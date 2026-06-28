@@ -227,3 +227,8 @@ Le Sprint 006 est termine sur la base des 3 tickets planifies. Les tickets T06.0
 | T07.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-007/T07.01-media-pipeline-report.md |
 | T07.01 | Integration | Cohesion medias, stockage et association | Integration Manager | READY FOR T07.02 | 2026-06-28 | reports/sprint-007/T07.01-media-pipeline-report.md |
 | T07.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T07.02 | 2026-06-28 | reports/sprint-007/T07.01-media-pipeline-report.md |
+| T07.02 | Architecture | Cohesion du pipeline documentaire, de la verification et des statuts | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-007/T07.02-document-pipeline-report.md |
+| T07.02 | QA | Criteres d'acceptation et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-007/T07.02-document-pipeline-report.md |
+| T07.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-007/T07.02-document-pipeline-report.md |
+| T07.02 | Integration | Cohesion documents, preuves et archivage | Integration Manager | READY FOR T07.03 | 2026-06-28 | reports/sprint-007/T07.02-document-pipeline-report.md |
+| T07.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T07.03 | 2026-06-28 | reports/sprint-007/T07.02-document-pipeline-report.md |

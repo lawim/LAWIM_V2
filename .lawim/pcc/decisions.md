@@ -39,3 +39,4 @@
 | 2026-06-28 | Sprint 006 closure proposal and no Sprint 007 opening | Directeur General | Sprint 006 closure / no Sprint 007 | Proposed | reports/sprint-006/SPRINT-006-CLOSURE-REPORT.md |
 | 2026-06-28 | Sprint 007 opening and media/document/geo plan confirmed | Directeur General | Sprint 007 / medias, documents et geolocalisation | Active | reports/sprint-007/SPRINT-007-PLANNING-REPORT.md |
 | 2026-06-28 | Media pipeline, storage and thumbnail contract confirmed | Architecture | T07.01 / Media pipeline | Active | reports/sprint-007/T07.01-media-pipeline-report.md |
+| 2026-06-28 | Document pipeline, verification and archive contract confirmed | Security | T07.02 / Document pipeline | Active | reports/sprint-007/T07.02-document-pipeline-report.md |

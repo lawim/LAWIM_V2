@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est prepare pour medias, documents et geolocalisation.
-- Derniere trace technique: Sprint 006 est cloture sur le socle immobilier; Sprint 007 est ouvert pour les medias, les documents et la geolocalisation; T07.01 est ferme.
+- Derniere trace technique: Sprint 006 est cloture sur le socle immobilier; Sprint 007 est ouvert pour les medias, les documents et la geolocalisation; T07.01 et T07.02 sont fermes.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -106,7 +106,7 @@
 - Statut Sprint 007: EN COURS
 - Objectif: associer les medias, les documents et le contexte geographique aux biens de LAWIM_V2.
 - Tickets: T07.01 - Media pipeline, T07.02 - Document pipeline, T07.03 - Geo integration
-- Tickets couverts: 1/3
+- Tickets couverts: 2/3
 - Ordre recommande: T07.01 -> T07.02 -> T07.03
 - Dependances: Sprint 006 cloture, T06.03, `docs/Directive/14-STORAGE-REFERENCE.md`, `docs/Directive/21-UX-UI-DESIGN-SYSTEM.md`, `docs/Directive/43-PROPERTY-VERIFICATION-PROCEDURE.md`, `docs/Directive/15-SECURITY-REFERENCE.md`, `docs/Directive/09-GEOLOCATION-REFERENCE.md` et `docs/Directive/27-TRACEABILITY-MATRIX.md`
 - Chemin critique: Decision DG d'ouverture -> T07.01 -> T07.02 -> T07.03 -> cloture Sprint 007
