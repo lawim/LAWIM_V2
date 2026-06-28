@@ -282,6 +282,16 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | Sprint 008 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
 | Sprint 008 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
 
+## Sprint 009
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| T09.01 | Architecture | Cohesion de la recherche, du classement et des filtres | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-009/T09.01-search-ranking-report.md |
+| T09.01 | QA | Criteres d'acceptation et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-009/T09.01-search-ranking-report.md |
+| T09.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-009/T09.01-search-ranking-report.md |
+| T09.01 | Integration | Cohesion recherche, classement et pertinence | Integration Manager | READY FOR T09.02 | 2026-06-28 | reports/sprint-009/T09.01-search-ranking-report.md |
+| T09.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T09.02 | 2026-06-28 | reports/sprint-009/T09.01-search-ranking-report.md |
+
 ## Cloture Sprint 008
 
 Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.01, T08.02 et T08.03 sont couverts; le risque bloquant reste false et aucun Sprint 009 n'est ouvert.

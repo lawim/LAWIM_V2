@@ -47,3 +47,4 @@
 | 2026-06-28 | Messaging flow, delivery and read-state contract confirmed | Integration | T08.02 / Messaging flow | Active | reports/sprint-008/T08.02-messaging-flow-report.md |
 | 2026-06-28 | Sprint 008 closure proposal and no Sprint 009 opening | Directeur General | Sprint 008 closure / no Sprint 009 | Proposed | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
 | 2026-06-28 | Sprint 009 opening and matching plan confirmed | Directeur General | Sprint 009 / matching foundation | Active | reports/sprint-009/SPRINT-009-PLANNING-REPORT.md |
+| 2026-06-28 | Search and ranking, relevance and pricing contract confirmed | Architecture | T09.01 / Search and ranking | Active | reports/sprint-009/T09.01-search-ranking-report.md |
