@@ -2,7 +2,7 @@
 
         - Date: 2026-06-28
         - Scope: Sprint 014 execution controlee
-        - Status: EN COURS
+        - Status: CLOTURE
 
         ## Objectif
         intégrer les paiements, les webhooks et la réconciliation.
@@ -41,6 +41,6 @@
         - Tickets couverts: 3/3
 
         ## Cloture
-        - Rapport de planning: reports/sprint-014/SPRINT-014-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-014/SPRINT-014-CLOSURE-REPORT.md
         - Decision proposee: GO AVEC RESERVES
         - Sprint 015: non ouvert

@@ -73,3 +73,4 @@
 | R-002 | T14.01 Sandbox integration consolidates the contract | High | Low | Keep sandbox integration explicit and preserve the reference as the source of truth | Security | Mitigated |
 | R-003 | T14.02 Webhook integrity consolidates the contract | High | Low | Keep webhook integrity explicit and preserve the reference as the source of truth | Security | Mitigated |
 | R-004 | T14.03 Reconciliation and receipts consolidates the contract | High | Low | Keep reconciliation and receipts explicit and preserve the reference as the source of truth | Reporting | Mitigated |
+| R-005 | Sprint 014 closure consolidates the campay guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |

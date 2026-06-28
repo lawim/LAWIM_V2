@@ -219,8 +219,8 @@
 - T13.03: ferme
         - Sprint 014: non ouvert
 
-                                ## Sprint 014
-        - Statut: EN COURS
+                                        ## Sprint 014
+        - Statut: CLOTURE
         - Objectif: intégrer les paiements, les webhooks et la réconciliation.
         - Tickets: T14.01 - Sandbox integration, T14.02 - Webhook integrity, T14.03 - Reconciliation and receipts
         - Tickets couverts: 3/3
@@ -230,7 +230,7 @@
         - Risques d'entree: doublons, faux positifs, divergence de statut.
         - Risque bloquant: false
         - Validation DG: en attente
-        - Rapport de planning: reports/sprint-014/SPRINT-014-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-014/SPRINT-014-CLOSURE-REPORT.md
         - Avancement:
         - T14.01: ferme
 - T14.02: ferme
