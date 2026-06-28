@@ -96,3 +96,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-002 | AI service scaffold, contract confirmed for Sprint 018 | AI | T18.01 / AI service scaffold | Active | reports/sprint-018/T18.01-ai-service-scaffold-report.md |
 | 2026-06-28 | DEC-003 | Language and search intelligence, contract confirmed for Sprint 018 | AI | T18.02 / Language and search intelligence | Active | reports/sprint-018/T18.02-language-and-search-intelligence-report.md |
 | 2026-06-28 | DEC-004 | Source-grounded responses, contract confirmed for Sprint 018 | AI | T18.03 / Source-grounded responses | Active | reports/sprint-018/T18.03-source-grounded-responses-report.md |
+| 2026-06-28 | DEC-005 | Sprint 018 closure proposal and no Sprint 019 opening | Directeur General | Sprint 018 closure / no Sprint 019 | Proposed | reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md |

@@ -2,7 +2,7 @@
 
         - Date: 2026-06-28
         - Scope: Sprint 018 execution controlee
-        - Status: EN COURS
+        - Status: CLOTURE
 
         ## Objectif
         brancher l'assistance IA sur les données, la langue et la connaissance.
@@ -40,6 +40,6 @@
         - Tickets couverts: 3/3
 
         ## Cloture
-        - Rapport de planning: reports/sprint-018/SPRINT-018-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md
         - Decision proposee: GO AVEC RESERVES
         - Sprint 019: non ouvert

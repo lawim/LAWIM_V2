@@ -500,3 +500,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T18.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-018/T18.03-source-grounded-responses-report.md |
 | T18.03 | Integration | Cohesion source-grounded responses | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-018/T18.03-source-grounded-responses-report.md |
 | T18.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-018/T18.03-source-grounded-responses-report.md |
+| Sprint 018 | Architecture | Cohesion globale des 3 tickets, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md |
+| Sprint 018 | QA | Couverture documentaire, conformite et completude des livrables | QA | Valide | 2026-06-28 | reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md |
+| Sprint 018 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md |
+| Sprint 018 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md |
+| Sprint 018 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md |

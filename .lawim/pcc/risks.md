@@ -93,3 +93,4 @@
 | R-002 | T18.01 AI service scaffold consolidates the contract | High | Low | Keep ai service scaffold explicit and preserve the reference as the source of truth | AI | Mitigated |
 | R-003 | T18.02 Language and search intelligence consolidates the contract | High | Low | Keep language and search intelligence explicit and preserve the reference as the source of truth | AI | Mitigated |
 | R-004 | T18.03 Source-grounded responses consolidates the contract | High | Low | Keep source-grounded responses explicit and preserve the reference as the source of truth | AI | Mitigated |
+| R-005 | Sprint 018 closure consolidates the lawim ai guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |

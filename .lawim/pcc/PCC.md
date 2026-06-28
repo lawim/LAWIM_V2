@@ -291,8 +291,8 @@
 - T17.03: ferme
         - Sprint 018: non ouvert
 
-                                ## Sprint 018
-        - Statut: EN COURS
+                                        ## Sprint 018
+        - Statut: CLOTURE
         - Objectif: brancher l'assistance IA sur les données, la langue et la connaissance.
         - Tickets: T18.01 - AI service scaffold, T18.02 - Language and search intelligence, T18.03 - Source-grounded responses
         - Tickets couverts: 3/3
@@ -302,7 +302,7 @@
         - Risques d'entree: hallucinations, mauvaise langue, sur-automatisation.
         - Risque bloquant: false
         - Validation DG: en attente
-        - Rapport de planning: reports/sprint-018/SPRINT-018-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md
         - Avancement:
         - T18.01: ferme
 - T18.02: ferme
