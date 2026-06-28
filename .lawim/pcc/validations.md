@@ -302,6 +302,18 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T09.03 | Integration | Cohesion disponibilite, preferences et filtres | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-009/T09.03-availability-preferences-report.md |
 | T09.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-009/T09.03-availability-preferences-report.md |
 
+## Cloture Sprint 009
+
+Le Sprint 009 est termine sur la base des 3 tickets planifies. Les tickets T09.01, T09.02 et T09.03 sont couverts; le risque bloquant reste false et aucun Sprint 010 n'est ouvert.
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sprint 009 | Architecture | Cohesion globale des 3 tickets, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md |
+| Sprint 009 | QA | Couverture documentaire, conformite et completude des livrables | QA | Valide | 2026-06-28 | reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md |
+| Sprint 009 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md |
+| Sprint 009 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md |
+| Sprint 009 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md |
+
 ## Cloture Sprint 008
 
 Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.01, T08.02 et T08.03 sont couverts; le risque bloquant reste false et aucun Sprint 009 n'est ouvert.

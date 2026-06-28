@@ -2,7 +2,7 @@
 
 - Date: 2026-06-28
 - Scope: Sprint 009 execution controlee
-- Status: EN COURS
+- Status: TERMINE
 
 ## Objectif
 Construire la recherche, le classement et la qualification des besoins.
@@ -46,6 +46,6 @@ GO AVEC RESERVES
 - Tickets couverts: 3/3
 
 ## Cloture
-- Rapport de cloture: a produire
+- Rapport de cloture: reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
 - Sprint 010: non ouvert

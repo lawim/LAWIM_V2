@@ -50,3 +50,4 @@
 | 2026-06-28 | Search and ranking, relevance and pricing contract confirmed | Architecture | T09.01 / Search and ranking | Active | reports/sprint-009/T09.01-search-ranking-report.md |
 | 2026-06-28 | Qualification, scoring and explainability contract confirmed | Architecture | T09.02 / Qualification and scoring | Active | reports/sprint-009/T09.02-qualification-scoring-report.md |
 | 2026-06-28 | Availability, preferences and location filters contract confirmed | Architecture | T09.03 / Availability and preferences | Active | reports/sprint-009/T09.03-availability-preferences-report.md |
+| 2026-06-28 | Sprint 009 closure proposal and no Sprint 010 opening | Directeur General | Sprint 009 closure / no Sprint 010 | Proposed | reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md |

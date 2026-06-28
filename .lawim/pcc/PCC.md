@@ -4,12 +4,12 @@
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
 - Sprint actif: Sprint 009
-- Sprint status: EN COURS
+- Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est cloture, Sprint 008 est cloture, Sprint 009 est prepare pour le matching foundation.
-- Derniere trace technique: Sprint 008 est cloture sur le conversation engine; Sprint 009 est ouvert pour le matching foundation; T09.01, T09.02 et T09.03 sont fermes.
+- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est cloture, Sprint 008 est cloture, Sprint 009 est cloture.
+- Derniere trace technique: Sprint 009 est cloture sur le matching foundation; T09.01, T09.02 et T09.03 sont fermes.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -133,7 +133,7 @@
 - Sprint 009: en cours d'ouverture
 
 ## Sprint 009
-- Statut Sprint 009: EN COURS
+- Statut Sprint 009: TERMINE
 - Objectif: construire la recherche, le classement et la qualification des besoins.
 - Tickets: T09.01 - Search and ranking, T09.02 - Qualification and scoring, T09.03 - Availability and preferences
 - Tickets couverts: 3/3
@@ -143,7 +143,7 @@
 - Risques d'entree: faux positifs, faux negatifs, biais de score, preferences ou disponibilite mal prises en compte
 - Risque bloquant: false
 - Validation DG: en attente
-- Rapport de cloture: a produire
+- Rapport de cloture: reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
 - Sprint 010: non ouvert
 
