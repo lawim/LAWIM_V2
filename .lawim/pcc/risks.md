@@ -66,3 +66,4 @@
 | R-005 | Sprint 012 closure consolidates the notifications guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |
 | R-001 | Sprint 013 opening requires stable tracking et attribution contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T13.01 Tracking code generator consolidates the contract | High | Low | Keep tracking code generator explicit and preserve the reference as the source of truth | Architecture | Mitigated |
+| R-003 | T13.02 Campaign and publication model consolidates the contract | High | Low | Keep campaign and publication model explicit and preserve the reference as the source of truth | Reporting | Mitigated |
