@@ -18,7 +18,7 @@ Preparer les fondations techniques de LAWIM_V2:
 GO AVEC RESERVES.
 
 ## Statut
-Initialise.
+Cloture.
 
 ## Portee
 Le sprint couvre la mise en place documentaire et technique des fondations d'execution.
@@ -34,3 +34,9 @@ Le sprint couvre la mise en place documentaire et technique des fondations d'exe
 - T01.08 - CI/CD Pipeline
 - T01.09 - Logging
 - T01.10 - Monitoring
+
+## Cloture
+- Date: 2026-06-28
+- Rapport de cloture: reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md
+- Decision proposee: GO AVEC RESERVES
+- Sprint 002: non ouvert

@@ -56,3 +56,15 @@ Ce registre suit le workflow officiel et les checklists associees.
 - un gate ne passe que si la preuve est tracee;
 - tout rejet renvoie au statut de correction approprie;
 - le registre ne remplace pas les checklists, il les reference.
+
+## Cloture Sprint 001
+
+Le Sprint 001 est termine sur la base des 10 tickets planifies. T01.04 est couvert par `env/README.md` et les modeles `*.env.example` / `*.secrets.example`; aucun ticket Sprint 002 n'est ouvert.
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sprint 001 | Architecture | Cohesion globale des 10 tickets, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
+| Sprint 001 | QA | Couverture documentaire, conformite et completude des livrables | QA | Valide | 2026-06-28 | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
+| Sprint 001 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
+| Sprint 001 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
+| Sprint 001 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
