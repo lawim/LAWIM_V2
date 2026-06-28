@@ -40,3 +40,39 @@
 | D-036 | T09.01 depend de la cloture Sprint 008 et des references matching / pricing | Sprint 008 | High | Confirmed |
 | D-037 | T09.02 depend de T09.01 et des conventions matching / conversation | Sprint 009 | High | Confirmed |
 | D-038 | T09.03 depend de T09.02 et des conventions matching / geolocation | Sprint 009 | High | Confirmed |
+| D-039 | Decision DG d'ouverture du Sprint 010 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-040 | T10.01 depend de la cloture Sprint 009, de la validation PCC et des references decision engine / workflow | Sprint 009 | High | Confirmed |
+| D-041 | T10.02 depend de T10.01 et des conventions rematching / tests | Sprint 010 | High | Confirmed |
+| D-042 | T10.03 depend de T10.02 et des conventions recommendation trace / traceability | Sprint 010 | High | Confirmed |
+| D-043 | Decision DG d'ouverture du Sprint 011 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-044 | T11.01 depend de la cloture Sprint 010 et des references workflow / architecture governance | Sprint 010 | High | Confirmed |
+| D-045 | T11.02 depend de T11.01 et des references workflow / complaints and disputes | Sprint 011 | High | Confirmed |
+| D-046 | T11.03 depend de T11.02 et des references workflow / traceability | Sprint 011 | High | Confirmed |
+| D-047 | Decision DG d'ouverture du Sprint 012 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-048 | T12.01 depend de la cloture Sprint 011 et des references notification / database | Sprint 011 | High | Confirmed |
+| D-049 | T12.02 depend de T12.01 et des references notification / Campay payment | Sprint 012 | High | Confirmed |
+| D-050 | T12.03 depend de T12.02 et des references notification / i18n-l10n | Sprint 012 | High | Confirmed |
+| D-051 | Decision DG d'ouverture du Sprint 013 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-052 | T13.01 depend de la cloture Sprint 012 et de la consolidation marketing tracking / database | Sprint 012 | High | Confirmed |
+| D-053 | T13.02 depend de T13.01 et des references database / dashboard | Sprint 013 | High | Confirmed |
+| D-054 | T13.03 depend de T13.02 et des references traceability / reporting | Sprint 013 | High | Confirmed |
+| D-055 | Decision DG d'ouverture du Sprint 014 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-056 | T14.01 depend de la cloture Sprint 013 et des references Campay / security | Sprint 013 | High | Confirmed |
+| D-057 | T14.02 depend de T14.01 et des references Campay / API | Sprint 014 | High | Confirmed |
+| D-058 | T14.03 depend de T14.02 et des references reporting / Campay | Sprint 014 | High | Confirmed |
+| D-059 | Decision DG d'ouverture du Sprint 015 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-060 | T15.01 depend de la cloture Sprint 014 et des references dashboard / UX | Sprint 014 | High | Confirmed |
+| D-061 | T15.02 depend de T15.01 et des references dashboard / administration | Sprint 015 | High | Confirmed |
+| D-062 | T15.03 depend de T15.02 et des references role / dashboard | Sprint 015 | High | Confirmed |
+| D-063 | Decision DG d'ouverture du Sprint 016 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-064 | T16.01 depend de la cloture Sprint 015 et des references reporting engine / database | Sprint 015 | High | Confirmed |
+| D-065 | T16.02 depend de T16.01 et des references reporting / marketing tracking consolidation | Sprint 016 | High | Confirmed |
+| D-066 | T16.03 depend de T16.02 et des references reporting / final certification | Sprint 016 | High | Confirmed |
+| D-067 | Decision DG d'ouverture du Sprint 017 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-068 | T17.01 depend de la cloture Sprint 016 et des references knowledge base master / business dictionary | Sprint 016 | High | Confirmed |
+| D-069 | T17.02 depend de T17.01 et des references documentation governance / knowledge base master | Sprint 017 | High | Confirmed |
+| D-070 | T17.03 depend de T17.02 et des references operational procedures / sales playbook | Sprint 017 | High | Confirmed |
+| D-071 | Decision DG d'ouverture du Sprint 018 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-072 | T18.01 depend de la cloture Sprint 017 et des references lawim ai / knowledge base master | Sprint 017 | High | Confirmed |
+| D-073 | T18.02 depend de T18.01 et des references language detection / multilingual search | Sprint 018 | High | Confirmed |
+| D-074 | T18.03 depend de T18.02 et des references lawim ai / traceability matrix | Sprint 018 | High | Confirmed |

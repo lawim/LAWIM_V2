@@ -8,7 +8,7 @@
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; les lots 004 a 006 sont en cours de consolidation et Sprint 019 reste non ouvert.
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; la matrice des dependances est etendue jusqu'au Sprint 018, le registre des risques est normalise et Sprint 019 reste non ouvert.
 - Derniere trace technique: Sprint 018 est cloture sur lawim ai; T18.01, T18.02 et T18.03 sont fermes
 
 ## Cloture Sprint 001
