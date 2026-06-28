@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement
-- Derniere trace technique: T01.08 a etabli la fondation CI/CD (separation CI/CD, validation des branches, versioning/promotion, integration Docker/Compose/Secrets) en reutilisant les contrats Docker, Compose, Environments, Nginx, OVH et Secrets; T01.09 reste prepare sans ouverture.
+- Derniere trace technique: T01.09 a etabli la fondation logging (strategie, conventions, niveaux, rotation, retention et preparation supervision) en reutilisant logging/README.md, docker/logging/README.md et monitoring/README.md; T01.10 reste prepare sans ouverture.
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

@@ -39,6 +39,11 @@ Ce registre suit le workflow officiel et les checklists associees.
 | T01.08 | Security | Absence de secret reel et permissions minimales | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.08-security-review.md |
 | T01.08 | Integration | Cohesion CI/CD, Docker, Compose, Secrets et versioning | Integration Manager | READY FOR T01.09 | 2026-06-28 | reports/sprint-001/T01.08-ci-cd-foundation-report.md |
 | T01.08 | DG | Validation finale de gouvernance | Directeur General | READY FOR T01.09 | 2026-06-28 | reports/sprint-001/T01.08-ci-cd-foundation-report.md |
+| T01.09 | Architecture | Coherence logging, naming, rotation, retention and monitoring integration | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.09-logging-foundation-report.md |
+| T01.09 | QA | Conformite au ticket et completude documentaire | QA | Valide | 2026-06-28 | reports/sprint-001/T01.09-logging-foundation-report.md |
+| T01.09 | Security | Masking, retention and sensitive-data exposure risks | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.09-logging-foundation-report.md |
+| T01.09 | Integration | Cohesion logging, Docker, Nginx, CI/CD and Monitoring | Integration Manager | READY FOR T01.10 | 2026-06-28 | reports/sprint-001/T01.09-logging-foundation-report.md |
+| T01.09 | DG | Validation finale de gouvernance | Directeur General | READY FOR T01.10 | 2026-06-28 | reports/sprint-001/T01.09-logging-foundation-report.md |
 
 ## Regles
 - une ligne de validation correspond a une gate;
