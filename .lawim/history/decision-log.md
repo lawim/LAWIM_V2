@@ -14,3 +14,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-008 | Adopt a logging foundation with documented strategy, levels, rotation, masking and monitoring preparation | DevOps | Logging foundation | Active | reports/sprint-001/T01.09-logging-foundation-report.md |
 | 2026-06-28 | DEC-009 | Adopt a monitoring foundation with technical metrics, availability, alerting and health checks | DevOps | Monitoring foundation | Active | reports/sprint-001/T01.10-monitoring-foundation-report.md |
 | 2026-06-28 | DEC-010 | Sprint 001 closure proposal and freeze of further sprint openings | Directeur General | Sprint 001 closure / no Sprint 002 | Proposed | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
+| 2026-06-28 | DEC-011 | Docker baseline, Compose contract and Nginx/environment baseline confirmed for LAWIM_V2 | DevOps | T02.01 / Docker baseline | Active | reports/sprint-002/T02.01-docker-baseline-report.md |

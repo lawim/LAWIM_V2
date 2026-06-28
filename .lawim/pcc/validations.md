@@ -59,7 +59,7 @@ Ce registre suit le workflow officiel et les checklists associees.
 
 ## Cloture Sprint 001
 
-Le Sprint 001 est termine sur la base des 10 tickets planifies. T01.04 est couvert par `env/README.md` et les modeles `*.env.example` / `*.secrets.example`; aucun ticket Sprint 002 n'est ouvert.
+Le Sprint 001 est termine sur la base des 10 tickets planifies. T01.04 est couvert par `env/README.md` et les modeles `*.env.example` / `*.secrets.example`; Sprint 002 est ouvert et T02.01 a confirme le socle Docker baseline.
 
 | Scope | Gate | Criteria | Validator | Result | Date | Reference |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -68,3 +68,13 @@ Le Sprint 001 est termine sur la base des 10 tickets planifies. T01.04 est couve
 | Sprint 001 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
 | Sprint 001 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
 | Sprint 001 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
+
+## Sprint 002
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| T02.01 | Architecture | Coherence technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-002/T02.01-docker-baseline-report.md |
+| T02.01 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-002/T02.01-docker-baseline-report.md |
+| T02.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-002/T02.01-docker-baseline-report.md |
+| T02.01 | Integration | Cohesion base, overlays, Nginx et environnements | Integration Manager | Valide | 2026-06-28 | reports/sprint-002/T02.01-docker-baseline-report.md |
+| T02.01 | DG | Validation finale de gouvernance | Directeur General | Valide avec reserves | 2026-06-28 | reports/sprint-002/T02.01-docker-baseline-report.md |

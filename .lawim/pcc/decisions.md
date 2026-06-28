@@ -13,3 +13,4 @@
 | 2026-06-28 | Logging foundation, log levels, rotation and monitoring preparation adopted for LAWIM_V2 | DevOps | T01.09 / Logging foundation | Active | reports/sprint-001/T01.09-logging-foundation-report.md |
 | 2026-06-28 | Monitoring foundation, technical metrics, availability, alert rules and health checks adopted for LAWIM_V2 | DevOps | T01.10 / Monitoring foundation | Active | reports/sprint-001/T01.10-monitoring-foundation-report.md |
 | 2026-06-28 | Sprint 001 closure proposal and freeze of further sprint openings | Directeur General | Sprint 001 closure / no Sprint 002 | Proposed | reports/sprint-001/SPRINT-001-CLOSURE-REPORT.md |
+| 2026-06-28 | Docker baseline, Compose contract and Nginx/environment baseline confirmed for LAWIM_V2 | DevOps | T02.01 / Docker baseline | Active | reports/sprint-002/T02.01-docker-baseline-report.md |

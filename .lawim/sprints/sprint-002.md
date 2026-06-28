@@ -1,8 +1,8 @@
 # Sprint 002 - Infrastructure et environnements
 
 - Date: 2026-06-28
-- Scope: Sprint 002 preparation only
-- Status: INITIALISE
+- Scope: Sprint 002 execution controlee
+- Status: EN COURS
 
 ## Objectif
 Disposer d'un runtime local reproductible, d'une observabilite de base et d'un squelette CI minimal pour preparer l'execution controlee du programme.
@@ -19,6 +19,9 @@ GO AVEC RESERVES
 - T02.01 - Docker baseline
 - T02.02 - Runtime observability
 - T02.03 - CI skeleton
+
+## Ticket suivant
+- T02.02 - Runtime observability
 
 ## Dependances
 - Sprint 001 cloture et PCC coherent.
