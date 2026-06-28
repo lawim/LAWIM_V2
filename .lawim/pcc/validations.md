@@ -147,3 +147,8 @@ Le Sprint 003 est termine sur la base des 3 tickets planifies. Les tickets T03.0
 | T04.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-004/T04.03-mfa-gate-report.md |
 | T04.03 | Integration | Cohesion MFA, recovery et flux critiques | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-004/T04.03-mfa-gate-report.md |
 | T04.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-004/T04.03-mfa-gate-report.md |
+| Sprint 004 | Architecture | Cohesion globale des 3 tickets, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-004/SPRINT-004-CLOSURE-REPORT.md |
+| Sprint 004 | QA | Couverture documentaire, conformite et completude des livrables | QA | Valide | 2026-06-28 | reports/sprint-004/SPRINT-004-CLOSURE-REPORT.md |
+| Sprint 004 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-004/SPRINT-004-CLOSURE-REPORT.md |
+| Sprint 004 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-004/SPRINT-004-CLOSURE-REPORT.md |
+| Sprint 004 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-004/SPRINT-004-CLOSURE-REPORT.md |

@@ -27,3 +27,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-021 | Auth service, login/logout and session contract confirmed | Security | T04.01 / Auth service | Active | reports/sprint-004/T04.01-auth-service-report.md |
 | 2026-06-28 | DEC-022 | Token strategy, JWT refresh and session storage confirmed | Security | T04.02 / Token strategy | Active | reports/sprint-004/T04.02-token-strategy-report.md |
 | 2026-06-28 | DEC-023 | MFA gate, recovery and access policy confirmed | Security | T04.03 / MFA gate | Active | reports/sprint-004/T04.03-mfa-gate-report.md |
+| 2026-06-28 | DEC-024 | Sprint 004 closure proposal and no Sprint 005 opening | Directeur General | Sprint 004 closure / no Sprint 005 | Proposed | reports/sprint-004/SPRINT-004-CLOSURE-REPORT.md |

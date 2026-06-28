@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 004
-- Sprint status: EN COURS
+- Sprint actif: Aucun
+- Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle authentification et identite reste a consolider dans Sprint 004.
-- Derniere trace technique: T04.03 a confirme la gate MFA; le Sprint 004 est complet et pret pour cloture sans remettre en cause le socle Sprint 003.
+- Derniere trace technique: Sprint 004 est cloture apres T04.01, T04.02 et T04.03; le socle authentification et identite est consolide sans ouvrir Sprint 005.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -48,10 +48,10 @@
 - T03.01: socle relationnel confirme
 - T03.02: baseline Prisma confirmee
 - T03.03: primitives de sauvegarde confirmee
-- Sprint 004: ouvert
+- Sprint 004: termine, cloture tracee
 
-## Ouverture Sprint 004
-- Statut Sprint 004: EN COURS
+## Cloture Sprint 004
+- Statut Sprint 004: TERMINE
 - Objectif: mettre en place l authentification et l identite de LAWIM_V2.
 - Tickets: T04.01 - Auth service, T04.02 - Token strategy, T04.03 - MFA gate
 - Tickets couverts: 3/3
@@ -64,6 +64,7 @@
 - T04.01: service d authentification confirme
 - T04.02: strategie de jetons confirmee
 - T04.03: gate MFA confirmee
+- Sprint 005: non ouvert
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

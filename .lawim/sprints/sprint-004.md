@@ -2,7 +2,7 @@
 
 - Date: 2026-06-28
 - Scope: Sprint 004 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 Mettre en place l authentification et l identite de LAWIM_V2: service d authentification, strategie de jetons, sessions et gate MFA.
