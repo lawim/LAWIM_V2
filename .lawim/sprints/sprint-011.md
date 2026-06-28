@@ -2,7 +2,7 @@
 
         - Date: 2026-06-28
         - Scope: Sprint 011 execution controlee
-        - Status: EN COURS
+        - Status: CLOTURE
 
         ## Objectif
         orchestrer les étapes métier, les visites et les événements.
@@ -39,6 +39,6 @@
         - Tickets couverts: 3/3
 
         ## Cloture
-        - Rapport de planning: reports/sprint-011/SPRINT-011-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-011/SPRINT-011-CLOSURE-REPORT.md
         - Decision proposee: GO AVEC RESERVES
         - Sprint 012: non ouvert
