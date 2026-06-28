@@ -490,3 +490,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T18.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-018/T18.01-ai-service-scaffold-report.md |
 | T18.01 | Integration | Cohesion ai service scaffold | Integration Manager | READY FOR T18.02 | 2026-06-28 | reports/sprint-018/T18.01-ai-service-scaffold-report.md |
 | T18.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T18.02 | 2026-06-28 | reports/sprint-018/T18.01-ai-service-scaffold-report.md |
+| T18.02 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-018/T18.02-language-and-search-intelligence-report.md |
+| T18.02 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-018/T18.02-language-and-search-intelligence-report.md |
+| T18.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-018/T18.02-language-and-search-intelligence-report.md |
+| T18.02 | Integration | Cohesion language and search intelligence | Integration Manager | READY FOR T18.03 | 2026-06-28 | reports/sprint-018/T18.02-language-and-search-intelligence-report.md |
+| T18.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T18.03 | 2026-06-28 | reports/sprint-018/T18.02-language-and-search-intelligence-report.md |

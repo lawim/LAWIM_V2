@@ -91,3 +91,4 @@
 | R-005 | Sprint 017 closure consolidates the knowledge base guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |
 | R-001 | Sprint 018 opening requires stable lawim ai contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T18.01 AI service scaffold consolidates the contract | High | Low | Keep ai service scaffold explicit and preserve the reference as the source of truth | AI | Mitigated |
+| R-003 | T18.02 Language and search intelligence consolidates the contract | High | Low | Keep language and search intelligence explicit and preserve the reference as the source of truth | AI | Mitigated |
