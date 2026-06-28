@@ -100,3 +100,13 @@ Le Sprint 002 est termine sur la base des 3 tickets planifies. Les tickets T02.0
 | Sprint 002 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-002/SPRINT-002-CLOSURE-REPORT.md |
 | Sprint 002 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-002/SPRINT-002-CLOSURE-REPORT.md |
 | Sprint 002 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-002/SPRINT-002-CLOSURE-REPORT.md |
+
+## Sprint 003
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| T03.01 | Architecture | Cohesion du socle relationnel, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-003/T03.01-postgresql-foundation-report.md |
+| T03.01 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-003/T03.01-postgresql-foundation-report.md |
+| T03.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-003/T03.01-postgresql-foundation-report.md |
+| T03.01 | Integration | Cohesion PostgreSQL, stockage et T02.03 | Integration Manager | READY FOR T03.02 | 2026-06-28 | reports/sprint-003/T03.01-postgresql-foundation-report.md |
+| T03.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T03.02 | 2026-06-28 | reports/sprint-003/T03.01-postgresql-foundation-report.md |

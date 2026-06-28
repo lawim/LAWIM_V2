@@ -36,6 +36,12 @@ GO AVEC RESERVES
 - sauvegarde ou restauration incomplète;
 - confusion entre persistance, archivage et stockage de reprise.
 
+## Avancement
+- T03.01: ferme;
+- T03.02: a venir;
+- T03.03: a venir;
+- Tickets couverts: 1/3.
+
 ## Cloture
 - Rapport de cloture: reports/sprint-003/SPRINT-003-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES

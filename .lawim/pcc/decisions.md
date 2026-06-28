@@ -18,3 +18,4 @@
 | 2026-06-28 | CI skeleton, branch gates and external-secret conventions confirmed for LAWIM_V2 | DevOps | T02.03 / CI skeleton | Active | reports/sprint-002/T02.03-ci-skeleton-report.md |
 | 2026-06-28 | Sprint 002 closure proposal and no Sprint 003 opening | Directeur General | Sprint 002 closure / no Sprint 003 | Proposed | reports/sprint-002/SPRINT-002-CLOSURE-REPORT.md |
 | 2026-06-28 | Sprint 003 opening and database/storage plan confirmed for LAWIM_V2 | Directeur General | Sprint 003 / base de donnees et stockage | Active | reports/sprint-003/SPRINT-003-PLANNING-REPORT.md |
+| 2026-06-28 | PostgreSQL foundation, connection baseline and constraint contract confirmed for LAWIM_V2 | Database | T03.01 / PostgreSQL foundation | Active | reports/sprint-003/T03.01-postgresql-foundation-report.md |
