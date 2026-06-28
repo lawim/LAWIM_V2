@@ -42,10 +42,10 @@ GO AVEC RESERVES
 - confusion entre stockage media et preuves documentaires.
 
 ## Avancement
-- T07.01: a faire
+- T07.01: ferme
 - T07.02: a faire
 - T07.03: a faire
-- Tickets couverts: 0/3
+- Tickets couverts: 1/3
 
 ## Cloture
 - Rapport de cloture: a produire
