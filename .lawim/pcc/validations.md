@@ -264,3 +264,20 @@ Le Sprint 007 est termine sur la base des 3 tickets planifies. Les tickets T07.0
 | T08.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-008/T08.02-messaging-flow-report.md |
 | T08.02 | Integration | Cohesion envoi, reception, lecture et livraison | Integration Manager | READY FOR T08.03 | 2026-06-28 | reports/sprint-008/T08.02-messaging-flow-report.md |
 | T08.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T08.03 | 2026-06-28 | reports/sprint-008/T08.02-messaging-flow-report.md |
+| T08.03 | Architecture | Cohesion des pieces jointes, de l historique et de l audit trail | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-008/T08.03-attachments-history-report.md |
+| T08.03 | QA | Criteres d'acceptation et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-008/T08.03-attachments-history-report.md |
+| T08.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-008/T08.03-attachments-history-report.md |
+| T08.03 | Integration | Cohesion pieces jointes, historique et conservation | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-008/T08.03-attachments-history-report.md |
+| T08.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-008/T08.03-attachments-history-report.md |
+
+## Cloture Sprint 008
+
+Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.01, T08.02 et T08.03 sont couverts; le risque bloquant reste false et aucun Sprint 009 n'est ouvert.
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sprint 008 | Architecture | Cohesion globale des 3 tickets, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
+| Sprint 008 | QA | Couverture documentaire, conformite et completude des livrables | QA | Valide | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
+| Sprint 008 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
+| Sprint 008 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
+| Sprint 008 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |

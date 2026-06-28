@@ -2,7 +2,7 @@
 
 - Date: 2026-06-28
 - Scope: Sprint 008 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 Permettre les echanges tracables entre utilisateurs et partenaires.
@@ -43,10 +43,10 @@ GO AVEC RESERVES
 ## Avancement
 - T08.01: ferme
 - T08.02: ferme
-- T08.03: a faire
-- Tickets couverts: 2/3
+- T08.03: ferme
+- Tickets couverts: 3/3
 
 ## Cloture
-- Rapport de cloture: a produire
+- Rapport de cloture: reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
 - Sprint 009: non ouvert
