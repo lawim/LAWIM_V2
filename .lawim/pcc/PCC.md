@@ -19,7 +19,17 @@
 - Security: PASS
 - Risque bloquant: false
 - Validation DG: en attente
-- Sprint 002: non ouvert
+- Sprint 002: en preparation, non ouvert
+
+## Preparation Sprint 002
+- Statut Sprint 002: INITIALISE
+- Objectif: disposer d'un runtime local reproductible, d'une observabilite de base et d'un squelette CI minimal.
+- Tickets: T02.01 - Docker baseline, T02.02 - Runtime observability, T02.03 - CI skeleton
+- Ordre recommande: T02.01 -> T02.02 -> T02.03
+- Dependances: Sprint 001 cloture, T01.01, T01.02, T01.03, T01.04, T01.05, T01.07, T01.08, T01.09 et T01.10
+- Chemin critique: Decision DG d'ouverture -> T02.01 -> T02.02 et T02.03
+- Risques d'entree: derive runtime, fuite de secrets, CI active trop tot
+- Decision proposee au DG: GO AVEC RESERVES
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

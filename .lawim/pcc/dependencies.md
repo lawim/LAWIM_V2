@@ -8,3 +8,7 @@
 | D-004 | Fondation Docker, Compose, Environments et Nginx validee pour la preparation OVH | T01.06 | High | Confirmed |
 | D-005 | Separation variables / secrets formalisee pour la preparation CI/CD | T01.07 | High | Confirmed |
 | D-006 | Fondation Monitoring dependante de la fondation Logging pour la correlation, les signaux et la preparation des alertes | T01.09 | High | Confirmed |
+| D-007 | Decision DG d'ouverture du Sprint 002 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-008 | T02.01 depend de la base runtime heritee et des conventions Docker / Compose / environnements / Nginx | Sprint 001 | High | Confirmed |
+| D-009 | T02.02 depend de T02.01 et des fondations Logging / Monitoring | Sprint 001 | High | Confirmed |
+| D-010 | T02.03 depend de T02.01 et des fondations Secrets / CI-CD | Sprint 001 | High | Confirmed |
