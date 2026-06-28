@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement
-- Derniere trace technique: T01.03 a etabli la fondation Compose partagee (base, profils development/staging/production, reseaux, volumes et contrat d'environnement); T01.04 reste en preparation.
+- Derniere trace technique: T01.05 a etabli la fondation Nginx partagee (default.conf, conf.d, snippets, politique de certificats et journalisation) en reutilisant le contrat Compose et le contrat d'environnement; T01.06 reste prepare sans ouverture.
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

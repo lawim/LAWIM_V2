@@ -19,6 +19,11 @@ Ce registre suit le workflow officiel et les checklists associees.
 | T01.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-001/T01.03-docker-compose-report.md |
 | T01.03 | Integration | Cohesion compose, conventions et reutilisation | Integration Manager | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.03-docker-compose-report.md |
 | T01.03 | DG | Validation finale de gouvernance | Directeur General | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.03-docker-compose-report.md |
+| T01.05 | Architecture | Coherence du reverse proxy, des virtual hosts et du contrat Compose | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.05-architecture-review.md |
+| T01.05 | QA | Conformite au ticket et completude documentaire | QA | Valide | 2026-06-28 | reports/sprint-001/T01.05-qa-review.md |
+| T01.05 | Security | Certificats, headers, secrets et surface d'attaque | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.05-security-review.md |
+| T01.05 | Integration | Cohesion Nginx, Compose et contrat d'environnement | Integration Manager | READY FOR T01.06 | 2026-06-28 | reports/sprint-001/T01.05-nginx-reverse-proxy-foundation-report.md |
+| T01.05 | DG | Validation finale de gouvernance | Directeur General | READY FOR T01.06 | 2026-06-28 | reports/sprint-001/T01.05-nginx-reverse-proxy-foundation-report.md |
 
 ## Regles
 - une ligne de validation correspond a une gate;

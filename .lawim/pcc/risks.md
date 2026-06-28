@@ -7,3 +7,4 @@
 | R-003 | Ambiguite d'infrastructure entre environnements | High | Medium | Formaliser les conventions d'environnement et de deploiement | DevOps | Open |
 | R-004 | Derive entre la base Docker et les overlays environnementaux | High | Medium | Promouvoir le meme digest, figer les tags et reutiliser la base commune | DevOps | Open |
 | R-005 | Drift between Compose overlays and environment contracts | High | Medium | Keep resource names stable, externalize environment values and validate merged config | DevOps | Open |
+| R-006 | Nginx routing drift between default.conf and future virtual hosts | High | Medium | Keep the base server block minimal and isolate additions in conf.d with explicit review | DevOps | Open |

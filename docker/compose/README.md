@@ -44,7 +44,8 @@ Validation minimale:
 - `docker-compose -f docker/compose/docker-compose.base.yml -f docker/compose/docker-compose.staging.yml config`
 - `docker-compose -f docker/compose/docker-compose.base.yml -f docker/compose/docker-compose.production.yml config`
 
-Preparation de T01.04:
+Preparation de T01.05:
 - le prochain ticket doit reutiliser ce contrat sans redefinir les noms de ressources;
 - les valeurs reelles d'environnement devront rester hors depot ou etre injectees par la mecanique officielle des environnements;
-- aucune ouverture de T01.04 n'est requise pour conserver ce contexte.
+- Nginx devra consommer ce contrat sans redefinir `APP_ENV`, `STACK_PROFILE`, `LOG_LEVEL`, `PUBLIC_BASE_URL` ou `SECRET_PROVIDER`;
+- aucune ouverture de T01.05 n'est requise pour conserver ce contexte.
