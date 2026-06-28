@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 017
+- Sprint actif: Sprint 018
 - Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille a ete verifie pour LOT-006; les lots 004 a 006 sont en cours de consolidation et Sprint 019 reste non ouvert.
-- Derniere trace technique: Sprint 017 est cloture sur knowledge base; T17.01, T17.02 et T17.03 sont fermes
+- Derniere trace technique: Sprint 018 est cloture sur lawim ai; T18.01, T18.02 et T18.03 sont fermes
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -290,6 +290,25 @@
 - T17.02: ferme
 - T17.03: ferme
         - Sprint 018: non ouvert
+
+        ## Sprint 018
+        - Statut: EN COURS
+        - Objectif: brancher l'assistance IA sur les données, la langue et la connaissance.
+        - Tickets: T18.01 - AI service scaffold, T18.02 - Language and search intelligence, T18.03 - Source-grounded responses
+        - Tickets couverts: 0/3
+        - Ordre recommande: T18.01 -> T18.02 -> T18.03
+        - Dependances: S017, S013, S016.
+        - Chemin critique: Decision DG d'ouverture -> T18.01 -> T18.02 -> T18.03 -> cloture Sprint 018
+        - Risques d'entree: hallucinations, mauvaise langue, sur-automatisation.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de planning: reports/sprint-018/SPRINT-018-PLANNING-REPORT.md
+        - Avancement:
+        - T18.01: A FAIRE
+- T18.02: A FAIRE
+- T18.03: A FAIRE
+        - Sprint 019: non ouvert
+
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md
