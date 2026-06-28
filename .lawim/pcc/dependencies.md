@@ -12,3 +12,7 @@
 | D-008 | T02.01 depend de la base runtime heritee et des conventions Docker / Compose / environnements / Nginx | Sprint 001 | High | Confirmed |
 | D-009 | T02.02 depend de T02.01 et des fondations Logging / Monitoring | Sprint 001 | High | Confirmed |
 | D-010 | T02.03 depend de T02.01 et des fondations Secrets / CI-CD | Sprint 001 | High | Confirmed |
+| D-011 | Decision DG d'ouverture du Sprint 003 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-012 | T03.01 depend de T02.03 et des references base de donnees / stockage | Sprint 002 | High | Confirmed |
+| D-013 | T03.02 depend de T03.01 et des conventions Prisma / migration | Sprint 003 | High | Confirmed |
+| D-014 | T03.03 depend de T03.01 et des conventions de sauvegarde / restauration | Sprint 003 | High | Confirmed |

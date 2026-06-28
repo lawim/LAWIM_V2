@@ -18,3 +18,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-012 | Runtime observability, logging conventions and health-check contract confirmed for LAWIM_V2 | DevOps | T02.02 / Runtime observability | Active | reports/sprint-002/T02.02-runtime-observability-report.md |
 | 2026-06-28 | DEC-013 | CI skeleton, branch gates and external-secret conventions confirmed for LAWIM_V2 | DevOps | T02.03 / CI skeleton | Active | reports/sprint-002/T02.03-ci-skeleton-report.md |
 | 2026-06-28 | DEC-014 | Sprint 002 closure proposal and no Sprint 003 opening | Directeur General | Sprint 002 closure / no Sprint 003 | Proposed | reports/sprint-002/SPRINT-002-CLOSURE-REPORT.md |
+| 2026-06-28 | DEC-015 | Sprint 003 opening and database/storage plan confirmed | Directeur General | Sprint 003 / base de donnees et stockage | Active | reports/sprint-003/SPRINT-003-PLANNING-REPORT.md |
