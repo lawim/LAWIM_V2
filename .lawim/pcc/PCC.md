@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 007
-- Sprint status: EN COURS
+- Sprint actif: aucun
+- Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est prepare pour medias, documents et geolocalisation.
-- Derniere trace technique: Sprint 006 est cloture sur le socle immobilier; Sprint 007 est ouvert pour les medias, les documents et la geolocalisation; T07.01, T07.02 et T07.03 sont fermes.
+- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est cloture, Sprint 008 reste non ouvert.
+- Derniere trace technique: Sprint 007 est cloture sur les medias, les documents et la geolocalisation; T07.01, T07.02 et T07.03 sont fermes.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -103,7 +103,7 @@
 - Sprint 007: en cours d'ouverture
 
 ## Sprint 007
-- Statut Sprint 007: EN COURS
+- Statut Sprint 007: TERMINE
 - Objectif: associer les medias, les documents et le contexte geographique aux biens de LAWIM_V2.
 - Tickets: T07.01 - Media pipeline, T07.02 - Document pipeline, T07.03 - Geo integration
 - Tickets couverts: 3/3
@@ -113,7 +113,7 @@
 - Risques d'entree: medias trompeurs, pieces documentaires mal qualifiees, localisation inexacte, confusion entre stockage media et preuves documentaires
 - Risque bloquant: false
 - Validation DG: en attente
-- Rapport de cloture: a produire
+- Rapport de cloture: reports/sprint-007/SPRINT-007-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
 - Sprint 008: non ouvert
 

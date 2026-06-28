@@ -2,7 +2,7 @@
 
 - Date: 2026-06-28
 - Scope: Sprint 007 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 Associer les medias, les pieces documentaires et le contexte geographique aux biens LAWIM_V2.
@@ -48,6 +48,6 @@ GO AVEC RESERVES
 - Tickets couverts: 3/3
 
 ## Cloture
-- Rapport de cloture: a produire
+- Rapport de cloture: reports/sprint-007/SPRINT-007-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
 - Sprint 008: non ouvert

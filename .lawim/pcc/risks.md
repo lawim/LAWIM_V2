@@ -36,3 +36,4 @@
 | R-032 | Media pipeline may drift from the canonical storage and UX references | High | Medium | Keep ingestion, storage and attachment rules explicit and preserve the media boundary as the source of truth | Architecture | Mitigated |
 | R-033 | Document pipeline may drift from the canonical verification and security references | High | Medium | Keep document acceptance, validation and archive rules explicit and preserve the verification procedure as the source of truth | Security | Mitigated |
 | R-034 | Geo integration may drift from the canonical geolocation and traceability references | High | Medium | Keep city, neighborhood, zone and coordinate rules explicit and preserve traceability as the source of truth | Architecture | Mitigated |
+| R-035 | Sprint 007 closure consolidates the media, document and geo guardrails | High | Low | Keep the media, document and geo references canonical and defer future implementation to Sprint 008 | PMO | Mitigated |
