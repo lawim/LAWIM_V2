@@ -291,11 +291,11 @@
 - T17.03: ferme
         - Sprint 018: non ouvert
 
-        ## Sprint 018
+                ## Sprint 018
         - Statut: EN COURS
         - Objectif: brancher l'assistance IA sur les données, la langue et la connaissance.
         - Tickets: T18.01 - AI service scaffold, T18.02 - Language and search intelligence, T18.03 - Source-grounded responses
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
         - Ordre recommande: T18.01 -> T18.02 -> T18.03
         - Dependances: S017, S013, S016.
         - Chemin critique: Decision DG d'ouverture -> T18.01 -> T18.02 -> T18.03 -> cloture Sprint 018
@@ -304,11 +304,10 @@
         - Validation DG: en attente
         - Rapport de planning: reports/sprint-018/SPRINT-018-PLANNING-REPORT.md
         - Avancement:
-        - T18.01: A FAIRE
+        - T18.01: ferme
 - T18.02: A FAIRE
 - T18.03: A FAIRE
         - Sprint 019: non ouvert
-
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md

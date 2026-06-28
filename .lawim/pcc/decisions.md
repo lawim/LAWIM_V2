@@ -92,3 +92,4 @@
 | 2026-06-28 | DEC-004 | FAQ and business content, contract confirmed for Sprint 017 | Documentation | T17.03 / FAQ and business content | Active | reports/sprint-017/T17.03-faq-and-business-content-report.md |
 | 2026-06-28 | DEC-005 | Sprint 017 closure proposal and no Sprint 018 opening | Directeur General | Sprint 017 closure / no Sprint 018 | Proposed | reports/sprint-017/SPRINT-017-CLOSURE-REPORT.md |
 | 2026-06-28 | DEC-001 | Sprint 018 opening and lawim ai plan confirmed | Directeur General | Sprint 018 / lawim ai | Active | reports/sprint-018/SPRINT-018-PLANNING-REPORT.md |
+| 2026-06-28 | DEC-002 | AI service scaffold, contract confirmed for Sprint 018 | AI | T18.01 / AI service scaffold | Active | reports/sprint-018/T18.01-ai-service-scaffold-report.md |

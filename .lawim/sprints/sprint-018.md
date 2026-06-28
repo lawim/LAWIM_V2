@@ -34,10 +34,10 @@
         - hallucinations, mauvaise langue, sur-automatisation.
 
         ## Avancement
-        - T18.01: A FAIRE
+        - T18.01: ferme
 - T18.02: A FAIRE
 - T18.03: A FAIRE
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-018/SPRINT-018-PLANNING-REPORT.md
