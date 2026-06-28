@@ -330,3 +330,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T10.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-010/T10.01-decision-orchestration-report.md |
 | T10.01 | Integration | Cohesion decision orchestration | Integration Manager | READY FOR T10.02 | 2026-06-28 | reports/sprint-010/T10.01-decision-orchestration-report.md |
 | T10.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T10.02 | 2026-06-28 | reports/sprint-010/T10.01-decision-orchestration-report.md |
+| T10.02 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-010/T10.02-rematching-flow-report.md |
+| T10.02 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-010/T10.02-rematching-flow-report.md |
+| T10.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-010/T10.02-rematching-flow-report.md |
+| T10.02 | Integration | Cohesion rematching flow | Integration Manager | READY FOR T10.03 | 2026-06-28 | reports/sprint-010/T10.02-rematching-flow-report.md |
+| T10.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T10.03 | 2026-06-28 | reports/sprint-010/T10.02-rematching-flow-report.md |

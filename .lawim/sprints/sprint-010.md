@@ -34,9 +34,9 @@
 
         ## Avancement
         - T10.01: ferme
-- T10.02: A FAIRE
+- T10.02: ferme
 - T10.03: A FAIRE
-        - Tickets couverts: 1/3
+        - Tickets couverts: 2/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-010/SPRINT-010-PLANNING-REPORT.md

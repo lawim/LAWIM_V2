@@ -51,3 +51,4 @@
 | R-047 | Sprint 009 closure consolidates the matching, scoring and preference guardrails | High | Low | Keep the matching, pricing, conversation and geolocation references canonical and defer future implementation to LOT-004 | PMO | Mitigated |
 | R-001 | Sprint 010 opening requires stable decision engine et rematching contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T10.01 Decision orchestration consolidates the contract | High | Low | Keep decision orchestration explicit and preserve the reference as the source of truth | Architecture | Mitigated |
+| R-003 | T10.02 Rematching flow consolidates the contract | High | Low | Keep rematching flow explicit and preserve the reference as the source of truth | Architecture | Mitigated |
