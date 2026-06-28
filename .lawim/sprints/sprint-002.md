@@ -2,7 +2,7 @@
 
 - Date: 2026-06-28
 - Scope: Sprint 002 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 Disposer d'un runtime local reproductible, d'une observabilite de base et d'un squelette CI minimal pour preparer l'execution controlee du programme.
@@ -20,8 +20,11 @@ GO AVEC RESERVES
 - T02.02 - Runtime observability
 - T02.03 - CI skeleton
 
-## Ticket suivant
-- SPRINT_002_CLOSURE
+## Cloture
+- Date: 2026-06-28
+- Rapport de cloture: reports/sprint-002/SPRINT-002-CLOSURE-REPORT.md
+- Decision proposee: GO AVEC RESERVES
+- Sprint 003: non ouvert
 
 ## Dependances
 - Sprint 001 cloture et PCC coherent.
