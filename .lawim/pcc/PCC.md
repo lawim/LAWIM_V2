@@ -2,14 +2,14 @@
 
 ## Programme
 - Programme: LAWIM_V2
-- Programme status: INITIALISE
+- Programme status: ACTIF
 - Sprint actif: Sprint 001
-- Sprint status: INITIALISE
+- Sprint status: EN COURS
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement
-- Derniere trace technique: T01.02 a etabli la base Docker partagee et les overlays development, staging et production; T01.03 reste en preparation.
+- Derniere trace technique: T01.03 a etabli la fondation Compose partagee (base, profils development/staging/production, reseaux, volumes et contrat d'environnement); T01.04 reste en preparation.
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

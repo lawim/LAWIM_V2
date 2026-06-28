@@ -1,0 +1,20 @@
+version: "3.9"
+
+# Staging profile contract for LAWIM_V2.
+#
+# This overlay documents the pre-production posture. It must remain close to
+# production while staying free of repository secrets and debug helpers.
+
+x-lawim-profile-contract:
+  profile: staging
+  purpose: production-parity verification
+  environment_contract:
+    APP_ENV: staging
+    STACK_PROFILE: staging
+    LOG_LEVEL: info
+    PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-}
+    SECRET_PROVIDER: ${SECRET_PROVIDER:-external}
+  operating_rules:
+    - keep runtime close to production
+    - avoid bind mounts unless a ticket explicitly justifies them
+    - no debug helpers by default

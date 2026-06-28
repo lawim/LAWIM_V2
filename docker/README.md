@@ -19,7 +19,7 @@ Principes:
 Arborescence:
 - `Dockerfile.base` : base commune minimale et reutilisable;
 - `images/` : overlays et conventions d'images par environnement;
-- `compose/` : reserve a T01.03;
+- `compose/` : fondation Compose partagee, profils et conventions de nommage;
 - `nginx/` : reserve a T01.05;
 - `logging/` : strategie de journalisation;
 - `monitoring/` : strategie de supervision.

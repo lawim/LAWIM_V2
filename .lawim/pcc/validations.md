@@ -14,6 +14,11 @@ Ce registre suit le workflow officiel et les checklists associees.
 | T01.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Pending | - | .lawim/checklists/security-checklist.md |
 | T01.02 | Integration | Cohesion images, conventions et reutilisation de la base | Integration Manager | Pending | - | .lawim/workflows/ticket-workflow.md |
 | T01.02 | DG | Validation finale de gouvernance | Directeur General | Pending | - | .lawim/pcc/PCC.md |
+| T01.03 | Architecture | Coherence technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.03-docker-compose-report.md |
+| T01.03 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-001/T01.03-docker-compose-report.md |
+| T01.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-001/T01.03-docker-compose-report.md |
+| T01.03 | Integration | Cohesion compose, conventions et reutilisation | Integration Manager | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.03-docker-compose-report.md |
+| T01.03 | DG | Validation finale de gouvernance | Directeur General | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.03-docker-compose-report.md |
 
 ## Regles
 - une ligne de validation correspond a une gate;
