@@ -57,3 +57,4 @@
 | R-001 | Sprint 011 opening requires stable workflows, visites, notifications contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T11.01 Workflow orchestration consolidates the contract | High | Low | Keep workflow orchestration explicit and preserve the reference as the source of truth | Workflow | Mitigated |
 | R-003 | T11.02 Visits and follow-up consolidates the contract | High | Low | Keep visits and follow-up explicit and preserve the reference as the source of truth | Workflow | Mitigated |
+| R-004 | T11.03 Event markers consolidates the contract | High | Low | Keep event markers explicit and preserve the reference as the source of truth | Integration | Mitigated |

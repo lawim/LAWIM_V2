@@ -60,3 +60,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-001 | Sprint 011 opening and workflows, visites, notifications plan confirmed | Directeur General | Sprint 011 / workflows, visites, notifications | Active | reports/sprint-011/SPRINT-011-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-002 | Workflow orchestration, contract confirmed for Sprint 011 | Workflow | T11.01 / Workflow orchestration | Active | reports/sprint-011/T11.01-workflow-orchestration-report.md |
 | 2026-06-28 | DEC-003 | Visits and follow-up, contract confirmed for Sprint 011 | Workflow | T11.02 / Visits and follow-up | Active | reports/sprint-011/T11.02-visits-and-follow-up-report.md |
+| 2026-06-28 | DEC-004 | Event markers, contract confirmed for Sprint 011 | Integration | T11.03 / Event markers | Active | reports/sprint-011/T11.03-event-markers-report.md |

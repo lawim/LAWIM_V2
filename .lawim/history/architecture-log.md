@@ -62,3 +62,4 @@ Ce journal est append-only. Toute evolution architecturale doit laisser une trac
 | 2026-06-28 | ARCH-001 | Sprint 011 planning review | Workflows, visites, notifications confirmed; no blocking architecture gaps remain for opening | Opening readiness for DG approval | PMO | reports/sprint-011/SPRINT-011-PLANNING-REPORT.md |
 | 2026-06-28 | ARCH-002 | T11.01 Workflow orchestration | Workflow orchestration, contrat confirme pour Sprint 011 | Stable gate before the next ticket | Workflow | reports/sprint-011/T11.01-workflow-orchestration-report.md |
 | 2026-06-28 | ARCH-003 | T11.02 Visits and follow-up | Visits and follow-up, contrat confirme pour Sprint 011 | Stable gate before the next ticket | Workflow | reports/sprint-011/T11.02-visits-and-follow-up-report.md |
+| 2026-06-28 | ARCH-004 | T11.03 Event markers | Event markers, contrat confirme pour Sprint 011 | Stable gate before the next ticket | Integration | reports/sprint-011/T11.03-event-markers-report.md |

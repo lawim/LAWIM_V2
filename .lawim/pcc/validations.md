@@ -355,3 +355,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T11.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-011/T11.02-visits-and-follow-up-report.md |
 | T11.02 | Integration | Cohesion visits and follow-up | Integration Manager | READY FOR T11.03 | 2026-06-28 | reports/sprint-011/T11.02-visits-and-follow-up-report.md |
 | T11.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T11.03 | 2026-06-28 | reports/sprint-011/T11.02-visits-and-follow-up-report.md |
+| T11.03 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-011/T11.03-event-markers-report.md |
+| T11.03 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-011/T11.03-event-markers-report.md |
+| T11.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-011/T11.03-event-markers-report.md |
+| T11.03 | Integration | Cohesion event markers | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-011/T11.03-event-markers-report.md |
+| T11.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-011/T11.03-event-markers-report.md |
