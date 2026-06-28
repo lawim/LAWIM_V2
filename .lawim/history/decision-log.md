@@ -89,3 +89,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-005 | Sprint 016 closure proposal and no Sprint 017 opening | Directeur General | Sprint 016 closure / no Sprint 017 | Proposed | reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md |
 | 2026-06-28 | DEC-001 | Sprint 017 opening and knowledge base plan confirmed | Directeur General | Sprint 017 / knowledge base | Active | reports/sprint-017/SPRINT-017-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-002 | Knowledge taxonomy, contract confirmed for Sprint 017 | Documentation | T17.01 / Knowledge taxonomy | Active | reports/sprint-017/T17.01-knowledge-taxonomy-report.md |
+| 2026-06-28 | DEC-003 | Ingestion and curation, contract confirmed for Sprint 017 | Documentation | T17.02 / Ingestion and curation | Active | reports/sprint-017/T17.02-ingestion-and-curation-report.md |
