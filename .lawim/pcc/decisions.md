@@ -56,3 +56,4 @@
 | 2026-06-28 | DEC-003 | Rematching flow, contract confirmed for Sprint 010 | Architecture | T10.02 / Rematching flow | Active | reports/sprint-010/T10.02-rematching-flow-report.md |
 | 2026-06-28 | DEC-004 | Recommendation trace, contract confirmed for Sprint 010 | Architecture | T10.03 / Recommendation trace | Active | reports/sprint-010/T10.03-recommendation-trace-report.md |
 | 2026-06-28 | DEC-005 | Sprint 010 closure proposal and no Sprint 011 opening | Directeur General | Sprint 010 closure / no Sprint 011 | Proposed | reports/sprint-010/SPRINT-010-CLOSURE-REPORT.md |
+| 2026-06-28 | DEC-001 | Sprint 011 opening and workflows, visites, notifications plan confirmed | Directeur General | Sprint 011 / workflows, visites, notifications | Active | reports/sprint-011/SPRINT-011-PLANNING-REPORT.md |

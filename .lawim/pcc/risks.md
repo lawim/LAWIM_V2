@@ -54,3 +54,4 @@
 | R-003 | T10.02 Rematching flow consolidates the contract | High | Low | Keep rematching flow explicit and preserve the reference as the source of truth | Architecture | Mitigated |
 | R-004 | T10.03 Recommendation trace consolidates the contract | High | Low | Keep recommendation trace explicit and preserve the reference as the source of truth | Architecture | Mitigated |
 | R-005 | Sprint 010 closure consolidates the decision engine et rematching guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |
+| R-001 | Sprint 011 opening requires stable workflows, visites, notifications contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
