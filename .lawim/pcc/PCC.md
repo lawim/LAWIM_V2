@@ -201,8 +201,8 @@
 - T12.03: ferme
         - Sprint 013: non ouvert
 
-                                ## Sprint 013
-        - Statut: EN COURS
+                                        ## Sprint 013
+        - Statut: CLOTURE
         - Objectif: rendre la traçabilité marketing transverse et immuable.
         - Tickets: T13.01 - Tracking code generator, T13.02 - Campaign and publication model, T13.03 - Redirect logging and attribution
         - Tickets couverts: 3/3
@@ -212,7 +212,7 @@
         - Risques d'entree: dérive d'attribution, doublons, code recalculé par erreur.
         - Risque bloquant: false
         - Validation DG: en attente
-        - Rapport de planning: reports/sprint-013/SPRINT-013-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-013/SPRINT-013-CLOSURE-REPORT.md
         - Avancement:
         - T13.01: ferme
 - T13.02: ferme

@@ -400,3 +400,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T13.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |
 | T13.03 | Integration | Cohesion redirect logging and attribution | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |
 | T13.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |
+| Sprint 013 | Architecture | Cohesion globale des 3 tickets, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-013/SPRINT-013-CLOSURE-REPORT.md |
+| Sprint 013 | QA | Couverture documentaire, conformite et completude des livrables | QA | Valide | 2026-06-28 | reports/sprint-013/SPRINT-013-CLOSURE-REPORT.md |
+| Sprint 013 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-013/SPRINT-013-CLOSURE-REPORT.md |
+| Sprint 013 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-013/SPRINT-013-CLOSURE-REPORT.md |
+| Sprint 013 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-013/SPRINT-013-CLOSURE-REPORT.md |

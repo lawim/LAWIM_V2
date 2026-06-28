@@ -2,7 +2,7 @@
 
         - Date: 2026-06-28
         - Scope: Sprint 013 execution controlee
-        - Status: EN COURS
+        - Status: CLOTURE
 
         ## Objectif
         rendre la traçabilité marketing transverse et immuable.
@@ -40,6 +40,6 @@
         - Tickets couverts: 3/3
 
         ## Cloture
-        - Rapport de planning: reports/sprint-013/SPRINT-013-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-013/SPRINT-013-CLOSURE-REPORT.md
         - Decision proposee: GO AVEC RESERVES
         - Sprint 014: non ouvert

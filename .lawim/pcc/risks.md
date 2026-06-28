@@ -68,3 +68,4 @@
 | R-002 | T13.01 Tracking code generator consolidates the contract | High | Low | Keep tracking code generator explicit and preserve the reference as the source of truth | Architecture | Mitigated |
 | R-003 | T13.02 Campaign and publication model consolidates the contract | High | Low | Keep campaign and publication model explicit and preserve the reference as the source of truth | Reporting | Mitigated |
 | R-004 | T13.03 Redirect logging and attribution consolidates the contract | High | Low | Keep redirect logging and attribution explicit and preserve the reference as the source of truth | Reporting | Mitigated |
+| R-005 | Sprint 013 closure consolidates the tracking et attribution guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |
