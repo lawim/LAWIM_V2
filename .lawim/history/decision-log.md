@@ -47,3 +47,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-041 | Conversation model, thread and participant contract confirmed | Architecture | T08.01 / Conversation model | Active | reports/sprint-008/T08.01-conversation-model-report.md |
 | 2026-06-28 | DEC-042 | Messaging flow, delivery and read-state contract confirmed | Integration | T08.02 / Messaging flow | Active | reports/sprint-008/T08.02-messaging-flow-report.md |
 | 2026-06-28 | DEC-043 | Sprint 008 closure proposal and no Sprint 009 opening | Directeur General | Sprint 008 closure / no Sprint 009 | Proposed | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
+| 2026-06-28 | DEC-044 | Sprint 009 opening and matching plan confirmed | Directeur General | Sprint 009 / matching foundation | Active | reports/sprint-009/SPRINT-009-PLANNING-REPORT.md |
