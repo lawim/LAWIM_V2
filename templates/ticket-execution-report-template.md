@@ -71,3 +71,18 @@ Cette section est obligatoire et doit suivre la regle definie dans `implementati
 
 ## Etat propose du ticket
 <Etat propose du ticket>
+
+## Bloc YAML de synthese
+```yaml
+ticket: <TICKET_ID>
+status: <STATUS>
+qa: <PASS / FAIL / N/A>
+security: <PASS / FAIL / N/A>
+architecture: <PASS / FAIL / N/A>
+git: <READY / NOT_READY>
+pcc: <UPDATED / PARTIAL / N/A>
+history: <UPDATED / PARTIAL / N/A>
+blocking_risk: <true / false>
+next_ticket: <NEXT_TICKET_ID>
+decision_required: <true / false>
+```
