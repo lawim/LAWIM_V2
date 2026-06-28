@@ -20,3 +20,6 @@
 | R-016 | Prisma baseline or migration order drifts from the canonical model | High | Medium | Keep the ORM baseline aligned with the database reference and document migration order before use | Database | Mitigated |
 | R-017 | Backup primitives or restore path remain incomplete or untested | High | Medium | Keep snapshot, checksum and restore contracts explicit and test the restoration path before promotion | DevOps | Mitigated |
 | R-018 | Sprint 004 opening depends on a stable authentication and identity contract | High | Low | Reuse the security and API references and keep the opening decision traceable before any ticket starts | PMO | Open |
+| R-019 | Auth service or session contract drifts from the canonical security and API references | High | Medium | Reuse the security and API references, keep login/logout explicit and validate session handling before token strategy | Security | Mitigated |
+| R-020 | Token strategy or refresh flow drifts from the canonical auth contract | High | Medium | Keep JWT, refresh and session storage aligned with the security reference before activation | Security | Open |
+| R-021 | MFA gate or recovery path remains incomplete | High | Medium | Keep MFA, recovery and access-policy rules explicit before enabling critical flows | Security | Open |

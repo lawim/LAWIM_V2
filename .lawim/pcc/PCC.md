@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle authentification et identite reste a consolider dans Sprint 004.
-- Derniere trace technique: Sprint 004 est ouvert sur l authentification et l identite; T04.01, T04.02 et T04.03 vont consolider l acces, les jetons et le MFA sans remettre en cause le socle Sprint 003.
+- Derniere trace technique: T04.01 a confirme le service d authentification; T04.02 et T04.03 vont consolider les jetons et le MFA sans remettre en cause le socle Sprint 003.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -54,13 +54,14 @@
 - Statut Sprint 004: EN COURS
 - Objectif: mettre en place l authentification et l identite de LAWIM_V2.
 - Tickets: T04.01 - Auth service, T04.02 - Token strategy, T04.03 - MFA gate
-- Tickets couverts: 0/3
+- Tickets couverts: 1/3
 - Ordre recommande: T04.01 -> T04.02 -> T04.03
 - Dependances: Sprint 003 cloture, T03.02, `docs/Directive/15-SECURITY-REFERENCE.md`, `docs/Directive/16-API-REFERENCE.md`, `docs/Directive/24-DEVELOPER-GUIDE.md` et `docs/Directive/40-PRODUCTION-CHECKLIST.md`
 - Chemin critique: Decision DG d'ouverture -> T04.01 -> T04.02 -> T04.03 -> cloture Sprint 004
 - Risques d'entree: exposition d acces, gestion faible des secrets, strategie de jetons fragile, gate MFA incomplet
 - Risque bloquant: false
 - Validation DG: en attente
+- T04.01: service d authentification confirme
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

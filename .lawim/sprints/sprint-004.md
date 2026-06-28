@@ -38,5 +38,13 @@ GO AVEC RESERVES
 - gate MFA incomplet sur les flux critiques;
 - confusion entre contrat documentaire et implementation sensible.
 
-## Validation DG
-- en attente.
+## Avancement
+- T04.01: ferme;
+- T04.02: a venir;
+- T04.03: a venir;
+- Tickets couverts: 1/3.
+
+## Cloture
+- Rapport de cloture: reports/sprint-004/SPRINT-004-CLOSURE-REPORT.md
+- Decision proposee: GO AVEC RESERVES
+- Sprint 005: non ouvert
