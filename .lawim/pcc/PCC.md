@@ -9,6 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement
+- Derniere trace technique: T01.02 a etabli la base Docker partagee et les overlays development, staging et production; T01.03 reste en preparation.
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
@@ -55,4 +56,3 @@ BROUILLON -> VALIDE DG -> PLANIFIE -> ASSIGNE -> EN COURS -> REVUE ARCHITECTE ->
 - la validation finale appartient au Directeur General;
 - les agents specialises executent uniquement le ticket transmis;
 - le PCC reste la reference de coordination du programme.
-

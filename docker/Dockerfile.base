@@ -1,18 +1,41 @@
-# Dockerfile.base
+# syntax=docker/dockerfile:1.7
 #
-# Role
-# Skeleton for the shared Docker base image of LAWIM_V2.
+# Shared base image for LAWIM_V2.
 #
-# Usage futur
-# This file will host the common runtime baseline reused by later image-specific
-# Dockerfiles.
+# This image is intentionally minimal. It provides only the common runtime
+# guarantees required by the later environment overlays.
 #
-# Conventions
-# - keep the base minimal and reproducible;
+# Conventions:
+# - keep the base reproducible and pinned by version;
 # - do not add business logic or secrets;
-# - keep environment-specific behavior out of this layer.
-#
-# TODO
-# - choose the runtime family and versioning rule;
-# - define the shared non-root execution model;
-# - document the minimal package set allowed in the base layer.
+# - do not embed environment-specific behavior here;
+# - reuse this base across development, staging and production overlays.
+
+ARG BASE_IMAGE=debian:bookworm-slim
+FROM ${BASE_IMAGE}
+
+ARG APP_UID=10001
+ARG APP_GID=10001
+ARG APP_HOME=/opt/lawim
+ARG DEBIAN_FRONTEND=noninteractive
+
+LABEL org.opencontainers.image.title="LAWIM_V2 base image" \
+      org.opencontainers.image.description="Shared foundation for LAWIM_V2 Docker overlays" \
+      org.opencontainers.image.source="LAWIM_V2"
+
+ENV LAWIM_HOME=${APP_HOME} \
+    LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    TZ=UTC \
+    PATH="${APP_HOME}/bin:${PATH}"
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates dumb-init tzdata \
+    && rm -rf /var/lib/apt/lists/* \
+    && install -d -m 0755 -o "${APP_UID}" -g "${APP_GID}" "${APP_HOME}" \
+    && install -d -m 0755 -o "${APP_UID}" -g "${APP_GID}" "${APP_HOME}/bin"
+
+WORKDIR ${APP_HOME}
+USER ${APP_UID}:${APP_GID}
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD ["/bin/sh"]
