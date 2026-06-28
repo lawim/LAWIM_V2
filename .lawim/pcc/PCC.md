@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 011
+- Sprint actif: Sprint 012
 - Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille a ete verifie pour LOT-004; les lots 004 a 006 sont en cours de consolidation et Sprint 019 reste non ouvert.
-- Derniere trace technique: Sprint 011 est cloture sur workflows, visites, notifications; T11.01, T11.02 et T11.03 sont fermes
+- Derniere trace technique: Sprint 012 est cloture sur notifications; T12.01, T12.02 et T12.03 sont fermes
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -182,6 +182,25 @@
 - T11.02: ferme
 - T11.03: ferme
         - Sprint 012: non ouvert
+
+        ## Sprint 012
+        - Statut: EN COURS
+        - Objectif: diffuser les messages au bon moment et par le bon canal.
+        - Tickets: T12.01 - Notification model, T12.02 - Channel adapters, T12.03 - Templates and preferences
+        - Tickets couverts: 0/3
+        - Ordre recommande: T12.01 -> T12.02 -> T12.03
+        - Dependances: S011, S004.
+        - Chemin critique: Decision DG d'ouverture -> T12.01 -> T12.02 -> T12.03 -> cloture Sprint 012
+        - Risques d'entree: bruit, doublons, mauvaise priorité.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de planning: reports/sprint-012/SPRINT-012-PLANNING-REPORT.md
+        - Avancement:
+        - T12.01: A FAIRE
+- T12.02: A FAIRE
+- T12.03: A FAIRE
+        - Sprint 013: non ouvert
+
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md
