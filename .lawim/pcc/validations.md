@@ -291,6 +291,11 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T09.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-009/T09.01-search-ranking-report.md |
 | T09.01 | Integration | Cohesion recherche, classement et pertinence | Integration Manager | READY FOR T09.02 | 2026-06-28 | reports/sprint-009/T09.01-search-ranking-report.md |
 | T09.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T09.02 | 2026-06-28 | reports/sprint-009/T09.01-search-ranking-report.md |
+| T09.02 | Architecture | Cohesion de la qualification, du scoring et des seuils | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-009/T09.02-qualification-scoring-report.md |
+| T09.02 | QA | Criteres d'acceptation, seuils et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-009/T09.02-qualification-scoring-report.md |
+| T09.02 | Security | Secrets, biais, exposition et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-009/T09.02-qualification-scoring-report.md |
+| T09.02 | Integration | Cohesion qualification, scoring et explicabilite | Integration Manager | READY FOR T09.03 | 2026-06-28 | reports/sprint-009/T09.02-qualification-scoring-report.md |
+| T09.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T09.03 | 2026-06-28 | reports/sprint-009/T09.02-qualification-scoring-report.md |
 
 ## Cloture Sprint 008
 

@@ -41,9 +41,9 @@ GO AVEC RESERVES
 
 ## Avancement
 - T09.01: ferme
-- T09.02: a faire
+- T09.02: ferme
 - T09.03: a faire
-- Tickets couverts: 1/3
+- Tickets couverts: 2/3
 
 ## Cloture
 - Rapport de cloture: a produire
