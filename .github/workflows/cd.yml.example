@@ -1,17 +1,79 @@
-# Role
-# Skeleton example for the future CD workflow of LAWIM_V2.
-#
-# Usage futur
-# This file will host controlled deployment, release tagging and environment
-# promotion steps.
-#
-# Conventions
-# - keep deployment gates explicit;
-# - keep secrets externalized;
-# - do not embed business decisions in the workflow file;
-# - keep the example file non-active until the release process is defined.
-#
-# TODO
-# - define release promotion rules;
-# - document approvals and environment mapping;
-# - describe rollback and notification hooks.
+# Example only. Do not rename this file to `.yml` until the workflow is approved.
+name: lawim-cd-example
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_environment:
+        description: Conceptual target environment for a promotion gate
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+  deployments: read
+  pull-requests: read
+
+concurrency:
+  group: lawim-cd-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  APP_ENV: release
+  STACK_PROFILE: production
+  LOG_LEVEL: info
+  SECRET_PROVIDER: external
+
+jobs:
+  release_gate:
+    name: Release gate and promotion checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Validate release version and ticket list
+        run: echo "Version, scope and ticket mapping placeholder"
+      - name: Validate migration readiness
+        run: echo "Future schema migration readiness placeholder"
+      - name: Validate digest promotion contract
+        run: echo "Digest promotion placeholder; no image publication in T01.08"
+      - name: Validate secret injection path
+        run: echo "No real secret values are stored here"
+
+  publish_metadata:
+    name: Publish release metadata only
+    runs-on: ubuntu-latest
+    needs: release_gate
+    steps:
+      - name: Record version and promotion evidence
+        run: echo "Metadata publication placeholder only"
+
+  deploy_staging:
+    name: Stage promotion gate
+    runs-on: ubuntu-latest
+    needs: publish_metadata
+    steps:
+      - name: Check staging mapping and approvals
+        run: echo "Staging promotion placeholder"
+
+  deploy_production:
+    name: Production promotion gate
+    runs-on: ubuntu-latest
+    needs: deploy_staging
+    steps:
+      - name: Check final approvals and rollback readiness
+        run: echo "Production promotion placeholder"
+
+  rollback:
+    name: Rollback documentation
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Document rollback path
+        run: echo "Rollback remains documented, not executed, in T01.08"

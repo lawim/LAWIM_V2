@@ -34,6 +34,11 @@ Ce registre suit le workflow officiel et les checklists associees.
 | T01.07 | Security | Absence de secrets reels et separation stricte | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.07-security-review.md |
 | T01.07 | Integration | Cohesion env, Compose, OVH et CI/CD conceptuel | Integration Manager | READY FOR T01.08 | 2026-06-28 | reports/sprint-001/T01.07-secrets-management-foundation-report.md |
 | T01.07 | DG | Validation finale de gouvernance | Directeur General | READY FOR T01.08 | 2026-06-28 | reports/sprint-001/T01.07-secrets-management-foundation-report.md |
+| T01.08 | Architecture | Coherence CI/CD, GitHub Actions, branches et promotion | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.08-architecture-review.md |
+| T01.08 | QA | Conformite au ticket et completude documentaire | QA | Valide | 2026-06-28 | reports/sprint-001/T01.08-qa-review.md |
+| T01.08 | Security | Absence de secret reel et permissions minimales | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.08-security-review.md |
+| T01.08 | Integration | Cohesion CI/CD, Docker, Compose, Secrets et versioning | Integration Manager | READY FOR T01.09 | 2026-06-28 | reports/sprint-001/T01.08-ci-cd-foundation-report.md |
+| T01.08 | DG | Validation finale de gouvernance | Directeur General | READY FOR T01.09 | 2026-06-28 | reports/sprint-001/T01.08-ci-cd-foundation-report.md |
 
 ## Regles
 - une ligne de validation correspond a une gate;

@@ -76,6 +76,18 @@ Referentiel utile:
 - [Sprint status](./status/sprint-status.md)
 - [Program status](./status/program-status.md)
 
+## Architecture future apres Sprint 001
+
+Ces references sont prevues pour l'evolution post-Sprint 001.
+
+Referentiel utile:
+
+- [DG-0026 orientation strategique](./architecture-backlog/DG-0026-ORIENTATION-STRATEGIQUE.md)
+- [LAWIM Orchestrator vision](./architecture-backlog/LAWIM-ORCHESTRATOR-VISION.md)
+- [Orchestrator backlog](./architecture-backlog/ORCHESTRATOR-BACKLOG.md)
+- [Contracts backlog](./architecture-backlog/contracts/)
+- [Policies backlog](./architecture-backlog/policies/)
+
 ## Comment utiliser les workflows
 
 - Le workflow officiel des tickets est la reference obligatoire.
