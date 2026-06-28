@@ -69,3 +69,4 @@
 | 2026-06-28 | DEC-001 | Sprint 013 opening and tracking et attribution plan confirmed | Directeur General | Sprint 013 / tracking et attribution | Active | reports/sprint-013/SPRINT-013-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-002 | Tracking code generator, contract confirmed for Sprint 013 | Architecture | T13.01 / Tracking code generator | Active | reports/sprint-013/T13.01-tracking-code-generator-report.md |
 | 2026-06-28 | DEC-003 | Campaign and publication model, contract confirmed for Sprint 013 | Reporting | T13.02 / Campaign and publication model | Active | reports/sprint-013/T13.02-campaign-and-publication-model-report.md |
+| 2026-06-28 | DEC-004 | Redirect logging and attribution, contract confirmed for Sprint 013 | Reporting | T13.03 / Redirect logging and attribution | Active | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |

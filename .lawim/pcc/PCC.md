@@ -201,11 +201,11 @@
 - T12.03: ferme
         - Sprint 013: non ouvert
 
-                        ## Sprint 013
+                                ## Sprint 013
         - Statut: EN COURS
         - Objectif: rendre la traçabilité marketing transverse et immuable.
         - Tickets: T13.01 - Tracking code generator, T13.02 - Campaign and publication model, T13.03 - Redirect logging and attribution
-        - Tickets couverts: 2/3
+        - Tickets couverts: 3/3
         - Ordre recommande: T13.01 -> T13.02 -> T13.03
         - Dependances: S005, S006, S011.
         - Chemin critique: Decision DG d'ouverture -> T13.01 -> T13.02 -> T13.03 -> cloture Sprint 013
@@ -216,7 +216,7 @@
         - Avancement:
         - T13.01: ferme
 - T13.02: ferme
-- T13.03: A FAIRE
+- T13.03: ferme
         - Sprint 014: non ouvert
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

@@ -395,3 +395,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T13.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-013/T13.02-campaign-and-publication-model-report.md |
 | T13.02 | Integration | Cohesion campaign and publication model | Integration Manager | READY FOR T13.03 | 2026-06-28 | reports/sprint-013/T13.02-campaign-and-publication-model-report.md |
 | T13.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T13.03 | 2026-06-28 | reports/sprint-013/T13.02-campaign-and-publication-model-report.md |
+| T13.03 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |
+| T13.03 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |
+| T13.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |
+| T13.03 | Integration | Cohesion redirect logging and attribution | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |
+| T13.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |
