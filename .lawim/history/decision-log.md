@@ -43,3 +43,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-037 | Document pipeline, verification and archive contract confirmed | Security | T07.02 / Document pipeline | Active | reports/sprint-007/T07.02-document-pipeline-report.md |
 | 2026-06-28 | DEC-038 | Geo integration, locality and traceability contract confirmed | Architecture | T07.03 / Geo integration | Active | reports/sprint-007/T07.03-geo-integration-report.md |
 | 2026-06-28 | DEC-039 | Sprint 007 closure proposal and no Sprint 008 opening | Directeur General | Sprint 007 closure / no Sprint 008 | Proposed | reports/sprint-007/SPRINT-007-CLOSURE-REPORT.md |
+| 2026-06-28 | DEC-040 | Sprint 008 opening and conversation plan confirmed | Directeur General | Sprint 008 / conversation engine | Active | reports/sprint-008/SPRINT-008-PLANNING-REPORT.md |

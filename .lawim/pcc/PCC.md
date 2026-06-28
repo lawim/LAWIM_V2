@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: aucun
-- Sprint status: CLOTURE
+- Sprint actif: Sprint 008
+- Sprint status: EN COURS
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est cloture, Sprint 008 reste non ouvert.
-- Derniere trace technique: Sprint 007 est cloture sur les medias, les documents et la geolocalisation; T07.01, T07.02 et T07.03 sont fermes.
+- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est cloture, Sprint 008 est prepare pour le conversation engine.
+- Derniere trace technique: Sprint 007 est cloture sur les medias, les documents et la geolocalisation; Sprint 008 est ouvert pour le conversation engine.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -115,7 +115,22 @@
 - Validation DG: en attente
 - Rapport de cloture: reports/sprint-007/SPRINT-007-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
-- Sprint 008: non ouvert
+- Sprint 008: en cours d'ouverture
+
+## Sprint 008
+- Statut Sprint 008: EN COURS
+- Objectif: permettre les echanges tracables entre utilisateurs et partenaires.
+- Tickets: T08.01 - Conversation model, T08.02 - Messaging flow, T08.03 - Attachments and history
+- Tickets couverts: 0/3
+- Ordre recommande: T08.01 -> T08.02 -> T08.03
+- Dependances: Sprint 007 cloture, T07.03, `docs/Directive/03-CONVERSATION-REFERENCE.md`, `docs/Directive/06-DATABASE-REFERENCE.md`, `docs/Directive/10-NOTIFICATION-REFERENCE.md`, `docs/Directive/14-STORAGE-REFERENCE.md` et `docs/Directive/12-TESTS-REFERENCE.md`
+- Chemin critique: Decision DG d'ouverture -> T08.01 -> T08.02 -> T08.03 -> cloture Sprint 008
+- Risques d'entree: spam, perte de contexte, conversations orphelines, stockage des pieces jointes mal trace
+- Risque bloquant: false
+- Validation DG: en attente
+- Rapport de cloture: a produire
+- Decision proposee: GO AVEC RESERVES
+- Sprint 009: non ouvert
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

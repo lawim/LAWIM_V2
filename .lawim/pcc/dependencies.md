@@ -32,3 +32,7 @@
 | D-028 | T07.01 depend de la cloture Sprint 006 et des references storage / UX | Sprint 006 | High | Confirmed |
 | D-029 | T07.02 depend de T07.01 et des conventions verification / security | Sprint 007 | High | Confirmed |
 | D-030 | T07.03 depend de T07.02 et des conventions geolocation / traceability | Sprint 007 | High | Confirmed |
+| D-031 | Decision DG d'ouverture du Sprint 008 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-032 | T08.01 depend de la cloture Sprint 007 et des references conversation / database | Sprint 007 | High | Confirmed |
+| D-033 | T08.02 depend de T08.01 et des conventions conversation / notification | Sprint 008 | High | Confirmed |
+| D-034 | T08.03 depend de T08.02 et des conventions storage / tests | Sprint 008 | High | Confirmed |
