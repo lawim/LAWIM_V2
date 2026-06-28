@@ -76,3 +76,4 @@
 | 2026-06-28 | DEC-003 | Webhook integrity, contract confirmed for Sprint 014 | Security | T14.02 / Webhook integrity | Active | reports/sprint-014/T14.02-webhook-integrity-report.md |
 | 2026-06-28 | DEC-004 | Reconciliation and receipts, contract confirmed for Sprint 014 | Reporting | T14.03 / Reconciliation and receipts | Active | reports/sprint-014/T14.03-reconciliation-and-receipts-report.md |
 | 2026-06-28 | DEC-005 | Sprint 014 closure proposal and no Sprint 015 opening | Directeur General | Sprint 014 closure / no Sprint 015 | Proposed | reports/sprint-014/SPRINT-014-CLOSURE-REPORT.md |
+| 2026-06-28 | DEC-001 | Sprint 015 opening and dashboard foundation plan confirmed | Directeur General | Sprint 015 / dashboard foundation | Active | reports/sprint-015/SPRINT-015-PLANNING-REPORT.md |

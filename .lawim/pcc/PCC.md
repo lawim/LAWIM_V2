@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 014
+- Sprint actif: Sprint 015
 - Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille a ete verifie pour LOT-005; les lots 004 a 006 sont en cours de consolidation et Sprint 019 reste non ouvert.
-- Derniere trace technique: Sprint 014 est cloture sur campay; T14.01, T14.02 et T14.03 sont fermes
+- Derniere trace technique: Sprint 015 est cloture sur dashboard foundation; T15.01, T15.02 et T15.03 sont fermes
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -236,6 +236,25 @@
 - T14.02: ferme
 - T14.03: ferme
         - Sprint 015: non ouvert
+
+        ## Sprint 015
+        - Statut: EN COURS
+        - Objectif: fournir les vues de pilotage essentielles.
+        - Tickets: T15.01 - Dashboard shell, T15.02 - Admin views, T15.03 - Role-based views
+        - Tickets couverts: 0/3
+        - Ordre recommande: T15.01 -> T15.02 -> T15.03
+        - Dependances: S013, S014.
+        - Chemin critique: Decision DG d'ouverture -> T15.01 -> T15.02 -> T15.03 -> cloture Sprint 015
+        - Risques d'entree: surcharge visuelle, incohérence entre rôles.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de planning: reports/sprint-015/SPRINT-015-PLANNING-REPORT.md
+        - Avancement:
+        - T15.01: A FAIRE
+- T15.02: A FAIRE
+- T15.03: A FAIRE
+        - Sprint 016: non ouvert
+
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md
