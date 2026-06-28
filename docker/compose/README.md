@@ -28,6 +28,12 @@ Contrat d'environnement:
 - `PUBLIC_BASE_URL` reste fourni de l'exterieur;
 - `SECRET_PROVIDER` reste externe et aucun secret ne doit etre commite.
 
+Contrat secrets:
+- `env/development/.secrets.example`, `env/staging/.secrets.example` et `env/production/.secrets.example` documentent la forme des secrets;
+- les fichiers runtime `.secrets.local` restent hors depot et sont montes ou injectes de l'exterieur;
+- Compose ne doit jamais lire un secret reel depuis un fichier versionne;
+- la separation variables / secrets reste visible dans les overlays et dans les futures definitions de services.
+
 Ordre de couche recommande:
 1. charger `docker-compose.base.yml`;
 2. ajouter le profil `docker-compose.development.yml`, `docker-compose.staging.yml` ou `docker-compose.production.yml`;

@@ -8,3 +8,5 @@
 | R-004 | Derive entre la base Docker et les overlays environnementaux | High | Medium | Promouvoir le meme digest, figer les tags et reutiliser la base commune | DevOps | Open |
 | R-005 | Drift between Compose overlays and environment contracts | High | Medium | Keep resource names stable, externalize environment values and validate merged config | DevOps | Open |
 | R-006 | Nginx routing drift between default.conf and future virtual hosts | High | Medium | Keep the base server block minimal and isolate additions in conf.d with explicit review | DevOps | Open |
+| R-007 | OVH host role drift between production, local relay and backup layers | High | Medium | Keep host roles documented, avoid real resource creation and align backup conventions with the storage reference | DevOps | Open |
+| R-008 | Secret template drift or leakage through env, Compose or CI/CD wiring | High | Medium | Keep secret values external, centralize the naming convention and review injection paths before use | Security | Open |

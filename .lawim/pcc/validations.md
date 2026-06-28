@@ -24,6 +24,16 @@ Ce registre suit le workflow officiel et les checklists associees.
 | T01.05 | Security | Certificats, headers, secrets et surface d'attaque | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.05-security-review.md |
 | T01.05 | Integration | Cohesion Nginx, Compose et contrat d'environnement | Integration Manager | READY FOR T01.06 | 2026-06-28 | reports/sprint-001/T01.05-nginx-reverse-proxy-foundation-report.md |
 | T01.05 | DG | Validation finale de gouvernance | Directeur General | READY FOR T01.06 | 2026-06-28 | reports/sprint-001/T01.05-nginx-reverse-proxy-foundation-report.md |
+| T01.06 | Architecture | Coherence OVH, prerequis reseau, stockage et administration | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.06-architecture-review.md |
+| T01.06 | QA | Conformite au ticket et completude documentaire | QA | Valide | 2026-06-28 | reports/sprint-001/T01.06-qa-review.md |
+| T01.06 | Security | Absence de donnees sensibles et separation des acces | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.06-security-review.md |
+| T01.06 | Integration | Cohesion OVH, Docker, Compose, Nginx et automation future | Integration Manager | READY FOR T01.07 | 2026-06-28 | reports/sprint-001/T01.06-ovh-infrastructure-foundation-report.md |
+| T01.06 | DG | Validation finale de gouvernance | Directeur General | READY FOR T01.07 | 2026-06-28 | reports/sprint-001/T01.06-ovh-infrastructure-foundation-report.md |
+| T01.07 | Architecture | Coherence de la strategie secrets, des conventions de nommage et de la separation variables / secrets | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.07-architecture-review.md |
+| T01.07 | QA | Conformite au ticket et completude documentaire | QA | Valide | 2026-06-28 | reports/sprint-001/T01.07-qa-review.md |
+| T01.07 | Security | Absence de secrets reels et separation stricte | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.07-security-review.md |
+| T01.07 | Integration | Cohesion env, Compose, OVH et CI/CD conceptuel | Integration Manager | READY FOR T01.08 | 2026-06-28 | reports/sprint-001/T01.07-secrets-management-foundation-report.md |
+| T01.07 | DG | Validation finale de gouvernance | Directeur General | READY FOR T01.08 | 2026-06-28 | reports/sprint-001/T01.07-secrets-management-foundation-report.md |
 
 ## Regles
 - une ligne de validation correspond a une gate;
