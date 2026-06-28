@@ -90,3 +90,4 @@
 | 2026-06-28 | DEC-002 | Knowledge taxonomy, contract confirmed for Sprint 017 | Documentation | T17.01 / Knowledge taxonomy | Active | reports/sprint-017/T17.01-knowledge-taxonomy-report.md |
 | 2026-06-28 | DEC-003 | Ingestion and curation, contract confirmed for Sprint 017 | Documentation | T17.02 / Ingestion and curation | Active | reports/sprint-017/T17.02-ingestion-and-curation-report.md |
 | 2026-06-28 | DEC-004 | FAQ and business content, contract confirmed for Sprint 017 | Documentation | T17.03 / FAQ and business content | Active | reports/sprint-017/T17.03-faq-and-business-content-report.md |
+| 2026-06-28 | DEC-005 | Sprint 017 closure proposal and no Sprint 018 opening | Directeur General | Sprint 017 closure / no Sprint 018 | Proposed | reports/sprint-017/SPRINT-017-CLOSURE-REPORT.md |

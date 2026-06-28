@@ -273,8 +273,8 @@
 - T16.03: ferme
         - Sprint 017: non ouvert
 
-                                ## Sprint 017
-        - Statut: EN COURS
+                                        ## Sprint 017
+        - Statut: CLOTURE
         - Objectif: structurer la connaissance métier et les contenus utiles à l'IA.
         - Tickets: T17.01 - Knowledge taxonomy, T17.02 - Ingestion and curation, T17.03 - FAQ and business content
         - Tickets couverts: 3/3
@@ -284,7 +284,7 @@
         - Risques d'entree: qualité inégale, redondance, contenus non validés.
         - Risque bloquant: false
         - Validation DG: en attente
-        - Rapport de planning: reports/sprint-017/SPRINT-017-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-017/SPRINT-017-CLOSURE-REPORT.md
         - Avancement:
         - T17.01: ferme
 - T17.02: ferme

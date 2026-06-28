@@ -2,7 +2,7 @@
 
         - Date: 2026-06-28
         - Scope: Sprint 017 execution controlee
-        - Status: EN COURS
+        - Status: CLOTURE
 
         ## Objectif
         structurer la connaissance métier et les contenus utiles à l'IA.
@@ -41,6 +41,6 @@
         - Tickets couverts: 3/3
 
         ## Cloture
-        - Rapport de planning: reports/sprint-017/SPRINT-017-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-017/SPRINT-017-CLOSURE-REPORT.md
         - Decision proposee: GO AVEC RESERVES
         - Sprint 018: non ouvert
