@@ -237,8 +237,8 @@
 - T14.03: ferme
         - Sprint 015: non ouvert
 
-                                ## Sprint 015
-        - Statut: EN COURS
+                                        ## Sprint 015
+        - Statut: CLOTURE
         - Objectif: fournir les vues de pilotage essentielles.
         - Tickets: T15.01 - Dashboard shell, T15.02 - Admin views, T15.03 - Role-based views
         - Tickets couverts: 3/3
@@ -248,7 +248,7 @@
         - Risques d'entree: surcharge visuelle, incohérence entre rôles.
         - Risque bloquant: false
         - Validation DG: en attente
-        - Rapport de planning: reports/sprint-015/SPRINT-015-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-015/SPRINT-015-CLOSURE-REPORT.md
         - Avancement:
         - T15.01: ferme
 - T15.02: ferme

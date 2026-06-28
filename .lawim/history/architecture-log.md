@@ -83,3 +83,4 @@ Ce journal est append-only. Toute evolution architecturale doit laisser une trac
 | 2026-06-28 | ARCH-002 | T15.01 Dashboard shell | Dashboard shell, contrat confirme pour Sprint 015 | Stable gate before the next ticket | Frontend | reports/sprint-015/T15.01-dashboard-shell-report.md |
 | 2026-06-28 | ARCH-003 | T15.02 Admin views | Admin views, contrat confirme pour Sprint 015 | Stable gate before the next ticket | Administration | reports/sprint-015/T15.02-admin-views-report.md |
 | 2026-06-28 | ARCH-004 | T15.03 Role-based views | Role-based views, contrat confirme pour Sprint 015 | Stable gate before the next ticket | Security | reports/sprint-015/T15.03-role-based-views-report.md |
+| 2026-06-28 | ARCH-005 | Sprint 015 closure review | Dashboard foundation consolidated; no blocking architecture gaps remain and Sprint 016 stays unopened | Closure readiness for DG review without opening Sprint 016 | PMO | reports/sprint-015/SPRINT-015-CLOSURE-REPORT.md |

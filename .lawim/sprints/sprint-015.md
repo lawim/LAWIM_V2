@@ -2,7 +2,7 @@
 
         - Date: 2026-06-28
         - Scope: Sprint 015 execution controlee
-        - Status: EN COURS
+        - Status: CLOTURE
 
         ## Objectif
         fournir les vues de pilotage essentielles.
@@ -39,6 +39,6 @@
         - Tickets couverts: 3/3
 
         ## Cloture
-        - Rapport de planning: reports/sprint-015/SPRINT-015-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-015/SPRINT-015-CLOSURE-REPORT.md
         - Decision proposee: GO AVEC RESERVES
         - Sprint 016: non ouvert

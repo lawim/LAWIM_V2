@@ -81,3 +81,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-002 | Dashboard shell, contract confirmed for Sprint 015 | Frontend | T15.01 / Dashboard shell | Active | reports/sprint-015/T15.01-dashboard-shell-report.md |
 | 2026-06-28 | DEC-003 | Admin views, contract confirmed for Sprint 015 | Administration | T15.02 / Admin views | Active | reports/sprint-015/T15.02-admin-views-report.md |
 | 2026-06-28 | DEC-004 | Role-based views, contract confirmed for Sprint 015 | Security | T15.03 / Role-based views | Active | reports/sprint-015/T15.03-role-based-views-report.md |
+| 2026-06-28 | DEC-005 | Sprint 015 closure proposal and no Sprint 016 opening | Directeur General | Sprint 015 closure / no Sprint 016 | Proposed | reports/sprint-015/SPRINT-015-CLOSURE-REPORT.md |

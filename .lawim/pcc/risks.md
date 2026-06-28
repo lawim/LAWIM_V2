@@ -78,3 +78,4 @@
 | R-002 | T15.01 Dashboard shell consolidates the contract | High | Low | Keep dashboard shell explicit and preserve the reference as the source of truth | Frontend | Mitigated |
 | R-003 | T15.02 Admin views consolidates the contract | High | Low | Keep admin views explicit and preserve the reference as the source of truth | Administration | Mitigated |
 | R-004 | T15.03 Role-based views consolidates the contract | High | Low | Keep role-based views explicit and preserve the reference as the source of truth | Security | Mitigated |
+| R-005 | Sprint 015 closure consolidates the dashboard foundation guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |
