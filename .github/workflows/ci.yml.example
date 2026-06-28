@@ -1,0 +1,16 @@
+# Role
+# Skeleton example for the future CI workflow of LAWIM_V2.
+#
+# Usage futur
+# This file will host validation jobs, linting, tests and build gates.
+#
+# Conventions
+# - one objective per workflow;
+# - keep secrets externalized;
+# - do not add deployment logic here;
+# - keep the example file non-active until the workflow is validated.
+#
+# TODO
+# - define triggers and jobs;
+# - document the required permissions;
+# - separate fast checks from heavier validation.

@@ -30,46 +30,46 @@ Impacts documentaires :
 
 # 2. Référentiels modifiés
 
-* [05-WORKFLOW-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/05-WORKFLOW-REFERENCE.md) - enrichissement des workflows de publication, redirection et conversion avec tracking marketing.
-* [06-DATABASE-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/06-DATABASE-REFERENCE.md) - ajout des entités de campagne, publication, tracking, attribution, redirection et analytics.
-* [07-DASHBOARD-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/07-DASHBOARD-REFERENCE.md) - enrichissement des dashboards existants.
-* [10-NOTIFICATION-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/10-NOTIFICATION-REFERENCE.md) - ajout des notifications marketing et des sources de tracking transverse.
-* [11-REPORTING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/11-REPORTING-REFERENCE.md) - enrichissement des rapports, KPI et vues marketing.
-* [12-TESTS-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/12-TESTS-REFERENCE.md) - ajout des scénarios de validation du tracking et de l'attribution.
-* [13-ARCHITECTURE-GOVERNANCE-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/13-ARCHITECTURE-GOVERNANCE-REFERENCE.md) - clarification du tracking comme capacité transverse.
-* [16-API-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/16-API-REFERENCE.md) - enrichissement des endpoints de tracking et analytics.
-* [18-LAWIM-AI-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/18-LAWIM-AI-REFERENCE.md) - optimisation marketing et analyse des performances.
-* [19-ADMINISTRATION-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/19-ADMINISTRATION-REFERENCE.md) - supervision des campagnes, publications et attributions.
-* [21-UX-UI-DESIGN-SYSTEM.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/21-UX-UI-DESIGN-SYSTEM.md) - affichage des blocs marketing dans les écrans existants.
-* [24-DEVELOPER-GUIDE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/24-DEVELOPER-GUIDE.md) - conventions code de tracking et immutabilité.
-* [25-USER-GUIDE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/25-USER-GUIDE.md) - compréhension utilisateur de la traçabilité des campagnes.
-* [26-MASTER-INDEX.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/26-MASTER-INDEX.md) - indexation explicite du rapport marketing.
-* [27-TRACEABILITY-MATRIX.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/27-TRACEABILITY-MATRIX.md) - chaîne complète de traçabilité marketing.
-* [28-CONTINUOUS-LEARNING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/28-CONTINUOUS-LEARNING-REFERENCE.md) - apprentissage des performances marketing.
-* [29-CAMPAY-PAYMENT-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/29-CAMPAY-PAYMENT-REFERENCE.md) - attribution analytique des paiements.
-* [30A-BUSINESS-DICTIONARY-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/30A-BUSINESS-DICTIONARY-REFERENCE.md) - intégration du vocabulaire marketing.
-* [31-IMPLEMENTATION-ROADMAP.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/31-IMPLEMENTATION-ROADMAP.md) - enrichissement du découpage d'implémentation.
-* [32-FINAL-CERTIFICATION-REPORT.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/32-FINAL-CERTIFICATION-REPORT.md) - réduction des réserves résiduelles.
-* [33-CODEX-IMPLEMENTATION-RULES.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/33-CODEX-IMPLEMENTATION-RULES.md) - rappel de la portée transverse du tracking marketing.
-* [34-IMPLEMENTATION-BACKLOG.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/34-IMPLEMENTATION-BACKLOG.md) - intégration du tracking marketing transverse au backlog.
-* [35-MIGRATION-PLAN.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/35-MIGRATION-PLAN.md) - préservation des historiques marketing.
-* [36-RELEASE-PLAN.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/36-RELEASE-PLAN.md) - cohérence des releases avec les lots marketing.
-* [37-QUALITY-ASSURANCE-PLAN.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/37-QUALITY-ASSURANCE-PLAN.md) - couverture QA des tests de tracking marketing.
-* [38-GIT-STRATEGY.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/38-GIT-STRATEGY.md) - traçabilité Git des lots marketing.
-* [39-CI-CD-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/39-CI-CD-REFERENCE.md) - contrôles CI/CD des référentiels marketing.
-* [40-PRODUCTION-CHECKLIST.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/40-PRODUCTION-CHECKLIST.md) - vérifications de production pour le tracking transverse.
+* [05-WORKFLOW-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/05-WORKFLOW-REFERENCE.md) - enrichissement des workflows de publication, redirection et conversion avec tracking marketing.
+* [06-DATABASE-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/06-DATABASE-REFERENCE.md) - ajout des entités de campagne, publication, tracking, attribution, redirection et analytics.
+* [07-DASHBOARD-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/07-DASHBOARD-REFERENCE.md) - enrichissement des dashboards existants.
+* [10-NOTIFICATION-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/10-NOTIFICATION-REFERENCE.md) - ajout des notifications marketing et des sources de tracking transverse.
+* [11-REPORTING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/11-REPORTING-REFERENCE.md) - enrichissement des rapports, KPI et vues marketing.
+* [12-TESTS-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/12-TESTS-REFERENCE.md) - ajout des scénarios de validation du tracking et de l'attribution.
+* [13-ARCHITECTURE-GOVERNANCE-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/13-ARCHITECTURE-GOVERNANCE-REFERENCE.md) - clarification du tracking comme capacité transverse.
+* [16-API-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/16-API-REFERENCE.md) - enrichissement des endpoints de tracking et analytics.
+* [18-LAWIM-AI-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/18-LAWIM-AI-REFERENCE.md) - optimisation marketing et analyse des performances.
+* [19-ADMINISTRATION-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/19-ADMINISTRATION-REFERENCE.md) - supervision des campagnes, publications et attributions.
+* [21-UX-UI-DESIGN-SYSTEM.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/21-UX-UI-DESIGN-SYSTEM.md) - affichage des blocs marketing dans les écrans existants.
+* [24-DEVELOPER-GUIDE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/24-DEVELOPER-GUIDE.md) - conventions code de tracking et immutabilité.
+* [25-USER-GUIDE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/25-USER-GUIDE.md) - compréhension utilisateur de la traçabilité des campagnes.
+* [26-MASTER-INDEX.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/26-MASTER-INDEX.md) - indexation explicite du rapport marketing.
+* [27-TRACEABILITY-MATRIX.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/27-TRACEABILITY-MATRIX.md) - chaîne complète de traçabilité marketing.
+* [28-CONTINUOUS-LEARNING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/28-CONTINUOUS-LEARNING-REFERENCE.md) - apprentissage des performances marketing.
+* [29-CAMPAY-PAYMENT-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/29-CAMPAY-PAYMENT-REFERENCE.md) - attribution analytique des paiements.
+* [30A-BUSINESS-DICTIONARY-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/30A-BUSINESS-DICTIONARY-REFERENCE.md) - intégration du vocabulaire marketing.
+* [31-IMPLEMENTATION-ROADMAP.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/31-IMPLEMENTATION-ROADMAP.md) - enrichissement du découpage d'implémentation.
+* [32-FINAL-CERTIFICATION-REPORT.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/32-FINAL-CERTIFICATION-REPORT.md) - réduction des réserves résiduelles.
+* [33-CODEX-IMPLEMENTATION-RULES.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/33-CODEX-IMPLEMENTATION-RULES.md) - rappel de la portée transverse du tracking marketing.
+* [34-IMPLEMENTATION-BACKLOG.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/34-IMPLEMENTATION-BACKLOG.md) - intégration du tracking marketing transverse au backlog.
+* [35-MIGRATION-PLAN.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/35-MIGRATION-PLAN.md) - préservation des historiques marketing.
+* [36-RELEASE-PLAN.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/36-RELEASE-PLAN.md) - cohérence des releases avec les lots marketing.
+* [37-QUALITY-ASSURANCE-PLAN.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/37-QUALITY-ASSURANCE-PLAN.md) - couverture QA des tests de tracking marketing.
+* [38-GIT-STRATEGY.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/38-GIT-STRATEGY.md) - traçabilité Git des lots marketing.
+* [39-CI-CD-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/39-CI-CD-REFERENCE.md) - contrôles CI/CD des référentiels marketing.
+* [40-PRODUCTION-CHECKLIST.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/40-PRODUCTION-CHECKLIST.md) - vérifications de production pour le tracking transverse.
 
 ---
 
 # 3. Référentiels créés
 
-* [MARKETING-TRACKING-CONSOLIDATION-REPORT.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/MARKETING-TRACKING-CONSOLIDATION-REPORT.md) - rapport de consolidation de la présente mission.
+* [MARKETING-TRACKING-CONSOLIDATION-REPORT.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/MARKETING-TRACKING-CONSOLIDATION-REPORT.md) - rapport de consolidation de la présente mission.
 
 ---
 
 # 4. Nouveaux modèles de données
 
-Nouvelles entités documentées dans [06-DATABASE-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/06-DATABASE-REFERENCE.md) :
+Nouvelles entités documentées dans [06-DATABASE-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/06-DATABASE-REFERENCE.md) :
 
 * ExternalChannel ;
 * ExternalCampaign ;
@@ -111,7 +111,7 @@ Nouveaux attributs majeurs :
 
 # 5. APIs enrichies
 
-Endpoints enrichis dans [16-API-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/16-API-REFERENCE.md) :
+Endpoints enrichis dans [16-API-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/16-API-REFERENCE.md) :
 
 * `POST /tracking/codes`
 * `GET /tracking/codes/{code}`
@@ -157,7 +157,7 @@ Nouveaux indicateurs intégrés :
 
 # 7. Reporting enrichi
 
-Nouveaux rapports documentés dans [11-REPORTING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/11-REPORTING-REFERENCE.md) :
+Nouveaux rapports documentés dans [11-REPORTING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/11-REPORTING-REFERENCE.md) :
 
 * rapport quotidien ;
 * rapport hebdomadaire ;
@@ -213,7 +213,7 @@ KPI marketing documentés :
 
 # 9. Tests ajoutés
 
-Scénarios de tests documentés dans [12-TESTS-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/12-TESTS-REFERENCE.md) :
+Scénarios de tests documentés dans [12-TESTS-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/12-TESTS-REFERENCE.md) :
 
 * validation d'un Tracking Code ;
 * unicité d'un Tracking Code ;

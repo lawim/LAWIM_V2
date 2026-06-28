@@ -14,9 +14,9 @@ Le présent document définit les spécificités de la famille résidentielle.
 
 Il hérite du référentiel maître des biens immobiliers et ne redéfinit pas les règles générales déjà portées par :
 
-* [02-PROPERTY-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02-PROPERTY-REFERENCE.md)
-* [02H-ATTRIBUTE-CATALOG.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02H-ATTRIBUTE-CATALOG.md)
-* [02I-PRICING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02I-PRICING-REFERENCE.md)
+* [02-PROPERTY-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02-PROPERTY-REFERENCE.md)
+* [02H-ATTRIBUTE-CATALOG.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02H-ATTRIBUTE-CATALOG.md)
+* [02I-PRICING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02I-PRICING-REFERENCE.md)
 
 ---
 

@@ -1,0 +1,15 @@
+# Role
+# Skeleton for the development Compose overlay of LAWIM_V2.
+#
+# Usage futur
+# This file will carry local-only toggles, bind mounts and debug helpers.
+#
+# Conventions
+# - keep production-only values out of this file;
+# - avoid secrets and hard-coded sensitive paths;
+# - keep the overlay small and explicit.
+#
+# TODO
+# - list the services allowed in local development;
+# - define the optional debug tooling;
+# - document local port and volume conventions.

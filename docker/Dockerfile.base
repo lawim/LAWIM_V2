@@ -1,0 +1,18 @@
+# Dockerfile.base
+#
+# Role
+# Skeleton for the shared Docker base image of LAWIM_V2.
+#
+# Usage futur
+# This file will host the common runtime baseline reused by later image-specific
+# Dockerfiles.
+#
+# Conventions
+# - keep the base minimal and reproducible;
+# - do not add business logic or secrets;
+# - keep environment-specific behavior out of this layer.
+#
+# TODO
+# - choose the runtime family and versioning rule;
+# - define the shared non-root execution model;
+# - document the minimal package set allowed in the base layer.

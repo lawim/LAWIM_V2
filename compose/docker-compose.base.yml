@@ -1,0 +1,16 @@
+# Role
+# Skeleton for the shared Compose base file of LAWIM_V2.
+#
+# Usage futur
+# This file will collect common services, networks, volumes and anchors reused
+# by the environment-specific overlays.
+#
+# Conventions
+# - keep environment-specific values out of the base file;
+# - do not store secrets here;
+# - preserve a stable naming strategy for services and volumes.
+#
+# TODO
+# - define the shared project naming convention;
+# - describe reusable anchors and network patterns;
+# - document the overlay order expected by later tickets.

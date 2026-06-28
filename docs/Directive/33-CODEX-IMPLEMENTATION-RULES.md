@@ -57,3 +57,17 @@ Codex doit :
 Ces règles garantissent que Codex implémente LAWIM sans créer d'ambiguïté ni dette documentaire inutile.
 
 Elles s'appliquent aussi aux lots d'implémentation liés au tracking marketing, à l'attribution et aux statistiques, sans remise en cause des décisions déjà validées.
+
+---
+
+# CHAPITRE 6 — TICKET EXECUTOR
+
+Le Ticket Executor est le point d'entree unique de traitement des tickets LAWIM_V2.
+
+Il lit le ticket, les regles applicables, le PCC, le workflow, les dependances, les livrables et les historiques avant toute action.
+
+Il reutilise l'existant, implemente uniquement le perimetre du ticket, prepare le rapport standard et produit les traces necessaires pour le PCC, les historiques et la preparation Git.
+
+Il ne lance jamais Git, ne modifie jamais la gouvernance, le Bootstrap Pack, la Constitution ou les regles metier, et ne saute jamais une etape du workflow.
+
+Le detail operationnel est defini dans `49-TICKET-EXECUTOR-REFERENCE.md`.

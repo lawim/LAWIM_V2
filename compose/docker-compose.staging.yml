@@ -1,0 +1,15 @@
+# Role
+# Skeleton for the staging Compose overlay of LAWIM_V2.
+#
+# Usage futur
+# This file will represent the pre-production parity layer used for validation.
+#
+# Conventions
+# - keep staging close to production without exposing secrets;
+# - avoid unmanaged data volumes;
+# - keep release gates traceable.
+#
+# TODO
+# - define staging-only toggles;
+# - document observability hooks and smoke-test entry points;
+# - align the overlay with release and approval flows.

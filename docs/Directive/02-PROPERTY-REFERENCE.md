@@ -41,18 +41,18 @@ Il est interdit de recopier les règles générales dans chaque sous-référenti
 
 Les familles documentées par LAWIM sont les suivantes :
 
-* [02A-RESIDENTIAL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02A-RESIDENTIAL-REFERENCE.md)
-* [02B-COMMERCIAL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02B-COMMERCIAL-REFERENCE.md)
-* [02C-INDUSTRIAL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02C-INDUSTRIAL-REFERENCE.md)
-* [02D-LAND-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02D-LAND-REFERENCE.md)
-* [02E-AGRICULTURAL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02E-AGRICULTURAL-REFERENCE.md)
-* [02F-HOTEL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02F-HOTEL-REFERENCE.md)
-* [02G-PROJECT-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02G-PROJECT-REFERENCE.md)
+* [02A-RESIDENTIAL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02A-RESIDENTIAL-REFERENCE.md)
+* [02B-COMMERCIAL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02B-COMMERCIAL-REFERENCE.md)
+* [02C-INDUSTRIAL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02C-INDUSTRIAL-REFERENCE.md)
+* [02D-LAND-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02D-LAND-REFERENCE.md)
+* [02E-AGRICULTURAL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02E-AGRICULTURAL-REFERENCE.md)
+* [02F-HOTEL-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02F-HOTEL-REFERENCE.md)
+* [02G-PROJECT-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02G-PROJECT-REFERENCE.md)
 
 Les référentiels transversaux associés sont :
 
-* [02H-ATTRIBUTE-CATALOG.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02H-ATTRIBUTE-CATALOG.md)
-* [02I-PRICING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02I-PRICING-REFERENCE.md)
+* [02H-ATTRIBUTE-CATALOG.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02H-ATTRIBUTE-CATALOG.md)
+* [02I-PRICING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02I-PRICING-REFERENCE.md)
 
 ---
 
@@ -111,7 +111,7 @@ Les attributs communs à tous les biens sont notamment :
 * détenteur ;
 * documents de preuve ou de contrôle lorsque requis.
 
-Les valeurs exactes sont normalisées par [02H-ATTRIBUTE-CATALOG.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02H-ATTRIBUTE-CATALOG.md).
+Les valeurs exactes sont normalisées par [02H-ATTRIBUTE-CATALOG.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02H-ATTRIBUTE-CATALOG.md).
 
 ---
 
@@ -141,7 +141,7 @@ Un bien ne peut être publié que si :
 * sa famille est identifiée ;
 * son type est cohérent ;
 * sa localisation minimale est connue ;
-* son prix est renseigné selon [02I-PRICING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/02I-PRICING-REFERENCE.md) ;
+* son prix est renseigné selon [02I-PRICING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02I-PRICING-REFERENCE.md) ;
 * son détenteur est identifiable ;
 * ses informations critiques sont normalisées ;
 * les pièces obligatoires sont présentes lorsque la famille les exige.
@@ -192,7 +192,7 @@ Un bien peut être archivé lorsqu'il :
 * est en litige ;
 * doit être conservé à des fins historiques, juridiques ou d'audit.
 
-L'archivage s'applique selon [14-STORAGE-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/14-STORAGE-REFERENCE.md).
+L'archivage s'applique selon [14-STORAGE-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/14-STORAGE-REFERENCE.md).
 
 ---
 

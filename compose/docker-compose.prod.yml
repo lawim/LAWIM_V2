@@ -1,0 +1,15 @@
+# Role
+# Skeleton for the production Compose overlay of LAWIM_V2.
+#
+# Usage futur
+# This file will hold the locked-down runtime choices for production deploys.
+#
+# Conventions
+# - keep secrets external to the repository;
+# - avoid debug helpers and temporary mounts;
+# - preserve rollback-friendly and reproducible settings.
+#
+# TODO
+# - define production-only hardening rules;
+# - document external dependency references;
+# - align with deployment, monitoring and rollback procedures.

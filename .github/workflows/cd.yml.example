@@ -1,0 +1,17 @@
+# Role
+# Skeleton example for the future CD workflow of LAWIM_V2.
+#
+# Usage futur
+# This file will host controlled deployment, release tagging and environment
+# promotion steps.
+#
+# Conventions
+# - keep deployment gates explicit;
+# - keep secrets externalized;
+# - do not embed business decisions in the workflow file;
+# - keep the example file non-active until the release process is defined.
+#
+# TODO
+# - define release promotion rules;
+# - document approvals and environment mapping;
+# - describe rollback and notification hooks.

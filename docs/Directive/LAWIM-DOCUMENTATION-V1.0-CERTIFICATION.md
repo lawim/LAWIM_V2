@@ -37,9 +37,9 @@ L'architecture documentaire finale est organisée en :
 
 La liste exhaustive des documents officiels est centralisée dans :
 
-* [LAWIM-DOCUMENTATION-V1.0.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/LAWIM-DOCUMENTATION-V1.0.md) ;
-* [26-MASTER-INDEX.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/26-MASTER-INDEX.md) ;
-* [LAWIM-DOCUMENTATION-RELEASE-V1.0.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM/Directive/LAWIM-DOCUMENTATION-RELEASE-V1.0.md).
+* [LAWIM-DOCUMENTATION-V1.0.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/LAWIM-DOCUMENTATION-V1.0.md) ;
+* [26-MASTER-INDEX.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/26-MASTER-INDEX.md) ;
+* [LAWIM-DOCUMENTATION-RELEASE-V1.0.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/LAWIM-DOCUMENTATION-RELEASE-V1.0.md).
 
 Les familles validées couvrent :
 

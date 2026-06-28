@@ -93,6 +93,7 @@ Il constitue la référence unique pour :
 | 46 | FRAUD-MANAGEMENT-PROCEDURE | Gestion fraude | 00, 06, 15, 19, 28, 41 |
 | 47 | PARTNER-SUSPENSION-PROCEDURE | Suspension partenaires | 00, 05, 06, 08, 15, 19, 41, 46 |
 | 48 | LAWIM-SALES-PLAYBOOK | Manuel commercial | 00, 01, 19, 24, 25, 41, 42, 45, 46, 47 |
+| 49 | TICKET-EXECUTOR-REFERENCE | Point d'entree unique de traitement des tickets | 05, 33, 38, 41 |
 | RPT | IMPLEMENTATION-READINESS-REPORT | Rapport de préparation | 26, 31, 32, 37 |
 | MKT | MARKETING-TRACKING-CONSOLIDATION-REPORT | Tracking marketing, attribution, campaign, publication, lead attribution, redirect, conversion, KPI, analytics | 05, 06, 07, 11, 12, 16, 18, 19, 26, 27, 28, 29, 30A, 31, 32 |
 
