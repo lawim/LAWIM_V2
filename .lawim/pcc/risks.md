@@ -25,3 +25,4 @@
 | R-021 | MFA gate or recovery path remains incomplete | High | Medium | Keep MFA, recovery and access-policy rules explicit before enabling critical flows | Security | Mitigated |
 | R-022 | Sprint 005 opening depends on stable users, roles and organizations contracts | High | Low | Reuse the role, administration, architecture and security references and keep the opening decision traceable before any ticket starts | PMO | Open |
 | R-023 | User lifecycle or profile contract drifts from the canonical role and database references | High | Medium | Keep the single-account rule, explicit statuses and traceable transitions aligned with the role and database references | Security | Mitigated |
+| R-024 | Organization model or attachment contract drifts from the canonical administration and architecture references | High | Medium | Keep the hierarchy, attachments and team boundaries explicit and defer permissions to T05.03 | Administration | Mitigated |

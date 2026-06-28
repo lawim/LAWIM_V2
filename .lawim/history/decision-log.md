@@ -30,3 +30,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-024 | Sprint 004 closure proposal and no Sprint 005 opening | Directeur General | Sprint 004 closure / no Sprint 005 | Proposed | reports/sprint-004/SPRINT-004-CLOSURE-REPORT.md |
 | 2026-06-28 | DEC-025 | Sprint 005 opening and users/roles/organizations plan confirmed | Directeur General | Sprint 005 / users, roles et organisations | Active | reports/sprint-005/SPRINT-005-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-026 | User lifecycle, single-account and status contract confirmed | Security | T05.01 / User lifecycle | Active | reports/sprint-005/T05.01-user-lifecycle-report.md |
+| 2026-06-28 | DEC-027 | Organization model, hierarchy and attachment contract confirmed | Administration | T05.02 / Organization model | Active | reports/sprint-005/T05.02-organization-model-report.md |

@@ -42,7 +42,8 @@ GO AVEC RESERVES
 
 ## Avancement
 - T05.01: ferme;
-- Tickets couverts: 1/3.
+- T05.02: ferme;
+- Tickets couverts: 2/3.
 
 ## Validation DG
 - en attente.
