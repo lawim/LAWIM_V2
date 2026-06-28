@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est cloture, Sprint 008 est cloture, Sprint 009 est prepare pour le matching foundation.
-- Derniere trace technique: Sprint 008 est cloture sur le conversation engine; Sprint 009 est ouvert pour le matching foundation; T09.01 et T09.02 sont fermes.
+- Derniere trace technique: Sprint 008 est cloture sur le conversation engine; Sprint 009 est ouvert pour le matching foundation; T09.01, T09.02 et T09.03 sont fermes.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -136,7 +136,7 @@
 - Statut Sprint 009: EN COURS
 - Objectif: construire la recherche, le classement et la qualification des besoins.
 - Tickets: T09.01 - Search and ranking, T09.02 - Qualification and scoring, T09.03 - Availability and preferences
-- Tickets couverts: 2/3
+- Tickets couverts: 3/3
 - Ordre recommande: T09.01 -> T09.02 -> T09.03
 - Dependances: Sprint 008 cloture, T08.03, `docs/Directive/04-MATCHING-REFERENCE.md`, `docs/Directive/02I-PRICING-REFERENCE.md`, `docs/Directive/03-CONVERSATION-REFERENCE.md`, `docs/Directive/09-GEOLOCATION-REFERENCE.md`
 - Chemin critique: Decision DG d'ouverture -> T09.01 -> T09.02 -> T09.03 -> cloture Sprint 009

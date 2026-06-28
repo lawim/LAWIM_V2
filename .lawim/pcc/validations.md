@@ -296,6 +296,11 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T09.02 | Security | Secrets, biais, exposition et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-009/T09.02-qualification-scoring-report.md |
 | T09.02 | Integration | Cohesion qualification, scoring et explicabilite | Integration Manager | READY FOR T09.03 | 2026-06-28 | reports/sprint-009/T09.02-qualification-scoring-report.md |
 | T09.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T09.03 | 2026-06-28 | reports/sprint-009/T09.02-qualification-scoring-report.md |
+| T09.03 | Architecture | Cohesion de la disponibilite, des preferences et des filtres | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-009/T09.03-availability-preferences-report.md |
+| T09.03 | QA | Criteres d'acceptation, contexte et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-009/T09.03-availability-preferences-report.md |
+| T09.03 | Security | Secrets, biais, exposition et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-009/T09.03-availability-preferences-report.md |
+| T09.03 | Integration | Cohesion disponibilite, preferences et filtres | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-009/T09.03-availability-preferences-report.md |
+| T09.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-009/T09.03-availability-preferences-report.md |
 
 ## Cloture Sprint 008
 
