@@ -9,7 +9,7 @@ Ce registre suit le workflow officiel et les checklists associees.
 | T01.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Pending | - | .lawim/checklists/security-checklist.md |
 | T01.01 | Integration | Cohesion backend, frontend, database et devops | Integration Manager | Pending | - | .lawim/workflows/ticket-workflow.md |
 | T01.01 | DG | Validation finale de gouvernance | Directeur General | Pending | - | .lawim/pcc/PCC.md |
-| T01.02 | Architecture | Coherence technique, dependances et conventions | Chief Architect + Tech Lead | Pending | - | .lawim/checklists/architecture-checklist.md |
+| T01.02 | Architecture | Coherence technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.02-architecture-review.md |
 | T01.02 | QA | Criteres d'acceptation et non-regression | QA | Pending | - | .lawim/checklists/qa-checklist.md |
 | T01.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Pending | - | .lawim/checklists/security-checklist.md |
 | T01.02 | Integration | Cohesion images, conventions et reutilisation de la base | Integration Manager | Pending | - | .lawim/workflows/ticket-workflow.md |
