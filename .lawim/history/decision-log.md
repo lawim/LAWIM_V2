@@ -33,3 +33,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-027 | Organization model, hierarchy and attachment contract confirmed | Administration | T05.02 / Organization model | Active | reports/sprint-005/T05.02-organization-model-report.md |
 | 2026-06-28 | DEC-028 | Permissions matrix, inheritance and delegation contract confirmed | Security | T05.03 / Permissions matrix | Active | reports/sprint-005/T05.03-permissions-matrix-report.md |
 | 2026-06-28 | DEC-029 | Sprint 005 closure proposal and no Sprint 006 opening | Directeur General | Sprint 005 closure / no Sprint 006 | Proposed | reports/sprint-005/SPRINT-005-CLOSURE-REPORT.md |
+| 2026-06-28 | DEC-030 | Sprint 006 opening and core immobilier plan confirmed | Directeur General | Sprint 006 / coeur immobilier | Active | reports/sprint-006/SPRINT-006-PLANNING-REPORT.md |

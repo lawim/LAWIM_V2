@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Aucun
-- Sprint status: CLOTURE
+- Sprint actif: Sprint 006
+- Sprint status: EN COURS
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle identite, organisations et permissions est consolide avant le coeur immobilier du Sprint 006.
-- Derniere trace technique: Sprint 005 est cloture apres T05.01, T05.02 et T05.03; le socle identite, organisations et permissions est consolide avant le Sprint 006, sans remettre en cause le socle Sprint 004.
+- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle biens, attributs et prix reste a consolider dans Sprint 006.
+- Derniere trace technique: Sprint 006 est ouvert sur les biens, les attributs et les prix; T06.01, T06.02 et T06.03 vont consolider le coeur immobilier sans remettre en cause le socle Sprint 005.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -82,7 +82,19 @@
 - T05.03: ferme
 - Rapport de cloture: reports/sprint-005/SPRINT-005-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
-- Sprint 006: non ouvert
+- Sprint 006: ouvert
+
+## Ouverture Sprint 006
+- Statut Sprint 006: EN COURS
+- Objectif: construire le socle des biens, attributs et prix de LAWIM_V2.
+- Tickets: T06.01 - Property domain schema, T06.02 - Pricing alignment, T06.03 - Publication guardrails
+- Tickets couverts: 0/3
+- Ordre recommande: T06.01 -> T06.02 -> T06.03
+- Dependances: Sprint 005 cloture, T05.03, `docs/Directive/02-PROPERTY-REFERENCE.md`, `docs/Directive/02H-ATTRIBUTE-CATALOG.md`, `docs/Directive/02I-PRICING-REFERENCE.md`, `docs/Directive/11-REPORTING-REFERENCE.md`, `docs/Directive/05-WORKFLOW-REFERENCE.md` et `docs/Directive/12-TESTS-REFERENCE.md`
+- Chemin critique: Decision DG d'ouverture -> T06.01 -> T06.02 -> T06.03 -> cloture Sprint 006
+- Risques d'entree: donnees incoherentes, confusion entre types de biens, variation de prix non normalisee, publication incoherente
+- Risque bloquant: false
+- Validation DG: en attente
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
