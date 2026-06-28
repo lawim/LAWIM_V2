@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 012
+- Sprint actif: Sprint 013
 - Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille a ete verifie pour LOT-004; les lots 004 a 006 sont en cours de consolidation et Sprint 019 reste non ouvert.
-- Derniere trace technique: Sprint 012 est cloture sur notifications; T12.01, T12.02 et T12.03 sont fermes
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-005; les lots 004 a 006 sont en cours de consolidation et Sprint 019 reste non ouvert.
+- Derniere trace technique: Sprint 013 est cloture sur tracking et attribution; T13.01, T13.02 et T13.03 sont fermes
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -200,6 +200,25 @@
 - T12.02: ferme
 - T12.03: ferme
         - Sprint 013: non ouvert
+
+        ## Sprint 013
+        - Statut: EN COURS
+        - Objectif: rendre la traçabilité marketing transverse et immuable.
+        - Tickets: T13.01 - Tracking code generator, T13.02 - Campaign and publication model, T13.03 - Redirect logging and attribution
+        - Tickets couverts: 0/3
+        - Ordre recommande: T13.01 -> T13.02 -> T13.03
+        - Dependances: S005, S006, S011.
+        - Chemin critique: Decision DG d'ouverture -> T13.01 -> T13.02 -> T13.03 -> cloture Sprint 013
+        - Risques d'entree: dérive d'attribution, doublons, code recalculé par erreur.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de planning: reports/sprint-013/SPRINT-013-PLANNING-REPORT.md
+        - Avancement:
+        - T13.01: A FAIRE
+- T13.02: A FAIRE
+- T13.03: A FAIRE
+        - Sprint 014: non ouvert
+
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md

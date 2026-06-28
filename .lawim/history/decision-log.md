@@ -67,3 +67,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-003 | Channel adapters, contract confirmed for Sprint 012 | Integration | T12.02 / Channel adapters | Active | reports/sprint-012/T12.02-channel-adapters-report.md |
 | 2026-06-28 | DEC-004 | Templates and preferences, contract confirmed for Sprint 012 | Security | T12.03 / Templates and preferences | Active | reports/sprint-012/T12.03-templates-and-preferences-report.md |
 | 2026-06-28 | DEC-005 | Sprint 012 closure proposal and no Sprint 013 opening | Directeur General | Sprint 012 closure / no Sprint 013 | Proposed | reports/sprint-012/SPRINT-012-CLOSURE-REPORT.md |
+| 2026-06-28 | DEC-001 | Sprint 013 opening and tracking et attribution plan confirmed | Directeur General | Sprint 013 / tracking et attribution | Active | reports/sprint-013/SPRINT-013-PLANNING-REPORT.md |
