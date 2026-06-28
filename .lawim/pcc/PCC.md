@@ -237,11 +237,11 @@
 - T14.03: ferme
         - Sprint 015: non ouvert
 
-        ## Sprint 015
+                ## Sprint 015
         - Statut: EN COURS
         - Objectif: fournir les vues de pilotage essentielles.
         - Tickets: T15.01 - Dashboard shell, T15.02 - Admin views, T15.03 - Role-based views
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
         - Ordre recommande: T15.01 -> T15.02 -> T15.03
         - Dependances: S013, S014.
         - Chemin critique: Decision DG d'ouverture -> T15.01 -> T15.02 -> T15.03 -> cloture Sprint 015
@@ -250,11 +250,10 @@
         - Validation DG: en attente
         - Rapport de planning: reports/sprint-015/SPRINT-015-PLANNING-REPORT.md
         - Avancement:
-        - T15.01: A FAIRE
+        - T15.01: ferme
 - T15.02: A FAIRE
 - T15.03: A FAIRE
         - Sprint 016: non ouvert
-
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md
