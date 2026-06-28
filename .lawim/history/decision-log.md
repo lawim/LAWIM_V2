@@ -85,3 +85,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-001 | Sprint 016 opening and reporting foundation plan confirmed | Directeur General | Sprint 016 / reporting foundation | Active | reports/sprint-016/SPRINT-016-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-002 | Reporting engine, contract confirmed for Sprint 016 | Reporting | T16.01 / Reporting engine | Active | reports/sprint-016/T16.01-reporting-engine-report.md |
 | 2026-06-28 | DEC-003 | Periodic reports, contract confirmed for Sprint 016 | Reporting | T16.02 / Periodic reports | Active | reports/sprint-016/T16.02-periodic-reports-report.md |
+| 2026-06-28 | DEC-004 | KPI catalog, contract confirmed for Sprint 016 | Reporting | T16.03 / KPI catalog | Active | reports/sprint-016/T16.03-kpi-catalog-report.md |

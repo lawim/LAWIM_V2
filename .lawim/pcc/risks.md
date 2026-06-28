@@ -82,3 +82,4 @@
 | R-001 | Sprint 016 opening requires stable reporting foundation contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T16.01 Reporting engine consolidates the contract | High | Low | Keep reporting engine explicit and preserve the reference as the source of truth | Reporting | Mitigated |
 | R-003 | T16.02 Periodic reports consolidates the contract | High | Low | Keep periodic reports explicit and preserve the reference as the source of truth | Reporting | Mitigated |
+| R-004 | T16.03 KPI catalog consolidates the contract | High | Low | Keep kpi catalog explicit and preserve the reference as the source of truth | Reporting | Mitigated |

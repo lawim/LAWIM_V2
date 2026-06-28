@@ -87,3 +87,4 @@ Ce journal est append-only. Toute evolution architecturale doit laisser une trac
 | 2026-06-28 | ARCH-001 | Sprint 016 planning review | Reporting foundation confirmed; no blocking architecture gaps remain for opening | Opening readiness for DG approval | PMO | reports/sprint-016/SPRINT-016-PLANNING-REPORT.md |
 | 2026-06-28 | ARCH-002 | T16.01 Reporting engine | Reporting engine, contrat confirme pour Sprint 016 | Stable gate before the next ticket | Reporting | reports/sprint-016/T16.01-reporting-engine-report.md |
 | 2026-06-28 | ARCH-003 | T16.02 Periodic reports | Periodic reports, contrat confirme pour Sprint 016 | Stable gate before the next ticket | Reporting | reports/sprint-016/T16.02-periodic-reports-report.md |
+| 2026-06-28 | ARCH-004 | T16.03 KPI catalog | KPI catalog, contrat confirme pour Sprint 016 | Stable gate before the next ticket | Reporting | reports/sprint-016/T16.03-kpi-catalog-report.md |

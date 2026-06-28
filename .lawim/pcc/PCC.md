@@ -255,11 +255,11 @@
 - T15.03: ferme
         - Sprint 016: non ouvert
 
-                        ## Sprint 016
+                                ## Sprint 016
         - Statut: EN COURS
         - Objectif: produire les premiers agrégats et rapports périodiques.
         - Tickets: T16.01 - Reporting engine, T16.02 - Periodic reports, T16.03 - KPI catalog
-        - Tickets couverts: 2/3
+        - Tickets couverts: 3/3
         - Ordre recommande: T16.01 -> T16.02 -> T16.03
         - Dependances: S013, S014, S015.
         - Chemin critique: Decision DG d'ouverture -> T16.01 -> T16.02 -> T16.03 -> cloture Sprint 016
@@ -270,7 +270,7 @@
         - Avancement:
         - T16.01: ferme
 - T16.02: ferme
-- T16.03: A FAIRE
+- T16.03: ferme
         - Sprint 017: non ouvert
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

@@ -455,3 +455,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T16.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-016/T16.02-periodic-reports-report.md |
 | T16.02 | Integration | Cohesion periodic reports | Integration Manager | READY FOR T16.03 | 2026-06-28 | reports/sprint-016/T16.02-periodic-reports-report.md |
 | T16.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T16.03 | 2026-06-28 | reports/sprint-016/T16.02-periodic-reports-report.md |
+| T16.03 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-016/T16.03-kpi-catalog-report.md |
+| T16.03 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-016/T16.03-kpi-catalog-report.md |
+| T16.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-016/T16.03-kpi-catalog-report.md |
+| T16.03 | Integration | Cohesion kpi catalog | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-016/T16.03-kpi-catalog-report.md |
+| T16.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-016/T16.03-kpi-catalog-report.md |
