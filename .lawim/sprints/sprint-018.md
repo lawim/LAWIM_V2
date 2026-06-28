@@ -36,8 +36,8 @@
         ## Avancement
         - T18.01: ferme
 - T18.02: ferme
-- T18.03: A FAIRE
-        - Tickets couverts: 2/3
+- T18.03: ferme
+        - Tickets couverts: 3/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-018/SPRINT-018-PLANNING-REPORT.md

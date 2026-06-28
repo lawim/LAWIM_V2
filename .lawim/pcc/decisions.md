@@ -94,3 +94,4 @@
 | 2026-06-28 | DEC-001 | Sprint 018 opening and lawim ai plan confirmed | Directeur General | Sprint 018 / lawim ai | Active | reports/sprint-018/SPRINT-018-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-002 | AI service scaffold, contract confirmed for Sprint 018 | AI | T18.01 / AI service scaffold | Active | reports/sprint-018/T18.01-ai-service-scaffold-report.md |
 | 2026-06-28 | DEC-003 | Language and search intelligence, contract confirmed for Sprint 018 | AI | T18.02 / Language and search intelligence | Active | reports/sprint-018/T18.02-language-and-search-intelligence-report.md |
+| 2026-06-28 | DEC-004 | Source-grounded responses, contract confirmed for Sprint 018 | AI | T18.03 / Source-grounded responses | Active | reports/sprint-018/T18.03-source-grounded-responses-report.md |
