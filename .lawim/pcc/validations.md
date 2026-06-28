@@ -137,3 +137,8 @@ Le Sprint 003 est termine sur la base des 3 tickets planifies. Les tickets T03.0
 | T04.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-004/T04.01-auth-service-report.md |
 | T04.01 | Integration | Cohesion auth, sessions et contrat API | Integration Manager | READY FOR T04.02 | 2026-06-28 | reports/sprint-004/T04.01-auth-service-report.md |
 | T04.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T04.02 | 2026-06-28 | reports/sprint-004/T04.01-auth-service-report.md |
+| T04.02 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-004/T04.02-token-strategy-report.md |
+| T04.02 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-004/T04.02-token-strategy-report.md |
+| T04.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-004/T04.02-token-strategy-report.md |
+| T04.02 | Integration | Cohesion token, refresh et stockage de session | Integration Manager | READY FOR T04.03 | 2026-06-28 | reports/sprint-004/T04.02-token-strategy-report.md |
+| T04.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T04.03 | 2026-06-28 | reports/sprint-004/T04.02-token-strategy-report.md |
