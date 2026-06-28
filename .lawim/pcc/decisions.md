@@ -64,3 +64,4 @@
 | 2026-06-28 | DEC-001 | Sprint 012 opening and notifications plan confirmed | Directeur General | Sprint 012 / notifications | Active | reports/sprint-012/SPRINT-012-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-002 | Notification model, contract confirmed for Sprint 012 | Architecture | T12.01 / Notification model | Active | reports/sprint-012/T12.01-notification-model-report.md |
 | 2026-06-28 | DEC-003 | Channel adapters, contract confirmed for Sprint 012 | Integration | T12.02 / Channel adapters | Active | reports/sprint-012/T12.02-channel-adapters-report.md |
+| 2026-06-28 | DEC-004 | Templates and preferences, contract confirmed for Sprint 012 | Security | T12.03 / Templates and preferences | Active | reports/sprint-012/T12.03-templates-and-preferences-report.md |

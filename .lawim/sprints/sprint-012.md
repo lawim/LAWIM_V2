@@ -35,8 +35,8 @@
         ## Avancement
         - T12.01: ferme
 - T12.02: ferme
-- T12.03: A FAIRE
-        - Tickets couverts: 2/3
+- T12.03: ferme
+        - Tickets couverts: 3/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-012/SPRINT-012-PLANNING-REPORT.md

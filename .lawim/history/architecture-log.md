@@ -67,3 +67,4 @@ Ce journal est append-only. Toute evolution architecturale doit laisser une trac
 | 2026-06-28 | ARCH-001 | Sprint 012 planning review | Notifications confirmed; no blocking architecture gaps remain for opening | Opening readiness for DG approval | PMO | reports/sprint-012/SPRINT-012-PLANNING-REPORT.md |
 | 2026-06-28 | ARCH-002 | T12.01 Notification model | Notification model, contrat confirme pour Sprint 012 | Stable gate before the next ticket | Architecture | reports/sprint-012/T12.01-notification-model-report.md |
 | 2026-06-28 | ARCH-003 | T12.02 Channel adapters | Channel adapters, contrat confirme pour Sprint 012 | Stable gate before the next ticket | Integration | reports/sprint-012/T12.02-channel-adapters-report.md |
+| 2026-06-28 | ARCH-004 | T12.03 Templates and preferences | Templates and preferences, contrat confirme pour Sprint 012 | Stable gate before the next ticket | Security | reports/sprint-012/T12.03-templates-and-preferences-report.md |
