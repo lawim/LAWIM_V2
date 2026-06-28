@@ -22,9 +22,10 @@ Implement the core runtime kernel.
 
 Add read-only command behavior.
 
-- Implement `status`.
-- Implement `doctor`.
-- Add traceable output formatting.
+- `status` is implemented.
+- `doctor` is implemented.
+- `--help` is available.
+- Remaining commands stay stubbed.
 
 ## Phase 3
 

@@ -3,13 +3,19 @@ set -eu
 
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 RUNTIME_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+PROJECT_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../../.." && pwd)
 
 usage() {
   cat <<EOF
-LAWIM runtime foundation stub
+LAWIM runtime minimal executable
 
 Usage:
   lawim <command>
+
+Minimal executable surface:
+  lawim --help
+  lawim status
+  lawim doctor
 
 Prepared commands:
   status
@@ -27,6 +33,145 @@ Contract docs:
 EOF
 }
 
+git_available() {
+  command -v git >/dev/null 2>&1
+}
+
+git_in_repo() {
+  git_available && git -C "$PROJECT_ROOT" rev-parse --is-inside-work-tree >/dev/null 2>&1
+}
+
+git_branch() {
+  git -C "$PROJECT_ROOT" branch --show-current 2>/dev/null || true
+}
+
+git_clean_state() {
+  if [ -n "$(git -C "$PROJECT_ROOT" status --short 2>/dev/null || true)" ]; then
+    printf '%s\n' "sale"
+  else
+    printf '%s\n' "propre"
+  fi
+}
+
+git_head_commit() {
+  git -C "$PROJECT_ROOT" log -1 --oneline 2>/dev/null || true
+}
+
+git_last_tag() {
+  git -C "$PROJECT_ROOT" tag --sort=-creatordate 2>/dev/null | sed -n '1p' || true
+}
+
+git_recent_tags() {
+  git -C "$PROJECT_ROOT" tag --sort=-creatordate 2>/dev/null | sed -n '1,5p' || true
+}
+
+git_remote_state() {
+  if [ -n "$(git -C "$PROJECT_ROOT" remote 2>/dev/null || true)" ]; then
+    printf '%s\n' "present"
+  else
+    printf '%s\n' "absent"
+  fi
+}
+
+read_pcc_field() {
+  field=$1
+  pcc_file="$PROJECT_ROOT/.lawim/pcc/PCC.md"
+  if [ ! -f "$pcc_file" ]; then
+    return 1
+  fi
+  awk -F': ' -v needle="$field" '$0 ~ "^- " needle ":" {print $2; exit}' "$pcc_file"
+}
+
+print_status() {
+  critical=0
+  printf '%s\n' "LAWIM status"
+
+  if git_in_repo; then
+    branch=$(git_branch)
+    [ -n "$branch" ] || branch="DETACHED"
+    printf 'Branche Git: %s\n' "$branch"
+    printf 'Depot: %s\n' "$(git_clean_state)"
+    head_commit=$(git_head_commit)
+    [ -n "$head_commit" ] || head_commit="indetectable"
+    printf 'Dernier commit: %s\n' "$head_commit"
+    last_tag=$(git_last_tag)
+    [ -n "$last_tag" ] || last_tag="aucun"
+    printf 'Dernier tag: %s\n' "$last_tag"
+    sprint_active=$(read_pcc_field "Sprint actif" 2>/dev/null || true)
+    [ -n "$sprint_active" ] || sprint_active="indetectable"
+    printf 'Sprint actif: %s\n' "$sprint_active"
+    program_status=$(read_pcc_field "Programme status" 2>/dev/null || true)
+    [ -n "$program_status" ] || program_status="indetectable"
+    printf 'Etat programme: %s\n' "$program_status"
+    printf 'Remote Git: %s\n' "$(git_remote_state)"
+  else
+    printf '%s\n' "Branche Git: indetectable"
+    printf '%s\n' "Depot: indetectable"
+    printf '%s\n' "Dernier commit: indetectable"
+    printf '%s\n' "Dernier tag: indetectable"
+    printf '%s\n' "Sprint actif: indetectable"
+    printf '%s\n' "Etat programme: indetectable"
+    printf '%s\n' "Remote Git: indetectable"
+    critical=1
+  fi
+
+  exit "$critical"
+}
+
+print_doctor() {
+  critical=0
+  printf '%s\n' "LAWIM doctor"
+
+  check_path() {
+    label=$1
+    path=$2
+    if [ -e "$PROJECT_ROOT/$path" ]; then
+      printf '[OK] %s: present\n' "$label"
+    else
+      printf '[FAIL] %s: missing\n' "$label"
+      critical=1
+    fi
+  }
+
+  check_path ".lawim" ".lawim"
+  check_path "PCC" ".lawim/pcc/PCC.md"
+  check_path "Sprints" ".lawim/sprints"
+  check_path "Tickets" ".lawim/tickets"
+  check_path "Reports" "reports"
+
+  if git_available; then
+    printf '%s\n' "[OK] Git: present"
+  else
+    printf '%s\n' "[FAIL] Git: missing"
+    critical=1
+  fi
+
+  if git_in_repo; then
+    printf '%s\n' "[OK] Git repo: present"
+  else
+    printf '%s\n' "[FAIL] Git repo: missing"
+    critical=1
+  fi
+
+  if git_in_repo; then
+    printf 'Etat depot: %s\n' "$(git_clean_state)"
+    printf 'Remote Git: %s\n' "$(git_remote_state)"
+    printf 'Tags recents:\n'
+    recent_tags=$(git_recent_tags)
+    if [ -n "$recent_tags" ]; then
+      printf '%s\n' "$recent_tags" | sed 's/^/- /'
+    else
+      printf '%s\n' "- aucun"
+    fi
+  else
+    printf '%s\n' "Etat depot: indetectable"
+    printf '%s\n' "Remote Git: indetectable"
+    printf '%s\n' "Tags recents: indetectable"
+  fi
+
+  exit "$critical"
+}
+
 stub_command() {
   command=$1
   printf '%s\n' "LAWIM runtime foundation stub: '$command' is defined but not implemented yet."
@@ -35,7 +180,13 @@ stub_command() {
 }
 
 case "${1:-}" in
-  status|doctor|run|batch-run|review|close-sprint|git-sync)
+  status)
+    print_status
+    ;;
+  doctor)
+    print_doctor
+    ;;
+  run|batch-run|review|close-sprint|git-sync)
     stub_command "$1"
     ;;
   ""|-h|--help|help)

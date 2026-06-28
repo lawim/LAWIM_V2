@@ -3,10 +3,17 @@
 This document summarizes the prepared LAWIM runtime commands.
 The per-command skeletons live in `.lawim/runtime/src/commands/`.
 
+## Minimal executable surface
+
+- `lawim --help` is available.
+- `lawim status` is implemented.
+- `lawim doctor` is implemented.
+- `lawim run`, `lawim batch-run`, `lawim review`, `lawim close-sprint`, and `lawim git-sync` remain stubs.
+
 | Command | Objective | Inputs | Outputs | Critical errors | Status | TODO |
 | --- | --- | --- | --- | --- | --- | --- |
-| `status` | Read current runtime readiness and trace links. | Runtime root, PCC summary, latest report pointers. | Readiness snapshot. | Missing runtime root; unreadable report trail; missing PCC reference. | SKELETON_CREATED | Bind to a read-only status model. |
-| `doctor` | Check runtime health and contract coverage. | Filesystem, command registry, imported contracts, imported policies. | Diagnostic result with PASS/WARN/FAIL. | Missing file, contract drift, unreadable policy source. | SKELETON_CREATED | Add structural and policy validators. |
+| `status` | Read current runtime readiness and trace links. | Runtime root, PCC summary, latest report pointers. | Readiness snapshot. | Missing runtime root; unreadable report trail; missing PCC reference. | IMPLEMENTED | Bind to a read-only status model. |
+| `doctor` | Check runtime health and contract coverage. | Filesystem, command registry, imported contracts, imported policies. | Diagnostic result with PASS/WARN/FAIL. | Missing file, contract drift, unreadable policy source. | IMPLEMENTED | Add structural and policy validators. |
 | `run` | Execute one prepared work item through the runtime. | Ticket context, planning data, policy gates, execution context. | Execution trace and report seed. | Missing ticket, invalid state, unresolved policy gate. | SKELETON_CREATED | Bind to the execution service. |
 | `batch-run` | Execute a controlled batch of work items. | Batch manifest, ordered ticket list, dependency map, policy gates. | Batch execution trace and aggregate report seed. | Invalid order, unresolved dependency, missing batch manifest. | SKELETON_CREATED | Add batch planning and aggregation. |
 | `review` | Orchestrate a formal review gate. | Deliverable, checklist, evidence, findings inputs. | Review decision, findings, and trace. | Missing evidence, incomplete checklist, unresolved review gate. | SKELETON_CREATED | Bind review outcomes to reports. |
@@ -16,4 +23,4 @@ The per-command skeletons live in `.lawim/runtime/src/commands/`.
 ## Notes
 
 - The runtime does not duplicate contract text from the architecture backlog.
-- The command layer is only a contract surface at this stage.
+- The command layer is executable only for `status`, `doctor`, and `--help` at this stage.

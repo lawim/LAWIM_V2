@@ -1,12 +1,12 @@
 # LAWIM Runtime Foundation
 
 Date: 2026-06-28
-Status: FOUNDATION_CREATED
+Status: MINIMAL_EXECUTABLE
 
 ## Purpose
 
 This directory contains the internal runtime skeleton for LAWIM_V2.
-It prepares the command, service, policy, and reporting boundaries without adding business logic.
+It now exposes a minimal executable surface for `lawim --help`, `lawim status`, and `lawim doctor` without adding business logic.
 
 ## Source of truth
 
@@ -19,10 +19,12 @@ It prepares the command, service, policy, and reporting boundaries without addin
 
 ## What exists now
 
-- Command skeletons for `status`, `doctor`, `run`, `batch-run`, `review`, `close-sprint`, and `git-sync`.
+- Executable minimal commands for `status` and `doctor`.
+- A minimal `--help` CLI entrypoint.
+- Command skeletons for `run`, `batch-run`, `review`, `close-sprint`, and `git-sync`.
 - Service skeletons for Workflow, Policy, Execution, Review, Git, PCC, Planning, and Report.
-- A small `bin/lawim` entrypoint stub that only advertises the contract surface.
-- A smoke test script that checks the foundation files exist.
+- A `bin/lawim` entrypoint that prints the minimal runtime status and diagnostic output.
+- A smoke test script that checks the executable surface.
 
 ## Non goals
 
