@@ -2,7 +2,7 @@
 
         - Date: 2026-06-28
         - Scope: Sprint 010 execution controlee
-        - Status: EN COURS
+        - Status: CLOTURE
 
         ## Objectif
         arbitrer les décisions et relancer le matching quand nécessaire.
@@ -39,6 +39,6 @@
         - Tickets couverts: 3/3
 
         ## Cloture
-        - Rapport de planning: reports/sprint-010/SPRINT-010-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-010/SPRINT-010-CLOSURE-REPORT.md
         - Decision proposee: GO AVEC RESERVES
         - Sprint 011: non ouvert

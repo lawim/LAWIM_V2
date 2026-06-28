@@ -147,8 +147,8 @@
 - Decision proposee: GO AVEC RESERVES
 - Sprint 010: non ouvert
 
-                                ## Sprint 010
-        - Statut: EN COURS
+                                        ## Sprint 010
+        - Statut: CLOTURE
         - Objectif: arbitrer les décisions et relancer le matching quand nécessaire.
         - Tickets: T10.01 - Decision orchestration, T10.02 - Rematching flow, T10.03 - Recommendation trace
         - Tickets couverts: 3/3
@@ -158,7 +158,7 @@
         - Risques d'entree: décision opaque, boucles de relance, incohérence métier.
         - Risque bloquant: false
         - Validation DG: en attente
-        - Rapport de planning: reports/sprint-010/SPRINT-010-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-010/SPRINT-010-CLOSURE-REPORT.md
         - Avancement:
         - T10.01: ferme
 - T10.02: ferme
