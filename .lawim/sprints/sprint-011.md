@@ -33,10 +33,10 @@
         - séquence cassée, notifications mal déclenchées.
 
         ## Avancement
-        - T11.01: A FAIRE
+        - T11.01: ferme
 - T11.02: A FAIRE
 - T11.03: A FAIRE
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-011/SPRINT-011-PLANNING-REPORT.md

@@ -165,11 +165,11 @@
 - T10.03: ferme
         - Sprint 011: non ouvert
 
-        ## Sprint 011
+                ## Sprint 011
         - Statut: EN COURS
         - Objectif: orchestrer les étapes métier, les visites et les événements.
         - Tickets: T11.01 - Workflow orchestration, T11.02 - Visits and follow-up, T11.03 - Event markers
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
         - Ordre recommande: T11.01 -> T11.02 -> T11.03
         - Dependances: S008, S010.
         - Chemin critique: Decision DG d'ouverture -> T11.01 -> T11.02 -> T11.03 -> cloture Sprint 011
@@ -178,11 +178,10 @@
         - Validation DG: en attente
         - Rapport de planning: reports/sprint-011/SPRINT-011-PLANNING-REPORT.md
         - Avancement:
-        - T11.01: A FAIRE
+        - T11.01: ferme
 - T11.02: A FAIRE
 - T11.03: A FAIRE
         - Sprint 012: non ouvert
-
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md

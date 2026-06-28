@@ -345,3 +345,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | Sprint 010 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-010/SPRINT-010-CLOSURE-REPORT.md |
 | Sprint 010 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-010/SPRINT-010-CLOSURE-REPORT.md |
 | Sprint 010 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-010/SPRINT-010-CLOSURE-REPORT.md |
+| T11.01 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-011/T11.01-workflow-orchestration-report.md |
+| T11.01 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-011/T11.01-workflow-orchestration-report.md |
+| T11.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-011/T11.01-workflow-orchestration-report.md |
+| T11.01 | Integration | Cohesion workflow orchestration | Integration Manager | READY FOR T11.02 | 2026-06-28 | reports/sprint-011/T11.01-workflow-orchestration-report.md |
+| T11.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T11.02 | 2026-06-28 | reports/sprint-011/T11.01-workflow-orchestration-report.md |
