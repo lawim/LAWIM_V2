@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 005
-- Sprint status: EN COURS
+- Sprint actif: Aucun
+- Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle utilisateurs, roles et organisations reste a consolider dans Sprint 005.
-- Derniere trace technique: T05.03 est ferme; la matrice de permissions est stabilisee avant la cloture du Sprint 005, sans remettre en cause le socle Sprint 004.
+- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle identite, organisations et permissions est consolide avant le coeur immobilier du Sprint 006.
+- Derniere trace technique: Sprint 005 est cloture apres T05.01, T05.02 et T05.03; le socle identite, organisations et permissions est consolide avant le Sprint 006, sans remettre en cause le socle Sprint 004.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -50,21 +50,6 @@
 - T03.03: primitives de sauvegarde confirmee
 - Sprint 004: termine, cloture tracee
 
-## Ouverture Sprint 005
-- Statut Sprint 005: EN COURS
-- Objectif: organiser les utilisateurs, les roles, les organisations et la matrice de permissions de LAWIM_V2.
-- Tickets: T05.01 - User lifecycle, T05.02 - Organization model, T05.03 - Permissions matrix
-- Tickets couverts: 3/3
-- T05.01: ferme
-- T05.02: ferme
-- T05.03: ferme
-- Ordre recommande: T05.01 -> T05.02 -> T05.03
-- Dependances: Sprint 004 cloture, T04.03, `docs/Directive/08-ROLE-REFERENCE.md`, `docs/Directive/19-ADMINISTRATION-REFERENCE.md`, `docs/Directive/13-ARCHITECTURE-GOVERNANCE-REFERENCE.md`, `docs/Directive/15-SECURITY-REFERENCE.md` et `docs/Directive/06-DATABASE-REFERENCE.md`
-- Chemin critique: Decision DG d'ouverture -> T05.01 -> T05.02 -> T05.03 -> cloture Sprint 005
-- Risques d'entree: duplication d identites, confusion sur les rattachements organisationnels, matrice de permissions trop large
-- Risque bloquant: false
-- Validation DG: en attente
-
 ## Cloture Sprint 004
 - Statut Sprint 004: TERMINE
 - Objectif: mettre en place l authentification et l identite de LAWIM_V2.
@@ -79,7 +64,25 @@
 - T04.01: service d authentification confirme
 - T04.02: strategie de jetons confirmee
 - T04.03: gate MFA confirmee
-- Sprint 005: ouvert
+- Sprint 005: termine, cloture tracee
+
+## Cloture Sprint 005
+- Statut Sprint 005: TERMINE
+- Objectif: organiser les utilisateurs, les roles, les organisations et la matrice de permissions de LAWIM_V2.
+- Tickets: T05.01 - User lifecycle, T05.02 - Organization model, T05.03 - Permissions matrix
+- Tickets couverts: 3/3
+- Ordre recommande: T05.01 -> T05.02 -> T05.03
+- Dependances: Sprint 004 cloture, T04.03, `docs/Directive/08-ROLE-REFERENCE.md`, `docs/Directive/19-ADMINISTRATION-REFERENCE.md`, `docs/Directive/13-ARCHITECTURE-GOVERNANCE-REFERENCE.md`, `docs/Directive/15-SECURITY-REFERENCE.md` et `docs/Directive/06-DATABASE-REFERENCE.md`
+- Chemin critique: Decision DG d'ouverture -> T05.01 -> T05.02 -> T05.03 -> cloture Sprint 005
+- Risques d'entree: duplication d identites, confusion sur les rattachements organisationnels, matrice de permissions trop large
+- Risque bloquant: false
+- Validation DG: en attente
+- T05.01: ferme
+- T05.02: ferme
+- T05.03: ferme
+- Rapport de cloture: reports/sprint-005/SPRINT-005-CLOSURE-REPORT.md
+- Decision proposee: GO AVEC RESERVES
+- Sprint 006: non ouvert
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

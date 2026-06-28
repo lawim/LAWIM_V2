@@ -2,7 +2,7 @@
 
 - Date: 2026-06-28
 - Scope: Sprint 005 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 Organiser les utilisateurs, les roles, les organisations et la matrice de permissions de LAWIM_V2.
@@ -46,5 +46,7 @@ GO AVEC RESERVES
 - T05.03: ferme;
 - Tickets couverts: 3/3.
 
-## Validation DG
-- en attente.
+## Cloture
+- Rapport de cloture: reports/sprint-005/SPRINT-005-CLOSURE-REPORT.md
+- Decision proposee: GO AVEC RESERVES
+- Sprint 006: non ouvert
