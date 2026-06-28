@@ -35,3 +35,4 @@
 | 2026-06-28 | Sprint 006 opening and core immobilier plan confirmed | Directeur General | Sprint 006 / coeur immobilier | Active | reports/sprint-006/SPRINT-006-PLANNING-REPORT.md |
 | 2026-06-28 | Property domain schema, status model and attribute normalization confirmed | Architecture | T06.01 / Property domain schema | Active | reports/sprint-006/T06.01-property-domain-schema-report.md |
 | 2026-06-28 | Pricing alignment, currency contract and variation history confirmed | Reporting | T06.02 / Pricing alignment | Active | reports/sprint-006/T06.02-pricing-alignment-report.md |
+| 2026-06-28 | Publication guardrails, status transitions and validation gates confirmed | Workflow | T06.03 / Publication guardrails | Active | reports/sprint-006/T06.03-publication-guardrails-report.md |

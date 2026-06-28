@@ -47,5 +47,5 @@ GO AVEC RESERVES
 ## Avancement
 - T06.01: ferme
 - T06.02: ferme
-- T06.03: en attente
-- Tickets couverts: 2/3
+- T06.03: ferme
+- Tickets couverts: 3/3

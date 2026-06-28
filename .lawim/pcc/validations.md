@@ -200,3 +200,8 @@ Le Sprint 005 est termine sur la base des 3 tickets planifies. Les tickets T05.0
 | T06.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-006/T06.02-pricing-alignment-report.md |
 | T06.02 | Integration | Cohesion prix, devises et reporting de base | Integration Manager | READY FOR T06.03 | 2026-06-28 | reports/sprint-006/T06.02-pricing-alignment-report.md |
 | T06.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T06.03 | 2026-06-28 | reports/sprint-006/T06.02-pricing-alignment-report.md |
+| T06.03 | Architecture | Cohesion des guardrails de publication et du workflow | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-006/T06.03-publication-guardrails-report.md |
+| T06.03 | QA | Criteres d'acceptation et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-006/T06.03-publication-guardrails-report.md |
+| T06.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-006/T06.03-publication-guardrails-report.md |
+| T06.03 | Integration | Cohesion publication, validation et readiness de cloture | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-006/T06.03-publication-guardrails-report.md |
+| T06.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-006/T06.03-publication-guardrails-report.md |
