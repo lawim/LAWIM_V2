@@ -15,4 +15,4 @@
 | R-011 | Monitoring drift, non-actionable alerts or health-check blind spots | High | Medium | Define signal ownership, thresholds and escalation paths before any monitoring tool is activated | DevOps | Open |
 | R-012 | Sprint 002 opened before DG opening decision is traced | High | Low | Record the DG opening decision in the execution trace and keep ticket states synchronized | PMO | Mitigated |
 | R-013 | Docker baseline drifts from the inherited runtime contract | High | Medium | Reuse the shared base, keep overlays deterministic and validate merged config before use | DevOps | Open |
-| R-014 | CI skeleton or observability exposes secrets or masks failures | High | Medium | Keep secrets external, validate log masking and health checks before activation | Security | Open |
+| R-014 | CI skeleton or observability exposes secrets or masks failures | High | Medium | Keep secrets external, validate log masking and health checks before activation | Security | Mitigated |

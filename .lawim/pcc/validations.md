@@ -83,3 +83,8 @@ Le Sprint 001 est termine sur la base des 10 tickets planifies. T01.04 est couve
 | T02.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-002/T02.02-runtime-observability-report.md |
 | T02.02 | Integration | Cohesion logs, health checks, monitoring et environnements | Integration Manager | Valide | 2026-06-28 | reports/sprint-002/T02.02-runtime-observability-report.md |
 | T02.02 | DG | Validation finale de gouvernance | Directeur General | Valide avec reserves | 2026-06-28 | reports/sprint-002/T02.02-runtime-observability-report.md |
+| T02.03 | Architecture | Coherence technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-002/T02.03-ci-skeleton-report.md |
+| T02.03 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-002/T02.03-ci-skeleton-report.md |
+| T02.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-002/T02.03-ci-skeleton-report.md |
+| T02.03 | Integration | Cohesion CI, branches, promotions et conventions de secrets | Integration Manager | Valide | 2026-06-28 | reports/sprint-002/T02.03-ci-skeleton-report.md |
+| T02.03 | DG | Validation finale de gouvernance | Directeur General | Valide avec reserves | 2026-06-28 | reports/sprint-002/T02.03-ci-skeleton-report.md |

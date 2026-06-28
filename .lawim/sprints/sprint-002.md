@@ -21,7 +21,7 @@ GO AVEC RESERVES
 - T02.03 - CI skeleton
 
 ## Ticket suivant
-- T02.03 - CI skeleton
+- SPRINT_002_CLOSURE
 
 ## Dependances
 - Sprint 001 cloture et PCC coherent.

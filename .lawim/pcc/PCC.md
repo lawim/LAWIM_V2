@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees
-- Derniere trace technique: T02.02 a confirme le contrat d'observabilite runtime, les conventions de logs et les health checks; Sprint 002 reste en execution controlee.
+- Derniere trace technique: T02.03 a confirme le squelette CI, les branches protegees, les exemples GitHub Actions et les conventions de promotion; Sprint 002 attend sa cloture.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -25,7 +25,7 @@
 - Statut Sprint 002: EN COURS
 - Objectif: disposer d'un runtime local reproductible, d'une observabilite de base et d'un squelette CI minimal.
 - Tickets: T02.01 - Docker baseline, T02.02 - Runtime observability, T02.03 - CI skeleton
-- Ticket suivant: T02.03 - CI skeleton
+- Ticket suivant: SPRINT_002_CLOSURE
 - Ordre recommande: T02.01 -> T02.02 -> T02.03
 - Dependances: Sprint 001 cloture, T01.01, T01.02, T01.03, T01.04, T01.05, T01.07, T01.08, T01.09 et T01.10
 - Chemin critique: Decision DG d'ouverture -> T02.01 -> T02.02 et T02.03
