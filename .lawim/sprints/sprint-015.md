@@ -34,9 +34,9 @@
 
         ## Avancement
         - T15.01: ferme
-- T15.02: A FAIRE
+- T15.02: ferme
 - T15.03: A FAIRE
-        - Tickets couverts: 1/3
+        - Tickets couverts: 2/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-015/SPRINT-015-PLANNING-REPORT.md
