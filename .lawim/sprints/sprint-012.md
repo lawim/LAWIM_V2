@@ -33,10 +33,10 @@
         - bruit, doublons, mauvaise priorité.
 
         ## Avancement
-        - T12.01: A FAIRE
+        - T12.01: ferme
 - T12.02: A FAIRE
 - T12.03: A FAIRE
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-012/SPRINT-012-PLANNING-REPORT.md

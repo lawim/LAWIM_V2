@@ -63,3 +63,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-004 | Event markers, contract confirmed for Sprint 011 | Integration | T11.03 / Event markers | Active | reports/sprint-011/T11.03-event-markers-report.md |
 | 2026-06-28 | DEC-005 | Sprint 011 closure proposal and no Sprint 012 opening | Directeur General | Sprint 011 closure / no Sprint 012 | Proposed | reports/sprint-011/SPRINT-011-CLOSURE-REPORT.md |
 | 2026-06-28 | DEC-001 | Sprint 012 opening and notifications plan confirmed | Directeur General | Sprint 012 / notifications | Active | reports/sprint-012/SPRINT-012-PLANNING-REPORT.md |
+| 2026-06-28 | DEC-002 | Notification model, contract confirmed for Sprint 012 | Architecture | T12.01 / Notification model | Active | reports/sprint-012/T12.01-notification-model-report.md |
