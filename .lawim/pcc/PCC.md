@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle biens, attributs et prix reste a consolider dans Sprint 006.
-- Derniere trace technique: T06.01 a verrouille le schema domaine des biens et prepare la consolidation du prix; T06.02 et T06.03 restent a executer sans remettre en cause le socle Sprint 005.
+- Derniere trace technique: T06.02 a aligne le contrat de prix et de reporting; T06.03 reste a executer sans remettre en cause le socle Sprint 005.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -88,7 +88,7 @@
 - Statut Sprint 006: EN COURS
 - Objectif: construire le socle des biens, attributs et prix de LAWIM_V2.
 - Tickets: T06.01 - Property domain schema, T06.02 - Pricing alignment, T06.03 - Publication guardrails
-- Tickets couverts: 1/3
+- Tickets couverts: 2/3
 - Ordre recommande: T06.01 -> T06.02 -> T06.03
 - Dependances: Sprint 005 cloture, T05.03, `docs/Directive/02-PROPERTY-REFERENCE.md`, `docs/Directive/02H-ATTRIBUTE-CATALOG.md`, `docs/Directive/02I-PRICING-REFERENCE.md`, `docs/Directive/11-REPORTING-REFERENCE.md`, `docs/Directive/05-WORKFLOW-REFERENCE.md` et `docs/Directive/12-TESTS-REFERENCE.md`
 - Chemin critique: Decision DG d'ouverture -> T06.01 -> T06.02 -> T06.03 -> cloture Sprint 006
@@ -96,7 +96,7 @@
 - Risque bloquant: false
 - Validation DG: en attente
 - T06.01: ferme
-- T06.02: en attente
+- T06.02: ferme
 - T06.03: en attente
 
 ## Referentiels de pilotage

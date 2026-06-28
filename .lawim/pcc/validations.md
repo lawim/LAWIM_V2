@@ -195,3 +195,8 @@ Le Sprint 005 est termine sur la base des 3 tickets planifies. Les tickets T05.0
 | T06.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-006/T06.01-property-domain-schema-report.md |
 | T06.01 | Integration | Cohesion property, attributes et statuts de base | Integration Manager | READY FOR T06.02 | 2026-06-28 | reports/sprint-006/T06.01-property-domain-schema-report.md |
 | T06.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T06.02 | 2026-06-28 | reports/sprint-006/T06.01-property-domain-schema-report.md |
+| T06.02 | Architecture | Cohesion du contrat de prix, des devises et de l'historique | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-006/T06.02-pricing-alignment-report.md |
+| T06.02 | QA | Criteres d'acceptation et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-006/T06.02-pricing-alignment-report.md |
+| T06.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-006/T06.02-pricing-alignment-report.md |
+| T06.02 | Integration | Cohesion prix, devises et reporting de base | Integration Manager | READY FOR T06.03 | 2026-06-28 | reports/sprint-006/T06.02-pricing-alignment-report.md |
+| T06.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T06.03 | 2026-06-28 | reports/sprint-006/T06.02-pricing-alignment-report.md |

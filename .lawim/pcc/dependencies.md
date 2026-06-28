@@ -26,3 +26,4 @@
 | D-022 | T05.03 depend de T05.02 et des conventions role / security | Sprint 005 | High | Confirmed |
 | D-023 | Decision DG d'ouverture du Sprint 006 a tracer avant toute execution | Gouvernance | High | Confirmed |
 | D-024 | T06.01 depend de la cloture Sprint 005 et des references property / attributes | Sprint 006 | High | Confirmed |
+| D-025 | T06.02 depend de T06.01 et des references pricing / reporting | Sprint 006 | High | Confirmed |
