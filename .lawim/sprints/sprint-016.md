@@ -34,10 +34,10 @@
         - chiffres incohérents, agrégats incomplets.
 
         ## Avancement
-        - T16.01: A FAIRE
+        - T16.01: ferme
 - T16.02: A FAIRE
 - T16.03: A FAIRE
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-016/SPRINT-016-PLANNING-REPORT.md
