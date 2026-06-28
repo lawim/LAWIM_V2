@@ -44,3 +44,4 @@
 | 2026-06-28 | Sprint 007 closure proposal and no Sprint 008 opening | Directeur General | Sprint 007 closure / no Sprint 008 | Proposed | reports/sprint-007/SPRINT-007-CLOSURE-REPORT.md |
 | 2026-06-28 | Sprint 008 opening and conversation plan confirmed | Directeur General | Sprint 008 / conversation engine | Active | reports/sprint-008/SPRINT-008-PLANNING-REPORT.md |
 | 2026-06-28 | Conversation model, thread and participant contract confirmed | Architecture | T08.01 / Conversation model | Active | reports/sprint-008/T08.01-conversation-model-report.md |
+| 2026-06-28 | Messaging flow, delivery and read-state contract confirmed | Integration | T08.02 / Messaging flow | Active | reports/sprint-008/T08.02-messaging-flow-report.md |

@@ -42,9 +42,9 @@ GO AVEC RESERVES
 
 ## Avancement
 - T08.01: ferme
-- T08.02: a faire
+- T08.02: ferme
 - T08.03: a faire
-- Tickets couverts: 1/3
+- Tickets couverts: 2/3
 
 ## Cloture
 - Rapport de cloture: a produire

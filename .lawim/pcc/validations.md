@@ -259,3 +259,8 @@ Le Sprint 007 est termine sur la base des 3 tickets planifies. Les tickets T07.0
 | T08.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-008/T08.01-conversation-model-report.md |
 | T08.01 | Integration | Cohesion threads, participants et statuts | Integration Manager | READY FOR T08.02 | 2026-06-28 | reports/sprint-008/T08.01-conversation-model-report.md |
 | T08.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T08.02 | 2026-06-28 | reports/sprint-008/T08.01-conversation-model-report.md |
+| T08.02 | Architecture | Cohesion du flux de message, des etats et des conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-008/T08.02-messaging-flow-report.md |
+| T08.02 | QA | Criteres d'acceptation et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-008/T08.02-messaging-flow-report.md |
+| T08.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-008/T08.02-messaging-flow-report.md |
+| T08.02 | Integration | Cohesion envoi, reception, lecture et livraison | Integration Manager | READY FOR T08.03 | 2026-06-28 | reports/sprint-008/T08.02-messaging-flow-report.md |
+| T08.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T08.03 | 2026-06-28 | reports/sprint-008/T08.02-messaging-flow-report.md |
