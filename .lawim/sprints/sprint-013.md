@@ -34,10 +34,10 @@
         - dérive d'attribution, doublons, code recalculé par erreur.
 
         ## Avancement
-        - T13.01: A FAIRE
+        - T13.01: ferme
 - T13.02: A FAIRE
 - T13.03: A FAIRE
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-013/SPRINT-013-PLANNING-REPORT.md
