@@ -115,3 +115,8 @@ Le Sprint 002 est termine sur la base des 3 tickets planifies. Les tickets T02.0
 | T03.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-003/T03.02-prisma-baseline-report.md |
 | T03.02 | Integration | Cohesion Prisma, schema relationnel et conventions de migration | Integration Manager | READY FOR T03.03 | 2026-06-28 | reports/sprint-003/T03.02-prisma-baseline-report.md |
 | T03.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T03.03 | 2026-06-28 | reports/sprint-003/T03.02-prisma-baseline-report.md |
+| T03.03 | Architecture | Cohesion des primitives de sauvegarde, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-003/T03.03-backup-primitives-report.md |
+| T03.03 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-003/T03.03-backup-primitives-report.md |
+| T03.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-003/T03.03-backup-primitives-report.md |
+| T03.03 | Integration | Cohesion backup, restore, stockage et T03.01/T03.02 | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-003/T03.03-backup-primitives-report.md |
+| T03.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-003/T03.03-backup-primitives-report.md |
