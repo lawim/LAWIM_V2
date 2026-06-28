@@ -183,11 +183,11 @@
 - T11.03: ferme
         - Sprint 012: non ouvert
 
-                ## Sprint 012
+                        ## Sprint 012
         - Statut: EN COURS
         - Objectif: diffuser les messages au bon moment et par le bon canal.
         - Tickets: T12.01 - Notification model, T12.02 - Channel adapters, T12.03 - Templates and preferences
-        - Tickets couverts: 1/3
+        - Tickets couverts: 2/3
         - Ordre recommande: T12.01 -> T12.02 -> T12.03
         - Dependances: S011, S004.
         - Chemin critique: Decision DG d'ouverture -> T12.01 -> T12.02 -> T12.03 -> cloture Sprint 012
@@ -197,7 +197,7 @@
         - Rapport de planning: reports/sprint-012/SPRINT-012-PLANNING-REPORT.md
         - Avancement:
         - T12.01: ferme
-- T12.02: A FAIRE
+- T12.02: ferme
 - T12.03: A FAIRE
         - Sprint 013: non ouvert
 ## Referentiels de pilotage

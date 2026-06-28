@@ -61,3 +61,4 @@
 | R-005 | Sprint 011 closure consolidates the workflows, visites, notifications guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |
 | R-001 | Sprint 012 opening requires stable notifications contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T12.01 Notification model consolidates the contract | High | Low | Keep notification model explicit and preserve the reference as the source of truth | Architecture | Mitigated |
+| R-003 | T12.02 Channel adapters consolidates the contract | High | Low | Keep channel adapters explicit and preserve the reference as the source of truth | Integration | Mitigated |
