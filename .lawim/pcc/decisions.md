@@ -27,3 +27,4 @@
 | 2026-06-28 | Token strategy, JWT refresh and session storage confirmed for LAWIM_V2 | Security | T04.02 / Token strategy | Active | reports/sprint-004/T04.02-token-strategy-report.md |
 | 2026-06-28 | MFA gate, recovery and access policy confirmed for LAWIM_V2 | Security | T04.03 / MFA gate | Active | reports/sprint-004/T04.03-mfa-gate-report.md |
 | 2026-06-28 | Sprint 004 closure proposal and no Sprint 005 opening | Directeur General | Sprint 004 closure / no Sprint 005 | Proposed | reports/sprint-004/SPRINT-004-CLOSURE-REPORT.md |
+| 2026-06-28 | Sprint 005 opening and users/roles/organizations plan confirmed | Directeur General | Sprint 005 / users, roles et organisations | Active | reports/sprint-005/SPRINT-005-PLANNING-REPORT.md |

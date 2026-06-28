@@ -20,3 +20,7 @@
 | D-016 | T04.01 depend de T03.02 et des references security / API | Sprint 003 | High | Confirmed |
 | D-017 | T04.02 depend de T04.01 et des conventions de jetons / session | Sprint 004 | High | Confirmed |
 | D-018 | T04.03 depend de T04.02 et des conventions MFA / access policy | Sprint 004 | High | Confirmed |
+| D-019 | Decision DG d'ouverture du Sprint 005 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-020 | T05.01 depend de la cloture Sprint 004 et des references role / database | Sprint 004 | High | Confirmed |
+| D-021 | T05.02 depend de T05.01 et des conventions administration / architecture | Sprint 005 | High | Confirmed |
+| D-022 | T05.03 depend de T05.02 et des conventions role / security | Sprint 005 | High | Confirmed |
