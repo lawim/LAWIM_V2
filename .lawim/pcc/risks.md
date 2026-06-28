@@ -12,3 +12,4 @@
 | R-008 | Secret template drift or leakage through env, Compose or CI/CD wiring | High | Medium | Keep secret values external, centralize the naming convention and review injection paths before use | Security | Open |
 | R-009 | Workflow drift, branch-policy mismatch or secret leakage through GitHub Actions wiring | High | Medium | Keep example workflows non-active, enforce minimal permissions, externalize secrets and validate branch mapping before activation | Security | Open |
 | R-010 | Logging drift, verbose output or sensitive data exposure through logs | High | Medium | Standardize levels, correlation identifiers, masking and retention rules before any collector is introduced | Security | Open |
+| R-011 | Monitoring drift, non-actionable alerts or health-check blind spots | High | Medium | Define signal ownership, thresholds and escalation paths before any monitoring tool is activated | DevOps | Open |

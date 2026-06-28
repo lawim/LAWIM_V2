@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement
-- Derniere trace technique: T01.09 a etabli la fondation logging (strategie, conventions, niveaux, rotation, retention et preparation supervision) en reutilisant logging/README.md, docker/logging/README.md et monitoring/README.md; T01.10 reste prepare sans ouverture.
+- Derniere trace technique: T01.10 a etabli la fondation monitoring (strategie de supervision, metriques techniques, disponibilite, alertes, health checks et integration conceptuelle avec Docker, Nginx, Logging, CI/CD et OVH) en reutilisant monitoring/README.md et docker/monitoring/README.md; la preparation de Sprint 001 se poursuit vers la revue de sprint sans ouverture de Sprint 002.
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

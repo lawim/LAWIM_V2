@@ -7,3 +7,4 @@
 | D-003 | Prerequis T01.02 a confirmer | T01.01 | Medium | Confirmed |
 | D-004 | Fondation Docker, Compose, Environments et Nginx validee pour la preparation OVH | T01.06 | High | Confirmed |
 | D-005 | Separation variables / secrets formalisee pour la preparation CI/CD | T01.07 | High | Confirmed |
+| D-006 | Fondation Monitoring dependante de la fondation Logging pour la correlation, les signaux et la preparation des alertes | T01.09 | High | Confirmed |

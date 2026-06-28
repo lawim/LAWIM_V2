@@ -44,6 +44,11 @@ Ce registre suit le workflow officiel et les checklists associees.
 | T01.09 | Security | Masking, retention and sensitive-data exposure risks | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.09-logging-foundation-report.md |
 | T01.09 | Integration | Cohesion logging, Docker, Nginx, CI/CD and Monitoring | Integration Manager | READY FOR T01.10 | 2026-06-28 | reports/sprint-001/T01.09-logging-foundation-report.md |
 | T01.09 | DG | Validation finale de gouvernance | Directeur General | READY FOR T01.10 | 2026-06-28 | reports/sprint-001/T01.09-logging-foundation-report.md |
+| T01.10 | Architecture | Coherence technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.10-monitoring-foundation-report.md |
+| T01.10 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-001/T01.10-monitoring-foundation-report.md |
+| T01.10 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide avec reserves | 2026-06-28 | reports/sprint-001/T01.10-monitoring-foundation-report.md |
+| T01.10 | Integration | Cohesion monitoring, Docker, Nginx, Logging, CI/CD et OVH | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-001/T01.10-monitoring-foundation-report.md |
+| T01.10 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-001/T01.10-monitoring-foundation-report.md |
 
 ## Regles
 - une ligne de validation correspond a une gate;
