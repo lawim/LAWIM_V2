@@ -410,3 +410,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T14.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-014/T14.01-sandbox-integration-report.md |
 | T14.01 | Integration | Cohesion sandbox integration | Integration Manager | READY FOR T14.02 | 2026-06-28 | reports/sprint-014/T14.01-sandbox-integration-report.md |
 | T14.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T14.02 | 2026-06-28 | reports/sprint-014/T14.01-sandbox-integration-report.md |
+| T14.02 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-014/T14.02-webhook-integrity-report.md |
+| T14.02 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-014/T14.02-webhook-integrity-report.md |
+| T14.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-014/T14.02-webhook-integrity-report.md |
+| T14.02 | Integration | Cohesion webhook integrity | Integration Manager | READY FOR T14.03 | 2026-06-28 | reports/sprint-014/T14.02-webhook-integrity-report.md |
+| T14.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T14.03 | 2026-06-28 | reports/sprint-014/T14.02-webhook-integrity-report.md |

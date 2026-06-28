@@ -74,3 +74,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-005 | Sprint 013 closure proposal and no Sprint 014 opening | Directeur General | Sprint 013 closure / no Sprint 014 | Proposed | reports/sprint-013/SPRINT-013-CLOSURE-REPORT.md |
 | 2026-06-28 | DEC-001 | Sprint 014 opening and campay plan confirmed | Directeur General | Sprint 014 / campay | Active | reports/sprint-014/SPRINT-014-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-002 | Sandbox integration, contract confirmed for Sprint 014 | Security | T14.01 / Sandbox integration | Active | reports/sprint-014/T14.01-sandbox-integration-report.md |
+| 2026-06-28 | DEC-003 | Webhook integrity, contract confirmed for Sprint 014 | Security | T14.02 / Webhook integrity | Active | reports/sprint-014/T14.02-webhook-integrity-report.md |

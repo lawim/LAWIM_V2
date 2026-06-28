@@ -219,11 +219,11 @@
 - T13.03: ferme
         - Sprint 014: non ouvert
 
-                ## Sprint 014
+                        ## Sprint 014
         - Statut: EN COURS
         - Objectif: intégrer les paiements, les webhooks et la réconciliation.
         - Tickets: T14.01 - Sandbox integration, T14.02 - Webhook integrity, T14.03 - Reconciliation and receipts
-        - Tickets couverts: 1/3
+        - Tickets couverts: 2/3
         - Ordre recommande: T14.01 -> T14.02 -> T14.03
         - Dependances: S004, S011, S012, S013.
         - Chemin critique: Decision DG d'ouverture -> T14.01 -> T14.02 -> T14.03 -> cloture Sprint 014
@@ -233,7 +233,7 @@
         - Rapport de planning: reports/sprint-014/SPRINT-014-PLANNING-REPORT.md
         - Avancement:
         - T14.01: ferme
-- T14.02: A FAIRE
+- T14.02: ferme
 - T14.03: A FAIRE
         - Sprint 015: non ouvert
 ## Referentiels de pilotage
