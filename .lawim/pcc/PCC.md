@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle utilisateurs, roles et organisations reste a consolider dans Sprint 005.
-- Derniere trace technique: Sprint 005 est ouvert sur les utilisateurs, les roles et les organisations; T05.01, T05.02 et T05.03 vont consolider les comptes et les permissions sans remettre en cause le socle Sprint 004.
+- Derniere trace technique: T05.01 est ferme; le cycle de vie utilisateur est stabilise avant T05.02 et T05.03, sans remettre en cause le socle Sprint 004.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -54,7 +54,8 @@
 - Statut Sprint 005: EN COURS
 - Objectif: organiser les utilisateurs, les roles, les organisations et la matrice de permissions de LAWIM_V2.
 - Tickets: T05.01 - User lifecycle, T05.02 - Organization model, T05.03 - Permissions matrix
-- Tickets couverts: 0/3
+- Tickets couverts: 1/3
+- T05.01: ferme
 - Ordre recommande: T05.01 -> T05.02 -> T05.03
 - Dependances: Sprint 004 cloture, T04.03, `docs/Directive/08-ROLE-REFERENCE.md`, `docs/Directive/19-ADMINISTRATION-REFERENCE.md`, `docs/Directive/13-ARCHITECTURE-GOVERNANCE-REFERENCE.md`, `docs/Directive/15-SECURITY-REFERENCE.md` et `docs/Directive/06-DATABASE-REFERENCE.md`
 - Chemin critique: Decision DG d'ouverture -> T05.01 -> T05.02 -> T05.03 -> cloture Sprint 005

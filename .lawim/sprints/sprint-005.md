@@ -40,5 +40,9 @@ GO AVEC RESERVES
 - matrice de permissions trop large ou insuffisamment explicite;
 - confusion entre contrat documentaire et implementation sensible.
 
+## Avancement
+- T05.01: ferme;
+- Tickets couverts: 1/3.
+
 ## Validation DG
 - en attente.

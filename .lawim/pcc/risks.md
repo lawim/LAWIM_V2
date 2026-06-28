@@ -24,3 +24,4 @@
 | R-020 | Token strategy or refresh flow drifts from the canonical auth contract | High | Medium | Keep JWT, refresh and session storage aligned with the security reference before activation | Security | Mitigated |
 | R-021 | MFA gate or recovery path remains incomplete | High | Medium | Keep MFA, recovery and access-policy rules explicit before enabling critical flows | Security | Mitigated |
 | R-022 | Sprint 005 opening depends on stable users, roles and organizations contracts | High | Low | Reuse the role, administration, architecture and security references and keep the opening decision traceable before any ticket starts | PMO | Open |
+| R-023 | User lifecycle or profile contract drifts from the canonical role and database references | High | Medium | Keep the single-account rule, explicit statuses and traceable transitions aligned with the role and database references | Security | Mitigated |
