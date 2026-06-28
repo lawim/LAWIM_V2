@@ -37,3 +37,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-031 | Property domain schema, status model and attribute normalization confirmed | Architecture | T06.01 / Property domain schema | Active | reports/sprint-006/T06.01-property-domain-schema-report.md |
 | 2026-06-28 | DEC-032 | Pricing alignment, currency contract and variation history confirmed | Reporting | T06.02 / Pricing alignment | Active | reports/sprint-006/T06.02-pricing-alignment-report.md |
 | 2026-06-28 | DEC-033 | Publication guardrails, status transitions and validation gates confirmed | Workflow | T06.03 / Publication guardrails | Active | reports/sprint-006/T06.03-publication-guardrails-report.md |
+| 2026-06-28 | DEC-034 | Sprint 006 closure proposal and no Sprint 007 opening | Directeur General | Sprint 006 closure / no Sprint 007 | Proposed | reports/sprint-006/SPRINT-006-CLOSURE-REPORT.md |

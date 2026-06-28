@@ -2,7 +2,7 @@
 
 - Date: 2026-06-28
 - Scope: Sprint 006 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 Construire le socle des biens, attributs et prix de LAWIM_V2.
@@ -49,3 +49,8 @@ GO AVEC RESERVES
 - T06.02: ferme
 - T06.03: ferme
 - Tickets couverts: 3/3
+
+## Cloture
+- Rapport de cloture: reports/sprint-006/SPRINT-006-CLOSURE-REPORT.md
+- Decision proposee: GO AVEC RESERVES
+- Sprint 007: non ouvert

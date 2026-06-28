@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 006
-- Sprint status: EN COURS
+- Sprint actif: aucun
+- Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle biens, attributs et prix reste a consolider dans Sprint 006.
-- Derniere trace technique: T06.03 a verrouille les guardrails de publication et le sprint est pret pour cloture; aucun retour sur le socle Sprint 005.
+- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 reste interdit.
+- Derniere trace technique: Sprint 006 est cloture sur le socle immobilier; T06.01, T06.02 et T06.03 sont fermes et Sprint 007 ne doit pas etre ouvert.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -82,10 +82,10 @@
 - T05.03: ferme
 - Rapport de cloture: reports/sprint-005/SPRINT-005-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
-- Sprint 006: ouvert
+- Sprint 006: termine, cloture tracee
 
-## Ouverture Sprint 006
-- Statut Sprint 006: EN COURS
+## Cloture Sprint 006
+- Statut Sprint 006: TERMINE
 - Objectif: construire le socle des biens, attributs et prix de LAWIM_V2.
 - Tickets: T06.01 - Property domain schema, T06.02 - Pricing alignment, T06.03 - Publication guardrails
 - Tickets couverts: 3/3
@@ -98,6 +98,9 @@
 - T06.01: ferme
 - T06.02: ferme
 - T06.03: ferme
+- Rapport de cloture: reports/sprint-006/SPRINT-006-CLOSURE-REPORT.md
+- Decision proposee: GO AVEC RESERVES
+- Sprint 007: non ouvert
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

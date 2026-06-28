@@ -205,3 +205,15 @@ Le Sprint 005 est termine sur la base des 3 tickets planifies. Les tickets T05.0
 | T06.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-006/T06.03-publication-guardrails-report.md |
 | T06.03 | Integration | Cohesion publication, validation et readiness de cloture | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-006/T06.03-publication-guardrails-report.md |
 | T06.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-006/T06.03-publication-guardrails-report.md |
+
+## Cloture Sprint 006
+
+Le Sprint 006 est termine sur la base des 3 tickets planifies. Les tickets T06.01, T06.02 et T06.03 sont couverts; le risque bloquant reste false et aucun Sprint 007 n'est ouvert.
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sprint 006 | Architecture | Cohesion globale des 3 tickets, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-006/SPRINT-006-CLOSURE-REPORT.md |
+| Sprint 006 | QA | Couverture documentaire, conformite et completude des livrables | QA | Valide | 2026-06-28 | reports/sprint-006/SPRINT-006-CLOSURE-REPORT.md |
+| Sprint 006 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-006/SPRINT-006-CLOSURE-REPORT.md |
+| Sprint 006 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-006/SPRINT-006-CLOSURE-REPORT.md |
+| Sprint 006 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-006/SPRINT-006-CLOSURE-REPORT.md |
