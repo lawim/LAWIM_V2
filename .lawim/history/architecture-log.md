@@ -77,3 +77,4 @@ Ce journal est append-only. Toute evolution architecturale doit laisser une trac
 | 2026-06-28 | ARCH-001 | Sprint 014 planning review | Campay confirmed; no blocking architecture gaps remain for opening | Opening readiness for DG approval | PMO | reports/sprint-014/SPRINT-014-PLANNING-REPORT.md |
 | 2026-06-28 | ARCH-002 | T14.01 Sandbox integration | Sandbox integration, contrat confirme pour Sprint 014 | Stable gate before the next ticket | Security | reports/sprint-014/T14.01-sandbox-integration-report.md |
 | 2026-06-28 | ARCH-003 | T14.02 Webhook integrity | Webhook integrity, contrat confirme pour Sprint 014 | Stable gate before the next ticket | Security | reports/sprint-014/T14.02-webhook-integrity-report.md |
+| 2026-06-28 | ARCH-004 | T14.03 Reconciliation and receipts | Reconciliation and receipts, contrat confirme pour Sprint 014 | Stable gate before the next ticket | Reporting | reports/sprint-014/T14.03-reconciliation-and-receipts-report.md |

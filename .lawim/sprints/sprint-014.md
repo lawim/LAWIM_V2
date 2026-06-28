@@ -37,8 +37,8 @@
         ## Avancement
         - T14.01: ferme
 - T14.02: ferme
-- T14.03: A FAIRE
-        - Tickets couverts: 2/3
+- T14.03: ferme
+        - Tickets couverts: 3/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-014/SPRINT-014-PLANNING-REPORT.md
