@@ -183,8 +183,8 @@
 - T11.03: ferme
         - Sprint 012: non ouvert
 
-                                ## Sprint 012
-        - Statut: EN COURS
+                                        ## Sprint 012
+        - Statut: CLOTURE
         - Objectif: diffuser les messages au bon moment et par le bon canal.
         - Tickets: T12.01 - Notification model, T12.02 - Channel adapters, T12.03 - Templates and preferences
         - Tickets couverts: 3/3
@@ -194,7 +194,7 @@
         - Risques d'entree: bruit, doublons, mauvaise priorité.
         - Risque bloquant: false
         - Validation DG: en attente
-        - Rapport de planning: reports/sprint-012/SPRINT-012-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-012/SPRINT-012-CLOSURE-REPORT.md
         - Avancement:
         - T12.01: ferme
 - T12.02: ferme

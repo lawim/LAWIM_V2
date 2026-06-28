@@ -2,7 +2,7 @@
 
         - Date: 2026-06-28
         - Scope: Sprint 012 execution controlee
-        - Status: EN COURS
+        - Status: CLOTURE
 
         ## Objectif
         diffuser les messages au bon moment et par le bon canal.
@@ -39,6 +39,6 @@
         - Tickets couverts: 3/3
 
         ## Cloture
-        - Rapport de planning: reports/sprint-012/SPRINT-012-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-012/SPRINT-012-CLOSURE-REPORT.md
         - Decision proposee: GO AVEC RESERVES
         - Sprint 013: non ouvert
