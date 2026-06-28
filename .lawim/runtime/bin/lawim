@@ -1,0 +1,49 @@
+#!/usr/bin/env sh
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+RUNTIME_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
+
+usage() {
+  cat <<EOF
+LAWIM runtime foundation stub
+
+Usage:
+  lawim <command>
+
+Prepared commands:
+  status
+  doctor
+  run
+  batch-run
+  review
+  close-sprint
+  git-sync
+
+Contract docs:
+  $RUNTIME_ROOT/docs/COMMANDS.md
+  $RUNTIME_ROOT/docs/SERVICES.md
+  $RUNTIME_ROOT/docs/POLICIES.md
+EOF
+}
+
+stub_command() {
+  command=$1
+  printf '%s\n' "LAWIM runtime foundation stub: '$command' is defined but not implemented yet."
+  printf '%s\n' "See $RUNTIME_ROOT/src/commands/$command.md and $RUNTIME_ROOT/docs/COMMANDS.md."
+  exit 2
+}
+
+case "${1:-}" in
+  status|doctor|run|batch-run|review|close-sprint|git-sync)
+    stub_command "$1"
+    ;;
+  ""|-h|--help|help)
+    usage
+    ;;
+  *)
+    printf '%s\n' "Unknown LAWIM runtime command: $1"
+    usage
+    exit 2
+    ;;
+esac
