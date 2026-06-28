@@ -72,3 +72,4 @@
 | 2026-06-28 | DEC-004 | Redirect logging and attribution, contract confirmed for Sprint 013 | Reporting | T13.03 / Redirect logging and attribution | Active | reports/sprint-013/T13.03-redirect-logging-and-attribution-report.md |
 | 2026-06-28 | DEC-005 | Sprint 013 closure proposal and no Sprint 014 opening | Directeur General | Sprint 013 closure / no Sprint 014 | Proposed | reports/sprint-013/SPRINT-013-CLOSURE-REPORT.md |
 | 2026-06-28 | DEC-001 | Sprint 014 opening and campay plan confirmed | Directeur General | Sprint 014 / campay | Active | reports/sprint-014/SPRINT-014-PLANNING-REPORT.md |
+| 2026-06-28 | DEC-002 | Sandbox integration, contract confirmed for Sprint 014 | Security | T14.01 / Sandbox integration | Active | reports/sprint-014/T14.01-sandbox-integration-report.md |

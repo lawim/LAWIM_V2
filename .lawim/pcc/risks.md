@@ -70,3 +70,4 @@
 | R-004 | T13.03 Redirect logging and attribution consolidates the contract | High | Low | Keep redirect logging and attribution explicit and preserve the reference as the source of truth | Reporting | Mitigated |
 | R-005 | Sprint 013 closure consolidates the tracking et attribution guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |
 | R-001 | Sprint 014 opening requires stable campay contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
+| R-002 | T14.01 Sandbox integration consolidates the contract | High | Low | Keep sandbox integration explicit and preserve the reference as the source of truth | Security | Mitigated |

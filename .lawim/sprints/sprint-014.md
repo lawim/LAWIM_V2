@@ -35,10 +35,10 @@
         - doublons, faux positifs, divergence de statut.
 
         ## Avancement
-        - T14.01: A FAIRE
+        - T14.01: ferme
 - T14.02: A FAIRE
 - T14.03: A FAIRE
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-014/SPRINT-014-PLANNING-REPORT.md
