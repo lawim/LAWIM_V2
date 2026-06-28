@@ -273,11 +273,11 @@
 - T16.03: ferme
         - Sprint 017: non ouvert
 
-        ## Sprint 017
+                ## Sprint 017
         - Statut: EN COURS
         - Objectif: structurer la connaissance métier et les contenus utiles à l'IA.
         - Tickets: T17.01 - Knowledge taxonomy, T17.02 - Ingestion and curation, T17.03 - FAQ and business content
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
         - Ordre recommande: T17.01 -> T17.02 -> T17.03
         - Dependances: S006, S008, S013, S016.
         - Chemin critique: Decision DG d'ouverture -> T17.01 -> T17.02 -> T17.03 -> cloture Sprint 017
@@ -286,11 +286,10 @@
         - Validation DG: en attente
         - Rapport de planning: reports/sprint-017/SPRINT-017-PLANNING-REPORT.md
         - Avancement:
-        - T17.01: A FAIRE
+        - T17.01: ferme
 - T17.02: A FAIRE
 - T17.03: A FAIRE
         - Sprint 018: non ouvert
-
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md

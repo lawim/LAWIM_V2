@@ -88,3 +88,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-004 | KPI catalog, contract confirmed for Sprint 016 | Reporting | T16.03 / KPI catalog | Active | reports/sprint-016/T16.03-kpi-catalog-report.md |
 | 2026-06-28 | DEC-005 | Sprint 016 closure proposal and no Sprint 017 opening | Directeur General | Sprint 016 closure / no Sprint 017 | Proposed | reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md |
 | 2026-06-28 | DEC-001 | Sprint 017 opening and knowledge base plan confirmed | Directeur General | Sprint 017 / knowledge base | Active | reports/sprint-017/SPRINT-017-PLANNING-REPORT.md |
+| 2026-06-28 | DEC-002 | Knowledge taxonomy, contract confirmed for Sprint 017 | Documentation | T17.01 / Knowledge taxonomy | Active | reports/sprint-017/T17.01-knowledge-taxonomy-report.md |

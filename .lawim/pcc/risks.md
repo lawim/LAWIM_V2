@@ -85,3 +85,4 @@
 | R-004 | T16.03 KPI catalog consolidates the contract | High | Low | Keep kpi catalog explicit and preserve the reference as the source of truth | Reporting | Mitigated |
 | R-005 | Sprint 016 closure consolidates the reporting foundation guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |
 | R-001 | Sprint 017 opening requires stable knowledge base contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
+| R-002 | T17.01 Knowledge taxonomy consolidates the contract | High | Low | Keep knowledge taxonomy explicit and preserve the reference as the source of truth | Documentation | Mitigated |
