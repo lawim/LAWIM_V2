@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 008
-- Sprint status: EN COURS
+- Sprint actif: aucun
+- Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est cloture, Sprint 008 est prepare pour le conversation engine.
-- Derniere trace technique: Sprint 007 est cloture sur les medias, les documents et la geolocalisation; Sprint 008 est ouvert pour le conversation engine; T08.01, T08.02 et T08.03 sont fermes.
+- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est cloture, Sprint 008 est cloture, Sprint 009 reste non ouvert.
+- Derniere trace technique: Sprint 008 est cloture sur le conversation engine; T08.01, T08.02 et T08.03 sont fermes.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -118,7 +118,7 @@
 - Sprint 008: en cours d'ouverture
 
 ## Sprint 008
-- Statut Sprint 008: EN COURS
+- Statut Sprint 008: TERMINE
 - Objectif: permettre les echanges tracables entre utilisateurs et partenaires.
 - Tickets: T08.01 - Conversation model, T08.02 - Messaging flow, T08.03 - Attachments and history
 - Tickets couverts: 3/3

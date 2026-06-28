@@ -41,3 +41,4 @@
 | R-037 | Conversation model may drift from the canonical conversation and database references | High | Medium | Keep threads, participants and statuses explicit and preserve the conversation model as the source of truth | Architecture | Mitigated |
 | R-038 | Messaging flow may drift from the canonical conversation and notification references | High | Medium | Keep delivery, read states and message history explicit and preserve the messaging flow as the source of truth | Security | Mitigated |
 | R-039 | Attachments and history may drift from the canonical storage and tests references | High | Medium | Keep attachment handling, history and audit trail explicit and preserve storage as the source of truth | Architecture | Mitigated |
+| R-040 | Sprint 008 closure consolidates the conversation and message guardrails | High | Low | Keep the conversation, message, storage and test references canonical and defer future implementation to Sprint 009 | PMO | Mitigated |
