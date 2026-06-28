@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 009
+- Sprint actif: Sprint 010
 - Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le lot 002 est cloture et Sprint 007 est cloture, Sprint 008 est cloture, Sprint 009 est cloture.
-- Derniere trace technique: Sprint 009 est cloture sur le matching foundation; T09.01, T09.02 et T09.03 sont fermes.
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-004; les lots 004 a 006 sont en cours de consolidation et Sprint 019 reste non ouvert.
+- Derniere trace technique: Sprint 010 est cloture sur decision engine et rematching; T10.01, T10.02 et T10.03 sont fermes
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -146,6 +146,24 @@
 - Rapport de cloture: reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
 - Sprint 010: non ouvert
+
+        ## Sprint 010
+        - Statut: EN COURS
+        - Objectif: arbitrer les décisions et relancer le matching quand nécessaire.
+        - Tickets: T10.01 - Decision orchestration, T10.02 - Rematching flow, T10.03 - Recommendation trace
+        - Tickets couverts: 0/3
+        - Ordre recommande: T10.01 -> T10.02 -> T10.03
+        - Dependances: S008, S009.
+        - Chemin critique: Decision DG d'ouverture -> T10.01 -> T10.02 -> T10.03 -> cloture Sprint 010
+        - Risques d'entree: décision opaque, boucles de relance, incohérence métier.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de planning: reports/sprint-010/SPRINT-010-PLANNING-REPORT.md
+        - Avancement:
+        - T10.01: A FAIRE
+- T10.02: A FAIRE
+- T10.03: A FAIRE
+        - Sprint 011: non ouvert
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

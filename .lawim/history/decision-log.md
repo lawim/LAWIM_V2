@@ -52,3 +52,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-046 | Qualification, scoring and explainability contract confirmed | Architecture | T09.02 / Qualification and scoring | Active | reports/sprint-009/T09.02-qualification-scoring-report.md |
 | 2026-06-28 | DEC-047 | Availability, preferences and location filters contract confirmed | Architecture | T09.03 / Availability and preferences | Active | reports/sprint-009/T09.03-availability-preferences-report.md |
 | 2026-06-28 | DEC-048 | Sprint 009 closure proposal and no Sprint 010 opening | Directeur General | Sprint 009 closure / no Sprint 010 | Proposed | reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md |
+| 2026-06-28 | DEC-001 | Sprint 010 opening and decision engine et rematching plan confirmed | Directeur General | Sprint 010 / decision engine et rematching | Active | reports/sprint-010/SPRINT-010-PLANNING-REPORT.md |
