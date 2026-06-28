@@ -17,5 +17,5 @@
 | R-013 | Docker baseline drifts from the inherited runtime contract | High | Medium | Reuse the shared base, keep overlays deterministic and validate merged config before use | DevOps | Open |
 | R-014 | CI skeleton or observability exposes secrets or masks failures | High | Medium | Keep secrets external, validate log masking and health checks before activation | Security | Mitigated |
 | R-015 | PostgreSQL schema drift or constraint mismatch against the canonical data model | High | Medium | Reuse the official database reference, keep constraints explicit and validate the schema contract before implementation | Database | Mitigated |
-| R-016 | Prisma baseline or migration order drifts from the canonical model | High | Medium | Keep the ORM baseline aligned with the database reference and document migration order before use | Database | Open |
+| R-016 | Prisma baseline or migration order drifts from the canonical model | High | Medium | Keep the ORM baseline aligned with the database reference and document migration order before use | Database | Mitigated |
 | R-017 | Backup primitives or restore path remain incomplete or untested | High | Medium | Keep snapshot, checksum and restore contracts explicit and test the restoration path before promotion | DevOps | Open |

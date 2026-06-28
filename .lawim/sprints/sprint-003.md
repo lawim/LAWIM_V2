@@ -38,9 +38,9 @@ GO AVEC RESERVES
 
 ## Avancement
 - T03.01: ferme;
-- T03.02: a venir;
+- T03.02: ferme;
 - T03.03: a venir;
-- Tickets couverts: 1/3.
+- Tickets couverts: 2/3.
 
 ## Cloture
 - Rapport de cloture: reports/sprint-003/SPRINT-003-CLOSURE-REPORT.md
