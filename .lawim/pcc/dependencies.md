@@ -28,3 +28,7 @@
 | D-024 | T06.01 depend de la cloture Sprint 005 et des references property / attributes | Sprint 006 | High | Confirmed |
 | D-025 | T06.02 depend de T06.01 et des references pricing / reporting | Sprint 006 | High | Confirmed |
 | D-026 | T06.03 depend de T06.02 et des conventions workflow / tests | Sprint 006 | High | Confirmed |
+| D-027 | Decision DG d'ouverture du Sprint 007 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-028 | T07.01 depend de la cloture Sprint 006 et des references storage / UX | Sprint 006 | High | Confirmed |
+| D-029 | T07.02 depend de T07.01 et des conventions verification / security | Sprint 007 | High | Confirmed |
+| D-030 | T07.03 depend de T07.02 et des conventions geolocation / traceability | Sprint 007 | High | Confirmed |
