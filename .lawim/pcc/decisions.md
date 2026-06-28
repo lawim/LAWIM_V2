@@ -79,3 +79,4 @@
 | 2026-06-28 | DEC-001 | Sprint 015 opening and dashboard foundation plan confirmed | Directeur General | Sprint 015 / dashboard foundation | Active | reports/sprint-015/SPRINT-015-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-002 | Dashboard shell, contract confirmed for Sprint 015 | Frontend | T15.01 / Dashboard shell | Active | reports/sprint-015/T15.01-dashboard-shell-report.md |
 | 2026-06-28 | DEC-003 | Admin views, contract confirmed for Sprint 015 | Administration | T15.02 / Admin views | Active | reports/sprint-015/T15.02-admin-views-report.md |
+| 2026-06-28 | DEC-004 | Role-based views, contract confirmed for Sprint 015 | Security | T15.03 / Role-based views | Active | reports/sprint-015/T15.03-role-based-views-report.md |
