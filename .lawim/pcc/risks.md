@@ -87,3 +87,4 @@
 | R-001 | Sprint 017 opening requires stable knowledge base contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T17.01 Knowledge taxonomy consolidates the contract | High | Low | Keep knowledge taxonomy explicit and preserve the reference as the source of truth | Documentation | Mitigated |
 | R-003 | T17.02 Ingestion and curation consolidates the contract | High | Low | Keep ingestion and curation explicit and preserve the reference as the source of truth | Documentation | Mitigated |
+| R-004 | T17.03 FAQ and business content consolidates the contract | High | Low | Keep faq and business content explicit and preserve the reference as the source of truth | Documentation | Mitigated |
