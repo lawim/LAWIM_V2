@@ -21,7 +21,7 @@ GO AVEC RESERVES
 - T02.03 - CI skeleton
 
 ## Ticket suivant
-- T02.02 - Runtime observability
+- T02.03 - CI skeleton
 
 ## Dependances
 - Sprint 001 cloture et PCC coherent.
