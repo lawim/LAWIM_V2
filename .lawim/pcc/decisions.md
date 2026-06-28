@@ -21,3 +21,4 @@
 | 2026-06-28 | PostgreSQL foundation, connection baseline and constraint contract confirmed for LAWIM_V2 | Database | T03.01 / PostgreSQL foundation | Active | reports/sprint-003/T03.01-postgresql-foundation-report.md |
 | 2026-06-28 | Prisma baseline, schema mapping and migration conventions confirmed for LAWIM_V2 | Database | T03.02 / Prisma baseline | Active | reports/sprint-003/T03.02-prisma-baseline-report.md |
 | 2026-06-28 | Backup primitives, checksum contract and restore conventions confirmed for LAWIM_V2 | DevOps | T03.03 / Backup primitives | Active | reports/sprint-003/T03.03-backup-primitives-report.md |
+| 2026-06-28 | Sprint 003 closure proposal and no Sprint 004 opening | Directeur General | Sprint 003 closure / no Sprint 004 | Proposed | reports/sprint-003/SPRINT-003-CLOSURE-REPORT.md |

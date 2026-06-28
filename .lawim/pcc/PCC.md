@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 003
-- Sprint status: EN COURS
+- Sprint actif: Aucun
+- Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees; le socle PostgreSQL, Prisma et stockage reste a consolider dans Sprint 003.
-- Derniere trace technique: T03.03 a confirme les primitives de sauvegarde et de restauration; le socle PostgreSQL, Prisma et stockage est trace sans remettre en cause le socle Sprint 002.
+- Reserve: le backlog canonique detaille devra etre verifie ulterieurement; la couverture de T01.04 repose sur les conventions d'environnements deja documentees.
+- Derniere trace technique: Sprint 003 est cloture apres T03.01, T03.02 et T03.03; le socle PostgreSQL, Prisma et les primitives de sauvegarde sont consolides sans ouvrir Sprint 004.
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -32,10 +32,10 @@
 - Risques d'entree: derive runtime, fuite de secrets, CI active trop tot
 - Risque bloquant: false
 - Validation DG: en attente
-- Sprint 003: ouvert
+- Sprint 003: termine, cloture tracee
 
-## Ouverture Sprint 003
-- Statut Sprint 003: EN COURS
+## Cloture Sprint 003
+- Statut Sprint 003: TERMINE
 - Objectif: installer la persistance, la structure initiale et les capacites de sauvegarde.
 - Tickets: T03.01 - PostgreSQL foundation, T03.02 - Prisma baseline, T03.03 - Backup primitives
 - Tickets couverts: 3/3
@@ -48,6 +48,7 @@
 - T03.01: socle relationnel confirme
 - T03.02: baseline Prisma confirmee
 - T03.03: primitives de sauvegarde confirmee
+- Sprint 004: non ouvert
 
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

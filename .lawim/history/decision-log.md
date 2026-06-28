@@ -22,3 +22,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-016 | PostgreSQL foundation, connection baseline and constraint contract confirmed | Database | T03.01 / PostgreSQL foundation | Active | reports/sprint-003/T03.01-postgresql-foundation-report.md |
 | 2026-06-28 | DEC-017 | Prisma baseline, schema mapping and migration conventions confirmed | Database | T03.02 / Prisma baseline | Active | reports/sprint-003/T03.02-prisma-baseline-report.md |
 | 2026-06-28 | DEC-018 | Backup primitives, checksum contract and restore conventions confirmed | DevOps | T03.03 / Backup primitives | Active | reports/sprint-003/T03.03-backup-primitives-report.md |
+| 2026-06-28 | DEC-019 | Sprint 003 closure proposal and no Sprint 004 opening | Directeur General | Sprint 003 closure / no Sprint 004 | Proposed | reports/sprint-003/SPRINT-003-CLOSURE-REPORT.md |

@@ -2,7 +2,7 @@
 
 - Date: 2026-06-28
 - Scope: Sprint 003 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 Installer la persistance, la structure initiale et les capacites de sauvegarde.
@@ -43,6 +43,7 @@ GO AVEC RESERVES
 - Tickets couverts: 3/3.
 
 ## Cloture
+- Statut Sprint 003: TERMINE
 - Rapport de cloture: reports/sprint-003/SPRINT-003-CLOSURE-REPORT.md
 - Decision proposee: GO AVEC RESERVES
 - Sprint 004: non ouvert
