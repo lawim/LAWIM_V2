@@ -16,3 +16,7 @@
 | D-012 | T03.01 depend de T02.03 et des references base de donnees / stockage | Sprint 002 | High | Confirmed |
 | D-013 | T03.02 depend de T03.01 et des conventions Prisma / migration | Sprint 003 | High | Confirmed |
 | D-014 | T03.03 depend de T03.01 et des conventions de sauvegarde / restauration | Sprint 003 | High | Confirmed |
+| D-015 | Decision DG d'ouverture du Sprint 004 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-016 | T04.01 depend de T03.02 et des references security / API | Sprint 003 | High | Confirmed |
+| D-017 | T04.02 depend de T04.01 et des conventions de jetons / session | Sprint 004 | High | Confirmed |
+| D-018 | T04.03 depend de T04.02 et des conventions MFA / access policy | Sprint 004 | High | Confirmed |
