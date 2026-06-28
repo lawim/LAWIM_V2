@@ -43,3 +43,4 @@
 | 2026-06-28 | Geo integration, locality and traceability contract confirmed | Architecture | T07.03 / Geo integration | Active | reports/sprint-007/T07.03-geo-integration-report.md |
 | 2026-06-28 | Sprint 007 closure proposal and no Sprint 008 opening | Directeur General | Sprint 007 closure / no Sprint 008 | Proposed | reports/sprint-007/SPRINT-007-CLOSURE-REPORT.md |
 | 2026-06-28 | Sprint 008 opening and conversation plan confirmed | Directeur General | Sprint 008 / conversation engine | Active | reports/sprint-008/SPRINT-008-PLANNING-REPORT.md |
+| 2026-06-28 | Conversation model, thread and participant contract confirmed | Architecture | T08.01 / Conversation model | Active | reports/sprint-008/T08.01-conversation-model-report.md |

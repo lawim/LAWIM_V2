@@ -249,3 +249,13 @@ Le Sprint 007 est termine sur la base des 3 tickets planifies. Les tickets T07.0
 | Sprint 007 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-007/SPRINT-007-CLOSURE-REPORT.md |
 | Sprint 007 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-007/SPRINT-007-CLOSURE-REPORT.md |
 | Sprint 007 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-007/SPRINT-007-CLOSURE-REPORT.md |
+
+## Sprint 008
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| T08.01 | Architecture | Cohesion du modele de conversation, des threads et des participants | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-008/T08.01-conversation-model-report.md |
+| T08.01 | QA | Criteres d'acceptation et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-008/T08.01-conversation-model-report.md |
+| T08.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-008/T08.01-conversation-model-report.md |
+| T08.01 | Integration | Cohesion threads, participants et statuts | Integration Manager | READY FOR T08.02 | 2026-06-28 | reports/sprint-008/T08.01-conversation-model-report.md |
+| T08.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T08.02 | 2026-06-28 | reports/sprint-008/T08.01-conversation-model-report.md |
