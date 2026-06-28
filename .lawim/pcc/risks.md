@@ -94,3 +94,5 @@
 | R-003 | T18.02 Language and search intelligence consolidates the contract | High | Low | Keep language and search intelligence explicit and preserve the reference as the source of truth | AI | Mitigated |
 | R-004 | T18.03 Source-grounded responses consolidates the contract | High | Low | Keep source-grounded responses explicit and preserve the reference as the source of truth | AI | Mitigated |
 | R-005 | Sprint 018 closure consolidates the lawim ai guardrails | High | Low | Keep the sprint references canonical and defer future implementation to the next sprint | PMO | Mitigated |
+| R-001 | Sprint 019 opening requires stable continuous learning contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
+| R-002 | T19.01 Feedback loop consolidates the feedback, metrics and validation contract | High | Low | Keep feedback signals explicit, versioned and human validated before any future recommendation use | Documentation | Mitigated |

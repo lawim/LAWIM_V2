@@ -2,14 +2,14 @@
 
 ## Programme
 - Programme: LAWIM_V2
-- Programme status: STABILISATION
-- Sprint actif: Sprint 018
-- Sprint status: CLOTURE
+- Programme status: ACTIF
+- Sprint actif: Sprint 019
+- Sprint status: EN COURS
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; la matrice des dependances est etendue jusqu'au Sprint 018, le registre des risques est normalise et Sprint 019 reste non ouvert.
-- Derniere trace technique: Sprint 018 est cloture sur lawim ai; T18.01, T18.02 et T18.03 sont fermes
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 019, le registre des risques est normalise et Sprint 019 est ouvert.
+- Derniere trace technique: Sprint 019 est ouvert sur Continuous Learning; T19.01 est ferme et T19.02 reste a venir
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -307,7 +307,24 @@
         - T18.01: ferme
 - T18.02: ferme
 - T18.03: ferme
-        - Sprint 019: non ouvert
+                                        ## Sprint 019
+        - Statut: EN COURS
+        - Objectif: organiser la boucle d amelioration avec validation humaine.
+        - Tickets: T19.01 - Feedback loop, T19.02 - Human validation gate, T19.03 - Versioned recommendations
+        - Tickets couverts: 1/3
+        - Ordre recommande: T19.01 -> T19.02 -> T19.03
+        - Dependances: S016, S017, S018.
+        - Chemin critique: DG-0028 -> T19.01 -> T19.02 -> T19.03 -> cloture Sprint 019
+        - Risques d entree: auto-optimisation non controlee, biais, derive metier.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de lancement: reports/sprint-019/SPRINT-019-PLANNING-REPORT.md
+        - Rapport de ticket: reports/sprint-019/T19.01-feedback-loop-report.md
+        - Avancement:
+        - T19.01: ferme
+        - T19.02: a venir
+        - T19.03: a venir
+        - Sprint 020: non ouvert
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md

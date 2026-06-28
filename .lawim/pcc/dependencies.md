@@ -76,3 +76,6 @@
 | D-072 | T18.01 depend de la cloture Sprint 017 et des references lawim ai / knowledge base master | Sprint 017 | High | Confirmed |
 | D-073 | T18.02 depend de T18.01 et des references language detection / multilingual search | Sprint 018 | High | Confirmed |
 | D-074 | T18.03 depend de T18.02 et des references lawim ai / traceability matrix | Sprint 018 | High | Confirmed |
+| D-075 | T19.01 depend de S016-T03 et des references continuous learning / reporting | Sprint 019 | High | Confirmed |
+| D-076 | T19.02 depend de T19.01 et des references governance / continuous learning | Sprint 019 | High | Confirmed |
+| D-077 | T19.03 depend de T19.02 et des references documentation versioning / continuous learning | Sprint 019 | High | Confirmed |
