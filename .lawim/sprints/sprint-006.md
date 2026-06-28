@@ -43,3 +43,9 @@ GO AVEC RESERVES
 
 ## Validation DG
 - en attente.
+
+## Avancement
+- T06.01: ferme
+- T06.02: en attente
+- T06.03: en attente
+- Tickets couverts: 1/3

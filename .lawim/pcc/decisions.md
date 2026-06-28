@@ -33,3 +33,4 @@
 | 2026-06-28 | Permissions matrix, inheritance and delegation contract confirmed | Security | T05.03 / Permissions matrix | Active | reports/sprint-005/T05.03-permissions-matrix-report.md |
 | 2026-06-28 | Sprint 005 closure proposal and no Sprint 006 opening | Directeur General | Sprint 005 closure / no Sprint 006 | Proposed | reports/sprint-005/SPRINT-005-CLOSURE-REPORT.md |
 | 2026-06-28 | Sprint 006 opening and core immobilier plan confirmed | Directeur General | Sprint 006 / coeur immobilier | Active | reports/sprint-006/SPRINT-006-PLANNING-REPORT.md |
+| 2026-06-28 | Property domain schema, status model and attribute normalization confirmed | Architecture | T06.01 / Property domain schema | Active | reports/sprint-006/T06.01-property-domain-schema-report.md |

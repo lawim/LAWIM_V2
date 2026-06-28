@@ -185,3 +185,13 @@ Le Sprint 005 est termine sur la base des 3 tickets planifies. Les tickets T05.0
 | Sprint 005 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-005/SPRINT-005-CLOSURE-REPORT.md |
 | Sprint 005 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-005/SPRINT-005-CLOSURE-REPORT.md |
 | Sprint 005 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-005/SPRINT-005-CLOSURE-REPORT.md |
+
+## Sprint 006
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| T06.01 | Architecture | Cohesion du modele bien, des statuts et des attributs | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-006/T06.01-property-domain-schema-report.md |
+| T06.01 | QA | Criteres d'acceptation et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-006/T06.01-property-domain-schema-report.md |
+| T06.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-006/T06.01-property-domain-schema-report.md |
+| T06.01 | Integration | Cohesion property, attributes et statuts de base | Integration Manager | READY FOR T06.02 | 2026-06-28 | reports/sprint-006/T06.01-property-domain-schema-report.md |
+| T06.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T06.02 | 2026-06-28 | reports/sprint-006/T06.01-property-domain-schema-report.md |
