@@ -168,3 +168,8 @@ Le Sprint 003 est termine sur la base des 3 tickets planifies. Les tickets T03.0
 | T05.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-005/T05.02-organization-model-report.md |
 | T05.02 | Integration | Cohesion organisations, agences, partenaires et equipes | Integration Manager | READY FOR T05.03 | 2026-06-28 | reports/sprint-005/T05.02-organization-model-report.md |
 | T05.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T05.03 | 2026-06-28 | reports/sprint-005/T05.02-organization-model-report.md |
+| T05.03 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-005/T05.03-permissions-matrix-report.md |
+| T05.03 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-005/T05.03-permissions-matrix-report.md |
+| T05.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-005/T05.03-permissions-matrix-report.md |
+| T05.03 | Integration | Cohesion permissions, visibilite et acces aux ressources | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-005/T05.03-permissions-matrix-report.md |
+| T05.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-005/T05.03-permissions-matrix-report.md |
