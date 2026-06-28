@@ -2,7 +2,7 @@
 
         - Date: 2026-06-28
         - Scope: Sprint 016 execution controlee
-        - Status: EN COURS
+        - Status: CLOTURE
 
         ## Objectif
         produire les premiers agrégats et rapports périodiques.
@@ -40,6 +40,6 @@
         - Tickets couverts: 3/3
 
         ## Cloture
-        - Rapport de planning: reports/sprint-016/SPRINT-016-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md
         - Decision proposee: GO AVEC RESERVES
         - Sprint 017: non ouvert

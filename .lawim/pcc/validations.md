@@ -460,3 +460,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T16.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-016/T16.03-kpi-catalog-report.md |
 | T16.03 | Integration | Cohesion kpi catalog | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-016/T16.03-kpi-catalog-report.md |
 | T16.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-016/T16.03-kpi-catalog-report.md |
+| Sprint 016 | Architecture | Cohesion globale des 3 tickets, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md |
+| Sprint 016 | QA | Couverture documentaire, conformite et completude des livrables | QA | Valide | 2026-06-28 | reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md |
+| Sprint 016 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md |
+| Sprint 016 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md |
+| Sprint 016 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md |

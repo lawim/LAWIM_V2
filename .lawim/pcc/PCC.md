@@ -255,8 +255,8 @@
 - T15.03: ferme
         - Sprint 016: non ouvert
 
-                                ## Sprint 016
-        - Statut: EN COURS
+                                        ## Sprint 016
+        - Statut: CLOTURE
         - Objectif: produire les premiers agrégats et rapports périodiques.
         - Tickets: T16.01 - Reporting engine, T16.02 - Periodic reports, T16.03 - KPI catalog
         - Tickets couverts: 3/3
@@ -266,7 +266,7 @@
         - Risques d'entree: chiffres incohérents, agrégats incomplets.
         - Risque bloquant: false
         - Validation DG: en attente
-        - Rapport de planning: reports/sprint-016/SPRINT-016-PLANNING-REPORT.md
+        - Rapport de cloture: reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md
         - Avancement:
         - T16.01: ferme
 - T16.02: ferme

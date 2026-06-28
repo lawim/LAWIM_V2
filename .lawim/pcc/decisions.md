@@ -85,3 +85,4 @@
 | 2026-06-28 | DEC-002 | Reporting engine, contract confirmed for Sprint 016 | Reporting | T16.01 / Reporting engine | Active | reports/sprint-016/T16.01-reporting-engine-report.md |
 | 2026-06-28 | DEC-003 | Periodic reports, contract confirmed for Sprint 016 | Reporting | T16.02 / Periodic reports | Active | reports/sprint-016/T16.02-periodic-reports-report.md |
 | 2026-06-28 | DEC-004 | KPI catalog, contract confirmed for Sprint 016 | Reporting | T16.03 / KPI catalog | Active | reports/sprint-016/T16.03-kpi-catalog-report.md |
+| 2026-06-28 | DEC-005 | Sprint 016 closure proposal and no Sprint 017 opening | Directeur General | Sprint 016 closure / no Sprint 017 | Proposed | reports/sprint-016/SPRINT-016-CLOSURE-REPORT.md |
