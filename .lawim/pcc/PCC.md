@@ -147,11 +147,11 @@
 - Decision proposee: GO AVEC RESERVES
 - Sprint 010: non ouvert
 
-        ## Sprint 010
+                ## Sprint 010
         - Statut: EN COURS
         - Objectif: arbitrer les décisions et relancer le matching quand nécessaire.
         - Tickets: T10.01 - Decision orchestration, T10.02 - Rematching flow, T10.03 - Recommendation trace
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
         - Ordre recommande: T10.01 -> T10.02 -> T10.03
         - Dependances: S008, S009.
         - Chemin critique: Decision DG d'ouverture -> T10.01 -> T10.02 -> T10.03 -> cloture Sprint 010
@@ -160,11 +160,10 @@
         - Validation DG: en attente
         - Rapport de planning: reports/sprint-010/SPRINT-010-PLANNING-REPORT.md
         - Avancement:
-        - T10.01: A FAIRE
+        - T10.01: ferme
 - T10.02: A FAIRE
 - T10.03: A FAIRE
         - Sprint 011: non ouvert
-
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md

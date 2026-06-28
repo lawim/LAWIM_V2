@@ -325,3 +325,8 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | Sprint 008 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
 | Sprint 008 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
 | Sprint 008 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-28 | reports/sprint-008/SPRINT-008-CLOSURE-REPORT.md |
+| T10.01 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-010/T10.01-decision-orchestration-report.md |
+| T10.01 | QA | Criteres d'acceptation et non-regression | QA | Valide | 2026-06-28 | reports/sprint-010/T10.01-decision-orchestration-report.md |
+| T10.01 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-010/T10.01-decision-orchestration-report.md |
+| T10.01 | Integration | Cohesion decision orchestration | Integration Manager | READY FOR T10.02 | 2026-06-28 | reports/sprint-010/T10.01-decision-orchestration-report.md |
+| T10.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T10.02 | 2026-06-28 | reports/sprint-010/T10.01-decision-orchestration-report.md |

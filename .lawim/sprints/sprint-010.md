@@ -33,10 +33,10 @@
         - décision opaque, boucles de relance, incohérence métier.
 
         ## Avancement
-        - T10.01: A FAIRE
+        - T10.01: ferme
 - T10.02: A FAIRE
 - T10.03: A FAIRE
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
 
         ## Cloture
         - Rapport de planning: reports/sprint-010/SPRINT-010-PLANNING-REPORT.md

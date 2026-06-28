@@ -52,3 +52,4 @@
 | 2026-06-28 | Availability, preferences and location filters contract confirmed | Architecture | T09.03 / Availability and preferences | Active | reports/sprint-009/T09.03-availability-preferences-report.md |
 | 2026-06-28 | Sprint 009 closure proposal and no Sprint 010 opening | Directeur General | Sprint 009 closure / no Sprint 010 | Proposed | reports/sprint-009/SPRINT-009-CLOSURE-REPORT.md |
 | 2026-06-28 | DEC-001 | Sprint 010 opening and decision engine et rematching plan confirmed | Directeur General | Sprint 010 / decision engine et rematching | Active | reports/sprint-010/SPRINT-010-PLANNING-REPORT.md |
+| 2026-06-28 | DEC-002 | Decision orchestration, contract confirmed for Sprint 010 | Architecture | T10.01 / Decision orchestration | Active | reports/sprint-010/T10.01-decision-orchestration-report.md |
