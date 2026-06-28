@@ -232,3 +232,8 @@ Le Sprint 006 est termine sur la base des 3 tickets planifies. Les tickets T06.0
 | T07.02 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-007/T07.02-document-pipeline-report.md |
 | T07.02 | Integration | Cohesion documents, preuves et archivage | Integration Manager | READY FOR T07.03 | 2026-06-28 | reports/sprint-007/T07.02-document-pipeline-report.md |
 | T07.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T07.03 | 2026-06-28 | reports/sprint-007/T07.02-document-pipeline-report.md |
+| T07.03 | Architecture | Cohesion de la geolocalisation, de la traceabilite et des conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-28 | reports/sprint-007/T07.03-geo-integration-report.md |
+| T07.03 | QA | Criteres d'acceptation et normalisation documentaire | QA | Valide | 2026-06-28 | reports/sprint-007/T07.03-geo-integration-report.md |
+| T07.03 | Security | Secrets, acces, risques et surface d'attaque | Security | Valide | 2026-06-28 | reports/sprint-007/T07.03-geo-integration-report.md |
+| T07.03 | Integration | Cohesion localisation, coordonnees et matrice de trace | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-007/T07.03-geo-integration-report.md |
+| T07.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-28 | reports/sprint-007/T07.03-geo-integration-report.md |

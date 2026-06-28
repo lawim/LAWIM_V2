@@ -44,8 +44,8 @@ GO AVEC RESERVES
 ## Avancement
 - T07.01: ferme
 - T07.02: ferme
-- T07.03: a faire
-- Tickets couverts: 2/3
+- T07.03: ferme
+- Tickets couverts: 3/3
 
 ## Cloture
 - Rapport de cloture: a produire
