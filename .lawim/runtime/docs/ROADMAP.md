@@ -39,7 +39,7 @@ Add orchestration services.
 Add controlled write paths.
 
 - Connect report generation.
-- Connect git synchronization safeguards.
+- Git synchronization safeguards are implemented through `lawim git-sync`.
 - Keep every mutation traceable.
 
 ## Phase 5

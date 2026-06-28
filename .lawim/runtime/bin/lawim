@@ -16,6 +16,10 @@ Minimal executable surface:
   lawim --help
   lawim status
   lawim doctor
+  lawim git-sync --status
+  lawim git-sync --commit "<message>"
+  lawim git-sync --tag "<tag>"
+  lawim git-sync --push
 
 Prepared commands:
   status
@@ -71,6 +75,136 @@ git_remote_state() {
   else
     printf '%s\n' "absent"
   fi
+}
+
+git_has_remote() {
+  [ "$(git_remote_state)" = "present" ]
+}
+
+is_blank() {
+  case $1 in
+    *[![:space:]]*) return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
+git_sync_usage() {
+  cat <<EOF
+LAWIM git-sync
+
+Usage:
+  lawim git-sync --status
+  lawim git-sync --commit "<message>"
+  lawim git-sync --tag "<tag>"
+  lawim git-sync --push
+
+Rules:
+  - --commit refuses empty messages and clean trees.
+  - --tag refuses empty tags and existing tags.
+  - --push refuses when no remote is configured.
+  - No remote is ever configured by this command.
+  - No force push and no tag deletion.
+EOF
+}
+
+git_sync_fail() {
+  printf '%s\n' "$1"
+  exit "${2:-2}"
+}
+
+git_sync_status() {
+  critical=0
+  printf '%s\n' "LAWIM git-sync status"
+
+  if git_in_repo; then
+    branch=$(git_branch)
+    [ -n "$branch" ] || branch="DETACHED"
+    printf 'Etat Git: %s\n' "$(git_clean_state)"
+    printf 'Branche Git: %s\n' "$branch"
+    head_commit=$(git_head_commit)
+    [ -n "$head_commit" ] || head_commit="indetectable"
+    printf 'Dernier commit: %s\n' "$head_commit"
+    last_tag=$(git_last_tag)
+    [ -n "$last_tag" ] || last_tag="aucun"
+    printf 'Dernier tag: %s\n' "$last_tag"
+    printf 'Derniers tags:\n'
+    recent_tags=$(git_recent_tags)
+    if [ -n "$recent_tags" ]; then
+      printf '%s\n' "$recent_tags" | sed 's/^/- /'
+    else
+      printf '%s\n' "- aucun"
+    fi
+    printf 'Remote Git: %s\n' "$(git_remote_state)"
+  else
+    printf '%s\n' "Etat Git: indetectable"
+    printf '%s\n' "Branche Git: indetectable"
+    printf '%s\n' "Dernier commit: indetectable"
+    printf '%s\n' "Dernier tag: indetectable"
+    printf '%s\n' "Derniers tags: indetectable"
+    printf '%s\n' "Remote Git: indetectable"
+    critical=1
+  fi
+
+  exit "$critical"
+}
+
+git_sync_commit() {
+  message=$1
+
+  if is_blank "$message"; then
+    git_sync_fail "Refus: message de commit vide." 2
+  fi
+
+  if ! git_in_repo; then
+    git_sync_fail "Refus: depot Git introuvable." 2
+  fi
+
+  if [ "$(git_clean_state)" = "propre" ]; then
+    git_sync_fail "Refus: aucun changement a committer." 2
+  fi
+
+  git -C "$PROJECT_ROOT" add -A
+  git -C "$PROJECT_ROOT" commit -m "$message"
+}
+
+git_sync_tag() {
+  tag=$1
+
+  if is_blank "$tag"; then
+    git_sync_fail "Refus: nom de tag vide." 2
+  fi
+
+  if ! git_in_repo; then
+    git_sync_fail "Refus: depot Git introuvable." 2
+  fi
+
+  if ! git -C "$PROJECT_ROOT" rev-parse --verify HEAD >/dev/null 2>&1; then
+    git_sync_fail "Refus: aucun commit HEAD disponible." 2
+  fi
+
+  if git -C "$PROJECT_ROOT" show-ref --tags --verify --quiet "refs/tags/$tag"; then
+    git_sync_fail "Refus: le tag existe deja." 2
+  fi
+
+  git -C "$PROJECT_ROOT" tag "$tag"
+  printf 'Tag cree: %s\n' "$tag"
+}
+
+git_sync_push() {
+  if ! git_in_repo; then
+    git_sync_fail "Refus: depot Git introuvable." 2
+  fi
+
+  if ! git_has_remote; then
+    git_sync_fail "Refus: aucun remote Git configure." 2
+  fi
+
+  branch=$(git_branch)
+  if [ -z "$branch" ] || [ "$branch" = "HEAD" ]; then
+    git_sync_fail "Refus: branche courante indeterminee." 2
+  fi
+
+  git -C "$PROJECT_ROOT" push
 }
 
 read_pcc_field() {
@@ -186,7 +320,46 @@ case "${1:-}" in
   doctor)
     print_doctor
     ;;
-  run|batch-run|review|close-sprint|git-sync)
+  git-sync)
+    case "${2:-}" in
+      --status)
+        if [ "$#" -ne 2 ]; then
+          git_sync_usage
+          exit 2
+        fi
+        git_sync_status
+        ;;
+      --commit)
+        if [ "$#" -ne 3 ]; then
+          git_sync_usage
+          exit 2
+        fi
+        git_sync_commit "${3:-}"
+        ;;
+      --tag)
+        if [ "$#" -ne 3 ]; then
+          git_sync_usage
+          exit 2
+        fi
+        git_sync_tag "${3:-}"
+        ;;
+      --push)
+        if [ "$#" -ne 2 ]; then
+          git_sync_usage
+          exit 2
+        fi
+        git_sync_push
+        ;;
+      ""|-h|--help|help)
+        git_sync_usage
+        ;;
+      *)
+        git_sync_usage
+        exit 2
+        ;;
+    esac
+    ;;
+  run|batch-run|review|close-sprint)
     stub_command "$1"
     ;;
   ""|-h|--help|help)

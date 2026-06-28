@@ -8,7 +8,8 @@ The per-command skeletons live in `.lawim/runtime/src/commands/`.
 - `lawim --help` is available.
 - `lawim status` is implemented.
 - `lawim doctor` is implemented.
-- `lawim run`, `lawim batch-run`, `lawim review`, `lawim close-sprint`, and `lawim git-sync` remain stubs.
+- `lawim git-sync --status`, `lawim git-sync --commit "<message>"`, `lawim git-sync --tag "<tag>"`, and `lawim git-sync --push` are implemented.
+- `lawim run`, `lawim batch-run`, `lawim review`, and `lawim close-sprint` remain stubs.
 
 | Command | Objective | Inputs | Outputs | Critical errors | Status | TODO |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -18,9 +19,9 @@ The per-command skeletons live in `.lawim/runtime/src/commands/`.
 | `batch-run` | Execute a controlled batch of work items. | Batch manifest, ordered ticket list, dependency map, policy gates. | Batch execution trace and aggregate report seed. | Invalid order, unresolved dependency, missing batch manifest. | SKELETON_CREATED | Add batch planning and aggregation. |
 | `review` | Orchestrate a formal review gate. | Deliverable, checklist, evidence, findings inputs. | Review decision, findings, and trace. | Missing evidence, incomplete checklist, unresolved review gate. | SKELETON_CREATED | Bind review outcomes to reports. |
 | `close-sprint` | Prepare and close a sprint in a traceable way. | Sprint state, open-ticket list, validations, closure evidence. | Sprint closure report and decision bundle. | Open ticket, missing validation, absent closure evidence. | SKELETON_CREATED | Add closure sequencing and checks. |
-| `git-sync` | Prepare a controlled repository sync. | Diff summary, branch state, trace notes, policy gates. | Git action plan and trace record. | Dirty tree with unknown owner, remote unavailable for push, policy violation. | SKELETON_CREATED | Bind to controlled repository actions. |
+| `git-sync` | Prepare a controlled repository sync. | Diff summary, branch state, tag intent, remote availability. | Git status, commit, tag, or push result with traceable output. | Empty commit message, clean tree, empty tag, existing tag, missing remote, forbidden mutation. | IMPLEMENTED | Extend safety checks if upstream rules evolve. |
 
 ## Notes
 
 - The runtime does not duplicate contract text from the architecture backlog.
-- The command layer is executable only for `status`, `doctor`, and `--help` at this stage.
+- The command layer is executable for `status`, `doctor`, `--help`, and the safe `git-sync` surface at this stage.

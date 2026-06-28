@@ -6,7 +6,8 @@ Control repository actions and traceability.
 
 ## Responsibilities
 
-- Build a controlled git action plan.
+- Report Git status safely.
+- Gate commit, tag, and push operations.
 - Enforce repository policy gates.
 - Keep action traces readable.
 
@@ -14,25 +15,32 @@ Control repository actions and traceability.
 
 - Diff summary.
 - Branch state.
+- Commit message.
 - Tag intent.
 - Remote availability.
 
 ## Outputs
 
-- Git action plan.
+- Git status snapshot.
+- Commit result.
+- Tag result.
+- Push result.
 - Repository trace.
 
 ## Critical errors
 
-- Dirty tree.
-- Remote mismatch.
+- Empty commit message.
+- Clean tree.
+- Empty tag name.
+- Existing tag.
+- Missing remote.
 - Forbidden mutation.
 
 ## Implementation status
 
-SKELETON_CREATED
+IMPLEMENTED
 
 ## TODO
 
-- Bind git contract and git policy.
-- Define local-only vs remote-aware sync behavior.
+- Keep the command aligned with the Git contract and Git policy.
+- Extend only when upstream governance changes.

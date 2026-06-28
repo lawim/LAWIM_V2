@@ -8,6 +8,8 @@ It does not test business behaviour.
 ## Current test
 
 - `runtime-foundation-smoke.sh` checks that the runtime foundation files exist.
+- `runtime-minimal-smoke.sh` checks `lawim --help`, `lawim status`, and `lawim doctor`.
+- `git-service-smoke.sh` checks the safe `lawim git-sync` surface in an isolated repository.
 
 ## Status
 

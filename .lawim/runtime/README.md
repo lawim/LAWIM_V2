@@ -21,6 +21,7 @@ It now exposes a minimal executable surface for `lawim --help`, `lawim status`, 
 
 - Executable minimal commands for `status` and `doctor`.
 - A minimal `--help` CLI entrypoint.
+- A safe `git-sync` command covering `--status`, `--commit`, `--tag`, and `--push`.
 - Command skeletons for `run`, `batch-run`, `review`, `close-sprint`, and `git-sync`.
 - Service skeletons for Workflow, Policy, Execution, Review, Git, PCC, Planning, and Report.
 - A `bin/lawim` entrypoint that prints the minimal runtime status and diagnostic output.

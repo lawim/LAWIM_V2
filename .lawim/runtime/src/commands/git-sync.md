@@ -8,28 +8,33 @@ Prepare a controlled repository sync.
 
 - Diff summary.
 - Branch state.
-- Trace notes.
-- Policy gates.
+- Commit message.
+- Tag intent.
 - Remote availability.
+- Policy gates.
 
 ## Outputs
 
-- Git action plan.
-- Commit or tag request when allowed.
+- Git status snapshot.
+- Commit result.
+- Tag result.
+- Push result.
 - Trace record.
 
 ## Critical errors
 
-- Dirty tree with unknown ownership.
-- Missing trace.
-- Forbidden policy transition.
+- Empty commit message.
+- Clean tree for commit.
+- Empty tag name.
+- Existing tag.
 - Remote absent when push is required.
+- Forbidden policy transition.
 
 ## Implementation status
 
-SKELETON_CREATED
+IMPLEMENTED
 
 ## TODO
 
-- Bind to the Git Service and Policy Service.
-- Define the local-only fallback when no remote exists.
+- Keep the command aligned with the Git Service and Policy Service.
+- Extend only if the Git governance contract changes.
