@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: STABILISATION
-- Sprint actif: Sprint 015
+- Sprint actif: Sprint 016
 - Sprint status: CLOTURE
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille a ete verifie pour LOT-005; les lots 004 a 006 sont en cours de consolidation et Sprint 019 reste non ouvert.
-- Derniere trace technique: Sprint 015 est cloture sur dashboard foundation; T15.01, T15.02 et T15.03 sont fermes
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; les lots 004 a 006 sont en cours de consolidation et Sprint 019 reste non ouvert.
+- Derniere trace technique: Sprint 016 est cloture sur reporting foundation; T16.01, T16.02 et T16.03 sont fermes
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -254,6 +254,25 @@
 - T15.02: ferme
 - T15.03: ferme
         - Sprint 016: non ouvert
+
+        ## Sprint 016
+        - Statut: EN COURS
+        - Objectif: produire les premiers agrégats et rapports périodiques.
+        - Tickets: T16.01 - Reporting engine, T16.02 - Periodic reports, T16.03 - KPI catalog
+        - Tickets couverts: 0/3
+        - Ordre recommande: T16.01 -> T16.02 -> T16.03
+        - Dependances: S013, S014, S015.
+        - Chemin critique: Decision DG d'ouverture -> T16.01 -> T16.02 -> T16.03 -> cloture Sprint 016
+        - Risques d'entree: chiffres incohérents, agrégats incomplets.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de planning: reports/sprint-016/SPRINT-016-PLANNING-REPORT.md
+        - Avancement:
+        - T16.01: A FAIRE
+- T16.02: A FAIRE
+- T16.03: A FAIRE
+        - Sprint 017: non ouvert
+
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md
