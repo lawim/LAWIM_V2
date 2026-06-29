@@ -1,0 +1,19 @@
+{
+  "name": "lawim_v2",
+  "private": true,
+  "description": "Prisma tooling for LAWIM_V2 schema v4",
+  "scripts": {
+    "prisma:validate": "prisma validate",
+    "prisma:format": "prisma format",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:status": "prisma migrate status"
+  },
+  "devDependencies": {
+    "prisma": "^6.9.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.9.0"
+  }
+}

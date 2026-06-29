@@ -3,6 +3,7 @@ const state = {
   bootstrap: null,
   health: null,
   selectedConversationId: null,
+  selectedPropertyId: null,
 };
 
 const refs = {};
@@ -20,6 +21,7 @@ function cacheRefs() {
     statusStrip: byId("status-strip"),
     organizationsList: byId("organizations-list"),
     propertiesList: byId("properties-list"),
+    mediaList: byId("media-list"),
     matchesList: byId("matches-list"),
     conversationsList: byId("conversations-list"),
     conversationDetail: byId("conversation-detail"),
@@ -31,6 +33,10 @@ function cacheRefs() {
     demoButton: byId("use-demo-button"),
     matchForm: byId("match-form"),
     propertyForm: byId("property-form"),
+    geoForm: byId("geo-form"),
+    geoResult: byId("geo-result"),
+    mediaUploadForm: byId("media-upload-form"),
+    mediaPropertySelect: byId("media-property-select"),
     ownerOrganizationSelect: byId("owner-organization-select"),
   });
 }
@@ -53,6 +59,34 @@ function money(value, currency = "XAF") {
     maximumFractionDigits: 0,
   }).format(Number(value));
   return `${formatted} ${currency}`;
+}
+
+function propertyPrice(property) {
+  if (property.price) {
+    return {
+      min: property.price.min,
+      max: property.price.max,
+      currency: property.price.currency || "XAF",
+    };
+  }
+  return {
+    min: property.price_min,
+    max: property.price_max,
+    currency: property.currency || "XAF",
+  };
+}
+
+function propertyGeo(property) {
+  if (property.geo) {
+    return property.geo;
+  }
+  return {
+    city: property.city,
+    country: property.country,
+    region: property.region,
+    address_line: property.address_line,
+    coordinates: { latitude: property.latitude, longitude: property.longitude },
+  };
 }
 
 function requestHeaders(headers = {}, auth = false) {
@@ -94,6 +128,20 @@ async function api(path, { method = "GET", auth = false, body = null, query = nu
     throw new Error(message);
   }
 
+  return payload;
+}
+
+async function apiMultipart(path, { auth = false, formData }) {
+  const response = await fetch(path, {
+    method: "POST",
+    headers: requestHeaders({}, auth),
+    body: formData,
+  });
+  const text = await response.text();
+  const payload = text ? JSON.parse(text) : {};
+  if (!response.ok) {
+    throw new Error(payload?.error?.message || `HTTP ${response.status}`);
+  }
   return payload;
 }
 
@@ -153,37 +201,71 @@ function renderOrganizations(items) {
     return article;
   }, "No organizations available.");
 
-  const options = ["<option value=\"\">None</option>"]
-    .concat(
-      items.map((organization) =>
-        `<option value="${organization.id}">${organization.name}</option>`,
-      ),
-    )
+  const options = ['<option value="">None</option>']
+    .concat(items.map((organization) => `<option value="${organization.id}">${organization.name}</option>`))
     .join("");
   refs.ownerOrganizationSelect.innerHTML = options;
 }
 
 function renderProperties(items) {
+  const mediaOptions = ['<option value="">Select property</option>']
+    .concat(
+      (items || []).map((property) => {
+        const label = property.listing_code || property.title;
+        return `<option value="${property.id}">${label}</option>`;
+      }),
+    )
+    .join("");
+  refs.mediaPropertySelect.innerHTML = mediaOptions;
+
   renderList(refs.propertiesList, items, (property) => {
+    const price = propertyPrice(property);
+    const geo = propertyGeo(property);
+    const coords = geo.coordinates || {};
     const article = document.createElement("article");
     article.className = "mini-card mini-card--property";
     article.innerHTML = `
       <div class="mini-card__header">
         <strong>${property.title}</strong>
-        <span class="chip subtle">${property.property_type}</span>
+        <span class="chip subtle">${property.status || "draft"}</span>
       </div>
-      <p class="muted">${property.city}, ${property.country}</p>
-      <p>${money(property.price_min, property.currency)} - ${money(property.price_max, property.currency)}</p>
-      <p class="muted">Owner: ${property.owner_organization_name || "n/a"} · Media: ${property.media_count ?? 0} · Threads: ${property.conversation_count ?? 0}</p>
-      <p>${property.summary}</p>
+      <p class="muted">${property.listing_code || "no-code"} · ${property.property_type || "n/a"} · ${property.availability || "available"}</p>
+      <p>${geo.city || "n/a"}, ${geo.region || "—"}, ${geo.country || "n/a"}</p>
+      <p>${money(price.min, price.currency)} - ${money(price.max, price.currency)}</p>
+      <p class="muted">Coords: ${coords.latitude ?? "—"}, ${coords.longitude ?? "—"}</p>
+      <p class="muted">Owner: ${property.ownership?.organization_name || property.owner_organization_name || "n/a"} · Media: ${property.media_count ?? 0}</p>
+      <p>${property.summary || ""}</p>
     `;
+    article.addEventListener("click", () => {
+      state.selectedPropertyId = property.id;
+      setNotice(`Selected property #${property.id} (${property.title})`, "neutral");
+    });
     return article;
   }, "No properties available.");
+}
+
+function renderMedia(items) {
+  renderList(refs.mediaList, items, (media) => {
+    const article = document.createElement("article");
+    article.className = "mini-card mini-card--media";
+    article.innerHTML = `
+      <div class="mini-card__header">
+        <strong>${media.caption || media.kind}</strong>
+        <span class="chip subtle">${media.kind}</span>
+      </div>
+      <p class="muted">${media.property_title || `Property #${media.property_id}`}</p>
+      <p>${media.mime_type || "unknown"} · ${media.size_bytes ?? 0} bytes</p>
+      <p class="muted">${media.url}</p>
+    `;
+    return article;
+  }, "No media available.");
 }
 
 function renderMatches(items) {
   renderList(refs.matchesList, items, (match) => {
     const property = match.property;
+    const price = propertyPrice(property);
+    const geo = propertyGeo(property);
     const article = document.createElement("article");
     article.className = "mini-card mini-card--match";
     article.innerHTML = `
@@ -191,8 +273,8 @@ function renderMatches(items) {
         <strong>${property.title}</strong>
         <span class="chip accent">${match.score}</span>
       </div>
-      <p class="muted">${property.city}, ${property.country}</p>
-      <p>${money(property.price_min, property.currency)} - ${money(property.price_max, property.currency)}</p>
+      <p class="muted">${geo.city || property.city}, ${geo.country || property.country}</p>
+      <p>${money(price.min, price.currency)} - ${money(price.max, price.currency)}</p>
       <p class="muted">${(match.reasons || []).join(" · ") || "No reasons returned."}</p>
     `;
     return article;
@@ -256,8 +338,9 @@ function renderConversations(items) {
 
 function renderHealth(health) {
   const environment = health.environment || {};
+  const database = health.database || {};
   setRuntimeChip(`${health.status.toUpperCase()} · ${environment.app_env || "unknown"}`, health.status === "ok" ? "ok" : "warn");
-  refs.bootstrapSummary.textContent = `Database ${health.database?.path || "n/a"} · ${health.summary?.events ?? 0} events logged.`;
+  refs.bootstrapSummary.textContent = `Driver ${environment.db_driver || database.driver || "sqlite"} · Geocoder ${environment.geocoding_provider || "local"} · ${health.summary?.events ?? 0} events.`;
 }
 
 function renderBootstrap(payload) {
@@ -275,6 +358,7 @@ function renderBootstrap(payload) {
   renderSummary(payload.summary || {});
   renderOrganizations(payload.organizations || []);
   renderProperties(payload.properties || []);
+  renderMedia(payload.media || []);
   renderMatches(payload.matches || []);
   renderConversations(payload.conversations || []);
 
@@ -402,7 +486,12 @@ async function handlePropertyCreate(event) {
         title: form.get("title"),
         summary: form.get("summary"),
         city: form.get("city"),
+        country: form.get("country") || "Cameroon",
+        address_line: form.get("address_line"),
+        region: form.get("region"),
         property_type: form.get("property_type"),
+        status: form.get("status") || "draft",
+        availability: form.get("availability") || "available",
         price_min: parseNumber(form.get("price_min")),
         price_max: parseNumber(form.get("price_max")),
         latitude: parseNumber(form.get("latitude")),
@@ -412,6 +501,55 @@ async function handlePropertyCreate(event) {
     });
     refs.propertyForm.reset();
     setNotice("Property created and persisted.", "success");
+    await refresh();
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function handleGeoLookup(event) {
+  event.preventDefault();
+  try {
+    const form = new FormData(refs.geoForm);
+    const payload = await api("/api/geo/geocode", {
+      query: {
+        city: form.get("city"),
+        country: form.get("country"),
+        address_line: form.get("address_line"),
+        region: form.get("region"),
+      },
+    });
+    const location = payload.location || {};
+    const coords = location.coordinates || {};
+    refs.geoResult.textContent = `${location.city}, ${location.region || "—"}, ${location.country} · ${coords.latitude}, ${coords.longitude} · provider=${payload.provider}`;
+    setNotice("Geo lookup completed.", "success");
+  } catch (error) {
+    refs.geoResult.textContent = error.message;
+    setNotice(error.message, "error");
+  }
+}
+
+async function handleMediaUpload(event) {
+  event.preventDefault();
+  if (!state.token) {
+    setNotice("Authenticate before uploading media.", "error");
+    return;
+  }
+  try {
+    const form = new FormData(refs.mediaUploadForm);
+    const file = form.get("file");
+    const propertyId = form.get("property_id");
+    if (!file || !propertyId) {
+      throw new Error("Property and file are required.");
+    }
+    const uploadData = new FormData();
+    uploadData.append("property_id", String(propertyId));
+    uploadData.append("file", file);
+    uploadData.append("caption", form.get("caption") || "Uploaded media");
+    uploadData.append("kind", form.get("kind") || "image");
+    await apiMultipart("/api/media/upload", { auth: true, formData: uploadData });
+    refs.mediaUploadForm.reset();
+    setNotice("Media uploaded.", "success");
     await refresh();
   } catch (error) {
     setNotice(error.message, "error");
@@ -452,6 +590,8 @@ function bindEvents() {
   refs.demoButton.addEventListener("click", populateDemoCredentials);
   refs.matchForm.addEventListener("submit", handleMatchSearch);
   refs.propertyForm.addEventListener("submit", handlePropertyCreate);
+  refs.geoForm.addEventListener("submit", handleGeoLookup);
+  refs.mediaUploadForm.addEventListener("submit", handleMediaUpload);
   refs.messageForm.addEventListener("submit", handleMessageCreate);
 }
 

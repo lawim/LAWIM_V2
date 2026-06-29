@@ -99,7 +99,7 @@
         <section class="panel form-panel">
           <div class="section-heading">
             <h2>Create property</h2>
-            <p class="muted">This uses the authenticated API and persists immediately.</p>
+            <p class="muted">Uses property DTO fields (geo, status, availability).</p>
           </div>
           <form id="property-form" class="stacked-form">
             <label>
@@ -116,8 +116,38 @@
                 <input name="city" type="text" required placeholder="Douala">
               </label>
               <label>
+                <span>Country</span>
+                <input name="country" type="text" value="Cameroon">
+              </label>
+            </div>
+            <label>
+              <span>Address line</span>
+              <input name="address_line" type="text" placeholder="12 Rue de la Joie">
+            </label>
+            <div class="two-up">
+              <label>
+                <span>Region</span>
+                <input name="region" type="text" placeholder="Littoral">
+              </label>
+              <label>
                 <span>Type</span>
                 <input name="property_type" type="text" placeholder="apartment">
+              </label>
+            </div>
+            <div class="two-up">
+              <label>
+                <span>Status</span>
+                <select name="status">
+                  <option value="draft">draft</option>
+                  <option value="published">published</option>
+                </select>
+              </label>
+              <label>
+                <span>Availability</span>
+                <select name="availability">
+                  <option value="available">available</option>
+                  <option value="reserved">reserved</option>
+                </select>
               </label>
             </div>
             <div class="two-up">
@@ -151,6 +181,61 @@
             </div>
           </form>
         </section>
+
+        <section class="panel form-panel">
+          <div class="section-heading">
+            <h2>Geo lookup</h2>
+            <p class="muted">Deterministic local geocoding provider.</p>
+          </div>
+          <form id="geo-form" class="stacked-form">
+            <label>
+              <span>City</span>
+              <input name="city" type="text" required placeholder="Douala">
+            </label>
+            <label>
+              <span>Country</span>
+              <input name="country" type="text" required value="Cameroon">
+            </label>
+            <label>
+              <span>Address line</span>
+              <input name="address_line" type="text" placeholder="Bonanjo">
+            </label>
+            <label>
+              <span>Region</span>
+              <input name="region" type="text" placeholder="Littoral">
+            </label>
+            <div class="actions">
+              <button type="submit" class="button secondary">Geocode</button>
+            </div>
+          </form>
+          <p id="geo-result" class="muted">No geo result yet.</p>
+        </section>
+
+        <section class="panel form-panel">
+          <div class="section-heading">
+            <h2>Upload media</h2>
+            <p class="muted">Multipart upload to local storage.</p>
+          </div>
+          <form id="media-upload-form" class="stacked-form">
+            <label>
+              <span>Property</span>
+              <select name="property_id" id="media-property-select" required>
+                <option value="">Select property</option>
+              </select>
+            </label>
+            <label>
+              <span>File</span>
+              <input name="file" type="file" accept="image/*,application/pdf" required>
+            </label>
+            <label>
+              <span>Caption</span>
+              <input name="caption" type="text" placeholder="Cover image">
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Upload</button>
+            </div>
+          </form>
+        </section>
       </aside>
 
       <section class="workspace">
@@ -169,9 +254,17 @@
           <article class="panel card">
             <div class="section-heading">
               <h2>Properties</h2>
-              <p class="muted">Published inventory and media coverage.</p>
+              <p class="muted">DTO-aligned listings with geo and lifecycle.</p>
             </div>
             <div id="properties-list" class="card-list"></div>
+          </article>
+
+          <article class="panel card">
+            <div class="section-heading">
+              <h2>Media</h2>
+              <p class="muted">Uploaded assets linked to properties.</p>
+            </div>
+            <div id="media-list" class="card-list"></div>
           </article>
 
           <article class="panel card">

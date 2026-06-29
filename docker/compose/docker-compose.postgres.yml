@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${LAWIM_POSTGRES_DB:-lawim_v2}
+      POSTGRES_USER: ${LAWIM_POSTGRES_USER:-lawim}
+      POSTGRES_PASSWORD: ${LAWIM_POSTGRES_PASSWORD:-lawim}
+    ports:
+      - "${LAWIM_POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - lawim_postgres_data:/var/lib/postgresql/data
+    networks:
+      - lawim_private
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${LAWIM_POSTGRES_USER:-lawim} -d ${LAWIM_POSTGRES_DB:-lawim_v2}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    environment:
+      LAWIM_DB_DRIVER: ${LAWIM_DB_DRIVER:-postgresql}
+      LAWIM_DATABASE_URL: ${LAWIM_DATABASE_URL:-postgresql://lawim:lawim@postgres:5432/lawim_v2}
+      LAWIM_DB_FALLBACK: ${LAWIM_DB_FALLBACK:-true}
+      LAWIM_MEDIA_STORAGE_PATH: /app/data/runtime/media
+      LAWIM_GEOCODING_PROVIDER: ${LAWIM_GEOCODING_PROVIDER:-local}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - lawim_media:/app/data/runtime/media
+
+volumes:
+  lawim_postgres_data:
+    name: ${LAWIM_VOLUME_POSTGRES_NAME:-lawim_v2_postgres}
+  lawim_media:
+    name: ${LAWIM_VOLUME_MEDIA_NAME:-lawim_v2_media}

@@ -103,12 +103,11 @@ APPLICATION_SCHEMA_VERSION = 4
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
     orm="prisma",
-    status="prepared",
+    status="active",
     notes=(
-        "SQLite remains the live runtime engine.",
-        "The manifest is stable enough to generate Prisma models later.",
-        "The live runtime must stay compatible with the current SQLite baseline.",
-        "PostgreSQL profile and adapter contract are finalized for MEGA_WAVE_004.",
+        "SQLite remains the default live runtime engine.",
+        "Prisma schema and PostgreSQL repository path are executable when configured.",
+        "The manifest fingerprint anchors SQLite ↔ PostgreSQL ↔ Prisma alignment.",
     ),
 )
 
@@ -306,14 +305,15 @@ def build_postgresql_profile(dsn: str, schema_version: int) -> dict[str, object]
     manifest = build_application_schema_manifest()
     return {
         "driver": "postgresql",
-        "adapter": "postgresql-repository-prepared",
+        "adapter": "postgresql-repository",
         "dsn": dsn,
         "schema_version": schema_version,
         "schema_fingerprint": build_schema_fingerprint(manifest),
         "schema": manifest,
         "migration": build_migration_profile(),
         "seed": build_seed_profile(),
-        "status": "prepared",
+        "status": "active",
+        "prisma_schema": "prisma/schema.prisma",
     }
 
 

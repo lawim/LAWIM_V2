@@ -84,6 +84,24 @@ class LocalMediaStorage(MediaStorage):
             target.unlink()
 
 
+def validate_upload_bytes(
+    content: bytes,
+    *,
+    mime_type: str | None,
+    filename: str,
+    max_bytes: int,
+) -> None:
+    if not content:
+        raise ValidationError("upload content is required")
+    if len(content) > max_bytes:
+        raise ValidationError(f"upload exceeds maximum size of {max_bytes} bytes")
+    _safe_filename(filename)
+    if mime_type:
+        allowed = {"image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"}
+        if mime_type not in allowed:
+            raise ValidationError(f"unsupported mime type: {mime_type}")
+
+
 def _safe_filename(filename: str) -> str:
     cleaned = re.sub(r"[^A-Za-z0-9._-]+", "-", filename.strip()).strip("-")
     if not cleaned:

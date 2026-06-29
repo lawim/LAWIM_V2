@@ -6,7 +6,8 @@ from http import HTTPStatus
 from .config import AppConfig
 from .db import LawimRepository
 from .dto import PaginationMeta, geo_location_dto, media_dto, paginated_payload, property_dto
-from .media_domain import LocalMediaStorage, decode_upload_content
+from .geocoding_provider import resolve_geocoding_provider
+from .media_domain import LocalMediaStorage, decode_upload_content, validate_upload_bytes
 
 
 class ServiceError(Exception):
@@ -81,6 +82,11 @@ class LawimServices:
         self.config = config
         self.policy = policy or AccessPolicy()
         self.media_storage = LocalMediaStorage(config.media_storage_path, public_base_url=config.public_base_url)
+        self.geocoder = resolve_geocoding_provider(
+            provider_name=config.geocoding_provider,
+            base_url=config.geocoding_base_url,
+            api_key=config.geocoding_api_key,
+        )
 
     def health(self) -> dict[str, object]:
         return {
@@ -92,9 +98,26 @@ class LawimServices:
                 "public_base_url": self.config.public_base_url,
                 "secret_provider": self.config.secret_provider,
                 "seed_demo_data": self.config.seed_demo_data,
+                "db_driver": self.config.db_driver,
+                "geocoding_provider": self.geocoder.name,
             },
             "database": self.repository.backend_profile(),
             "summary": self.repository.summary(),
+        }
+
+    def bootstrap(self, *, token: str | None = None) -> dict[str, object]:
+        payload = self.repository.bootstrap_payload(token=token)
+        properties = self.list_properties(limit=10)["properties"]
+        media = self.list_media(limit=10)["media"]
+        return {
+            "summary": payload["summary"],
+            "current_user": payload["current_user"],
+            "organizations": payload["organizations"],
+            "users": payload["users"],
+            "properties": properties,
+            "media": media,
+            "conversations": payload["conversations"],
+            "matches": payload["matches"],
         }
 
     def login(self, *, email: str, password: str) -> dict[str, object]:
@@ -443,6 +466,33 @@ class LawimServices:
         if not self.policy.can_manage_media(actor, property_row):
             raise PermissionDenied("Media access is restricted to administrators and the owning organization")
         content = decode_upload_content(content_base64)
+        return self.upload_media_bytes(
+            actor=actor,
+            property_id=property_id,
+            filename=filename,
+            content=content,
+            kind=kind,
+            caption=caption,
+            mime_type=mime_type,
+            metadata=metadata,
+        )
+
+    def upload_media_bytes(
+        self,
+        *,
+        actor: dict[str, object],
+        property_id: int,
+        filename: str,
+        content: bytes,
+        kind: str = "image",
+        caption: str = "LAWIM_V2 media",
+        mime_type: str | None = None,
+        metadata: dict[str, object] | str | None = None,
+    ) -> dict[str, object]:
+        property_row = self.repository.get_property(property_id)
+        if not self.policy.can_manage_media(actor, property_row):
+            raise PermissionDenied("Media access is restricted to administrators and the owning organization")
+        validate_upload_bytes(content, mime_type=mime_type, filename=filename, max_bytes=self.config.max_upload_bytes)
         stored = self.media_storage.store(
             property_id=property_id,
             filename=filename,
@@ -542,8 +592,35 @@ class LawimServices:
         region: str | None = None,
         address_line: str | None = None,
         postal_code: str | None = None,
+        geocode: bool = False,
     ) -> dict[str, object]:
-        return self.repository.normalize_location(
+        if geocode:
+            return self.geocoder.geocode(
+                city=city,
+                country=country,
+                region=region,
+                address_line=address_line,
+                postal_code=postal_code,
+            )
+        location = self.repository.normalize_location(
+            city=city,
+            country=country,
+            region=region,
+            address_line=address_line,
+            postal_code=postal_code,
+        )
+        return {"location": location, "provider": "normalize", "confidence": 1.0, "deterministic": True}
+
+    def geocode_location(
+        self,
+        *,
+        city: str,
+        country: str,
+        region: str | None = None,
+        address_line: str | None = None,
+        postal_code: str | None = None,
+    ) -> dict[str, object]:
+        return self.geocoder.geocode(
             city=city,
             country=country,
             region=region,

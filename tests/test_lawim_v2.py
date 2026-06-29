@@ -56,6 +56,9 @@ class LawimV2ExecutableBaselineTest(TestCase):
             host="127.0.0.1",
             port=3000,
             db_path=self.db_path,
+            db_driver="sqlite",
+            database_url="postgresql://lawim:lawim@localhost:5432/lawim_v2",
+            db_fallback=True,
             app_env="test",
             stack_profile="test",
             log_level="debug",
@@ -64,6 +67,10 @@ class LawimV2ExecutableBaselineTest(TestCase):
             seed_demo_data=True,
             session_ttl_seconds=3600,
             media_storage_path=Path(self.tempdir.name) / "media",
+            max_upload_bytes=5 * 1024 * 1024,
+            geocoding_provider="local",
+            geocoding_base_url="https://nominatim.openstreetmap.org/search",
+            geocoding_api_key=None,
         )
 
     def tearDown(self) -> None:
@@ -538,11 +545,18 @@ class LawimV2ExecutableBaselineTest(TestCase):
     def test_geo_normalization_search_and_contracts(self) -> None:
         normalized = self.invoke("/api/geo/normalize?city=douala&country=cameroun&region=littoral")
         self.assertEqual(normalized.status, HTTPStatus.OK)
-        location = normalized.body_json()["location"]
+        payload = normalized.body_json()
+        location = payload["location"]
         self.assertEqual(location["city"], "Douala")
         self.assertEqual(location["country"], "Cameroon")
         self.assertEqual(location["region"], "Littoral")
-        self.assertIn("search_key", location)
+        self.assertEqual(payload["provider"], "normalize")
+
+        geocoded = self.invoke("/api/geo/geocode?city=Douala&country=Cameroon&address_line=Bonanjo")
+        self.assertEqual(geocoded.status, HTTPStatus.OK)
+        geo_payload = geocoded.body_json()
+        self.assertEqual(geo_payload["provider"], "local")
+        self.assertIn("coordinates", geo_payload["location"])
 
         search = self.invoke("/api/geo/search?q=douala")
         self.assertEqual(search.status, HTTPStatus.OK)
@@ -648,8 +662,86 @@ class LawimV2ExecutableBaselineTest(TestCase):
     def test_postgresql_adapter_profile_is_prepared(self) -> None:
         from lawim_v2.persistence_adapter import PostgreSQLPersistenceAdapter
 
-        adapter = PostgreSQLPersistenceAdapter("postgresql://example.test/lawim")
+        adapter = PostgreSQLPersistenceAdapter("postgresql://example.test/lawim", allow_sqlite_fallback=True)
         profile = adapter.backend_profile(schema_version=4)
         self.assertEqual(profile["driver"], "postgresql")
-        self.assertEqual(profile["adapter"], "postgresql-repository-prepared")
-        self.assertEqual(profile["status"], "prepared")
+        self.assertEqual(profile["adapter"], "postgresql-repository")
+        self.assertEqual(profile["status"], "active")
+        self.assertEqual(profile["prisma_schema"], "prisma/schema.prisma")
+
+    def test_bootstrap_returns_dto_aligned_properties_and_media(self) -> None:
+        bootstrap = self.invoke("/api/bootstrap")
+        self.assertEqual(bootstrap.status, HTTPStatus.OK)
+        payload = bootstrap.body_json()
+        self.assertGreaterEqual(len(payload["properties"]), 1)
+        property_row = payload["properties"][0]
+        self.assertIn("geo", property_row)
+        self.assertIn("price", property_row)
+        self.assertIn("listing_code", property_row)
+        if payload["media"]:
+            media_row = payload["media"][0]
+            self.assertIn("thumbnail", media_row)
+
+    def test_multipart_media_upload(self) -> None:
+        login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        token = str(login.body_json()["token"])
+        created = self.invoke(
+            "/api/properties",
+            method="POST",
+            token=token,
+            body={
+                "title": "Multipart Property",
+                "summary": "Multipart upload target",
+                "city": "Douala",
+                "country": "Cameroon",
+                "price_min": 100000,
+                "price_max": 120000,
+                "status": "draft",
+            },
+        )
+        property_id = int(created.body_json()["property"]["id"])
+        boundary = "----LawimBoundary"
+        body = (
+            f"--{boundary}\r\n"
+            f'Content-Disposition: form-data; name="property_id"\r\n\r\n'
+            f"{property_id}\r\n"
+            f"--{boundary}\r\n"
+            f'Content-Disposition: form-data; name="file"; filename="cover.jpg"\r\n'
+            f"Content-Type: image/jpeg\r\n\r\n"
+        ).encode("utf-8") + b"binary-image-content" + f"\r\n--{boundary}--\r\n".encode("utf-8")
+        uploaded = self.invoke(
+            "/api/media/upload",
+            method="POST",
+            token=token,
+            raw_body=body,
+            headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+        )
+        self.assertEqual(uploaded.status, HTTPStatus.CREATED)
+        self.assertEqual(uploaded.body_json()["media"]["mime_type"], "image/jpeg")
+
+    def test_prisma_manifest_validation_script(self) -> None:
+        import subprocess
+        import sys
+
+        result = subprocess.run(
+            [sys.executable, "scripts/validate_prisma_manifest.py"],
+            cwd=Path(__file__).resolve().parents[1],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stdout + result.stderr)
+        self.assertIn("PASS", result.stdout)
+
+    def test_local_geocoding_provider_is_deterministic(self) -> None:
+        from lawim_v2.geocoding_provider import LocalGeocodingProvider
+
+        provider = LocalGeocodingProvider()
+        first = provider.geocode(city="Douala", country="Cameroon", address_line="Bonanjo")
+        second = provider.geocode(city="Douala", country="Cameroon", address_line="Bonanjo")
+        self.assertEqual(first, second)
+        self.assertEqual(first["provider"], "local")

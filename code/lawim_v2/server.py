@@ -19,6 +19,7 @@ from .db import LawimRepository
 from .dto import geo_location_dto, media_dto, paginated_payload, property_dto
 from .media_domain import THUMBNAIL_CONTRACT
 from .matching import MatchCriteria
+from .multipart import parse_multipart_form_data
 from .persistence_adapter import resolve_persistence_adapter
 from .services import LawimServices, ServiceError
 
@@ -118,6 +119,9 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         if not parsed.path.startswith("/api/"):
             raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Resource not found")
+        if parsed.path == "/api/media/upload" and "multipart/form-data" in self.headers.get("Content-Type", "").lower():
+            self._handle_multipart_media_upload(parsed)
+            return
         body = self._read_json_body()
         self._handle_api_post(parsed, body)
 
@@ -131,8 +135,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/bootstrap":
             token = self._bearer_token(optional=True)
-            payload = self.repository.bootstrap_payload(token=token)
-            self._send_json(payload)
+            self._send_json(self.services.bootstrap(token=token))
             return
 
         if path == "/api/events":
@@ -174,16 +177,28 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/geo/normalize":
+            geocode = self._first_bool(query, "geocode")
             self._send_json(
-                {
-                    "location": self.services.normalize_location(
-                        city=self._require_query(query, "city"),
-                        country=self._require_query(query, "country"),
-                        region=self._first(query, "region"),
-                        address_line=self._first(query, "address_line"),
-                        postal_code=self._first(query, "postal_code"),
-                    )
-                }
+                self.services.normalize_location(
+                    city=self._require_query(query, "city"),
+                    country=self._require_query(query, "country"),
+                    region=self._first(query, "region"),
+                    address_line=self._first(query, "address_line"),
+                    postal_code=self._first(query, "postal_code"),
+                    geocode=geocode,
+                )
+            )
+            return
+
+        if path == "/api/geo/geocode":
+            self._send_json(
+                self.services.geocode_location(
+                    city=self._require_query(query, "city"),
+                    country=self._require_query(query, "country"),
+                    region=self._first(query, "region"),
+                    address_line=self._first(query, "address_line"),
+                    postal_code=self._first(query, "postal_code"),
+                )
             )
             return
 
@@ -410,6 +425,18 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"property": property_row})
             return
 
+        if path == "/api/geo/geocode":
+            self._send_json(
+                self.services.geocode_location(
+                    city=self._require_text(body, "city"),
+                    country=self._require_text(body, "country"),
+                    region=self._optional_text(body.get("region")),
+                    address_line=self._optional_text(body.get("address_line")),
+                    postal_code=self._optional_text(body.get("postal_code")),
+                )
+            )
+            return
+
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
 
     def _handle_put(self) -> None:
@@ -574,6 +601,54 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if not isinstance(payload, dict):
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_json", "Request body must be a JSON object")
         return payload
+
+    def _read_raw_body(self, *, max_bytes: int) -> bytes:
+        content_length = self.headers.get("Content-Length", "0")
+        try:
+            length = int(content_length)
+        except ValueError as exc:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_content_length", "Content-Length must be an integer") from exc
+        if length < 0:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_content_length", "Content-Length must be non-negative")
+        if length <= 0:
+            return b""
+        if length > max_bytes:
+            raise ApiError(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, "payload_too_large", "Request body exceeds the supported size")
+        return self.rfile.read(length)
+
+    def _handle_multipart_media_upload(self, parsed) -> None:
+        actor = self._require_user()
+        raw = self._read_raw_body(max_bytes=self.config.max_upload_bytes)
+        parts = parse_multipart_form_data(
+            self.headers.get("Content-Type", ""),
+            raw,
+            max_bytes=self.config.max_upload_bytes,
+        )
+        file_part = parts.get("file")
+        if file_part is None or not file_part.data:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Multipart field 'file' is required")
+        property_part = parts.get("property_id")
+        if property_part is None or not property_part.data:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Multipart field 'property_id' is required")
+        try:
+            property_id = int(property_part.data.decode("utf-8").strip())
+        except ValueError as exc:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "property_id must be an integer") from exc
+        filename = file_part.filename or "upload.bin"
+        caption_part = parts.get("caption")
+        kind_part = parts.get("kind")
+        caption = caption_part.data.decode("utf-8").strip() if caption_part and caption_part.data else "LAWIM_V2 media"
+        kind = kind_part.data.decode("utf-8").strip() if kind_part and kind_part.data else "image"
+        media_row = self.services.upload_media_bytes(
+            actor=actor,
+            property_id=property_id,
+            filename=filename,
+            content=file_part.data,
+            kind=kind,
+            caption=caption,
+            mime_type=file_part.content_type,
+        )
+        self._send_json({"media": media_row}, status=HTTPStatus.CREATED)
 
     def _send_json(
         self,
@@ -826,7 +901,12 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:
-    adapter = resolve_persistence_adapter(config.db_path)
+    adapter = resolve_persistence_adapter(
+        config.db_path,
+        db_driver=config.db_driver,
+        database_url=config.database_url,
+        allow_sqlite_fallback=config.db_fallback,
+    )
     repository = adapter.create_repository()
     repository.initialize(seed_demo_data=config.seed_demo_data)
     services = LawimServices(repository, config)
