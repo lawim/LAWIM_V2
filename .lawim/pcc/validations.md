@@ -557,3 +557,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T21.02 | PMO | Validation de l audit, de la privacy et de la retention | PMO | PASS | 2026-06-29 | reports/sprint-021/T21.02-audit-and-privacy-report.md |
 | T21.02 | Integration | Cohesion audit and privacy | Integration Manager | READY FOR T21.03 | 2026-06-29 | reports/sprint-021/T21.02-audit-and-privacy-report.md |
 | T21.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T21.03 | 2026-06-29 | reports/sprint-021/T21.02-audit-and-privacy-report.md |
+| T21.03 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-021/T21.03-fraud-controls-report.md |
+| T21.03 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-021/T21.03-fraud-controls-report.md |
+| T21.03 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-021/T21.03-fraud-controls-report.md |
+| T21.03 | PMO | Validation des signaux, anomalies et abus | PMO | PASS | 2026-06-29 | reports/sprint-021/T21.03-fraud-controls-report.md |
+| T21.03 | Integration | Cohesion fraud controls | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-021/T21.03-fraud-controls-report.md |
+| T21.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-021/T21.03-fraud-controls-report.md |

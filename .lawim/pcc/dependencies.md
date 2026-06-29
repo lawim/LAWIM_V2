@@ -86,3 +86,4 @@
 | D-082 | Decision DG d'ouverture du Sprint 021 a tracer avant toute execution | Gouvernance | High | Confirmed |
 | D-083 | T21.01 depend de la cloture Sprint 020 et des references security / role / zero trust | Sprint 021 | High | Confirmed |
 | D-084 | T21.02 depend de T21.01 et des references security / database | Sprint 021 | High | Confirmed |
+| D-085 | T21.03 depend de T21.02 et des procedures fraud / partner suspension | Sprint 021 | High | Confirmed |

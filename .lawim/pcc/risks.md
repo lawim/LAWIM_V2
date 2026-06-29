@@ -105,3 +105,4 @@
 | R-001 | Sprint 021 opening requires stable security hardening contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T21.01 zero trust hardening consolidates the access, roles and segmentation contract | High | Low | Keep access explicit, roles constrained and segmentation bounded | Security | Mitigated |
 | R-003 | T21.02 audit and privacy consolidates the logs, sensitivity and retention contract | High | Low | Keep logs explicit, retention bounded and privacy exposure controlled | Security | Mitigated |
+| R-004 | T21.03 fraud controls consolidates the signals, anomalies and abuse contract | High | Low | Keep fraud signals explicit, escalate clearly and align partner suspension with procedures | Security | Mitigated |
