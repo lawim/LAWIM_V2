@@ -32,11 +32,12 @@ DG-0028
 - regression tardive, performance insuffisante, bug bloquant
 
 ## Avancement
-- T24.01: a venir
+- T24.01: ferme
 - T24.02: a venir
 - T24.03: a venir
-- Tickets couverts: 0/3
+- Tickets couverts: 1/3
 
 ## Preparation
 - Rapport de lancement: reports/sprint-024/SPRINT-024-PLANNING-REPORT.md
+- Rapport de ticket: reports/sprint-024/T24.01-internal-beta-qa-report.md
 - Sprint 025: non ouvert

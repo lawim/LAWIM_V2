@@ -115,3 +115,4 @@
 | R-003 | T23.02 validation et tests consolidates the acceptance, test and reconciliation contract | High | Low | Keep tests explicit, acceptance human and historical reconciliation traceable | QA | Mitigated |
 | R-004 | T23.03 rollback et observabilite consolidates the traces and thresholds contract | High | Low | Keep rollback explicit, traces sufficient and thresholds aligned | DevOps | Mitigated |
 | R-001 | Sprint 024 opening requires stable beta readiness contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
+| R-002 | T24.01 internal beta QA consolidates the internal beta, user journeys and feedback contract | High | Low | Keep scenarios explicit, feedback captured and internal validation traceable | QA | Mitigated |
