@@ -593,3 +593,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T23.02 | PMO | Validation des tests obligatoires, de l acceptance humaine et de la reconciliation des historiques | PMO | PASS | 2026-06-29 | reports/sprint-023/T23.02-validation-et-tests-report.md |
 | T23.02 | Integration | Cohesion validation et tests | Integration Manager | READY FOR T23.03 | 2026-06-29 | reports/sprint-023/T23.02-validation-et-tests-report.md |
 | T23.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T23.03 | 2026-06-29 | reports/sprint-023/T23.02-validation-et-tests-report.md |
+| T23.03 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-023/T23.03-rollback-et-observabilite-report.md |
+| T23.03 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-023/T23.03-rollback-et-observabilite-report.md |
+| T23.03 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-023/T23.03-rollback-et-observabilite-report.md |
+| T23.03 | PMO | Validation du rollback et de l observabilite | PMO | PASS | 2026-06-29 | reports/sprint-023/T23.03-rollback-et-observabilite-report.md |
+| T23.03 | Integration | Cohesion rollback et observabilite | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-023/T23.03-rollback-et-observabilite-report.md |
+| T23.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-023/T23.03-rollback-et-observabilite-report.md |
