@@ -1,11 +1,5 @@
 version: "3.9"
 
-# Shared Compose foundation for LAWIM_V2.
-#
-# This file defines the stable naming conventions, the reusable environment
-# contract and the shared Docker resources. It does not implement any business
-# service yet.
-
 x-lawim-compose-contract:
   project: LAWIM_V2
   compose_project_name: lawim_v2
@@ -14,7 +8,7 @@ x-lawim-compose-contract:
     APP_ENV: ${APP_ENV:-development}
     STACK_PROFILE: ${STACK_PROFILE:-development}
     LOG_LEVEL: ${LOG_LEVEL:-info}
-    PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-}
+    PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:3000}
     SECRET_PROVIDER: ${SECRET_PROVIDER:-external}
   network_names:
     public: lawim_v2_public
@@ -23,49 +17,48 @@ x-lawim-compose-contract:
     state: lawim_v2_state
     shared: lawim_v2_shared
     cache: lawim_v2_cache
-  service_defaults:
-    init: true
-    restart: unless-stopped
-    stop_grace_period: 30s
-    logging_driver: json-file
-  extension_policy:
-    primary_pattern: file layering with -f
-    secondary_pattern: x- fragments for reusable metadata
-    future_pattern: extends for concrete services when they exist
 
-services: {}
+services:
+  app:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    image: lawim_v2/app:local
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      STACK_PROFILE: ${STACK_PROFILE:-development}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:3000}
+      SECRET_PROVIDER: ${SECRET_PROVIDER:-external}
+      LAWIM_HOST: 0.0.0.0
+      LAWIM_PORT: 3000
+      LAWIM_DB_PATH: /app/data/runtime/lawim.sqlite3
+      LAWIM_SEED_DEMO_DATA: ${LAWIM_SEED_DEMO_DATA:-true}
+      LAWIM_SESSION_TTL_SECONDS: ${LAWIM_SESSION_TTL_SECONDS:-604800}
+    command: ["python", "-m", "lawim_v2"]
+    ports:
+      - "${LAWIM_APP_PORT:-3000}:3000"
+    volumes:
+      - lawim_state:/app/data/runtime
+    networks:
+      - lawim_public
+      - lawim_private
+    restart: unless-stopped
+    init: true
 
 networks:
   lawim_public:
     name: ${LAWIM_NETWORK_PUBLIC_NAME:-lawim_v2_public}
     driver: bridge
-    labels:
-      com.lawim.project: LAWIM_V2
-      com.lawim.layer: compose-foundation
   lawim_private:
     name: ${LAWIM_NETWORK_PRIVATE_NAME:-lawim_v2_private}
     driver: bridge
     internal: true
-    labels:
-      com.lawim.project: LAWIM_V2
-      com.lawim.layer: compose-foundation
 
 volumes:
   lawim_state:
     name: ${LAWIM_VOLUME_STATE_NAME:-lawim_v2_state}
-    driver: local
-    labels:
-      com.lawim.project: LAWIM_V2
-      com.lawim.layer: compose-foundation
   lawim_shared:
     name: ${LAWIM_VOLUME_SHARED_NAME:-lawim_v2_shared}
-    driver: local
-    labels:
-      com.lawim.project: LAWIM_V2
-      com.lawim.layer: compose-foundation
   lawim_cache:
     name: ${LAWIM_VOLUME_CACHE_NAME:-lawim_v2_cache}
-    driver: local
-    labels:
-      com.lawim.project: LAWIM_V2
-      com.lawim.layer: compose-foundation

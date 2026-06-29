@@ -1,15 +1,23 @@
-# Role
-# Skeleton for the development Compose overlay of LAWIM_V2.
-#
-# Usage futur
-# This file will carry local-only toggles, bind mounts and debug helpers.
-#
-# Conventions
-# - keep production-only values out of this file;
-# - avoid secrets and hard-coded sensitive paths;
-# - keep the overlay small and explicit.
-#
-# TODO
-# - list the services allowed in local development;
-# - define the optional debug tooling;
-# - document local port and volume conventions.
+version: "3.9"
+
+x-lawim-profile-contract:
+  profile: development
+  purpose: local iteration and debugging
+  environment_contract:
+    APP_ENV: development
+    STACK_PROFILE: development
+    LOG_LEVEL: debug
+    PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:3000}
+    SECRET_PROVIDER: ${SECRET_PROVIDER:-external}
+
+services:
+  app:
+    environment:
+      APP_ENV: development
+      STACK_PROFILE: development
+      LOG_LEVEL: debug
+      LAWIM_SEED_DEMO_DATA: ${LAWIM_SEED_DEMO_DATA:-true}
+    volumes:
+      - ../code:/app/code
+      - ../sitecustomize.py:/app/sitecustomize.py:ro
+      - ../data/runtime:/app/data/runtime

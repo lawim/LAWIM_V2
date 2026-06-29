@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAWIM_V2 Executable Baseline</title>
+  <meta name="description" content="Executable baseline for LAWIM_V2 with API, demo data, matching and conversations.">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="backdrop backdrop-a"></div>
+  <div class="backdrop backdrop-b"></div>
+
+  <div class="app-shell">
+    <header class="masthead panel">
+      <div>
+        <p class="eyebrow">LAWIM_V2</p>
+        <h1>Executable baseline</h1>
+        <p class="lede">
+          SQLite-backed API, seeded demo data, property matching, conversations and a compact operator console.
+        </p>
+      </div>
+      <div class="masthead__status">
+        <span id="runtime-chip" class="chip">Booting</span>
+        <span id="current-user" class="muted">Guest session</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar">
+        <section class="panel form-panel">
+          <div class="section-heading">
+            <h2>Authentication</h2>
+            <p class="muted">Use the demo accounts seeded by the runtime.</p>
+          </div>
+          <form id="login-form" class="stacked-form">
+            <label>
+              <span>Email</span>
+              <input id="login-email" name="email" type="email" autocomplete="username" required>
+            </label>
+            <label>
+              <span>Password</span>
+              <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Sign in</button>
+              <button type="button" id="use-demo-button" class="button secondary">Use demo admin</button>
+            </div>
+          </form>
+          <div class="credential-hint">
+            <span>Demo</span>
+            <strong>admin@lawim.local / lawim-demo</strong>
+          </div>
+          <div class="actions single">
+            <button type="button" id="logout-button" class="button ghost">Logout</button>
+          </div>
+        </section>
+
+        <section class="panel form-panel">
+          <div class="section-heading">
+            <h2>Match search</h2>
+            <p class="muted">Refine the ranking returned by the matching engine.</p>
+          </div>
+          <form id="match-form" class="stacked-form">
+            <label>
+              <span>City</span>
+              <input name="city" type="text" placeholder="Douala">
+            </label>
+            <div class="two-up">
+              <label>
+                <span>Budget min</span>
+                <input name="budget_min" type="number" min="0" step="1" placeholder="180000">
+              </label>
+              <label>
+                <span>Budget max</span>
+                <input name="budget_max" type="number" min="0" step="1" placeholder="320000">
+              </label>
+            </div>
+            <div class="two-up">
+              <label>
+                <span>Latitude</span>
+                <input name="latitude" type="number" step="0.000001" placeholder="4.05">
+              </label>
+              <label>
+                <span>Longitude</span>
+                <input name="longitude" type="number" step="0.000001" placeholder="9.7">
+              </label>
+            </div>
+            <label>
+              <span>Limit</span>
+              <input name="limit" type="number" min="1" max="20" step="1" value="5">
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Refresh matches</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel form-panel">
+          <div class="section-heading">
+            <h2>Create property</h2>
+            <p class="muted">This uses the authenticated API and persists immediately.</p>
+          </div>
+          <form id="property-form" class="stacked-form">
+            <label>
+              <span>Title</span>
+              <input name="title" type="text" required placeholder="Akwa skyline apartment">
+            </label>
+            <label>
+              <span>Summary</span>
+              <textarea name="summary" rows="3" placeholder="Concise description"></textarea>
+            </label>
+            <div class="two-up">
+              <label>
+                <span>City</span>
+                <input name="city" type="text" required placeholder="Douala">
+              </label>
+              <label>
+                <span>Type</span>
+                <input name="property_type" type="text" placeholder="apartment">
+              </label>
+            </div>
+            <div class="two-up">
+              <label>
+                <span>Price min</span>
+                <input name="price_min" type="number" min="0" step="1" placeholder="180000">
+              </label>
+              <label>
+                <span>Price max</span>
+                <input name="price_max" type="number" min="0" step="1" placeholder="260000">
+              </label>
+            </div>
+            <div class="two-up">
+              <label>
+                <span>Latitude</span>
+                <input name="latitude" type="number" step="0.000001" placeholder="4.055">
+              </label>
+              <label>
+                <span>Longitude</span>
+                <input name="longitude" type="number" step="0.000001" placeholder="9.7">
+              </label>
+            </div>
+            <label>
+              <span>Owner organization</span>
+              <select name="owner_organization_id" id="owner-organization-select">
+                <option value="">None</option>
+              </select>
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Create property</button>
+            </div>
+          </form>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <section id="status-strip" class="stats-grid"></section>
+        <section id="notice" class="notice panel">Loading runtime state...</section>
+
+        <section class="cards-grid">
+          <article class="panel card">
+            <div class="section-heading">
+              <h2>Organizations</h2>
+              <p class="muted">Seeded agencies, partners and owners.</p>
+            </div>
+            <div id="organizations-list" class="card-list"></div>
+          </article>
+
+          <article class="panel card">
+            <div class="section-heading">
+              <h2>Properties</h2>
+              <p class="muted">Published inventory and media coverage.</p>
+            </div>
+            <div id="properties-list" class="card-list"></div>
+          </article>
+
+          <article class="panel card">
+            <div class="section-heading">
+              <h2>Matches</h2>
+              <p class="muted">Ranked recommendations from the matcher.</p>
+            </div>
+            <div id="matches-list" class="card-list"></div>
+          </article>
+
+          <article class="panel card">
+            <div class="section-heading">
+              <h2>Conversations</h2>
+              <p class="muted">Requests and follow-up threads.</p>
+            </div>
+            <div id="conversations-list" class="card-list"></div>
+          </article>
+        </section>
+
+        <section class="panel detail-panel">
+          <div class="section-heading">
+            <h2>Conversation detail</h2>
+            <p class="muted">Click a conversation to inspect and reply.</p>
+          </div>
+          <div id="conversation-detail" class="detail-body">
+            <p class="muted">No conversation selected.</p>
+          </div>
+          <form id="message-form" class="stacked-form message-form hidden">
+            <label>
+              <span>Reply body</span>
+              <textarea name="body" rows="3" placeholder="Write a follow-up message"></textarea>
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Send reply</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel footer-note">
+          <p class="muted" id="bootstrap-summary">Awaiting bootstrap payload.</p>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

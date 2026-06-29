@@ -1,15 +1,18 @@
-# Role
-# Skeleton for the production Compose overlay of LAWIM_V2.
-#
-# Usage futur
-# This file will hold the locked-down runtime choices for production deploys.
-#
-# Conventions
-# - keep secrets external to the repository;
-# - avoid debug helpers and temporary mounts;
-# - preserve rollback-friendly and reproducible settings.
-#
-# TODO
-# - define production-only hardening rules;
-# - document external dependency references;
-# - align with deployment, monitoring and rollback procedures.
+version: "3.9"
+
+x-lawim-profile-contract:
+  profile: production
+  purpose: locked-down runtime
+  environment_contract:
+    APP_ENV: production
+    STACK_PROFILE: production
+    LOG_LEVEL: info
+    PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:3000}
+    SECRET_PROVIDER: ${SECRET_PROVIDER:-external}
+
+services:
+  app:
+    environment:
+      APP_ENV: production
+      STACK_PROFILE: production
+      LOG_LEVEL: info

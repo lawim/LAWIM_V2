@@ -1,15 +1,18 @@
-# Role
-# Skeleton for the staging Compose overlay of LAWIM_V2.
-#
-# Usage futur
-# This file will represent the pre-production parity layer used for validation.
-#
-# Conventions
-# - keep staging close to production without exposing secrets;
-# - avoid unmanaged data volumes;
-# - keep release gates traceable.
-#
-# TODO
-# - define staging-only toggles;
-# - document observability hooks and smoke-test entry points;
-# - align the overlay with release and approval flows.
+version: "3.9"
+
+x-lawim-profile-contract:
+  profile: staging
+  purpose: production-parity verification
+  environment_contract:
+    APP_ENV: staging
+    STACK_PROFILE: staging
+    LOG_LEVEL: info
+    PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:3000}
+    SECRET_PROVIDER: ${SECRET_PROVIDER:-external}
+
+services:
+  app:
+    environment:
+      APP_ENV: staging
+      STACK_PROFILE: staging
+      LOG_LEVEL: info
