@@ -102,3 +102,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-29 | DEC-003 | Human validation gate, review and escalation contract confirmed | PMO | T19.02 / Human validation gate | Active | reports/sprint-019/T19.02-human-validation-gate-report.md |
 | 2026-06-29 | DEC-004 | Versioned recommendations, versioning and rollback contract confirmed | Documentation | T19.03 / Versioned recommendations | Active | reports/sprint-019/T19.03-versioned-recommendations-report.md |
 | 2026-06-29 | DEC-001 | Sprint 020 opening and mobile foundation plan confirmed | Directeur General | Sprint 020 / mobile foundation | Active | reports/sprint-020/SPRINT-020-PLANNING-REPORT.md |
+| 2026-06-29 | DEC-002 | Mobile shell, navigation and client architecture contract confirmed | Frontend | T20.01 / Mobile shell | Active | reports/sprint-020/T20.01-mobile-shell-report.md |

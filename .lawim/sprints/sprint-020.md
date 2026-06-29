@@ -32,11 +32,12 @@ DG-0028
 - fragmentation device, latence, incoherence offline/online.
 
 ## Avancement
-- T20.01: a venir
+- T20.01: ferme
 - T20.02: a venir
 - T20.03: a venir
-- Tickets couverts: 0/3
+- Tickets couverts: 1/3
 
 ## Preparation
 - Rapport de lancement: reports/sprint-020/SPRINT-020-PLANNING-REPORT.md
+- Rapport de ticket: reports/sprint-020/T20.01-mobile-shell-report.md
 - Sprint 021: non ouvert
