@@ -88,6 +88,7 @@ class LawimServices:
                 "log_level": self.config.log_level,
                 "public_base_url": self.config.public_base_url,
                 "secret_provider": self.config.secret_provider,
+                "seed_demo_data": self.config.seed_demo_data,
             },
             "database": self.repository.backend_profile(),
             "summary": self.repository.summary(),

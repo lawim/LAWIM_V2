@@ -9,6 +9,15 @@ from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from pathlib import Path
 
+from .persistence import (
+    APPLICATION_SCHEMA_VERSION,
+    build_application_schema_manifest,
+    build_demo_seed_blueprint,
+    build_migration_profile,
+    build_persistence_profile,
+    build_schema_fingerprint,
+    build_seed_profile,
+)
 from .matching import MatchCriteria, rank_properties
 from .security import create_session_token, hash_password, verify_password
 
@@ -115,7 +124,7 @@ CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id
 """
 
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = APPLICATION_SCHEMA_VERSION
 
 
 def utcnow() -> str:
@@ -185,12 +194,17 @@ class LawimRepository:
     def initialize(self, seed_demo_data: bool = True) -> None:
         with self._transaction() as conn:
             conn.executescript(SCHEMA)
-            conn.execute(
-                "INSERT OR REPLACE INTO schema_meta (key, value) VALUES ('schema_version', ?)",
-                (str(SCHEMA_VERSION),),
-            )
+            metadata = {
+                "schema_version": str(SCHEMA_VERSION),
+                "schema_manifest": json.dumps(self.schema_manifest(), ensure_ascii=False, sort_keys=True),
+                "schema_fingerprint": self.schema_fingerprint(),
+                "migration_profile": json.dumps(self.migration_profile(), ensure_ascii=False, sort_keys=True),
+                "seed_profile": json.dumps(self.seed_profile(), ensure_ascii=False, sort_keys=True),
+            }
+            for key, value in metadata.items():
+                conn.execute("INSERT OR REPLACE INTO schema_meta (key, value) VALUES (?, ?)", (key, value))
         if seed_demo_data:
-            self._seed_demo_data()
+            self.seed_demo_data()
 
     def schema_version(self) -> int:
         row = self.one("SELECT value FROM schema_meta WHERE key = 'schema_version'")
@@ -202,144 +216,103 @@ class LawimRepository:
             return 0
 
     def backend_profile(self) -> dict[str, object]:
-        return {
-            "driver": "sqlite",
-            "path": str(self.db_path),
-            "schema_version": self.schema_version(),
-        }
+        return build_persistence_profile(self.db_path, self.schema_version())
 
-    def _seed_demo_data(self) -> None:
+    def schema_manifest(self) -> dict[str, object]:
+        return build_application_schema_manifest()
+
+    def schema_fingerprint(self) -> str:
+        return build_schema_fingerprint(self.schema_manifest())
+
+    def migration_profile(self) -> dict[str, object]:
+        return build_migration_profile()
+
+    def seed_profile(self) -> dict[str, object]:
+        return build_seed_profile()
+
+    def seed_demo_data(self) -> dict[str, object]:
         if self.scalar("SELECT COUNT(*) FROM organizations") > 0:
-            return
+            return {
+                "profile": "demo",
+                "seeded": False,
+                "schema_version": self.schema_version(),
+                "schema_fingerprint": self.schema_fingerprint(),
+                "summary": self.summary(),
+            }
 
-        organizations = [
-            {"name": "LAWIM Demo Agency", "slug": "lawim-demo-agency", "kind": "agency", "city": "Douala"},
-            {"name": "LAWIM Partner Group", "slug": "lawim-partner-group", "kind": "partner", "city": "Yaounde"},
-            {"name": "LAWIM Owner Desk", "slug": "lawim-owner-desk", "kind": "owner", "city": "Kribi"},
-        ]
-        for organization in organizations:
-            self.create_organization(**organization)
+        blueprint = build_demo_seed_blueprint()
 
-        admin_org = self.get_organization_by_slug("lawim-demo-agency")
-        partner_org = self.get_organization_by_slug("lawim-partner-group")
-        owner_org = self.get_organization_by_slug("lawim-owner-desk")
+        organization_ids: dict[str, int] = {}
+        for organization in blueprint["organizations"]:
+            seeded_organization = self.create_organization(**organization)
+            organization_ids[str(seeded_organization["slug"])] = int(seeded_organization["id"])
 
-        demo_users = [
-            ("admin@lawim.local", "LAWIM Admin", "admin", admin_org["id"]),
-            ("agent@lawim.local", "LAWIM Agent", "agent", partner_org["id"]),
-            ("owner@lawim.local", "LAWIM Owner", "owner", owner_org["id"]),
-        ]
-        for email, full_name, role, organization_id in demo_users:
-            self.create_user(
-                email=email,
-                full_name=full_name,
-                role=role,
+        user_ids: dict[str, int] = {}
+        for user in blueprint["users"]:
+            seeded_user = self.create_user(
+                email=str(user["email"]),
+                full_name=str(user["full_name"]),
+                role=str(user["role"]),
                 password=self.seed.admin_password,
-                organization_id=organization_id,
+                organization_id=organization_ids[str(user["organization_slug"])],
+            )
+            user_ids[str(seeded_user["email"])] = int(seeded_user["id"])
+
+        property_ids: dict[str, int] = {}
+        for property_row in blueprint["properties"]:
+            owner_organization_id = organization_ids[str(property_row["owner_organization_slug"])]
+            seeded_property = self.create_property(
+                title=str(property_row["title"]),
+                summary=str(property_row["summary"]),
+                city=str(property_row["city"]),
+                country=str(property_row["country"]),
+                latitude=property_row.get("latitude"),
+                longitude=property_row.get("longitude"),
+                price_min=property_row.get("price_min"),
+                price_max=property_row.get("price_max"),
+                currency=str(property_row.get("currency", "XAF")),
+                status=str(property_row.get("status", "published")),
+                property_type=str(property_row.get("property_type", "apartment")),
+                owner_organization_id=owner_organization_id,
+                bedrooms=int(property_row.get("bedrooms", 0)),
+                bathrooms=int(property_row.get("bathrooms", 0)),
+                area_sqm=float(property_row.get("area_sqm", 0)),
+            )
+            property_ids[str(seeded_property["title"])] = int(seeded_property["id"])
+
+        for media_row in blueprint["media"]:
+            self.create_media(
+                property_id=property_ids[str(media_row["property_title"])],
+                kind=str(media_row["kind"]),
+                url=str(media_row["url"]),
+                caption=str(media_row["caption"]),
             )
 
-        owner_id = self.get_user_by_email("owner@lawim.local")["id"]
-        agent_id = self.get_user_by_email("agent@lawim.local")["id"]
-        admin_id = self.get_user_by_email("admin@lawim.local")["id"]
-
-        properties = [
-            {
-                "title": "Bonanjo City Loft",
-                "summary": "Appartement urbain lumineux proche des services et du centre d'affaires.",
-                "city": "Douala",
-                "country": "Cameroon",
-                "latitude": 4.050,
-                "longitude": 9.700,
-                "price_min": 250000,
-                "price_max": 300000,
-                "currency": "XAF",
-                "status": "published",
-                "property_type": "apartment",
-                "owner_organization_id": owner_id,
-                "bedrooms": 2,
-                "bathrooms": 1,
-                "area_sqm": 78,
-            },
-            {
-                "title": "Kribi Beach Villa",
-                "summary": "Villa familiale avec vue mer, terrasse et accès rapide aux plages.",
-                "city": "Kribi",
-                "country": "Cameroon",
-                "latitude": 2.938,
-                "longitude": 9.907,
-                "price_min": 450000,
-                "price_max": 520000,
-                "currency": "XAF",
-                "status": "published",
-                "property_type": "villa",
-                "owner_organization_id": owner_id,
-                "bedrooms": 4,
-                "bathrooms": 3,
-                "area_sqm": 210,
-            },
-            {
-                "title": "Bastos Studio",
-                "summary": "Studio compact prêt à louer pour un usage urbain et flexible.",
-                "city": "Yaounde",
-                "country": "Cameroon",
-                "latitude": 3.867,
-                "longitude": 11.516,
-                "price_min": 180000,
-                "price_max": 220000,
-                "currency": "XAF",
-                "status": "published",
-                "property_type": "studio",
-                "owner_organization_id": owner_id,
-                "bedrooms": 1,
-                "bathrooms": 1,
-                "area_sqm": 35,
-            },
-        ]
-        seeded_properties = [self.create_property(**property_row) for property_row in properties]
-
-        media = [
-            (
-                seeded_properties[0]["id"],
-                "image",
-                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%231e293b'/><text x='50' y='220' fill='white' font-size='38' font-family='sans-serif'>Bonanjo City Loft</text></svg>",
-                "Visuel de démonstration",
-            ),
-            (
-                seeded_properties[1]["id"],
-                "image",
-                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%230f766e'/><text x='50' y='220' fill='white' font-size='38' font-family='sans-serif'>Kribi Beach Villa</text></svg>",
-                "Visuel de démonstration",
-            ),
-            (
-                seeded_properties[2]["id"],
-                "image",
-                "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%237c3aed'/><text x='50' y='220' fill='white' font-size='38' font-family='sans-serif'>Bastos Studio</text></svg>",
-                "Visuel de démonstration",
-            ),
-        ]
-        for property_id, kind, url, caption in media:
-            self.create_media(property_id=property_id, kind=kind, url=url, caption=caption)
-
+        conversation_row = blueprint["conversation"]
         conversation = self.create_conversation(
-            user_id=agent_id,
-            property_id=seeded_properties[0]["id"],
-            subject="Demande de visite Bonanjo City Loft",
-            status="open",
-            initial_message="Bonjour, je souhaite organiser une visite pour le week-end.",
-            sender_user_id=agent_id,
+            user_id=user_ids[str(conversation_row["user_email"])],
+            property_id=property_ids[str(conversation_row["property_title"])],
+            subject=str(conversation_row["subject"]),
+            status=str(conversation_row["status"]),
+            initial_message=str(conversation_row["initial_message"]),
+            sender_user_id=user_ids[str(conversation_row["sender_email"])],
         )
-        self.add_message(conversation["id"], admin_id, "Bonjour, la visite est disponible samedi matin.")
-        self.add_message(conversation["id"], owner_id, "Je confirme la disponibilité du bien.")
+        for message_row in conversation_row["follow_up_messages"]:
+            self.add_message(
+                conversation["id"],
+                user_ids[str(message_row["sender_email"])],
+                str(message_row["body"]),
+            )
 
-        self.record_event(
-            "bootstrap_seeded",
-            {
-                "organizations": 3,
-                "users": 3,
-                "properties": 3,
-                "conversations": 1,
-            },
-        )
+        report = {
+            "profile": "demo",
+            "seeded": True,
+            "schema_version": self.schema_version(),
+            "schema_fingerprint": self.schema_fingerprint(),
+            "summary": self.summary(),
+        }
+        self.record_event("bootstrap_seeded", report)
+        return report
 
     def scalar(self, sql: str, params: tuple[object, ...] = ()) -> int:
         row = self.one(sql, params)

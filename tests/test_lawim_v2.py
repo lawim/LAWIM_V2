@@ -8,7 +8,7 @@ from pathlib import Path
 from unittest import TestCase
 
 from lawim_v2.config import AppConfig
-from lawim_v2.db import LawimRepository
+from lawim_v2.db import ConflictError, LawimRepository
 from lawim_v2.server import LawimRequestHandler
 from lawim_v2.services import LawimServices
 
@@ -111,7 +111,9 @@ class LawimV2ExecutableBaselineTest(TestCase):
         health_payload = health.body_json()
         self.assertEqual(health_payload["status"], "ok")
         self.assertEqual(health_payload["database"]["driver"], "sqlite")
-        self.assertEqual(health_payload["database"]["schema_version"], 2)
+        self.assertEqual(health_payload["database"]["schema_version"], 3)
+        self.assertEqual(health_payload["database"]["migration"]["target_engine"], "postgresql")
+        self.assertTrue(health_payload["environment"]["seed_demo_data"])
         self.assertEqual(health_payload["summary"]["organizations"], 3)
         self.assertEqual(health_payload["summary"]["users"], 3)
 
@@ -186,6 +188,54 @@ class LawimV2ExecutableBaselineTest(TestCase):
         )
         self.assertEqual(rejected.status, HTTPStatus.BAD_REQUEST)
         self.assertEqual(rejected.body_json()["error"]["code"], "invalid_state")
+
+    def test_persistence_profile_is_formalized_and_seed_helper_is_idempotent(self) -> None:
+        with tempfile.TemporaryDirectory() as tempdir:
+            db_path = Path(tempdir) / "empty.sqlite3"
+            repository = LawimRepository(db_path)
+            repository.initialize(seed_demo_data=False)
+            try:
+                profile = repository.backend_profile()
+                self.assertEqual(profile["driver"], "sqlite")
+                self.assertEqual(profile["adapter"], "sqlite-repository")
+                self.assertEqual(profile["schema_version"], 3)
+                self.assertEqual(profile["migration"]["orm"], "prisma")
+                self.assertEqual(profile["migration"]["target_engine"], "postgresql")
+                self.assertEqual(profile["seed"]["name"], "demo")
+                self.assertEqual(profile["schema"]["name"], "lawim_v2_runtime_schema")
+                self.assertEqual(profile["schema"]["tables"][0]["name"], "organizations")
+                self.assertEqual(len(str(profile["schema_fingerprint"])), 64)
+
+                stored_fingerprint = repository.one(
+                    "SELECT value FROM schema_meta WHERE key = 'schema_fingerprint'"
+                )
+                self.assertIsNotNone(stored_fingerprint)
+                self.assertEqual(stored_fingerprint["value"], profile["schema_fingerprint"])
+                self.assertEqual(repository.summary()["organizations"], 0)
+
+                first_seed = repository.seed_demo_data()
+                self.assertTrue(first_seed["seeded"])
+                self.assertEqual(first_seed["schema_version"], 3)
+                self.assertEqual(repository.summary()["organizations"], 3)
+
+                second_seed = repository.seed_demo_data()
+                self.assertFalse(second_seed["seeded"])
+                self.assertEqual(second_seed["summary"]["organizations"], 3)
+            finally:
+                repository.close()
+
+    def test_referential_integrity_blocks_orphaned_deletes(self) -> None:
+        seeded_properties = self.repository.list_properties(limit=10)
+        property_with_conversation = next(
+            property_row for property_row in seeded_properties if property_row["title"] == "Bonanjo City Loft"
+        )
+        agent = self.repository.get_user_by_email("agent@lawim.local")
+
+        with self.assertRaises(ConflictError):
+            self.repository.delete_property(int(property_with_conversation["id"]))
+
+        with self.assertRaises(ConflictError):
+            self.repository.delete_user(int(agent["id"]))
 
     def test_role_based_permissions_block_global_writes_and_impersonation(self) -> None:
         admin_login = self.invoke(
