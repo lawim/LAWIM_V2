@@ -587,3 +587,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T23.01 | PMO | Validation du noyau de migration et de la readiness | PMO | PASS | 2026-06-29 | reports/sprint-023/T23.01-livrable-principal-report.md |
 | T23.01 | Integration | Cohesion livrable principal | Integration Manager | READY FOR T23.02 | 2026-06-29 | reports/sprint-023/T23.01-livrable-principal-report.md |
 | T23.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T23.02 | 2026-06-29 | reports/sprint-023/T23.01-livrable-principal-report.md |
+| T23.02 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-023/T23.02-validation-et-tests-report.md |
+| T23.02 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-023/T23.02-validation-et-tests-report.md |
+| T23.02 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-023/T23.02-validation-et-tests-report.md |
+| T23.02 | PMO | Validation des tests obligatoires, de l acceptance humaine et de la reconciliation des historiques | PMO | PASS | 2026-06-29 | reports/sprint-023/T23.02-validation-et-tests-report.md |
+| T23.02 | Integration | Cohesion validation et tests | Integration Manager | READY FOR T23.03 | 2026-06-29 | reports/sprint-023/T23.02-validation-et-tests-report.md |
+| T23.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T23.03 | 2026-06-29 | reports/sprint-023/T23.02-validation-et-tests-report.md |
