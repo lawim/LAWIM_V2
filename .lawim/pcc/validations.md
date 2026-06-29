@@ -545,3 +545,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T20.03 | PMO | Validation du handoff push et paiement | PMO | PASS | 2026-06-29 | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |
 | T20.03 | Integration | Cohesion push and payment handoff | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |
 | T20.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |
+| T21.01 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-021/T21.01-zero-trust-hardening-report.md |
+| T21.01 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-021/T21.01-zero-trust-hardening-report.md |
+| T21.01 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-021/T21.01-zero-trust-hardening-report.md |
+| T21.01 | PMO | Validation du zero trust et des frontieres | PMO | PASS | 2026-06-29 | reports/sprint-021/T21.01-zero-trust-hardening-report.md |
+| T21.01 | Integration | Cohesion zero trust hardening | Integration Manager | READY FOR T21.02 | 2026-06-29 | reports/sprint-021/T21.01-zero-trust-hardening-report.md |
+| T21.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T21.02 | 2026-06-29 | reports/sprint-021/T21.01-zero-trust-hardening-report.md |

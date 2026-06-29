@@ -79,3 +79,9 @@
 | D-075 | T19.01 depend de S016-T03 et des references continuous learning / reporting | Sprint 019 | High | Confirmed |
 | D-076 | T19.02 depend de T19.01 et des references governance / continuous learning | Sprint 019 | High | Confirmed |
 | D-077 | T19.03 depend de T19.02 et des references documentation versioning / continuous learning | Sprint 019 | High | Confirmed |
+| D-078 | Decision DG d'ouverture du Sprint 020 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-079 | T20.01 depend de la cloture Sprint 019 et des references mobile / UX | Sprint 020 | High | Confirmed |
+| D-080 | T20.02 depend de T20.01 et des references mobile / database | Sprint 020 | High | Confirmed |
+| D-081 | T20.03 depend de T20.02 et des references mobile / Campay | Sprint 020 | High | Confirmed |
+| D-082 | Decision DG d'ouverture du Sprint 021 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-083 | T21.01 depend de la cloture Sprint 020 et des references security / role / zero trust | Sprint 021 | High | Confirmed |

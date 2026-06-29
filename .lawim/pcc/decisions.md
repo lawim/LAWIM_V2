@@ -105,3 +105,4 @@
 | 2026-06-29 | DEC-003 | Offline sync, cache and recovery contract confirmed | Frontend | T20.02 / Offline sync | Active | reports/sprint-020/T20.02-offline-sync-report.md |
 | 2026-06-29 | DEC-004 | Push and payment handoff contract confirmed | Frontend | T20.03 / Push and payment handoff | Active | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |
 | 2026-06-29 | DEC-001 | Sprint 021 opening and security hardening plan confirmed | Directeur General | Sprint 021 / security hardening | Active | reports/sprint-021/SPRINT-021-PLANNING-REPORT.md |
+| 2026-06-29 | DEC-002 | Zero trust hardening, access and privilege contract confirmed for Sprint 021 | Security | T21.01 / Zero trust hardening | Active | reports/sprint-021/T21.01-zero-trust-hardening-report.md |

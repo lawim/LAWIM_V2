@@ -8,8 +8,8 @@
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 021, le registre des risques est normalise et Sprint 021 est ouvert.
-- Derniere trace technique: Sprint 021 est ouvert sur Security hardening; T21.01 reste a venir
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 021, le registre des risques est normalise, T21.01 est ferme et T21.02 reste a venir.
+- Derniere trace technique: Sprint 021 est ouvert sur Zero trust hardening; T21.01 est ferme; T21.02 reste a venir
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -363,10 +363,12 @@
         - Risque bloquant: false
         - Validation DG: en attente
         - Rapport de lancement: reports/sprint-021/SPRINT-021-PLANNING-REPORT.md
+        - Rapport de ticket: reports/sprint-021/T21.01-zero-trust-hardening-report.md
         - Avancement:
-        - T21.01: a venir
+        - T21.01: ferme
         - T21.02: a venir
         - T21.03: a venir
+        - Tickets couverts: 1/3
         - Sprint 022: non ouvert
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

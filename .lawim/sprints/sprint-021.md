@@ -32,11 +32,12 @@ DG-0028
 - faux positifs, trop de friction, surface d attaque residuelle.
 
 ## Avancement
-- T21.01: a venir
+- T21.01: ferme
 - T21.02: a venir
 - T21.03: a venir
-- Tickets couverts: 0/3
+- Tickets couverts: 1/3
 
 ## Preparation
 - Rapport de lancement: reports/sprint-021/SPRINT-021-PLANNING-REPORT.md
+- Rapport de ticket: reports/sprint-021/T21.01-zero-trust-hardening-report.md
 - Sprint 022: non ouvert
