@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS organizations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
-    kind TEXT NOT NULL DEFAULT 'agency',
+    kind TEXT NOT NULL DEFAULT 'agency' CHECK (kind IN ('agency', 'partner', 'owner')),
     city TEXT,
     created_at TEXT NOT NULL
 );
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL UNIQUE,
     full_name TEXT NOT NULL,
-    role TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('admin', 'agent', 'owner')),
     organization_id INTEGER,
     password_salt TEXT NOT NULL,
     password_hash TEXT NOT NULL,
@@ -53,15 +53,15 @@ CREATE TABLE IF NOT EXISTS properties (
     country TEXT NOT NULL,
     latitude REAL,
     longitude REAL,
-    price_min INTEGER,
-    price_max INTEGER,
+    price_min INTEGER CHECK (price_min IS NULL OR price_min >= 0),
+    price_max INTEGER CHECK (price_max IS NULL OR price_max >= 0),
     currency TEXT NOT NULL,
-    status TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('draft', 'open', 'closed', 'published', 'archived')),
     property_type TEXT NOT NULL,
     owner_organization_id INTEGER,
-    bedrooms INTEGER NOT NULL DEFAULT 0,
-    bathrooms INTEGER NOT NULL DEFAULT 0,
-    area_sqm REAL NOT NULL DEFAULT 0,
+    bedrooms INTEGER NOT NULL DEFAULT 0 CHECK (bedrooms >= 0),
+    bathrooms INTEGER NOT NULL DEFAULT 0 CHECK (bathrooms >= 0),
+    area_sqm REAL NOT NULL DEFAULT 0 CHECK (area_sqm >= 0),
     created_at TEXT NOT NULL,
     FOREIGN KEY (owner_organization_id) REFERENCES organizations(id)
 );
@@ -69,9 +69,9 @@ CREATE TABLE IF NOT EXISTS properties (
 CREATE TABLE IF NOT EXISTS media (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     property_id INTEGER NOT NULL,
-    kind TEXT NOT NULL,
-    url TEXT NOT NULL,
-    caption TEXT NOT NULL,
+    kind TEXT NOT NULL CHECK (kind <> ''),
+    url TEXT NOT NULL CHECK (url <> ''),
+    caption TEXT NOT NULL CHECK (caption <> ''),
     created_at TEXT NOT NULL,
     FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
 );
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS conversations (
     property_id INTEGER,
     user_id INTEGER NOT NULL,
     subject TEXT NOT NULL,
-    status TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('open', 'closed', 'archived')),
     created_at TEXT NOT NULL,
     FOREIGN KEY (property_id) REFERENCES properties(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -104,10 +104,18 @@ CREATE TABLE IF NOT EXISTS events (
     created_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS schema_meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
 CREATE INDEX IF NOT EXISTS idx_properties_status_city ON properties(status, city);
 CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
 CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at);
 """
+
+
+SCHEMA_VERSION = 2
 
 
 def utcnow() -> str:
@@ -177,8 +185,28 @@ class LawimRepository:
     def initialize(self, seed_demo_data: bool = True) -> None:
         with self._transaction() as conn:
             conn.executescript(SCHEMA)
+            conn.execute(
+                "INSERT OR REPLACE INTO schema_meta (key, value) VALUES ('schema_version', ?)",
+                (str(SCHEMA_VERSION),),
+            )
         if seed_demo_data:
             self._seed_demo_data()
+
+    def schema_version(self) -> int:
+        row = self.one("SELECT value FROM schema_meta WHERE key = 'schema_version'")
+        if row is None:
+            return 0
+        try:
+            return int(str(row["value"]))
+        except (TypeError, ValueError):
+            return 0
+
+    def backend_profile(self) -> dict[str, object]:
+        return {
+            "driver": "sqlite",
+            "path": str(self.db_path),
+            "schema_version": self.schema_version(),
+        }
 
     def _seed_demo_data(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM organizations") > 0:
@@ -381,7 +409,8 @@ class LawimRepository:
 
     def create_organization(self, *, name: str, slug: str, kind: str = "agency", city: str | None = None) -> dict[str, object]:
         name = _require_text(name, "organization name")
-        slug = _require_text(slug, "organization slug")
+        slug = _require_text(slug, "organization slug").lower()
+        kind = _require_text(kind, "organization kind").lower()
         if kind not in {"agency", "partner", "owner"}:
             raise ValidationError(f"unsupported organization kind: {kind}")
         with self._transaction() as conn:
@@ -396,6 +425,41 @@ class LawimRepository:
         assert organization is not None
         self.record_event("organization_created", organization)
         return organization
+
+    def update_organization(
+        self,
+        organization_id: int,
+        *,
+        name: str | None = None,
+        slug: str | None = None,
+        kind: str | None = None,
+        city: str | None = None,
+    ) -> dict[str, object]:
+        current = self.get_organization_by_id(organization_id)
+        changes: dict[str, object] = {}
+        if name is not None:
+            changes["name"] = _require_text(name, "organization name")
+        if slug is not None:
+            changes["slug"] = _require_text(slug, "organization slug").lower()
+        if kind is not None:
+            normalized_kind = _require_text(kind, "organization kind").lower()
+            if normalized_kind not in {"agency", "partner", "owner"}:
+                raise ValidationError(f"unsupported organization kind: {normalized_kind}")
+            changes["kind"] = normalized_kind
+        if city is not None:
+            changes["city"] = _require_text(city, "organization city")
+        if not changes:
+            return current
+        assignments = ", ".join(f"{column} = ?" for column in changes)
+        params = tuple(changes.values()) + (organization_id,)
+        with self._transaction() as conn:
+            try:
+                conn.execute(f"UPDATE organizations SET {assignments} WHERE id = ?", params)
+            except sqlite3.IntegrityError as exc:
+                raise ConflictError("organization already exists") from exc
+        updated = self.get_organization_by_id(organization_id)
+        self.record_event("organization_updated", {"id": organization_id, "changes": changes})
+        return updated
 
     def list_organizations(self, limit: int = 50) -> list[dict[str, object]]:
         if limit < 1:
@@ -421,9 +485,10 @@ class LawimRepository:
         password: str,
         organization_id: int | None = None,
     ) -> dict[str, object]:
-        email = _require_text(email, "email")
+        email = _require_text(email, "email").lower()
         full_name = _require_text(full_name, "full_name")
         password = _require_text(password, "password")
+        role = _require_text(role, "role").lower()
         if role not in {"admin", "agent", "owner"}:
             raise ValidationError(f"unsupported user role: {role}")
         if organization_id is not None:
@@ -461,6 +526,63 @@ class LawimRepository:
         assert user is not None
         self.record_event("user_created", {"email": email, "role": role, "organization_id": organization_id})
         return user
+
+    def update_user(
+        self,
+        user_id: int,
+        *,
+        email: str | None = None,
+        full_name: str | None = None,
+        role: str | None = None,
+        password: str | None = None,
+        organization_id: int | None = None,
+    ) -> dict[str, object]:
+        current = self.get_user_by_id(user_id)
+        changes: dict[str, object] = {}
+        if email is not None:
+            changes["email"] = _require_text(email, "email").lower()
+        if full_name is not None:
+            changes["full_name"] = _require_text(full_name, "full_name")
+        if role is not None:
+            normalized_role = _require_text(role, "role").lower()
+            if normalized_role not in {"admin", "agent", "owner"}:
+                raise ValidationError(f"unsupported user role: {normalized_role}")
+            changes["role"] = normalized_role
+        if organization_id is not None:
+            self.get_organization_by_id(organization_id)
+            changes["organization_id"] = organization_id
+        if password is not None:
+            password_record = hash_password(_require_text(password, "password"))
+            changes["password_salt"] = password_record.salt
+            changes["password_hash"] = password_record.hash
+        if not changes:
+            return current
+        assignments = ", ".join(f"{column} = ?" for column in changes)
+        params = tuple(changes.values()) + (user_id,)
+        with self._transaction() as conn:
+            try:
+                conn.execute(f"UPDATE users SET {assignments} WHERE id = ?", params)
+            except sqlite3.IntegrityError as exc:
+                raise ConflictError("user already exists") from exc
+        updated = self.get_user_by_id(user_id)
+        self.record_event(
+            "user_updated",
+            {
+                "id": user_id,
+                "changes": {key: value for key, value in changes.items() if key not in {"password_salt", "password_hash"}},
+            },
+        )
+        return updated
+
+    def delete_user(self, user_id: int) -> None:
+        user = self.get_user_by_id(user_id)
+        if self.scalar("SELECT COUNT(*) FROM conversations WHERE user_id = ?", (user_id,)) > 0:
+            raise ConflictError("user has conversations")
+        if self.scalar("SELECT COUNT(*) FROM messages WHERE sender_user_id = ?", (user_id,)) > 0:
+            raise ConflictError("user has messages")
+        with self._transaction() as conn:
+            conn.execute("DELETE FROM users WHERE id = ?", (user_id,))
+        self.record_event("user_deleted", {"id": user_id, "email": user["email"]})
 
     def list_users(self, limit: int = 50) -> list[dict[str, object]]:
         if limit < 1:
@@ -558,8 +680,9 @@ class LawimRepository:
         summary = _require_text(summary, "summary")
         city = _require_text(city, "city")
         country = _require_text(country, "country")
-        currency = _require_text(currency, "currency")
-        property_type = _require_text(property_type, "property_type")
+        currency = _require_text(currency, "currency").upper()
+        property_type = _require_text(property_type, "property_type").lower()
+        status = _require_text(status, "status").lower()
         if status not in {"draft", "open", "closed", "published", "archived"}:
             raise ValidationError(f"unsupported property status: {status}")
         if owner_organization_id is not None:
@@ -610,6 +733,115 @@ class LawimRepository:
         property_row = self.get_property(cursor.lastrowid)
         self.record_event("property_created", {"id": property_row["id"], "title": title, "city": city})
         return property_row
+
+    def update_property(
+        self,
+        property_id: int,
+        *,
+        title: str | None = None,
+        summary: str | None = None,
+        city: str | None = None,
+        country: str | None = None,
+        latitude: float | None = None,
+        longitude: float | None = None,
+        price_min: int | None = None,
+        price_max: int | None = None,
+        currency: str | None = None,
+        status: str | None = None,
+        property_type: str | None = None,
+        owner_organization_id: int | None = None,
+        bedrooms: int | None = None,
+        bathrooms: int | None = None,
+        area_sqm: float | None = None,
+    ) -> dict[str, object]:
+        current = self.get_property(property_id)
+        changes: dict[str, object] = {}
+        if title is not None:
+            changes["title"] = _require_text(title, "title")
+        if summary is not None:
+            changes["summary"] = _require_text(summary, "summary")
+        if city is not None:
+            changes["city"] = _require_text(city, "city")
+        if country is not None:
+            changes["country"] = _require_text(country, "country")
+        if latitude is not None:
+            if not -90.0 <= latitude <= 90.0:
+                raise ValidationError("latitude must be between -90 and 90")
+            changes["latitude"] = latitude
+        if longitude is not None:
+            if not -180.0 <= longitude <= 180.0:
+                raise ValidationError("longitude must be between -180 and 180")
+            changes["longitude"] = longitude
+        if price_min is not None:
+            if price_min < 0:
+                raise ValidationError("price_min must be non-negative")
+            changes["price_min"] = price_min
+        if price_max is not None:
+            if price_max < 0:
+                raise ValidationError("price_max must be non-negative")
+            changes["price_max"] = price_max
+        if currency is not None:
+            changes["currency"] = _require_text(currency, "currency").upper()
+        if status is not None:
+            normalized_status = _require_text(status, "status").lower()
+            if normalized_status not in {"draft", "open", "closed", "published", "archived"}:
+                raise ValidationError(f"unsupported property status: {normalized_status}")
+            current_status = str(current["status"]).lower()
+            allowed_transitions = {
+                "draft": {"draft", "open", "closed", "published", "archived"},
+                "open": {"open", "published", "closed", "archived"},
+                "published": {"published", "closed", "archived"},
+                "closed": {"closed", "archived"},
+                "archived": {"archived"},
+            }
+            if normalized_status not in allowed_transitions.get(current_status, {normalized_status}):
+                raise ValidationError(f"invalid property status transition: {current_status} -> {normalized_status}")
+            changes["status"] = normalized_status
+        if property_type is not None:
+            changes["property_type"] = _require_text(property_type, "property_type").lower()
+        if owner_organization_id is not None:
+            self.get_organization_by_id(owner_organization_id)
+            changes["owner_organization_id"] = owner_organization_id
+        if bedrooms is not None:
+            if bedrooms < 0:
+                raise ValidationError("bedrooms must be non-negative")
+            changes["bedrooms"] = bedrooms
+        if bathrooms is not None:
+            if bathrooms < 0:
+                raise ValidationError("bathrooms must be non-negative")
+            changes["bathrooms"] = bathrooms
+        if area_sqm is not None:
+            if area_sqm < 0:
+                raise ValidationError("area_sqm must be non-negative")
+            changes["area_sqm"] = area_sqm
+        merged_price_min = changes.get("price_min", current["price_min"])
+        merged_price_max = changes.get("price_max", current["price_max"])
+        if merged_price_min is not None and merged_price_max is not None and int(merged_price_min) > int(merged_price_max):
+            raise ValidationError("price_min cannot exceed price_max")
+        if not changes:
+            return current
+        assignments = ", ".join(f"{column} = ?" for column in changes)
+        params = tuple(changes.values()) + (property_id,)
+        with self._transaction() as conn:
+            conn.execute(f"UPDATE properties SET {assignments} WHERE id = ?", params)
+        updated = self.get_property(property_id)
+        self.record_event(
+            "property_updated",
+            {
+                "id": property_id,
+                "changes": changes,
+            },
+        )
+        return updated
+
+    def delete_property(self, property_id: int) -> dict[str, object]:
+        property_row = self.get_property(property_id)
+        if self.scalar("SELECT COUNT(*) FROM conversations WHERE property_id = ?", (property_id,)) > 0:
+            raise ConflictError("property has conversations")
+        with self._transaction() as conn:
+            conn.execute("DELETE FROM properties WHERE id = ?", (property_id,))
+        self.record_event("property_deleted", {"id": property_id, "title": property_row["title"]})
+        return {"deleted": True, "property_id": property_id}
 
     def get_property(self, property_id: int) -> dict[str, object]:
         property_row = self.one(
@@ -676,7 +908,7 @@ class LawimRepository:
         )
 
     def create_media(self, *, property_id: int, kind: str, url: str, caption: str) -> dict[str, object]:
-        kind = _require_text(kind, "kind")
+        kind = _require_text(kind, "kind").lower()
         url = _require_text(url, "url")
         caption = _require_text(caption, "caption")
         self.get_property(property_id)
@@ -692,6 +924,53 @@ class LawimRepository:
         assert media_row is not None
         self.record_event("media_created", {"property_id": property_id, "kind": kind})
         return media_row
+
+    def get_media(self, media_id: int) -> dict[str, object]:
+        media_row = self.one(
+            """
+            SELECT m.*, p.title AS property_title
+            FROM media m
+            JOIN properties p ON p.id = m.property_id
+            WHERE m.id = ?
+            """,
+            (media_id,),
+        )
+        if media_row is None:
+            raise NotFoundError(f"unknown media id: {media_id}")
+        return media_row
+
+    def update_media(
+        self,
+        media_id: int,
+        *,
+        kind: str | None = None,
+        url: str | None = None,
+        caption: str | None = None,
+    ) -> dict[str, object]:
+        current = self.get_media(media_id)
+        changes: dict[str, object] = {}
+        if kind is not None:
+            changes["kind"] = _require_text(kind, "kind").lower()
+        if url is not None:
+            changes["url"] = _require_text(url, "url")
+        if caption is not None:
+            changes["caption"] = _require_text(caption, "caption")
+        if not changes:
+            return current
+        assignments = ", ".join(f"{column} = ?" for column in changes)
+        params = tuple(changes.values()) + (media_id,)
+        with self._transaction() as conn:
+            conn.execute(f"UPDATE media SET {assignments} WHERE id = ?", params)
+        updated = self.get_media(media_id)
+        self.record_event("media_updated", {"id": media_id, "property_id": current["property_id"], "changes": changes})
+        return updated
+
+    def delete_media(self, media_id: int) -> dict[str, object]:
+        media_row = self.get_media(media_id)
+        with self._transaction() as conn:
+            conn.execute("DELETE FROM media WHERE id = ?", (media_id,))
+        self.record_event("media_deleted", {"id": media_id, "property_id": media_row["property_id"]})
+        return {"deleted": True, "media_id": media_id}
 
     def create_conversation(
         self,
@@ -711,6 +990,7 @@ class LawimRepository:
             self.get_property(property_id)
         if sender_user_id is not None:
             self.get_user_by_id(sender_user_id)
+        status = _require_text(status, "status").lower()
         if status not in {"open", "closed", "archived"}:
             raise ValidationError(f"unsupported conversation status: {status}")
         added_initial_message = False
@@ -738,6 +1018,47 @@ class LawimRepository:
             self.record_event("message_added", {"conversation_id": conversation["id"], "sender_user_id": sender_user_id or user_id})
         return conversation
 
+    def update_conversation(
+        self,
+        conversation_id: int,
+        *,
+        subject: str | None = None,
+        status: str | None = None,
+    ) -> dict[str, object]:
+        current = self.get_conversation(conversation_id)
+        changes: dict[str, object] = {}
+        if subject is not None:
+            changes["subject"] = _require_text(subject, "subject")
+        if status is not None:
+            normalized_status = _require_text(status, "status").lower()
+            if normalized_status not in {"open", "closed", "archived"}:
+                raise ValidationError(f"unsupported conversation status: {normalized_status}")
+            current_status = str(current["status"]).lower()
+            allowed_transitions = {
+                "open": {"open", "closed", "archived"},
+                "closed": {"closed", "archived"},
+                "archived": {"archived"},
+            }
+            if normalized_status not in allowed_transitions.get(current_status, {normalized_status}):
+                raise ValidationError(f"invalid conversation status transition: {current_status} -> {normalized_status}")
+            changes["status"] = normalized_status
+        if not changes:
+            return current
+        assignments = ", ".join(f"{column} = ?" for column in changes)
+        params = tuple(changes.values()) + (conversation_id,)
+        with self._transaction() as conn:
+            conn.execute(f"UPDATE conversations SET {assignments} WHERE id = ?", params)
+        updated = self.get_conversation(conversation_id)
+        self.record_event("conversation_updated", {"id": conversation_id, "changes": changes})
+        return updated
+
+    def delete_conversation(self, conversation_id: int) -> dict[str, object]:
+        conversation = self.get_conversation(conversation_id)
+        with self._transaction() as conn:
+            conn.execute("DELETE FROM conversations WHERE id = ?", (conversation_id,))
+        self.record_event("conversation_deleted", {"id": conversation_id, "property_id": conversation["property_id"]})
+        return {"deleted": True, "conversation_id": conversation_id}
+
     def add_message(self, conversation_id: int, sender_user_id: int, body: str) -> dict[str, object]:
         body = _require_text(body, "body")
         self.get_conversation(conversation_id)
@@ -754,6 +1075,19 @@ class LawimRepository:
         assert message is not None
         self.record_event("message_added", {"conversation_id": conversation_id, "sender_user_id": sender_user_id})
         return message
+
+    def list_events(self, limit: int = 50) -> list[dict[str, object]]:
+        if limit < 1:
+            raise ValidationError("limit must be positive")
+        return self.all(
+            """
+            SELECT *
+            FROM events
+            ORDER BY created_at DESC, id DESC
+            LIMIT ?
+            """,
+            (limit,),
+        )
 
     def get_conversation(self, conversation_id: int) -> dict[str, object]:
         conversation = self.one(

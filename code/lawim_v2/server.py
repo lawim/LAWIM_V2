@@ -15,6 +15,7 @@ from urllib.parse import parse_qs, urlparse
 from .config import AppConfig
 from .db import LawimRepository, RepositoryError
 from .matching import MatchCriteria
+from .services import LawimServices, ServiceError
 
 
 LOGGER = logging.getLogger("lawim_v2")
@@ -38,39 +39,46 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
     server_version = "LAWIM_V2/0.1"
     repository: LawimRepository
     config: AppConfig
+    services: LawimServices
 
     def do_GET(self) -> None:  # noqa: N802
-        try:
-            self._handle_get()
-        except ApiError as exc:
-            self._send_json_error(exc.status, exc.code, exc.message)
-        except RepositoryError as exc:
-            self._send_json_error(exc.status, exc.code, str(exc))
-        except Exception as exc:  # pragma: no cover - unexpected runtime failure
-            LOGGER.exception("Unhandled GET error: %s", exc)
-            self._send_json_error(HTTPStatus.INTERNAL_SERVER_ERROR, "internal_error", "Unexpected server error")
+        self._handle_request(self._handle_get)
 
     def do_POST(self) -> None:  # noqa: N802
-        try:
-            self._handle_post()
-        except ApiError as exc:
-            self._send_json_error(exc.status, exc.code, exc.message)
-        except RepositoryError as exc:
-            self._send_json_error(exc.status, exc.code, str(exc))
-        except Exception as exc:  # pragma: no cover - unexpected runtime failure
-            LOGGER.exception("Unhandled POST error: %s", exc)
-            self._send_json_error(HTTPStatus.INTERNAL_SERVER_ERROR, "internal_error", "Unexpected server error")
+        self._handle_request(self._handle_post)
+
+    def do_PUT(self) -> None:  # noqa: N802
+        self._handle_request(self._handle_put)
+
+    def do_PATCH(self) -> None:  # noqa: N802
+        self._handle_request(self._handle_patch)
+
+    def do_DELETE(self) -> None:  # noqa: N802
+        self._handle_request(self._handle_delete)
 
     def do_OPTIONS(self) -> None:  # noqa: N802
         self.send_response(HTTPStatus.NO_CONTENT)
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
         self.send_header("Content-Length", "0")
         self.end_headers()
 
     def log_message(self, format: str, *args: object) -> None:  # noqa: A003
         LOGGER.info("%s - %s", self.address_string(), format % args)
+
+    def _handle_request(self, handler) -> None:
+        try:
+            handler()
+        except ApiError as exc:
+            self._send_json_error(exc.status, exc.code, exc.message)
+        except ServiceError as exc:
+            self._send_json_error(exc.status, exc.code, exc.message)
+        except RepositoryError as exc:
+            self._send_json_error(exc.status, exc.code, str(exc))
+        except Exception as exc:  # pragma: no cover - unexpected runtime failure
+            LOGGER.exception("Unhandled %s error: %s", self.command, exc)
+            self._send_json_error(HTTPStatus.INTERNAL_SERVER_ERROR, "internal_error", "Unexpected server error")
 
     def _handle_get(self) -> None:
         parsed = urlparse(self.path)
@@ -110,28 +118,18 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         query = parse_qs(parsed.query)
 
         if path == "/api/health":
-            payload = {
-                "status": "ok",
-                "environment": {
-                    "app_env": self.config.app_env,
-                    "stack_profile": self.config.stack_profile,
-                    "log_level": self.config.log_level,
-                    "public_base_url": self.config.public_base_url,
-                    "secret_provider": self.config.secret_provider,
-                },
-                "database": {
-                    "driver": "sqlite",
-                    "path": str(self.config.db_path),
-                },
-                "summary": self.repository.summary(),
-            }
-            self._send_json(payload)
+            self._send_json(self.services.health())
             return
 
         if path == "/api/bootstrap":
             token = self._bearer_token(optional=True)
             payload = self.repository.bootstrap_payload(token=token)
             self._send_json(payload)
+            return
+
+        if path == "/api/events":
+            actor = self._require_user()
+            self._send_json({"events": self.services.events(actor=actor, limit=self._query_limit(query))})
             return
 
         if path == "/api/me":
@@ -199,18 +197,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/auth/login":
             email = self._require_text(body, "email")
             password = self._require_text(body, "password")
-            user = self.repository.authenticate(email=email, password=password)
-            if user is None:
-                raise ApiError(HTTPStatus.UNAUTHORIZED, "invalid_credentials", "Invalid email or password")
-            session = self.repository.create_session(user_id=user["id"], ttl_seconds=self.config.session_ttl_seconds)
-            self._send_json(
-                {
-                    "token": session["token"],
-                    "session": session,
-                    "user": self.repository.public_user(user),
-                },
-                status=HTTPStatus.CREATED,
-            )
+            payload = self.services.login(email=email, password=password)
+            self._send_json(payload, status=HTTPStatus.CREATED)
             return
 
         if path == "/api/auth/register":
@@ -219,35 +207,27 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             full_name = self._require_text(body, "full_name")
             role = self._coerce_role(body.get("role"))
             organization_id = self._optional_int(body.get("organization_id"), minimum=1)
-            user = self.repository.create_user(
+            payload = self.services.register(
+                actor=None,
                 email=email,
+                password=password,
                 full_name=full_name,
                 role=role,
-                password=password,
                 organization_id=organization_id,
             )
-            session = self.repository.create_session(user_id=user["id"], ttl_seconds=self.config.session_ttl_seconds)
-            self._send_json(
-                {
-                    "token": session["token"],
-                    "session": session,
-                    "user": self.repository.public_user(user),
-                },
-                status=HTTPStatus.CREATED,
-            )
+            self._send_json(payload, status=HTTPStatus.CREATED)
             return
 
         if path == "/api/auth/logout":
             token = self._bearer_token(optional=True)
-            if token:
-                self.repository.delete_session(token)
-            self._send_json({"status": "logged_out"})
+            self._send_json(self.services.logout(token=token))
             return
 
-        user = self._require_user()
+        actor = self._require_user()
 
         if path == "/api/organizations":
-            organization = self.repository.create_organization(
+            organization = self.services.create_organization(
+                actor=actor,
                 name=self._require_text(body, "name"),
                 slug=self._require_text(body, "slug"),
                 kind=self._coerce_kind(body.get("kind")),
@@ -257,7 +237,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/users":
-            user_row = self.repository.create_user(
+            user_row = self.services.create_user(
+                actor=actor,
                 email=self._require_text(body, "email"),
                 full_name=self._require_text(body, "full_name"),
                 role=self._coerce_role(body.get("role")),
@@ -268,7 +249,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/properties":
-            property_row = self.repository.create_property(
+            property_row = self.services.create_property(
+                actor=actor,
                 title=self._require_text(body, "title"),
                 summary=self._optional_text(body.get("summary")) or "Bien LAWIM_V2",
                 city=self._require_text(body, "city"),
@@ -289,7 +271,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/media":
-            media_row = self.repository.create_media(
+            media_row = self.services.create_media(
+                actor=actor,
                 property_id=self._require_int(body, "property_id", minimum=1),
                 kind=self._optional_text(body.get("kind")) or "image",
                 url=self._require_text(body, "url"),
@@ -299,25 +282,138 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/conversations":
-            conversation = self.repository.create_conversation(
-                user_id=self._require_int(body, "user_id", default=user["id"], minimum=1),
+            conversation = self.services.create_conversation(
+                actor=actor,
+                user_id=self._require_int(body, "user_id", default=int(actor["id"]), minimum=1),
                 property_id=self._optional_int(body.get("property_id"), minimum=1),
                 subject=self._require_text(body, "subject"),
                 status=self._coerce_status(body.get("status"), default="open"),
                 initial_message=self._optional_text(body.get("initial_message")),
-                sender_user_id=self._optional_int(body.get("sender_user_id"), minimum=1) or user["id"],
+                sender_user_id=self._optional_int(body.get("sender_user_id"), minimum=1) or int(actor["id"]),
             )
             self._send_json({"conversation": conversation}, status=HTTPStatus.CREATED)
             return
 
         if path.startswith("/api/conversations/") and path.endswith("/messages"):
             conversation_id = self._extract_conversation_id(path, suffix="/messages")
-            message = self.repository.add_message(
+            message = self.services.add_message(
+                actor=actor,
                 conversation_id=conversation_id,
-                sender_user_id=self._require_int(body, "sender_user_id", default=user["id"], minimum=1),
+                sender_user_id=self._require_int(body, "sender_user_id", default=int(actor["id"]), minimum=1),
                 body=self._require_text(body, "body"),
             )
             self._send_json({"message": message}, status=HTTPStatus.CREATED)
+            return
+
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
+
+    def _handle_put(self) -> None:
+        self._handle_mutation("PUT")
+
+    def _handle_patch(self) -> None:
+        self._handle_mutation("PATCH")
+
+    def _handle_delete(self) -> None:
+        self._handle_mutation("DELETE")
+
+    def _handle_mutation(self, method: str) -> None:
+        parsed = urlparse(self.path)
+        if not parsed.path.startswith("/api/"):
+            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Resource not found")
+        body = self._read_json_body()
+        path = parsed.path
+        actor = self._require_user()
+
+        if path.startswith("/api/organizations/") and path.count("/") == 3:
+            organization_id = self._extract_resource_id(path, "/api/organizations/", resource="Organization")
+            if method == "DELETE":
+                raise ApiError(HTTPStatus.METHOD_NOT_ALLOWED, "method_not_allowed", "Organizations cannot be deleted in this baseline")
+            organization = self.services.update_organization(
+                actor=actor,
+                organization_id=organization_id,
+                name=self._optional_text(body.get("name")),
+                slug=self._optional_text(body.get("slug")),
+                kind=self._optional_text(body.get("kind")),
+                city=self._optional_text(body.get("city")),
+            )
+            self._send_json({"organization": organization})
+            return
+
+        if path.startswith("/api/users/") and path.count("/") == 3:
+            user_id = self._extract_resource_id(path, "/api/users/", resource="User")
+            if method == "DELETE":
+                payload = self.services.delete_user(actor=actor, user_id=user_id)
+                self._send_json(payload)
+                return
+            user_row = self.services.update_user(
+                actor=actor,
+                user_id=user_id,
+                email=self._optional_text(body.get("email")),
+                full_name=self._optional_text(body.get("full_name")),
+                role=self._optional_text(body.get("role")),
+                password=self._optional_text(body.get("password")),
+                organization_id=self._optional_int(body.get("organization_id"), minimum=1),
+            )
+            self._send_json({"user": self.repository.public_user(user_row)})
+            return
+
+        if path.startswith("/api/properties/") and path.count("/") == 3:
+            property_id = self._extract_property_id(path)
+            if method == "DELETE":
+                payload = self.services.delete_property(actor=actor, property_id=property_id)
+                self._send_json(payload)
+                return
+            property_row = self.services.update_property(
+                actor=actor,
+                property_id=property_id,
+                title=self._optional_text(body.get("title")),
+                summary=self._optional_text(body.get("summary")),
+                city=self._optional_text(body.get("city")),
+                country=self._optional_text(body.get("country")),
+                latitude=self._optional_float(body.get("latitude")),
+                longitude=self._optional_float(body.get("longitude")),
+                price_min=self._optional_int(body.get("price_min"), minimum=0),
+                price_max=self._optional_int(body.get("price_max"), minimum=0),
+                currency=self._optional_text(body.get("currency")),
+                status=self._optional_text(body.get("status")),
+                property_type=self._optional_text(body.get("property_type")),
+                owner_organization_id=self._optional_int(body.get("owner_organization_id"), minimum=1),
+                bedrooms=self._optional_int(body.get("bedrooms"), minimum=0),
+                bathrooms=self._optional_int(body.get("bathrooms"), minimum=0),
+                area_sqm=self._optional_float(body.get("area_sqm")),
+            )
+            self._send_json({"property": property_row})
+            return
+
+        if path.startswith("/api/media/") and path.count("/") == 3:
+            media_id = self._extract_resource_id(path, "/api/media/", resource="Media")
+            if method == "DELETE":
+                payload = self.services.delete_media(actor=actor, media_id=media_id)
+                self._send_json(payload)
+                return
+            media_row = self.services.update_media(
+                actor=actor,
+                media_id=media_id,
+                kind=self._optional_text(body.get("kind")),
+                url=self._optional_text(body.get("url")),
+                caption=self._optional_text(body.get("caption")),
+            )
+            self._send_json({"media": media_row})
+            return
+
+        if path.startswith("/api/conversations/") and path.count("/") == 3:
+            conversation_id = self._extract_conversation_id(path)
+            if method == "DELETE":
+                payload = self.services.delete_conversation(actor=actor, conversation_id=conversation_id)
+                self._send_json(payload)
+                return
+            conversation = self.services.update_conversation(
+                actor=actor,
+                conversation_id=conversation_id,
+                subject=self._optional_text(body.get("subject")),
+                status=self._optional_text(body.get("status")),
+            )
+            self._send_json({"conversation": conversation})
             return
 
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
@@ -352,7 +448,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             raise ApiError(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, "payload_too_large", "Request body exceeds the supported size")
         content_type = self.headers.get("Content-Type", "")
         if "application/json" not in content_type.lower():
-            raise ApiError(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, "unsupported_media_type", "POST requests must use application/json")
+            raise ApiError(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, "unsupported_media_type", "Mutating requests must use application/json")
         raw = self.rfile.read(length)
         if not raw:
             return {}
@@ -377,7 +473,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
         if status == HTTPStatus.UNAUTHORIZED:
             self.send_header("WWW-Authenticate", 'Bearer realm="LAWIM_V2"')
         if extra_headers:
@@ -559,20 +655,35 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_conversation_id", "Conversation id must be positive")
         return conversation_id
 
+    def _extract_resource_id(self, path: str, prefix: str, *, resource: str) -> int:
+        if not path.startswith(prefix):
+            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", f"{resource} route not found")
+        raw_id = path[len(prefix) :]
+        try:
+            resource_id = int(raw_id.strip("/"))
+        except ValueError as exc:
+            raise ApiError(HTTPStatus.BAD_REQUEST, f"invalid_{resource.lower()}_id", f"{resource} id must be numeric") from exc
+        if resource_id < 1:
+            raise ApiError(HTTPStatus.BAD_REQUEST, f"invalid_{resource.lower()}_id", f"{resource} id must be positive")
+        return resource_id
+
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:
     repository = LawimRepository(config.db_path)
     repository.initialize(seed_demo_data=config.seed_demo_data)
+    services = LawimServices(repository, config)
 
     class BoundHandler(LawimRequestHandler):
         pass
 
     BoundHandler.repository = repository
     BoundHandler.config = config
+    BoundHandler.services = services
 
     server = LawimThreadingHTTPServer((config.host, config.port), BoundHandler)
     server.repository = repository  # type: ignore[attr-defined]
     server.config = config  # type: ignore[attr-defined]
+    server.services = services  # type: ignore[attr-defined]
     return server
 
 

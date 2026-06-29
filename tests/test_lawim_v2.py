@@ -10,6 +10,7 @@ from unittest import TestCase
 from lawim_v2.config import AppConfig
 from lawim_v2.db import LawimRepository
 from lawim_v2.server import LawimRequestHandler
+from lawim_v2.services import LawimServices
 
 
 class DummyHandler(LawimRequestHandler):
@@ -25,6 +26,7 @@ class DummyHandler(LawimRequestHandler):
     ) -> None:
         self.repository = repository
         self.config = config
+        self.services = LawimServices(repository, config)
         self.path = path
         self.command = method
         self.headers = headers or {}
@@ -93,7 +95,13 @@ class LawimV2ExecutableBaselineTest(TestCase):
             handler.do_GET()
         elif method == "POST":
             handler.do_POST()
-        else:  # pragma: no cover - helper is only used for GET/POST
+        elif method == "PUT":
+            handler.do_PUT()
+        elif method == "PATCH":
+            handler.do_PATCH()
+        elif method == "DELETE":
+            handler.do_DELETE()
+        else:  # pragma: no cover - helper is only used for GET/POST/PUT/PATCH/DELETE
             raise AssertionError(f"Unsupported method: {method}")
         return handler
 
@@ -102,6 +110,8 @@ class LawimV2ExecutableBaselineTest(TestCase):
         self.assertEqual(health.status, HTTPStatus.OK)
         health_payload = health.body_json()
         self.assertEqual(health_payload["status"], "ok")
+        self.assertEqual(health_payload["database"]["driver"], "sqlite")
+        self.assertEqual(health_payload["database"]["schema_version"], 2)
         self.assertEqual(health_payload["summary"]["organizations"], 3)
         self.assertEqual(health_payload["summary"]["users"], 3)
 
@@ -176,6 +186,214 @@ class LawimV2ExecutableBaselineTest(TestCase):
         )
         self.assertEqual(rejected.status, HTTPStatus.BAD_REQUEST)
         self.assertEqual(rejected.body_json()["error"]["code"], "invalid_state")
+
+    def test_role_based_permissions_block_global_writes_and_impersonation(self) -> None:
+        admin_login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        owner_login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "owner@lawim.local", "password": "lawim-demo"},
+        )
+
+        admin_payload = admin_login.body_json()
+        owner_payload = owner_login.body_json()
+        admin_token = str(admin_payload["token"])
+        owner_token = str(owner_payload["token"])
+        admin_id = int(admin_payload["user"]["id"])
+        owner_id = int(owner_payload["user"]["id"])
+
+        created_property = self.invoke(
+            "/api/properties",
+            method="POST",
+            token=admin_token,
+            body={
+                "title": "Riverfront Tower",
+                "summary": "Prime riverside listing.",
+                "city": "Douala",
+                "country": "Cameroon",
+                "status": "draft",
+                "property_type": "apartment",
+            },
+        )
+        property_id = int(created_property.body_json()["property"]["id"])
+
+        owner_property_update = self.invoke(
+            f"/api/properties/{property_id}",
+            method="PATCH",
+            token=owner_token,
+            body={"title": "Blocked update"},
+        )
+        self.assertEqual(owner_property_update.status, HTTPStatus.FORBIDDEN)
+        self.assertEqual(owner_property_update.body_json()["error"]["code"], "forbidden")
+
+        owner_org_create = self.invoke(
+            "/api/organizations",
+            method="POST",
+            token=owner_token,
+            body={"name": "Blocked Org", "slug": "blocked-org", "kind": "owner"},
+        )
+        self.assertEqual(owner_org_create.status, HTTPStatus.FORBIDDEN)
+
+        owner_user_create = self.invoke(
+            "/api/users",
+            method="POST",
+            token=owner_token,
+            body={
+                "email": "blocked@lawim.local",
+                "full_name": "Blocked User",
+                "role": "agent",
+                "password": "lawim-demo",
+            },
+        )
+        self.assertEqual(owner_user_create.status, HTTPStatus.FORBIDDEN)
+
+        owner_events = self.invoke("/api/events", token=owner_token)
+        self.assertEqual(owner_events.status, HTTPStatus.FORBIDDEN)
+
+        impersonated_conversation = self.invoke(
+            "/api/conversations",
+            method="POST",
+            token=owner_token,
+            body={
+                "user_id": owner_id,
+                "subject": "Impersonation attempt",
+                "sender_user_id": admin_id,
+            },
+        )
+        self.assertEqual(impersonated_conversation.status, HTTPStatus.FORBIDDEN)
+
+    def test_backend_mutations_persist_and_event_log_is_available(self) -> None:
+        login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        login_payload = login.body_json()
+        token = str(login_payload["token"])
+        user_id = int(login_payload["user"]["id"])
+        organization_id = int(login_payload["user"]["organization_id"])
+
+        user_update = self.invoke(
+            f"/api/users/{user_id}",
+            method="PATCH",
+            token=token,
+            body={"full_name": "LAWIM Admin Prime"},
+        )
+        self.assertEqual(user_update.status, HTTPStatus.OK)
+        self.assertEqual(user_update.body_json()["user"]["full_name"], "LAWIM Admin Prime")
+
+        me = self.invoke("/api/me", token=token)
+        self.assertEqual(me.status, HTTPStatus.OK)
+        self.assertEqual(me.body_json()["user"]["full_name"], "LAWIM Admin Prime")
+
+        organization_update = self.invoke(
+            f"/api/organizations/{organization_id}",
+            method="PUT",
+            token=token,
+            body={"name": "LAWIM Demo Agency Plus"},
+        )
+        self.assertEqual(organization_update.status, HTTPStatus.OK)
+        self.assertEqual(organization_update.body_json()["organization"]["name"], "LAWIM Demo Agency Plus")
+
+        property_create = self.invoke(
+            "/api/properties",
+            method="POST",
+            token=token,
+            body={
+                "title": "Riverfront Loft",
+                "summary": "Riverside residence ready for upgrade.",
+                "city": "Douala",
+                "country": "Cameroon",
+                "status": "draft",
+                "property_type": "apartment",
+                "price_min": 250000,
+                "price_max": 300000,
+            },
+        )
+        property_payload = property_create.body_json()["property"]
+        property_id = int(property_payload["id"])
+
+        property_update = self.invoke(
+            f"/api/properties/{property_id}",
+            method="PATCH",
+            token=token,
+            body={"title": "Riverfront Loft Prime", "status": "published"},
+        )
+        self.assertEqual(property_update.status, HTTPStatus.OK)
+        self.assertEqual(property_update.body_json()["property"]["title"], "Riverfront Loft Prime")
+        self.assertEqual(property_update.body_json()["property"]["status"], "published")
+
+        property_detail = self.invoke(f"/api/properties/{property_id}", token=token)
+        self.assertEqual(property_detail.status, HTTPStatus.OK)
+        self.assertEqual(property_detail.body_json()["property"]["title"], "Riverfront Loft Prime")
+
+        media_create = self.invoke(
+            "/api/media",
+            method="POST",
+            token=token,
+            body={
+                "property_id": property_id,
+                "kind": "image",
+                "url": "https://example.test/riverfront-loft.jpg",
+                "caption": "Original caption",
+            },
+        )
+        media_id = int(media_create.body_json()["media"]["id"])
+
+        media_update = self.invoke(
+            f"/api/media/{media_id}",
+            method="PATCH",
+            token=token,
+            body={"caption": "Updated caption"},
+        )
+        self.assertEqual(media_update.status, HTTPStatus.OK)
+        self.assertEqual(media_update.body_json()["media"]["caption"], "Updated caption")
+
+        media_delete = self.invoke(f"/api/media/{media_id}", method="DELETE", token=token)
+        self.assertEqual(media_delete.status, HTTPStatus.OK)
+        self.assertTrue(media_delete.body_json()["deleted"])
+
+        conversation_create = self.invoke(
+            "/api/conversations",
+            method="POST",
+            token=token,
+            body={
+                "property_id": property_id,
+                "subject": "Site visit request",
+                "initial_message": "Please share your availability.",
+            },
+        )
+        conversation_id = int(conversation_create.body_json()["conversation"]["id"])
+
+        conversation_update = self.invoke(
+            f"/api/conversations/{conversation_id}",
+            method="PATCH",
+            token=token,
+            body={"status": "closed"},
+        )
+        self.assertEqual(conversation_update.status, HTTPStatus.OK)
+        self.assertEqual(conversation_update.body_json()["conversation"]["status"], "closed")
+
+        conversation_delete = self.invoke(f"/api/conversations/{conversation_id}", method="DELETE", token=token)
+        self.assertEqual(conversation_delete.status, HTTPStatus.OK)
+        self.assertTrue(conversation_delete.body_json()["deleted"])
+
+        property_delete = self.invoke(f"/api/properties/{property_id}", method="DELETE", token=token)
+        self.assertEqual(property_delete.status, HTTPStatus.OK)
+        self.assertTrue(property_delete.body_json()["deleted"])
+
+        deleted_property_lookup = self.invoke(f"/api/properties/{property_id}", token=token)
+        self.assertEqual(deleted_property_lookup.status, HTTPStatus.NOT_FOUND)
+
+        events = self.invoke("/api/events?limit=10", token=token)
+        self.assertEqual(events.status, HTTPStatus.OK)
+        event_kinds = [event["kind"] for event in events.body_json()["events"]]
+        self.assertIn("property_deleted", event_kinds)
+        self.assertIn("conversation_deleted", event_kinds)
 
     def test_authentication_and_matching_flow_work_end_to_end(self) -> None:
         login = self.invoke(
