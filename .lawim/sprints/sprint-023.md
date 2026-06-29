@@ -37,11 +37,12 @@ DG-0028
 - reconciliation des historiques insuffisante, bascule mal tracee, rollback incomplet
 
 ## Avancement
-- T23.01: a venir
+- T23.01: ferme
 - T23.02: a venir
 - T23.03: a venir
-- Tickets couverts: 0/3
+- Tickets couverts: 1/3
 
 ## Preparation
 - Rapport de lancement: reports/sprint-023/SPRINT-023-PLANNING-REPORT.md
+- Rapport de ticket: reports/sprint-023/T23.01-livrable-principal-report.md
 - Sprint 024: non ouvert

@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 023, le registre des risques est normalise, et le Sprint 022 est cloture.
-- Derniere trace technique: Sprint 023 est ouvert sur migration; Sprint 022 est cloture; T23.01 reste a venir
+- Derniere trace technique: Sprint 023 est ouvert sur migration; Sprint 022 est cloture; T23.01 est ferme; T23.02 reste a venir
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -396,7 +396,7 @@
         - Statut: EN COURS
         - Objectif: migration, bascule, reconciliation des historiques et surveillance.
         - Tickets: T23.01 - Livrable principal, T23.02 - Validation et tests, T23.03 - Rollback et observabilite
-        - Tickets couverts: 0/3
+        - Tickets couverts: 1/3
         - Ordre recommande: T23.01 -> T23.02 -> T23.03
         - Dependances: S022, S004, S014, S018, S020, S021.
         - Chemin critique: DG-0028 -> T23.01 -> T23.02 -> T23.03 -> cloture Sprint 023
@@ -404,8 +404,9 @@
         - Risque bloquant: false
         - Validation DG: en attente
         - Rapport de lancement: reports/sprint-023/SPRINT-023-PLANNING-REPORT.md
+        - Rapport de ticket: reports/sprint-023/T23.01-livrable-principal-report.md
         - Avancement:
-        - T23.01: a venir
+        - T23.01: ferme
         - T23.02: a venir
         - T23.03: a venir
         - Sprint 024: non ouvert

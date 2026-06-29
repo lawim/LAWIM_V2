@@ -581,3 +581,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T22.03 | PMO | Validation du rollback et de l observabilite | PMO | PASS | 2026-06-29 | reports/sprint-022/T22.03-rollback-et-observabilite-report.md |
 | T22.03 | Integration | Cohesion rollback et observabilite | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-022/T22.03-rollback-et-observabilite-report.md |
 | T22.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-022/T22.03-rollback-et-observabilite-report.md |
+| T23.01 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-023/T23.01-livrable-principal-report.md |
+| T23.01 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-023/T23.01-livrable-principal-report.md |
+| T23.01 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-023/T23.01-livrable-principal-report.md |
+| T23.01 | PMO | Validation du noyau de migration et de la readiness | PMO | PASS | 2026-06-29 | reports/sprint-023/T23.01-livrable-principal-report.md |
+| T23.01 | Integration | Cohesion livrable principal | Integration Manager | READY FOR T23.02 | 2026-06-29 | reports/sprint-023/T23.01-livrable-principal-report.md |
+| T23.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T23.02 | 2026-06-29 | reports/sprint-023/T23.01-livrable-principal-report.md |
