@@ -2,7 +2,7 @@
 
 - Date: 2026-06-28
 - Scope: Sprint 019 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 organiser la boucle d amelioration avec validation humaine.
@@ -42,4 +42,5 @@ DG-0028
 - Rapport de ticket: reports/sprint-019/T19.01-feedback-loop-report.md
 - Rapport de ticket: reports/sprint-019/T19.02-human-validation-gate-report.md
 - Rapport de ticket: reports/sprint-019/T19.03-versioned-recommendations-report.md
-- Sprint 020: non ouvert
+- Rapport de cloture: reports/sprint-019/SPRINT-019-CLOSURE-REPORT.md
+- Sprint 020: ouvert

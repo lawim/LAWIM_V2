@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: ACTIF
-- Sprint actif: Sprint 019
+- Sprint actif: Sprint 020
 - Sprint status: EN COURS
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 019, le registre des risques est normalise et Sprint 019 est ouvert.
-- Derniere trace technique: Sprint 019 est ouvert sur Continuous Learning; T19.01, T19.02 et T19.03 sont fermes et la cloture du sprint reste a tracer
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 020, le registre des risques est normalise et Sprint 020 est ouvert.
+- Derniere trace technique: Sprint 020 est ouvert sur Mobile foundation; T20.01 reste a venir
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -308,7 +308,7 @@
 - T18.02: ferme
 - T18.03: ferme
                                         ## Sprint 019
-        - Statut: EN COURS
+        - Statut: CLOTURE
         - Objectif: organiser la boucle d amelioration avec validation humaine.
         - Tickets: T19.01 - Feedback loop, T19.02 - Human validation gate, T19.03 - Versioned recommendations
         - Tickets couverts: 3/3
@@ -322,11 +322,30 @@
         - Rapport de ticket: reports/sprint-019/T19.01-feedback-loop-report.md
         - Rapport de ticket: reports/sprint-019/T19.02-human-validation-gate-report.md
         - Rapport de ticket: reports/sprint-019/T19.03-versioned-recommendations-report.md
+        - Rapport de cloture: reports/sprint-019/SPRINT-019-CLOSURE-REPORT.md
         - Avancement:
         - T19.01: ferme
         - T19.02: ferme
         - T19.03: ferme
-        - Sprint 020: non ouvert
+        - Sprint 020: ouvert
+
+                                        ## Sprint 020
+        - Statut: EN COURS
+        - Objectif: preparer une application mobile legere et synchronisee.
+        - Tickets: T20.01 - Mobile shell, T20.02 - Offline sync, T20.03 - Push and payment handoff
+        - Tickets couverts: 0/3
+        - Ordre recommande: T20.01 -> T20.02 -> T20.03
+        - Dependances: S004, S012, S014, S015, S016.
+        - Chemin critique: DG-0028 -> T20.01 -> T20.02 -> T20.03 -> cloture Sprint 020
+        - Risques d entree: fragmentation device, latence, incoherence offline/online.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de lancement: reports/sprint-020/SPRINT-020-PLANNING-REPORT.md
+        - Avancement:
+        - T20.01: a venir
+        - T20.02: a venir
+        - T20.03: a venir
+        - Sprint 021: non ouvert
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md

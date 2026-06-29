@@ -98,3 +98,4 @@
 | R-002 | T19.01 Feedback loop consolidates the feedback, metrics and validation contract | High | Low | Keep feedback signals explicit, versioned and human validated before any future recommendation use | Documentation | Mitigated |
 | R-003 | T19.02 Human validation gate consolidates approval, review and escalation rules | High | Low | Keep human approval mandatory and prevent automatic application of sensitive recommendations | PMO | Mitigated |
 | R-004 | T19.03 Versioned recommendations consolidates versioning, rollback and traceability rules | High | Low | Keep recommendations versioned, linked to their feedback and rollbackable before reuse | Documentation | Mitigated |
+| R-001 | Sprint 020 opening requires stable mobile foundation contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
