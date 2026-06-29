@@ -98,3 +98,4 @@
 | 2026-06-28 | DEC-005 | Sprint 018 closure proposal and no Sprint 019 opening | Directeur General | Sprint 018 closure / no Sprint 019 | Proposed | reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md |
 | 2026-06-28 | DEC-001 | Sprint 019 opening and continuous learning plan confirmed | Directeur General | Sprint 019 / continuous learning | Active | reports/sprint-019/SPRINT-019-PLANNING-REPORT.md |
 | 2026-06-28 | DEC-002 | Feedback loop, signal capture and metrics contract confirmed | Documentation | T19.01 / Feedback loop | Active | reports/sprint-019/T19.01-feedback-loop-report.md |
+| 2026-06-29 | DEC-003 | Human validation gate, review and escalation contract confirmed | PMO | T19.02 / Human validation gate | Active | reports/sprint-019/T19.02-human-validation-gate-report.md |

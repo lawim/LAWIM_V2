@@ -97,3 +97,6 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-28 | DEC-003 | Language and search intelligence, contract confirmed for Sprint 018 | AI | T18.02 / Language and search intelligence | Active | reports/sprint-018/T18.02-language-and-search-intelligence-report.md |
 | 2026-06-28 | DEC-004 | Source-grounded responses, contract confirmed for Sprint 018 | AI | T18.03 / Source-grounded responses | Active | reports/sprint-018/T18.03-source-grounded-responses-report.md |
 | 2026-06-28 | DEC-005 | Sprint 018 closure proposal and no Sprint 019 opening | Directeur General | Sprint 018 closure / no Sprint 019 | Proposed | reports/sprint-018/SPRINT-018-CLOSURE-REPORT.md |
+| 2026-06-29 | DEC-001 | Sprint 019 opening and continuous learning plan confirmed | Directeur General | Sprint 019 / continuous learning | Active | reports/sprint-019/SPRINT-019-PLANNING-REPORT.md |
+| 2026-06-29 | DEC-002 | Feedback loop, signal capture and metrics contract confirmed | Documentation | T19.01 / Feedback loop | Active | reports/sprint-019/T19.01-feedback-loop-report.md |
+| 2026-06-29 | DEC-003 | Human validation gate, review and escalation contract confirmed | PMO | T19.02 / Human validation gate | Active | reports/sprint-019/T19.02-human-validation-gate-report.md |
