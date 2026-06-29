@@ -2,7 +2,7 @@
 
 - Date: 2026-06-29
 - Scope: Sprint 023 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 migration, bascule, reconciliation des historiques et surveillance.
@@ -47,4 +47,5 @@ DG-0028
 - Rapport de ticket: reports/sprint-023/T23.01-livrable-principal-report.md
 - Rapport de ticket: reports/sprint-023/T23.02-validation-et-tests-report.md
 - Rapport de ticket: reports/sprint-023/T23.03-rollback-et-observabilite-report.md
-- Sprint 024: non ouvert
+- Rapport de cloture: reports/sprint-023/SPRINT-023-CLOSURE-REPORT.md
+- Sprint 024: ouvert

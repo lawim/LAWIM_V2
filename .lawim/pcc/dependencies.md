@@ -95,3 +95,7 @@
 | D-091 | T23.01 depend de T22.03 et des references git strategy / development governance / production checklist | Sprint 023 | High | Confirmed |
 | D-092 | T23.02 depend de T23.01 et des references QA / governance | Sprint 023 | High | Confirmed |
 | D-093 | T23.03 depend de T23.02 et des references git strategy / production checklist | Sprint 023 | High | Confirmed |
+| D-094 | Decision DG d'ouverture du Sprint 024 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-095 | T24.01 depend de T23.03 et des references 12-TESTS-REFERENCE.md / 37-QUALITY-ASSURANCE-PLAN.md | Sprint 024 | High | Confirmed |
+| D-096 | T24.02 depend de T24.01 et des references 12-TESTS-REFERENCE.md / 40-PRODUCTION-CHECKLIST.md | Sprint 024 | High | Confirmed |
+| D-097 | T24.03 depend de T24.02 et des references LAWIM-DOCUMENTATION-RELEASE-V1.0.md / LAWIM_V2_BOOTSTRAP_REPORT.md | Sprint 024 | High | Confirmed |

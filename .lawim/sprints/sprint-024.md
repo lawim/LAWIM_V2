@@ -1,0 +1,42 @@
+# Sprint 024 - Beta et production readiness
+
+- Date: 2026-06-29
+- Scope: Sprint 024 execution controlee
+- Status: EN COURS
+
+## Objectif
+stabiliser, tester et preparer la mise en production.
+
+## Decision
+DG-0028
+
+## Portee
+- contrat documentaire du sprint et des tickets associes;
+- dependances officielles et ordre d execution;
+- revues architecture, QA, security et PMO;
+- alignement avec les references officielles et le Standard V2;
+- aucune extension fonctionnelle hors beta et production readiness.
+
+## Tickets
+- T24.01 - Internal beta QA
+- T24.02 - Performance and regression
+- T24.03 - Release candidate and go-live
+
+## Dependances
+- S023.
+
+## Chemin critique
+- DG-0028 -> T24.01 -> T24.02 -> T24.03 -> cloture Sprint 024
+
+## Risques d entree
+- regression tardive, performance insuffisante, bug bloquant
+
+## Avancement
+- T24.01: a venir
+- T24.02: a venir
+- T24.03: a venir
+- Tickets couverts: 0/3
+
+## Preparation
+- Rapport de lancement: reports/sprint-024/SPRINT-024-PLANNING-REPORT.md
+- Sprint 025: non ouvert
