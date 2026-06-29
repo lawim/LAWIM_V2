@@ -101,3 +101,4 @@
 | R-001 | Sprint 020 opening requires stable mobile foundation contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T20.01 Mobile shell consolidates the mobile shell and navigation contract | High | Low | Keep the shell minimal, navigation explicit and the client architecture bounded | Frontend | Mitigated |
 | R-003 | T20.02 Offline sync consolidates the cache and recovery contract | High | Low | Keep offline cache explicit, handle recovery paths and prevent sync conflicts | Frontend | Mitigated |
+| R-004 | T20.03 Push and payment handoff consolidates the alert and redirection contract | High | Low | Keep push alerts and payment redirections separated from sync and local cache | Frontend | Mitigated |

@@ -103,3 +103,4 @@
 | 2026-06-29 | DEC-001 | Sprint 020 opening and mobile foundation plan confirmed | Directeur General | Sprint 020 / mobile foundation | Active | reports/sprint-020/SPRINT-020-PLANNING-REPORT.md |
 | 2026-06-29 | DEC-002 | Mobile shell, navigation and client architecture contract confirmed | Frontend | T20.01 / Mobile shell | Active | reports/sprint-020/T20.01-mobile-shell-report.md |
 | 2026-06-29 | DEC-003 | Offline sync, cache and recovery contract confirmed | Frontend | T20.02 / Offline sync | Active | reports/sprint-020/T20.02-offline-sync-report.md |
+| 2026-06-29 | DEC-004 | Push and payment handoff contract confirmed | Frontend | T20.03 / Push and payment handoff | Active | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |

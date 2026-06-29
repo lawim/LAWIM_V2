@@ -539,3 +539,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T20.02 | PMO | Validation de la sync locale et du cache | PMO | PASS | 2026-06-29 | reports/sprint-020/T20.02-offline-sync-report.md |
 | T20.02 | Integration | Cohesion offline sync | Integration Manager | READY FOR T20.03 | 2026-06-29 | reports/sprint-020/T20.02-offline-sync-report.md |
 | T20.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T20.03 | 2026-06-29 | reports/sprint-020/T20.02-offline-sync-report.md |
+| T20.03 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |
+| T20.03 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |
+| T20.03 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |
+| T20.03 | PMO | Validation du handoff push et paiement | PMO | PASS | 2026-06-29 | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |
+| T20.03 | Integration | Cohesion push and payment handoff | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |
+| T20.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-020/T20.03-push-and-payment-handoff-report.md |

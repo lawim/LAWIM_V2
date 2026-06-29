@@ -34,11 +34,12 @@ DG-0028
 ## Avancement
 - T20.01: ferme
 - T20.02: ferme
-- T20.03: a venir
-- Tickets couverts: 2/3
+- T20.03: ferme
+- Tickets couverts: 3/3
 
 ## Preparation
 - Rapport de lancement: reports/sprint-020/SPRINT-020-PLANNING-REPORT.md
 - Rapport de ticket: reports/sprint-020/T20.01-mobile-shell-report.md
 - Rapport de ticket: reports/sprint-020/T20.02-offline-sync-report.md
+- Rapport de ticket: reports/sprint-020/T20.03-push-and-payment-handoff-report.md
 - Sprint 021: non ouvert
