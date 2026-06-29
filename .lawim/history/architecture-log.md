@@ -102,3 +102,4 @@ Ce journal est append-only. Toute evolution architecturale doit laisser une trac
 | 2026-06-28 | ARCH-001 | Sprint 019 planning review | Continuous learning confirmed; no blocking architecture gaps remain for opening | Opening readiness for DG approval | PMO | reports/sprint-019/SPRINT-019-PLANNING-REPORT.md |
 | 2026-06-28 | ARCH-002 | T19.01 Feedback loop | Feedback loop, contrat confirme pour Sprint 019 | Stable gate before the next ticket | Documentation | reports/sprint-019/T19.01-feedback-loop-report.md |
 | 2026-06-29 | ARCH-003 | T19.02 Human validation gate | Human validation gate, contrat confirme pour Sprint 019 | Stable gate before the next ticket | PMO | reports/sprint-019/T19.02-human-validation-gate-report.md |
+| 2026-06-29 | ARCH-004 | T19.03 Versioned recommendations | Versioned recommendations, contrat confirme pour Sprint 019 | Stable gate before the next ticket | Documentation | reports/sprint-019/T19.03-versioned-recommendations-report.md |
