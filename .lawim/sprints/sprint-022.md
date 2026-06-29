@@ -36,11 +36,12 @@ DG-0028
 - readiness insuffisante, go/no-go mal trace, rollback incomplet
 
 ## Avancement
-- T22.01: a venir
+- T22.01: ferme
 - T22.02: a venir
 - T22.03: a venir
-- Tickets couverts: 0/3
+- Tickets couverts: 1/3
 
 ## Preparation
 - Rapport de lancement: reports/sprint-022/SPRINT-022-PLANNING-REPORT.md
+- Rapport de ticket: reports/sprint-022/T22.01-livrable-principal-report.md
 - Sprint 023: non ouvert

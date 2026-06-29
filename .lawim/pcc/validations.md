@@ -563,3 +563,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T21.03 | PMO | Validation des signaux, anomalies et abus | PMO | PASS | 2026-06-29 | reports/sprint-021/T21.03-fraud-controls-report.md |
 | T21.03 | Integration | Cohesion fraud controls | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-021/T21.03-fraud-controls-report.md |
 | T21.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-021/T21.03-fraud-controls-report.md |
+| T22.01 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-022/T22.01-livrable-principal-report.md |
+| T22.01 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-022/T22.01-livrable-principal-report.md |
+| T22.01 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-022/T22.01-livrable-principal-report.md |
+| T22.01 | PMO | Validation du noyau de preproduction et de la readiness | PMO | PASS | 2026-06-29 | reports/sprint-022/T22.01-livrable-principal-report.md |
+| T22.01 | Integration | Cohesion livrable principal | Integration Manager | READY FOR T22.02 | 2026-06-29 | reports/sprint-022/T22.01-livrable-principal-report.md |
+| T22.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T22.02 | 2026-06-29 | reports/sprint-022/T22.01-livrable-principal-report.md |

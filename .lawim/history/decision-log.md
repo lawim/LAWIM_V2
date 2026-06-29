@@ -109,3 +109,5 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-29 | DEC-002 | Zero trust hardening, access and privilege contract confirmed | Security | T21.01 / Zero trust hardening | Active | reports/sprint-021/T21.01-zero-trust-hardening-report.md |
 | 2026-06-29 | DEC-003 | Audit and privacy, logs and retention contract confirmed | Security | T21.02 / Audit and privacy | Active | reports/sprint-021/T21.02-audit-and-privacy-report.md |
 | 2026-06-29 | DEC-004 | Fraud controls, signals and escalation contract confirmed | Security | T21.03 / Fraud controls | Active | reports/sprint-021/T21.03-fraud-controls-report.md |
+| 2026-06-29 | DEC-001 | Sprint 022 opening and preproduction plan confirmed | Directeur General | Sprint 022 / preproduction | Active | reports/sprint-022/SPRINT-022-PLANNING-REPORT.md |
+| 2026-06-29 | DEC-002 | Livrable principal, readiness operationnelle contract confirmed | DevOps | T22.01 / Livrable principal | Active | reports/sprint-022/T22.01-livrable-principal-report.md |
