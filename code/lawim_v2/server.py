@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import mimetypes
 import sqlite3
 from dataclasses import asdict, replace
 from http import HTTPStatus
@@ -13,8 +14,12 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 from .config import AppConfig
-from .db import LawimRepository, RepositoryError
+from .errors import RepositoryError
+from .db import LawimRepository
+from .dto import geo_location_dto, media_dto, paginated_payload, property_dto
+from .media_domain import THUMBNAIL_CONTRACT
 from .matching import MatchCriteria
+from .persistence_adapter import resolve_persistence_adapter
 from .services import LawimServices, ServiceError
 
 
@@ -93,6 +98,9 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/styles.css":
             self._send_static("styles.css", "text/css; charset=utf-8")
             return
+        if path.startswith("/media/"):
+            self._send_media_asset(path)
+            return
         if path == "/healthz":
             self._send_text("ok", content_type="text/plain; charset=utf-8")
             return
@@ -146,21 +154,73 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/properties":
-            city = self._first(query, "city")
-            status = self._first(query, "status")
-            self._send_json({"properties": self.repository.list_properties(city=city, status=status, limit=self._query_limit(query))})
+            self._send_json(
+                self.services.list_properties(
+                    city=self._first(query, "city"),
+                    country=self._first(query, "country"),
+                    region=self._first(query, "region"),
+                    status=self._first(query, "status"),
+                    availability=self._first(query, "availability"),
+                    property_type=self._first(query, "property_type"),
+                    owner_organization_id=self._first_int(query, "owner_organization_id", minimum=1),
+                    include_deleted=self._first_bool(query, "include_deleted"),
+                    search=self._first(query, "search"),
+                    page=self._query_page(query),
+                    limit=self._query_limit(query),
+                    sort=self._first(query, "sort") or "created_at",
+                    order=self._first(query, "order") or "desc",
+                )
+            )
+            return
+
+        if path == "/api/geo/normalize":
+            self._send_json(
+                {
+                    "location": self.services.normalize_location(
+                        city=self._require_query(query, "city"),
+                        country=self._require_query(query, "country"),
+                        region=self._first(query, "region"),
+                        address_line=self._first(query, "address_line"),
+                        postal_code=self._first(query, "postal_code"),
+                    )
+                }
+            )
+            return
+
+        if path == "/api/geo/search":
+            self._send_json(
+                {
+                    "locations": self.services.search_locations(
+                        query=self._first(query, "q"),
+                        limit=self._query_limit(query),
+                    )
+                }
+            )
+            return
+
+        if path == "/api/geo/contracts":
+            self._send_json({"thumbnail": THUMBNAIL_CONTRACT})
             return
 
         if path.startswith("/api/properties/") and path.endswith("/media"):
             property_id = self._extract_property_id(path, suffix="/media")
-            self._send_json({"media": self.repository.list_media(property_id=property_id)})
+            self._send_json(
+                self.services.list_media(
+                    property_id=property_id,
+                    page=self._query_page(query),
+                    limit=self._query_limit(query),
+                    sort=self._first(query, "sort") or "position",
+                    order=self._first(query, "order") or "asc",
+                )
+            )
             return
+
+        if path.startswith("/api/properties/") and path.endswith("/publish"):
+            raise ApiError(HTTPStatus.METHOD_NOT_ALLOWED, "method_not_allowed", "Use POST to publish a property")
 
         if path.startswith("/api/properties/"):
             property_id = self._extract_property_id(path)
-            property_row = self.repository.get_property(property_id)
-            property_row["media"] = self.repository.list_media(property_id=property_id)
-            self._send_json({"property": property_row})
+            self._send_json({"property": self.services.get_property(property_id)})
             return
 
         if path == "/api/conversations":
@@ -186,7 +246,22 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/media":
             property_id = self._first_int(query, "property_id", minimum=1)
-            self._send_json({"media": self.repository.list_media(property_id=property_id, limit=self._query_limit(query))})
+            self._send_json(
+                self.services.list_media(
+                    property_id=property_id,
+                    kind=self._first(query, "kind"),
+                    include_deleted=self._first_bool(query, "include_deleted"),
+                    page=self._query_page(query),
+                    limit=self._query_limit(query),
+                    sort=self._first(query, "sort") or "created_at",
+                    order=self._first(query, "order") or "desc",
+                )
+            )
+            return
+
+        if path.startswith("/api/media/"):
+            media_id = self._extract_resource_id(path, "/api/media/", resource="Media")
+            self._send_json({"media": self.services.get_media(media_id)})
             return
 
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
@@ -255,19 +330,39 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 summary=self._optional_text(body.get("summary")) or "Bien LAWIM_V2",
                 city=self._require_text(body, "city"),
                 country=self._optional_text(body.get("country")) or "Cameroon",
+                address_line=self._optional_text(body.get("address_line")),
+                region=self._optional_text(body.get("region")),
+                postal_code=self._optional_text(body.get("postal_code")),
                 latitude=self._optional_float(body.get("latitude")),
                 longitude=self._optional_float(body.get("longitude")),
                 price_min=self._optional_int(body.get("price_min"), minimum=0),
                 price_max=self._optional_int(body.get("price_max"), minimum=0),
                 currency=self._optional_text(body.get("currency")) or "XAF",
-                status=self._coerce_status(body.get("status")),
+                status=self._coerce_status(body.get("status"), default="draft"),
+                availability=self._coerce_availability(body.get("availability")),
                 property_type=self._optional_text(body.get("property_type")) or "apartment",
                 owner_organization_id=self._optional_int(body.get("owner_organization_id"), minimum=1),
                 bedrooms=self._optional_int(body.get("bedrooms"), minimum=0) or 0,
                 bathrooms=self._optional_int(body.get("bathrooms"), minimum=0) or 0,
                 area_sqm=self._optional_float(body.get("area_sqm")) or 0.0,
+                metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
+                listing_code=self._optional_text(body.get("listing_code")),
             )
             self._send_json({"property": property_row}, status=HTTPStatus.CREATED)
+            return
+
+        if path == "/api/media/upload":
+            media_row = self.services.upload_media(
+                actor=actor,
+                property_id=self._require_int(body, "property_id", minimum=1),
+                filename=self._require_text(body, "filename"),
+                content_base64=self._require_text(body, "content_base64"),
+                kind=self._optional_text(body.get("kind")) or "image",
+                caption=self._optional_text(body.get("caption")) or "LAWIM_V2 media",
+                mime_type=self._optional_text(body.get("mime_type")),
+                metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
+            )
+            self._send_json({"media": media_row}, status=HTTPStatus.CREATED)
             return
 
         if path == "/api/media":
@@ -303,6 +398,16 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 body=self._require_text(body, "body"),
             )
             self._send_json({"message": message}, status=HTTPStatus.CREATED)
+            return
+
+        if path.startswith("/api/properties/") and path.endswith("/publish"):
+            property_id = self._extract_property_id(path, suffix="/publish")
+            property_row = self.services.publish_property(
+                actor=actor,
+                property_id=property_id,
+                version=self._optional_int(body.get("version"), minimum=1),
+            )
+            self._send_json({"property": property_row})
             return
 
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
@@ -370,17 +475,23 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 summary=self._optional_text(body.get("summary")),
                 city=self._optional_text(body.get("city")),
                 country=self._optional_text(body.get("country")),
+                address_line=self._optional_text(body.get("address_line")),
+                region=self._optional_text(body.get("region")),
+                postal_code=self._optional_text(body.get("postal_code")),
                 latitude=self._optional_float(body.get("latitude")),
                 longitude=self._optional_float(body.get("longitude")),
                 price_min=self._optional_int(body.get("price_min"), minimum=0),
                 price_max=self._optional_int(body.get("price_max"), minimum=0),
                 currency=self._optional_text(body.get("currency")),
                 status=self._optional_text(body.get("status")),
+                availability=self._optional_text(body.get("availability")),
                 property_type=self._optional_text(body.get("property_type")),
                 owner_organization_id=self._optional_int(body.get("owner_organization_id"), minimum=1),
                 bedrooms=self._optional_int(body.get("bedrooms"), minimum=0),
                 bathrooms=self._optional_int(body.get("bathrooms"), minimum=0),
                 area_sqm=self._optional_float(body.get("area_sqm")),
+                metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
+                version=self._optional_int(body.get("version"), minimum=1),
             )
             self._send_json({"property": property_row})
             return
@@ -397,6 +508,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 kind=self._optional_text(body.get("kind")),
                 url=self._optional_text(body.get("url")),
                 caption=self._optional_text(body.get("caption")),
+                thumbnail_url=self._optional_text(body.get("thumbnail_url")),
+                metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
+                position=self._optional_int(body.get("position"), minimum=0),
+                version=self._optional_int(body.get("version"), minimum=1),
             )
             self._send_json({"media": media_row})
             return
@@ -510,6 +625,22 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             raise ApiError(HTTPStatus.NOT_FOUND, "asset_not_found", f"Static asset not found: {name}") from exc
         self._send_text(content, content_type=content_type)
 
+    def _send_media_asset(self, path: str) -> None:
+        relative = path[len("/media/") :].lstrip("/")
+        if not relative or ".." in relative.split("/"):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_media_path", "Invalid media path")
+        target = self.config.media_storage_path / relative
+        if not target.is_file():
+            raise ApiError(HTTPStatus.NOT_FOUND, "asset_not_found", "Media asset not found")
+        content_type = mimetypes.guess_type(target.name)[0] or "application/octet-stream"
+        body = target.read_bytes()
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(body)
+
     def _require_text(self, payload: dict[str, Any], key: str) -> str:
         value = payload.get(key)
         if not isinstance(value, str) or not value.strip():
@@ -587,6 +718,32 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if normalized not in {"draft", "open", "closed", "published", "archived"}:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'status' must be one of draft, open, closed, published or archived")
         return normalized
+
+    def _coerce_availability(self, value: object | None, default: str = "available") -> str:
+        if value is None:
+            return default
+        if not isinstance(value, str):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'availability' must be a string")
+        normalized = value.strip().lower()
+        if normalized not in {"available", "reserved", "sold", "rented", "unavailable"}:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'availability' is invalid")
+        return normalized
+
+    def _first_bool(self, query: dict[str, list[str]], key: str) -> bool:
+        value = self._first(query, key)
+        if value is None:
+            return False
+        return value.strip().lower() in {"1", "true", "yes", "on"}
+
+    def _require_query(self, query: dict[str, list[str]], key: str) -> str:
+        value = self._first(query, key)
+        if not value:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", f"Query '{key}' is required")
+        return value
+
+    def _query_page(self, query: dict[str, list[str]]) -> int:
+        value = self._first_int(query, "page", minimum=1)
+        return value or 1
 
     def _first(self, query: dict[str, list[str]], key: str) -> str | None:
         value = query.get(key)
@@ -669,7 +826,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:
-    repository = LawimRepository(config.db_path)
+    adapter = resolve_persistence_adapter(config.db_path)
+    repository = adapter.create_repository()
     repository.initialize(seed_demo_data=config.seed_demo_data)
     services = LawimServices(repository, config)
 

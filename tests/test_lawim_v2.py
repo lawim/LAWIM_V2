@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import io
 import json
 import tempfile
@@ -62,6 +63,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
             secret_provider="external",
             seed_demo_data=True,
             session_ttl_seconds=3600,
+            media_storage_path=Path(self.tempdir.name) / "media",
         )
 
     def tearDown(self) -> None:
@@ -111,7 +113,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
         health_payload = health.body_json()
         self.assertEqual(health_payload["status"], "ok")
         self.assertEqual(health_payload["database"]["driver"], "sqlite")
-        self.assertEqual(health_payload["database"]["schema_version"], 3)
+        self.assertEqual(health_payload["database"]["schema_version"], 4)
         self.assertEqual(health_payload["database"]["migration"]["target_engine"], "postgresql")
         self.assertTrue(health_payload["environment"]["seed_demo_data"])
         self.assertEqual(health_payload["summary"]["organizations"], 3)
@@ -198,7 +200,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
                 profile = repository.backend_profile()
                 self.assertEqual(profile["driver"], "sqlite")
                 self.assertEqual(profile["adapter"], "sqlite-repository")
-                self.assertEqual(profile["schema_version"], 3)
+                self.assertEqual(profile["schema_version"], 4)
                 self.assertEqual(profile["migration"]["orm"], "prisma")
                 self.assertEqual(profile["migration"]["target_engine"], "postgresql")
                 self.assertEqual(profile["seed"]["name"], "demo")
@@ -215,7 +217,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
 
                 first_seed = repository.seed_demo_data()
                 self.assertTrue(first_seed["seeded"])
-                self.assertEqual(first_seed["schema_version"], 3)
+                self.assertEqual(first_seed["schema_version"], 4)
                 self.assertEqual(repository.summary()["organizations"], 3)
 
                 second_seed = repository.seed_demo_data()
@@ -225,14 +227,14 @@ class LawimV2ExecutableBaselineTest(TestCase):
                 repository.close()
 
     def test_referential_integrity_blocks_orphaned_deletes(self) -> None:
-        seeded_properties = self.repository.list_properties(limit=10)
+        seeded_properties = self.repository.list_properties(limit=10)["items"]
         property_with_conversation = next(
             property_row for property_row in seeded_properties if property_row["title"] == "Bonanjo City Loft"
         )
         agent = self.repository.get_user_by_email("agent@lawim.local")
 
-        with self.assertRaises(ConflictError):
-            self.repository.delete_property(int(property_with_conversation["id"]))
+        soft_deleted = self.repository.delete_property(int(property_with_conversation["id"]))
+        self.assertTrue(soft_deleted["soft"])
 
         with self.assertRaises(ConflictError):
             self.repository.delete_user(int(agent["id"]))
@@ -371,7 +373,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
             f"/api/properties/{property_id}",
             method="PATCH",
             token=token,
-            body={"title": "Riverfront Loft Prime", "status": "published"},
+            body={"title": "Riverfront Loft Prime", "status": "published", "version": property_payload["version"]},
         )
         self.assertEqual(property_update.status, HTTPStatus.OK)
         self.assertEqual(property_update.body_json()["property"]["title"], "Riverfront Loft Prime")
@@ -439,7 +441,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
         deleted_property_lookup = self.invoke(f"/api/properties/{property_id}", token=token)
         self.assertEqual(deleted_property_lookup.status, HTTPStatus.NOT_FOUND)
 
-        events = self.invoke("/api/events?limit=10", token=token)
+        events = self.invoke("/api/events?limit=20", token=token)
         self.assertEqual(events.status, HTTPStatus.OK)
         event_kinds = [event["kind"] for event in events.body_json()["events"]]
         self.assertIn("property_deleted", event_kinds)
@@ -514,3 +516,140 @@ class LawimV2ExecutableBaselineTest(TestCase):
         messages = self.invoke(f"/api/conversations/{conversation_id}/messages", token=token)
         self.assertEqual(messages.status, HTTPStatus.OK)
         self.assertEqual(len(messages.body_json()["messages"]), 1)
+
+    def test_property_platform_pagination_filtering_and_dto_contract(self) -> None:
+        login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        token = str(login.body_json()["token"])
+
+        listing = self.invoke("/api/properties?city=Douala&status=published&limit=2&page=1&sort=title&order=asc", token=token)
+        self.assertEqual(listing.status, HTTPStatus.OK)
+        payload = listing.body_json()
+        self.assertIn("pagination", payload)
+        self.assertEqual(payload["pagination"]["limit"], 2)
+        self.assertGreaterEqual(payload["pagination"]["total"], 1)
+        self.assertIn("geo", payload["properties"][0])
+        self.assertIn("price", payload["properties"][0])
+        self.assertIn("listing_code", payload["properties"][0])
+
+    def test_geo_normalization_search_and_contracts(self) -> None:
+        normalized = self.invoke("/api/geo/normalize?city=douala&country=cameroun&region=littoral")
+        self.assertEqual(normalized.status, HTTPStatus.OK)
+        location = normalized.body_json()["location"]
+        self.assertEqual(location["city"], "Douala")
+        self.assertEqual(location["country"], "Cameroon")
+        self.assertEqual(location["region"], "Littoral")
+        self.assertIn("search_key", location)
+
+        search = self.invoke("/api/geo/search?q=douala")
+        self.assertEqual(search.status, HTTPStatus.OK)
+        self.assertGreaterEqual(len(search.body_json()["locations"]), 1)
+
+        contracts = self.invoke("/api/geo/contracts")
+        self.assertEqual(contracts.status, HTTPStatus.OK)
+        self.assertEqual(contracts.body_json()["thumbnail"]["strategy"], "deterministic-svg-placeholder")
+
+    def test_media_upload_storage_and_soft_delete(self) -> None:
+        login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        token = str(login.body_json()["token"])
+
+        created = self.invoke(
+            "/api/properties",
+            method="POST",
+            token=token,
+            body={
+                "title": "Media Platform Loft",
+                "summary": "Property used to validate media upload.",
+                "city": "Douala",
+                "country": "Cameroon",
+                "price_min": 100000,
+                "price_max": 150000,
+                "status": "draft",
+            },
+        )
+        property_id = int(created.body_json()["property"]["id"])
+        content = base64.b64encode(b"fake-image-bytes").decode("ascii")
+
+        uploaded = self.invoke(
+            "/api/media/upload",
+            method="POST",
+            token=token,
+            body={
+                "property_id": property_id,
+                "filename": "cover.jpg",
+                "content_base64": content,
+                "caption": "Cover image",
+            },
+        )
+        self.assertEqual(uploaded.status, HTTPStatus.CREATED)
+        media_payload = uploaded.body_json()["media"]
+        self.assertTrue(str(media_payload["url"]).startswith("http://127.0.0.1:3000/media/"))
+        self.assertIn("thumbnail", media_payload)
+        self.assertEqual(media_payload["mime_type"], "image/jpeg")
+
+        media_id = int(media_payload["id"])
+        deleted = self.invoke(f"/api/media/{media_id}", method="DELETE", token=token)
+        self.assertEqual(deleted.status, HTTPStatus.OK)
+        self.assertTrue(deleted.body_json()["soft"])
+
+        missing = self.invoke(f"/api/media/{media_id}", token=token)
+        self.assertEqual(missing.status, HTTPStatus.NOT_FOUND)
+
+    def test_property_publish_endpoint_and_optimistic_locking(self) -> None:
+        login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        token = str(login.body_json()["token"])
+
+        created = self.invoke(
+            "/api/properties",
+            method="POST",
+            token=token,
+            body={
+                "title": "Publish Candidate",
+                "summary": "Ready for publication.",
+                "city": "Douala",
+                "country": "Cameroon",
+                "price_min": 120000,
+                "price_max": 180000,
+                "status": "draft",
+            },
+        )
+        property_row = created.body_json()["property"]
+        property_id = int(property_row["id"])
+
+        published = self.invoke(
+            f"/api/properties/{property_id}/publish",
+            method="POST",
+            token=token,
+            body={"version": property_row["version"]},
+        )
+        self.assertEqual(published.status, HTTPStatus.OK)
+        self.assertEqual(published.body_json()["property"]["status"], "published")
+        self.assertIsNotNone(published.body_json()["property"]["lifecycle"]["published_at"])
+
+        stale = self.invoke(
+            f"/api/properties/{property_id}",
+            method="PATCH",
+            token=token,
+            body={"title": "Stale update", "version": property_row["version"]},
+        )
+        self.assertEqual(stale.status, HTTPStatus.CONFLICT)
+
+    def test_postgresql_adapter_profile_is_prepared(self) -> None:
+        from lawim_v2.persistence_adapter import PostgreSQLPersistenceAdapter
+
+        adapter = PostgreSQLPersistenceAdapter("postgresql://example.test/lawim")
+        profile = adapter.backend_profile(schema_version=4)
+        self.assertEqual(profile["driver"], "postgresql")
+        self.assertEqual(profile["adapter"], "postgresql-repository-prepared")
+        self.assertEqual(profile["status"], "prepared")

@@ -34,10 +34,12 @@ class AppConfig:
     secret_provider: str
     seed_demo_data: bool
     session_ttl_seconds: int
+    media_storage_path: Path
 
     @classmethod
     def from_env(cls) -> "AppConfig":
         db_path = Path(os.getenv("LAWIM_DB_PATH", "data/runtime/lawim.sqlite3")).expanduser()
+        media_storage_path = Path(os.getenv("LAWIM_MEDIA_STORAGE_PATH", "data/runtime/media")).expanduser()
         return cls(
             host=os.getenv("LAWIM_HOST", "0.0.0.0"),
             port=_int_env("LAWIM_PORT", 3000),
@@ -49,7 +51,9 @@ class AppConfig:
             secret_provider=os.getenv("SECRET_PROVIDER", "external"),
             seed_demo_data=_bool_env("LAWIM_SEED_DEMO_DATA", True),
             session_ttl_seconds=_int_env("LAWIM_SESSION_TTL_SECONDS", 7 * 24 * 60 * 60),
+            media_storage_path=media_storage_path,
         )
 
     def ensure_runtime_dir(self) -> None:
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        self.media_storage_path.mkdir(parents=True, exist_ok=True)

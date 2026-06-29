@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 3
+APPLICATION_SCHEMA_VERSION = 4
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -108,6 +108,7 @@ APPLICATION_MIGRATION = MigrationSpec(
         "SQLite remains the live runtime engine.",
         "The manifest is stable enough to generate Prisma models later.",
         "The live runtime must stay compatible with the current SQLite baseline.",
+        "PostgreSQL profile and adapter contract are finalized for MEGA_WAVE_004.",
     ),
 )
 
@@ -178,32 +179,59 @@ APPLICATION_SCHEMA = SchemaManifest(
             primary_key="id",
             columns=(
                 "id",
+                "listing_code",
                 "title",
                 "summary",
+                "address_line",
                 "city",
+                "region",
+                "postal_code",
                 "country",
+                "search_key",
                 "latitude",
                 "longitude",
                 "price_min",
                 "price_max",
                 "currency",
                 "status",
+                "availability",
                 "property_type",
                 "owner_organization_id",
                 "bedrooms",
                 "bathrooms",
                 "area_sqm",
+                "metadata_json",
+                "version",
+                "published_at",
+                "deleted_at",
                 "created_at",
             ),
+            unique=(("listing_code",),),
             foreign_keys=(ForeignKeySpec("owner_organization_id", "organizations.id"),),
-            indexes=("idx_properties_status_city",),
+            indexes=("idx_properties_status_city", "idx_properties_search_key", "idx_properties_deleted_at"),
         ),
         TableSpec(
             name="media",
             purpose="Media linked to a property listing.",
             primary_key="id",
-            columns=("id", "property_id", "kind", "url", "caption", "created_at"),
+            columns=(
+                "id",
+                "property_id",
+                "kind",
+                "url",
+                "caption",
+                "storage_path",
+                "mime_type",
+                "size_bytes",
+                "thumbnail_url",
+                "metadata_json",
+                "position",
+                "version",
+                "deleted_at",
+                "created_at",
+            ),
             foreign_keys=(ForeignKeySpec("property_id", "properties.id", on_delete="cascade"),),
+            indexes=("idx_media_property_position",),
         ),
         TableSpec(
             name="conversations",
@@ -274,6 +302,21 @@ def build_persistence_profile(db_path: Path, schema_version: int) -> dict[str, o
     }
 
 
+def build_postgresql_profile(dsn: str, schema_version: int) -> dict[str, object]:
+    manifest = build_application_schema_manifest()
+    return {
+        "driver": "postgresql",
+        "adapter": "postgresql-repository-prepared",
+        "dsn": dsn,
+        "schema_version": schema_version,
+        "schema_fingerprint": build_schema_fingerprint(manifest),
+        "schema": manifest,
+        "migration": build_migration_profile(),
+        "seed": build_seed_profile(),
+        "status": "prepared",
+    }
+
+
 def build_demo_seed_blueprint() -> dict[str, object]:
     return {
         "organizations": [
@@ -305,7 +348,10 @@ def build_demo_seed_blueprint() -> dict[str, object]:
             {
                 "title": "Bonanjo City Loft",
                 "summary": "Appartement urbain lumineux proche des services et du centre d'affaires.",
+                "address_line": "12 Rue de la Joie, Bonanjo",
                 "city": "Douala",
+                "region": "Littoral",
+                "postal_code": "BP-4020",
                 "country": "Cameroon",
                 "latitude": 4.05,
                 "longitude": 9.7,
@@ -313,16 +359,20 @@ def build_demo_seed_blueprint() -> dict[str, object]:
                 "price_max": 300000,
                 "currency": "XAF",
                 "status": "published",
+                "availability": "available",
                 "property_type": "apartment",
                 "owner_organization_slug": "lawim-owner-desk",
                 "bedrooms": 2,
                 "bathrooms": 1,
                 "area_sqm": 78,
+                "metadata": {"featured": True, "source": "demo"},
             },
             {
                 "title": "Kribi Beach Villa",
                 "summary": "Villa familiale avec vue mer, terrasse et accès rapide aux plages.",
+                "address_line": "Route de la Plage",
                 "city": "Kribi",
+                "region": "South",
                 "country": "Cameroon",
                 "latitude": 2.938,
                 "longitude": 9.907,
@@ -330,6 +380,7 @@ def build_demo_seed_blueprint() -> dict[str, object]:
                 "price_max": 520000,
                 "currency": "XAF",
                 "status": "published",
+                "availability": "available",
                 "property_type": "villa",
                 "owner_organization_slug": "lawim-owner-desk",
                 "bedrooms": 4,
@@ -339,7 +390,9 @@ def build_demo_seed_blueprint() -> dict[str, object]:
             {
                 "title": "Bastos Studio",
                 "summary": "Studio compact prêt à louer pour un usage urbain et flexible.",
+                "address_line": "Avenue Kennedy",
                 "city": "Yaounde",
+                "region": "Centre",
                 "country": "Cameroon",
                 "latitude": 3.867,
                 "longitude": 11.516,
@@ -347,6 +400,7 @@ def build_demo_seed_blueprint() -> dict[str, object]:
                 "price_max": 220000,
                 "currency": "XAF",
                 "status": "published",
+                "availability": "reserved",
                 "property_type": "studio",
                 "owner_organization_slug": "lawim-owner-desk",
                 "bedrooms": 1,
