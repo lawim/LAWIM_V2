@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: ACTIF
-- Sprint actif: Sprint 020
+- Sprint actif: Sprint 021
 - Sprint status: EN COURS
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 020, le registre des risques est normalise et Sprint 020 est ouvert.
-- Derniere trace technique: Sprint 020 est ouvert sur Mobile foundation; T20.01, T20.02 et T20.03 sont fermes et la cloture du sprint reste a tracer
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 021, le registre des risques est normalise et Sprint 021 est ouvert.
+- Derniere trace technique: Sprint 021 est ouvert sur Security hardening; T21.01 reste a venir
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -330,7 +330,7 @@
         - Sprint 020: ouvert
 
                                         ## Sprint 020
-        - Statut: EN COURS
+        - Statut: CLOTURE
         - Objectif: preparer une application mobile legere et synchronisee.
         - Tickets: T20.01 - Mobile shell, T20.02 - Offline sync, T20.03 - Push and payment handoff
         - Tickets couverts: 3/3
@@ -348,7 +348,26 @@
         - T20.01: ferme
         - T20.02: ferme
         - T20.03: ferme
-        - Sprint 021: non ouvert
+        - Rapport de cloture: reports/sprint-020/SPRINT-020-CLOSURE-REPORT.md
+        - Sprint 021: ouvert
+
+                                        ## Sprint 021
+        - Statut: EN COURS
+        - Objectif: renforcer la securite, l audit et la detection de fraude.
+        - Tickets: T21.01 - Zero trust hardening, T21.02 - Audit and privacy, T21.03 - Fraud controls
+        - Tickets couverts: 0/3
+        - Ordre recommande: T21.01 -> T21.02 -> T21.03
+        - Dependances: S004, S014, S018, S020.
+        - Chemin critique: DG-0028 -> T21.01 -> T21.02 -> T21.03 -> cloture Sprint 021
+        - Risques d entree: faux positifs, trop de friction, surface d attaque residuelle.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de lancement: reports/sprint-021/SPRINT-021-PLANNING-REPORT.md
+        - Avancement:
+        - T21.01: a venir
+        - T21.02: a venir
+        - T21.03: a venir
+        - Sprint 022: non ouvert
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md

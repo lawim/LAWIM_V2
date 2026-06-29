@@ -2,7 +2,7 @@
 
 - Date: 2026-06-29
 - Scope: Sprint 020 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 preparer une application mobile legere et synchronisee.
@@ -42,4 +42,5 @@ DG-0028
 - Rapport de ticket: reports/sprint-020/T20.01-mobile-shell-report.md
 - Rapport de ticket: reports/sprint-020/T20.02-offline-sync-report.md
 - Rapport de ticket: reports/sprint-020/T20.03-push-and-payment-handoff-report.md
-- Sprint 021: non ouvert
+- Rapport de cloture: reports/sprint-020/SPRINT-020-CLOSURE-REPORT.md
+- Sprint 021: ouvert
