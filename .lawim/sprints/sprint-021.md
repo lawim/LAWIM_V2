@@ -33,11 +33,12 @@ DG-0028
 
 ## Avancement
 - T21.01: ferme
-- T21.02: a venir
+- T21.02: ferme
 - T21.03: a venir
-- Tickets couverts: 1/3
+- Tickets couverts: 2/3
 
 ## Preparation
 - Rapport de lancement: reports/sprint-021/SPRINT-021-PLANNING-REPORT.md
 - Rapport de ticket: reports/sprint-021/T21.01-zero-trust-hardening-report.md
+- Rapport de ticket: reports/sprint-021/T21.02-audit-and-privacy-report.md
 - Sprint 022: non ouvert

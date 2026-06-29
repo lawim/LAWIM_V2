@@ -551,3 +551,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T21.01 | PMO | Validation du zero trust et des frontieres | PMO | PASS | 2026-06-29 | reports/sprint-021/T21.01-zero-trust-hardening-report.md |
 | T21.01 | Integration | Cohesion zero trust hardening | Integration Manager | READY FOR T21.02 | 2026-06-29 | reports/sprint-021/T21.01-zero-trust-hardening-report.md |
 | T21.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T21.02 | 2026-06-29 | reports/sprint-021/T21.01-zero-trust-hardening-report.md |
+| T21.02 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-021/T21.02-audit-and-privacy-report.md |
+| T21.02 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-021/T21.02-audit-and-privacy-report.md |
+| T21.02 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-021/T21.02-audit-and-privacy-report.md |
+| T21.02 | PMO | Validation de l audit, de la privacy et de la retention | PMO | PASS | 2026-06-29 | reports/sprint-021/T21.02-audit-and-privacy-report.md |
+| T21.02 | Integration | Cohesion audit and privacy | Integration Manager | READY FOR T21.03 | 2026-06-29 | reports/sprint-021/T21.02-audit-and-privacy-report.md |
+| T21.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T21.03 | 2026-06-29 | reports/sprint-021/T21.02-audit-and-privacy-report.md |
