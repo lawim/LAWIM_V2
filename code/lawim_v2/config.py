@@ -12,6 +12,16 @@ def _bool_env(name: str, default: bool) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _int_env(name: str, default: int) -> int:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    try:
+        return int(value)
+    except ValueError as exc:
+        raise ValueError(f"Environment variable {name} must be an integer") from exc
+
+
 @dataclass(frozen=True, slots=True)
 class AppConfig:
     host: str
@@ -27,10 +37,10 @@ class AppConfig:
 
     @classmethod
     def from_env(cls) -> "AppConfig":
-        db_path = Path(os.getenv("LAWIM_DB_PATH", "data/runtime/lawim.sqlite3"))
+        db_path = Path(os.getenv("LAWIM_DB_PATH", "data/runtime/lawim.sqlite3")).expanduser()
         return cls(
             host=os.getenv("LAWIM_HOST", "0.0.0.0"),
-            port=int(os.getenv("LAWIM_PORT", "3000")),
+            port=_int_env("LAWIM_PORT", 3000),
             db_path=db_path,
             app_env=os.getenv("APP_ENV", "development"),
             stack_profile=os.getenv("STACK_PROFILE", "development"),
@@ -38,7 +48,7 @@ class AppConfig:
             public_base_url=os.getenv("PUBLIC_BASE_URL", "http://localhost:3000"),
             secret_provider=os.getenv("SECRET_PROVIDER", "external"),
             seed_demo_data=_bool_env("LAWIM_SEED_DEMO_DATA", True),
-            session_ttl_seconds=int(os.getenv("LAWIM_SESSION_TTL_SECONDS", str(7 * 24 * 60 * 60))),
+            session_ttl_seconds=_int_env("LAWIM_SESSION_TTL_SECONDS", 7 * 24 * 60 * 60),
         )
 
     def ensure_runtime_dir(self) -> None:

@@ -3,8 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 import logging
-import mimetypes
-from dataclasses import asdict
+import sqlite3
+from dataclasses import asdict, replace
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
@@ -13,11 +13,12 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 from .config import AppConfig
-from .db import LawimRepository
+from .db import LawimRepository, RepositoryError
 from .matching import MatchCriteria
 
 
 LOGGER = logging.getLogger("lawim_v2")
+MAX_JSON_BODY_BYTES = 1_048_576
 
 
 class ApiError(Exception):
@@ -43,6 +44,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_get()
         except ApiError as exc:
             self._send_json_error(exc.status, exc.code, exc.message)
+        except RepositoryError as exc:
+            self._send_json_error(exc.status, exc.code, str(exc))
         except Exception as exc:  # pragma: no cover - unexpected runtime failure
             LOGGER.exception("Unhandled GET error: %s", exc)
             self._send_json_error(HTTPStatus.INTERNAL_SERVER_ERROR, "internal_error", "Unexpected server error")
@@ -52,6 +55,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_post()
         except ApiError as exc:
             self._send_json_error(exc.status, exc.code, exc.message)
+        except RepositoryError as exc:
+            self._send_json_error(exc.status, exc.code, str(exc))
         except Exception as exc:  # pragma: no cover - unexpected runtime failure
             LOGGER.exception("Unhandled POST error: %s", exc)
             self._send_json_error(HTTPStatus.INTERNAL_SERVER_ERROR, "internal_error", "Unexpected server error")
@@ -172,8 +177,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/api/conversations/"):
             conversation_id = self._extract_conversation_id(path)
             conversation = self.repository.get_conversation(conversation_id)
-            if conversation is None:
-                raise ApiError(HTTPStatus.NOT_FOUND, "conversation_not_found", "Conversation not found")
             conversation["messages"] = self.repository.list_messages(conversation_id)
             self._send_json({"conversation": conversation})
             return
@@ -184,7 +187,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/media":
-            property_id = self._first_int(query, "property_id")
+            property_id = self._first_int(query, "property_id", minimum=1)
             self._send_json({"media": self.repository.list_media(property_id=property_id, limit=self._query_limit(query))})
             return
 
@@ -215,7 +218,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             password = self._require_text(body, "password")
             full_name = self._require_text(body, "full_name")
             role = self._coerce_role(body.get("role"))
-            organization_id = self._optional_int(body.get("organization_id"))
+            organization_id = self._optional_int(body.get("organization_id"), minimum=1)
             user = self.repository.create_user(
                 email=email,
                 full_name=full_name,
@@ -259,7 +262,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 full_name=self._require_text(body, "full_name"),
                 role=self._coerce_role(body.get("role")),
                 password=self._require_text(body, "password"),
-                organization_id=self._optional_int(body.get("organization_id")),
+                organization_id=self._optional_int(body.get("organization_id"), minimum=1),
             )
             self._send_json({"user": self.repository.public_user(user_row)}, status=HTTPStatus.CREATED)
             return
@@ -272,14 +275,14 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 country=self._optional_text(body.get("country")) or "Cameroon",
                 latitude=self._optional_float(body.get("latitude")),
                 longitude=self._optional_float(body.get("longitude")),
-                price_min=self._optional_int(body.get("price_min")),
-                price_max=self._optional_int(body.get("price_max")),
+                price_min=self._optional_int(body.get("price_min"), minimum=0),
+                price_max=self._optional_int(body.get("price_max"), minimum=0),
                 currency=self._optional_text(body.get("currency")) or "XAF",
                 status=self._coerce_status(body.get("status")),
                 property_type=self._optional_text(body.get("property_type")) or "apartment",
-                owner_organization_id=self._optional_int(body.get("owner_organization_id")),
-                bedrooms=self._optional_int(body.get("bedrooms")) or 0,
-                bathrooms=self._optional_int(body.get("bathrooms")) or 0,
+                owner_organization_id=self._optional_int(body.get("owner_organization_id"), minimum=1),
+                bedrooms=self._optional_int(body.get("bedrooms"), minimum=0) or 0,
+                bathrooms=self._optional_int(body.get("bathrooms"), minimum=0) or 0,
                 area_sqm=self._optional_float(body.get("area_sqm")) or 0.0,
             )
             self._send_json({"property": property_row}, status=HTTPStatus.CREATED)
@@ -287,7 +290,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/media":
             media_row = self.repository.create_media(
-                property_id=self._require_int(body, "property_id"),
+                property_id=self._require_int(body, "property_id", minimum=1),
                 kind=self._optional_text(body.get("kind")) or "image",
                 url=self._require_text(body, "url"),
                 caption=self._optional_text(body.get("caption")) or "LAWIM_V2 media",
@@ -297,12 +300,12 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/conversations":
             conversation = self.repository.create_conversation(
-                user_id=self._require_int(body, "user_id", default=user["id"]),
-                property_id=self._optional_int(body.get("property_id")),
+                user_id=self._require_int(body, "user_id", default=user["id"], minimum=1),
+                property_id=self._optional_int(body.get("property_id"), minimum=1),
                 subject=self._require_text(body, "subject"),
                 status=self._coerce_status(body.get("status"), default="open"),
                 initial_message=self._optional_text(body.get("initial_message")),
-                sender_user_id=self._optional_int(body.get("sender_user_id")) or user["id"],
+                sender_user_id=self._optional_int(body.get("sender_user_id"), minimum=1) or user["id"],
             )
             self._send_json({"conversation": conversation}, status=HTTPStatus.CREATED)
             return
@@ -311,7 +314,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             conversation_id = self._extract_conversation_id(path, suffix="/messages")
             message = self.repository.add_message(
                 conversation_id=conversation_id,
-                sender_user_id=self._require_int(body, "sender_user_id", default=user["id"]),
+                sender_user_id=self._require_int(body, "sender_user_id", default=user["id"], minimum=1),
                 body=self._require_text(body, "body"),
             )
             self._send_json({"message": message}, status=HTTPStatus.CREATED)
@@ -336,9 +339,20 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         raise ApiError(HTTPStatus.UNAUTHORIZED, "missing_token", "Bearer token required")
 
     def _read_json_body(self) -> dict[str, Any]:
-        length = int(self.headers.get("Content-Length", "0"))
+        content_length = self.headers.get("Content-Length", "0")
+        try:
+            length = int(content_length)
+        except ValueError as exc:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_content_length", "Content-Length must be an integer") from exc
+        if length < 0:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_content_length", "Content-Length must be non-negative")
         if length <= 0:
             return {}
+        if length > MAX_JSON_BODY_BYTES:
+            raise ApiError(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, "payload_too_large", "Request body exceeds the supported size")
+        content_type = self.headers.get("Content-Type", "")
+        if "application/json" not in content_type.lower():
+            raise ApiError(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, "unsupported_media_type", "POST requests must use application/json")
         raw = self.rfile.read(length)
         if not raw:
             return {}
@@ -350,7 +364,13 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_json", "Request body must be a JSON object")
         return payload
 
-    def _send_json(self, payload: dict[str, Any], *, status: HTTPStatus = HTTPStatus.OK) -> None:
+    def _send_json(
+        self,
+        payload: dict[str, Any],
+        *,
+        status: HTTPStatus = HTTPStatus.OK,
+        extra_headers: dict[str, str] | None = None,
+    ) -> None:
         body = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -358,6 +378,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        if status == HTTPStatus.UNAUTHORIZED:
+            self.send_header("WWW-Authenticate", 'Bearer realm="LAWIM_V2"')
+        if extra_headers:
+            for header, value in extra_headers.items():
+                self.send_header(header, value)
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("X-Frame-Options", "DENY")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
@@ -372,6 +397,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
+        self.send_header(
+            "Content-Security-Policy",
+            "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'self'; form-action 'self'",
+        )
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("X-Frame-Options", "DENY")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
@@ -394,53 +423,74 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
     def _optional_text(self, value: object) -> str | None:
         if value is None:
             return None
-        if isinstance(value, str):
-            stripped = value.strip()
-            return stripped or None
-        return str(value)
+        if not isinstance(value, str):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Optional text fields must be strings")
+        stripped = value.strip()
+        return stripped or None
 
-    def _optional_int(self, value: object) -> int | None:
+    def _optional_int(self, value: object, *, minimum: int | None = None) -> int | None:
         if value is None or value == "":
             return None
         try:
-            return int(value)
+            parsed = int(value)
         except (TypeError, ValueError) as exc:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Expected an integer") from exc
+        if minimum is not None and parsed < minimum:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", f"Expected an integer greater than or equal to {minimum}")
+        return parsed
 
-    def _require_int(self, payload: dict[str, Any], key: str, default: int | None = None) -> int:
+    def _require_int(self, payload: dict[str, Any], key: str, default: int | None = None, *, minimum: int | None = None) -> int:
         value = payload.get(key, default)
         if value is None:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", f"Field '{key}' is required")
         try:
-            return int(value)
+            parsed = int(value)
         except (TypeError, ValueError) as exc:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", f"Field '{key}' must be an integer") from exc
+        if minimum is not None and parsed < minimum:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", f"Field '{key}' must be greater than or equal to {minimum}")
+        return parsed
 
     def _optional_float(self, value: object) -> float | None:
         if value is None or value == "":
             return None
         try:
-            return float(value)
+            parsed = float(value)
         except (TypeError, ValueError) as exc:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Expected a number") from exc
+        if not float("-inf") < parsed < float("inf"):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Expected a finite number")
+        return parsed
 
     def _coerce_role(self, value: object | None) -> str:
-        if not isinstance(value, str):
+        if value is None:
             return "agent"
+        if not isinstance(value, str):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'role' must be a string")
         normalized = value.strip().lower()
-        return normalized if normalized in {"admin", "agent", "owner"} else "agent"
+        if normalized not in {"admin", "agent", "owner"}:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'role' must be one of admin, agent or owner")
+        return normalized
 
     def _coerce_kind(self, value: object | None) -> str:
-        if not isinstance(value, str):
+        if value is None:
             return "agency"
+        if not isinstance(value, str):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'kind' must be a string")
         normalized = value.strip().lower()
-        return normalized if normalized in {"agency", "partner", "owner"} else "agency"
+        if normalized not in {"agency", "partner", "owner"}:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'kind' must be one of agency, partner or owner")
+        return normalized
 
     def _coerce_status(self, value: object | None, default: str = "published") -> str:
-        if not isinstance(value, str):
+        if value is None:
             return default
+        if not isinstance(value, str):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'status' must be a string")
         normalized = value.strip().lower()
-        return normalized if normalized in {"draft", "open", "closed", "published", "archived"} else default
+        if normalized not in {"draft", "open", "closed", "published", "archived"}:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'status' must be one of draft, open, closed, published or archived")
+        return normalized
 
     def _first(self, query: dict[str, list[str]], key: str) -> str | None:
         value = query.get(key)
@@ -449,26 +499,35 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         stripped = value[0].strip()
         return stripped or None
 
-    def _first_int(self, query: dict[str, list[str]], key: str) -> int | None:
+    def _first_int(self, query: dict[str, list[str]], key: str, *, minimum: int | None = None) -> int | None:
         value = self._first(query, key)
         if value is None:
             return None
         try:
-            return int(value)
+            parsed = int(value)
         except ValueError as exc:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", f"Query '{key}' must be an integer") from exc
+        if minimum is not None and parsed < minimum:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", f"Query '{key}' must be greater than or equal to {minimum}")
+        return parsed
 
     def _query_limit(self, query: dict[str, list[str]]) -> int:
-        value = self._first_int(query, "limit")
+        value = self._first_int(query, "limit", minimum=1)
         if value is None:
             return 10
-        return max(1, min(value, 100))
+        if value > 100:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'limit' must not exceed 100")
+        return value
 
     def _build_match_criteria(self, query: dict[str, list[str]]) -> MatchCriteria:
+        budget_min = self._first_int(query, "budget_min", minimum=0)
+        budget_max = self._first_int(query, "budget_max", minimum=0)
+        if budget_min is not None and budget_max is not None and budget_min > budget_max:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'budget_min' cannot exceed 'budget_max'")
         return MatchCriteria(
             city=self._first(query, "city"),
-            budget_min=self._first_int(query, "budget_min"),
-            budget_max=self._first_int(query, "budget_max"),
+            budget_min=budget_min,
+            budget_max=budget_max,
             latitude=self._optional_float(self._first(query, "latitude")),
             longitude=self._optional_float(self._first(query, "longitude")),
             limit=self._query_limit(query),
@@ -480,9 +539,12 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Property route not found")
         raw_id = path[len(marker) : len(path) - len(suffix) if suffix else None]
         try:
-            return int(raw_id.strip("/"))
+            property_id = int(raw_id.strip("/"))
         except ValueError as exc:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_property_id", "Property id must be numeric") from exc
+        if property_id < 1:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_property_id", "Property id must be positive")
+        return property_id
 
     def _extract_conversation_id(self, path: str, suffix: str = "") -> int:
         marker = "/api/conversations/"
@@ -490,9 +552,12 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Conversation route not found")
         raw_id = path[len(marker) : len(path) - len(suffix) if suffix else None]
         try:
-            return int(raw_id.strip("/"))
+            conversation_id = int(raw_id.strip("/"))
         except ValueError as exc:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_conversation_id", "Conversation id must be numeric") from exc
+        if conversation_id < 1:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_conversation_id", "Conversation id must be positive")
+        return conversation_id
 
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:
@@ -519,68 +584,35 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--no-seed", action="store_true", help="Skip demo data seeding")
     args = parser.parse_args(argv)
 
-    config = AppConfig.from_env()
-    if args.host:
-        config = config.__class__(
-            host=args.host,
-            port=config.port,
-            db_path=config.db_path,
-            app_env=config.app_env,
-            stack_profile=config.stack_profile,
-            log_level=config.log_level,
-            public_base_url=config.public_base_url,
-            secret_provider=config.secret_provider,
-            seed_demo_data=config.seed_demo_data,
-            session_ttl_seconds=config.session_ttl_seconds,
-        )
-    if args.port:
-        config = config.__class__(
-            host=config.host,
-            port=args.port,
-            db_path=config.db_path,
-            app_env=config.app_env,
-            stack_profile=config.stack_profile,
-            log_level=config.log_level,
-            public_base_url=config.public_base_url,
-            secret_provider=config.secret_provider,
-            seed_demo_data=config.seed_demo_data,
-            session_ttl_seconds=config.session_ttl_seconds,
-        )
-    if args.db:
-        config = config.__class__(
-            host=config.host,
-            port=config.port,
-            db_path=Path(args.db),
-            app_env=config.app_env,
-            stack_profile=config.stack_profile,
-            log_level=config.log_level,
-            public_base_url=config.public_base_url,
-            secret_provider=config.secret_provider,
-            seed_demo_data=config.seed_demo_data,
-            session_ttl_seconds=config.session_ttl_seconds,
-        )
+    try:
+        config = AppConfig.from_env()
+    except ValueError as exc:
+        parser.error(str(exc))
+
+    overrides: dict[str, object] = {}
+    if args.host is not None:
+        overrides["host"] = args.host
+    if args.port is not None:
+        overrides["port"] = args.port
+    if args.db is not None:
+        overrides["db_path"] = Path(args.db).expanduser()
     if args.no_seed:
-        config = config.__class__(
-            host=config.host,
-            port=config.port,
-            db_path=config.db_path,
-            app_env=config.app_env,
-            stack_profile=config.stack_profile,
-            log_level=config.log_level,
-            public_base_url=config.public_base_url,
-            secret_provider=config.secret_provider,
-            seed_demo_data=False,
-            session_ttl_seconds=config.session_ttl_seconds,
-        )
+        overrides["seed_demo_data"] = False
+    if overrides:
+        config = replace(config, **overrides)
 
     logging.basicConfig(
         level=getattr(logging, config.log_level.upper(), logging.INFO),
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
     )
 
-    config.ensure_runtime_dir()
-    server = create_server(config)
-    LOGGER.info("LAWIM_V2 listening on http://%s:%s", config.host, config.port)
+    try:
+        config.ensure_runtime_dir()
+        server = create_server(config)
+    except (OSError, sqlite3.Error) as exc:
+        parser.error(str(exc))
+    bound_host, bound_port = server.server_address[:2]
+    LOGGER.info("LAWIM_V2 listening on http://%s:%s", bound_host, bound_port)
     LOGGER.info("Database path: %s", config.db_path)
     try:
         server.serve_forever()

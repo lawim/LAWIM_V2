@@ -66,17 +66,29 @@ class LawimV2ExecutableBaselineTest(TestCase):
         self.repository.close()
         self.tempdir.cleanup()
 
-    def invoke(self, path: str, *, method: str = "GET", body: dict[str, object] | None = None, token: str | None = None) -> DummyHandler:
-        headers: dict[str, str] = {}
+    def invoke(
+        self,
+        path: str,
+        *,
+        method: str = "GET",
+        body: dict[str, object] | None = None,
+        raw_body: bytes | None = None,
+        headers: dict[str, str] | None = None,
+        token: str | None = None,
+    ) -> DummyHandler:
+        request_headers: dict[str, str] = dict(headers or {})
         payload = b""
+        if raw_body is not None:
+            payload = raw_body
+            request_headers.setdefault("Content-Length", str(len(payload)))
         if body is not None:
             payload = json.dumps(body).encode("utf-8")
-            headers["Content-Length"] = str(len(payload))
-            headers["Content-Type"] = "application/json"
+            request_headers.setdefault("Content-Length", str(len(payload)))
+            request_headers.setdefault("Content-Type", "application/json")
         if token:
-            headers["Authorization"] = f"Bearer {token}"
+            request_headers["Authorization"] = f"Bearer {token}"
 
-        handler = DummyHandler(self.repository, self.config, path, method=method, headers=headers, body=payload)
+        handler = DummyHandler(self.repository, self.config, path, method=method, headers=request_headers, body=payload)
         if method == "GET":
             handler.do_GET()
         elif method == "POST":
@@ -102,10 +114,68 @@ class LawimV2ExecutableBaselineTest(TestCase):
         html = self.invoke("/")
         self.assertEqual(html.status, HTTPStatus.OK)
         self.assertIn("LAWIM_V2 Executable Baseline", html.body_text())
+        self.assertIn("Content-Security-Policy", html.response_headers)
+        self.assertIn("default-src 'self'", html.response_headers["Content-Security-Policy"])
 
         js = self.invoke("/app.js")
         self.assertEqual(js.status, HTTPStatus.OK)
         self.assertIn("renderBootstrap", js.body_text())
+
+    def test_missing_resources_and_invalid_input_are_rejected_cleanly(self) -> None:
+        property_lookup = self.invoke("/api/properties/999999")
+        self.assertEqual(property_lookup.status, HTTPStatus.NOT_FOUND)
+        self.assertEqual(property_lookup.body_json()["error"]["code"], "not_found")
+
+        conversation_messages = self.invoke("/api/conversations/999999/messages")
+        self.assertEqual(conversation_messages.status, HTTPStatus.NOT_FOUND)
+
+        unauthorized = self.invoke("/api/me")
+        self.assertEqual(unauthorized.status, HTTPStatus.UNAUTHORIZED)
+        self.assertEqual(unauthorized.response_headers["WWW-Authenticate"], 'Bearer realm="LAWIM_V2"')
+
+        invalid_content_type = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            raw_body=b"{}",
+            headers={"Content-Type": "text/plain"},
+        )
+        self.assertEqual(invalid_content_type.status, HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
+
+        invalid_content_length = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            raw_body=b"{}",
+            headers={"Content-Type": "application/json", "Content-Length": "abc"},
+        )
+        self.assertEqual(invalid_content_length.status, HTTPStatus.BAD_REQUEST)
+
+        invalid_match_range = self.invoke("/api/matches?budget_min=10&budget_max=5")
+        self.assertEqual(invalid_match_range.status, HTTPStatus.BAD_REQUEST)
+
+    def test_property_validation_rejects_inverted_price_ranges(self) -> None:
+        login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        token = str(login.body_json()["token"])
+
+        rejected = self.invoke(
+            "/api/properties",
+            method="POST",
+            token=token,
+            body={
+                "title": "Bad Range Property",
+                "summary": "This should fail.",
+                "city": "Douala",
+                "country": "Cameroon",
+                "price_min": 340000,
+                "price_max": 260000,
+                "property_type": "apartment",
+            },
+        )
+        self.assertEqual(rejected.status, HTTPStatus.BAD_REQUEST)
+        self.assertEqual(rejected.body_json()["error"]["code"], "invalid_state")
 
     def test_authentication_and_matching_flow_work_end_to_end(self) -> None:
         login = self.invoke(

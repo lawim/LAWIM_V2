@@ -6,6 +6,7 @@ import threading
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from http import HTTPStatus
 from pathlib import Path
 
 from .matching import MatchCriteria, rank_properties
@@ -113,6 +114,35 @@ def utcnow() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
+def _require_text(value: object, field: str) -> str:
+    if not isinstance(value, str):
+        raise ValidationError(f"{field} must be a string")
+    stripped = value.strip()
+    if not stripped:
+        raise ValidationError(f"{field} is required")
+    return stripped
+
+
+class RepositoryError(ValueError):
+    status = HTTPStatus.INTERNAL_SERVER_ERROR
+    code = "repository_error"
+
+
+class NotFoundError(RepositoryError):
+    status = HTTPStatus.NOT_FOUND
+    code = "not_found"
+
+
+class ConflictError(RepositoryError):
+    status = HTTPStatus.CONFLICT
+    code = "conflict"
+
+
+class ValidationError(RepositoryError):
+    status = HTTPStatus.BAD_REQUEST
+    code = "invalid_state"
+
+
 @dataclass(frozen=True, slots=True)
 class DemoSeed:
     admin_password: str = "lawim-demo"
@@ -122,12 +152,17 @@ class LawimRepository:
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        self.connection = sqlite3.connect(self.db_path, check_same_thread=False)
+        self.connection = sqlite3.connect(self.db_path, check_same_thread=False, timeout=30.0)
+        self.lock = threading.RLock()
+        self.seed = seed or DemoSeed()
+        self._configure_connection()
+
+    def _configure_connection(self) -> None:
         self.connection.row_factory = sqlite3.Row
         self.connection.execute("PRAGMA foreign_keys = ON")
         self.connection.execute("PRAGMA journal_mode = WAL")
-        self.lock = threading.RLock()
-        self.seed = seed or DemoSeed()
+        self.connection.execute("PRAGMA synchronous = NORMAL")
+        self.connection.execute("PRAGMA busy_timeout = 5000")
 
     def close(self) -> None:
         with self.lock:
@@ -304,11 +339,31 @@ class LawimRepository:
                 (kind, json.dumps(payload, ensure_ascii=False), utcnow()),
             )
 
+    def get_organization_by_id(self, organization_id: int) -> dict[str, object]:
+        organization = self.one("SELECT * FROM organizations WHERE id = ?", (organization_id,))
+        if organization is None:
+            raise NotFoundError(f"unknown organization id: {organization_id}")
+        return organization
+
     def get_organization_by_slug(self, slug: str) -> dict[str, object]:
         organization = self.one("SELECT * FROM organizations WHERE slug = ?", (slug,))
         if organization is None:
-            raise ValueError(f"unknown organization slug: {slug}")
+            raise NotFoundError(f"unknown organization slug: {slug}")
         return organization
+
+    def get_user_by_id(self, user_id: int) -> dict[str, object]:
+        user = self.one(
+            """
+            SELECT u.*, o.name AS organization_name, o.slug AS organization_slug
+            FROM users u
+            LEFT JOIN organizations o ON o.id = u.organization_id
+            WHERE u.id = ?
+            """,
+            (user_id,),
+        )
+        if user is None:
+            raise NotFoundError(f"unknown user id: {user_id}")
+        return user
 
     def get_user_by_email(self, email: str) -> dict[str, object]:
         user = self.one(
@@ -321,10 +376,14 @@ class LawimRepository:
             (email,),
         )
         if user is None:
-            raise ValueError(f"unknown user email: {email}")
+            raise NotFoundError(f"unknown user email: {email}")
         return user
 
     def create_organization(self, *, name: str, slug: str, kind: str = "agency", city: str | None = None) -> dict[str, object]:
+        name = _require_text(name, "organization name")
+        slug = _require_text(slug, "organization slug")
+        if kind not in {"agency", "partner", "owner"}:
+            raise ValidationError(f"unsupported organization kind: {kind}")
         with self._transaction() as conn:
             try:
                 cursor = conn.execute(
@@ -332,13 +391,15 @@ class LawimRepository:
                     (name, slug, kind, city, utcnow()),
                 )
             except sqlite3.IntegrityError as exc:
-                raise ValueError("organization already exists") from exc
+                raise ConflictError("organization already exists") from exc
         organization = self.one("SELECT * FROM organizations WHERE id = ?", (cursor.lastrowid,))
         assert organization is not None
         self.record_event("organization_created", organization)
         return organization
 
     def list_organizations(self, limit: int = 50) -> list[dict[str, object]]:
+        if limit < 1:
+            raise ValidationError("limit must be positive")
         return self.all(
             """
             SELECT o.*, COUNT(u.id) AS user_count
@@ -360,6 +421,13 @@ class LawimRepository:
         password: str,
         organization_id: int | None = None,
     ) -> dict[str, object]:
+        email = _require_text(email, "email")
+        full_name = _require_text(full_name, "full_name")
+        password = _require_text(password, "password")
+        if role not in {"admin", "agent", "owner"}:
+            raise ValidationError(f"unsupported user role: {role}")
+        if organization_id is not None:
+            self.get_organization_by_id(organization_id)
         password_record = hash_password(password)
         with self._transaction() as conn:
             try:
@@ -380,7 +448,7 @@ class LawimRepository:
                     ),
                 )
             except sqlite3.IntegrityError as exc:
-                raise ValueError("user already exists") from exc
+                raise ConflictError("user already exists") from exc
         user = self.one(
             """
             SELECT u.*, o.name AS organization_name, o.slug AS organization_slug
@@ -395,6 +463,8 @@ class LawimRepository:
         return user
 
     def list_users(self, limit: int = 50) -> list[dict[str, object]]:
+        if limit < 1:
+            raise ValidationError("limit must be positive")
         return self.all(
             """
             SELECT u.*, o.name AS organization_name, o.slug AS organization_slug
@@ -423,6 +493,7 @@ class LawimRepository:
         return user
 
     def create_session(self, *, user_id: int, ttl_seconds: int) -> dict[str, object]:
+        self.get_user_by_id(user_id)
         token = create_session_token()
         now = datetime.now(timezone.utc)
         expires = now + timedelta(seconds=ttl_seconds)
@@ -483,6 +554,32 @@ class LawimRepository:
         bathrooms: int = 0,
         area_sqm: float = 0,
     ) -> dict[str, object]:
+        title = _require_text(title, "title")
+        summary = _require_text(summary, "summary")
+        city = _require_text(city, "city")
+        country = _require_text(country, "country")
+        currency = _require_text(currency, "currency")
+        property_type = _require_text(property_type, "property_type")
+        if status not in {"draft", "open", "closed", "published", "archived"}:
+            raise ValidationError(f"unsupported property status: {status}")
+        if owner_organization_id is not None:
+            self.get_organization_by_id(owner_organization_id)
+        if price_min is not None and price_min < 0:
+            raise ValidationError("price_min must be non-negative")
+        if price_max is not None and price_max < 0:
+            raise ValidationError("price_max must be non-negative")
+        if price_min is not None and price_max is not None and price_min > price_max:
+            raise ValidationError("price_min cannot exceed price_max")
+        if latitude is not None and not -90.0 <= latitude <= 90.0:
+            raise ValidationError("latitude must be between -90 and 90")
+        if longitude is not None and not -180.0 <= longitude <= 180.0:
+            raise ValidationError("longitude must be between -180 and 180")
+        if bedrooms < 0:
+            raise ValidationError("bedrooms must be non-negative")
+        if bathrooms < 0:
+            raise ValidationError("bathrooms must be non-negative")
+        if area_sqm < 0:
+            raise ValidationError("area_sqm must be non-negative")
         with self._transaction() as conn:
             cursor = conn.execute(
                 """
@@ -527,10 +624,12 @@ class LawimRepository:
             (property_id,),
         )
         if property_row is None:
-            raise ValueError("unknown property")
+            raise NotFoundError(f"unknown property id: {property_id}")
         return property_row
 
     def list_properties(self, *, city: str | None = None, status: str | None = None, limit: int = 50) -> list[dict[str, object]]:
+        if limit < 1:
+            raise ValidationError("limit must be positive")
         clauses = ["1 = 1"]
         params: list[object] = []
         if city:
@@ -555,9 +654,12 @@ class LawimRepository:
         )
 
     def list_media(self, property_id: int | None = None, limit: int = 50) -> list[dict[str, object]]:
+        if limit < 1:
+            raise ValidationError("limit must be positive")
         clauses = ["1 = 1"]
         params: list[object] = []
         if property_id is not None:
+            self.get_property(property_id)
             clauses.append("m.property_id = ?")
             params.append(property_id)
         params.append(limit)
@@ -574,6 +676,9 @@ class LawimRepository:
         )
 
     def create_media(self, *, property_id: int, kind: str, url: str, caption: str) -> dict[str, object]:
+        kind = _require_text(kind, "kind")
+        url = _require_text(url, "url")
+        caption = _require_text(caption, "caption")
         self.get_property(property_id)
         with self._transaction() as conn:
             cursor = conn.execute(
@@ -598,8 +703,17 @@ class LawimRepository:
         initial_message: str | None = None,
         sender_user_id: int | None = None,
     ) -> dict[str, object]:
+        subject = _require_text(subject, "subject")
+        if initial_message is not None:
+            initial_message = _require_text(initial_message, "initial_message")
+        self.get_user_by_id(user_id)
         if property_id is not None:
             self.get_property(property_id)
+        if sender_user_id is not None:
+            self.get_user_by_id(sender_user_id)
+        if status not in {"open", "closed", "archived"}:
+            raise ValidationError(f"unsupported conversation status: {status}")
+        added_initial_message = False
         with self._transaction() as conn:
             cursor = conn.execute(
                 """
@@ -608,21 +722,26 @@ class LawimRepository:
                 """,
                 (property_id, user_id, subject, status, utcnow()),
             )
-        conversation = self.get_conversation(cursor.lastrowid)
-        assert conversation is not None
-        if initial_message:
-            self.add_message(
-                conversation_id=conversation["id"],
-                sender_user_id=sender_user_id or user_id,
-                body=initial_message,
-            )
-            conversation = self.get_conversation(cursor.lastrowid)
-            assert conversation is not None
+            conversation_id = cursor.lastrowid
+            if initial_message:
+                conn.execute(
+                    """
+                    INSERT INTO messages (conversation_id, sender_user_id, body, created_at)
+                    VALUES (?, ?, ?, ?)
+                    """,
+                    (conversation_id, sender_user_id or user_id, initial_message, utcnow()),
+                )
+                added_initial_message = True
+        conversation = self.get_conversation(conversation_id)
         self.record_event("conversation_created", {"id": conversation["id"], "property_id": property_id})
+        if added_initial_message:
+            self.record_event("message_added", {"conversation_id": conversation["id"], "sender_user_id": sender_user_id or user_id})
         return conversation
 
     def add_message(self, conversation_id: int, sender_user_id: int, body: str) -> dict[str, object]:
+        body = _require_text(body, "body")
         self.get_conversation(conversation_id)
+        self.get_user_by_id(sender_user_id)
         with self._transaction() as conn:
             cursor = conn.execute(
                 """
@@ -636,8 +755,8 @@ class LawimRepository:
         self.record_event("message_added", {"conversation_id": conversation_id, "sender_user_id": sender_user_id})
         return message
 
-    def get_conversation(self, conversation_id: int) -> dict[str, object] | None:
-        return self.one(
+    def get_conversation(self, conversation_id: int) -> dict[str, object]:
+        conversation = self.one(
             """
             SELECT c.*, p.title AS property_title, u.full_name AS requester_name, u.email AS requester_email,
                    (SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count,
@@ -649,8 +768,13 @@ class LawimRepository:
             """,
             (conversation_id,),
         )
+        if conversation is None:
+            raise NotFoundError(f"unknown conversation id: {conversation_id}")
+        return conversation
 
     def list_conversations(self, limit: int = 50) -> list[dict[str, object]]:
+        if limit < 1:
+            raise ValidationError("limit must be positive")
         return self.all(
             """
             SELECT c.*, p.title AS property_title, u.full_name AS requester_name, u.email AS requester_email,
