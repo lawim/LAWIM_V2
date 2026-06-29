@@ -605,3 +605,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T24.01 | PMO | Validation de la beta interne et du feedback | PMO | PASS | 2026-06-29 | reports/sprint-024/T24.01-internal-beta-qa-report.md |
 | T24.01 | Integration | Cohesion internal beta QA | Integration Manager | READY FOR T24.02 | 2026-06-29 | reports/sprint-024/T24.01-internal-beta-qa-report.md |
 | T24.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T24.02 | 2026-06-29 | reports/sprint-024/T24.01-internal-beta-qa-report.md |
+| T24.02 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-024/T24.02-performance-and-regression-report.md |
+| T24.02 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-024/T24.02-performance-and-regression-report.md |
+| T24.02 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-024/T24.02-performance-and-regression-report.md |
+| T24.02 | PMO | Validation de la stabilite et des performances | PMO | PASS | 2026-06-29 | reports/sprint-024/T24.02-performance-and-regression-report.md |
+| T24.02 | Integration | Cohesion performance and regression | Integration Manager | READY FOR T24.03 | 2026-06-29 | reports/sprint-024/T24.02-performance-and-regression-report.md |
+| T24.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T24.03 | 2026-06-29 | reports/sprint-024/T24.02-performance-and-regression-report.md |
