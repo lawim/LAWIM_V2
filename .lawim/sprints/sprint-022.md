@@ -2,7 +2,7 @@
 
 - Date: 2026-06-29
 - Scope: Sprint 022 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 preproduction, go/no-go, validation humaine et readiness operationnelle.
@@ -46,4 +46,5 @@ DG-0028
 - Rapport de ticket: reports/sprint-022/T22.01-livrable-principal-report.md
 - Rapport de ticket: reports/sprint-022/T22.02-validation-et-tests-report.md
 - Rapport de ticket: reports/sprint-022/T22.03-rollback-et-observabilite-report.md
-- Sprint 023: non ouvert
+- Rapport de cloture: reports/sprint-022/SPRINT-022-CLOSURE-REPORT.md
+- Sprint 023: ouvert

@@ -112,3 +112,5 @@
 | 2026-06-29 | DEC-002 | Livrable principal, readiness operationnelle contract confirmed | DevOps | T22.01 / Livrable principal | Active | reports/sprint-022/T22.01-livrable-principal-report.md |
 | 2026-06-29 | DEC-003 | Validation et tests, acceptance humaine contract confirmed | QA | T22.02 / Validation et tests | Active | reports/sprint-022/T22.02-validation-et-tests-report.md |
 | 2026-06-29 | DEC-004 | Rollback et observabilite, traces et seuils contract confirmed | DevOps | T22.03 / Rollback et observabilite | Active | reports/sprint-022/T22.03-rollback-et-observabilite-report.md |
+| 2026-06-29 | DEC-001 | Sprint 023 opening and migration plan confirmed | Directeur General | Sprint 023 / migration | Active | reports/sprint-023/SPRINT-023-PLANNING-REPORT.md |
+| 2026-06-29 | DEC-002 | Livrable principal, readiness operationnelle contract confirmed | DevOps | T23.01 / Livrable principal | Active | reports/sprint-023/T23.01-livrable-principal-report.md |

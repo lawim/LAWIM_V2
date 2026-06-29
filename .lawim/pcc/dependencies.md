@@ -91,3 +91,7 @@
 | D-087 | T22.01 depend de T21.03 et des references CI/CD / QA / production checklist | Sprint 022 | High | Confirmed |
 | D-088 | T22.02 depend de T22.01 et des references QA / governance | Sprint 022 | High | Confirmed |
 | D-089 | T22.03 depend de T22.02 et des references git strategy / production checklist | Sprint 022 | High | Confirmed |
+| D-090 | Decision DG d'ouverture du Sprint 023 a tracer avant toute execution | Gouvernance | High | Confirmed |
+| D-091 | T23.01 depend de T22.03 et des references git strategy / development governance / production checklist | Sprint 023 | High | Confirmed |
+| D-092 | T23.02 depend de T23.01 et des references QA / governance | Sprint 023 | High | Confirmed |
+| D-093 | T23.03 depend de T23.02 et des references git strategy / production checklist | Sprint 023 | High | Confirmed |

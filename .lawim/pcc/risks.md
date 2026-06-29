@@ -110,3 +110,5 @@
 | R-002 | T22.01 livrable principal consolidates the preproduction readiness contract | High | Low | Keep readiness explicit, staging aligned and go/no-go traceable | DevOps | Mitigated |
 | R-003 | T22.02 validation et tests consolidates the acceptance and test contract | High | Low | Keep tests explicit, acceptance human and go/no-go traceable | QA | Mitigated |
 | R-004 | T22.03 rollback et observabilite consolidates the traces and thresholds contract | High | Low | Keep rollback explicit, traces sufficient and thresholds aligned | DevOps | Mitigated |
+| R-001 | Sprint 023 opening requires stable migration contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
+| R-002 | T23.01 Livrable principal consolidates the migration readiness contract | High | Low | Keep migration nucleus explicit, readiness aligned and go/no-go traceable | DevOps | Mitigated |
