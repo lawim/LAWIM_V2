@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 024, le registre des risques est normalise, et le Sprint 023 est cloture.
-- Derniere trace technique: Sprint 024 est ouvert sur beta et production readiness; Sprint 023 est cloture; T24.01 est ferme; T24.02 est ferme; T24.03 reste a venir
+- Derniere trace technique: Sprint 024 est ouvert sur beta et production readiness; Sprint 023 est cloture; T24.01 est ferme; T24.02 est ferme; T24.03 est ferme; Sprint 024 reste a cloturer
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -418,7 +418,7 @@
         - Statut: EN COURS
         - Objectif: stabiliser, tester et preparer la mise en production.
         - Tickets: T24.01 - Internal beta QA, T24.02 - Performance and regression, T24.03 - Release candidate and go-live
-        - Tickets couverts: 2/3
+        - Tickets couverts: 3/3
         - Ordre recommande: T24.01 -> T24.02 -> T24.03
         - Dependances: S023.
         - Chemin critique: DG-0028 -> T24.01 -> T24.02 -> T24.03 -> cloture Sprint 024
@@ -428,10 +428,11 @@
         - Rapport de lancement: reports/sprint-024/SPRINT-024-PLANNING-REPORT.md
         - Rapport de ticket: reports/sprint-024/T24.01-internal-beta-qa-report.md
         - Rapport de ticket: reports/sprint-024/T24.02-performance-and-regression-report.md
+        - Rapport de ticket: reports/sprint-024/T24.03-release-candidate-and-go-live-report.md
         - Avancement:
         - T24.01: ferme
         - T24.02: ferme
-        - T24.03: a venir
+        - T24.03: ferme
         - Sprint 025: non ouvert
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md

@@ -611,3 +611,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T24.02 | PMO | Validation de la stabilite et des performances | PMO | PASS | 2026-06-29 | reports/sprint-024/T24.02-performance-and-regression-report.md |
 | T24.02 | Integration | Cohesion performance and regression | Integration Manager | READY FOR T24.03 | 2026-06-29 | reports/sprint-024/T24.02-performance-and-regression-report.md |
 | T24.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T24.03 | 2026-06-29 | reports/sprint-024/T24.02-performance-and-regression-report.md |
+| T24.03 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
+| T24.03 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
+| T24.03 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
+| T24.03 | PMO | Validation de la release candidate et du rollback | PMO | PASS | 2026-06-29 | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
+| T24.03 | Integration | Cohesion release candidate and go-live | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
+| T24.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |

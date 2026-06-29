@@ -117,3 +117,4 @@
 | R-001 | Sprint 024 opening requires stable beta readiness contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T24.01 internal beta QA consolidates the internal beta, user journeys and feedback contract | High | Low | Keep scenarios explicit, feedback captured and internal validation traceable | QA | Mitigated |
 | R-003 | T24.02 performance and regression consolidates the stability and robustness contract | High | Low | Keep performance explicit, load traces sufficient and non-regression traceable | QA | Mitigated |
+| R-004 | T24.03 release candidate and go-live consolidates the checklist and rollback contract | High | Low | Keep release candidate explicit, checklist complete and rollback traceable | DevOps | Mitigated |
