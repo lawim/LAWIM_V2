@@ -89,3 +89,4 @@
 | D-085 | T21.03 depend de T21.02 et des procedures fraud / partner suspension | Sprint 021 | High | Confirmed |
 | D-086 | Decision DG d'ouverture du Sprint 022 a tracer avant toute execution | Gouvernance | High | Confirmed |
 | D-087 | T22.01 depend de T21.03 et des references CI/CD / QA / production checklist | Sprint 022 | High | Confirmed |
+| D-088 | T22.02 depend de T22.01 et des references QA / governance | Sprint 022 | High | Confirmed |

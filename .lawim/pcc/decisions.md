@@ -110,3 +110,4 @@
 | 2026-06-29 | DEC-004 | Fraud controls, signals and escalation contract confirmed for Sprint 021 | Security | T21.03 / Fraud controls | Active | reports/sprint-021/T21.03-fraud-controls-report.md |
 | 2026-06-29 | DEC-001 | Sprint 022 opening and preproduction plan confirmed | Directeur General | Sprint 022 / preproduction | Active | reports/sprint-022/SPRINT-022-PLANNING-REPORT.md |
 | 2026-06-29 | DEC-002 | Livrable principal, readiness operationnelle contract confirmed | DevOps | T22.01 / Livrable principal | Active | reports/sprint-022/T22.01-livrable-principal-report.md |
+| 2026-06-29 | DEC-003 | Validation et tests, acceptance humaine contract confirmed | QA | T22.02 / Validation et tests | Active | reports/sprint-022/T22.02-validation-et-tests-report.md |

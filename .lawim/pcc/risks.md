@@ -108,3 +108,4 @@
 | R-004 | T21.03 fraud controls consolidates the signals, anomalies and abuse contract | High | Low | Keep fraud signals explicit, escalate clearly and align partner suspension with procedures | Security | Mitigated |
 | R-001 | Sprint 022 opening requires stable preproduction contracts | High | Low | Reuse the official references, keep the opening decision traceable and defer implementation until the sprint gate is confirmed | PMO | Open |
 | R-002 | T22.01 livrable principal consolidates the preproduction readiness contract | High | Low | Keep readiness explicit, staging aligned and go/no-go traceable | DevOps | Mitigated |
+| R-003 | T22.02 validation et tests consolidates the acceptance and test contract | High | Low | Keep tests explicit, acceptance human and go/no-go traceable | QA | Mitigated |

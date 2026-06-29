@@ -37,11 +37,12 @@ DG-0028
 
 ## Avancement
 - T22.01: ferme
-- T22.02: a venir
+- T22.02: ferme
 - T22.03: a venir
-- Tickets couverts: 1/3
+- Tickets couverts: 2/3
 
 ## Preparation
 - Rapport de lancement: reports/sprint-022/SPRINT-022-PLANNING-REPORT.md
 - Rapport de ticket: reports/sprint-022/T22.01-livrable-principal-report.md
+- Rapport de ticket: reports/sprint-022/T22.02-validation-et-tests-report.md
 - Sprint 023: non ouvert
