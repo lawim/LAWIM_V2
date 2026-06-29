@@ -617,3 +617,15 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T24.03 | PMO | Validation de la release candidate et du rollback | PMO | PASS | 2026-06-29 | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
 | T24.03 | Integration | Cohesion release candidate and go-live | Integration Manager | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
 | T24.03 | DG | Validation finale de gouvernance | Directeur General | READY FOR SPRINT REVIEW | 2026-06-29 | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
+
+## Cloture Sprint 024
+
+Le Sprint 024 est termine sur la base des 3 tickets planifies. Les tickets T24.01, T24.02 et T24.03 sont couverts; le risque bloquant reste false et aucun Sprint 025 n'est ouvert.
+
+| Scope | Gate | Criteria | Validator | Result | Date | Reference |
+| --- | --- | --- | --- | --- | --- | --- |
+| Sprint 024 | Architecture | Cohesion globale des 3 tickets, dependances et conventions | Chief Architect + Tech Lead | Valide avec reserves | 2026-06-29 | reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md |
+| Sprint 024 | QA | Couverture documentaire, conformite et completude des livrables | QA | Valide | 2026-06-29 | reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md |
+| Sprint 024 | Security | Conformite globale, secrets, risques residuels et recommandations | Security | Valide | 2026-06-29 | reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md |
+| Sprint 024 | Integration | Cohesion de bout en bout et gel du sprint | Integration Manager | Valide | 2026-06-29 | reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md |
+| Sprint 024 | DG | Decision finale de cloture | Directeur General | Pending | 2026-06-29 | reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md |

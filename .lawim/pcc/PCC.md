@@ -4,12 +4,12 @@
 - Programme: LAWIM_V2
 - Programme status: ACTIF
 - Sprint actif: Sprint 024
-- Sprint status: EN COURS
-- Decision: GO AVEC RESERVES
+- Sprint status: CLOTURE
+- Decision: CLOTURE EN ATTENTE DG
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 024, le registre des risques est normalise, et le Sprint 023 est cloture.
-- Derniere trace technique: Sprint 024 est ouvert sur beta et production readiness; Sprint 023 est cloture; T24.01 est ferme; T24.02 est ferme; T24.03 est ferme; Sprint 024 reste a cloturer
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 024, le registre des risques est normalise, et le Sprint 024 est cloture sans ouverture du Sprint 025.
+- Derniere trace technique: Sprint 024 est cloture; Sprint 023 est cloture; T24.01 est ferme; T24.02 est ferme; T24.03 est ferme; Sprint 025 reste non ouvert
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -415,7 +415,7 @@
         - Sprint 024: ouvert
 
                                         ## Sprint 024
-        - Statut: EN COURS
+        - Statut: CLOTURE
         - Objectif: stabiliser, tester et preparer la mise en production.
         - Tickets: T24.01 - Internal beta QA, T24.02 - Performance and regression, T24.03 - Release candidate and go-live
         - Tickets couverts: 3/3
@@ -429,6 +429,7 @@
         - Rapport de ticket: reports/sprint-024/T24.01-internal-beta-qa-report.md
         - Rapport de ticket: reports/sprint-024/T24.02-performance-and-regression-report.md
         - Rapport de ticket: reports/sprint-024/T24.03-release-candidate-and-go-live-report.md
+        - Rapport de cloture: reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md
         - Avancement:
         - T24.01: ferme
         - T24.02: ferme

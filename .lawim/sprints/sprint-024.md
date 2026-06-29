@@ -2,7 +2,7 @@
 
 - Date: 2026-06-29
 - Scope: Sprint 024 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 stabiliser, tester et preparer la mise en production.
@@ -42,4 +42,5 @@ DG-0028
 - Rapport de ticket: reports/sprint-024/T24.01-internal-beta-qa-report.md
 - Rapport de ticket: reports/sprint-024/T24.02-performance-and-regression-report.md
 - Rapport de ticket: reports/sprint-024/T24.03-release-candidate-and-go-live-report.md
+- Rapport de cloture: reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md
 - Sprint 025: non ouvert

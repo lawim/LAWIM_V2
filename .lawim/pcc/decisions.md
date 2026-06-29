@@ -120,3 +120,4 @@
 | 2026-06-29 | DEC-002 | Internal beta QA, experience interne contract confirmed | QA | T24.01 / Internal beta QA | Active | reports/sprint-024/T24.01-internal-beta-qa-report.md |
 | 2026-06-29 | DEC-003 | Performance and regression, stabilite et performances contract confirmed | QA | T24.02 / Performance and regression | Active | reports/sprint-024/T24.02-performance-and-regression-report.md |
 | 2026-06-29 | DEC-004 | Release candidate and go-live, checklist et rollback contract confirmed | DevOps | T24.03 / Release candidate and go-live | Active | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
+| 2026-06-29 | DEC-005 | Sprint 024 closure proposal and no Sprint 025 opening | Directeur General | Sprint 024 closure / no Sprint 025 | Proposed | reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md |
