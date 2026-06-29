@@ -9,7 +9,7 @@
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
 - Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 020, le registre des risques est normalise et Sprint 020 est ouvert.
-- Derniere trace technique: Sprint 020 est ouvert sur Mobile foundation; T20.01 est ferme et T20.02 reste a venir
+- Derniere trace technique: Sprint 020 est ouvert sur Mobile foundation; T20.01 et T20.02 sont fermes et T20.03 reste a venir
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -333,7 +333,7 @@
         - Statut: EN COURS
         - Objectif: preparer une application mobile legere et synchronisee.
         - Tickets: T20.01 - Mobile shell, T20.02 - Offline sync, T20.03 - Push and payment handoff
-        - Tickets couverts: 1/3
+        - Tickets couverts: 2/3
         - Ordre recommande: T20.01 -> T20.02 -> T20.03
         - Dependances: S004, S012, S014, S015, S016.
         - Chemin critique: DG-0028 -> T20.01 -> T20.02 -> T20.03 -> cloture Sprint 020
@@ -342,9 +342,10 @@
         - Validation DG: en attente
         - Rapport de lancement: reports/sprint-020/SPRINT-020-PLANNING-REPORT.md
         - Rapport de ticket: reports/sprint-020/T20.01-mobile-shell-report.md
+        - Rapport de ticket: reports/sprint-020/T20.02-offline-sync-report.md
         - Avancement:
         - T20.01: ferme
-        - T20.02: a venir
+        - T20.02: ferme
         - T20.03: a venir
         - Sprint 021: non ouvert
 ## Referentiels de pilotage

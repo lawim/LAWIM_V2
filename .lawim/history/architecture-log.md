@@ -105,3 +105,4 @@ Ce journal est append-only. Toute evolution architecturale doit laisser une trac
 | 2026-06-29 | ARCH-004 | T19.03 Versioned recommendations | Versioned recommendations, contrat confirme pour Sprint 019 | Stable gate before the next ticket | Documentation | reports/sprint-019/T19.03-versioned-recommendations-report.md |
 | 2026-06-29 | ARCH-001 | Sprint 020 planning review | Mobile foundation confirmed; no blocking architecture gaps remain for opening | Opening readiness for DG approval | PMO | reports/sprint-020/SPRINT-020-PLANNING-REPORT.md |
 | 2026-06-29 | ARCH-002 | T20.01 Mobile shell | Mobile shell, contrat confirme pour Sprint 020 | Stable gate before the next ticket | Frontend | reports/sprint-020/T20.01-mobile-shell-report.md |
+| 2026-06-29 | ARCH-003 | T20.02 Offline sync | Offline sync, contrat confirme pour Sprint 020 | Stable gate before the next ticket | Frontend | reports/sprint-020/T20.02-offline-sync-report.md |

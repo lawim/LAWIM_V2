@@ -533,3 +533,9 @@ Le Sprint 008 est termine sur la base des 3 tickets planifies. Les tickets T08.0
 | T20.01 | PMO | Validation du shell mobile et du cadrage | PMO | PASS | 2026-06-29 | reports/sprint-020/T20.01-mobile-shell-report.md |
 | T20.01 | Integration | Cohesion mobile shell | Integration Manager | READY FOR T20.02 | 2026-06-29 | reports/sprint-020/T20.01-mobile-shell-report.md |
 | T20.01 | DG | Validation finale de gouvernance | Directeur General | READY FOR T20.02 | 2026-06-29 | reports/sprint-020/T20.01-mobile-shell-report.md |
+| T20.02 | Architecture | Cohesion technique, dependances et conventions | Chief Architect + Tech Lead | PASS | 2026-06-29 | reports/sprint-020/T20.02-offline-sync-report.md |
+| T20.02 | QA | Criteres d'acceptation et non-regression | QA | PASS | 2026-06-29 | reports/sprint-020/T20.02-offline-sync-report.md |
+| T20.02 | Security | Secrets, acces, risques et surface d'attaque | Security | PASS | 2026-06-29 | reports/sprint-020/T20.02-offline-sync-report.md |
+| T20.02 | PMO | Validation de la sync locale et du cache | PMO | PASS | 2026-06-29 | reports/sprint-020/T20.02-offline-sync-report.md |
+| T20.02 | Integration | Cohesion offline sync | Integration Manager | READY FOR T20.03 | 2026-06-29 | reports/sprint-020/T20.02-offline-sync-report.md |
+| T20.02 | DG | Validation finale de gouvernance | Directeur General | READY FOR T20.03 | 2026-06-29 | reports/sprint-020/T20.02-offline-sync-report.md |
