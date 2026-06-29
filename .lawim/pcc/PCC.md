@@ -3,13 +3,13 @@
 ## Programme
 - Programme: LAWIM_V2
 - Programme status: ACTIF
-- Sprint actif: Sprint 021
+- Sprint actif: Sprint 022
 - Sprint status: EN COURS
 - Decision: GO AVEC RESERVES
 - Mode: execution controlee par tickets
 - Baseline: Bootstrap Pack valide + base operationnelle Sprint 001
-- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 021, le registre des risques est normalise, et les tickets T21.01, T21.02 et T21.03 sont fermes.
-- Derniere trace technique: Sprint 021 est ouvert sur Fraud controls; T21.01 est ferme; T21.02 est ferme; T21.03 est ferme; Sprint 021 reste a cloturer
+- Reserve: le backlog canonique detaille a ete verifie pour LOT-006; le Standard V2 est adopte, la matrice des dependances est prolongee pour Sprint 022, le registre des risques est normalise, et le Sprint 021 est cloture.
+- Derniere trace technique: Sprint 022 est ouvert sur preproduction; Sprint 021 est cloture; T22.01 reste a venir
 
 ## Cloture Sprint 001
 - Statut Sprint 001: TERMINE
@@ -352,7 +352,7 @@
         - Sprint 021: ouvert
 
                                         ## Sprint 021
-        - Statut: EN COURS
+        - Statut: CLOTURE
         - Objectif: renforcer la securite, l audit et la detection de fraude.
         - Tickets: T21.01 - Zero trust hardening, T21.02 - Audit and privacy, T21.03 - Fraud controls
         - Tickets couverts: 0/3
@@ -371,7 +371,26 @@
         - T21.02: ferme
         - T21.03: ferme
         - Tickets couverts: 3/3
-        - Sprint 022: non ouvert
+        - Rapport de cloture: reports/sprint-021/SPRINT-021-CLOSURE-REPORT.md
+        - Sprint 022: ouvert
+
+                                        ## Sprint 022
+        - Statut: EN COURS
+        - Objectif: preproduction, go/no-go, validation humaine et readiness operationnelle.
+        - Tickets: T22.01 - Livrable principal, T22.02 - Validation et tests, T22.03 - Rollback et observabilite
+        - Tickets couverts: 0/3
+        - Ordre recommande: T22.01 -> T22.02 -> T22.03
+        - Dependances: S021, S004, S014, S018, S020.
+        - Chemin critique: DG-0028 -> T22.01 -> T22.02 -> T22.03 -> cloture Sprint 022
+        - Risques d entree: readiness insuffisante, go/no-go mal trace, rollback incomplet.
+        - Risque bloquant: false
+        - Validation DG: en attente
+        - Rapport de lancement: reports/sprint-022/SPRINT-022-PLANNING-REPORT.md
+        - Avancement:
+        - T22.01: a venir
+        - T22.02: a venir
+        - T22.03: a venir
+        - Sprint 023: non ouvert
 ## Referentiels de pilotage
 - Workflow officiel: .lawim/workflows/ticket-workflow.md
 - Ticket status model: .lawim/status/ticket-status.md

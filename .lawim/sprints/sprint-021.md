@@ -2,7 +2,7 @@
 
 - Date: 2026-06-29
 - Scope: Sprint 021 execution controlee
-- Status: EN COURS
+- Status: CLOTURE
 
 ## Objectif
 renforcer la securite, l audit et la detection de fraude.
@@ -42,4 +42,5 @@ DG-0028
 - Rapport de ticket: reports/sprint-021/T21.01-zero-trust-hardening-report.md
 - Rapport de ticket: reports/sprint-021/T21.02-audit-and-privacy-report.md
 - Rapport de ticket: reports/sprint-021/T21.03-fraud-controls-report.md
-- Sprint 022: non ouvert
+- Rapport de cloture: reports/sprint-021/SPRINT-021-CLOSURE-REPORT.md
+- Sprint 022: ouvert
