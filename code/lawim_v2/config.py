@@ -22,6 +22,16 @@ def _int_env(name: str, default: int) -> int:
         raise ValueError(f"Environment variable {name} must be an integer") from exc
 
 
+def _float_env(name: str, default: float) -> float:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    try:
+        return float(value)
+    except ValueError as exc:
+        raise ValueError(f"Environment variable {name} must be a number") from exc
+
+
 @dataclass(frozen=True, slots=True)
 class AppConfig:
     host: str
@@ -74,9 +84,28 @@ class AppConfig:
             geocoding_api_key=geocoding_api_key.strip() if geocoding_api_key else None,
             cdn_base_url=cdn_base_url.strip() if cdn_base_url else None,
             metrics_enabled=_bool_env("LAWIM_METRICS_ENABLED", True),
-            match_min_score=float(os.getenv("LAWIM_MATCH_MIN_SCORE", "10")),
+            match_min_score=_float_env("LAWIM_MATCH_MIN_SCORE", 10.0),
             max_json_body_bytes=_int_env("LAWIM_MAX_JSON_BODY_BYTES", 1_048_576),
         )
+
+    def validate(self) -> None:
+        errors: list[str] = []
+        if not (1 <= self.port <= 65535):
+            errors.append(f"LAWIM_PORT must be between 1 and 65535 (got {self.port})")
+        if self.db_driver not in {"sqlite", "postgresql"}:
+            errors.append(f"LAWIM_DB_DRIVER must be sqlite or postgresql (got {self.db_driver!r})")
+        if self.session_ttl_seconds < 60:
+            errors.append("LAWIM_SESSION_TTL_SECONDS must be at least 60 seconds")
+        if self.max_upload_bytes < 1:
+            errors.append("LAWIM_MAX_UPLOAD_BYTES must be positive")
+        if self.max_json_body_bytes < 1_024:
+            errors.append("LAWIM_MAX_JSON_BODY_BYTES must be at least 1024")
+        if not (0.0 <= self.match_min_score <= 100.0):
+            errors.append("LAWIM_MATCH_MIN_SCORE must be between 0 and 100")
+        if self.app_env not in {"development", "staging", "production", "test"}:
+            errors.append(f"APP_ENV has unsupported value: {self.app_env!r}")
+        if errors:
+            raise ValueError("Invalid LAWIM_V2 configuration: " + "; ".join(errors))
 
     def ensure_runtime_dir(self) -> None:
         self.db_path.parent.mkdir(parents=True, exist_ok=True)

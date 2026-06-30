@@ -1003,6 +1003,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:
+    config.validate()
     adapter = resolve_persistence_adapter(
         config.db_path,
         db_driver=config.db_driver,
@@ -1037,6 +1038,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         config = AppConfig.from_env()
+        config.validate()
     except ValueError as exc:
         parser.error(str(exc))
 

@@ -35,6 +35,12 @@ services:
       LAWIM_DB_PATH: /app/data/runtime/lawim.sqlite3
       LAWIM_SEED_DEMO_DATA: ${LAWIM_SEED_DEMO_DATA:-true}
       LAWIM_SESSION_TTL_SECONDS: ${LAWIM_SESSION_TTL_SECONDS:-604800}
+      LAWIM_DB_DRIVER: ${LAWIM_DB_DRIVER:-sqlite}
+      LAWIM_DB_FALLBACK: ${LAWIM_DB_FALLBACK:-true}
+      LAWIM_MAX_UPLOAD_BYTES: ${LAWIM_MAX_UPLOAD_BYTES:-5242880}
+      LAWIM_MAX_JSON_BODY_BYTES: ${LAWIM_MAX_JSON_BODY_BYTES:-1048576}
+      LAWIM_MATCH_MIN_SCORE: ${LAWIM_MATCH_MIN_SCORE:-10}
+      LAWIM_METRICS_ENABLED: ${LAWIM_METRICS_ENABLED:-true}
     command: ["python", "-m", "lawim_v2"]
     ports:
       - "${LAWIM_APP_PORT:-3000}:3000"
@@ -45,6 +51,18 @@ services:
       - lawim_private
     restart: unless-stopped
     init: true
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/api/health', timeout=3)",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
 networks:
   lawim_public:

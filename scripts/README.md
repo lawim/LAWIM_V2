@@ -1,24 +1,21 @@
-# Scripts
+# Scripts opérationnels
 
-Ce dossier reserve les scripts operationnels de LAWIM_V2.
+Scripts idempotents pour la Release Candidate LAWIM_V2. Aucun secret embarqué.
 
-## Role
-Point d'entree pour les scripts techniques non lies au code metier.
+| Script | Usage |
+|--------|-------|
+| `run-local.sh` | Démarrage local Python (SQLite par défaut) |
+| `run-tests.sh` | Suite unitaire + smoke runtime |
+| `run-compose-dev.sh` | Stack Compose development |
+| `run-compose-postgres.sh` | Stack dev + PostgreSQL optionnel |
+| `smoke_runtime.py` | Smoke test : serveur, health, UI, API, arrêt propre |
+| `validate_prisma_manifest.py` | Validation manifeste schéma |
 
-## Usage futur
-- installation;
-- verification;
-- sauvegarde et restauration;
-- controles de sante;
-- rotation ou nettoyage.
+## Codes de retour
 
-## Conventions
-- scripts idempotents;
-- entree et sortie explicites;
-- aucun secret;
-- journalisation standardisee quand elle sera ajoutee.
+- `0` : succès
+- `1` : échec (tests, smoke, ou erreur compose)
 
-## TODO
-- ajouter les scripts de base;
-- definir les conventions de nommage;
-- documenter les codes de retour attendus.
+## Documentation
+
+Voir `docs/OPERATIONS-RC.md` pour le guide d'exploitation minimal.
