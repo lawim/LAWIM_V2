@@ -29,7 +29,9 @@ from .property_domain import (
     normalize_metadata as normalize_property_metadata,
     validate_status_transition,
 )
+from .conversation_domain import validate_stage_transition, validate_status_transition as validate_conversation_status
 from .matching import MatchCriteria, rank_properties
+from .notification_domain import build_notification_payload, normalize_kind as normalize_notification_kind
 from .security import create_session_token, hash_password, verify_password
 
 
@@ -118,11 +120,15 @@ CREATE TABLE IF NOT EXISTS conversations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     property_id INTEGER,
     user_id INTEGER NOT NULL,
+    organization_id INTEGER,
     subject TEXT NOT NULL,
     status TEXT NOT NULL CHECK (status IN ('open', 'closed', 'archived')),
+    negotiation_stage TEXT NOT NULL DEFAULT 'inquiry' CHECK (negotiation_stage IN ('inquiry', 'offer', 'counter', 'accepted', 'declined', 'closed')),
     created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
     FOREIGN KEY (property_id) REFERENCES properties(id),
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (organization_id) REFERENCES organizations(id)
 );
 
 CREATE TABLE IF NOT EXISTS messages (
@@ -142,6 +148,18 @@ CREATE TABLE IF NOT EXISTS events (
     created_at TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    kind TEXT NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    read_at TEXT,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS schema_meta (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL
@@ -153,6 +171,8 @@ CREATE INDEX IF NOT EXISTS idx_properties_deleted_at ON properties(deleted_at);
 CREATE INDEX IF NOT EXISTS idx_media_property_position ON media(property_id, position);
 CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
 CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_conversations_user_updated ON conversations(user_id, updated_at);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at);
 """
 
 
@@ -331,6 +351,54 @@ class LawimRepository:
         conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_search_key ON properties(search_key)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_deleted_at ON properties(deleted_at)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_media_property_position ON media(property_id, position)")
+
+        conversation_columns = {
+            "organization_id": "INTEGER",
+            "negotiation_stage": "TEXT NOT NULL DEFAULT 'inquiry'",
+            "updated_at": "TEXT",
+        }
+        for column, definition in conversation_columns.items():
+            self._ensure_column(conn, "conversations", column, definition)
+        conn.execute(
+            """
+            UPDATE conversations
+            SET negotiation_stage = 'inquiry'
+            WHERE negotiation_stage IS NULL OR TRIM(negotiation_stage) = ''
+            """
+        )
+        conn.execute(
+            """
+            UPDATE conversations
+            SET updated_at = created_at
+            WHERE updated_at IS NULL OR TRIM(updated_at) = ''
+            """
+        )
+        conn.execute(
+            """
+            UPDATE conversations
+            SET organization_id = (
+                SELECT owner_organization_id FROM properties WHERE properties.id = conversations.property_id
+            )
+            WHERE organization_id IS NULL AND property_id IS NOT NULL
+            """
+        )
+        conn.executescript(
+            """
+            CREATE TABLE IF NOT EXISTS notifications (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                kind TEXT NOT NULL,
+                title TEXT NOT NULL,
+                body TEXT NOT NULL,
+                payload_json TEXT NOT NULL DEFAULT '{}',
+                read_at TEXT,
+                created_at TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+            CREATE INDEX IF NOT EXISTS idx_conversations_user_updated ON conversations(user_id, updated_at);
+            CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at);
+            """
+        )
 
     def schema_version(self) -> int:
         row = self.one("SELECT value FROM schema_meta WHERE key = 'schema_version'")
@@ -1367,28 +1435,45 @@ class LawimRepository:
         subject: str,
         status: str = "open",
         property_id: int | None = None,
+        organization_id: int | None = None,
+        negotiation_stage: str = "inquiry",
         initial_message: str | None = None,
         sender_user_id: int | None = None,
     ) -> dict[str, object]:
         subject = _require_text(subject, "subject")
         if initial_message is not None:
             initial_message = _require_text(initial_message, "initial_message")
-        self.get_user_by_id(user_id)
+        user = self.get_user_by_id(user_id)
+        property_row = None
         if property_id is not None:
-            self.get_property(property_id)
+            property_row = self.get_property(property_id)
         if sender_user_id is not None:
             self.get_user_by_id(sender_user_id)
         status = _require_text(status, "status").lower()
         if status not in {"open", "closed", "archived"}:
             raise ValidationError(f"unsupported conversation status: {status}")
+        stage = _require_text(negotiation_stage, "negotiation_stage").lower()
+        try:
+            validate_stage_transition(stage, stage)
+        except ValueError as exc:
+            raise ValidationError(str(exc)) from exc
+        resolved_org = organization_id
+        if resolved_org is None and property_row is not None:
+            resolved_org = property_row.get("owner_organization_id")
+        if resolved_org is None:
+            resolved_org = user.get("organization_id")
+        if resolved_org is not None:
+            self.get_organization_by_id(int(resolved_org))
+        now = utcnow()
         added_initial_message = False
         with self._transaction() as conn:
             cursor = conn.execute(
                 """
-                INSERT INTO conversations (property_id, user_id, subject, status, created_at)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO conversations
+                    (property_id, user_id, organization_id, subject, status, negotiation_stage, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
-                (property_id, user_id, subject, status, utcnow()),
+                (property_id, user_id, resolved_org, subject, status, stage, now, now),
             )
             conversation_id = cursor.lastrowid
             if initial_message:
@@ -1401,7 +1486,7 @@ class LawimRepository:
                 )
                 added_initial_message = True
         conversation = self.get_conversation(conversation_id)
-        self.record_event("conversation_created", {"id": conversation["id"], "property_id": property_id})
+        self.record_event("conversation_created", {"id": conversation["id"], "property_id": property_id, "organization_id": resolved_org})
         if added_initial_message:
             self.record_event("message_added", {"conversation_id": conversation["id"], "sender_user_id": sender_user_id or user_id})
         return conversation
@@ -1412,6 +1497,7 @@ class LawimRepository:
         *,
         subject: str | None = None,
         status: str | None = None,
+        negotiation_stage: str | None = None,
     ) -> dict[str, object]:
         current = self.get_conversation(conversation_id)
         changes: dict[str, object] = {}
@@ -1419,19 +1505,21 @@ class LawimRepository:
             changes["subject"] = _require_text(subject, "subject")
         if status is not None:
             normalized_status = _require_text(status, "status").lower()
-            if normalized_status not in {"open", "closed", "archived"}:
-                raise ValidationError(f"unsupported conversation status: {normalized_status}")
-            current_status = str(current["status"]).lower()
-            allowed_transitions = {
-                "open": {"open", "closed", "archived"},
-                "closed": {"closed", "archived"},
-                "archived": {"archived"},
-            }
-            if normalized_status not in allowed_transitions.get(current_status, {normalized_status}):
-                raise ValidationError(f"invalid conversation status transition: {current_status} -> {normalized_status}")
+            try:
+                validate_conversation_status(str(current["status"]).lower(), normalized_status)
+            except ValueError as exc:
+                raise ValidationError(str(exc)) from exc
             changes["status"] = normalized_status
+        if negotiation_stage is not None:
+            normalized_stage = _require_text(negotiation_stage, "negotiation_stage").lower()
+            try:
+                validate_stage_transition(str(current.get("negotiation_stage", "inquiry")).lower(), normalized_stage)
+            except ValueError as exc:
+                raise ValidationError(str(exc)) from exc
+            changes["negotiation_stage"] = normalized_stage
         if not changes:
             return current
+        changes["updated_at"] = utcnow()
         assignments = ", ".join(f"{column} = ?" for column in changes)
         params = tuple(changes.values()) + (conversation_id,)
         with self._transaction() as conn:
@@ -1459,6 +1547,7 @@ class LawimRepository:
                 """,
                 (conversation_id, sender_user_id, body, utcnow()),
             )
+            conn.execute("UPDATE conversations SET updated_at = ? WHERE id = ?", (utcnow(), conversation_id))
         message = self.one("SELECT * FROM messages WHERE id = ?", (cursor.lastrowid,))
         assert message is not None
         self.record_event("message_added", {"conversation_id": conversation_id, "sender_user_id": sender_user_id})
@@ -1481,10 +1570,12 @@ class LawimRepository:
         conversation = self.one(
             """
             SELECT c.*, p.title AS property_title, u.full_name AS requester_name, u.email AS requester_email,
+                   o.name AS organization_name, o.slug AS organization_slug,
                    (SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count,
                    (SELECT body FROM messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) AS last_message
             FROM conversations c
             LEFT JOIN properties p ON p.id = c.property_id
+            LEFT JOIN organizations o ON o.id = c.organization_id
             JOIN users u ON u.id = c.user_id
             WHERE c.id = ?
             """,
@@ -1494,21 +1585,47 @@ class LawimRepository:
             raise NotFoundError(f"unknown conversation id: {conversation_id}")
         return conversation
 
-    def list_conversations(self, limit: int = 50) -> list[dict[str, object]]:
+    def list_conversations(
+        self,
+        *,
+        user_id: int | None = None,
+        organization_id: int | None = None,
+        property_id: int | None = None,
+        status: str | None = None,
+        limit: int = 50,
+    ) -> list[dict[str, object]]:
         if limit < 1:
             raise ValidationError("limit must be positive")
+        clauses = ["1 = 1"]
+        params: list[object] = []
+        if user_id is not None:
+            clauses.append("c.user_id = ?")
+            params.append(user_id)
+        if organization_id is not None:
+            clauses.append("c.organization_id = ?")
+            params.append(organization_id)
+        if property_id is not None:
+            clauses.append("c.property_id = ?")
+            params.append(property_id)
+        if status:
+            clauses.append("LOWER(c.status) = LOWER(?)")
+            params.append(status)
+        params.append(limit)
         return self.all(
-            """
+            f"""
             SELECT c.*, p.title AS property_title, u.full_name AS requester_name, u.email AS requester_email,
+                   o.name AS organization_name, o.slug AS organization_slug,
                    (SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count,
                    (SELECT body FROM messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) AS last_message
             FROM conversations c
             LEFT JOIN properties p ON p.id = c.property_id
+            LEFT JOIN organizations o ON o.id = c.organization_id
             JOIN users u ON u.id = c.user_id
-            ORDER BY c.created_at DESC
+            WHERE {' AND '.join(clauses)}
+            ORDER BY c.updated_at DESC, c.id DESC
             LIMIT ?
             """,
-            (limit,),
+            tuple(params),
         )
 
     def list_messages(self, conversation_id: int) -> list[dict[str, object]]:
@@ -1524,6 +1641,82 @@ class LawimRepository:
             (conversation_id,),
         )
 
+    def create_notification(
+        self,
+        *,
+        user_id: int,
+        kind: str,
+        title: str,
+        body: str,
+        payload: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        self.get_user_by_id(user_id)
+        normalized_kind = normalize_notification_kind(kind)
+        title = _require_text(title, "title")
+        body = _require_text(body, "body")
+        payload_json = build_notification_payload(payload)
+        with self._transaction() as conn:
+            cursor = conn.execute(
+                """
+                INSERT INTO notifications (user_id, kind, title, body, payload_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (user_id, normalized_kind, title, body, payload_json, utcnow()),
+            )
+        row = self.one("SELECT * FROM notifications WHERE id = ?", (cursor.lastrowid,))
+        assert row is not None
+        self.record_event("notification_created", {"id": row["id"], "user_id": user_id, "kind": normalized_kind})
+        return row
+
+    def list_notifications(
+        self,
+        *,
+        user_id: int,
+        unread_only: bool = False,
+        limit: int = 50,
+    ) -> list[dict[str, object]]:
+        if limit < 1:
+            raise ValidationError("limit must be positive")
+        clauses = ["user_id = ?"]
+        params: list[object] = [user_id]
+        if unread_only:
+            clauses.append("read_at IS NULL")
+        params.append(limit)
+        return self.all(
+            f"""
+            SELECT *
+            FROM notifications
+            WHERE {' AND '.join(clauses)}
+            ORDER BY created_at DESC, id DESC
+            LIMIT ?
+            """,
+            tuple(params),
+        )
+
+    def mark_notification_read(self, notification_id: int, *, user_id: int) -> dict[str, object]:
+        row = self.one("SELECT * FROM notifications WHERE id = ? AND user_id = ?", (notification_id, user_id))
+        if row is None:
+            raise NotFoundError(f"unknown notification id: {notification_id}")
+        if row.get("read_at"):
+            return row
+        read_at = utcnow()
+        with self._transaction() as conn:
+            conn.execute("UPDATE notifications SET read_at = ? WHERE id = ?", (read_at, notification_id))
+        updated = self.one("SELECT * FROM notifications WHERE id = ?", (notification_id,))
+        assert updated is not None
+        self.record_event("notification_read", {"id": notification_id, "user_id": user_id})
+        return updated
+
+    def mark_all_notifications_read(self, *, user_id: int) -> dict[str, object]:
+        self.get_user_by_id(user_id)
+        read_at = utcnow()
+        with self._transaction() as conn:
+            cursor = conn.execute(
+                "UPDATE notifications SET read_at = ? WHERE user_id = ? AND read_at IS NULL",
+                (read_at, user_id),
+            )
+        return {"updated": cursor.rowcount, "read_at": read_at}
+
     def summary(self) -> dict[str, object]:
         return {
             "organizations": self.scalar("SELECT COUNT(*) FROM organizations"),
@@ -1533,6 +1726,7 @@ class LawimRepository:
             ),
             "conversations": self.scalar("SELECT COUNT(*) FROM conversations"),
             "messages": self.scalar("SELECT COUNT(*) FROM messages"),
+            "notifications": self.scalar("SELECT COUNT(*) FROM notifications"),
             "media": self.scalar("SELECT COUNT(*) FROM media"),
             "events": self.scalar("SELECT COUNT(*) FROM events"),
             "sessions": self.scalar("SELECT COUNT(*) FROM sessions"),

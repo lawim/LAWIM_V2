@@ -96,9 +96,12 @@ POSTGRESQL_INIT_STATEMENTS = (
         id SERIAL PRIMARY KEY,
         property_id INTEGER REFERENCES properties(id),
         user_id INTEGER NOT NULL REFERENCES users(id),
+        organization_id INTEGER REFERENCES organizations(id),
         subject TEXT NOT NULL,
         status TEXT NOT NULL,
-        created_at TEXT NOT NULL
+        negotiation_stage TEXT NOT NULL DEFAULT 'inquiry',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
     )
     """,
     """
@@ -119,6 +122,18 @@ POSTGRESQL_INIT_STATEMENTS = (
     )
     """,
     """
+    CREATE TABLE IF NOT EXISTS notifications (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        kind TEXT NOT NULL,
+        title TEXT NOT NULL,
+        body TEXT NOT NULL,
+        payload_json TEXT NOT NULL DEFAULT '{}',
+        read_at TEXT,
+        created_at TEXT NOT NULL
+    )
+    """,
+    """
     CREATE TABLE IF NOT EXISTS schema_meta (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
@@ -130,6 +145,8 @@ POSTGRESQL_INIT_STATEMENTS = (
     "CREATE INDEX IF NOT EXISTS idx_media_property_position ON media(property_id, position)",
     "CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token)",
     "CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at)",
+    "CREATE INDEX IF NOT EXISTS idx_conversations_user_updated ON conversations(user_id, updated_at)",
+    "CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at)",
 )
 
 

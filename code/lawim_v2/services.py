@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from http import HTTPStatus
 
 from .config import AppConfig
 from .db import LawimRepository
-from .dto import PaginationMeta, geo_location_dto, media_dto, paginated_payload, property_dto
+from .dto import PaginationMeta, conversation_dto, geo_location_dto, match_dto, media_dto, message_dto, notification_dto, paginated_payload, property_dto
 from .geocoding_provider import resolve_geocoding_provider
+from .matching import MatchCriteria, MatchWeights
 from .media_domain import LocalMediaStorage, decode_upload_content, validate_upload_bytes
+from .observability import METRICS
 
 
 class ServiceError(Exception):
@@ -71,6 +73,9 @@ class AccessPolicy:
         if conversation_row is not None and conversation_row.get("user_id") == actor.get("id"):
             return True
         organization_id = actor.get("organization_id")
+        if organization_id is not None and conversation_row is not None:
+            if conversation_row.get("organization_id") == organization_id:
+                return True
         if organization_id is not None and property_row is not None:
             return property_row.get("owner_organization_id") == organization_id
         return False
@@ -81,7 +86,11 @@ class LawimServices:
         self.repository = repository
         self.config = config
         self.policy = policy or AccessPolicy()
-        self.media_storage = LocalMediaStorage(config.media_storage_path, public_base_url=config.public_base_url)
+        self.media_storage = LocalMediaStorage(
+            config.media_storage_path,
+            public_base_url=config.public_base_url,
+            cdn_base_url=config.cdn_base_url,
+        )
         self.geocoder = resolve_geocoding_provider(
             provider_name=config.geocoding_provider,
             base_url=config.geocoding_base_url,
@@ -89,26 +98,45 @@ class LawimServices:
         )
 
     def health(self) -> dict[str, object]:
-        return {
+        profile = self.repository.backend_profile()
+        payload: dict[str, object] = {
             "status": "ok",
             "environment": {
                 "app_env": self.config.app_env,
                 "stack_profile": self.config.stack_profile,
                 "log_level": self.config.log_level,
                 "public_base_url": self.config.public_base_url,
+                "cdn_base_url": self.config.cdn_base_url,
                 "secret_provider": self.config.secret_provider,
                 "seed_demo_data": self.config.seed_demo_data,
                 "db_driver": self.config.db_driver,
                 "geocoding_provider": self.geocoder.name,
+                "metrics_enabled": self.config.metrics_enabled,
             },
-            "database": self.repository.backend_profile(),
+            "database": profile,
             "summary": self.repository.summary(),
+            "audit": {
+                "recent_events": self.repository.list_events(limit=5),
+            },
         }
+        if self.config.metrics_enabled:
+            payload["metrics"] = METRICS.snapshot()
+        return payload
+
+    def metrics(self) -> dict[str, object]:
+        if not self.config.metrics_enabled:
+            raise ServiceError(HTTPStatus.NOT_FOUND, "not_found", "Metrics are disabled")
+        return {"metrics": METRICS.snapshot(), "summary": self.repository.summary()}
 
     def bootstrap(self, *, token: str | None = None) -> dict[str, object]:
         payload = self.repository.bootstrap_payload(token=token)
         properties = self.list_properties(limit=10)["properties"]
         media = self.list_media(limit=10)["media"]
+        conversations = self.list_conversations(actor=payload["current_user"], limit=10)["conversations"]
+        matches = self.list_matches(MatchCriteria(limit=5))["matches"]
+        notifications: list[dict[str, object]] = []
+        if payload["current_user"] is not None:
+            notifications = self.list_notifications(actor=payload["current_user"], limit=10)["notifications"]
         return {
             "summary": payload["summary"],
             "current_user": payload["current_user"],
@@ -116,8 +144,9 @@ class LawimServices:
             "users": payload["users"],
             "properties": properties,
             "media": media,
-            "conversations": payload["conversations"],
-            "matches": payload["matches"],
+            "conversations": conversations,
+            "matches": matches,
+            "notifications": notifications,
         }
 
     def login(self, *, email: str, password: str) -> dict[str, object]:
@@ -639,6 +668,8 @@ class LawimServices:
         subject: str,
         status: str = "open",
         property_id: int | None = None,
+        organization_id: int | None = None,
+        negotiation_stage: str = "inquiry",
         initial_message: str | None = None,
         sender_user_id: int | None = None,
     ) -> dict[str, object]:
@@ -647,14 +678,19 @@ class LawimServices:
         if sender_user_id is not None and not self.policy.is_admin(actor) and sender_user_id != actor.get("id"):
             raise PermissionDenied("Message author must match the authenticated user")
         resolved_sender = sender_user_id if sender_user_id is not None else int(actor["id"])
-        return self.repository.create_conversation(
+        conversation = self.repository.create_conversation(
             user_id=user_id,
             subject=subject,
             status=status,
             property_id=property_id,
+            organization_id=organization_id,
+            negotiation_stage=negotiation_stage,
             initial_message=initial_message,
             sender_user_id=resolved_sender,
         )
+        METRICS.increment("conversations")
+        self._notify_conversation_created(conversation)
+        return conversation_dto(conversation)
 
     def update_conversation(
         self,
@@ -663,6 +699,7 @@ class LawimServices:
         conversation_id: int,
         subject: str | None = None,
         status: str | None = None,
+        negotiation_stage: str | None = None,
     ) -> dict[str, object]:
         current = self.repository.get_conversation(conversation_id)
         property_row = None
@@ -670,13 +707,61 @@ class LawimServices:
             property_row = self.repository.get_property(int(current["property_id"]))
         if not self.policy.can_manage_conversation(actor, current, property_row):
             raise PermissionDenied("Conversation access is restricted to participants and administrators")
-        return self.repository.update_conversation(conversation_id, subject=subject, status=status)
+        updated = self.repository.update_conversation(
+            conversation_id,
+            subject=subject,
+            status=status,
+            negotiation_stage=negotiation_stage,
+        )
+        self._notify_conversation_updated(updated, actor)
+        return conversation_dto(updated)
 
     def delete_conversation(self, *, actor: dict[str, object], conversation_id: int) -> dict[str, object]:
         current = self.repository.get_conversation(conversation_id)
         if not self.policy.is_admin(actor) and current.get("user_id") != actor.get("id"):
             raise PermissionDenied("Conversation access is restricted to participants and administrators")
         return self.repository.delete_conversation(conversation_id)
+
+    def get_conversation(self, *, actor: dict[str, object] | None, conversation_id: int) -> dict[str, object]:
+        current = self.repository.get_conversation(conversation_id)
+        property_row = None
+        if current.get("property_id") is not None:
+            property_row = self.repository.get_property(int(current["property_id"]))
+        if actor is not None and not self.policy.can_manage_conversation(actor, current, property_row):
+            raise PermissionDenied("Conversation access is restricted to participants and administrators")
+        messages = self.repository.list_messages(conversation_id)
+        return conversation_dto(current, messages=messages)
+
+    def list_conversations(
+        self,
+        *,
+        actor: dict[str, object] | None = None,
+        user_id: int | None = None,
+        organization_id: int | None = None,
+        property_id: int | None = None,
+        status: str | None = None,
+        limit: int = 50,
+    ) -> dict[str, object]:
+        resolved_user_id = user_id
+        resolved_org_id = organization_id
+        if actor is not None and not self.policy.is_admin(actor):
+            if resolved_user_id is not None and resolved_user_id != actor.get("id"):
+                raise PermissionDenied("Cannot list conversations for another user")
+            if resolved_org_id is not None and resolved_org_id != actor.get("organization_id"):
+                raise PermissionDenied("Cannot list conversations for another organization")
+            if resolved_user_id is None and resolved_org_id is None:
+                if actor.get("organization_id") is not None:
+                    resolved_org_id = int(actor["organization_id"])
+                else:
+                    resolved_user_id = int(actor["id"])
+        rows = self.repository.list_conversations(
+            user_id=resolved_user_id,
+            organization_id=resolved_org_id,
+            property_id=property_id,
+            status=status,
+            limit=limit,
+        )
+        return {"conversations": [conversation_dto(row) for row in rows]}
 
     def add_message(
         self,
@@ -694,12 +779,124 @@ class LawimServices:
             raise PermissionDenied("Conversation access is restricted to participants and administrators")
         if not self.policy.is_admin(actor) and sender_user_id != actor.get("id"):
             raise PermissionDenied("Message author must match the authenticated user")
-        return self.repository.add_message(conversation_id, sender_user_id, body)
+        message = self.repository.add_message(conversation_id, sender_user_id, body)
+        self._notify_message_received(current, message)
+        return message_dto(message)
+
+    def list_matches(self, criteria: MatchCriteria) -> dict[str, object]:
+        ranked = self.repository.matched_properties(criteria)
+        METRICS.increment("matches")
+        return {
+            "matches": [match_dto(item) for item in ranked],
+            "criteria": {
+                "city": criteria.city,
+                "region": criteria.region,
+                "country": criteria.country,
+                "budget_min": criteria.budget_min,
+                "budget_max": criteria.budget_max,
+                "latitude": criteria.latitude,
+                "longitude": criteria.longitude,
+                "property_type": criteria.property_type,
+                "bedrooms_min": criteria.bedrooms_min,
+                "availability": criteria.availability,
+                "status": criteria.status,
+                "limit": criteria.limit,
+                "weights": asdict(criteria.weights.normalized()),
+            },
+        }
+
+    def list_notifications(
+        self,
+        *,
+        actor: dict[str, object],
+        unread_only: bool = False,
+        limit: int = 50,
+    ) -> dict[str, object]:
+        rows = self.repository.list_notifications(user_id=int(actor["id"]), unread_only=unread_only, limit=limit)
+        return {"notifications": [notification_dto(row) for row in rows]}
+
+    def mark_notification_read(self, *, actor: dict[str, object], notification_id: int) -> dict[str, object]:
+        row = self.repository.mark_notification_read(notification_id, user_id=int(actor["id"]))
+        METRICS.increment("notifications")
+        return {"notification": notification_dto(row)}
+
+    def mark_all_notifications_read(self, *, actor: dict[str, object]) -> dict[str, object]:
+        result = self.repository.mark_all_notifications_read(user_id=int(actor["id"]))
+        METRICS.increment("notifications")
+        return result
 
     def events(self, *, actor: dict[str, object], limit: int = 50) -> list[dict[str, object]]:
         if not self.policy.is_admin(actor):
             raise PermissionDenied("Only administrators can inspect the event log")
         return self.repository.list_events(limit=limit)
+
+    def _notify_conversation_created(self, conversation: dict[str, object]) -> None:
+        title = "Conversation ouverte"
+        body = f"Nouvelle conversation : {conversation.get('subject')}"
+        payload = {"conversation_id": conversation.get("id"), "property_id": conversation.get("property_id")}
+        self.repository.create_notification(
+            user_id=int(conversation["user_id"]),
+            kind="conversation_created",
+            title=title,
+            body=body,
+            payload=payload,
+        )
+        org_id = conversation.get("organization_id")
+        if org_id is not None:
+            for user in self.repository.list_users(limit=100):
+                if user.get("organization_id") == org_id and user.get("id") != conversation.get("user_id"):
+                    self.repository.create_notification(
+                        user_id=int(user["id"]),
+                        kind="conversation_created",
+                        title=title,
+                        body=body,
+                        payload=payload,
+                    )
+
+    def _notify_conversation_updated(self, conversation: dict[str, object], actor: dict[str, object]) -> None:
+        title = "Conversation mise à jour"
+        body = f"{conversation.get('subject')} — statut {conversation.get('status')}"
+        payload = {
+            "conversation_id": conversation.get("id"),
+            "status": conversation.get("status"),
+            "negotiation_stage": conversation.get("negotiation_stage"),
+        }
+        recipient_ids = {int(conversation["user_id"])}
+        org_id = conversation.get("organization_id")
+        if org_id is not None:
+            for user in self.repository.list_users(limit=100):
+                if user.get("organization_id") == org_id:
+                    recipient_ids.add(int(user["id"]))
+        recipient_ids.discard(int(actor["id"]))
+        for user_id in recipient_ids:
+            self.repository.create_notification(
+                user_id=user_id,
+                kind="conversation_updated",
+                title=title,
+                body=body,
+                payload=payload,
+            )
+
+    def _notify_message_received(self, conversation: dict[str, object], message: dict[str, object]) -> None:
+        sender_id = int(message["sender_user_id"])
+        title = "Nouveau message"
+        body = str(message.get("body", ""))[:240]
+        payload = {"conversation_id": conversation.get("id"), "message_id": message.get("id")}
+        recipient_ids = {int(conversation["user_id"])}
+        org_id = conversation.get("organization_id")
+        if org_id is not None:
+            for user in self.repository.list_users(limit=100):
+                if user.get("organization_id") == org_id:
+                    recipient_ids.add(int(user["id"]))
+        recipient_ids.discard(sender_id)
+        for user_id in recipient_ids:
+            self.repository.create_notification(
+                user_id=user_id,
+                kind="message_received",
+                title=title,
+                body=body,
+                payload=payload,
+            )
 
     def _require_admin(self, actor: dict[str, object], message: str) -> None:
         if not self.policy.is_admin(actor):

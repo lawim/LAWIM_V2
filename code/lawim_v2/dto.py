@@ -120,6 +120,83 @@ def error_dto(code: str, message: str) -> dict[str, object]:
     return {"error": {"code": code, "message": message}}
 
 
+def match_dto(match_row: dict[str, object]) -> dict[str, object]:
+    property_row = match_row.get("property")
+    if isinstance(property_row, dict):
+        property_payload = property_dto(property_row)
+    else:
+        property_payload = property_row
+    return {
+        "score": match_row.get("score", 0),
+        "breakdown": match_row.get("breakdown", {}),
+        "reasons": match_row.get("reasons", []),
+        "distance_km": match_row.get("distance_km"),
+        "weights": match_row.get("weights", {}),
+        "property": property_payload,
+    }
+
+
+def message_dto(message_row: dict[str, object]) -> dict[str, object]:
+    return {
+        "id": message_row["id"],
+        "conversation_id": message_row["conversation_id"],
+        "body": message_row["body"],
+        "sender": {
+            "user_id": message_row["sender_user_id"],
+            "full_name": message_row.get("sender_name"),
+            "email": message_row.get("sender_email"),
+        },
+        "created_at": message_row.get("created_at"),
+    }
+
+
+def conversation_dto(conversation_row: dict[str, object], *, messages: list[dict[str, object]] | None = None) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "id": conversation_row["id"],
+        "subject": conversation_row["subject"],
+        "status": conversation_row["status"],
+        "negotiation_stage": conversation_row.get("negotiation_stage", "inquiry"),
+        "property": {
+            "id": conversation_row.get("property_id"),
+            "title": conversation_row.get("property_title"),
+        },
+        "requester": {
+            "user_id": conversation_row["user_id"],
+            "full_name": conversation_row.get("requester_name"),
+            "email": conversation_row.get("requester_email"),
+        },
+        "organization": {
+            "id": conversation_row.get("organization_id"),
+            "name": conversation_row.get("organization_name"),
+            "slug": conversation_row.get("organization_slug"),
+        },
+        "message_count": conversation_row.get("message_count", 0),
+        "last_message": conversation_row.get("last_message"),
+        "lifecycle": {
+            "created_at": conversation_row.get("created_at"),
+            "updated_at": conversation_row.get("updated_at"),
+        },
+    }
+    if messages is not None:
+        payload["messages"] = [message_dto(item) for item in messages]
+    return payload
+
+
+def notification_dto(notification_row: dict[str, object]) -> dict[str, object]:
+    from .notification_domain import payload_dict
+
+    return {
+        "id": notification_row["id"],
+        "kind": notification_row["kind"],
+        "title": notification_row["title"],
+        "body": notification_row["body"],
+        "payload": payload_dict(str(notification_row.get("payload_json") or "{}")),
+        "read": notification_row.get("read_at") is not None,
+        "read_at": notification_row.get("read_at"),
+        "created_at": notification_row.get("created_at"),
+    }
+
+
 def coerce_sort_field(field: str | None, allowed: set[str], default: str) -> str:
     if not field:
         return default

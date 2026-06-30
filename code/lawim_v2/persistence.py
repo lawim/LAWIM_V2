@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 4
+APPLICATION_SCHEMA_VERSION = 5
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -125,6 +125,7 @@ APPLICATION_SEED = SeedSpec(
         "media": 3,
         "conversations": 1,
         "messages": 3,
+        "notifications": 0,
     },
     notes=(
         "Idempotent when organizations already exist.",
@@ -236,11 +237,23 @@ APPLICATION_SCHEMA = SchemaManifest(
             name="conversations",
             purpose="Request and negotiation threads associated with a property.",
             primary_key="id",
-            columns=("id", "property_id", "user_id", "subject", "status", "created_at"),
+            columns=(
+                "id",
+                "property_id",
+                "user_id",
+                "organization_id",
+                "subject",
+                "status",
+                "negotiation_stage",
+                "created_at",
+                "updated_at",
+            ),
             foreign_keys=(
                 ForeignKeySpec("property_id", "properties.id"),
                 ForeignKeySpec("user_id", "users.id"),
+                ForeignKeySpec("organization_id", "organizations.id"),
             ),
+            indexes=("idx_conversations_user_updated",),
         ),
         TableSpec(
             name="messages",
@@ -258,6 +271,14 @@ APPLICATION_SCHEMA = SchemaManifest(
             purpose="Audit trail for lifecycle and mutation events.",
             primary_key="id",
             columns=("id", "kind", "payload", "created_at"),
+        ),
+        TableSpec(
+            name="notifications",
+            purpose="In-app notifications for conversations, matches, and system events.",
+            primary_key="id",
+            columns=("id", "user_id", "kind", "title", "body", "payload_json", "read_at", "created_at"),
+            foreign_keys=(ForeignKeySpec("user_id", "users.id", on_delete="cascade"),),
+            indexes=("idx_notifications_user_read",),
         ),
         TableSpec(
             name="schema_meta",

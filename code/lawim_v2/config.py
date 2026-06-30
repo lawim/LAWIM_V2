@@ -42,12 +42,15 @@ class AppConfig:
     geocoding_provider: str
     geocoding_base_url: str
     geocoding_api_key: str | None
+    cdn_base_url: str | None
+    metrics_enabled: bool
 
     @classmethod
     def from_env(cls) -> "AppConfig":
         db_path = Path(os.getenv("LAWIM_DB_PATH", "data/runtime/lawim.sqlite3")).expanduser()
         media_storage_path = Path(os.getenv("LAWIM_MEDIA_STORAGE_PATH", "data/runtime/media")).expanduser()
         geocoding_api_key = os.getenv("LAWIM_GEOCODING_API_KEY")
+        cdn_base_url = os.getenv("LAWIM_CDN_BASE_URL")
         return cls(
             host=os.getenv("LAWIM_HOST", "0.0.0.0"),
             port=_int_env("LAWIM_PORT", 3000),
@@ -67,6 +70,8 @@ class AppConfig:
             geocoding_provider=os.getenv("LAWIM_GEOCODING_PROVIDER", "local"),
             geocoding_base_url=os.getenv("LAWIM_GEOCODING_BASE_URL", "https://nominatim.openstreetmap.org/search"),
             geocoding_api_key=geocoding_api_key.strip() if geocoding_api_key else None,
+            cdn_base_url=cdn_base_url.strip() if cdn_base_url else None,
+            metrics_enabled=_bool_env("LAWIM_METRICS_ENABLED", True),
         )
 
     def ensure_runtime_dir(self) -> None:

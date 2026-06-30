@@ -71,6 +71,8 @@ class LawimV2ExecutableBaselineTest(TestCase):
             geocoding_provider="local",
             geocoding_base_url="https://nominatim.openstreetmap.org/search",
             geocoding_api_key=None,
+            cdn_base_url=None,
+            metrics_enabled=True,
         )
 
     def tearDown(self) -> None:
@@ -120,7 +122,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
         health_payload = health.body_json()
         self.assertEqual(health_payload["status"], "ok")
         self.assertEqual(health_payload["database"]["driver"], "sqlite")
-        self.assertEqual(health_payload["database"]["schema_version"], 4)
+        self.assertEqual(health_payload["database"]["schema_version"], 5)
         self.assertEqual(health_payload["database"]["migration"]["target_engine"], "postgresql")
         self.assertTrue(health_payload["environment"]["seed_demo_data"])
         self.assertEqual(health_payload["summary"]["organizations"], 3)
@@ -207,7 +209,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
                 profile = repository.backend_profile()
                 self.assertEqual(profile["driver"], "sqlite")
                 self.assertEqual(profile["adapter"], "sqlite-repository")
-                self.assertEqual(profile["schema_version"], 4)
+                self.assertEqual(profile["schema_version"], 5)
                 self.assertEqual(profile["migration"]["orm"], "prisma")
                 self.assertEqual(profile["migration"]["target_engine"], "postgresql")
                 self.assertEqual(profile["seed"]["name"], "demo")
@@ -224,7 +226,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
 
                 first_seed = repository.seed_demo_data()
                 self.assertTrue(first_seed["seeded"])
-                self.assertEqual(first_seed["schema_version"], 4)
+                self.assertEqual(first_seed["schema_version"], 5)
                 self.assertEqual(repository.summary()["organizations"], 3)
 
                 second_seed = repository.seed_demo_data()
@@ -663,7 +665,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
         from lawim_v2.persistence_adapter import PostgreSQLPersistenceAdapter
 
         adapter = PostgreSQLPersistenceAdapter("postgresql://example.test/lawim", allow_sqlite_fallback=True)
-        profile = adapter.backend_profile(schema_version=4)
+        profile = adapter.backend_profile(schema_version=5)
         self.assertEqual(profile["driver"], "postgresql")
         self.assertEqual(profile["adapter"], "postgresql-repository")
         self.assertEqual(profile["status"], "active")
@@ -745,3 +747,103 @@ class LawimV2ExecutableBaselineTest(TestCase):
         second = provider.geocode(city="Douala", country="Cameroon", address_line="Bonanjo")
         self.assertEqual(first, second)
         self.assertEqual(first["provider"], "local")
+
+    def test_schema_version_is_five(self) -> None:
+        self.assertEqual(self.repository.schema_version(), 5)
+
+    def test_advanced_matching_breakdown_and_weights(self) -> None:
+        matches = self.invoke(
+            "/api/matches?city=Douala&budget_max=320000&bedrooms_min=2&property_type=apartment&limit=3"
+        )
+        self.assertEqual(matches.status, HTTPStatus.OK)
+        payload = matches.body_json()
+        self.assertIn("criteria", payload)
+        self.assertIn("weights", payload["criteria"])
+        first = payload["matches"][0]
+        self.assertIn("breakdown", first)
+        self.assertIn("reasons", first)
+        self.assertIn("score", first)
+        self.assertIn("property", first)
+
+    def test_notifications_created_on_conversation_and_message(self) -> None:
+        owner_login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "owner@lawim.local", "password": "lawim-demo"},
+        )
+        owner_token = str(owner_login.body_json()["token"])
+        created = self.invoke(
+            "/api/conversations",
+            method="POST",
+            token=owner_token,
+            body={
+                "subject": "Notification probe",
+                "initial_message": "Hello from tests",
+            },
+        )
+        self.assertEqual(created.status, HTTPStatus.CREATED)
+        conversation_id = int(created.body_json()["conversation"]["id"])
+
+        owner_notifications = self.invoke("/api/notifications?limit=20", token=owner_token)
+        self.assertEqual(owner_notifications.status, HTTPStatus.OK)
+        owner_kinds = [item["kind"] for item in owner_notifications.body_json()["notifications"]]
+        self.assertIn("conversation_created", owner_kinds)
+
+        admin_login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        admin_token = str(admin_login.body_json()["token"])
+        reply = self.invoke(
+            f"/api/conversations/{conversation_id}/messages",
+            method="POST",
+            token=admin_token,
+            body={"body": "Follow-up ping"},
+        )
+        self.assertEqual(reply.status, HTTPStatus.CREATED)
+
+        owner_refreshed = self.invoke("/api/notifications?limit=20", token=owner_token)
+        refreshed_kinds = [item["kind"] for item in owner_refreshed.body_json()["notifications"]]
+        self.assertIn("message_received", refreshed_kinds)
+
+        notification_id = owner_refreshed.body_json()["notifications"][0]["id"]
+        marked = self.invoke(f"/api/notifications/{notification_id}/read", method="PATCH", token=owner_token, body={})
+        self.assertEqual(marked.status, HTTPStatus.OK)
+        self.assertTrue(marked.body_json()["notification"]["read"])
+
+    def test_negotiation_stage_update(self) -> None:
+        login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        token = str(login.body_json()["token"])
+        created = self.invoke(
+            "/api/conversations",
+            method="POST",
+            token=token,
+            body={"subject": "Offer thread", "initial_message": "Interested"},
+        )
+        conversation_id = int(created.body_json()["conversation"]["id"])
+        updated = self.invoke(
+            f"/api/conversations/{conversation_id}",
+            method="PATCH",
+            token=token,
+            body={"negotiation_stage": "offer"},
+        )
+        self.assertEqual(updated.status, HTTPStatus.OK)
+        self.assertEqual(updated.body_json()["conversation"]["negotiation_stage"], "offer")
+
+    def test_health_and_metrics_endpoints(self) -> None:
+        health = self.invoke("/api/health")
+        self.assertEqual(health.status, HTTPStatus.OK)
+        health_payload = health.body_json()
+        self.assertEqual(health_payload["status"], "ok")
+        self.assertIn("audit", health_payload)
+        self.assertIn("metrics", health_payload)
+        self.assertIn("notifications", health_payload["summary"])
+
+        metrics = self.invoke("/api/metrics")
+        self.assertEqual(metrics.status, HTTPStatus.OK)
+        self.assertIn("metrics", metrics.body_json())

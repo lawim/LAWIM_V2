@@ -48,9 +48,15 @@ class MediaStorage(ABC):
 
 
 class LocalMediaStorage(MediaStorage):
-    def __init__(self, root: Path, *, public_base_url: str) -> None:
+    def __init__(self, root: Path, *, public_base_url: str, cdn_base_url: str | None = None) -> None:
         self.root = Path(root)
         self.public_base_url = public_base_url.rstrip("/")
+        self.cdn_base_url = cdn_base_url.rstrip("/") if cdn_base_url else None
+
+    def _public_url(self, relative: Path) -> str:
+        if self.cdn_base_url:
+            return f"{self.cdn_base_url}/{relative.as_posix()}"
+        return f"{self.public_base_url}/media/{relative.as_posix()}"
 
     def store(
         self,
@@ -68,7 +74,7 @@ class LocalMediaStorage(MediaStorage):
         target = self.root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(content)
-        public_url = f"{self.public_base_url}/media/{relative.as_posix()}"
+        public_url = self._public_url(relative)
         thumbnail_url = build_thumbnail_url(public_url, safe_name)
         return StoredMedia(
             storage_path=relative.as_posix(),

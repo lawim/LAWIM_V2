@@ -24,6 +24,8 @@ function cacheRefs() {
     mediaList: byId("media-list"),
     matchesList: byId("matches-list"),
     conversationsList: byId("conversations-list"),
+    notificationsList: byId("notifications-list"),
+    markNotificationsReadButton: byId("mark-notifications-read"),
     conversationDetail: byId("conversation-detail"),
     messageForm: byId("message-form"),
     loginForm: byId("login-form"),
@@ -169,6 +171,7 @@ function renderSummary(summary) {
     ["Published properties", summary.published_properties ?? 0, "violet"],
     ["Conversations", summary.conversations ?? 0, "coral"],
     ["Messages", summary.messages ?? 0, "sea"],
+    ["Notifications", summary.notifications ?? 0, "gold"],
     ["Media", summary.media ?? 0, "slate"],
   ];
   cards.forEach(([label, value, accent]) => refs.statusStrip.appendChild(renderStat(label, value, accent)));
@@ -266,6 +269,10 @@ function renderMatches(items) {
     const property = match.property;
     const price = propertyPrice(property);
     const geo = propertyGeo(property);
+    const breakdown = match.breakdown || {};
+    const breakdownText = Object.entries(breakdown)
+      .map(([key, value]) => `${key}:${value}`)
+      .join(" · ");
     const article = document.createElement("article");
     article.className = "mini-card mini-card--match";
     article.innerHTML = `
@@ -276,9 +283,22 @@ function renderMatches(items) {
       <p class="muted">${geo.city || property.city}, ${geo.country || property.country}</p>
       <p>${money(price.min, price.currency)} - ${money(price.max, price.currency)}</p>
       <p class="muted">${(match.reasons || []).join(" · ") || "No reasons returned."}</p>
+      <p class="muted breakdown">${breakdownText || "No score breakdown."}</p>
     `;
     return article;
   }, "No match results yet.");
+}
+
+function conversationRequester(conversation) {
+  return conversation.requester?.full_name || conversation.requester_name || "n/a";
+}
+
+function conversationPropertyTitle(conversation) {
+  return conversation.property?.title || conversation.property_title || "n/a";
+}
+
+function messageSenderName(message) {
+  return message.sender?.full_name || message.sender_name || "n/a";
 }
 
 function renderConversationDetail(conversation) {
@@ -286,10 +306,10 @@ function renderConversationDetail(conversation) {
   refs.conversationDetail.innerHTML = `
     <div class="detail-summary">
       <div>
-        <p class="eyebrow">${conversation.status}</p>
+        <p class="eyebrow">${conversation.status} · ${conversation.negotiation_stage || "inquiry"}</p>
         <h3>${conversation.subject}</h3>
         <p class="muted">
-          Requester: ${conversation.requester_name || "n/a"} · Property: ${conversation.property_title || "n/a"}
+          Requester: ${conversationRequester(conversation)} · Property: ${conversationPropertyTitle(conversation)}
         </p>
       </div>
       <div class="detail-badge">
@@ -303,7 +323,7 @@ function renderConversationDetail(conversation) {
           (message) => `
             <article class="message">
               <div class="message__meta">
-                <strong>${message.sender_name}</strong>
+                <strong>${messageSenderName(message)}</strong>
                 <span class="muted">${message.created_at}</span>
               </div>
               <p>${message.body}</p>
@@ -316,6 +336,60 @@ function renderConversationDetail(conversation) {
   refs.messageForm.classList.toggle("hidden", !state.token);
 }
 
+function renderNotifications(items) {
+  renderList(refs.notificationsList, items, (notification) => {
+    const article = document.createElement("article");
+    article.className = "mini-card mini-card--notification";
+    if (!notification.read) {
+      article.dataset.unread = "true";
+    }
+    article.innerHTML = `
+      <div class="mini-card__header">
+        <strong>${notification.title}</strong>
+        <span class="chip subtle">${notification.kind}</span>
+      </div>
+      <p>${notification.body}</p>
+      <p class="muted">${notification.created_at || ""}</p>
+    `;
+    article.addEventListener("click", () => markNotificationRead(notification.id));
+    return article;
+  }, "No notifications yet.");
+}
+
+async function markNotificationRead(notificationId) {
+  if (!state.token) {
+    return;
+  }
+  try {
+    await api(`/api/notifications/${notificationId}/read`, { method: "PATCH", auth: true, body: {} });
+    await refreshNotifications();
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function markAllNotificationsRead() {
+  if (!state.token) {
+    return;
+  }
+  try {
+    await api("/api/notifications/read-all", { method: "POST", auth: true, body: {} });
+    await refreshNotifications();
+    setNotice("All notifications marked as read.", "ok");
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function refreshNotifications() {
+  if (!state.token) {
+    renderNotifications([]);
+    return;
+  }
+  const payload = await api("/api/notifications?limit=20", { auth: true });
+  renderNotifications(payload.notifications || []);
+}
+
 function renderConversations(items) {
   renderList(refs.conversationsList, items, (conversation) => {
     const article = document.createElement("article");
@@ -326,9 +400,9 @@ function renderConversations(items) {
     article.innerHTML = `
       <div class="mini-card__header">
         <strong>${conversation.subject}</strong>
-        <span class="chip subtle">${conversation.status}</span>
+        <span class="chip subtle">${conversation.status} · ${conversation.negotiation_stage || "inquiry"}</span>
       </div>
-      <p class="muted">${conversation.requester_name || "n/a"} · ${conversation.property_title || "n/a"}</p>
+      <p class="muted">${conversationRequester(conversation)} · ${conversationPropertyTitle(conversation)}</p>
       <p>${conversation.last_message || "No messages yet."}</p>
     `;
     article.addEventListener("click", () => selectConversation(conversation.id));
@@ -340,7 +414,7 @@ function renderHealth(health) {
   const environment = health.environment || {};
   const database = health.database || {};
   setRuntimeChip(`${health.status.toUpperCase()} · ${environment.app_env || "unknown"}`, health.status === "ok" ? "ok" : "warn");
-  refs.bootstrapSummary.textContent = `Driver ${environment.db_driver || database.driver || "sqlite"} · Geocoder ${environment.geocoding_provider || "local"} · ${health.summary?.events ?? 0} events.`;
+  refs.bootstrapSummary.textContent = `Driver ${environment.db_driver || database.driver || "sqlite"} · Geocoder ${environment.geocoding_provider || "local"} · ${health.summary?.events ?? 0} events · ${health.metrics?.requests_total ?? 0} requests.`;
 }
 
 function renderBootstrap(payload) {
@@ -361,6 +435,7 @@ function renderBootstrap(payload) {
   renderMedia(payload.media || []);
   renderMatches(payload.matches || []);
   renderConversations(payload.conversations || []);
+  renderNotifications(payload.notifications || []);
 
   if (state.token && !currentUser) {
     state.token = "";
@@ -384,7 +459,7 @@ function renderBootstrap(payload) {
 
 async function selectConversation(conversationId) {
   state.selectedConversationId = conversationId;
-  const payload = await api(`/api/conversations/${conversationId}`);
+  const payload = await api(`/api/conversations/${conversationId}`, { auth: Boolean(state.token) });
   renderConversationDetail(payload.conversation);
   renderConversations(state.bootstrap?.conversations || []);
 }
@@ -593,6 +668,9 @@ function bindEvents() {
   refs.geoForm.addEventListener("submit", handleGeoLookup);
   refs.mediaUploadForm.addEventListener("submit", handleMediaUpload);
   refs.messageForm.addEventListener("submit", handleMessageCreate);
+  if (refs.markNotificationsReadButton) {
+    refs.markNotificationsReadButton.addEventListener("click", markAllNotificationsRead);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {

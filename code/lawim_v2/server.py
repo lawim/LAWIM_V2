@@ -5,7 +5,7 @@ import json
 import logging
 import mimetypes
 import sqlite3
-from dataclasses import asdict, replace
+from dataclasses import replace
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
@@ -16,10 +16,11 @@ from urllib.parse import parse_qs, urlparse
 from .config import AppConfig
 from .errors import RepositoryError
 from .db import LawimRepository
-from .dto import geo_location_dto, media_dto, paginated_payload, property_dto
+from .dto import error_dto, geo_location_dto, media_dto, paginated_payload, property_dto
+from .matching import MatchCriteria, MatchWeights
 from .media_domain import THUMBNAIL_CONTRACT
-from .matching import MatchCriteria
 from .multipart import parse_multipart_form_data
+from .observability import METRICS
 from .persistence_adapter import resolve_persistence_adapter
 from .services import LawimServices, ServiceError
 
@@ -77,14 +78,20 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         try:
             handler()
         except ApiError as exc:
+            METRICS.increment("api", failed=True)
             self._send_json_error(exc.status, exc.code, exc.message)
         except ServiceError as exc:
+            METRICS.increment("api", failed=True)
             self._send_json_error(exc.status, exc.code, exc.message)
         except RepositoryError as exc:
+            METRICS.increment("api", failed=True)
             self._send_json_error(exc.status, exc.code, str(exc))
         except Exception as exc:  # pragma: no cover - unexpected runtime failure
+            METRICS.increment("api", failed=True)
             LOGGER.exception("Unhandled %s error: %s", self.command, exc)
             self._send_json_error(HTTPStatus.INTERNAL_SERVER_ERROR, "internal_error", "Unexpected server error")
+        else:
+            METRICS.increment("api")
 
     def _handle_get(self) -> None:
         parsed = urlparse(self.path)
@@ -131,6 +138,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/health":
             self._send_json(self.services.health())
+            return
+
+        if path == "/api/metrics":
+            self._send_json(self.services.metrics())
             return
 
         if path == "/api/bootstrap":
@@ -239,16 +250,46 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/conversations":
-            self._send_json({"conversations": self.repository.list_conversations(limit=self._query_limit(query))})
+            actor = self._require_user(optional=True)
+            self._send_json(
+                self.services.list_conversations(
+                    actor=actor,
+                    user_id=self._first_int(query, "user_id", minimum=1),
+                    organization_id=self._first_int(query, "organization_id", minimum=1),
+                    property_id=self._first_int(query, "property_id", minimum=1),
+                    status=self._first(query, "status"),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+
+        if path == "/api/notifications":
+            actor = self._require_user()
+            self._send_json(
+                self.services.list_notifications(
+                    actor=actor,
+                    unread_only=self._first_bool(query, "unread_only"),
+                    limit=self._query_limit(query),
+                )
+            )
             return
 
         if path.startswith("/api/conversations/") and path.endswith("/messages"):
+            actor = self._require_user(optional=True)
             conversation_id = self._extract_conversation_id(path, suffix="/messages")
+            if actor is not None:
+                payload = self.services.get_conversation(actor=actor, conversation_id=conversation_id)
+                self._send_json({"messages": payload.get("messages", [])})
+                return
             self._send_json({"messages": self.repository.list_messages(conversation_id)})
             return
 
         if path.startswith("/api/conversations/"):
+            actor = self._require_user(optional=True)
             conversation_id = self._extract_conversation_id(path)
+            if actor is not None:
+                self._send_json({"conversation": self.services.get_conversation(actor=actor, conversation_id=conversation_id)})
+                return
             conversation = self.repository.get_conversation(conversation_id)
             conversation["messages"] = self.repository.list_messages(conversation_id)
             self._send_json({"conversation": conversation})
@@ -256,7 +297,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/matches":
             criteria = self._build_match_criteria(query)
-            self._send_json({"matches": self.repository.matched_properties(criteria), "criteria": asdict(criteria)})
+            self._send_json(self.services.list_matches(criteria))
             return
 
         if path == "/api/media":
@@ -396,12 +437,19 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 actor=actor,
                 user_id=self._require_int(body, "user_id", default=int(actor["id"]), minimum=1),
                 property_id=self._optional_int(body.get("property_id"), minimum=1),
+                organization_id=self._optional_int(body.get("organization_id"), minimum=1),
                 subject=self._require_text(body, "subject"),
                 status=self._coerce_status(body.get("status"), default="open"),
+                negotiation_stage=self._optional_text(body.get("negotiation_stage")) or "inquiry",
                 initial_message=self._optional_text(body.get("initial_message")),
                 sender_user_id=self._optional_int(body.get("sender_user_id"), minimum=1) or int(actor["id"]),
             )
             self._send_json({"conversation": conversation}, status=HTTPStatus.CREATED)
+            return
+
+        if path == "/api/notifications/read-all":
+            result = self.services.mark_all_notifications_read(actor=actor)
+            self._send_json(result)
             return
 
         if path.startswith("/api/conversations/") and path.endswith("/messages"):
@@ -554,14 +602,25 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 conversation_id=conversation_id,
                 subject=self._optional_text(body.get("subject")),
                 status=self._optional_text(body.get("status")),
+                negotiation_stage=self._optional_text(body.get("negotiation_stage")),
             )
             self._send_json({"conversation": conversation})
             return
 
+        if path.startswith("/api/notifications/") and path.endswith("/read"):
+            notification_id = self._extract_notification_id(path)
+            payload = self.services.mark_notification_read(actor=actor, notification_id=notification_id)
+            self._send_json(payload)
+            return
+
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
 
-    def _require_user(self) -> dict[str, object]:
-        token = self._bearer_token(optional=False)
+    def _require_user(self, *, optional: bool = False) -> dict[str, object] | None:
+        token = self._bearer_token(optional=optional)
+        if not token:
+            if optional:
+                return None
+            raise ApiError(HTTPStatus.UNAUTHORIZED, "unauthorized", "Valid session required")
         user = self.repository.get_user_by_session(token)
         if user is None:
             raise ApiError(HTTPStatus.UNAUTHORIZED, "unauthorized", "Valid session required")
@@ -852,14 +911,49 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         budget_max = self._first_int(query, "budget_max", minimum=0)
         if budget_min is not None and budget_max is not None and budget_min > budget_max:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'budget_min' cannot exceed 'budget_max'")
+        weights = MatchWeights(
+            status=self._first_float(query, "weight_status") or MatchWeights().status,
+            city=self._first_float(query, "weight_city") or MatchWeights().city,
+            region=self._first_float(query, "weight_region") or MatchWeights().region,
+            budget=self._first_float(query, "weight_budget") or MatchWeights().budget,
+            proximity=self._first_float(query, "weight_proximity") or MatchWeights().proximity,
+            attributes=self._first_float(query, "weight_attributes") or MatchWeights().attributes,
+            availability=self._first_float(query, "weight_availability") or MatchWeights().availability,
+        )
         return MatchCriteria(
             city=self._first(query, "city"),
+            region=self._first(query, "region"),
+            country=self._first(query, "country"),
             budget_min=budget_min,
             budget_max=budget_max,
             latitude=self._optional_float(self._first(query, "latitude")),
             longitude=self._optional_float(self._first(query, "longitude")),
+            property_type=self._first(query, "property_type"),
+            bedrooms_min=self._first_int(query, "bedrooms_min", minimum=0),
+            availability=self._first(query, "availability"),
+            status=self._first(query, "status") or "published",
             limit=self._query_limit(query),
+            weights=weights.normalized(),
         )
+
+    def _first_float(self, query: dict[str, list[str]], key: str) -> float | None:
+        raw = self._first(query, key)
+        if raw is None:
+            return None
+        return self._optional_float(raw)
+
+    def _extract_notification_id(self, path: str) -> int:
+        marker = "/api/notifications/"
+        if not path.startswith(marker) or not path.endswith("/read"):
+            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Notification route not found")
+        raw_id = path[len(marker) : -len("/read")]
+        try:
+            notification_id = int(raw_id.strip("/"))
+        except ValueError as exc:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_notification_id", "Notification id must be numeric") from exc
+        if notification_id < 1:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_notification_id", "Notification id must be positive")
+        return notification_id
 
     def _extract_property_id(self, path: str, suffix: str = "") -> int:
         marker = "/api/properties/"

@@ -1,4 +1,4 @@
-// LAWIM_V2 runtime schema v4 — aligned with code/lawim_v2/persistence.py manifest
+// LAWIM_V2 runtime schema v5 — aligned with code/lawim_v2/persistence.py manifest
 // Fingerprint anchor: build_schema_fingerprint(build_application_schema_manifest())
 
 generator client {
@@ -11,14 +11,15 @@ datasource db {
 }
 
 model Organization {
-  id         Int      @id @default(autoincrement())
-  name       String
-  slug       String   @unique
-  kind       String   @default("agency")
-  city       String?
-  createdAt  String   @map("created_at")
-  users      User[]
-  properties Property[] @relation("OwnerOrganization")
+  id            Int      @id @default(autoincrement())
+  name          String
+  slug          String   @unique
+  kind          String   @default("agency")
+  city          String?
+  createdAt     String   @map("created_at")
+  users         User[]
+  properties    Property[] @relation("OwnerOrganization")
+  conversations Conversation[]
 
   @@map("organizations")
 }
@@ -36,6 +37,7 @@ model User {
   sessions       Session[]
   conversations  Conversation[]
   messages       Message[] @relation("Sender")
+  notifications  Notification[]
 
   @@map("users")
 }
@@ -111,16 +113,21 @@ model Media {
 }
 
 model Conversation {
-  id         Int      @id @default(autoincrement())
-  propertyId Int?     @map("property_id")
-  userId     Int      @map("user_id")
-  subject    String
-  status     String
-  createdAt  String   @map("created_at")
-  property   Property? @relation(fields: [propertyId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
-  messages   Message[]
+  id               Int      @id @default(autoincrement())
+  propertyId       Int?     @map("property_id")
+  userId           Int      @map("user_id")
+  organizationId   Int?     @map("organization_id")
+  subject          String
+  status           String
+  negotiationStage String   @default("inquiry") @map("negotiation_stage")
+  createdAt        String   @map("created_at")
+  updatedAt        String   @map("updated_at")
+  property         Property? @relation(fields: [propertyId], references: [id])
+  user             User     @relation(fields: [userId], references: [id])
+  organization     Organization? @relation(fields: [organizationId], references: [id])
+  messages         Message[]
 
+  @@index([userId, updatedAt], map: "idx_conversations_user_updated")
   @@map("conversations")
 }
 
@@ -144,6 +151,21 @@ model Event {
   createdAt String @map("created_at")
 
   @@map("events")
+}
+
+model Notification {
+  id          Int     @id @default(autoincrement())
+  userId      Int     @map("user_id")
+  kind        String
+  title       String
+  body        String
+  payloadJson String  @default("{}") @map("payload_json")
+  readAt      String? @map("read_at")
+  createdAt   String  @map("created_at")
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt], map: "idx_notifications_user_read")
+  @@map("notifications")
 }
 
 model SchemaMeta {
