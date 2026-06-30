@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 from .errors import ValidationError
 from .dto import PaginationMeta, coerce_sort_field, coerce_sort_order
+from .geo_domain import normalize_city, normalize_country, normalize_region
+from .property_domain import normalize_availability, normalize_property_type
 
 
 def _coerce_sort_field(field: str | None, allowed: set[str], default: str) -> str:
@@ -98,20 +100,23 @@ def build_property_query(
     parsed_price_max = parse_price(price_max, field="price_max")
     if parsed_price_min is not None and parsed_price_max is not None and parsed_price_min > parsed_price_max:
         raise ValidationError("price_min cannot exceed price_max")
+    normalized_city = _optional_city(city)
+    normalized_country = _optional_country(country)
+    normalized_region = _optional_region(region, city=normalized_city)
     return ListQuery(
         page=parse_page(page),
         limit=parse_limit(limit),
         sort=_coerce_sort_field(sort, {"created_at", "title", "price_min", "city", "status"}, "created_at"),
         order=_coerce_sort_order(order),
-        city=_optional_text(city),
-        country=_optional_text(country),
-        region=_optional_text(region),
-        status=_optional_text(status),
-        availability=_optional_text(availability),
-        property_type=_optional_text(property_type),
+        city=normalized_city,
+        country=normalized_country,
+        region=normalized_region,
+        status=_optional_lower(status),
+        availability=_optional_availability(availability),
+        property_type=_optional_property_type(property_type),
         owner_organization_id=owner_organization_id,
         include_deleted=include_deleted,
-        search=_optional_text(search),
+        search=_optional_lower(search),
         price_min=parsed_price_min,
         price_max=parsed_price_max,
     )
@@ -127,7 +132,7 @@ def build_notification_query(
     return ListQuery(
         page=parse_page(page),
         limit=parse_limit(limit),
-        kind=_optional_text(kind),
+        kind=_optional_lower(kind),
         unread_only=unread_only,
     )
 
@@ -148,7 +153,7 @@ def build_media_query(
         sort=_coerce_sort_field(sort, {"created_at", "position", "kind"}, "created_at"),
         order=_coerce_sort_order(order),
         property_id=property_id,
-        kind=_optional_text(kind),
+        kind=_optional_lower(kind),
         include_deleted=include_deleted,
     )
 
@@ -163,3 +168,45 @@ def _optional_text(value: str | None) -> str | None:
         return None
     stripped = value.strip()
     return stripped or None
+
+
+def _optional_lower(value: str | None) -> str | None:
+    text = _optional_text(value)
+    if text is None:
+        return None
+    return text.lower()
+
+
+def _optional_city(value: str | None) -> str | None:
+    text = _optional_text(value)
+    if text is None:
+        return None
+    return normalize_city(text)
+
+
+def _optional_country(value: str | None) -> str | None:
+    text = _optional_text(value)
+    if text is None:
+        return None
+    return normalize_country(text)
+
+
+def _optional_region(value: str | None, *, city: str | None = None) -> str | None:
+    text = _optional_text(value)
+    if text is None:
+        return None
+    return normalize_region(text, city=city)
+
+
+def _optional_availability(value: str | None) -> str | None:
+    text = _optional_text(value)
+    if text is None:
+        return None
+    return normalize_availability(text)
+
+
+def _optional_property_type(value: str | None) -> str | None:
+    text = _optional_text(value)
+    if text is None:
+        return None
+    return normalize_property_type(text)

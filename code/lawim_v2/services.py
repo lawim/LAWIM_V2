@@ -147,6 +147,28 @@ class LawimServices:
                 payload["metrics"] = METRICS.snapshot()
         return payload
 
+    def readiness(self) -> dict[str, object]:
+        try:
+            self.repository.scalar("SELECT 1")
+            db_ready = True
+        except Exception:
+            db_ready = False
+        storage_ready = False
+        try:
+            self.config.media_storage_path.mkdir(parents=True, exist_ok=True)
+            probe = self.config.media_storage_path / ".ready_probe"
+            probe.write_text("ok", encoding="utf-8")
+            probe.unlink(missing_ok=True)
+            storage_ready = True
+        except OSError:
+            storage_ready = False
+        ready = db_ready and storage_ready
+        return {
+            "status": "ready" if ready else "not_ready",
+            "database": {"ready": db_ready},
+            "storage": {"ready": storage_ready, "path": str(self.config.media_storage_path)},
+        }
+
     def metrics(self, *, actor: dict[str, object]) -> dict[str, object]:
         if not self.policy.is_admin(actor):
             raise PermissionDenied("Only administrators can inspect runtime metrics")
@@ -161,26 +183,23 @@ class LawimServices:
 
     def bootstrap(self, *, token: str | None = None) -> dict[str, object]:
         payload = self.repository.bootstrap_payload(token=token)
-        properties = self.list_properties(limit=10)["properties"]
-        media = self.list_media(limit=10)["media"]
-        conversations = self.list_conversations(actor=payload["current_user"], limit=10)["conversations"]
-        matches = self.list_matches(MatchCriteria(limit=5))["matches"]
         notifications: list[dict[str, object]] = []
-        users: list[dict[str, object]] = []
         current_user = payload["current_user"]
         if current_user is not None:
             notifications = self.list_notifications(actor=current_user, limit=10)["notifications"]
-            if self.policy.is_admin(current_user):
-                users = self.list_users(actor=current_user, limit=10)
+        users = payload["users"] if current_user is not None and self.policy.is_admin(current_user) else []
         return {
             "summary": payload["summary"],
-            "current_user": payload["current_user"],
-            "organizations": self.list_organizations(limit=10),
+            "current_user": current_user,
+            "features": {
+                "demo_credentials": self.config.seed_demo_data,
+            },
+            "organizations": [organization_dto(row) for row in payload["organizations"]],
             "users": users,
-            "properties": properties,
-            "media": media,
-            "conversations": conversations,
-            "matches": matches,
+            "properties": [property_dto(item) for item in payload["properties"]],
+            "media": [media_dto(item) for item in payload["media"]],
+            "conversations": [conversation_dto(item) for item in payload["conversations"]],
+            "matches": [match_dto(item) for item in payload["matches"]],
             "notifications": notifications,
         }
 
@@ -924,10 +943,10 @@ class LawimServices:
         METRICS.increment("notifications")
         return result
 
-    def events(self, *, actor: dict[str, object], limit: int = 50) -> list[dict[str, object]]:
+    def events(self, *, actor: dict[str, object], limit: int = 50, kind: str | None = None) -> list[dict[str, object]]:
         if not self.policy.is_admin(actor):
             raise PermissionDenied("Only administrators can inspect the event log")
-        return self.repository.list_events(limit=limit)
+        return self.repository.list_events(limit=limit, kind=kind)
 
     def _notify_conversation_created(self, conversation: dict[str, object]) -> None:
         title = "Conversation ouverte"
@@ -942,15 +961,16 @@ class LawimServices:
         )
         org_id = conversation.get("organization_id")
         if org_id is not None:
-            for user in self.repository.list_users(limit=100):
-                if user.get("organization_id") == org_id and user.get("id") != conversation.get("user_id"):
-                    self.repository.create_notification(
-                        user_id=int(user["id"]),
-                        kind="conversation_created",
-                        title=title,
-                        body=body,
-                        payload=payload,
-                    )
+            recipient_ids = set(self.repository.list_user_ids_by_organization(int(org_id)))
+            recipient_ids.discard(int(conversation["user_id"]))
+            for user_id in recipient_ids:
+                self.repository.create_notification(
+                    user_id=user_id,
+                    kind="conversation_created",
+                    title=title,
+                    body=body,
+                    payload=payload,
+                )
 
     def _notify_conversation_updated(self, conversation: dict[str, object], actor: dict[str, object]) -> None:
         title = "Conversation mise à jour"
@@ -963,9 +983,7 @@ class LawimServices:
         recipient_ids = {int(conversation["user_id"])}
         org_id = conversation.get("organization_id")
         if org_id is not None:
-            for user in self.repository.list_users(limit=100):
-                if user.get("organization_id") == org_id:
-                    recipient_ids.add(int(user["id"]))
+            recipient_ids.update(self.repository.list_user_ids_by_organization(int(org_id)))
         recipient_ids.discard(int(actor["id"]))
         for user_id in recipient_ids:
             self.repository.create_notification(
@@ -984,9 +1002,7 @@ class LawimServices:
         recipient_ids = {int(conversation["user_id"])}
         org_id = conversation.get("organization_id")
         if org_id is not None:
-            for user in self.repository.list_users(limit=100):
-                if user.get("organization_id") == org_id:
-                    recipient_ids.add(int(user["id"]))
+            recipient_ids.update(self.repository.list_user_ids_by_organization(int(org_id)))
         recipient_ids.discard(sender_id)
         for user_id in recipient_ids:
             self.repository.create_notification(

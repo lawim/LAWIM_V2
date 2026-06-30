@@ -5,6 +5,7 @@ import json
 import logging
 import mimetypes
 import sqlite3
+import time
 from dataclasses import replace
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -23,11 +24,13 @@ from .media_domain import THUMBNAIL_CONTRACT
 from .multipart import parse_multipart_form_data
 from .observability import METRICS
 from .persistence_adapter import resolve_persistence_adapter
+from .rate_limit import AuthRateLimiter
 from .services import LawimServices, ServiceError
 
 
 LOGGER = logging.getLogger("lawim_v2")
 MAX_JSON_BODY_BYTES = 1_048_576
+_STATIC_TEXT_CACHE: dict[str, str] = {}
 
 
 class ApiError(Exception):
@@ -48,6 +51,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
     repository: LawimRepository
     config: AppConfig
     services: LawimServices
+    auth_limiter: AuthRateLimiter
 
     def do_GET(self) -> None:  # noqa: N802
         self._handle_request(self._handle_get)
@@ -66,33 +70,60 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self) -> None:  # noqa: N802
         self.send_response(HTTPStatus.NO_CONTENT)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+        self._send_cors_headers()
         self.send_header("Content-Length", "0")
         self.end_headers()
 
     def log_message(self, format: str, *args: object) -> None:  # noqa: A003
-        LOGGER.info("%s - %s", self.address_string(), format % args)
+        LOGGER.info(
+            json.dumps(
+                {
+                    "event": "http_request",
+                    "client": self.address_string(),
+                    "request": format % args,
+                    "method": self.command,
+                    "path": self.path,
+                },
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+        )
 
     def _handle_request(self, handler) -> None:
+        route = urlparse(self.path).path
+        started = time.perf_counter()
+        failed = False
         try:
             handler()
         except ApiError as exc:
-            METRICS.increment("api", failed=True)
+            failed = True
             self._send_json_error(exc.status, exc.code, exc.message)
         except ServiceError as exc:
-            METRICS.increment("api", failed=True)
+            failed = True
             self._send_json_error(exc.status, exc.code, exc.message)
         except RepositoryError as exc:
-            METRICS.increment("api", failed=True)
+            failed = True
             self._send_json_error(exc.status, exc.code, str(exc))
         except Exception as exc:  # pragma: no cover - unexpected runtime failure
-            METRICS.increment("api", failed=True)
+            failed = True
             LOGGER.exception("Unhandled %s error: %s", self.command, exc)
             self._send_json_error(HTTPStatus.INTERNAL_SERVER_ERROR, "internal_error", "Unexpected server error")
-        else:
-            METRICS.increment("api")
+        finally:
+            duration_ms = (time.perf_counter() - started) * 1000.0
+            METRICS.record_request(route=route, duration_ms=duration_ms, failed=failed)
+            if self.config.metrics_enabled:
+                LOGGER.debug(
+                    json.dumps(
+                        {
+                            "event": "request_complete",
+                            "route": route,
+                            "method": self.command,
+                            "duration_ms": round(duration_ms, 2),
+                            "failed": failed,
+                        },
+                        separators=(",", ":"),
+                    )
+                )
 
     def _handle_get(self) -> None:
         parsed = urlparse(self.path)
@@ -112,6 +143,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
         if path == "/healthz":
             self._send_text("ok", content_type="text/plain; charset=utf-8")
+            return
+        if path == "/readyz":
+            payload = self.services.readiness()
+            status = HTTPStatus.OK if payload.get("status") == "ready" else HTTPStatus.SERVICE_UNAVAILABLE
+            self._send_json(payload, status=status)
             return
         if path.startswith("/api/"):
             self._handle_api_get(parsed)
@@ -154,7 +190,15 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/events":
             actor = self._require_user()
-            self._send_json({"events": self.services.events(actor=actor, limit=self._query_limit(query))})
+            self._send_json(
+                {
+                    "events": self.services.events(
+                        actor=actor,
+                        limit=self._query_limit(query),
+                        kind=self._first(query, "kind"),
+                    )
+                }
+            )
             return
 
         if path == "/api/me":
@@ -351,6 +395,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         path = parsed.path
 
         if path == "/api/auth/login":
+            self._enforce_auth_rate_limit(path)
             email = self._require_text(body, "email")
             password = self._require_text(body, "password")
             payload = self.services.login(email=email, password=password)
@@ -358,6 +403,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/auth/register":
+            self._enforce_auth_rate_limit(path)
             email = self._require_text(body, "email")
             password = self._require_text(body, "password")
             full_name = self._require_text(body, "full_name")
@@ -734,6 +780,40 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         )
         self._send_json({"media": media_row}, status=HTTPStatus.CREATED)
 
+    def _request_origin(self) -> str | None:
+        raw = self.headers.get("Origin")
+        if not raw:
+            return None
+        stripped = raw.strip()
+        return stripped or None
+
+    def _allowed_cors_origin(self) -> str | None:
+        origin = self._request_origin()
+        allowed = self.config.cors_allowed_origins
+        if origin and origin in allowed:
+            return origin
+        if origin is None and len(allowed) == 1:
+            return allowed[0]
+        return None
+
+    def _send_cors_headers(self) -> None:
+        origin = self._allowed_cors_origin()
+        if origin:
+            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Vary", "Origin")
+        self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+
+    def _enforce_auth_rate_limit(self, path: str) -> None:
+        client_host = self.client_address[0] if self.client_address else "unknown"
+        key = f"{client_host}:{path}"
+        if not self.auth_limiter.is_allowed(key):
+            raise ApiError(
+                HTTPStatus.TOO_MANY_REQUESTS,
+                "rate_limited",
+                "Too many authentication attempts; try again later",
+            )
+
     def _send_security_headers(self) -> None:
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("X-Frame-Options", "DENY")
@@ -746,13 +826,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         status: HTTPStatus = HTTPStatus.OK,
         extra_headers: dict[str, str] | None = None,
     ) -> None:
-        body = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
+        body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+        self._send_cors_headers()
         if status == HTTPStatus.UNAUTHORIZED:
             self.send_header("WWW-Authenticate", 'Bearer realm="LAWIM_V2"')
         if extra_headers:
@@ -780,12 +858,17 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
     def _send_static(self, name: str, content_type: str) -> None:
         try:
-            content = resources.files("lawim_v2.static").joinpath(name).read_text(encoding="utf-8")
+            content = _STATIC_TEXT_CACHE.get(name)
+            if content is None:
+                content = resources.files("lawim_v2.static").joinpath(name).read_text(encoding="utf-8")
+                _STATIC_TEXT_CACHE[name] = content
         except FileNotFoundError as exc:
             raise ApiError(HTTPStatus.NOT_FOUND, "asset_not_found", f"Static asset not found: {name}") from exc
         self._send_text(content, content_type=content_type)
 
     def _send_media_asset(self, path: str) -> None:
+        if not self.config.public_media:
+            self._require_user()
         relative = path[len("/media/") :].lstrip("/")
         if not relative or ".." in relative.split("/"):
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_media_path", "Invalid media path")
@@ -797,7 +880,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("Access-Control-Allow-Origin", "*")
+        self._send_cors_headers()
         self._send_security_headers()
         self.end_headers()
         self.wfile.write(body)
@@ -942,27 +1025,34 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         min_score = query_min_score if query_min_score is not None else self.config.match_min_score
         if min_score < 0:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'min_score' must be non-negative")
+        city = self._first(query, "city")
+        region = self._first(query, "region")
+        country = self._first(query, "country")
+        property_type = self._first(query, "property_type")
+        availability = self._first(query, "availability")
+        status = self._first(query, "status")
+        default_weights = MatchWeights()
         weights = MatchWeights(
-            status=self._first_float(query, "weight_status") or MatchWeights().status,
-            city=self._first_float(query, "weight_city") or MatchWeights().city,
-            region=self._first_float(query, "weight_region") or MatchWeights().region,
-            budget=self._first_float(query, "weight_budget") or MatchWeights().budget,
-            proximity=self._first_float(query, "weight_proximity") or MatchWeights().proximity,
-            attributes=self._first_float(query, "weight_attributes") or MatchWeights().attributes,
-            availability=self._first_float(query, "weight_availability") or MatchWeights().availability,
+            status=self._first_float(query, "weight_status") or default_weights.status,
+            city=self._first_float(query, "weight_city") or default_weights.city,
+            region=self._first_float(query, "weight_region") or default_weights.region,
+            budget=self._first_float(query, "weight_budget") or default_weights.budget,
+            proximity=self._first_float(query, "weight_proximity") or default_weights.proximity,
+            attributes=self._first_float(query, "weight_attributes") or default_weights.attributes,
+            availability=self._first_float(query, "weight_availability") or default_weights.availability,
         )
         return MatchCriteria(
-            city=self._first(query, "city"),
-            region=self._first(query, "region"),
-            country=self._first(query, "country"),
+            city=city.lower() if city else None,
+            region=region.lower() if region else None,
+            country=country.lower() if country else None,
             budget_min=budget_min,
             budget_max=budget_max,
             latitude=self._optional_float(self._first(query, "latitude")),
             longitude=self._optional_float(self._first(query, "longitude")),
-            property_type=self._first(query, "property_type"),
+            property_type=property_type.lower() if property_type else None,
             bedrooms_min=self._first_int(query, "bedrooms_min", minimum=0),
-            availability=self._first(query, "availability"),
-            status=self._first(query, "status") or "published",
+            availability=availability.lower() if availability else None,
+            status=(status.lower() if status else "published"),
             limit=self._query_limit(query),
             min_score=min_score,
             weights=weights.normalized(),
@@ -1018,6 +1108,10 @@ def create_server(config: AppConfig) -> LawimThreadingHTTPServer:
     BoundHandler.repository = repository
     BoundHandler.config = config
     BoundHandler.services = services
+    BoundHandler.auth_limiter = AuthRateLimiter(
+        max_attempts=config.auth_rate_limit_max,
+        window_seconds=config.auth_rate_limit_window_seconds,
+    )
 
     server = LawimThreadingHTTPServer((config.host, config.port), BoundHandler)
     server.repository = repository  # type: ignore[attr-defined]

@@ -129,7 +129,9 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
     )
     conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_search_key ON properties(search_key)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_deleted_at ON properties(deleted_at)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_created_at ON properties(created_at, id)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_media_property_position ON media(property_id, position)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_media_created_at ON media(created_at, id)")
 
     conversation_columns = {
         "organization_id": "INTEGER",
@@ -175,7 +177,18 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
         CREATE INDEX IF NOT EXISTS idx_conversations_user_updated ON conversations(user_id, updated_at);
+        CREATE INDEX IF NOT EXISTS idx_conversations_updated_at ON conversations(updated_at, id);
+        CREATE INDEX IF NOT EXISTS idx_conversations_organization_updated ON conversations(organization_id, updated_at, id);
+        CREATE INDEX IF NOT EXISTS idx_conversations_property_updated ON conversations(property_id, updated_at, id);
         CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at);
+        CREATE INDEX IF NOT EXISTS idx_organizations_created_at ON organizations(created_at, id);
+        CREATE INDEX IF NOT EXISTS idx_users_organization ON users(organization_id, id);
+        CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at, id);
+        CREATE INDEX IF NOT EXISTS idx_events_created_at ON events(created_at, id);
+        CREATE INDEX IF NOT EXISTS idx_events_kind_created ON events(kind, created_at, id);
+        CREATE INDEX IF NOT EXISTS idx_sessions_user_expires ON sessions(user_id, expires_at);
+        CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
+        CREATE INDEX IF NOT EXISTS idx_properties_owner_status ON properties(owner_organization_id, status, deleted_at);
         """
     )
 

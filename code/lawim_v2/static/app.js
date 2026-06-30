@@ -7,9 +7,13 @@ const state = {
   selectedPropertyId: null,
   selectedPropertyVersion: null,
   selectedPropertyTitle: null,
+  refreshInFlight: false,
 };
 
 const refs = {};
+const moneyFormatter = new Intl.NumberFormat("fr-FR", {
+  maximumFractionDigits: 0,
+});
 
 function byId(id) {
   return document.getElementById(id);
@@ -110,9 +114,7 @@ function money(value, currency = "XAF") {
   if (value === null || value === undefined || value === "") {
     return "n/a";
   }
-  const formatted = new Intl.NumberFormat("fr-FR", {
-    maximumFractionDigits: 0,
-  }).format(Number(value));
+  const formatted = moneyFormatter.format(Number(value));
   return `${formatted} ${currency}`;
 }
 
@@ -195,17 +197,25 @@ async function apiMultipart(path, { auth = false, formData }) {
     body: formData,
   });
   const text = await response.text();
-  const payload = text ? JSON.parse(text) : {};
+  let payload = {};
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch (error) {
+      throw new Error(`Invalid JSON response from ${path}`);
+    }
+  }
   if (!response.ok) {
-    throw new Error(payload?.error?.message || `HTTP ${response.status}`);
+    const formatted = formatApiError(payload, response.status);
+    const error = new Error(formatted.message);
+    error.code = formatted.code;
+    throw error;
   }
   return payload;
 }
 
 function clearNode(node) {
-  while (node.firstChild) {
-    node.removeChild(node.firstChild);
-  }
+  node.replaceChildren();
 }
 
 function renderStat(label, value, accent = "") {
@@ -214,12 +224,17 @@ function renderStat(label, value, accent = "") {
   if (accent) {
     item.dataset.accent = accent;
   }
-  item.innerHTML = `<span class="stat-label">${label}</span><strong>${value}</strong>`;
+  const statLabel = document.createElement("span");
+  statLabel.className = "stat-label";
+  statLabel.textContent = label;
+  const statValue = document.createElement("strong");
+  statValue.textContent = value;
+  item.append(statLabel, statValue);
   return item;
 }
 
 function renderSummary(summary) {
-  clearNode(refs.statusStrip);
+  const fragment = document.createDocumentFragment();
   const cards = [
     ["Organizations", summary.organizations ?? 0, "teal"],
     ["Users", summary.users ?? 0, "gold"],
@@ -229,19 +244,21 @@ function renderSummary(summary) {
     ["Notifications", summary.notifications ?? 0, "gold"],
     ["Media", summary.media ?? 0, "slate"],
   ];
-  cards.forEach(([label, value, accent]) => refs.statusStrip.appendChild(renderStat(label, value, accent)));
+  cards.forEach(([label, value, accent]) => fragment.appendChild(renderStat(label, value, accent)));
+  refs.statusStrip.replaceChildren(fragment);
 }
 
 function renderList(target, items, renderer, emptyText) {
-  clearNode(target);
+  const fragment = document.createDocumentFragment();
   if (!items || !items.length) {
     const empty = document.createElement("p");
     empty.className = "muted empty-state";
     empty.textContent = emptyText;
-    target.appendChild(empty);
+    target.replaceChildren(empty);
     return;
   }
-  items.forEach((item) => target.appendChild(renderer(item)));
+  items.forEach((item) => fragment.appendChild(renderer(item)));
+  target.replaceChildren(fragment);
 }
 
 function renderOrganizations(items) {
@@ -581,6 +598,10 @@ function renderHealth(health) {
 
 function renderBootstrap(payload) {
   state.bootstrap = payload;
+  maybePopulateDemoCredentials();
+  if (refs.demoButton) {
+    refs.demoButton.hidden = !payload.features?.demo_credentials;
+  }
   const currentUser = payload.current_user;
 
   if (currentUser) {
@@ -621,9 +642,15 @@ function renderBootstrap(payload) {
 
 async function selectConversation(conversationId) {
   state.selectedConversationId = conversationId;
-  const payload = await api(`/api/conversations/${conversationId}`, { auth: true });
-  renderConversationDetail(payload.conversation);
-  renderConversations(state.bootstrap?.conversations || []);
+  try {
+    const payload = await api(`/api/conversations/${conversationId}`, { auth: true });
+    renderConversationDetail(payload.conversation);
+    renderConversations(state.bootstrap?.conversations || []);
+  } catch (error) {
+    state.selectedConversationId = null;
+    refs.conversationDetail.innerHTML = `<p class="muted">${error.message}</p>`;
+    setNotice(error.message, "error", error.code || "");
+  }
 }
 
 function parseNumber(value) {
@@ -635,6 +662,10 @@ function parseNumber(value) {
 }
 
 async function refresh() {
+  if (state.refreshInFlight) {
+    return;
+  }
+  state.refreshInFlight = true;
   setLoading(true, "Refreshing runtime state...");
   try {
     const healthPromise = api("/api/health", { auth: Boolean(state.token) });
@@ -649,6 +680,7 @@ async function refresh() {
     setNotice(`${error.message} — retry with refresh or check ./scripts/run-local.sh`, "error", error.code || "");
     setRuntimeChip("DEGRADED", "warn");
   } finally {
+    state.refreshInFlight = false;
     setLoading(false);
   }
 }
@@ -820,6 +852,12 @@ async function handleMessageCreate(event) {
     await selectConversation(state.selectedConversationId);
   } catch (error) {
     setNotice(error.message, "error");
+  }
+}
+
+function maybePopulateDemoCredentials() {
+  if (state.bootstrap?.features?.demo_credentials) {
+    populateDemoCredentials();
   }
 }
 
@@ -1057,7 +1095,6 @@ function bindEvents() {
 document.addEventListener("DOMContentLoaded", async () => {
   cacheRefs();
   bindEvents();
-  populateDemoCredentials();
   applyJourney(state.activeJourney);
   updateSelectedPropertyLabel();
   await refresh();

@@ -20,7 +20,7 @@ from .persistence import (
     build_seed_profile,
 )
 from .api_query import ListQuery, build_media_query, build_notification_query, build_property_query, pagination_meta
-from .geo_domain import build_geo_dto, location_matches_query
+from .geo_domain import build_geo_dto
 from .media_domain import build_thumbnail_url, normalize_kind, normalize_metadata as normalize_media_metadata, validate_media_url
 from .property_domain import (
     build_property_input,
@@ -52,6 +52,10 @@ def _require_text(value: object, field: str) -> str:
     if not stripped:
         raise ValidationError(f"{field} is required")
     return stripped
+
+
+def _normalize_email(value: str) -> str:
+    return _require_text(value, "email").lower()
 
 @dataclass(frozen=True, slots=True)
 class DemoSeed:
@@ -277,14 +281,15 @@ class LawimRepository:
         return user
 
     def get_user_by_email(self, email: str) -> dict[str, object]:
+        normalized_email = _normalize_email(email)
         user = self.one(
             """
             SELECT u.*, o.name AS organization_name, o.slug AS organization_slug
             FROM users u
             LEFT JOIN organizations o ON o.id = u.organization_id
-            WHERE LOWER(u.email) = LOWER(?)
+            WHERE u.email = ?
             """,
-            (email,),
+            (normalized_email,),
         )
         if user is None:
             raise NotFoundError(f"unknown user email: {email}")
@@ -481,15 +486,28 @@ class LawimRepository:
             (limit,),
         )
 
+    def list_user_ids_by_organization(self, organization_id: int) -> list[int]:
+        rows = self.all(
+            """
+            SELECT u.id
+            FROM users u
+            WHERE u.organization_id = ?
+            ORDER BY u.id ASC
+            """,
+            (organization_id,),
+        )
+        return [int(row["id"]) for row in rows]
+
     def authenticate(self, *, email: str, password: str) -> dict[str, object] | None:
+        normalized_email = _normalize_email(email)
         user = self.one(
             """
             SELECT u.*, o.name AS organization_name, o.slug AS organization_slug
             FROM users u
             LEFT JOIN organizations o ON o.id = u.organization_id
-            WHERE LOWER(u.email) = LOWER(?)
+            WHERE u.email = ?
             """,
-            (email,),
+            (normalized_email,),
         )
         if user is None:
             return None
@@ -502,12 +520,14 @@ class LawimRepository:
         token = create_session_token()
         now = datetime.now(timezone.utc)
         expires = now + timedelta(seconds=ttl_seconds)
+        created_at = now.replace(microsecond=0).isoformat()
+        expires_at = expires.replace(microsecond=0).isoformat()
         with self._transaction() as conn:
             conn.execute(
                 "INSERT INTO sessions (token, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)",
-                (token, user_id, now.replace(microsecond=0).isoformat(), expires.replace(microsecond=0).isoformat()),
+                (token, user_id, created_at, expires_at),
             )
-        return self.get_session(token) or {"token": token, "user_id": user_id, "expires_at": expires.isoformat()}
+        return {"token": token, "user_id": user_id, "created_at": created_at, "expires_at": expires_at}
 
     def delete_session(self, token: str) -> None:
         with self._transaction() as conn:
@@ -790,13 +810,28 @@ class LawimRepository:
         params: list[object] = [property_id]
         if not include_deleted:
             clauses.append("p.deleted_at IS NULL")
+        metrics_cte = """
+            WITH media_counts AS (
+                SELECT property_id, COUNT(*) AS media_count
+                FROM media
+                WHERE deleted_at IS NULL
+                GROUP BY property_id
+            ),
+            conversation_counts AS (
+                SELECT property_id, COUNT(*) AS conversation_count
+                FROM conversations
+                GROUP BY property_id
+            )
+        """
         property_row = self.one(
-            f"""
+            f"""{metrics_cte}
             SELECT p.*, o.name AS owner_organization_name, o.slug AS owner_organization_slug,
-                   (SELECT COUNT(*) FROM media m WHERE m.property_id = p.id AND m.deleted_at IS NULL) AS media_count,
-                   (SELECT COUNT(*) FROM conversations c WHERE c.property_id = p.id) AS conversation_count
+                   COALESCE(mc.media_count, 0) AS media_count,
+                   COALESCE(cc.conversation_count, 0) AS conversation_count
             FROM properties p
             LEFT JOIN organizations o ON o.id = p.owner_organization_id
+            LEFT JOIN media_counts mc ON mc.property_id = p.id
+            LEFT JOIN conversation_counts cc ON cc.property_id = p.id
             WHERE {' AND '.join(clauses)}
             """,
             tuple(params),
@@ -849,29 +884,29 @@ class LawimRepository:
         if not query.include_deleted:
             clauses.append("p.deleted_at IS NULL")
         if query.city:
-            clauses.append("LOWER(p.city) = LOWER(?)")
+            clauses.append("p.city = ?")
             params.append(query.city)
         if query.country:
-            clauses.append("LOWER(p.country) = LOWER(?)")
+            clauses.append("p.country = ?")
             params.append(query.country)
         if query.region:
-            clauses.append("LOWER(p.region) = LOWER(?)")
+            clauses.append("p.region = ?")
             params.append(query.region)
         if query.status:
-            clauses.append("LOWER(p.status) = LOWER(?)")
+            clauses.append("p.status = ?")
             params.append(query.status)
         if query.availability:
-            clauses.append("LOWER(p.availability) = LOWER(?)")
+            clauses.append("p.availability = ?")
             params.append(query.availability)
         if query.property_type:
-            clauses.append("LOWER(p.property_type) = LOWER(?)")
+            clauses.append("p.property_type = ?")
             params.append(query.property_type)
         if query.owner_organization_id is not None:
             clauses.append("p.owner_organization_id = ?")
             params.append(query.owner_organization_id)
         if query.search:
             clauses.append(
-                "(LOWER(p.title) LIKE ? OR LOWER(p.summary) LIKE ? OR LOWER(p.search_key) LIKE ? OR LOWER(p.listing_code) LIKE ?)"
+                "(LOWER(p.title) LIKE ? OR LOWER(p.summary) LIKE ? OR p.search_key LIKE ? OR p.listing_code LIKE ?)"
             )
             needle = f"%{query.search.lower()}%"
             params.extend([needle, needle, needle, needle])
@@ -891,13 +926,28 @@ class LawimRepository:
         }[query.sort]
         order = "ASC" if query.order == "asc" else "DESC"
         total = self.scalar(f"SELECT COUNT(*) FROM properties p WHERE {where}", tuple(params))
+        metrics_cte = """
+            WITH media_counts AS (
+                SELECT property_id, COUNT(*) AS media_count
+                FROM media
+                WHERE deleted_at IS NULL
+                GROUP BY property_id
+            ),
+            conversation_counts AS (
+                SELECT property_id, COUNT(*) AS conversation_count
+                FROM conversations
+                GROUP BY property_id
+            )
+        """
         rows = self.all(
-            f"""
+            f"""{metrics_cte}
             SELECT p.*, o.name AS owner_organization_name, o.slug AS owner_organization_slug,
-                   (SELECT COUNT(*) FROM media m WHERE m.property_id = p.id AND m.deleted_at IS NULL) AS media_count,
-                   (SELECT COUNT(*) FROM conversations c WHERE c.property_id = p.id) AS conversation_count
+                   COALESCE(mc.media_count, 0) AS media_count,
+                   COALESCE(cc.conversation_count, 0) AS conversation_count
             FROM properties p
             LEFT JOIN organizations o ON o.id = p.owner_organization_id
+            LEFT JOIN media_counts mc ON mc.property_id = p.id
+            LEFT JOIN conversation_counts cc ON cc.property_id = p.id
             WHERE {where}
             ORDER BY {sort_column} {order}, p.id DESC
             LIMIT ? OFFSET ?
@@ -918,18 +968,27 @@ class LawimRepository:
     def search_locations(self, *, query: str | None = None, limit: int = 20) -> list[dict[str, object]]:
         if limit < 1:
             raise ValidationError("limit must be positive")
-        rows = self.all(
-            """
+        clauses = ["deleted_at IS NULL"]
+        params: list[object] = []
+        if query:
+            escaped = query.casefold().replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+            needle = f"%{escaped}%"
+            clauses.append(
+                "(LOWER(city) LIKE ? ESCAPE '\\' OR LOWER(COALESCE(region, '')) LIKE ? ESCAPE '\\' OR LOWER(country) LIKE ? ESCAPE '\\' OR search_key LIKE ? ESCAPE '\\')"
+            )
+            params.extend([needle, needle, needle, needle])
+        where = " AND ".join(clauses)
+        return self.all(
+            f"""
             SELECT city, region, country, search_key, COUNT(*) AS property_count
             FROM properties
-            WHERE deleted_at IS NULL
+            WHERE {where}
             GROUP BY city, region, country, search_key
             ORDER BY property_count DESC, city ASC
-            """
+            LIMIT ?
+            """,
+            tuple(params + [limit]),
         )
-        if query:
-            rows = [row for row in rows if location_matches_query(row, query)]
-        return rows[:limit]
 
     def normalize_location(
         self,
@@ -978,22 +1037,14 @@ class LawimRepository:
             clauses.append("m.property_id = ?")
             params.append(query.property_id)
         if query.kind:
-            clauses.append("LOWER(m.kind) = LOWER(?)")
+            clauses.append("m.kind = ?")
             params.append(query.kind)
         if not query.include_deleted:
             clauses.append("m.deleted_at IS NULL")
         where = " AND ".join(clauses)
         sort_column = {"created_at": "m.created_at", "position": "m.position", "kind": "m.kind"}[query.sort]
         order = "ASC" if query.order == "asc" else "DESC"
-        total = self.scalar(
-            f"""
-            SELECT COUNT(*)
-            FROM media m
-            JOIN properties p ON p.id = m.property_id
-            WHERE {where}
-            """,
-            tuple(params),
-        )
+        total = self.scalar(f"SELECT COUNT(*) FROM media m WHERE {where}", tuple(params))
         rows = self.all(
             f"""
             SELECT m.*, p.title AS property_title
@@ -1273,17 +1324,25 @@ class LawimRepository:
         self.record_event("message_added", {"conversation_id": conversation_id, "sender_user_id": sender_user_id})
         return message
 
-    def list_events(self, limit: int = 50) -> list[dict[str, object]]:
+    def list_events(self, limit: int = 50, *, kind: str | None = None) -> list[dict[str, object]]:
         if limit < 1:
             raise ValidationError("limit must be positive")
+        clauses: list[str] = []
+        params: list[object] = []
+        if kind:
+            clauses.append("kind = ?")
+            params.append(kind.strip().lower())
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        params.append(limit)
         return self.all(
-            """
+            f"""
             SELECT *
             FROM events
+            {where}
             ORDER BY created_at DESC, id DESC
             LIMIT ?
             """,
-            (limit,),
+            tuple(params),
         )
 
     def get_conversation(self, conversation_id: int) -> dict[str, object]:
@@ -1292,7 +1351,13 @@ class LawimRepository:
             SELECT c.*, p.title AS property_title, u.full_name AS requester_name, u.email AS requester_email,
                    o.name AS organization_name, o.slug AS organization_slug,
                    (SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count,
-                   (SELECT body FROM messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) AS last_message
+                   (
+                       SELECT m.body
+                       FROM messages m
+                       WHERE m.conversation_id = c.id
+                       ORDER BY m.created_at DESC, m.id DESC
+                       LIMIT 1
+                   ) AS last_message
             FROM conversations c
             LEFT JOIN properties p ON p.id = c.property_id
             LEFT JOIN organizations o ON o.id = c.organization_id
@@ -1328,19 +1393,40 @@ class LawimRepository:
             clauses.append("c.property_id = ?")
             params.append(property_id)
         if status:
-            clauses.append("LOWER(c.status) = LOWER(?)")
-            params.append(status)
+            clauses.append("c.status = ?")
+            params.append(status.lower())
         params.append(limit)
+        metrics_cte = """
+            WITH message_stats AS (
+                SELECT conversation_id, COUNT(*) AS message_count
+                FROM messages
+                GROUP BY conversation_id
+            ),
+            last_messages AS (
+                SELECT conversation_id, body AS last_message
+                FROM (
+                    SELECT conversation_id, body,
+                           ROW_NUMBER() OVER (
+                               PARTITION BY conversation_id
+                               ORDER BY created_at DESC, id DESC
+                           ) AS rn
+                    FROM messages
+                ) ranked_messages
+                WHERE rn = 1
+            )
+        """
         return self.all(
-            f"""
+            f"""{metrics_cte}
             SELECT c.*, p.title AS property_title, u.full_name AS requester_name, u.email AS requester_email,
                    o.name AS organization_name, o.slug AS organization_slug,
-                   (SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count,
-                   (SELECT body FROM messages m WHERE m.conversation_id = c.id ORDER BY m.created_at DESC LIMIT 1) AS last_message
+                   COALESCE(ms.message_count, 0) AS message_count,
+                   lm.last_message AS last_message
             FROM conversations c
             LEFT JOIN properties p ON p.id = c.property_id
             LEFT JOIN organizations o ON o.id = c.organization_id
             JOIN users u ON u.id = c.user_id
+            LEFT JOIN message_stats ms ON ms.conversation_id = c.id
+            LEFT JOIN last_messages lm ON lm.conversation_id = c.id
             WHERE {' AND '.join(clauses)}
             ORDER BY c.updated_at DESC, c.id DESC
             LIMIT ?
@@ -1403,7 +1489,7 @@ class LawimRepository:
         if query.unread_only:
             clauses.append("read_at IS NULL")
         if query.kind:
-            clauses.append("LOWER(kind) = LOWER(?)")
+            clauses.append("kind = ?")
             params.append(query.kind)
         where = " AND ".join(clauses)
         total = self.scalar(f"SELECT COUNT(*) FROM notifications WHERE {where}", tuple(params))
@@ -1460,30 +1546,55 @@ class LawimRepository:
         return {"updated": cursor.rowcount, "read_at": read_at}
 
     def summary(self) -> dict[str, object]:
+        row = self.one(
+            """
+            SELECT
+                (SELECT COUNT(*) FROM organizations) AS organizations,
+                (SELECT COUNT(*) FROM users) AS users,
+                (SELECT COUNT(*) FROM properties WHERE status = 'published' AND deleted_at IS NULL) AS published_properties,
+                (SELECT COUNT(*) FROM conversations) AS conversations,
+                (SELECT COUNT(*) FROM messages) AS messages,
+                (SELECT COUNT(*) FROM notifications) AS notifications,
+                (SELECT COUNT(*) FROM media) AS media,
+                (SELECT COUNT(*) FROM events) AS events,
+                (SELECT COUNT(*) FROM sessions) AS sessions
+            """
+        )
+        assert row is not None
         return {
-            "organizations": self.scalar("SELECT COUNT(*) FROM organizations"),
-            "users": self.scalar("SELECT COUNT(*) FROM users"),
-            "published_properties": self.scalar(
-                "SELECT COUNT(*) FROM properties WHERE status = 'published' AND deleted_at IS NULL"
-            ),
-            "conversations": self.scalar("SELECT COUNT(*) FROM conversations"),
-            "messages": self.scalar("SELECT COUNT(*) FROM messages"),
-            "notifications": self.scalar("SELECT COUNT(*) FROM notifications"),
-            "media": self.scalar("SELECT COUNT(*) FROM media"),
-            "events": self.scalar("SELECT COUNT(*) FROM events"),
-            "sessions": self.scalar("SELECT COUNT(*) FROM sessions"),
+            "organizations": int(row["organizations"]),
+            "users": int(row["users"]),
+            "published_properties": int(row["published_properties"]),
+            "conversations": int(row["conversations"]),
+            "messages": int(row["messages"]),
+            "notifications": int(row["notifications"]),
+            "media": int(row["media"]),
+            "events": int(row["events"]),
+            "sessions": int(row["sessions"]),
         }
 
     def bootstrap_payload(self, *, token: str | None = None) -> dict[str, object]:
         current_user = self.get_user_by_session(token) if token else None
+        users: list[dict[str, object]] = []
+        if current_user is not None and str(current_user.get("role")) == "admin":
+            users = [self._public_user(row) for row in self.list_users(limit=10)]
+        conversations: list[dict[str, object]]
+        if current_user is not None and str(current_user.get("role")) != "admin":
+            organization_id = current_user.get("organization_id")
+            if organization_id is not None:
+                conversations = self.list_conversations(organization_id=int(organization_id), limit=10)
+            else:
+                conversations = self.list_conversations(user_id=int(current_user["id"]), limit=10)
+        else:
+            conversations = self.list_conversations(limit=10) if current_user is not None else []
         return {
             "summary": self.summary(),
             "current_user": self._public_user(current_user) if current_user else None,
             "organizations": self.list_organizations(limit=10),
-            "users": [self._public_user(row) for row in self.list_users(limit=10)],
+            "users": users,
             "properties": self.list_properties(limit=10)["items"],
             "media": self.list_media(limit=10)["items"],
-            "conversations": self.list_conversations(limit=10),
+            "conversations": conversations,
             "matches": self.recommendations(MatchCriteria(limit=5)),
         }
 

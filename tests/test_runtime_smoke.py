@@ -53,6 +53,10 @@ class ConfigValidationTest(TestCase):
             metrics_enabled=True,
             match_min_score=10.0,
             max_json_body_bytes=1_048_576,
+            cors_allowed_origins=("http://127.0.0.1:3000",),
+            auth_rate_limit_max=30,
+            auth_rate_limit_window_seconds=300,
+            public_media=True,
         )
         with self.assertRaises(ValueError) as ctx:
             config.validate()

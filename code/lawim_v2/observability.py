@@ -5,6 +5,14 @@ import time
 from dataclasses import dataclass, field
 
 
+def _percentile(values: list[float], ratio: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    index = min(len(ordered) - 1, max(0, int(round((len(ordered) - 1) * ratio))))
+    return round(ordered[index], 2)
+
+
 @dataclass
 class RuntimeMetrics:
     started_at: float = field(default_factory=time.time)
@@ -14,6 +22,8 @@ class RuntimeMetrics:
     conversations_total: int = 0
     notifications_total: int = 0
     lock: threading.Lock = field(default_factory=threading.Lock)
+    _latency_samples: list[float] = field(default_factory=list)
+    _route_counts: dict[str, int] = field(default_factory=dict)
 
     def increment(self, name: str, *, failed: bool = False) -> None:
         with self.lock:
@@ -27,9 +37,21 @@ class RuntimeMetrics:
             elif name == "notifications":
                 self.notifications_total += 1
 
+    def record_request(self, *, route: str, duration_ms: float, failed: bool = False) -> None:
+        with self.lock:
+            self.requests_total += 1
+            if failed:
+                self.requests_failed += 1
+            self._latency_samples.append(duration_ms)
+            if len(self._latency_samples) > 1000:
+                self._latency_samples = self._latency_samples[-1000:]
+            self._route_counts[route] = self._route_counts.get(route, 0) + 1
+
     def snapshot(self) -> dict[str, object]:
         with self.lock:
             uptime_seconds = max(0, int(time.time() - self.started_at))
+            samples = list(self._latency_samples)
+            top_routes = sorted(self._route_counts.items(), key=lambda item: item[1], reverse=True)[:10]
             return {
                 "uptime_seconds": uptime_seconds,
                 "requests_total": self.requests_total,
@@ -37,6 +59,13 @@ class RuntimeMetrics:
                 "matches_total": self.matches_total,
                 "conversations_total": self.conversations_total,
                 "notifications_total": self.notifications_total,
+                "latency_ms": {
+                    "p50": _percentile(samples, 0.50),
+                    "p95": _percentile(samples, 0.95),
+                    "max": round(max(samples), 2) if samples else 0.0,
+                    "samples": len(samples),
+                },
+                "routes_top": [{"route": route, "count": count} for route, count in top_routes],
             }
 
 

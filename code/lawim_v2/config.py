@@ -2,7 +2,19 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from pathlib import Path
+from urllib.parse import urlparse
 import os
+
+
+def _parse_cors_origins(raw: str | None, public_base_url: str) -> tuple[str, ...]:
+    if raw is not None and raw.strip():
+        origins = tuple(origin.strip() for origin in raw.split(",") if origin.strip())
+        if origins:
+            return origins
+    parsed = urlparse(public_base_url)
+    if parsed.scheme and parsed.netloc:
+        return (f"{parsed.scheme}://{parsed.netloc}",)
+    return ("http://127.0.0.1:3000",)
 
 
 def _bool_env(name: str, default: bool) -> bool:
@@ -56,6 +68,10 @@ class AppConfig:
     metrics_enabled: bool
     match_min_score: float
     max_json_body_bytes: int
+    cors_allowed_origins: tuple[str, ...]
+    auth_rate_limit_max: int
+    auth_rate_limit_window_seconds: int
+    public_media: bool
 
     @classmethod
     def from_env(cls) -> "AppConfig":
@@ -63,6 +79,9 @@ class AppConfig:
         media_storage_path = Path(os.getenv("LAWIM_MEDIA_STORAGE_PATH", "data/runtime/media")).expanduser()
         geocoding_api_key = os.getenv("LAWIM_GEOCODING_API_KEY")
         cdn_base_url = os.getenv("LAWIM_CDN_BASE_URL")
+        public_base_url = os.getenv("PUBLIC_BASE_URL", "http://localhost:3000")
+        app_env = os.getenv("APP_ENV", "development")
+        public_media_default = app_env in {"development", "test", "staging"}
         return cls(
             host=os.getenv("LAWIM_HOST", "0.0.0.0"),
             port=_int_env("LAWIM_PORT", 3000),
@@ -70,10 +89,10 @@ class AppConfig:
             db_driver=os.getenv("LAWIM_DB_DRIVER", "sqlite"),
             database_url=os.getenv("LAWIM_DATABASE_URL", "postgresql://lawim:lawim@localhost:5432/lawim_v2"),
             db_fallback=_bool_env("LAWIM_DB_FALLBACK", True),
-            app_env=os.getenv("APP_ENV", "development"),
+            app_env=app_env,
             stack_profile=os.getenv("STACK_PROFILE", "development"),
             log_level=os.getenv("LOG_LEVEL", "info"),
-            public_base_url=os.getenv("PUBLIC_BASE_URL", "http://localhost:3000"),
+            public_base_url=public_base_url,
             secret_provider=os.getenv("SECRET_PROVIDER", "external"),
             seed_demo_data=_bool_env("LAWIM_SEED_DEMO_DATA", True),
             session_ttl_seconds=_int_env("LAWIM_SESSION_TTL_SECONDS", 7 * 24 * 60 * 60),
@@ -86,6 +105,10 @@ class AppConfig:
             metrics_enabled=_bool_env("LAWIM_METRICS_ENABLED", True),
             match_min_score=_float_env("LAWIM_MATCH_MIN_SCORE", 10.0),
             max_json_body_bytes=_int_env("LAWIM_MAX_JSON_BODY_BYTES", 1_048_576),
+            cors_allowed_origins=_parse_cors_origins(os.getenv("LAWIM_CORS_ORIGINS"), public_base_url),
+            auth_rate_limit_max=_int_env("LAWIM_AUTH_RATE_LIMIT_MAX", 30),
+            auth_rate_limit_window_seconds=_int_env("LAWIM_AUTH_RATE_LIMIT_WINDOW_SECONDS", 300),
+            public_media=_bool_env("LAWIM_PUBLIC_MEDIA", public_media_default),
         )
 
     def validate(self) -> None:
@@ -108,6 +131,13 @@ class AppConfig:
             errors.append("LAWIM_SEED_DEMO_DATA must be false when APP_ENV=production")
         if self.db_driver == "postgresql" and not self.database_url.strip():
             errors.append("LAWIM_DATABASE_URL is required when LAWIM_DB_DRIVER=postgresql")
+        if self.app_env == "production":
+            if self.db_driver == "postgresql" and self.db_fallback:
+                errors.append("LAWIM_DB_FALLBACK must be false when APP_ENV=production and LAWIM_DB_DRIVER=postgresql")
+            if not self.public_base_url.lower().startswith("https://"):
+                errors.append("PUBLIC_BASE_URL must use https when APP_ENV=production")
+            if self.public_media:
+                errors.append("LAWIM_PUBLIC_MEDIA must be false when APP_ENV=production")
         if errors:
             raise ValueError("Invalid LAWIM_V2 configuration: " + "; ".join(errors))
 
@@ -146,6 +176,10 @@ class AppConfig:
             metrics_enabled=True,
             match_min_score=10.0,
             max_json_body_bytes=1_048_576,
+            cors_allowed_origins=("http://127.0.0.1:3000",),
+            auth_rate_limit_max=100,
+            auth_rate_limit_window_seconds=300,
+            public_media=True,
         )
         if overrides:
             config = replace(config, **overrides)  # type: ignore[arg-type]

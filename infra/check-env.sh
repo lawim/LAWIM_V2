@@ -56,10 +56,18 @@ else
   echo "[warn] node not found — JS syntax check skipped in run-tests.sh" >&2
 fi
 
-if python3 -c "import pg8000" 2>/dev/null; then
+_pg8000_ok() {
+  python3 -c "import pg8000" 2>/dev/null && return 0
+  if [[ -x "${ROOT}/.venv-platform/bin/python" ]]; then
+    "${ROOT}/.venv-platform/bin/python" -c "import pg8000" 2>/dev/null
+    return $?
+  fi
+  return 1
+}
+if _pg8000_ok; then
   check "pg8000 installed" true
 else
-  echo "[warn] pg8000 not installed — PostgreSQL runtime optional (pip install -r requirements-postgresql.txt)" >&2
+  echo "[warn] pg8000 not installed — run platform/setup-dev-venv.sh or pip install -r requirements-postgresql.txt" >&2
 fi
 
 exit "${failures}"

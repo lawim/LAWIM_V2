@@ -10,6 +10,7 @@ from unittest import TestCase
 
 from lawim_v2.config import AppConfig
 from lawim_v2.db import LawimRepository
+from lawim_v2.rate_limit import AuthRateLimiter
 from lawim_v2.server import LawimRequestHandler
 from lawim_v2.services import LawimServices
 
@@ -64,6 +65,10 @@ class LawimTestHarness(TestCase):
         self.repository = LawimRepository(self.db_path)
         self.repository.initialize(seed_demo_data=True)
         self.config = AppConfig.for_test(db_path=self.db_path, media_storage_path=self.media_path)
+        self.auth_limiter = AuthRateLimiter(
+            max_attempts=self.config.auth_rate_limit_max,
+            window_seconds=self.config.auth_rate_limit_window_seconds,
+        )
 
     def tearDown(self) -> None:
         self.repository.close()
@@ -92,6 +97,8 @@ class LawimTestHarness(TestCase):
             request_headers["Authorization"] = f"Bearer {token}"
 
         handler = DummyHandler(self.repository, self.config, path, method=method, headers=request_headers, body=payload)
+        handler.client_address = ("127.0.0.1", 0)
+        handler.auth_limiter = self.auth_limiter
         if method == "GET":
             handler.do_GET()
         elif method == "POST":
