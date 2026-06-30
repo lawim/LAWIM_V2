@@ -42,6 +42,7 @@ def main() -> int:
         ("properties", "model Property"),
         ("media", "model Media"),
         ("notifications", "model Notification"),
+        ("projects", "model Project"),
         ("schema_meta", "model SchemaMeta"),
     ]
     for table, marker in checks:

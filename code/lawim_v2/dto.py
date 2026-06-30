@@ -6,6 +6,7 @@ from typing import Any
 from .conversation_domain import allowed_stage_transitions
 from .media_domain import THUMBNAIL_CONTRACT, metadata_dict as media_metadata_dict
 from .property_domain import metadata_dict as property_metadata_dict
+from .project_domain import metadata_dict as project_metadata_dict
 
 
 @dataclass(frozen=True, slots=True)
@@ -250,6 +251,68 @@ def notification_dto(notification_row: dict[str, object]) -> dict[str, object]:
         "read": notification_row.get("read_at") is not None,
         "read_at": notification_row.get("read_at"),
         "created_at": notification_row.get("created_at"),
+    }
+
+
+def project_dto(row: dict[str, object]) -> dict[str, object]:
+    return {
+        "id": row["id"],
+        "user_id": row["user_id"],
+        "organization_id": row.get("organization_id"),
+        "title": row["title"],
+        "project_type": row["project_type"],
+        "objective": row["objective"],
+        "budget": {
+            "min": row.get("budget_min"),
+            "max": row.get("budget_max"),
+            "currency": row.get("currency", "XAF"),
+        },
+        "location": {
+            "city": row.get("location_city"),
+            "region": row.get("location_region"),
+            "country": row.get("location_country"),
+            "coordinates": {
+                "latitude": row.get("location_latitude"),
+                "longitude": row.get("location_longitude"),
+            },
+        },
+        "timeline_horizon": row.get("timeline_horizon"),
+        "status": row["status"],
+        "priority": row.get("priority", "normal"),
+        "progress_percent": row.get("progress_percent", 0),
+        "metadata": project_metadata_dict(str(row.get("metadata_json") or "{}")),
+        "archived_at": row.get("archived_at"),
+        "created_at": row.get("created_at"),
+        "updated_at": row.get("updated_at"),
+    }
+
+
+def project_step_dto(row: dict[str, object]) -> dict[str, object]:
+    return {
+        "id": row["id"],
+        "project_id": row["project_id"],
+        "step_key": row["step_key"],
+        "title": row["title"],
+        "description": row.get("description"),
+        "position": row.get("position", 0),
+        "status": row["status"],
+        "milestone": row.get("milestone"),
+        "next_action": row.get("next_action"),
+        "completed_at": row.get("completed_at"),
+        "created_at": row.get("created_at"),
+        "updated_at": row.get("updated_at"),
+    }
+
+
+def project_progress_dto(row: dict[str, object]) -> dict[str, object]:
+    return {
+        "project_id": row["project_id"],
+        "progress_percent": row.get("progress_percent", 0),
+        "steps_total": row.get("steps_total", 0),
+        "steps_completed": row.get("steps_completed", 0),
+        "checklist_total": row.get("checklist_total", 0),
+        "checklist_checked": row.get("checklist_checked", 0),
+        "status": row.get("status"),
     }
 
 

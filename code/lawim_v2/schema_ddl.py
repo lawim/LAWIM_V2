@@ -1,4 +1,4 @@
-"""Unified DDL for SQLite and PostgreSQL runtimes (persistence manifest v5)."""
+"""Unified DDL for SQLite and PostgreSQL runtimes (persistence manifest v6)."""
 
 from __future__ import annotations
 
@@ -155,6 +155,78 @@ POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     "CREATE INDEX IF NOT EXISTS idx_sessions_user_expires ON sessions(user_id, expires_at)",
     "CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at)",
     "CREATE INDEX IF NOT EXISTS idx_properties_owner_status ON properties(owner_organization_id, status, deleted_at)",
+    """
+    CREATE TABLE IF NOT EXISTS projects (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        organization_id INTEGER REFERENCES organizations(id),
+        title TEXT NOT NULL,
+        project_type TEXT NOT NULL,
+        objective TEXT NOT NULL,
+        budget_min INTEGER,
+        budget_max INTEGER,
+        currency TEXT NOT NULL DEFAULT 'XAF',
+        location_city TEXT,
+        location_region TEXT,
+        location_country TEXT DEFAULT 'Cameroon',
+        location_latitude DOUBLE PRECISION,
+        location_longitude DOUBLE PRECISION,
+        timeline_horizon TEXT,
+        status TEXT NOT NULL DEFAULT 'draft',
+        priority TEXT NOT NULL DEFAULT 'normal',
+        progress_percent INTEGER NOT NULL DEFAULT 0,
+        metadata_json TEXT NOT NULL DEFAULT '{}',
+        archived_at TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS project_steps (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        step_key TEXT NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT,
+        position INTEGER NOT NULL DEFAULT 0,
+        status TEXT NOT NULL DEFAULT 'pending',
+        milestone TEXT,
+        next_action TEXT,
+        completed_at TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE (project_id, step_key)
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS project_checklist_items (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        step_id INTEGER REFERENCES project_steps(id) ON DELETE CASCADE,
+        label TEXT NOT NULL,
+        checked INTEGER NOT NULL DEFAULT 0,
+        position INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS project_step_history (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        step_id INTEGER NOT NULL REFERENCES project_steps(id) ON DELETE CASCADE,
+        from_status TEXT,
+        to_status TEXT NOT NULL,
+        note TEXT,
+        created_at TEXT NOT NULL
+    )
+    """,
+    "CREATE INDEX IF NOT EXISTS idx_projects_user_status ON projects(user_id, status, created_at)",
+    "CREATE INDEX IF NOT EXISTS idx_projects_organization_status ON projects(organization_id, status, created_at)",
+    "CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at, id)",
+    "CREATE INDEX IF NOT EXISTS idx_project_steps_project_position ON project_steps(project_id, position)",
+    "CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_items(project_id, step_id, position)",
+    "CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id)",
 )
 
 SQLITE_INIT_SCRIPT = """
@@ -307,6 +379,82 @@ CREATE INDEX IF NOT EXISTS idx_events_kind_created ON events(kind, created_at, i
 CREATE INDEX IF NOT EXISTS idx_sessions_user_expires ON sessions(user_id, expires_at);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
 CREATE INDEX IF NOT EXISTS idx_properties_owner_status ON properties(owner_organization_id, status, deleted_at);
+
+CREATE TABLE IF NOT EXISTS projects (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    organization_id INTEGER,
+    title TEXT NOT NULL,
+    project_type TEXT NOT NULL CHECK (project_type IN ('buy', 'rent', 'sell', 'invest', 'build', 'other')),
+    objective TEXT NOT NULL,
+    budget_min INTEGER CHECK (budget_min IS NULL OR budget_min >= 0),
+    budget_max INTEGER CHECK (budget_max IS NULL OR budget_max >= 0),
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    location_city TEXT,
+    location_region TEXT,
+    location_country TEXT DEFAULT 'Cameroon',
+    location_latitude REAL,
+    location_longitude REAL,
+    timeline_horizon TEXT,
+    status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'active', 'paused', 'completed', 'archived')),
+    priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high')),
+    progress_percent INTEGER NOT NULL DEFAULT 0 CHECK (progress_percent >= 0 AND progress_percent <= 100),
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    archived_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (organization_id) REFERENCES organizations(id)
+);
+
+CREATE TABLE IF NOT EXISTS project_steps (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id INTEGER NOT NULL,
+    step_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    position INTEGER NOT NULL DEFAULT 0 CHECK (position >= 0),
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'completed', 'skipped', 'blocked')),
+    milestone TEXT,
+    next_action TEXT,
+    completed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+    UNIQUE (project_id, step_key)
+);
+
+CREATE TABLE IF NOT EXISTS project_checklist_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id INTEGER NOT NULL,
+    step_id INTEGER,
+    label TEXT NOT NULL,
+    checked INTEGER NOT NULL DEFAULT 0 CHECK (checked IN (0, 1)),
+    position INTEGER NOT NULL DEFAULT 0 CHECK (position >= 0),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+    FOREIGN KEY (step_id) REFERENCES project_steps(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS project_step_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id INTEGER NOT NULL,
+    step_id INTEGER NOT NULL,
+    from_status TEXT,
+    to_status TEXT NOT NULL,
+    note TEXT,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+    FOREIGN KEY (step_id) REFERENCES project_steps(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_projects_user_status ON projects(user_id, status, created_at);
+CREATE INDEX IF NOT EXISTS idx_projects_organization_status ON projects(organization_id, status, created_at);
+CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at, id);
+CREATE INDEX IF NOT EXISTS idx_project_steps_project_position ON project_steps(project_id, position);
+CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_items(project_id, step_id, position);
+CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);
 """
 
 

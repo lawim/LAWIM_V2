@@ -12,7 +12,7 @@ from .persistence import APPLICATION_SCHEMA_VERSION
 PRODUCTION_MIGRATION_TOOL = "prisma"
 SQLITE_RUNTIME_INIT = "schema_ddl.SQLITE_INIT_SCRIPT"
 MIGRATION_STRATEGY_NOTES = (
-    "Fresh installs use schema_ddl init scripts aligned with persistence manifest v5.",
+    "Fresh installs use schema_ddl init scripts aligned with persistence manifest v6.",
     "SQLite legacy databases receive idempotent ALTER/backfill steps in apply_sqlite_legacy_migrations().",
     "PostgreSQL production deployments should prefer prisma migrate deploy over runtime DDL init.",
     "Future schema versions must add a Prisma migration and optional SQLite legacy steps.",
@@ -189,6 +189,81 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
         CREATE INDEX IF NOT EXISTS idx_sessions_user_expires ON sessions(user_id, expires_at);
         CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
         CREATE INDEX IF NOT EXISTS idx_properties_owner_status ON properties(owner_organization_id, status, deleted_at);
+        """
+    )
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS projects (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            organization_id INTEGER,
+            title TEXT NOT NULL,
+            project_type TEXT NOT NULL,
+            objective TEXT NOT NULL,
+            budget_min INTEGER,
+            budget_max INTEGER,
+            currency TEXT NOT NULL DEFAULT 'XAF',
+            location_city TEXT,
+            location_region TEXT,
+            location_country TEXT DEFAULT 'Cameroon',
+            location_latitude REAL,
+            location_longitude REAL,
+            timeline_horizon TEXT,
+            status TEXT NOT NULL DEFAULT 'draft',
+            priority TEXT NOT NULL DEFAULT 'normal',
+            progress_percent INTEGER NOT NULL DEFAULT 0,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            archived_at TEXT,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (organization_id) REFERENCES organizations(id)
+        );
+        CREATE TABLE IF NOT EXISTS project_steps (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id INTEGER NOT NULL,
+            step_key TEXT NOT NULL,
+            title TEXT NOT NULL,
+            description TEXT,
+            position INTEGER NOT NULL DEFAULT 0,
+            status TEXT NOT NULL DEFAULT 'pending',
+            milestone TEXT,
+            next_action TEXT,
+            completed_at TEXT,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+            UNIQUE (project_id, step_key)
+        );
+        CREATE TABLE IF NOT EXISTS project_checklist_items (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id INTEGER NOT NULL,
+            step_id INTEGER,
+            label TEXT NOT NULL,
+            checked INTEGER NOT NULL DEFAULT 0,
+            position INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+            FOREIGN KEY (step_id) REFERENCES project_steps(id) ON DELETE CASCADE
+        );
+        CREATE TABLE IF NOT EXISTS project_step_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project_id INTEGER NOT NULL,
+            step_id INTEGER NOT NULL,
+            from_status TEXT,
+            to_status TEXT NOT NULL,
+            note TEXT,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+            FOREIGN KEY (step_id) REFERENCES project_steps(id) ON DELETE CASCADE
+        );
+        CREATE INDEX IF NOT EXISTS idx_projects_user_status ON projects(user_id, status, created_at);
+        CREATE INDEX IF NOT EXISTS idx_projects_organization_status ON projects(organization_id, status, created_at);
+        CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at, id);
+        CREATE INDEX IF NOT EXISTS idx_project_steps_project_position ON project_steps(project_id, position);
+        CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_items(project_id, step_id, position);
+        CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);
         """
     )
 

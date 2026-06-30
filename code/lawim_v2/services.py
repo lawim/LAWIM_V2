@@ -21,6 +21,7 @@ from .geocoding_provider import resolve_geocoding_provider
 from .matching import MatchCriteria, MatchWeights
 from .media_domain import LocalMediaStorage, decode_upload_content, validate_upload_bytes
 from .observability import METRICS
+from .project_service import ProjectPermissionDenied, ProjectService
 from .security import validate_email, validate_password
 
 
@@ -108,6 +109,7 @@ class LawimServices:
             base_url=config.geocoding_base_url,
             api_key=config.geocoding_api_key,
         )
+        self.projects = ProjectService(repository, self.policy)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()

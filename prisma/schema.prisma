@@ -1,4 +1,4 @@
-// LAWIM_V2 runtime schema v5 — aligned with code/lawim_v2/persistence.py manifest
+// LAWIM_V2 runtime schema v6 — aligned with code/lawim_v2/persistence.py manifest
 // Fingerprint anchor: build_schema_fingerprint(build_application_schema_manifest())
 
 generator client {
@@ -20,6 +20,7 @@ model Organization {
   users         User[]
   properties    Property[] @relation("OwnerOrganization")
   conversations Conversation[]
+  projects      Project[]
 
   @@index([createdAt, id], map: "idx_organizations_created_at")
   @@map("organizations")
@@ -39,6 +40,7 @@ model User {
   conversations  Conversation[]
   messages       Message[] @relation("Sender")
   notifications  Notification[]
+  projects       Project[]
 
   @@index([createdAt, id], map: "idx_users_created_at")
   @@index([organizationId, id], map: "idx_users_organization")
@@ -185,4 +187,92 @@ model SchemaMeta {
   value String
 
   @@map("schema_meta")
+}
+
+model Project {
+  id                Int      @id @default(autoincrement())
+  userId            Int      @map("user_id")
+  organizationId    Int?     @map("organization_id")
+  title             String
+  projectType       String   @map("project_type")
+  objective         String
+  budgetMin         Int?     @map("budget_min")
+  budgetMax         Int?     @map("budget_max")
+  currency          String   @default("XAF")
+  locationCity      String?  @map("location_city")
+  locationRegion    String?  @map("location_region")
+  locationCountry   String?  @default("Cameroon") @map("location_country")
+  locationLatitude  Float?   @map("location_latitude")
+  locationLongitude Float?   @map("location_longitude")
+  timelineHorizon   String?  @map("timeline_horizon")
+  status            String   @default("draft")
+  priority          String   @default("normal")
+  progressPercent   Int      @default(0) @map("progress_percent")
+  metadataJson      String   @default("{}") @map("metadata_json")
+  archivedAt        String?  @map("archived_at")
+  createdAt         String   @map("created_at")
+  updatedAt         String   @map("updated_at")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization      Organization? @relation(fields: [organizationId], references: [id])
+  steps             ProjectStep[]
+  checklistItems    ProjectChecklistItem[]
+  stepHistory       ProjectStepHistory[]
+
+  @@index([userId, status, createdAt], map: "idx_projects_user_status")
+  @@index([organizationId, status, createdAt], map: "idx_projects_organization_status")
+  @@index([createdAt, id], map: "idx_projects_created_at")
+  @@map("projects")
+}
+
+model ProjectStep {
+  id          Int      @id @default(autoincrement())
+  projectId   Int      @map("project_id")
+  stepKey     String   @map("step_key")
+  title       String
+  description String?
+  position    Int      @default(0)
+  status      String   @default("pending")
+  milestone   String?
+  nextAction  String?  @map("next_action")
+  completedAt String?  @map("completed_at")
+  createdAt   String   @map("created_at")
+  updatedAt   String   @map("updated_at")
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  checklistItems ProjectChecklistItem[]
+  history     ProjectStepHistory[]
+
+  @@unique([projectId, stepKey], map: "project_steps_project_id_step_key_key")
+  @@index([projectId, position], map: "idx_project_steps_project_position")
+  @@map("project_steps")
+}
+
+model ProjectChecklistItem {
+  id        Int      @id @default(autoincrement())
+  projectId Int      @map("project_id")
+  stepId    Int?     @map("step_id")
+  label     String
+  checked   Int      @default(0)
+  position  Int      @default(0)
+  createdAt String   @map("created_at")
+  updatedAt String   @map("updated_at")
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  step      ProjectStep? @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, stepId, position], map: "idx_project_checklist_project")
+  @@map("project_checklist_items")
+}
+
+model ProjectStepHistory {
+  id         Int      @id @default(autoincrement())
+  projectId  Int      @map("project_id")
+  stepId     Int      @map("step_id")
+  fromStatus String?  @map("from_status")
+  toStatus   String   @map("to_status")
+  note       String?
+  createdAt  String   @map("created_at")
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  step       ProjectStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, createdAt, id], map: "idx_project_step_history_project")
+  @@map("project_step_history")
 }

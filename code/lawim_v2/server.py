@@ -26,6 +26,7 @@ from .observability import METRICS
 from .persistence_adapter import resolve_persistence_adapter
 from .rate_limit import AuthRateLimiter
 from .services import LawimServices, ServiceError
+from .project_service import ProjectPermissionDenied
 
 
 LOGGER = logging.getLogger("lawim_v2")
@@ -99,6 +100,9 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             failed = True
             self._send_json_error(exc.status, exc.code, exc.message)
         except ServiceError as exc:
+            failed = True
+            self._send_json_error(exc.status, exc.code, exc.message)
+        except ProjectPermissionDenied as exc:
             failed = True
             self._send_json_error(exc.status, exc.code, exc.message)
         except RepositoryError as exc:
@@ -389,6 +393,28 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"media": self.services.get_media(media_id)})
             return
 
+        if path.startswith("/api/v2/projects/"):
+            self._handle_v2_project_get(path, query)
+            return
+
+        if path == "/api/v2/projects":
+            actor = self._require_user()
+            self._send_json(
+                self.services.projects.list_projects(
+                    actor=actor,
+                    user_id=self._first_int(query, "user_id", minimum=1),
+                    organization_id=self._first_int(query, "organization_id", minimum=1),
+                    status=self._first(query, "status"),
+                    project_type=self._first(query, "project_type"),
+                    priority=self._first(query, "priority"),
+                    page=self._query_page(query),
+                    limit=self._query_limit(query),
+                    sort=self._first(query, "sort") or "created_at",
+                    order=self._first(query, "order") or "desc",
+                )
+            )
+            return
+
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
 
     def _handle_api_post(self, parsed, body: dict[str, Any]) -> None:
@@ -556,6 +582,29 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             )
             return
 
+        if path == "/api/v2/projects":
+            project = self.services.projects.create_project(
+                actor=actor,
+                title=self._require_text(body, "title"),
+                project_type=self._require_text(body, "project_type"),
+                objective=self._require_text(body, "objective"),
+                budget_min=self._optional_int(body.get("budget_min"), minimum=0),
+                budget_max=self._optional_int(body.get("budget_max"), minimum=0),
+                currency=self._optional_text(body.get("currency")) or "XAF",
+                location_city=self._optional_text(body.get("location_city")),
+                location_region=self._optional_text(body.get("location_region")),
+                location_country=self._optional_text(body.get("location_country")) or "Cameroon",
+                location_latitude=self._optional_float(body.get("location_latitude")),
+                location_longitude=self._optional_float(body.get("location_longitude")),
+                timeline_horizon=self._optional_text(body.get("timeline_horizon")),
+                status=self._optional_text(body.get("status")) or "draft",
+                priority=self._optional_text(body.get("priority")) or "normal",
+                organization_id=self._optional_int(body.get("organization_id"), minimum=1),
+                metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
+            )
+            self._send_json({"project": project}, status=HTTPStatus.CREATED)
+            return
+
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
 
     def _handle_put(self) -> None:
@@ -682,6 +731,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             notification_id = self._extract_notification_id(path)
             payload = self.services.mark_notification_read(actor=actor, notification_id=notification_id)
             self._send_json(payload)
+            return
+
+        if path.startswith("/api/v2/projects/"):
+            self._handle_v2_project_mutation(path, method, body, actor)
             return
 
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
@@ -1088,6 +1141,85 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
     def _extract_conversation_id(self, path: str, suffix: str = "") -> int:
         return self._extract_path_id(path, marker="/api/conversations/", suffix=suffix, resource="Conversation")
+
+    def _extract_project_id(self, path: str, suffix: str = "") -> int:
+        return self._extract_path_id(path, marker="/api/v2/projects/", suffix=suffix, resource="Project")
+
+    def _handle_v2_project_get(self, path: str, query: dict[str, list[str]]) -> None:
+        actor = self._require_user()
+        if path.endswith("/steps"):
+            project_id = self._extract_project_id(path, suffix="/steps")
+            self._send_json({"steps": self.services.projects.list_project_steps(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/progress"):
+            project_id = self._extract_project_id(path, suffix="/progress")
+            self._send_json(
+                {"progress": self.services.projects.get_project_progress(actor=actor, project_id=project_id)}
+            )
+            return
+        if path.endswith("/next-actions"):
+            project_id = self._extract_project_id(path, suffix="/next-actions")
+            self._send_json(
+                {"next_actions": self.services.projects.get_project_next_actions(actor=actor, project_id=project_id)}
+            )
+            return
+        project_id = self._extract_project_id(path)
+        detail = self.services.projects.get_project_detail(actor=actor, project_id=project_id)
+        self._send_json(detail)
+
+    def _handle_v2_project_mutation(
+        self,
+        path: str,
+        method: str,
+        body: dict[str, Any],
+        actor: dict[str, object],
+    ) -> None:
+        if method == "DELETE":
+            project_id = self._extract_project_id(path)
+            project = self.services.projects.archive_project(actor=actor, project_id=project_id)
+            self._send_json({"project": project})
+            return
+        if method not in {"PATCH", "PUT"}:
+            raise ApiError(HTTPStatus.METHOD_NOT_ALLOWED, "method_not_allowed", f"{method} not supported for projects")
+        if "/steps/" in path:
+            parts = path.rstrip("/").split("/")
+            step_id = int(parts[-1])
+            project_id = self._extract_project_id(path, suffix=f"/steps/{step_id}")
+            step = self.services.projects.update_project_step(
+                actor=actor,
+                project_id=project_id,
+                step_id=step_id,
+                status=self._optional_text(body.get("status")),
+                note=self._optional_text(body.get("note")),
+            )
+            self._send_json({"step": step})
+            return
+        project_id = self._extract_project_id(path)
+        if self._optional_text(body.get("status")) == "archived" and len(body) == 1:
+            project = self.services.projects.archive_project(actor=actor, project_id=project_id)
+            self._send_json({"project": project})
+            return
+        project = self.services.projects.update_project(
+            actor=actor,
+            project_id=project_id,
+            title=self._optional_text(body.get("title")),
+            objective=self._optional_text(body.get("objective")),
+            project_type=self._optional_text(body.get("project_type")),
+            budget_min=self._optional_int(body.get("budget_min"), minimum=0),
+            budget_max=self._optional_int(body.get("budget_max"), minimum=0),
+            currency=self._optional_text(body.get("currency")),
+            location_city=self._optional_text(body.get("location_city")),
+            location_region=self._optional_text(body.get("location_region")),
+            location_country=self._optional_text(body.get("location_country")),
+            location_latitude=self._optional_float(body.get("location_latitude")),
+            location_longitude=self._optional_float(body.get("location_longitude")),
+            timeline_horizon=self._optional_text(body.get("timeline_horizon")),
+            status=self._optional_text(body.get("status")),
+            priority=self._optional_text(body.get("priority")),
+            organization_id=self._optional_int(body.get("organization_id"), minimum=1),
+            metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
+        )
+        self._send_json({"project": project})
 
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:

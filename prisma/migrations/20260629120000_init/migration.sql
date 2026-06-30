@@ -1,4 +1,4 @@
--- LAWIM_V2 schema v5 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
+-- LAWIM_V2 schema v6 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
 
 CREATE TABLE IF NOT EXISTS organizations (
         id SERIAL PRIMARY KEY,
@@ -156,3 +156,77 @@ CREATE INDEX IF NOT EXISTS idx_sessions_user_expires ON sessions(user_id, expire
 CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
 
 CREATE INDEX IF NOT EXISTS idx_properties_owner_status ON properties(owner_organization_id, status, deleted_at);
+
+CREATE TABLE IF NOT EXISTS projects (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        organization_id INTEGER REFERENCES organizations(id),
+        title TEXT NOT NULL,
+        project_type TEXT NOT NULL,
+        objective TEXT NOT NULL,
+        budget_min INTEGER,
+        budget_max INTEGER,
+        currency TEXT NOT NULL DEFAULT 'XAF',
+        location_city TEXT,
+        location_region TEXT,
+        location_country TEXT DEFAULT 'Cameroon',
+        location_latitude DOUBLE PRECISION,
+        location_longitude DOUBLE PRECISION,
+        timeline_horizon TEXT,
+        status TEXT NOT NULL DEFAULT 'draft',
+        priority TEXT NOT NULL DEFAULT 'normal',
+        progress_percent INTEGER NOT NULL DEFAULT 0,
+        metadata_json TEXT NOT NULL DEFAULT '{}',
+        archived_at TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+
+CREATE TABLE IF NOT EXISTS project_steps (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        step_key TEXT NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT,
+        position INTEGER NOT NULL DEFAULT 0,
+        status TEXT NOT NULL DEFAULT 'pending',
+        milestone TEXT,
+        next_action TEXT,
+        completed_at TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE (project_id, step_key)
+    );
+
+CREATE TABLE IF NOT EXISTS project_checklist_items (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        step_id INTEGER REFERENCES project_steps(id) ON DELETE CASCADE,
+        label TEXT NOT NULL,
+        checked INTEGER NOT NULL DEFAULT 0,
+        position INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+
+CREATE TABLE IF NOT EXISTS project_step_history (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        step_id INTEGER NOT NULL REFERENCES project_steps(id) ON DELETE CASCADE,
+        from_status TEXT,
+        to_status TEXT NOT NULL,
+        note TEXT,
+        created_at TEXT NOT NULL
+    );
+
+CREATE INDEX IF NOT EXISTS idx_projects_user_status ON projects(user_id, status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_projects_organization_status ON projects(organization_id, status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at, id);
+
+CREATE INDEX IF NOT EXISTS idx_project_steps_project_position ON project_steps(project_id, position);
+
+CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_items(project_id, step_id, position);
+
+CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);

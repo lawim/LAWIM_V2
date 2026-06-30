@@ -7,6 +7,7 @@ const state = {
   selectedPropertyId: null,
   selectedPropertyVersion: null,
   selectedPropertyTitle: null,
+  selectedProjectId: null,
   refreshInFlight: false,
 };
 
@@ -63,6 +64,9 @@ function cacheRefs() {
     selectedPropertyLabel: byId("selected-property-label"),
     publishPropertyButton: byId("publish-property-button"),
     archivePropertyButton: byId("archive-property-button"),
+    projectForm: byId("project-form"),
+    projectsList: byId("projects-list"),
+    projectDetail: byId("project-detail"),
   });
 }
 
@@ -243,6 +247,7 @@ function renderSummary(summary) {
     ["Messages", summary.messages ?? 0, "sea"],
     ["Notifications", summary.notifications ?? 0, "gold"],
     ["Media", summary.media ?? 0, "slate"],
+    ["Projects", summary.projects ?? 0, "teal"],
   ];
   cards.forEach(([label, value, accent]) => fragment.appendChild(renderStat(label, value, accent)));
   refs.statusStrip.replaceChildren(fragment);
@@ -287,6 +292,88 @@ function renderOrganizations(items) {
     refs.adminOrganizationSelect.innerHTML = ['<option value="">Select organization</option>']
       .concat(items.map((organization) => `<option value="${organization.id}">${escapeHtml(organization.name)}</option>`))
       .join("");
+  }
+}
+
+function renderProjects(items) {
+  if (!refs.projectsList) {
+    return;
+  }
+  renderList(refs.projectsList, items, (project) => {
+    const article = document.createElement("article");
+    article.className = "mini-card mini-card--project";
+    const budget = project.budget || {};
+    article.innerHTML = `
+      <div class="mini-card__header">
+        <strong>${escapeHtml(project.title)}</strong>
+        <span class="${statusChipClass(project.status)}">${escapeHtml(project.status)}</span>
+      </div>
+      <p class="muted">${escapeHtml(project.project_type)} · ${project.progress_percent ?? 0}% · ${escapeHtml(project.priority || "normal")}</p>
+      <p>${escapeHtml(project.location?.city || "—")} · ${money(budget.min, budget.currency)} - ${money(budget.max, budget.currency)}</p>
+      <p class="muted">${escapeHtml(project.objective || "")}</p>
+    `;
+    article.addEventListener("click", () => selectProject(project.id));
+    return article;
+  }, state.token ? "No projects yet — create one from the sidebar." : "Sign in to view projects.");
+}
+
+async function selectProject(projectId) {
+  if (!state.token || !refs.projectDetail) {
+    return;
+  }
+  state.selectedProjectId = projectId;
+  try {
+    const payload = await api(`/api/v2/projects/${projectId}`, { auth: true });
+    const project = payload.project;
+    const progress = payload.progress || {};
+    const stepsHtml = (payload.steps || [])
+      .map(
+        (step) => `
+          <article class="message">
+            <div class="message__meta">
+              <strong>${escapeHtml(step.title)}</strong>
+              <span class="chip subtle">${escapeHtml(step.status)}</span>
+            </div>
+            <p class="muted">${escapeHtml(step.milestone || "")} · ${escapeHtml(step.next_action || "")}</p>
+          </article>
+        `,
+      )
+      .join("");
+    const actionsHtml = (payload.next_actions || [])
+      .map((action) => `<li>${escapeHtml(action.next_action || action.title)}</li>`)
+      .join("");
+    refs.projectDetail.innerHTML = `
+      <div class="detail-summary">
+        <div>
+          <p class="eyebrow">${escapeHtml(project.project_type)} project</p>
+          <h3>${escapeHtml(project.title)}</h3>
+          <p>${escapeHtml(project.objective)}</p>
+          <p class="muted">Progress ${progress.progress_percent ?? 0}% · ${progress.steps_completed ?? 0}/${progress.steps_total ?? 0} steps</p>
+        </div>
+      </div>
+      <h4>Next actions</h4>
+      <ul>${actionsHtml || "<li class='muted'>No pending actions</li>"}</ul>
+      <h4>Journey steps</h4>
+      <div class="message-stream">${stepsHtml}</div>
+    `;
+  } catch (error) {
+    refs.projectDetail.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function refreshProjects() {
+  if (!state.token || !refs.projectsList) {
+    renderProjects([]);
+    return;
+  }
+  try {
+    const payload = await api("/api/v2/projects", { auth: true, query: { limit: 20 } });
+    renderProjects(payload.projects || []);
+    if (state.selectedProjectId) {
+      await selectProject(state.selectedProjectId);
+    }
+  } catch (error) {
+    renderProjects([]);
   }
 }
 
@@ -674,6 +761,7 @@ async function refresh() {
     state.health = health;
     renderHealth(health);
     renderBootstrap(bootstrap);
+    await refreshProjects();
     applyJourney(state.activeJourney);
     setNotice("Runtime is available and ready.", "success");
   } catch (error) {
@@ -718,6 +806,38 @@ async function handleLogout() {
     state.selectedConversationId = null;
     setNotice("Session cleared.", "neutral");
     await refresh();
+  }
+}
+
+async function handleProjectCreate(event) {
+  event.preventDefault();
+  if (!state.token) {
+    setNotice("Sign in to create a project.", "error");
+    return;
+  }
+  try {
+    const form = new FormData(refs.projectForm);
+    const payload = await api("/api/v2/projects", {
+      method: "POST",
+      auth: true,
+      body: {
+        title: form.get("title"),
+        objective: form.get("objective"),
+        project_type: form.get("project_type"),
+        budget_min: parseNumber(form.get("budget_min")),
+        budget_max: parseNumber(form.get("budget_max")),
+        location_city: form.get("location_city"),
+        timeline_horizon: form.get("timeline_horizon"),
+        status: "active",
+      },
+    });
+    refs.projectForm.reset();
+    state.selectedProjectId = payload.project.id;
+    setNotice("Project created.", "success");
+    await refreshProjects();
+    applyJourney("project");
+  } catch (error) {
+    setNotice(error.message, "error", error.code || "");
   }
 }
 
@@ -1071,6 +1191,7 @@ function bindEvents() {
   refs.logoutButton.addEventListener("click", handleLogout);
   refs.demoButton.addEventListener("click", populateDemoCredentials);
   refs.registerForm?.addEventListener("submit", handleRegister);
+  refs.projectForm?.addEventListener("submit", handleProjectCreate);
   refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);
   refs.matchForm.addEventListener("submit", handleMatchSearch);
   refs.propertyForm.addEventListener("submit", handlePropertyCreate);

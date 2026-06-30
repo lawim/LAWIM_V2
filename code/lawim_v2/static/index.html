@@ -64,6 +64,7 @@
           <div id="journey-nav" class="journey-nav">
             <button type="button" class="button secondary" data-journey="seller">Seller</button>
             <button type="button" class="button secondary" data-journey="buyer">Buyer</button>
+            <button type="button" class="button secondary" data-journey="project">Project</button>
             <button type="button" class="button secondary" data-journey="admin">Admin</button>
           </div>
         </section>
@@ -101,6 +102,60 @@
             </label>
             <div class="actions">
               <button type="submit" class="button primary">Register</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel form-panel" data-journey-panel="project buyer">
+          <div class="section-heading">
+            <h2>Real estate project</h2>
+            <p class="muted">LAWIM 2.x — create and track your property project.</p>
+          </div>
+          <form id="project-form" class="stacked-form">
+            <label>
+              <span>Title</span>
+              <input name="title" type="text" required placeholder="Achat appartement Douala">
+            </label>
+            <label>
+              <span>Objective</span>
+              <textarea name="objective" rows="2" required placeholder="Describe your project goal"></textarea>
+            </label>
+            <label>
+              <span>Project type</span>
+              <select name="project_type">
+                <option value="buy">buy</option>
+                <option value="rent">rent</option>
+                <option value="sell">sell</option>
+                <option value="invest">invest</option>
+                <option value="build">build</option>
+                <option value="other">other</option>
+              </select>
+            </label>
+            <div class="two-up">
+              <label>
+                <span>Budget min</span>
+                <input name="budget_min" type="number" min="0" step="1" placeholder="200000">
+              </label>
+              <label>
+                <span>Budget max</span>
+                <input name="budget_max" type="number" min="0" step="1" placeholder="350000">
+              </label>
+            </div>
+            <label>
+              <span>City</span>
+              <input name="location_city" type="text" placeholder="Douala">
+            </label>
+            <label>
+              <span>Horizon</span>
+              <select name="timeline_horizon">
+                <option value="3_months">3 months</option>
+                <option value="6_months">6 months</option>
+                <option value="1_year">1 year</option>
+                <option value="flexible">flexible</option>
+              </select>
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Create project</button>
             </div>
           </form>
         </section>
@@ -443,6 +498,14 @@
         <section id="notice" class="notice panel">Loading runtime state...</section>
 
         <section class="cards-grid">
+          <article class="panel card" data-journey-panel="project buyer admin">
+            <div class="section-heading">
+              <h2>Projects</h2>
+              <p class="muted">2.x guided real-estate projects (API v2).</p>
+            </div>
+            <div id="projects-list" class="card-list"></div>
+          </article>
+
           <article class="panel card">
             <div class="section-heading">
               <h2>Organizations</h2>
@@ -522,6 +585,16 @@
           </div>
           <div id="admin-dashboard" class="detail-body">
             <p class="muted">Sign in as admin to load supervision data.</p>
+          </div>
+        </section>
+
+        <section class="panel detail-panel" data-journey-panel="project buyer">
+          <div class="section-heading">
+            <h2>Project detail</h2>
+            <p class="muted">Progress, steps and next actions.</p>
+          </div>
+          <div id="project-detail" class="detail-body">
+            <p class="muted">Select a project to inspect.</p>
           </div>
         </section>
 

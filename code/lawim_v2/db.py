@@ -35,6 +35,7 @@ from .notification_domain import build_notification_payload, normalize_kind as n
 from .security import create_session_token, hash_password, verify_password
 from .schema_ddl import SQLITE_INIT_SCRIPT
 from .schema_migrations import apply_sqlite_legacy_migrations
+from .project_repository import ProjectRepositoryMixin
 
 
 SCHEMA = SQLITE_INIT_SCRIPT
@@ -72,7 +73,7 @@ __all__ = [
 ]
 
 
-class LawimRepository:
+class LawimRepository(ProjectRepositoryMixin):
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -217,6 +218,36 @@ class LawimRepository:
                 user_ids[str(message_row["sender_email"])],
                 str(message_row["body"]),
             )
+
+        if "project" in blueprint:
+            project_row = blueprint["project"]
+            user_id = user_ids[str(project_row["user_email"])]
+            user = self.get_user_by_id(user_id)
+            project = self.create_project(
+                title=str(project_row["title"]),
+                project_type=str(project_row["project_type"]),
+                objective=str(project_row["objective"]),
+                user_id=user_id,
+                organization_id=user.get("organization_id"),
+                budget_min=project_row.get("budget_min"),
+                budget_max=project_row.get("budget_max"),
+                currency=str(project_row.get("currency", "XAF")),
+                location_city=project_row.get("location_city"),
+                location_region=project_row.get("location_region"),
+                location_country=str(project_row.get("location_country", "Cameroon")),
+                timeline_horizon=project_row.get("timeline_horizon"),
+                status=str(project_row.get("status", "draft")),
+                priority=str(project_row.get("priority", "normal")),
+            )
+            if project_row.get("activate_first_step"):
+                steps = self.list_project_steps(int(project["id"]))
+                if steps:
+                    self.update_project_step(
+                        int(project["id"]),
+                        int(steps[0]["id"]),
+                        status="in_progress",
+                        note="Demo seed activation",
+                    )
 
         report = {
             "profile": "demo",
@@ -1557,7 +1588,8 @@ class LawimRepository:
                 (SELECT COUNT(*) FROM notifications) AS notifications,
                 (SELECT COUNT(*) FROM media) AS media,
                 (SELECT COUNT(*) FROM events) AS events,
-                (SELECT COUNT(*) FROM sessions) AS sessions
+                (SELECT COUNT(*) FROM sessions) AS sessions,
+                (SELECT COUNT(*) FROM projects WHERE status != 'archived') AS projects
             """
         )
         assert row is not None
@@ -1571,6 +1603,7 @@ class LawimRepository:
             "media": int(row["media"]),
             "events": int(row["events"]),
             "sessions": int(row["sessions"]),
+            "projects": int(row["projects"]),
         }
 
     def bootstrap_payload(self, *, token: str | None = None) -> dict[str, object]:

@@ -56,7 +56,7 @@ Comptes démo (mot de passe `lawim-demo`) : `admin@lawim.local`, `agent@lawim.lo
 
 ## Schéma & persistance
 
-- Source de vérité logique : `code/lawim_v2/persistence.py` (manifest v5)
+- Source de vérité logique : `code/lawim_v2/persistence.py` (manifest v6)
 - DDL unifié : `code/lawim_v2/schema_ddl.py` (SQLite + PostgreSQL)
 - Migrations legacy SQLite : `code/lawim_v2/schema_migrations.py`
 - Prisma : ancre production PostgreSQL (`prisma/schema.prisma` + migrations)
