@@ -153,9 +153,20 @@ class LawimServices:
             db_ready = True
         except Exception:
             db_ready = False
+        storage_ready = False
+        try:
+            self.config.media_storage_path.mkdir(parents=True, exist_ok=True)
+            probe = self.config.media_storage_path / ".ready_probe"
+            probe.write_text("ok", encoding="utf-8")
+            probe.unlink(missing_ok=True)
+            storage_ready = True
+        except OSError:
+            storage_ready = False
+        ready = db_ready and storage_ready
         return {
-            "status": "ready" if db_ready else "not_ready",
+            "status": "ready" if ready else "not_ready",
             "database": {"ready": db_ready},
+            "storage": {"ready": storage_ready, "path": str(self.config.media_storage_path)},
         }
 
     def metrics(self, *, actor: dict[str, object]) -> dict[str, object]:
@@ -932,10 +943,10 @@ class LawimServices:
         METRICS.increment("notifications")
         return result
 
-    def events(self, *, actor: dict[str, object], limit: int = 50) -> list[dict[str, object]]:
+    def events(self, *, actor: dict[str, object], limit: int = 50, kind: str | None = None) -> list[dict[str, object]]:
         if not self.policy.is_admin(actor):
             raise PermissionDenied("Only administrators can inspect the event log")
-        return self.repository.list_events(limit=limit)
+        return self.repository.list_events(limit=limit, kind=kind)
 
     def _notify_conversation_created(self, conversation: dict[str, object]) -> None:
         title = "Conversation ouverte"

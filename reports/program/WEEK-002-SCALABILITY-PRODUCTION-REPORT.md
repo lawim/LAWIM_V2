@@ -1,69 +1,142 @@
-# LAWIM_V2 — WEEK 002 Scalability / Performance / Production Report
+# WEEK 002 — Scalability & Production Report
 
-- **Date:** 2026-06-30
-- **Repository:** `/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2`
+- **Date:** 2026-06-29
 - **Branch:** `release/1.0.0-beta`
-- **Required tag:** `v1.0.0-rc1`
-- **Scope:** performance, scalability, production hardening only. No business features added.
+- **Base tag:** `v1.0.0-rc1`
+- **Scope:** Production scalability, performance, observability (no new business features)
 
 ---
 
-## 1. Preflight
-
-| Check | Status |
-|-------|--------|
-| Repository root | PASS |
-| Branch `release/1.0.0-beta` | PASS |
-| Tag `v1.0.0-rc1` | PASS |
-| Clean worktree before changes | PASS |
-
----
-
-## 2. What changed
+## 1. Optimisations réalisées
 
 | Area | Change |
 |------|--------|
-| PostgreSQL / SQLite queries | Removed redundant `LOWER(...)` comparisons from indexed filters by normalizing inputs once; replaced correlated count subqueries with CTE/aggregate joins; collapsed summary counts into one query; removed the 100-user notification fan-out cap by querying organization recipients directly. |
-| Cache | Added in-memory static asset caching in the HTTP server. |
-| API | Switched JSON responses to compact serialization; added structured JSON request logs. |
-| Bootstrap path | Eliminated duplicate bootstrap queries by reusing repository payloads and preserving access filtering for users/conversations. |
-| UI | Cached the number formatter and batched list rendering with `DocumentFragment` / `replaceChildren()` to reduce DOM churn. |
-| Schema / DDL | Removed the redundant session-token index, added targeted read indexes for organizations, users, properties, media, conversations, and events; kept Prisma, runtime DDL, and migration SQL aligned. |
-| Repro tooling | Added `scripts/bench_hot_paths.py` for repeatable local benchmarking. |
+| **Conversation detail** | `get_conversation()` uses indexed per-conversation subqueries instead of full-table window CTE |
+| **Property listing** | Already used aggregated CTE for media/conversation counts (retained) |
+| **Audit log** | `list_events(kind=…)` filter for admin queries (uses new index) |
+| **Metrics** | Per-request latency tracking (p50/p95/max) + top routes |
+| **Readiness** | `/readyz` now probes media storage writability |
+| **UI** | `refresh()` guarded against concurrent in-flight calls |
+| **Benchmark** | `scripts/benchmark_runtime.py` — reproducible 20-iteration probe |
 
 ---
 
-## 3. Validation
+## 2. Indexes ajoutés
 
-| Validation | Result | Notes |
-|------------|--------|-------|
-| `python3 -m unittest discover -s tests -p 'test_*.py'` | PASS | 82 tests, 3 skipped |
-| `python3 scripts/validate_prisma_manifest.py` | PASS | Prisma schema, runtime DDL, and migration SQL aligned |
-| `python3 scripts/bench_hot_paths.py --iterations 25` | PASS | Reproducible hot-path benchmark completed |
+| Index | Tables | Purpose |
+|-------|--------|---------|
+| `idx_events_kind_created` | events | Audit filter by kind + time |
+| `idx_sessions_user_expires` | sessions | Session lookup / expiry sweep |
+| `idx_sessions_expires_at` | sessions | Global session cleanup |
+| `idx_properties_owner_status` | properties | Seller org listing by status |
 
-### Benchmark snapshot
+Aligned across: `schema_ddl.py` (PG + SQLite), `schema_migrations.py` (legacy SQLite), `persistence.py` manifest, `prisma/schema.prisma`, migration SQL (synced).
 
-| Hot path | Mean | Median | p95 |
-|----------|------|--------|-----|
-| `repository.summary` | 0.020 ms | 0.020 ms | 0.061 ms |
-| `repository.list_properties` | 0.314 ms | 0.272 ms | 0.843 ms |
-| `services.list_conversations` | 0.194 ms | 0.184 ms | 0.276 ms |
-| `services.bootstrap` | 1.594 ms | 1.438 ms | 2.431 ms |
-| `repository.search_locations` | 0.069 ms | 0.065 ms | 0.084 ms |
-
-Benchmark context: seeded temporary SQLite repository, 25 iterations per path.
+**Schema fingerprint updated:** `c2e5c04f…926ac` (manifest v5 unchanged).
 
 ---
 
-## 4. Production notes
+## 3. Performance
 
-- The bootstrap path now avoids unnecessary duplicate reads while preserving access control for anonymous, owner/agent, and admin callers.
-- Notification fan-out no longer truncates organization recipients at 100 users.
-- The runtime remains compatible with PostgreSQL and SQLite, and the manifest validation stayed green after the schema/index changes.
-- No push was performed because no remote is configured.
+Benchmark local (`scripts/benchmark_runtime.py`, SQLite, 20 iterations):
+
+| Route | p50 (ms) | p95 (ms) |
+|-------|----------|----------|
+| `/healthz` | ~1.4 | ~2.7 |
+| `/readyz` | ~2.4 | ~4.5 |
+| `/api/health` | ~1.7 | ~3.1 |
+| `/api/properties?limit=10` | (see full JSON output) | — |
+| `/api/bootstrap` | (see full JSON output) | — |
+
+PostgreSQL smoke init: **~50 ms** on Podman container (port 5433).
+
+All critical routes remain well under 250 ms p95 on dev hardware.
 
 ---
 
-## 5. Decision
+## 4. Sécurité
 
-**PASS:** the repository is prepared for a higher-load production posture without adding business scope.
+No regression — RC1 hardening retained:
+
+- CORS allowlist
+- Auth rate limiting
+- Payload limits
+- Optional private media
+- Production `AppConfig.validate()` enforced
+
+**New:** `platform/validate-production.sh` — validates production env contract (HTTPS, no PG fallback, no public media, external secrets).
+
+---
+
+## 5. Observabilité
+
+| Capability | Status |
+|------------|--------|
+| Structured HTTP logs | JSON `http_request` (existing) |
+| Request completion debug | `request_complete` with `duration_ms` |
+| Metrics snapshot | `latency_ms`, `routes_top` added |
+| `/healthz` | Liveness |
+| `/readyz` | DB + storage readiness |
+| `/api/metrics` | Admin-only (existing) |
+| Audit `/api/events?kind=` | Kind filter for operators |
+
+---
+
+## 6. PostgreSQL
+
+- DDL/index alignment verified via `validate_prisma_manifest.py` PASS
+- **6/6** integration tests PASS via `./platform/run-postgres-tests.sh`
+- `smoke_postgres.py` reports `init_ms` timing
+- SQLite fallback unchanged
+
+---
+
+## 7. Tests
+
+| Suite | Result |
+|-------|--------|
+| Total | **90** run |
+| Passed | **88** |
+| Skipped | 2 (PG without system pg8000 in `run-tests.sh`) |
+| New | `tests/test_week002_production.py` (8 cases) |
+
+---
+
+## 8. Validations finales
+
+| Gate | Result |
+|------|--------|
+| `./scripts/validate-install.sh` | PASS |
+| `./scripts/validate-packaging.sh` | PASS |
+| `./scripts/run-tests.sh` | PASS (90 tests) |
+| `validate_prisma_manifest.py` | PASS |
+| `smoke_runtime.py` | PASS |
+| `./platform/validate-platform.sh` | PASS (with postgres started) |
+| `./platform/run-postgres-tests.sh` | PASS |
+| `git diff --check` | PASS |
+| `platform/validate-production.sh` | PASS |
+
+---
+
+## 9. Limites restantes
+
+1. `./scripts/run-tests.sh` skips PG modules without platform venv/DSN.
+2. `./platform/validate-platform.sh` requires `./platform/start-postgres.sh` first on this host.
+3. Metrics remain in-process (not exported to Prometheus yet).
+4. `docker compose up` still fails on Podman-only hosts (use `platform/compose.sh`).
+5. No automated browser E2E load testing.
+
+---
+
+## 10. Recommandation GA 1.0.0
+
+**Proceed toward GA** after:
+
+1. Staging deployment with `platform/validate-production.sh` against real env vars
+2. Manual QA sign-off (`RC_READINESS_CHECKLIST.md`)
+3. PostgreSQL validated on target infra (not only local Podman)
+4. Optional: wire metrics export / external APM before high-traffic production
+
+WEEK 002 materially improves production readiness without expanding product scope. RC1 + WEEK 002 provide a solid GA candidate base.
+
+**Tag:** `week-002-scalability-production`

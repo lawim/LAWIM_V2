@@ -1324,51 +1324,44 @@ class LawimRepository:
         self.record_event("message_added", {"conversation_id": conversation_id, "sender_user_id": sender_user_id})
         return message
 
-    def list_events(self, limit: int = 50) -> list[dict[str, object]]:
+    def list_events(self, limit: int = 50, *, kind: str | None = None) -> list[dict[str, object]]:
         if limit < 1:
             raise ValidationError("limit must be positive")
+        clauses: list[str] = []
+        params: list[object] = []
+        if kind:
+            clauses.append("kind = ?")
+            params.append(kind.strip().lower())
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        params.append(limit)
         return self.all(
-            """
+            f"""
             SELECT *
             FROM events
+            {where}
             ORDER BY created_at DESC, id DESC
             LIMIT ?
             """,
-            (limit,),
+            tuple(params),
         )
 
     def get_conversation(self, conversation_id: int) -> dict[str, object]:
-        metrics_cte = """
-            WITH message_stats AS (
-                SELECT conversation_id, COUNT(*) AS message_count
-                FROM messages
-                GROUP BY conversation_id
-            ),
-            last_messages AS (
-                SELECT conversation_id, body AS last_message
-                FROM (
-                    SELECT conversation_id, body,
-                           ROW_NUMBER() OVER (
-                               PARTITION BY conversation_id
-                               ORDER BY created_at DESC, id DESC
-                           ) AS rn
-                    FROM messages
-                ) ranked_messages
-                WHERE rn = 1
-            )
-        """
         conversation = self.one(
-            f"""{metrics_cte}
+            """
             SELECT c.*, p.title AS property_title, u.full_name AS requester_name, u.email AS requester_email,
                    o.name AS organization_name, o.slug AS organization_slug,
-                   COALESCE(ms.message_count, 0) AS message_count,
-                   lm.last_message AS last_message
+                   (SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count,
+                   (
+                       SELECT m.body
+                       FROM messages m
+                       WHERE m.conversation_id = c.id
+                       ORDER BY m.created_at DESC, m.id DESC
+                       LIMIT 1
+                   ) AS last_message
             FROM conversations c
             LEFT JOIN properties p ON p.id = c.property_id
             LEFT JOIN organizations o ON o.id = c.organization_id
             JOIN users u ON u.id = c.user_id
-            LEFT JOIN message_stats ms ON ms.conversation_id = c.id
-            LEFT JOIN last_messages lm ON lm.conversation_id = c.id
             WHERE c.id = ?
             """,
             (conversation_id,),

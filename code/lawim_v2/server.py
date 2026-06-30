@@ -5,6 +5,7 @@ import json
 import logging
 import mimetypes
 import sqlite3
+import time
 from dataclasses import replace
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -89,23 +90,40 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         )
 
     def _handle_request(self, handler) -> None:
+        route = urlparse(self.path).path
+        started = time.perf_counter()
+        failed = False
         try:
             handler()
         except ApiError as exc:
-            METRICS.increment("api", failed=True)
+            failed = True
             self._send_json_error(exc.status, exc.code, exc.message)
         except ServiceError as exc:
-            METRICS.increment("api", failed=True)
+            failed = True
             self._send_json_error(exc.status, exc.code, exc.message)
         except RepositoryError as exc:
-            METRICS.increment("api", failed=True)
+            failed = True
             self._send_json_error(exc.status, exc.code, str(exc))
         except Exception as exc:  # pragma: no cover - unexpected runtime failure
-            METRICS.increment("api", failed=True)
+            failed = True
             LOGGER.exception("Unhandled %s error: %s", self.command, exc)
             self._send_json_error(HTTPStatus.INTERNAL_SERVER_ERROR, "internal_error", "Unexpected server error")
-        else:
-            METRICS.increment("api")
+        finally:
+            duration_ms = (time.perf_counter() - started) * 1000.0
+            METRICS.record_request(route=route, duration_ms=duration_ms, failed=failed)
+            if self.config.metrics_enabled:
+                LOGGER.debug(
+                    json.dumps(
+                        {
+                            "event": "request_complete",
+                            "route": route,
+                            "method": self.command,
+                            "duration_ms": round(duration_ms, 2),
+                            "failed": failed,
+                        },
+                        separators=(",", ":"),
+                    )
+                )
 
     def _handle_get(self) -> None:
         parsed = urlparse(self.path)
@@ -172,7 +190,15 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/events":
             actor = self._require_user()
-            self._send_json({"events": self.services.events(actor=actor, limit=self._query_limit(query))})
+            self._send_json(
+                {
+                    "events": self.services.events(
+                        actor=actor,
+                        limit=self._query_limit(query),
+                        kind=self._first(query, "kind"),
+                    )
+                }
+            )
             return
 
         if path == "/api/me":

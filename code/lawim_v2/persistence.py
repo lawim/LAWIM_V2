@@ -173,6 +173,7 @@ APPLICATION_SCHEMA = SchemaManifest(
             primary_key="token",
             columns=("token", "user_id", "created_at", "expires_at"),
             foreign_keys=(ForeignKeySpec("user_id", "users.id", on_delete="cascade"),),
+            indexes=("idx_sessions_user_expires", "idx_sessions_expires_at"),
         ),
         TableSpec(
             name="properties",
@@ -214,6 +215,7 @@ APPLICATION_SCHEMA = SchemaManifest(
                 "idx_properties_search_key",
                 "idx_properties_deleted_at",
                 "idx_properties_created_at",
+                "idx_properties_owner_status",
             ),
         ),
         TableSpec(
@@ -282,7 +284,7 @@ APPLICATION_SCHEMA = SchemaManifest(
             purpose="Audit trail for lifecycle and mutation events.",
             primary_key="id",
             columns=("id", "kind", "payload", "created_at"),
-            indexes=("idx_events_created_at",),
+            indexes=("idx_events_created_at", "idx_events_kind_created"),
         ),
         TableSpec(
             name="notifications",

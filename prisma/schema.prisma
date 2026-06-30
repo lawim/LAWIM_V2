@@ -52,6 +52,8 @@ model Session {
   expiresAt String @map("expires_at")
   user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, expiresAt], map: "idx_sessions_user_expires")
+  @@index([expiresAt], map: "idx_sessions_expires_at")
   @@map("sessions")
 }
 
@@ -91,6 +93,7 @@ model Property {
   @@index([searchKey], map: "idx_properties_search_key")
   @@index([deletedAt], map: "idx_properties_deleted_at")
   @@index([createdAt, id], map: "idx_properties_created_at")
+  @@index([ownerOrganizationId, status, deletedAt], map: "idx_properties_owner_status")
   @@map("properties")
 }
 
@@ -158,6 +161,7 @@ model Event {
   createdAt String @map("created_at")
 
   @@index([createdAt, id], map: "idx_events_created_at")
+  @@index([kind, createdAt, id], map: "idx_events_kind_created")
   @@map("events")
 }
 

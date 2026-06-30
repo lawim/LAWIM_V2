@@ -7,6 +7,7 @@ const state = {
   selectedPropertyId: null,
   selectedPropertyVersion: null,
   selectedPropertyTitle: null,
+  refreshInFlight: false,
 };
 
 const refs = {};
@@ -661,6 +662,10 @@ function parseNumber(value) {
 }
 
 async function refresh() {
+  if (state.refreshInFlight) {
+    return;
+  }
+  state.refreshInFlight = true;
   setLoading(true, "Refreshing runtime state...");
   try {
     const healthPromise = api("/api/health", { auth: Boolean(state.token) });
@@ -675,6 +680,7 @@ async function refresh() {
     setNotice(`${error.message} — retry with refresh or check ./scripts/run-local.sh`, "error", error.code || "");
     setRuntimeChip("DEGRADED", "warn");
   } finally {
+    state.refreshInFlight = false;
     setLoading(false);
   }
 }

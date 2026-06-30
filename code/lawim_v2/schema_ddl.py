@@ -151,6 +151,10 @@ POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     "CREATE INDEX IF NOT EXISTS idx_users_organization ON users(organization_id, id)",
     "CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at, id)",
     "CREATE INDEX IF NOT EXISTS idx_events_created_at ON events(created_at, id)",
+    "CREATE INDEX IF NOT EXISTS idx_events_kind_created ON events(kind, created_at, id)",
+    "CREATE INDEX IF NOT EXISTS idx_sessions_user_expires ON sessions(user_id, expires_at)",
+    "CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at)",
+    "CREATE INDEX IF NOT EXISTS idx_properties_owner_status ON properties(owner_organization_id, status, deleted_at)",
 )
 
 SQLITE_INIT_SCRIPT = """
@@ -299,6 +303,10 @@ CREATE INDEX IF NOT EXISTS idx_organizations_created_at ON organizations(created
 CREATE INDEX IF NOT EXISTS idx_users_organization ON users(organization_id, id);
 CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at, id);
 CREATE INDEX IF NOT EXISTS idx_events_created_at ON events(created_at, id);
+CREATE INDEX IF NOT EXISTS idx_events_kind_created ON events(kind, created_at, id);
+CREATE INDEX IF NOT EXISTS idx_sessions_user_expires ON sessions(user_id, expires_at);
+CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
+CREATE INDEX IF NOT EXISTS idx_properties_owner_status ON properties(owner_organization_id, status, deleted_at);
 """
 
 

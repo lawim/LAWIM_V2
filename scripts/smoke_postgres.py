@@ -6,6 +6,7 @@ from __future__ import annotations
 import os
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 
@@ -41,10 +42,12 @@ def main() -> int:
     )
     repository = adapter.create_repository()
     try:
+        started = time.perf_counter()
         repository.initialize(seed_demo_data=True)
         repository.scalar("SELECT 1")
+        elapsed_ms = round((time.perf_counter() - started) * 1000.0, 2)
         summary = repository.summary()
-        print(f"PostgreSQL smoke OK — organizations={summary['organizations']}")
+        print(f"PostgreSQL smoke OK — organizations={summary['organizations']} init_ms={elapsed_ms}")
         return 0
     finally:
         repository.close()
