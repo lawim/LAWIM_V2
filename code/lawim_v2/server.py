@@ -289,7 +289,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/matches":
             criteria = self._build_match_criteria(query)
-            self._send_json(self.services.list_matches(criteria))
+            actor = self._require_user(optional=True)
+            self._send_json(self.services.list_matches(criteria, actor=actor))
             return
 
         if path == "/api/media":

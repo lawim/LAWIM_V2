@@ -785,11 +785,28 @@ class LawimServices:
         self._notify_message_received(current, message)
         return message_dto(message)
 
-    def list_matches(self, criteria: MatchCriteria) -> dict[str, object]:
+    def list_matches(self, criteria: MatchCriteria, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         ranked = self.repository.matched_properties(criteria)
         METRICS.increment("matches")
+        matches = [match_dto(item) for item in ranked]
+        if actor is not None and matches:
+            top = matches[0]
+            property_payload = top.get("property")
+            if isinstance(property_payload, dict):
+                title = str(property_payload.get("title") or "Property")
+                property_id = property_payload.get("id")
+            else:
+                title = "Property"
+                property_id = None
+            self.repository.create_notification(
+                user_id=int(actor["id"]),
+                kind="match_found",
+                title="Correspondance trouvée",
+                body=f"{title} — score {top.get('score')}",
+                payload={"property_id": property_id, "score": top.get("score")},
+            )
         return {
-            "matches": [match_dto(item) for item in ranked],
+            "matches": matches,
             "criteria": {
                 "city": criteria.city,
                 "region": criteria.region,

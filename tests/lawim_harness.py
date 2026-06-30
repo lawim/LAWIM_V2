@@ -125,6 +125,28 @@ class LawimTestHarness(TestCase):
         self.assertEqual(response.status, HTTPStatus.CREATED, msg=response.body_text())
         return str(response.body_json()["token"])
 
+    def register(
+        self,
+        *,
+        email: str,
+        full_name: str,
+        role: str = "owner",
+        password: str = "lawim-demo",
+        organization_id: int | None = None,
+        token: str | None = None,
+    ) -> str:
+        body: dict[str, object] = {
+            "email": email,
+            "full_name": full_name,
+            "role": role,
+            "password": password,
+        }
+        if organization_id is not None:
+            body["organization_id"] = organization_id
+        response = self.invoke("/api/auth/register", method="POST", body=body, token=token)
+        self.assertEqual(response.status, HTTPStatus.CREATED, msg=response.body_text())
+        return str(response.body_json()["token"])
+
     def assert_error_shape(self, response: DummyHandler) -> dict[str, object]:
         payload = response.body_json()
         self.assertIn("error", payload)

@@ -513,3 +513,18 @@ button {
     align-items: start;
   }
 }
+
+.journey-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.journey-nav [data-active="true"] {
+  border-color: rgba(240, 179, 109, 0.65);
+  background: rgba(240, 179, 109, 0.12);
+}
+
+[hidden] {
+  display: none !important;
+}

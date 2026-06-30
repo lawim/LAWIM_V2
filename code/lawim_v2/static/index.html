@@ -15,9 +15,9 @@
     <header class="masthead panel">
       <div>
         <p class="eyebrow">LAWIM_V2</p>
-        <h1>Executable baseline</h1>
+        <h1>User journey console</h1>
         <p class="lede">
-          SQLite-backed API, seeded demo data, property matching, conversations and a compact operator console.
+          Seller, buyer and administrator journeys over the SQLite-backed LAWIM_V2 runtime.
         </p>
       </div>
       <div class="masthead__status">
@@ -58,6 +58,82 @@
 
         <section class="panel form-panel">
           <div class="section-heading">
+            <h2>User journey</h2>
+            <p class="muted">Switch the console to your role.</p>
+          </div>
+          <div id="journey-nav" class="journey-nav">
+            <button type="button" class="button secondary" data-journey="seller">Seller</button>
+            <button type="button" class="button secondary" data-journey="buyer">Buyer</button>
+            <button type="button" class="button secondary" data-journey="admin">Admin</button>
+          </div>
+        </section>
+
+        <section class="panel form-panel" data-journey-panel="buyer seller">
+          <div class="section-heading">
+            <h2>Register</h2>
+            <p class="muted">Create an owner or agent account.</p>
+          </div>
+          <form id="register-form" class="stacked-form">
+            <label>
+              <span>Full name</span>
+              <input name="full_name" type="text" required placeholder="Jane Seller">
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" required placeholder="seller@example.local">
+            </label>
+            <label>
+              <span>Password</span>
+              <input name="password" type="password" required value="lawim-demo">
+            </label>
+            <label>
+              <span>Role</span>
+              <select name="role">
+                <option value="owner">owner (buyer)</option>
+                <option value="agent">agent (seller)</option>
+              </select>
+            </label>
+            <label>
+              <span>Organization</span>
+              <select name="organization_id" id="register-organization-select">
+                <option value="">None</option>
+              </select>
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Register</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel form-panel" data-journey-panel="buyer">
+          <div class="section-heading">
+            <h2>Property search</h2>
+            <p class="muted">Filter published listings before matching.</p>
+          </div>
+          <form id="property-search-form" class="stacked-form">
+            <label>
+              <span>City</span>
+              <input name="city" type="text" placeholder="Douala">
+            </label>
+            <label>
+              <span>Type</span>
+              <input name="property_type" type="text" placeholder="apartment">
+            </label>
+            <label>
+              <span>Status</span>
+              <select name="status">
+                <option value="published">published</option>
+                <option value="">any</option>
+              </select>
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Search</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel form-panel" data-journey-panel="buyer">
+          <div class="section-heading">
             <h2>Match search</h2>
             <p class="muted">Refine the ranking returned by the matching engine.</p>
           </div>
@@ -96,7 +172,7 @@
           </form>
         </section>
 
-        <section class="panel form-panel">
+        <section class="panel form-panel" data-journey-panel="seller">
           <div class="section-heading">
             <h2>Create property</h2>
             <p class="muted">Uses property DTO fields (geo, status, availability).</p>
@@ -182,7 +258,19 @@
           </form>
         </section>
 
-        <section class="panel form-panel">
+        <section class="panel form-panel" data-journey-panel="seller">
+          <div class="section-heading">
+            <h2>Listing actions</h2>
+            <p class="muted">Publish or archive the selected property.</p>
+          </div>
+          <p id="selected-property-label" class="muted">No property selected.</p>
+          <div class="actions">
+            <button type="button" id="publish-property-button" class="button primary">Publish</button>
+            <button type="button" id="archive-property-button" class="button ghost">Archive</button>
+          </div>
+        </section>
+
+        <section class="panel form-panel" data-journey-panel="seller">
           <div class="section-heading">
             <h2>Geo lookup</h2>
             <p class="muted">Deterministic local geocoding provider.</p>
@@ -211,7 +299,7 @@
           <p id="geo-result" class="muted">No geo result yet.</p>
         </section>
 
-        <section class="panel form-panel">
+        <section class="panel form-panel" data-journey-panel="seller">
           <div class="section-heading">
             <h2>Upload media</h2>
             <p class="muted">Multipart upload to local storage.</p>
@@ -233,6 +321,65 @@
             </label>
             <div class="actions">
               <button type="submit" class="button primary">Upload</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel form-panel" data-journey-panel="buyer">
+          <div class="section-heading">
+            <h2>Start conversation</h2>
+            <p class="muted">Open a negotiation on the selected property.</p>
+          </div>
+          <form id="buyer-conversation-form" class="stacked-form">
+            <label>
+              <span>Subject</span>
+              <input name="subject" type="text" required placeholder="Visit request">
+            </label>
+            <label>
+              <span>Initial message</span>
+              <textarea name="initial_message" rows="3" required placeholder="I am interested in this listing."></textarea>
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Open conversation</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel form-panel" data-journey-panel="admin">
+          <div class="section-heading">
+            <h2>Administration</h2>
+            <p class="muted">Create organizations and staff accounts.</p>
+          </div>
+          <form id="admin-org-form" class="stacked-form">
+            <label>
+              <span>Organization name</span>
+              <input name="name" type="text" required placeholder="New agency">
+            </label>
+            <label>
+              <span>Slug</span>
+              <input name="slug" type="text" required placeholder="new-agency">
+            </label>
+            <div class="actions">
+              <button type="submit" class="button secondary">Create organization</button>
+            </div>
+          </form>
+          <form id="admin-user-form" class="stacked-form">
+            <label>
+              <span>Staff email</span>
+              <input name="email" type="email" required>
+            </label>
+            <label>
+              <span>Full name</span>
+              <input name="full_name" type="text" required>
+            </label>
+            <label>
+              <span>Organization</span>
+              <select name="organization_id" id="admin-organization-select">
+                <option value="">Select organization</option>
+              </select>
+            </label>
+            <div class="actions">
+              <button type="submit" class="button primary">Create user</button>
             </div>
           </form>
         </section>
@@ -295,7 +442,17 @@
           </article>
         </section>
 
-        <section class="panel detail-panel">
+        <section class="panel detail-panel" data-journey-panel="admin">
+          <div class="section-heading">
+            <h2>Supervision</h2>
+            <p class="muted">Audit trail and runtime metrics.</p>
+          </div>
+          <div id="admin-dashboard" class="detail-body">
+            <p class="muted">Sign in as admin to load supervision data.</p>
+          </div>
+        </section>
+
+        <section class="panel detail-panel" data-journey-panel="buyer seller">
           <div class="section-heading">
             <h2>Conversation detail</h2>
             <p class="muted">Click a conversation to inspect and reply.</p>

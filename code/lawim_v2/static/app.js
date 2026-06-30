@@ -2,8 +2,11 @@ const state = {
   token: localStorage.getItem("lawim.token") || "",
   bootstrap: null,
   health: null,
+  activeJourney: localStorage.getItem("lawim.journey") || "buyer",
   selectedConversationId: null,
   selectedPropertyId: null,
+  selectedPropertyVersion: null,
+  selectedPropertyTitle: null,
 };
 
 const refs = {};
@@ -40,6 +43,18 @@ function cacheRefs() {
     mediaUploadForm: byId("media-upload-form"),
     mediaPropertySelect: byId("media-property-select"),
     ownerOrganizationSelect: byId("owner-organization-select"),
+    registerOrganizationSelect: byId("register-organization-select"),
+    adminOrganizationSelect: byId("admin-organization-select"),
+    journeyNav: byId("journey-nav"),
+    registerForm: byId("register-form"),
+    propertySearchForm: byId("property-search-form"),
+    buyerConversationForm: byId("buyer-conversation-form"),
+    adminOrgForm: byId("admin-org-form"),
+    adminUserForm: byId("admin-user-form"),
+    adminDashboard: byId("admin-dashboard"),
+    selectedPropertyLabel: byId("selected-property-label"),
+    publishPropertyButton: byId("publish-property-button"),
+    archivePropertyButton: byId("archive-property-button"),
   });
 }
 
@@ -208,6 +223,14 @@ function renderOrganizations(items) {
     .concat(items.map((organization) => `<option value="${organization.id}">${organization.name}</option>`))
     .join("");
   refs.ownerOrganizationSelect.innerHTML = options;
+  if (refs.registerOrganizationSelect) {
+    refs.registerOrganizationSelect.innerHTML = options;
+  }
+  if (refs.adminOrganizationSelect) {
+    refs.adminOrganizationSelect.innerHTML = ['<option value="">Select organization</option>']
+      .concat(items.map((organization) => `<option value="${organization.id}">${organization.name}</option>`))
+      .join("");
+  }
 }
 
 function renderProperties(items) {
@@ -241,6 +264,9 @@ function renderProperties(items) {
     `;
     article.addEventListener("click", () => {
       state.selectedPropertyId = property.id;
+      state.selectedPropertyVersion = property.version;
+      state.selectedPropertyTitle = property.title;
+      updateSelectedPropertyLabel();
       setNotice(`Selected property #${property.id} (${property.title})`, "neutral");
     });
     return article;
@@ -410,6 +436,69 @@ function renderConversations(items) {
   }, "No conversations available.");
 }
 
+function updateSelectedPropertyLabel() {
+  if (!refs.selectedPropertyLabel) {
+    return;
+  }
+  if (!state.selectedPropertyId) {
+    refs.selectedPropertyLabel.textContent = "No property selected.";
+    return;
+  }
+  refs.selectedPropertyLabel.textContent = `#${state.selectedPropertyId} · ${state.selectedPropertyTitle || "Property"} · v${state.selectedPropertyVersion ?? "?"}`;
+}
+
+function applyJourney(journey) {
+  state.activeJourney = journey;
+  localStorage.setItem("lawim.journey", journey);
+  document.querySelectorAll("[data-journey-panel]").forEach((panel) => {
+    const allowed = (panel.getAttribute("data-journey-panel") || "").split(/\s+/);
+    panel.hidden = !allowed.includes(journey);
+  });
+  document.querySelectorAll("#journey-nav [data-journey]").forEach((button) => {
+    button.dataset.active = button.getAttribute("data-journey") === journey ? "true" : "false";
+  });
+  if (journey === "admin" && state.token) {
+    loadAdminDashboard();
+  }
+}
+
+async function loadAdminDashboard() {
+  if (!refs.adminDashboard || !state.token) {
+    return;
+  }
+  try {
+    const [metrics, events] = await Promise.all([
+      api("/api/metrics"),
+      api("/api/events?limit=10", { auth: true }),
+    ]);
+    const counters = metrics.metrics || {};
+    refs.adminDashboard.innerHTML = `
+      <div class="detail-summary">
+        <div>
+          <p class="eyebrow">Runtime metrics</p>
+          <p>Requests ${counters.requests_total ?? 0} · Matches ${counters.matches_total ?? 0} · Conversations ${counters.conversations_total ?? 0}</p>
+        </div>
+      </div>
+      <div class="message-stream">
+        ${(events.events || [])
+          .map(
+            (event) => `
+              <article class="message">
+                <div class="message__meta">
+                  <strong>${event.kind}</strong>
+                  <span class="muted">${event.created_at}</span>
+                </div>
+              </article>
+            `,
+          )
+          .join("")}
+      </div>
+    `;
+  } catch (error) {
+    refs.adminDashboard.innerHTML = `<p class="muted">${error.message}</p>`;
+  }
+}
+
 function renderHealth(health) {
   const environment = health.environment || {};
   const database = health.database || {};
@@ -482,6 +571,7 @@ async function refresh() {
     state.health = health;
     renderHealth(health);
     renderBootstrap(bootstrap);
+    applyJourney(state.activeJourney);
     setNotice("Runtime is available, seeded and ready.");
   } catch (error) {
     setNotice(error.message, "error");
@@ -530,6 +620,7 @@ async function handleMatchSearch(event) {
   try {
     const form = new FormData(refs.matchForm);
     const payload = await api("/api/matches", {
+      auth: Boolean(state.token),
       query: {
         city: form.get("city"),
         budget_min: parseNumber(form.get("budget_min")),
@@ -541,6 +632,9 @@ async function handleMatchSearch(event) {
     });
     renderMatches(payload.matches || []);
     setNotice(`Returned ${payload.matches?.length || 0} ranked matches.`, "success");
+    if (state.token) {
+      await refreshNotifications();
+    }
   } catch (error) {
     setNotice(error.message, "error");
   }
@@ -659,15 +753,183 @@ function populateDemoCredentials() {
   refs.loginPassword.value = "lawim-demo";
 }
 
+async function handleRegister(event) {
+  event.preventDefault();
+  try {
+    const form = new FormData(refs.registerForm);
+    const payload = await api("/api/auth/register", {
+      method: "POST",
+      body: {
+        full_name: form.get("full_name"),
+        email: form.get("email"),
+        password: form.get("password"),
+        role: form.get("role"),
+        organization_id: parseNumber(form.get("organization_id")),
+      },
+    });
+    state.token = payload.token;
+    localStorage.setItem("lawim.token", state.token);
+    applyJourney(form.get("role") === "agent" ? "seller" : "buyer");
+    setNotice(`Registered as ${payload.user.email}`, "success");
+    await refresh();
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function handlePropertySearch(event) {
+  event.preventDefault();
+  try {
+    const form = new FormData(refs.propertySearchForm);
+    const payload = await api("/api/properties", {
+      query: {
+        city: form.get("city"),
+        property_type: form.get("property_type"),
+        status: form.get("status"),
+        limit: 20,
+      },
+    });
+    renderProperties(payload.properties || []);
+    setNotice(`Found ${payload.properties?.length || 0} listings.`, "success");
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function handlePublishProperty() {
+  if (!state.token || !state.selectedPropertyId) {
+    setNotice("Select a property and authenticate first.", "error");
+    return;
+  }
+  try {
+    const payload = await api(`/api/properties/${state.selectedPropertyId}/publish`, {
+      method: "POST",
+      auth: true,
+      body: { version: state.selectedPropertyVersion },
+    });
+    state.selectedPropertyVersion = payload.property.version;
+    updateSelectedPropertyLabel();
+    setNotice("Property published.", "success");
+    await refresh();
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function handleArchiveProperty() {
+  if (!state.token || !state.selectedPropertyId) {
+    setNotice("Select a property and authenticate first.", "error");
+    return;
+  }
+  try {
+    const payload = await api(`/api/properties/${state.selectedPropertyId}`, {
+      method: "PATCH",
+      auth: true,
+      body: { status: "archived", version: state.selectedPropertyVersion },
+    });
+    state.selectedPropertyVersion = payload.property.version;
+    updateSelectedPropertyLabel();
+    setNotice("Property archived.", "success");
+    await refresh();
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function handleBuyerConversation(event) {
+  event.preventDefault();
+  if (!state.token || !state.selectedPropertyId) {
+    setNotice("Select a property and authenticate first.", "error");
+    return;
+  }
+  try {
+    const form = new FormData(refs.buyerConversationForm);
+    const payload = await api("/api/conversations", {
+      method: "POST",
+      auth: true,
+      body: {
+        property_id: state.selectedPropertyId,
+        subject: form.get("subject"),
+        initial_message: form.get("initial_message"),
+      },
+    });
+    refs.buyerConversationForm.reset();
+    state.selectedConversationId = payload.conversation.id;
+    setNotice("Conversation opened.", "success");
+    await refresh();
+    await selectConversation(payload.conversation.id);
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function handleAdminOrgCreate(event) {
+  event.preventDefault();
+  if (!state.token) {
+    setNotice("Authenticate as admin first.", "error");
+    return;
+  }
+  try {
+    const form = new FormData(refs.adminOrgForm);
+    await api("/api/organizations", {
+      method: "POST",
+      auth: true,
+      body: { name: form.get("name"), slug: form.get("slug"), kind: "agency", city: "Douala" },
+    });
+    refs.adminOrgForm.reset();
+    setNotice("Organization created.", "success");
+    await refresh();
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function handleAdminUserCreate(event) {
+  event.preventDefault();
+  if (!state.token) {
+    setNotice("Authenticate as admin first.", "error");
+    return;
+  }
+  try {
+    const form = new FormData(refs.adminUserForm);
+    await api("/api/users", {
+      method: "POST",
+      auth: true,
+      body: {
+        email: form.get("email"),
+        full_name: form.get("full_name"),
+        role: "agent",
+        password: "lawim-demo",
+        organization_id: parseNumber(form.get("organization_id")),
+      },
+    });
+    refs.adminUserForm.reset();
+    setNotice("Staff user created.", "success");
+    await refresh();
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
 function bindEvents() {
   refs.loginForm.addEventListener("submit", handleLogin);
   refs.logoutButton.addEventListener("click", handleLogout);
   refs.demoButton.addEventListener("click", populateDemoCredentials);
+  refs.registerForm?.addEventListener("submit", handleRegister);
+  refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);
   refs.matchForm.addEventListener("submit", handleMatchSearch);
   refs.propertyForm.addEventListener("submit", handlePropertyCreate);
   refs.geoForm.addEventListener("submit", handleGeoLookup);
   refs.mediaUploadForm.addEventListener("submit", handleMediaUpload);
   refs.messageForm.addEventListener("submit", handleMessageCreate);
+  refs.buyerConversationForm?.addEventListener("submit", handleBuyerConversation);
+  refs.adminOrgForm?.addEventListener("submit", handleAdminOrgCreate);
+  refs.adminUserForm?.addEventListener("submit", handleAdminUserCreate);
+  refs.publishPropertyButton?.addEventListener("click", handlePublishProperty);
+  refs.archivePropertyButton?.addEventListener("click", handleArchiveProperty);
+  refs.journeyNav?.querySelectorAll("[data-journey]").forEach((button) => {
+    button.addEventListener("click", () => applyJourney(button.getAttribute("data-journey")));
+  });
   if (refs.markNotificationsReadButton) {
     refs.markNotificationsReadButton.addEventListener("click", markAllNotificationsRead);
   }
@@ -677,5 +939,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   cacheRefs();
   bindEvents();
   populateDemoCredentials();
+  applyJourney(state.activeJourney);
+  updateSelectedPropertyLabel();
   await refresh();
 });
