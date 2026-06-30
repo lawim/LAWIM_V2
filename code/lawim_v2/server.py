@@ -29,6 +29,7 @@ from .services import LawimServices, ServiceError
 
 LOGGER = logging.getLogger("lawim_v2")
 MAX_JSON_BODY_BYTES = 1_048_576
+_STATIC_TEXT_CACHE: dict[str, str] = {}
 
 
 class ApiError(Exception):
@@ -73,7 +74,19 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def log_message(self, format: str, *args: object) -> None:  # noqa: A003
-        LOGGER.info("%s - %s", self.address_string(), format % args)
+        LOGGER.info(
+            json.dumps(
+                {
+                    "event": "http_request",
+                    "client": self.address_string(),
+                    "request": format % args,
+                    "method": self.command,
+                    "path": self.path,
+                },
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+        )
 
     def _handle_request(self, handler) -> None:
         try:
@@ -787,7 +800,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         status: HTTPStatus = HTTPStatus.OK,
         extra_headers: dict[str, str] | None = None,
     ) -> None:
-        body = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
+        body = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
@@ -819,7 +832,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
     def _send_static(self, name: str, content_type: str) -> None:
         try:
-            content = resources.files("lawim_v2.static").joinpath(name).read_text(encoding="utf-8")
+            content = _STATIC_TEXT_CACHE.get(name)
+            if content is None:
+                content = resources.files("lawim_v2.static").joinpath(name).read_text(encoding="utf-8")
+                _STATIC_TEXT_CACHE[name] = content
         except FileNotFoundError as exc:
             raise ApiError(HTTPStatus.NOT_FOUND, "asset_not_found", f"Static asset not found: {name}") from exc
         self._send_text(content, content_type=content_type)
@@ -983,27 +999,34 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         min_score = query_min_score if query_min_score is not None else self.config.match_min_score
         if min_score < 0:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'min_score' must be non-negative")
+        city = self._first(query, "city")
+        region = self._first(query, "region")
+        country = self._first(query, "country")
+        property_type = self._first(query, "property_type")
+        availability = self._first(query, "availability")
+        status = self._first(query, "status")
+        default_weights = MatchWeights()
         weights = MatchWeights(
-            status=self._first_float(query, "weight_status") or MatchWeights().status,
-            city=self._first_float(query, "weight_city") or MatchWeights().city,
-            region=self._first_float(query, "weight_region") or MatchWeights().region,
-            budget=self._first_float(query, "weight_budget") or MatchWeights().budget,
-            proximity=self._first_float(query, "weight_proximity") or MatchWeights().proximity,
-            attributes=self._first_float(query, "weight_attributes") or MatchWeights().attributes,
-            availability=self._first_float(query, "weight_availability") or MatchWeights().availability,
+            status=self._first_float(query, "weight_status") or default_weights.status,
+            city=self._first_float(query, "weight_city") or default_weights.city,
+            region=self._first_float(query, "weight_region") or default_weights.region,
+            budget=self._first_float(query, "weight_budget") or default_weights.budget,
+            proximity=self._first_float(query, "weight_proximity") or default_weights.proximity,
+            attributes=self._first_float(query, "weight_attributes") or default_weights.attributes,
+            availability=self._first_float(query, "weight_availability") or default_weights.availability,
         )
         return MatchCriteria(
-            city=self._first(query, "city"),
-            region=self._first(query, "region"),
-            country=self._first(query, "country"),
+            city=city.lower() if city else None,
+            region=region.lower() if region else None,
+            country=country.lower() if country else None,
             budget_min=budget_min,
             budget_max=budget_max,
             latitude=self._optional_float(self._first(query, "latitude")),
             longitude=self._optional_float(self._first(query, "longitude")),
-            property_type=self._first(query, "property_type"),
+            property_type=property_type.lower() if property_type else None,
             bedrooms_min=self._first_int(query, "bedrooms_min", minimum=0),
-            availability=self._first(query, "availability"),
-            status=self._first(query, "status") or "published",
+            availability=availability.lower() if availability else None,
+            status=(status.lower() if status else "published"),
             limit=self._query_limit(query),
             min_score=min_score,
             weights=weights.normalized(),

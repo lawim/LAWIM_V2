@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from typing import Any
 
 from .conversation_domain import allowed_stage_transitions
-from .geo_domain import build_geo_dto
 from .media_domain import THUMBNAIL_CONTRACT, metadata_dict as media_metadata_dict
 from .property_domain import metadata_dict as property_metadata_dict
 
@@ -63,15 +62,8 @@ def organization_dto(row: dict[str, object]) -> dict[str, object]:
 
 
 def property_dto(property_row: dict[str, object]) -> dict[str, object]:
-    geo = build_geo_dto(
-        city=str(property_row.get("city") or ""),
-        country=str(property_row.get("country") or ""),
-        latitude=property_row.get("latitude"),  # type: ignore[arg-type]
-        longitude=property_row.get("longitude"),  # type: ignore[arg-type]
-        region=property_row.get("region"),  # type: ignore[arg-type]
-        address_line=property_row.get("address_line"),  # type: ignore[arg-type]
-        postal_code=property_row.get("postal_code"),  # type: ignore[arg-type]
-    )
+    latitude = property_row.get("latitude")
+    longitude = property_row.get("longitude")
     return {
         "id": property_row["id"],
         "listing_code": property_row.get("listing_code"),
@@ -90,7 +82,18 @@ def property_dto(property_row: dict[str, object]) -> dict[str, object]:
             "organization_name": property_row.get("owner_organization_name"),
             "organization_slug": property_row.get("owner_organization_slug"),
         },
-        "geo": geo,
+        "geo": {
+            "address_line": property_row.get("address_line"),
+            "city": property_row.get("city"),
+            "region": property_row.get("region"),
+            "postal_code": property_row.get("postal_code"),
+            "country": property_row.get("country"),
+            "coordinates": {
+                "latitude": latitude,
+                "longitude": longitude,
+            },
+            "search_key": property_row.get("search_key"),
+        },
         "metrics": {
             "bedrooms": property_row.get("bedrooms"),
             "bathrooms": property_row.get("bathrooms"),
@@ -184,6 +187,7 @@ def message_dto(message_row: dict[str, object]) -> dict[str, object]:
 
 def conversation_dto(conversation_row: dict[str, object], *, messages: list[dict[str, object]] | None = None) -> dict[str, object]:
     stage = str(conversation_row.get("negotiation_stage", "inquiry"))
+    allowed_stages = allowed_stage_transitions(stage)
     payload: dict[str, object] = {
         "id": conversation_row["id"],
         "subject": conversation_row["subject"],
@@ -191,7 +195,7 @@ def conversation_dto(conversation_row: dict[str, object], *, messages: list[dict
         "negotiation_stage": stage,
         "negotiation": {
             "stage": stage,
-            "allowed_stages": allowed_stage_transitions(stage),
+            "allowed_stages": allowed_stages,
             "history": [],
         },
         "property": {
@@ -219,7 +223,7 @@ def conversation_dto(conversation_row: dict[str, object], *, messages: list[dict
         payload["messages"] = [message_dto(item) for item in messages]
         payload["negotiation"] = {
             "stage": stage,
-            "allowed_stages": allowed_stage_transitions(stage),
+            "allowed_stages": allowed_stages,
             "history": [
                 {
                     "type": "message",

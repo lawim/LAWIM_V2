@@ -78,8 +78,7 @@ def _text_match(left: object, right: str | None) -> bool:
     return str(left).lower() == right.lower()
 
 
-def score_property(property_row: dict[str, object], criteria: MatchCriteria) -> dict[str, object]:
-    weights = criteria.weights.normalized()
+def _score_property(property_row: dict[str, object], criteria: MatchCriteria, weights: MatchWeights) -> dict[str, object]:
     breakdown: dict[str, float] = {}
     reasons: list[str] = []
     distance_km: float | None = None
@@ -171,8 +170,17 @@ def score_property(property_row: dict[str, object], criteria: MatchCriteria) -> 
     }
 
 
+def score_property(property_row: dict[str, object], criteria: MatchCriteria) -> dict[str, object]:
+    return _score_property(property_row, criteria, criteria.weights.normalized())
+
+
 def rank_properties(properties: Iterable[dict[str, object]], criteria: MatchCriteria) -> list[dict[str, object]]:
-    ranked = [score_property(property_row, criteria) for property_row in properties]
-    ranked = [item for item in ranked if float(item["score"]) >= criteria.min_score]
+    weights = criteria.weights.normalized()
+    ranked: list[dict[str, object]] = []
+    append = ranked.append
+    for property_row in properties:
+        scored = _score_property(property_row, criteria, weights)
+        if float(scored["score"]) >= criteria.min_score:
+            append(scored)
     ranked.sort(key=lambda item: (item["score"], item["property"].get("id", 0)), reverse=True)
     return ranked[: max(criteria.limit, 1)]

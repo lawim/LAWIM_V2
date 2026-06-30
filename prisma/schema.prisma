@@ -21,6 +21,7 @@ model Organization {
   properties    Property[] @relation("OwnerOrganization")
   conversations Conversation[]
 
+  @@index([createdAt, id], map: "idx_organizations_created_at")
   @@map("organizations")
 }
 
@@ -39,6 +40,8 @@ model User {
   messages       Message[] @relation("Sender")
   notifications  Notification[]
 
+  @@index([createdAt, id], map: "idx_users_created_at")
+  @@index([organizationId, id], map: "idx_users_organization")
   @@map("users")
 }
 
@@ -49,7 +52,6 @@ model Session {
   expiresAt String @map("expires_at")
   user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([token], map: "idx_sessions_token")
   @@map("sessions")
 }
 
@@ -88,6 +90,7 @@ model Property {
   @@index([status, city], map: "idx_properties_status_city")
   @@index([searchKey], map: "idx_properties_search_key")
   @@index([deletedAt], map: "idx_properties_deleted_at")
+  @@index([createdAt, id], map: "idx_properties_created_at")
   @@map("properties")
 }
 
@@ -109,6 +112,7 @@ model Media {
   property     Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@index([propertyId, position], map: "idx_media_property_position")
+  @@index([createdAt, id], map: "idx_media_created_at")
   @@map("media")
 }
 
@@ -128,6 +132,9 @@ model Conversation {
   messages         Message[]
 
   @@index([userId, updatedAt], map: "idx_conversations_user_updated")
+  @@index([updatedAt, id], map: "idx_conversations_updated_at")
+  @@index([organizationId, updatedAt, id], map: "idx_conversations_organization_updated")
+  @@index([propertyId, updatedAt, id], map: "idx_conversations_property_updated")
   @@map("conversations")
 }
 
@@ -150,6 +157,7 @@ model Event {
   payload   String
   createdAt String @map("created_at")
 
+  @@index([createdAt, id], map: "idx_events_created_at")
   @@map("events")
 }
 

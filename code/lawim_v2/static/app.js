@@ -10,6 +10,9 @@ const state = {
 };
 
 const refs = {};
+const moneyFormatter = new Intl.NumberFormat("fr-FR", {
+  maximumFractionDigits: 0,
+});
 
 function byId(id) {
   return document.getElementById(id);
@@ -110,9 +113,7 @@ function money(value, currency = "XAF") {
   if (value === null || value === undefined || value === "") {
     return "n/a";
   }
-  const formatted = new Intl.NumberFormat("fr-FR", {
-    maximumFractionDigits: 0,
-  }).format(Number(value));
+  const formatted = moneyFormatter.format(Number(value));
   return `${formatted} ${currency}`;
 }
 
@@ -213,9 +214,7 @@ async function apiMultipart(path, { auth = false, formData }) {
 }
 
 function clearNode(node) {
-  while (node.firstChild) {
-    node.removeChild(node.firstChild);
-  }
+  node.replaceChildren();
 }
 
 function renderStat(label, value, accent = "") {
@@ -224,12 +223,17 @@ function renderStat(label, value, accent = "") {
   if (accent) {
     item.dataset.accent = accent;
   }
-  item.innerHTML = `<span class="stat-label">${label}</span><strong>${value}</strong>`;
+  const statLabel = document.createElement("span");
+  statLabel.className = "stat-label";
+  statLabel.textContent = label;
+  const statValue = document.createElement("strong");
+  statValue.textContent = value;
+  item.append(statLabel, statValue);
   return item;
 }
 
 function renderSummary(summary) {
-  clearNode(refs.statusStrip);
+  const fragment = document.createDocumentFragment();
   const cards = [
     ["Organizations", summary.organizations ?? 0, "teal"],
     ["Users", summary.users ?? 0, "gold"],
@@ -239,19 +243,21 @@ function renderSummary(summary) {
     ["Notifications", summary.notifications ?? 0, "gold"],
     ["Media", summary.media ?? 0, "slate"],
   ];
-  cards.forEach(([label, value, accent]) => refs.statusStrip.appendChild(renderStat(label, value, accent)));
+  cards.forEach(([label, value, accent]) => fragment.appendChild(renderStat(label, value, accent)));
+  refs.statusStrip.replaceChildren(fragment);
 }
 
 function renderList(target, items, renderer, emptyText) {
-  clearNode(target);
+  const fragment = document.createDocumentFragment();
   if (!items || !items.length) {
     const empty = document.createElement("p");
     empty.className = "muted empty-state";
     empty.textContent = emptyText;
-    target.appendChild(empty);
+    target.replaceChildren(empty);
     return;
   }
-  items.forEach((item) => target.appendChild(renderer(item)));
+  items.forEach((item) => fragment.appendChild(renderer(item)));
+  target.replaceChildren(fragment);
 }
 
 function renderOrganizations(items) {

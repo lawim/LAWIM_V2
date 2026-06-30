@@ -147,6 +147,7 @@ APPLICATION_SCHEMA = SchemaManifest(
             primary_key="id",
             columns=("id", "name", "slug", "kind", "city", "created_at"),
             unique=(("slug",),),
+            indexes=("idx_organizations_created_at",),
         ),
         TableSpec(
             name="users",
@@ -164,6 +165,7 @@ APPLICATION_SCHEMA = SchemaManifest(
             ),
             unique=(("email",),),
             foreign_keys=(ForeignKeySpec("organization_id", "organizations.id"),),
+            indexes=("idx_users_organization", "idx_users_created_at"),
         ),
         TableSpec(
             name="sessions",
@@ -171,7 +173,6 @@ APPLICATION_SCHEMA = SchemaManifest(
             primary_key="token",
             columns=("token", "user_id", "created_at", "expires_at"),
             foreign_keys=(ForeignKeySpec("user_id", "users.id", on_delete="cascade"),),
-            indexes=("idx_sessions_token",),
         ),
         TableSpec(
             name="properties",
@@ -208,7 +209,12 @@ APPLICATION_SCHEMA = SchemaManifest(
             ),
             unique=(("listing_code",),),
             foreign_keys=(ForeignKeySpec("owner_organization_id", "organizations.id"),),
-            indexes=("idx_properties_status_city", "idx_properties_search_key", "idx_properties_deleted_at"),
+            indexes=(
+                "idx_properties_status_city",
+                "idx_properties_search_key",
+                "idx_properties_deleted_at",
+                "idx_properties_created_at",
+            ),
         ),
         TableSpec(
             name="media",
@@ -231,7 +237,7 @@ APPLICATION_SCHEMA = SchemaManifest(
                 "created_at",
             ),
             foreign_keys=(ForeignKeySpec("property_id", "properties.id", on_delete="cascade"),),
-            indexes=("idx_media_property_position",),
+            indexes=("idx_media_property_position", "idx_media_created_at"),
         ),
         TableSpec(
             name="conversations",
@@ -253,7 +259,12 @@ APPLICATION_SCHEMA = SchemaManifest(
                 ForeignKeySpec("user_id", "users.id"),
                 ForeignKeySpec("organization_id", "organizations.id"),
             ),
-            indexes=("idx_conversations_user_updated",),
+            indexes=(
+                "idx_conversations_user_updated",
+                "idx_conversations_updated_at",
+                "idx_conversations_organization_updated",
+                "idx_conversations_property_updated",
+            ),
         ),
         TableSpec(
             name="messages",
@@ -271,6 +282,7 @@ APPLICATION_SCHEMA = SchemaManifest(
             purpose="Audit trail for lifecycle and mutation events.",
             primary_key="id",
             columns=("id", "kind", "payload", "created_at"),
+            indexes=("idx_events_created_at",),
         ),
         TableSpec(
             name="notifications",
