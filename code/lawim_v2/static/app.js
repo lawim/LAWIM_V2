@@ -82,6 +82,8 @@ function setLoading(isLoading, message = "Loading...") {
     refs.notice.dataset.tone = "neutral";
     refs.notice.textContent = message;
   }
+}
+
 function formatApiError(payload, status) {
   const code = payload?.error?.code;
   const message = payload?.error?.message || payload?.message || `HTTP ${status}`;

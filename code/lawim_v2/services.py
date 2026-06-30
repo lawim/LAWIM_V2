@@ -5,7 +5,18 @@ from http import HTTPStatus
 
 from .config import AppConfig
 from .db import LawimRepository
-from .dto import PaginationMeta, conversation_dto, geo_location_dto, match_dto, media_dto, message_dto, notification_dto, paginated_payload, property_dto
+from .dto import (
+    PaginationMeta,
+    conversation_dto,
+    geo_location_dto,
+    match_dto,
+    media_dto,
+    message_dto,
+    notification_dto,
+    organization_dto,
+    paginated_payload,
+    property_dto,
+)
 from .geocoding_provider import resolve_geocoding_provider
 from .matching import MatchCriteria, MatchWeights
 from .media_domain import LocalMediaStorage, decode_upload_content, validate_upload_bytes
@@ -164,7 +175,7 @@ class LawimServices:
         return {
             "summary": payload["summary"],
             "current_user": payload["current_user"],
-            "organizations": payload["organizations"],
+            "organizations": self.list_organizations(limit=10),
             "users": users,
             "properties": properties,
             "media": media,
@@ -225,6 +236,9 @@ class LawimServices:
             self.repository.delete_session(token)
         return {"status": "logged_out"}
 
+    def list_organizations(self, *, limit: int = 50) -> list[dict[str, object]]:
+        return [organization_dto(row) for row in self.repository.list_organizations(limit=limit)]
+
     def create_organization(
         self,
         *,
@@ -235,7 +249,7 @@ class LawimServices:
         city: str | None = None,
     ) -> dict[str, object]:
         self._require_admin(actor, "Only administrators can create organizations")
-        return self.repository.create_organization(name=name, slug=slug, kind=kind, city=city)
+        return organization_dto(self.repository.create_organization(name=name, slug=slug, kind=kind, city=city))
 
     def update_organization(
         self,
@@ -248,7 +262,9 @@ class LawimServices:
         city: str | None = None,
     ) -> dict[str, object]:
         self._require_admin(actor, "Only administrators can update organizations")
-        return self.repository.update_organization(organization_id, name=name, slug=slug, kind=kind, city=city)
+        return organization_dto(
+            self.repository.update_organization(organization_id, name=name, slug=slug, kind=kind, city=city)
+        )
 
     def create_user(
         self,

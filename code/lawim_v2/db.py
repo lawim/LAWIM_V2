@@ -1786,17 +1786,9 @@ class LawimRepository:
         return self.recommendations(criteria)
 
     def _public_user(self, user: dict[str, object] | None) -> dict[str, object] | None:
-        if user is None:
-            return None
-        return {
-            "id": user["id"],
-            "email": user["email"],
-            "full_name": user["full_name"],
-            "role": user["role"],
-            "organization_id": user["organization_id"],
-            "organization_name": user.get("organization_name"),
-            "organization_slug": user.get("organization_slug"),
-        }
+        from .dto import user_dto
+
+        return user_dto(user)
 
     def public_user(self, user: dict[str, object] | None) -> dict[str, object] | None:
         return self._public_user(user)

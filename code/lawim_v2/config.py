@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 import os
 
@@ -114,3 +114,39 @@ class AppConfig:
     def ensure_runtime_dir(self) -> None:
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.media_storage_path.mkdir(parents=True, exist_ok=True)
+
+    @classmethod
+    def for_test(
+        cls,
+        *,
+        db_path: Path,
+        media_storage_path: Path,
+        **overrides: object,
+    ) -> "AppConfig":
+        config = cls(
+            host="127.0.0.1",
+            port=3000,
+            db_path=db_path,
+            db_driver="sqlite",
+            database_url="postgresql://lawim:lawim@localhost:5432/lawim_v2",
+            db_fallback=True,
+            app_env="test",
+            stack_profile="test",
+            log_level="debug",
+            public_base_url="http://127.0.0.1:3000",
+            secret_provider="external",
+            seed_demo_data=True,
+            session_ttl_seconds=3600,
+            media_storage_path=media_storage_path,
+            max_upload_bytes=5 * 1024 * 1024,
+            geocoding_provider="local",
+            geocoding_base_url="https://nominatim.openstreetmap.org/search",
+            geocoding_api_key=None,
+            cdn_base_url=None,
+            metrics_enabled=True,
+            match_min_score=10.0,
+            max_json_body_bytes=1_048_576,
+        )
+        if overrides:
+            config = replace(config, **overrides)  # type: ignore[arg-type]
+        return config

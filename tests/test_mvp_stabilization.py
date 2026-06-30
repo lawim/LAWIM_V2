@@ -27,7 +27,7 @@ class PropertySearchStabilizationTest(LawimTestHarness):
         invalid = self.invoke("/api/properties?price_min=500000&price_max=100000")
         self.assertEqual(invalid.status, HTTPStatus.BAD_REQUEST)
         error = self.assert_error_shape(invalid)
-        self.assertEqual(error["code"], "invalid_query")
+        self.assertEqual(error["code"], "validation_error")
 
         bad_sort = self.invoke("/api/properties?sort=unknown")
         self.assertEqual(bad_sort.status, HTTPStatus.BAD_REQUEST)

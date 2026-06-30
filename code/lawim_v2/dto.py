@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from .conversation_domain import allowed_stage_transitions
 from .geo_domain import build_geo_dto
 from .media_domain import THUMBNAIL_CONTRACT, metadata_dict as media_metadata_dict
 from .property_domain import metadata_dict as property_metadata_dict
@@ -32,6 +33,32 @@ def paginated_payload(items: list[dict[str, object]], *, key: str, pagination: P
     return {
         key: items,
         "pagination": pagination.to_dict(),
+    }
+
+
+def user_dto(user: dict[str, object] | None) -> dict[str, object] | None:
+    if user is None:
+        return None
+    return {
+        "id": user["id"],
+        "email": user["email"],
+        "full_name": user["full_name"],
+        "role": user["role"],
+        "organization_id": user["organization_id"],
+        "organization_name": user.get("organization_name"),
+        "organization_slug": user.get("organization_slug"),
+    }
+
+
+def organization_dto(row: dict[str, object]) -> dict[str, object]:
+    return {
+        "id": row["id"],
+        "name": row["name"],
+        "slug": row["slug"],
+        "kind": row["kind"],
+        "city": row.get("city"),
+        "created_at": row.get("created_at"),
+        "user_count": row.get("user_count", 0),
     }
 
 
@@ -118,9 +145,6 @@ def geo_location_dto(location: dict[str, object]) -> dict[str, object]:
 
 def error_dto(code: str, message: str) -> dict[str, object]:
     return {"error": {"code": code, "message": message}}
-
-
-from .conversation_domain import allowed_stage_transitions
 
 
 def match_dto(match_row: dict[str, object]) -> dict[str, object]:

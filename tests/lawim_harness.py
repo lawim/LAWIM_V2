@@ -10,7 +10,7 @@ from unittest import TestCase
 
 from lawim_v2.config import AppConfig
 from lawim_v2.db import LawimRepository
-from lawim_v2.server import LawimRequestHandler, MAX_JSON_BODY_BYTES
+from lawim_v2.server import LawimRequestHandler
 from lawim_v2.services import LawimServices
 
 
@@ -63,30 +63,7 @@ class LawimTestHarness(TestCase):
         self.media_path = Path(self.tempdir.name) / "media"
         self.repository = LawimRepository(self.db_path)
         self.repository.initialize(seed_demo_data=True)
-        self.config = AppConfig(
-            host="127.0.0.1",
-            port=3000,
-            db_path=self.db_path,
-            db_driver="sqlite",
-            database_url="postgresql://lawim:lawim@localhost:5432/lawim_v2",
-            db_fallback=True,
-            app_env="test",
-            stack_profile="test",
-            log_level="debug",
-            public_base_url="http://127.0.0.1:3000",
-            secret_provider="external",
-            seed_demo_data=True,
-            session_ttl_seconds=3600,
-            media_storage_path=self.media_path,
-            max_upload_bytes=5 * 1024 * 1024,
-            geocoding_provider="local",
-            geocoding_base_url="https://nominatim.openstreetmap.org/search",
-            geocoding_api_key=None,
-            cdn_base_url=None,
-            metrics_enabled=True,
-            match_min_score=10.0,
-            max_json_body_bytes=MAX_JSON_BODY_BYTES,
-        )
+        self.config = AppConfig.for_test(db_path=self.db_path, media_storage_path=self.media_path)
 
     def tearDown(self) -> None:
         self.repository.close()

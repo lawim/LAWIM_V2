@@ -14,9 +14,10 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 from .config import AppConfig
-from .errors import RepositoryError
+from .api_query import build_property_query
+from .errors import RepositoryError, ValidationError
 from .db import LawimRepository
-from .dto import error_dto, geo_location_dto, media_dto, paginated_payload, property_dto
+from .dto import error_dto
 from .matching import MatchCriteria, MatchWeights
 from .media_domain import THUMBNAIL_CONTRACT
 from .multipart import parse_multipart_form_data
@@ -162,7 +163,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/organizations":
-            self._send_json({"organizations": self.repository.list_organizations(limit=self._query_limit(query))})
+            self._send_json({"organizations": self.services.list_organizations(limit=self._query_limit(query))})
             return
 
         if path == "/api/users":
@@ -171,17 +172,12 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/properties":
-            price_min = self._first_int(query, "price_min", minimum=0)
-            price_max = self._first_int(query, "price_max", minimum=0)
-            if price_min is not None and price_max is not None and price_min > price_max:
-                raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'price_min' cannot exceed 'price_max'")
-            include_deleted = self._first_bool(query, "include_deleted")
-            if include_deleted:
-                actor = self._require_user()
-                if not self.services.policy.is_admin(actor):
-                    raise ApiError(HTTPStatus.FORBIDDEN, "forbidden", "include_deleted requires administrator access")
-            self._send_json(
-                self.services.list_properties(
+            try:
+                listing = build_property_query(
+                    page=self._query_page(query),
+                    limit=self._query_limit(query),
+                    sort=self._first(query, "sort"),
+                    order=self._first(query, "order"),
                     city=self._first(query, "city"),
                     country=self._first(query, "country"),
                     region=self._first(query, "region"),
@@ -191,12 +187,32 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                     owner_organization_id=self._first_int(query, "owner_organization_id", minimum=1),
                     include_deleted=self._first_bool(query, "include_deleted"),
                     search=self._first(query, "search"),
-                    price_min=price_min,
-                    price_max=price_max,
-                    page=self._query_page(query),
-                    limit=self._query_limit(query),
-                    sort=self._first(query, "sort") or "created_at",
-                    order=self._first(query, "order") or "desc",
+                    price_min=self._first_int(query, "price_min", minimum=0),
+                    price_max=self._first_int(query, "price_max", minimum=0),
+                )
+            except ValidationError as exc:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "validation_error", str(exc)) from exc
+            if listing.include_deleted:
+                actor = self._require_user()
+                if not self.services.policy.is_admin(actor):
+                    raise ApiError(HTTPStatus.FORBIDDEN, "forbidden", "include_deleted requires administrator access")
+            self._send_json(
+                self.services.list_properties(
+                    city=listing.city,
+                    country=listing.country,
+                    region=listing.region,
+                    status=listing.status,
+                    availability=listing.availability,
+                    property_type=listing.property_type,
+                    owner_organization_id=listing.owner_organization_id,
+                    include_deleted=listing.include_deleted,
+                    search=listing.search,
+                    price_min=listing.price_min,
+                    price_max=listing.price_max,
+                    page=listing.page,
+                    limit=listing.limit,
+                    sort=listing.sort,
+                    order=listing.order,
                 )
             )
             return
@@ -325,7 +341,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path.startswith("/api/media/"):
-            media_id = self._extract_resource_id(path, "/api/media/", resource="Media")
+            media_id = self._extract_path_id(path, marker="/api/media/", resource="Media")
             self._send_json({"media": self.services.get_media(media_id)})
             return
 
@@ -514,7 +530,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         actor = self._require_user()
 
         if path.startswith("/api/organizations/") and path.count("/") == 3:
-            organization_id = self._extract_resource_id(path, "/api/organizations/", resource="Organization")
+            organization_id = self._extract_path_id(path, marker="/api/organizations/", resource="Organization")
             if method == "DELETE":
                 raise ApiError(HTTPStatus.METHOD_NOT_ALLOWED, "method_not_allowed", "Organizations cannot be deleted in this baseline")
             organization = self.services.update_organization(
@@ -529,7 +545,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path.startswith("/api/users/") and path.count("/") == 3:
-            user_id = self._extract_resource_id(path, "/api/users/", resource="User")
+            user_id = self._extract_path_id(path, marker="/api/users/", resource="User")
             if method == "DELETE":
                 payload = self.services.delete_user(actor=actor, user_id=user_id)
                 self._send_json(payload)
@@ -581,7 +597,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path.startswith("/api/media/") and path.count("/") == 3:
-            media_id = self._extract_resource_id(path, "/api/media/", resource="Media")
+            media_id = self._extract_path_id(path, marker="/api/media/", resource="Media")
             if method == "DELETE":
                 payload = self.services.delete_media(actor=actor, media_id=media_id)
                 self._send_json(payload)
@@ -747,7 +763,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def _send_json_error(self, status: HTTPStatus, code: str, message: str) -> None:
-        self._send_json({"error": {"code": code, "message": message}}, status=status)
+        self._send_json(error_dto(code, message), status=status)
 
     def _send_text(self, text: str, *, content_type: str) -> None:
         body = text.encode("utf-8")
@@ -958,56 +974,30 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return None
         return self._optional_float(raw)
 
-    def _extract_notification_id(self, path: str) -> int:
-        marker = "/api/notifications/"
-        if not path.startswith(marker) or not path.endswith("/read"):
-            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Notification route not found")
-        raw_id = path[len(marker) : -len("/read")]
-        try:
-            notification_id = int(raw_id.strip("/"))
-        except ValueError as exc:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_notification_id", "Notification id must be numeric") from exc
-        if notification_id < 1:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_notification_id", "Notification id must be positive")
-        return notification_id
-
-    def _extract_property_id(self, path: str, suffix: str = "") -> int:
-        marker = "/api/properties/"
-        if suffix and not path.endswith(suffix):
-            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Property route not found")
-        raw_id = path[len(marker) : len(path) - len(suffix) if suffix else None]
-        try:
-            property_id = int(raw_id.strip("/"))
-        except ValueError as exc:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_property_id", "Property id must be numeric") from exc
-        if property_id < 1:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_property_id", "Property id must be positive")
-        return property_id
-
-    def _extract_conversation_id(self, path: str, suffix: str = "") -> int:
-        marker = "/api/conversations/"
-        if suffix and not path.endswith(suffix):
-            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Conversation route not found")
-        raw_id = path[len(marker) : len(path) - len(suffix) if suffix else None]
-        try:
-            conversation_id = int(raw_id.strip("/"))
-        except ValueError as exc:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_conversation_id", "Conversation id must be numeric") from exc
-        if conversation_id < 1:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_conversation_id", "Conversation id must be positive")
-        return conversation_id
-
-    def _extract_resource_id(self, path: str, prefix: str, *, resource: str) -> int:
-        if not path.startswith(prefix):
+    def _extract_path_id(self, path: str, *, marker: str, suffix: str = "", resource: str) -> int:
+        if not path.startswith(marker):
             raise ApiError(HTTPStatus.NOT_FOUND, "not_found", f"{resource} route not found")
-        raw_id = path[len(prefix) :]
+        if suffix and not path.endswith(suffix):
+            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", f"{resource} route not found")
+        end = len(path) - len(suffix) if suffix else None
+        raw_id = path[len(marker) : end]
+        id_key = f"invalid_{resource.lower()}_id"
         try:
             resource_id = int(raw_id.strip("/"))
         except ValueError as exc:
-            raise ApiError(HTTPStatus.BAD_REQUEST, f"invalid_{resource.lower()}_id", f"{resource} id must be numeric") from exc
+            raise ApiError(HTTPStatus.BAD_REQUEST, id_key, f"{resource} id must be numeric") from exc
         if resource_id < 1:
-            raise ApiError(HTTPStatus.BAD_REQUEST, f"invalid_{resource.lower()}_id", f"{resource} id must be positive")
+            raise ApiError(HTTPStatus.BAD_REQUEST, id_key, f"{resource} id must be positive")
         return resource_id
+
+    def _extract_notification_id(self, path: str) -> int:
+        return self._extract_path_id(path, marker="/api/notifications/", suffix="/read", resource="Notification")
+
+    def _extract_property_id(self, path: str, suffix: str = "") -> int:
+        return self._extract_path_id(path, marker="/api/properties/", suffix=suffix, resource="Property")
+
+    def _extract_conversation_id(self, path: str, suffix: str = "") -> int:
+        return self._extract_path_id(path, marker="/api/conversations/", suffix=suffix, resource="Conversation")
 
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:

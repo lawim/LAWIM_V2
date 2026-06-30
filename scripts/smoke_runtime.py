@@ -48,29 +48,13 @@ def run_smoke(*, host: str = "127.0.0.1", timeout: float = 5.0) -> SmokeResult:
     db_path = root / "lawim.sqlite3"
     media_path = root / "media"
 
-    config = AppConfig(
+    config = AppConfig.for_test(
+        db_path=db_path,
+        media_storage_path=media_path,
         host=host,
         port=port,
-        db_path=db_path,
-        db_driver="sqlite",
-        database_url="postgresql://lawim:lawim@localhost:5432/lawim_v2",
-        db_fallback=True,
-        app_env="test",
-        stack_profile="test",
         log_level="warning",
         public_base_url=f"http://{host}:{port}",
-        secret_provider="external",
-        seed_demo_data=True,
-        session_ttl_seconds=3600,
-        media_storage_path=media_path,
-        max_upload_bytes=5 * 1024 * 1024,
-        geocoding_provider="local",
-        geocoding_base_url="https://nominatim.openstreetmap.org/search",
-        geocoding_api_key=None,
-        cdn_base_url=None,
-        metrics_enabled=True,
-        match_min_score=10.0,
-        max_json_body_bytes=1_048_576,
     )
     config.validate()
     config.ensure_runtime_dir()

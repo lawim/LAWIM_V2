@@ -6,6 +6,11 @@ cd "$ROOT"
 
 export PYTHONPATH="${ROOT}/code:${ROOT}/tests${PYTHONPATH:+:${PYTHONPATH}}"
 
+if command -v node >/dev/null 2>&1; then
+  echo "Checking frontend JavaScript syntax..."
+  node --check "${ROOT}/code/lawim_v2/static/app.js"
+fi
+
 echo "Running LAWIM_V2 unit tests..."
 python3 -m unittest discover -s tests -v "$@"
 
