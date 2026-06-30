@@ -9,5 +9,8 @@ export PYTHONPATH="${ROOT}/code:${ROOT}/tests${PYTHONPATH:+:${PYTHONPATH}}"
 echo "Running LAWIM_V2 unit tests..."
 python3 -m unittest discover -s tests -v "$@"
 
+echo "Validating Prisma manifest..."
+python3 "${ROOT}/scripts/validate_prisma_manifest.py"
+
 echo "Running runtime smoke test..."
 python3 "${ROOT}/scripts/smoke_runtime.py"

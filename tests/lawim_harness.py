@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import io
 import json
 import tempfile
@@ -11,6 +12,16 @@ from lawim_v2.config import AppConfig
 from lawim_v2.db import LawimRepository
 from lawim_v2.server import LawimRequestHandler, MAX_JSON_BODY_BYTES
 from lawim_v2.services import LawimServices
+
+
+MINIMAL_JPEG_BYTES = (
+    b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01"
+    b"\x00\x00\xff\xd9"
+)
+
+
+def minimal_jpeg_base64() -> str:
+    return base64.b64encode(MINIMAL_JPEG_BYTES).decode("ascii")
 
 
 class DummyHandler(LawimRequestHandler):

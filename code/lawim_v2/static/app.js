@@ -67,6 +67,21 @@ function setNotice(message, tone = "neutral", code = "") {
   refs.notice.textContent = code ? `[${code}] ${message}` : message;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function setLoading(isLoading, message = "Loading...") {
+  document.body.dataset.loading = isLoading ? "true" : "false";
+  if (isLoading && refs.notice) {
+    refs.notice.dataset.tone = "neutral";
+    refs.notice.textContent = message;
+  }
 function formatApiError(payload, status) {
   const code = payload?.error?.code;
   const message = payload?.error?.message || payload?.message || `HTTP ${status}`;
@@ -233,17 +248,17 @@ function renderOrganizations(items) {
     article.className = "mini-card";
     article.innerHTML = `
       <div class="mini-card__header">
-        <strong>${organization.name}</strong>
-        <span class="chip subtle">${organization.kind}</span>
+        <strong>${escapeHtml(organization.name)}</strong>
+        <span class="chip subtle">${escapeHtml(organization.kind)}</span>
       </div>
-      <p class="muted">${organization.slug}</p>
-      <p>${organization.city || "No city"} · ${organization.user_count ?? 0} users</p>
+      <p class="muted">${escapeHtml(organization.slug)}</p>
+      <p>${escapeHtml(organization.city || "No city")} · ${organization.user_count ?? 0} users</p>
     `;
     return article;
   }, "No organizations available.");
 
   const options = ['<option value="">None</option>']
-    .concat(items.map((organization) => `<option value="${organization.id}">${organization.name}</option>`))
+    .concat(items.map((organization) => `<option value="${organization.id}">${escapeHtml(organization.name)}</option>`))
     .join("");
   refs.ownerOrganizationSelect.innerHTML = options;
   if (refs.registerOrganizationSelect) {
@@ -251,7 +266,7 @@ function renderOrganizations(items) {
   }
   if (refs.adminOrganizationSelect) {
     refs.adminOrganizationSelect.innerHTML = ['<option value="">Select organization</option>']
-      .concat(items.map((organization) => `<option value="${organization.id}">${organization.name}</option>`))
+      .concat(items.map((organization) => `<option value="${organization.id}">${escapeHtml(organization.name)}</option>`))
       .join("");
   }
 }
@@ -261,7 +276,7 @@ function renderProperties(items) {
     .concat(
       (items || []).map((property) => {
         const label = property.listing_code || property.title;
-        return `<option value="${property.id}">${label}</option>`;
+        return `<option value="${property.id}">${escapeHtml(label)}</option>`;
       }),
     )
     .join("");
@@ -275,15 +290,15 @@ function renderProperties(items) {
     article.className = "mini-card mini-card--property";
     article.innerHTML = `
       <div class="mini-card__header">
-        <strong>${property.title}</strong>
-        <span class="${statusChipClass(property.status)}" data-status="${property.status || "draft"}">${property.status || "draft"}</span>
+        <strong>${escapeHtml(property.title)}</strong>
+        <span class="${statusChipClass(property.status)}" data-status="${escapeHtml(property.status || "draft")}">${escapeHtml(property.status || "draft")}</span>
       </div>
-      <p class="muted">${property.listing_code || "no-code"} · ${property.property_type || "n/a"} · ${property.availability || "available"}</p>
-      <p>${geo.city || "n/a"}, ${geo.region || "—"}, ${geo.country || "n/a"}</p>
+      <p class="muted">${escapeHtml(property.listing_code || "no-code")} · ${escapeHtml(property.property_type || "n/a")} · ${escapeHtml(property.availability || "available")}</p>
+      <p>${escapeHtml(geo.city || "n/a")}, ${escapeHtml(geo.region || "—")}, ${escapeHtml(geo.country || "n/a")}</p>
       <p>${money(price.min, price.currency)} - ${money(price.max, price.currency)}</p>
       <p class="muted">Coords: ${coords.latitude ?? "—"}, ${coords.longitude ?? "—"}</p>
-      <p class="muted">Owner: ${property.ownership?.organization_name || property.owner_organization_name || "n/a"} · Media: ${property.media_count ?? 0}</p>
-      <p>${property.summary || ""}</p>
+      <p class="muted">Owner: ${escapeHtml(property.ownership?.organization_name || property.owner_organization_name || "n/a")} · Media: ${property.media_count ?? 0}</p>
+      <p>${escapeHtml(property.summary || "")}</p>
     `;
     article.addEventListener("click", () => {
       state.selectedPropertyId = property.id;
@@ -300,14 +315,19 @@ function renderMedia(items) {
   renderList(refs.mediaList, items, (media) => {
     const article = document.createElement("article");
     article.className = "mini-card mini-card--media";
+    const preview =
+      media.mime_type?.startsWith("image/") && media.url
+        ? `<img class="media-preview" src="${escapeHtml(media.url)}" alt="${escapeHtml(media.caption || media.kind)}" loading="lazy">`
+        : "";
     article.innerHTML = `
+      ${preview}
       <div class="mini-card__header">
-        <strong>${media.caption || media.kind}</strong>
-        <span class="chip subtle">${media.kind}</span>
+        <strong>${escapeHtml(media.caption || media.kind)}</strong>
+        <span class="chip subtle">${escapeHtml(media.kind)}</span>
       </div>
-      <p class="muted">${media.property_title || `Property #${media.property_id}`}</p>
-      <p>${media.mime_type || "unknown"} · ${media.size_bytes ?? 0} bytes</p>
-      <p class="muted">${media.url}</p>
+      <p class="muted">${escapeHtml(media.property_title || `Property #${media.property_id}`)}</p>
+      <p>${escapeHtml(media.mime_type || "unknown")} · ${media.size_bytes ?? 0} bytes</p>
+      <p class="muted">${escapeHtml(media.url)}</p>
     `;
     return article;
   }, "No media available.");
@@ -326,13 +346,13 @@ function renderMatches(items) {
     article.className = "mini-card mini-card--match";
     article.innerHTML = `
       <div class="mini-card__header">
-        <strong>${property.title}</strong>
-        <span class="chip accent">${match.score} · ${match.grade || "n/a"}</span>
+        <strong>${escapeHtml(property.title)}</strong>
+        <span class="chip accent">${match.score} · ${escapeHtml(match.grade || "n/a")}</span>
       </div>
-      <p class="muted">${geo.city || property.city}, ${geo.country || property.country}</p>
+      <p class="muted">${escapeHtml(geo.city || property.city)}, ${escapeHtml(geo.country || property.country)}</p>
       <p>${money(price.min, price.currency)} - ${money(price.max, price.currency)}</p>
-      <p class="muted">${match.summary || (match.reasons || []).join(" · ") || "No summary."}</p>
-      <p class="muted breakdown">${breakdownText || "No score breakdown."}</p>
+      <p class="muted">${escapeHtml(match.summary || (match.reasons || []).join(" · ") || "No summary.")}</p>
+      <p class="muted breakdown">${escapeHtml(breakdownText || "No score breakdown.")}</p>
     `;
     return article;
   }, "No match results yet.");
@@ -358,12 +378,12 @@ function renderConversationDetail(conversation) {
     <div class="detail-summary">
       <div>
         <p class="eyebrow">
-          <span class="chip subtle" data-status="${conversation.status}">${conversation.status}</span>
-          <span class="chip accent">${conversation.negotiation_stage || negotiation.stage || "inquiry"}</span>
+          <span class="chip subtle" data-status="${escapeHtml(conversation.status)}">${escapeHtml(conversation.status)}</span>
+          <span class="chip accent">${escapeHtml(conversation.negotiation_stage || negotiation.stage || "inquiry")}</span>
         </p>
-        <h3>${conversation.subject}</h3>
+        <h3>${escapeHtml(conversation.subject)}</h3>
         <p class="muted">
-          Requester: ${conversationRequester(conversation)} · Property: ${conversationPropertyTitle(conversation)}
+          Requester: ${escapeHtml(conversationRequester(conversation))} · Property: ${escapeHtml(conversationPropertyTitle(conversation))}
         </p>
       </div>
       <div class="detail-badge">
@@ -377,10 +397,10 @@ function renderConversationDetail(conversation) {
           (message) => `
             <article class="message">
               <div class="message__meta">
-                <strong>${messageSenderName(message)}</strong>
-                <span class="muted">${message.created_at}</span>
+                <strong>${escapeHtml(messageSenderName(message))}</strong>
+                <span class="muted">${escapeHtml(message.created_at)}</span>
               </div>
-              <p>${message.body}</p>
+              <p>${escapeHtml(message.body)}</p>
             </article>
           `,
         )
@@ -413,11 +433,11 @@ function renderNotifications(items) {
     }
     article.innerHTML = `
       <div class="mini-card__header">
-        <strong>${notification.title}</strong>
-        <span class="chip subtle">${notification.kind}</span>
+        <strong>${escapeHtml(notification.title)}</strong>
+        <span class="chip subtle">${escapeHtml(notification.kind)}</span>
       </div>
-      <p>${notification.body}</p>
-      <p class="muted">${notification.read ? "read" : "unread"} · ${notification.created_at || ""}</p>
+      <p>${escapeHtml(notification.body)}</p>
+      <p class="muted">${notification.read ? "read" : "unread"} · ${escapeHtml(notification.created_at || "")}</p>
     `;
     article.addEventListener("click", () => markNotificationRead(notification.id));
     return article;
@@ -475,11 +495,11 @@ function renderConversations(items) {
     }
     article.innerHTML = `
       <div class="mini-card__header">
-        <strong>${conversation.subject}</strong>
-        <span class="chip subtle">${conversation.status} · ${conversation.negotiation_stage || "inquiry"}</span>
+        <strong>${escapeHtml(conversation.subject)}</strong>
+        <span class="chip subtle">${escapeHtml(conversation.status)} · ${escapeHtml(conversation.negotiation_stage || "inquiry")}</span>
       </div>
-      <p class="muted">${conversationRequester(conversation)} · ${conversationPropertyTitle(conversation)}</p>
-      <p>${conversation.last_message || "No messages yet."}</p>
+      <p class="muted">${escapeHtml(conversationRequester(conversation))} · ${escapeHtml(conversationPropertyTitle(conversation))}</p>
+      <p>${escapeHtml(conversation.last_message || "No messages yet.")}</p>
     `;
     article.addEventListener("click", () => selectConversation(conversation.id));
     return article;
@@ -518,7 +538,7 @@ async function loadAdminDashboard() {
   }
   try {
     const [metrics, events] = await Promise.all([
-      api("/api/metrics"),
+      api("/api/metrics", { auth: true }),
       api("/api/events?limit=10", { auth: true }),
     ]);
     const counters = metrics.metrics || {};
@@ -535,8 +555,8 @@ async function loadAdminDashboard() {
             (event) => `
               <article class="message">
                 <div class="message__meta">
-                  <strong>${event.kind}</strong>
-                  <span class="muted">${event.created_at}</span>
+                  <strong>${escapeHtml(event.kind)}</strong>
+                  <span class="muted">${escapeHtml(event.created_at)}</span>
                 </div>
               </article>
             `,
@@ -545,7 +565,7 @@ async function loadAdminDashboard() {
       </div>
     `;
   } catch (error) {
-    refs.adminDashboard.innerHTML = `<p class="muted">${error.message}</p>`;
+    refs.adminDashboard.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
   }
 }
 
@@ -553,7 +573,8 @@ function renderHealth(health) {
   const environment = health.environment || {};
   const database = health.database || {};
   setRuntimeChip(`${health.status.toUpperCase()} · ${environment.app_env || "unknown"}`, health.status === "ok" ? "ok" : "warn");
-  refs.bootstrapSummary.textContent = `Driver ${environment.db_driver || database.driver || "sqlite"} · Geocoder ${environment.geocoding_provider || "local"} · ${health.summary?.events ?? 0} events · ${health.metrics?.requests_total ?? 0} requests.`;
+  const metricsNote = health.metrics ? `${health.metrics.requests_total ?? 0} requests` : "metrics admin-only";
+  refs.bootstrapSummary.textContent = `Driver ${environment.db_driver || database.driver || "sqlite"} · schema v${database.schema_version ?? "?"} · ${health.summary?.events ?? 0} events · ${metricsNote}.`;
 }
 
 function renderBootstrap(payload) {
@@ -612,20 +633,21 @@ function parseNumber(value) {
 }
 
 async function refresh() {
+  setLoading(true, "Refreshing runtime state...");
   try {
-    setNotice("Refreshing runtime state...");
-    const [health, bootstrap] = await Promise.all([
-      api("/api/health"),
-      api("/api/bootstrap", { auth: Boolean(state.token) }),
-    ]);
+    const healthPromise = api("/api/health", { auth: Boolean(state.token) });
+    const bootstrapPromise = api("/api/bootstrap", { auth: Boolean(state.token) });
+    const [health, bootstrap] = await Promise.all([healthPromise, bootstrapPromise]);
     state.health = health;
     renderHealth(health);
     renderBootstrap(bootstrap);
     applyJourney(state.activeJourney);
-    setNotice("Runtime is available, seeded and ready.");
+    setNotice("Runtime is available and ready.", "success");
   } catch (error) {
-    setNotice(error.message, "error");
+    setNotice(`${error.message} — retry with refresh or check ./scripts/run-local.sh`, "error", error.code || "");
     setRuntimeChip("DEGRADED", "warn");
+  } finally {
+    setLoading(false);
   }
 }
 
@@ -992,7 +1014,7 @@ async function handleAdminUserCreate(event) {
         email: form.get("email"),
         full_name: form.get("full_name"),
         role: "agent",
-        password: "lawim-demo",
+        password: form.get("password") || "lawim-demo",
         organization_id: parseNumber(form.get("organization_id")),
       },
     });

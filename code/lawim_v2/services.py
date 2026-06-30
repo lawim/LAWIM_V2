@@ -10,6 +10,7 @@ from .geocoding_provider import resolve_geocoding_provider
 from .matching import MatchCriteria, MatchWeights
 from .media_domain import LocalMediaStorage, decode_upload_content, validate_upload_bytes
 from .observability import METRICS
+from .security import validate_email, validate_password
 
 
 class ServiceError(Exception):
@@ -97,11 +98,25 @@ class LawimServices:
             api_key=config.geocoding_api_key,
         )
 
-    def health(self) -> dict[str, object]:
+    def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()
+        summary = self.repository.summary()
         payload: dict[str, object] = {
             "status": "ok",
             "environment": {
+                "app_env": self.config.app_env,
+                "stack_profile": self.config.stack_profile,
+                "db_driver": self.config.db_driver,
+                "metrics_enabled": self.config.metrics_enabled,
+            },
+            "database": {
+                "driver": profile.get("driver"),
+                "schema_version": profile.get("schema_version"),
+            },
+            "summary": summary,
+        }
+        if actor is not None and self.policy.is_admin(actor):
+            payload["environment"] = {
                 "app_env": self.config.app_env,
                 "stack_profile": self.config.stack_profile,
                 "log_level": self.config.log_level,
@@ -112,21 +127,26 @@ class LawimServices:
                 "db_driver": self.config.db_driver,
                 "geocoding_provider": self.geocoder.name,
                 "metrics_enabled": self.config.metrics_enabled,
-            },
-            "database": profile,
-            "summary": self.repository.summary(),
-            "audit": {
+            }
+            payload["database"] = profile
+            payload["audit"] = {
                 "recent_events": self.repository.list_events(limit=5),
-            },
-        }
-        if self.config.metrics_enabled:
-            payload["metrics"] = METRICS.snapshot()
+            }
+            if self.config.metrics_enabled:
+                payload["metrics"] = METRICS.snapshot()
         return payload
 
-    def metrics(self) -> dict[str, object]:
+    def metrics(self, *, actor: dict[str, object]) -> dict[str, object]:
+        if not self.policy.is_admin(actor):
+            raise PermissionDenied("Only administrators can inspect runtime metrics")
         if not self.config.metrics_enabled:
             raise ServiceError(HTTPStatus.NOT_FOUND, "not_found", "Metrics are disabled")
         return {"metrics": METRICS.snapshot(), "summary": self.repository.summary()}
+
+    def list_users(self, *, actor: dict[str, object], limit: int = 50) -> list[dict[str, object]]:
+        if not self.policy.is_admin(actor):
+            raise PermissionDenied("Only administrators can list users")
+        return [self.repository.public_user(row) for row in self.repository.list_users(limit=limit)]
 
     def bootstrap(self, *, token: str | None = None) -> dict[str, object]:
         payload = self.repository.bootstrap_payload(token=token)
@@ -135,13 +155,17 @@ class LawimServices:
         conversations = self.list_conversations(actor=payload["current_user"], limit=10)["conversations"]
         matches = self.list_matches(MatchCriteria(limit=5))["matches"]
         notifications: list[dict[str, object]] = []
-        if payload["current_user"] is not None:
-            notifications = self.list_notifications(actor=payload["current_user"], limit=10)["notifications"]
+        users: list[dict[str, object]] = []
+        current_user = payload["current_user"]
+        if current_user is not None:
+            notifications = self.list_notifications(actor=current_user, limit=10)["notifications"]
+            if self.policy.is_admin(current_user):
+                users = self.list_users(actor=current_user, limit=10)
         return {
             "summary": payload["summary"],
             "current_user": payload["current_user"],
             "organizations": payload["organizations"],
-            "users": payload["users"],
+            "users": users,
             "properties": properties,
             "media": media,
             "conversations": conversations,
@@ -170,6 +194,11 @@ class LawimServices:
         role: str,
         organization_id: int | None = None,
     ) -> dict[str, object]:
+        try:
+            normalized_email = validate_email(email)
+            validate_password(password)
+        except ValueError as exc:
+            raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", str(exc)) from exc
         normalized_role = role.lower()
         if normalized_role not in {"admin", "agent", "owner"}:
             raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Invalid user role")
@@ -178,7 +207,7 @@ class LawimServices:
         if actor is not None and not self.policy.is_admin(actor):
             raise PermissionDenied("Only administrators can create staff accounts")
         user = self.repository.create_user(
-            email=email,
+            email=normalized_email,
             full_name=full_name,
             role=normalized_role,
             password=password,
@@ -232,8 +261,13 @@ class LawimServices:
         organization_id: int | None = None,
     ) -> dict[str, object]:
         self._require_admin(actor, "Only administrators can create users")
+        try:
+            normalized_email = validate_email(email)
+            validate_password(password)
+        except ValueError as exc:
+            raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", str(exc)) from exc
         return self.repository.create_user(
-            email=email,
+            email=normalized_email,
             full_name=full_name,
             role=role,
             password=password,
@@ -525,12 +559,12 @@ class LawimServices:
         property_row = self.repository.get_property(property_id)
         if not self.policy.can_manage_media(actor, property_row):
             raise PermissionDenied("Media access is restricted to administrators and the owning organization")
-        validate_upload_bytes(content, mime_type=mime_type, filename=filename, max_bytes=self.config.max_upload_bytes)
+        resolved_mime = validate_upload_bytes(content, mime_type=mime_type, filename=filename, max_bytes=self.config.max_upload_bytes)
         stored = self.media_storage.store(
             property_id=property_id,
             filename=filename,
             content=content,
-            mime_type=mime_type,
+            mime_type=resolved_mime,
         )
         row = self.repository.create_media(
             property_id=property_id,

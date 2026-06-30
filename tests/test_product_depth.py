@@ -4,7 +4,7 @@ import json
 from http import HTTPStatus
 from importlib import resources
 
-from lawim_harness import LawimTestHarness
+from lawim_harness import LawimTestHarness, MINIMAL_JPEG_BYTES
 
 
 class ProductDepthE2ETest(LawimTestHarness):
@@ -80,7 +80,7 @@ class ProductDepthE2ETest(LawimTestHarness):
             f"--{boundary}\r\n"
             f'Content-Disposition: form-data; name="file"; filename="depth.jpg"\r\n'
             f"Content-Type: image/jpeg\r\n\r\n"
-        ).encode("utf-8") + b"jpeg-bytes" + f"\r\n--{boundary}--\r\n".encode("utf-8")
+        ).encode("utf-8") + MINIMAL_JPEG_BYTES + f"\r\n--{boundary}--\r\n".encode("utf-8")
         uploaded = self.invoke(
             "/api/media/upload",
             method="POST",
@@ -150,7 +150,7 @@ class ProductDepthE2ETest(LawimTestHarness):
         for expected in ("property_created", "media_created", "message_added", "notification_created"):
             self.assertIn(expected, event_kinds)
 
-        metrics_before = self.invoke("/api/metrics")
+        metrics_before = self.invoke("/api/metrics", token=admin_token)
         self.assertEqual(metrics_before.status, HTTPStatus.OK)
 
         persisted_property = self.invoke(f"/api/properties/{property_id}")
@@ -318,7 +318,8 @@ class ProductDepthUIValidationTest(LawimTestHarness):
             "match.breakdown",
             "match.summary",
             "match.grade",
-            "conversation.negotiation_stage",
+            "escapeHtml",
+            "setLoading",
             "conversation.negotiation",
             "notification.read",
             "property.geo",

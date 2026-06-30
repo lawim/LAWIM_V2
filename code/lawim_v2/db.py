@@ -1770,7 +1770,7 @@ class LawimRepository:
             "summary": self.summary(),
             "current_user": self._public_user(current_user) if current_user else None,
             "organizations": self.list_organizations(limit=10),
-            "users": self.list_users(limit=10),
+            "users": [self._public_user(row) for row in self.list_users(limit=10)],
             "properties": self.list_properties(limit=10)["items"],
             "media": self.list_media(limit=10)["items"],
             "conversations": self.list_conversations(limit=10),

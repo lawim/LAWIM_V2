@@ -38,3 +38,18 @@ def verify_password(password: str, salt: str, expected_hash: str) -> bool:
 
 def create_session_token() -> str:
     return secrets.token_urlsafe(32)
+
+
+_EMAIL_PATTERN = __import__("re").compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
+def validate_email(email: str) -> str:
+    normalized = email.strip().lower()
+    if not normalized or not _EMAIL_PATTERN.match(normalized):
+        raise ValueError("email format is invalid")
+    return normalized
+
+
+def validate_password(password: str, *, min_length: int = 8) -> None:
+    if len(password) < min_length:
+        raise ValueError(f"password must be at least {min_length} characters")

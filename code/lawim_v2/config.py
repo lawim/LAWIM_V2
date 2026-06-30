@@ -104,6 +104,10 @@ class AppConfig:
             errors.append("LAWIM_MATCH_MIN_SCORE must be between 0 and 100")
         if self.app_env not in {"development", "staging", "production", "test"}:
             errors.append(f"APP_ENV has unsupported value: {self.app_env!r}")
+        if self.app_env == "production" and self.seed_demo_data:
+            errors.append("LAWIM_SEED_DEMO_DATA must be false when APP_ENV=production")
+        if self.db_driver == "postgresql" and not self.database_url.strip():
+            errors.append("LAWIM_DATABASE_URL is required when LAWIM_DB_DRIVER=postgresql")
         if errors:
             raise ValueError("Invalid LAWIM_V2 configuration: " + "; ".join(errors))
 

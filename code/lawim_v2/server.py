@@ -137,11 +137,13 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         query = parse_qs(parsed.query)
 
         if path == "/api/health":
-            self._send_json(self.services.health())
+            actor = self._require_user(optional=True)
+            self._send_json(self.services.health(actor=actor))
             return
 
         if path == "/api/metrics":
-            self._send_json(self.services.metrics())
+            actor = self._require_user()
+            self._send_json(self.services.metrics(actor=actor))
             return
 
         if path == "/api/bootstrap":
@@ -164,7 +166,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/users":
-            self._send_json({"users": self.repository.list_users(limit=self._query_limit(query))})
+            actor = self._require_user()
+            self._send_json({"users": self.services.list_users(actor=actor, limit=self._query_limit(query))})
             return
 
         if path == "/api/properties":
@@ -172,6 +175,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             price_max = self._first_int(query, "price_max", minimum=0)
             if price_min is not None and price_max is not None and price_min > price_max:
                 raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'price_min' cannot exceed 'price_max'")
+            include_deleted = self._first_bool(query, "include_deleted")
+            if include_deleted:
+                actor = self._require_user()
+                if not self.services.policy.is_admin(actor):
+                    raise ApiError(HTTPStatus.FORBIDDEN, "forbidden", "include_deleted requires administrator access")
             self._send_json(
                 self.services.list_properties(
                     city=self._first(query, "city"),

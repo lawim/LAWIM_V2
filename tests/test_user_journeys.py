@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from http import HTTPStatus
 
-from lawim_harness import LawimTestHarness
+from lawim_harness import LawimTestHarness, MINIMAL_JPEG_BYTES
 
 
 class SellerJourneyTest(LawimTestHarness):
@@ -65,7 +65,7 @@ class SellerJourneyTest(LawimTestHarness):
             f"--{boundary}\r\n"
             f'Content-Disposition: form-data; name="file"; filename="villa.jpg"\r\n'
             f"Content-Type: image/jpeg\r\n\r\n"
-        ).encode("utf-8") + b"jpeg" + f"\r\n--{boundary}--\r\n".encode("utf-8")
+        ).encode("utf-8") + MINIMAL_JPEG_BYTES + f"\r\n--{boundary}--\r\n".encode("utf-8")
         uploaded = self.invoke(
             "/api/media/upload",
             method="POST",
@@ -221,11 +221,11 @@ class AdminJourneyTest(LawimTestHarness):
     def test_admin_journey_supervision_audit_and_user_management(self) -> None:
         admin_token = self.login(email="admin@lawim.local")
 
-        health = self.invoke("/api/health")
+        health = self.invoke("/api/health", token=admin_token)
         self.assertEqual(health.status, HTTPStatus.OK)
         self.assertIn("audit", health.body_json())
 
-        metrics = self.invoke("/api/metrics")
+        metrics = self.invoke("/api/metrics", token=admin_token)
         self.assertEqual(metrics.status, HTTPStatus.OK)
 
         organization = self.invoke(

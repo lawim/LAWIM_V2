@@ -355,6 +355,25 @@ button {
   background: rgba(255, 196, 87, 0.06);
 }
 
+.media-preview {
+  width: 100%;
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  margin-bottom: 0.5rem;
+}
+
+body[data-loading="true"] .workspace {
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.empty-state {
+  padding: 1rem;
+  text-align: center;
+  font-style: italic;
+}
+
 .notice {
   border-radius: var(--radius-md);
   color: var(--muted);

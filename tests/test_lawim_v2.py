@@ -13,6 +13,8 @@ from lawim_v2.db import ConflictError, LawimRepository
 from lawim_v2.server import LawimRequestHandler
 from lawim_v2.services import LawimServices
 
+from lawim_harness import MINIMAL_JPEG_BYTES, minimal_jpeg_base64
+
 
 class DummyHandler(LawimRequestHandler):
     def __init__(
@@ -125,8 +127,8 @@ class LawimV2ExecutableBaselineTest(TestCase):
         self.assertEqual(health_payload["status"], "ok")
         self.assertEqual(health_payload["database"]["driver"], "sqlite")
         self.assertEqual(health_payload["database"]["schema_version"], 5)
-        self.assertEqual(health_payload["database"]["migration"]["target_engine"], "postgresql")
-        self.assertTrue(health_payload["environment"]["seed_demo_data"])
+        self.assertNotIn("audit", health_payload)
+        self.assertIn("app_env", health_payload["environment"])
         self.assertEqual(health_payload["summary"]["organizations"], 3)
         self.assertEqual(health_payload["summary"]["users"], 3)
 
@@ -593,7 +595,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
             },
         )
         property_id = int(created.body_json()["property"]["id"])
-        content = base64.b64encode(b"fake-image-bytes").decode("ascii")
+        content = minimal_jpeg_base64()
 
         uploaded = self.invoke(
             "/api/media/upload",
@@ -716,7 +718,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
             f"--{boundary}\r\n"
             f'Content-Disposition: form-data; name="file"; filename="cover.jpg"\r\n'
             f"Content-Type: image/jpeg\r\n\r\n"
-        ).encode("utf-8") + b"binary-image-content" + f"\r\n--{boundary}--\r\n".encode("utf-8")
+        ).encode("utf-8") + MINIMAL_JPEG_BYTES + f"\r\n--{boundary}--\r\n".encode("utf-8")
         uploaded = self.invoke(
             "/api/media/upload",
             method="POST",
@@ -842,10 +844,18 @@ class LawimV2ExecutableBaselineTest(TestCase):
         self.assertEqual(health.status, HTTPStatus.OK)
         health_payload = health.body_json()
         self.assertEqual(health_payload["status"], "ok")
-        self.assertIn("audit", health_payload)
-        self.assertIn("metrics", health_payload)
+        self.assertNotIn("audit", health_payload)
         self.assertIn("notifications", health_payload["summary"])
 
-        metrics = self.invoke("/api/metrics")
+        admin_login = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"email": "admin@lawim.local", "password": "lawim-demo"},
+        )
+        admin_token = str(admin_login.body_json()["token"])
+        admin_health = self.invoke("/api/health", token=admin_token)
+        self.assertIn("audit", admin_health.body_json())
+
+        metrics = self.invoke("/api/metrics", token=admin_token)
         self.assertEqual(metrics.status, HTTPStatus.OK)
         self.assertIn("metrics", metrics.body_json())

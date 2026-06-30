@@ -90,22 +90,44 @@ class LocalMediaStorage(MediaStorage):
             target.unlink()
 
 
+ALLOWED_UPLOAD_MIMES = frozenset({"image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"})
+
+
+def sniff_mime_type(content: bytes) -> str | None:
+    if content.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if content.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if len(content) >= 12 and content[:4] == b"RIFF" and content[8:12] == b"WEBP":
+        return "image/webp"
+    if content.startswith((b"GIF87a", b"GIF89a")):
+        return "image/gif"
+    if content.startswith(b"%PDF"):
+        return "application/pdf"
+    return None
+
+
 def validate_upload_bytes(
     content: bytes,
     *,
     mime_type: str | None,
     filename: str,
     max_bytes: int,
-) -> None:
+) -> str:
     if not content:
         raise ValidationError("upload content is required")
     if len(content) > max_bytes:
         raise ValidationError(f"upload exceeds maximum size of {max_bytes} bytes")
     _safe_filename(filename)
-    if mime_type:
-        allowed = {"image/jpeg", "image/png", "image/webp", "image/gif", "application/pdf"}
-        if mime_type not in allowed:
-            raise ValidationError(f"unsupported mime type: {mime_type}")
+    detected = sniff_mime_type(content)
+    if detected is None:
+        raise ValidationError("unsupported or unrecognized file content")
+    if mime_type and mime_type != detected:
+        raise ValidationError(f"mime type mismatch: declared {mime_type}, detected {detected}")
+    effective = mime_type or detected
+    if effective not in ALLOWED_UPLOAD_MIMES:
+        raise ValidationError(f"unsupported mime type: {effective}")
+    return effective
 
 
 def _safe_filename(filename: str) -> str:
