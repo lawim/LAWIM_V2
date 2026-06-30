@@ -1,9 +1,11 @@
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
 .pytest_cache/
 .mypy_cache/
 .coverage
+.packaging-venv/
 .venv/
 .env.local
 data/runtime/

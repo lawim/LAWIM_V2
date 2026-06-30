@@ -19,6 +19,7 @@ from lawim_v2.schema_ddl import (  # noqa: E402
     normalize_sql_statement,
     normalized_ddl_fingerprint,
     POSTGRESQL_INIT_STATEMENTS,
+    validate_manifest_table_alignment,
 )
 
 
@@ -53,6 +54,12 @@ def main() -> int:
         print("FAIL: Prisma header version mismatch")
         return 1
 
+    alignment_errors = validate_manifest_table_alignment()
+    if alignment_errors:
+        for error in alignment_errors:
+            print(f"FAIL: {error}")
+        return 1
+
     migration_text = migration_path.read_text(encoding="utf-8")
     migration_statements = extract_sql_statements(migration_text)
     runtime_statements = tuple(normalize_sql_statement(stmt) for stmt in POSTGRESQL_INIT_STATEMENTS)
@@ -71,6 +78,7 @@ def main() -> int:
 
     ddl_fingerprint = normalized_ddl_fingerprint()
     print("PASS: prisma schema present")
+    print("PASS: manifest table alignment (sqlite + postgresql DDL)")
     print("PASS: prisma migration SQL aligned with runtime PostgreSQL DDL")
     print(f"manifest_version={APPLICATION_SCHEMA_VERSION}")
     print(f"manifest_fingerprint={fingerprint}")

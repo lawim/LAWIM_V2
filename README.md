@@ -16,11 +16,21 @@ git clone <repo-url> lawim_v2 && cd lawim_v2
 ./scripts/validate-install.sh
 ```
 
+Installation en paquet Python (optionnel) :
+
+```bash
+LAWIM_INSTALL_PACKAGE=1 ./scripts/install.sh
+# ou
+pip install -e ".[postgresql]"
+python -m lawim_v2 --help
+```
+
 Variables utiles à l'installation :
 
 | Variable | Effet |
 |----------|--------|
 | `LAWIM_INSTALL_POSTGRES_DRIVER=1` | installe `pg8000` via pip |
+| `LAWIM_INSTALL_PACKAGE=1` | installe le paquet editable (`pip install -e .`) |
 
 Un fichier `.env.local` est créé depuis `env/development/.env.example` s'il n'existe pas.
 
@@ -47,9 +57,16 @@ Comptes démo (mot de passe `lawim-demo`) : `admin@lawim.local`, `agent@lawim.lo
 ## Schéma & persistance
 
 - Source de vérité logique : `code/lawim_v2/persistence.py` (manifest v5)
-- DDL PostgreSQL runtime : `code/lawim_v2/schema_ddl.py`
-- Prisma : ancre d'alignement (`prisma/schema.prisma` + migration SQL)
+- DDL unifié : `code/lawim_v2/schema_ddl.py` (SQLite + PostgreSQL)
+- Migrations legacy SQLite : `code/lawim_v2/schema_migrations.py`
+- Prisma : ancre production PostgreSQL (`prisma/schema.prisma` + migrations)
+- Docs : [docs/MIGRATIONS.md](docs/MIGRATIONS.md), [docs/PUBLISHING.md](docs/PUBLISHING.md)
 - Validation : `python3 scripts/validate_prisma_manifest.py`
+
+## Packaging
+
+- Métadonnées : `pyproject.toml` (paquet `lawim-v2`, entry point `lawim-v2`)
+- Validation : `./scripts/validate-packaging.sh`
 
 ## Structure
 

@@ -43,4 +43,7 @@ if command -v node >/dev/null 2>&1; then
   node --check "${ROOT}/code/lawim_v2/static/app.js"
 fi
 
+echo "Validating pip packaging..."
+"${ROOT}/scripts/validate-packaging.sh"
+
 echo "=== INSTALL VALIDATION OK ==="

@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lawim-v2"
+version = "0.1.0"
+description = "LAWIM_V2 property platform runtime — listings, matching, conversations"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "Proprietary" }
+authors = [{ name = "LAWIM Program" }]
+keywords = ["lawim", "property", "real-estate"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+dependencies = []
+
+[project.optional-dependencies]
+postgresql = ["pg8000>=1.31.2"]
+dev = ["pg8000>=1.31.2"]
+
+[project.scripts]
+lawim-v2 = "lawim_v2.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/lawim/lawim_v2"
+Documentation = "https://github.com/lawim/lawim_v2/blob/develop/docs/OPERATIONS-RC.md"
+
+[tool.setuptools]
+package-dir = { "" = "code" }
+
+[tool.setuptools.packages.find]
+where = ["code"]
+
+[tool.setuptools.package-data]
+lawim_v2 = ["static/*"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["*.pyc", "__pycache__"]

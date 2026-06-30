@@ -25,6 +25,11 @@ if [[ "${LAWIM_INSTALL_POSTGRES_DRIVER:-0}" == "1" ]]; then
   python3 -m pip install --user -r "${ROOT}/requirements-postgresql.txt"
 fi
 
+if [[ "${LAWIM_INSTALL_PACKAGE:-0}" == "1" ]]; then
+  echo "Installing LAWIM_V2 package (editable)..."
+  python3 -m pip install --user -e "${ROOT}[postgresql]"
+fi
+
 export PYTHONPATH="${ROOT}/code${PYTHONPATH:+:${PYTHONPATH}}"
 
 echo ""
@@ -33,4 +38,5 @@ echo "Next steps:"
 echo "  ./scripts/run-local.sh          # native SQLite dev server"
 echo "  ./scripts/run-tests.sh          # unit tests + validators"
 echo "  ./scripts/validate-install.sh   # full reproducibility gate"
+echo "  ./scripts/validate-packaging.sh # pip install + smoke"
 echo "  ./scripts/run-compose-dev.sh    # optional Docker stack"

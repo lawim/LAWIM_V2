@@ -1,6 +1,6 @@
 # Tests
 
-Suite `unittest` pour LAWIM_V2 (64 tests au 2026-06-29).
+Suite `unittest` pour LAWIM_V2 (74 tests au 2026-06-29).
 
 ## Lancer les tests
 

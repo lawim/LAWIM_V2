@@ -1,0 +1,189 @@
+"""Incremental SQLite migrations and production migration strategy metadata."""
+
+from __future__ import annotations
+
+import sqlite3
+from typing import Protocol
+
+from .persistence import APPLICATION_SCHEMA_VERSION
+
+# Production PostgreSQL: apply prisma/migrations via `prisma migrate deploy`.
+# Development SQLite: runtime init (schema_ddl.SQLITE_INIT_SCRIPT) + legacy steps below.
+PRODUCTION_MIGRATION_TOOL = "prisma"
+SQLITE_RUNTIME_INIT = "schema_ddl.SQLITE_INIT_SCRIPT"
+MIGRATION_STRATEGY_NOTES = (
+    "Fresh installs use schema_ddl init scripts aligned with persistence manifest v5.",
+    "SQLite legacy databases receive idempotent ALTER/backfill steps in apply_sqlite_legacy_migrations().",
+    "PostgreSQL production deployments should prefer prisma migrate deploy over runtime DDL init.",
+    "Future schema versions must add a Prisma migration and optional SQLite legacy steps.",
+)
+
+
+class _ColumnMigrationConnection(Protocol):
+    def execute(self, sql: str, params: tuple[object, ...] = ()) -> object: ...
+    def executescript(self, sql: str) -> object: ...
+
+
+def _table_columns(conn: sqlite3.Connection, table: str) -> set[str]:
+    rows = conn.execute(f"PRAGMA table_info({table})").fetchall()
+    return {str(row[1]) for row in rows}
+
+
+def _ensure_column(conn: sqlite3.Connection, table: str, column: str, definition: str) -> None:
+    if column not in _table_columns(conn, table):
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
+
+
+def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
+    """Idempotent upgrades for databases created before schema v5."""
+    property_columns = {
+        "listing_code": "TEXT",
+        "address_line": "TEXT",
+        "region": "TEXT",
+        "postal_code": "TEXT",
+        "search_key": "TEXT",
+        "availability": "TEXT NOT NULL DEFAULT 'available'",
+        "metadata_json": "TEXT NOT NULL DEFAULT '{}'",
+        "version": "INTEGER NOT NULL DEFAULT 1",
+        "published_at": "TEXT",
+        "deleted_at": "TEXT",
+    }
+    for column, definition in property_columns.items():
+        _ensure_column(conn, "properties", column, definition)
+
+    media_columns = {
+        "storage_path": "TEXT",
+        "mime_type": "TEXT",
+        "size_bytes": "INTEGER",
+        "thumbnail_url": "TEXT",
+        "metadata_json": "TEXT NOT NULL DEFAULT '{}'",
+        "position": "INTEGER NOT NULL DEFAULT 0",
+        "version": "INTEGER NOT NULL DEFAULT 1",
+        "deleted_at": "TEXT",
+    }
+    for column, definition in media_columns.items():
+        _ensure_column(conn, "media", column, definition)
+
+    conn.execute(
+        """
+        UPDATE properties
+        SET availability = 'available'
+        WHERE availability IS NULL OR TRIM(availability) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE properties
+        SET metadata_json = '{}'
+        WHERE metadata_json IS NULL OR TRIM(metadata_json) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE properties
+        SET version = 1
+        WHERE version IS NULL OR version < 1
+        """
+    )
+    conn.execute(
+        """
+        UPDATE media
+        SET metadata_json = '{}'
+        WHERE metadata_json IS NULL OR TRIM(metadata_json) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE media
+        SET version = 1
+        WHERE version IS NULL OR version < 1
+        """
+    )
+    conn.execute(
+        """
+        UPDATE media
+        SET position = 0
+        WHERE position IS NULL OR position < 0
+        """
+    )
+    conn.execute(
+        """
+        UPDATE properties
+        SET search_key = LOWER(city || '|' || COALESCE(region, '') || '|' || country)
+        WHERE search_key IS NULL OR TRIM(search_key) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE properties
+        SET published_at = created_at
+        WHERE status = 'published' AND (published_at IS NULL OR TRIM(published_at) = '')
+        """
+    )
+    conn.execute(
+        """
+        UPDATE properties
+        SET listing_code = 'lawim-' || id
+        WHERE listing_code IS NULL OR TRIM(listing_code) = ''
+        """
+    )
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_search_key ON properties(search_key)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_deleted_at ON properties(deleted_at)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_media_property_position ON media(property_id, position)")
+
+    conversation_columns = {
+        "organization_id": "INTEGER",
+        "negotiation_stage": "TEXT NOT NULL DEFAULT 'inquiry'",
+        "updated_at": "TEXT",
+    }
+    for column, definition in conversation_columns.items():
+        _ensure_column(conn, "conversations", column, definition)
+    conn.execute(
+        """
+        UPDATE conversations
+        SET negotiation_stage = 'inquiry'
+        WHERE negotiation_stage IS NULL OR TRIM(negotiation_stage) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE conversations
+        SET updated_at = created_at
+        WHERE updated_at IS NULL OR TRIM(updated_at) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE conversations
+        SET organization_id = (
+            SELECT owner_organization_id FROM properties WHERE properties.id = conversations.property_id
+        )
+        WHERE organization_id IS NULL AND property_id IS NOT NULL
+        """
+    )
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS notifications (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            kind TEXT NOT NULL,
+            title TEXT NOT NULL,
+            body TEXT NOT NULL,
+            payload_json TEXT NOT NULL DEFAULT '{}',
+            read_at TEXT,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        );
+        CREATE INDEX IF NOT EXISTS idx_conversations_user_updated ON conversations(user_id, updated_at);
+        CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at);
+        """
+    )
+
+
+def migration_strategy_profile() -> dict[str, object]:
+    return {
+        "schema_version": APPLICATION_SCHEMA_VERSION,
+        "production_tool": PRODUCTION_MIGRATION_TOOL,
+        "sqlite_runtime_init": SQLITE_RUNTIME_INIT,
+        "notes": list(MIGRATION_STRATEGY_NOTES),
+    }

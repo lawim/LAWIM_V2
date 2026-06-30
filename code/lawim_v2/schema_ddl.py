@@ -1,4 +1,4 @@
-"""PostgreSQL DDL aligned with persistence.APPLICATION_SCHEMA v5."""
+"""Unified DDL for SQLite and PostgreSQL runtimes (persistence manifest v5)."""
 
 from __future__ import annotations
 
@@ -144,6 +144,180 @@ POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     "CREATE INDEX IF NOT EXISTS idx_conversations_user_updated ON conversations(user_id, updated_at)",
     "CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at)",
 )
+
+SQLITE_INIT_SCRIPT = """
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS organizations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE,
+    kind TEXT NOT NULL DEFAULT 'agency' CHECK (kind IN ('agency', 'partner', 'owner')),
+    city TEXT,
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    full_name TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('admin', 'agent', 'owner')),
+    organization_id INTEGER,
+    password_salt TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (organization_id) REFERENCES organizations(id)
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+    token TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS properties (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    listing_code TEXT UNIQUE,
+    title TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    address_line TEXT,
+    city TEXT NOT NULL,
+    region TEXT,
+    postal_code TEXT,
+    country TEXT NOT NULL,
+    search_key TEXT,
+    latitude REAL,
+    longitude REAL,
+    price_min INTEGER CHECK (price_min IS NULL OR price_min >= 0),
+    price_max INTEGER CHECK (price_max IS NULL OR price_max >= 0),
+    currency TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('draft', 'open', 'closed', 'published', 'archived')),
+    availability TEXT NOT NULL DEFAULT 'available' CHECK (availability IN ('available', 'reserved', 'sold', 'rented', 'unavailable')),
+    property_type TEXT NOT NULL,
+    owner_organization_id INTEGER,
+    bedrooms INTEGER NOT NULL DEFAULT 0 CHECK (bedrooms >= 0),
+    bathrooms INTEGER NOT NULL DEFAULT 0 CHECK (bathrooms >= 0),
+    area_sqm REAL NOT NULL DEFAULT 0 CHECK (area_sqm >= 0),
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    version INTEGER NOT NULL DEFAULT 1 CHECK (version >= 1),
+    published_at TEXT,
+    deleted_at TEXT,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (owner_organization_id) REFERENCES organizations(id)
+);
+
+CREATE TABLE IF NOT EXISTS media (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    property_id INTEGER NOT NULL,
+    kind TEXT NOT NULL CHECK (kind <> ''),
+    url TEXT NOT NULL CHECK (url <> ''),
+    caption TEXT NOT NULL CHECK (caption <> ''),
+    storage_path TEXT,
+    mime_type TEXT,
+    size_bytes INTEGER CHECK (size_bytes IS NULL OR size_bytes >= 0),
+    thumbnail_url TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    position INTEGER NOT NULL DEFAULT 0 CHECK (position >= 0),
+    version INTEGER NOT NULL DEFAULT 1 CHECK (version >= 1),
+    deleted_at TEXT,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS conversations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    property_id INTEGER,
+    user_id INTEGER NOT NULL,
+    organization_id INTEGER,
+    subject TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('open', 'closed', 'archived')),
+    negotiation_stage TEXT NOT NULL DEFAULT 'inquiry' CHECK (negotiation_stage IN ('inquiry', 'offer', 'counter', 'accepted', 'declined', 'closed')),
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (property_id) REFERENCES properties(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (organization_id) REFERENCES organizations(id)
+);
+
+CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    conversation_id INTEGER NOT NULL,
+    sender_user_id INTEGER NOT NULL,
+    body TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE,
+    FOREIGN KEY (sender_user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    kind TEXT NOT NULL,
+    payload TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    kind TEXT NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    read_at TEXT,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS schema_meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_properties_status_city ON properties(status, city);
+CREATE INDEX IF NOT EXISTS idx_properties_search_key ON properties(search_key);
+CREATE INDEX IF NOT EXISTS idx_properties_deleted_at ON properties(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_media_property_position ON media(property_id, position);
+CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
+CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_conversations_user_updated ON conversations(user_id, updated_at);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at);
+"""
+
+
+def manifest_table_names() -> tuple[str, ...]:
+    from .persistence import APPLICATION_SCHEMA
+
+    return tuple(table.name for table in APPLICATION_SCHEMA.tables)
+
+
+def ddl_table_names(script: str) -> set[str]:
+    return set(re.findall(r"CREATE TABLE IF NOT EXISTS (\w+)", script, flags=re.IGNORECASE))
+
+
+def sqlite_table_names() -> set[str]:
+    return ddl_table_names(SQLITE_INIT_SCRIPT)
+
+
+def postgresql_table_names() -> set[str]:
+    names: set[str] = set()
+    for statement in POSTGRESQL_INIT_STATEMENTS:
+        names.update(ddl_table_names(statement))
+    return names
+
+
+def validate_manifest_table_alignment() -> list[str]:
+    expected = set(manifest_table_names())
+    errors: list[str] = []
+    for engine, names in (("sqlite", sqlite_table_names()), ("postgresql", postgresql_table_names())):
+        missing = expected - names
+        extra = names - expected
+        if missing:
+            errors.append(f"{engine} DDL missing tables: {sorted(missing)}")
+        if extra:
+            errors.append(f"{engine} DDL has unexpected tables: {sorted(extra)}")
+    return errors
 
 
 def normalize_sql_statement(statement: str) -> str:

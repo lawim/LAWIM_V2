@@ -5,7 +5,9 @@ Scripts idempotents pour la Release Candidate LAWIM_V2. Aucun secret embarqué.
 | Script | Usage |
 |--------|-------|
 | `install.sh` | Bootstrap machine vierge (dirs, `.env.local`, checks) |
-| `validate-install.sh` | Gate reproductibilité : compile, tests, schema, smoke, compose |
+| `validate-install.sh` | Gate reproductibilité : compile, tests, schema, smoke, compose, packaging |
+| `validate-packaging.sh` | Venv éphémère + `pip install -e .` + smoke |
+| `sync_prisma_migration.py` | Régénère migration Prisma depuis `schema_ddl` |
 | `run-local.sh` | Démarrage local Python (SQLite par défaut) |
 | `run-tests.sh` | Suite unitaire + validate_prisma + smoke |
 | `run-compose-dev.sh` | Stack Compose development |
