@@ -195,9 +195,19 @@ async function apiMultipart(path, { auth = false, formData }) {
     body: formData,
   });
   const text = await response.text();
-  const payload = text ? JSON.parse(text) : {};
+  let payload = {};
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch (error) {
+      throw new Error(`Invalid JSON response from ${path}`);
+    }
+  }
   if (!response.ok) {
-    throw new Error(payload?.error?.message || `HTTP ${response.status}`);
+    const formatted = formatApiError(payload, response.status);
+    const error = new Error(formatted.message);
+    error.code = formatted.code;
+    throw error;
   }
   return payload;
 }
@@ -581,6 +591,10 @@ function renderHealth(health) {
 
 function renderBootstrap(payload) {
   state.bootstrap = payload;
+  maybePopulateDemoCredentials();
+  if (refs.demoButton) {
+    refs.demoButton.hidden = !payload.features?.demo_credentials;
+  }
   const currentUser = payload.current_user;
 
   if (currentUser) {
@@ -621,9 +635,15 @@ function renderBootstrap(payload) {
 
 async function selectConversation(conversationId) {
   state.selectedConversationId = conversationId;
-  const payload = await api(`/api/conversations/${conversationId}`, { auth: true });
-  renderConversationDetail(payload.conversation);
-  renderConversations(state.bootstrap?.conversations || []);
+  try {
+    const payload = await api(`/api/conversations/${conversationId}`, { auth: true });
+    renderConversationDetail(payload.conversation);
+    renderConversations(state.bootstrap?.conversations || []);
+  } catch (error) {
+    state.selectedConversationId = null;
+    refs.conversationDetail.innerHTML = `<p class="muted">${error.message}</p>`;
+    setNotice(error.message, "error", error.code || "");
+  }
 }
 
 function parseNumber(value) {
@@ -820,6 +840,12 @@ async function handleMessageCreate(event) {
     await selectConversation(state.selectedConversationId);
   } catch (error) {
     setNotice(error.message, "error");
+  }
+}
+
+function maybePopulateDemoCredentials() {
+  if (state.bootstrap?.features?.demo_credentials) {
+    populateDemoCredentials();
   }
 }
 
@@ -1057,7 +1083,6 @@ function bindEvents() {
 document.addEventListener("DOMContentLoaded", async () => {
   cacheRefs();
   bindEvents();
-  populateDemoCredentials();
   applyJourney(state.activeJourney);
   updateSelectedPropertyLabel();
   await refresh();

@@ -23,6 +23,7 @@ from .media_domain import THUMBNAIL_CONTRACT
 from .multipart import parse_multipart_form_data
 from .observability import METRICS
 from .persistence_adapter import resolve_persistence_adapter
+from .rate_limit import AuthRateLimiter
 from .services import LawimServices, ServiceError
 
 
@@ -48,6 +49,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
     repository: LawimRepository
     config: AppConfig
     services: LawimServices
+    auth_limiter: AuthRateLimiter
 
     def do_GET(self) -> None:  # noqa: N802
         self._handle_request(self._handle_get)
@@ -66,9 +68,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self) -> None:  # noqa: N802
         self.send_response(HTTPStatus.NO_CONTENT)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+        self._send_cors_headers()
         self.send_header("Content-Length", "0")
         self.end_headers()
 
@@ -112,6 +112,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
         if path == "/healthz":
             self._send_text("ok", content_type="text/plain; charset=utf-8")
+            return
+        if path == "/readyz":
+            payload = self.services.readiness()
+            status = HTTPStatus.OK if payload.get("status") == "ready" else HTTPStatus.SERVICE_UNAVAILABLE
+            self._send_json(payload, status=status)
             return
         if path.startswith("/api/"):
             self._handle_api_get(parsed)
@@ -351,6 +356,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         path = parsed.path
 
         if path == "/api/auth/login":
+            self._enforce_auth_rate_limit(path)
             email = self._require_text(body, "email")
             password = self._require_text(body, "password")
             payload = self.services.login(email=email, password=password)
@@ -358,6 +364,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/auth/register":
+            self._enforce_auth_rate_limit(path)
             email = self._require_text(body, "email")
             password = self._require_text(body, "password")
             full_name = self._require_text(body, "full_name")
@@ -734,6 +741,40 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         )
         self._send_json({"media": media_row}, status=HTTPStatus.CREATED)
 
+    def _request_origin(self) -> str | None:
+        raw = self.headers.get("Origin")
+        if not raw:
+            return None
+        stripped = raw.strip()
+        return stripped or None
+
+    def _allowed_cors_origin(self) -> str | None:
+        origin = self._request_origin()
+        allowed = self.config.cors_allowed_origins
+        if origin and origin in allowed:
+            return origin
+        if origin is None and len(allowed) == 1:
+            return allowed[0]
+        return None
+
+    def _send_cors_headers(self) -> None:
+        origin = self._allowed_cors_origin()
+        if origin:
+            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Vary", "Origin")
+        self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+
+    def _enforce_auth_rate_limit(self, path: str) -> None:
+        client_host = self.client_address[0] if self.client_address else "unknown"
+        key = f"{client_host}:{path}"
+        if not self.auth_limiter.is_allowed(key):
+            raise ApiError(
+                HTTPStatus.TOO_MANY_REQUESTS,
+                "rate_limited",
+                "Too many authentication attempts; try again later",
+            )
+
     def _send_security_headers(self) -> None:
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("X-Frame-Options", "DENY")
@@ -750,9 +791,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
+        self._send_cors_headers()
         if status == HTTPStatus.UNAUTHORIZED:
             self.send_header("WWW-Authenticate", 'Bearer realm="LAWIM_V2"')
         if extra_headers:
@@ -786,6 +825,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self._send_text(content, content_type=content_type)
 
     def _send_media_asset(self, path: str) -> None:
+        if not self.config.public_media:
+            self._require_user()
         relative = path[len("/media/") :].lstrip("/")
         if not relative or ".." in relative.split("/"):
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_media_path", "Invalid media path")
@@ -797,7 +838,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("Access-Control-Allow-Origin", "*")
+        self._send_cors_headers()
         self._send_security_headers()
         self.end_headers()
         self.wfile.write(body)
@@ -1018,6 +1059,10 @@ def create_server(config: AppConfig) -> LawimThreadingHTTPServer:
     BoundHandler.repository = repository
     BoundHandler.config = config
     BoundHandler.services = services
+    BoundHandler.auth_limiter = AuthRateLimiter(
+        max_attempts=config.auth_rate_limit_max,
+        window_seconds=config.auth_rate_limit_window_seconds,
+    )
 
     server = LawimThreadingHTTPServer((config.host, config.port), BoundHandler)
     server.repository = repository  # type: ignore[attr-defined]

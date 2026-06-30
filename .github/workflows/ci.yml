@@ -34,6 +34,12 @@ jobs:
       - name: Full install validation
         run: ./scripts/validate-install.sh
 
+      - name: Packaging validation
+        run: ./scripts/validate-packaging.sh
+
+      - name: Runtime smoke
+        run: python3 scripts/smoke_runtime.py
+
   compose:
     name: Docker Compose config
     runs-on: ubuntu-latest
@@ -74,8 +80,11 @@ jobs:
       - name: Install PostgreSQL driver
         run: python3 -m pip install -r requirements-postgresql.txt
 
-      - name: Run PostgreSQL integration test
+      - name: Run PostgreSQL integration tests
         env:
           PYTHONPATH: code:tests
           LAWIM_TEST_POSTGRES_URL: postgresql://lawim:lawim@localhost:5432/lawim_v2
-        run: python3 -m unittest tests.test_productization.PostgreSQLIntegrationTest -v
+        run: |
+          python3 -m unittest tests.test_productization.PostgreSQLIntegrationTest -v
+          python3 -m unittest tests.test_rc_postgresql -v
+          python3 scripts/smoke_postgres.py

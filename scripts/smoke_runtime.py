@@ -81,6 +81,17 @@ def run_smoke(*, host: str = "127.0.0.1", timeout: float = 5.0) -> SmokeResult:
         return status, headers, body
 
     try:
+        status, headers, body = fetch("/healthz")
+        if status != 200 or body.strip() != b"ok":
+            return SmokeResult(False, f"/healthz returned unexpected response: {status!r} {body!r}")
+
+        status, _, body = fetch("/readyz")
+        if status != 200:
+            return SmokeResult(False, f"/readyz returned HTTP {status}")
+        readiness = json.loads(body.decode("utf-8"))
+        if readiness.get("status") != "ready":
+            return SmokeResult(False, f"/readyz payload invalid: {readiness!r}")
+
         status, headers, body = fetch("/api/health")
         if status != 200:
             return SmokeResult(False, f"/api/health returned HTTP {status}")

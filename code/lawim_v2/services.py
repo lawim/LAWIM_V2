@@ -147,6 +147,17 @@ class LawimServices:
                 payload["metrics"] = METRICS.snapshot()
         return payload
 
+    def readiness(self) -> dict[str, object]:
+        try:
+            self.repository.scalar("SELECT 1")
+            db_ready = True
+        except Exception:
+            db_ready = False
+        return {
+            "status": "ready" if db_ready else "not_ready",
+            "database": {"ready": db_ready},
+        }
+
     def metrics(self, *, actor: dict[str, object]) -> dict[str, object]:
         if not self.policy.is_admin(actor):
             raise PermissionDenied("Only administrators can inspect runtime metrics")
@@ -175,6 +186,9 @@ class LawimServices:
         return {
             "summary": payload["summary"],
             "current_user": payload["current_user"],
+            "features": {
+                "demo_credentials": self.config.seed_demo_data,
+            },
             "organizations": self.list_organizations(limit=10),
             "users": users,
             "properties": properties,
