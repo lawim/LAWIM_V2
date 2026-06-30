@@ -56,6 +56,7 @@ class MatchCriteria:
     availability: str | None = None
     status: str | None = "published"
     limit: int = 10
+    min_score: float = 0.0
     weights: MatchWeights = field(default_factory=lambda: DEFAULT_WEIGHTS)
 
 
@@ -144,9 +145,17 @@ def score_property(property_row: dict[str, object], criteria: MatchCriteria) -> 
         reasons.append("available")
 
     total = round(sum(breakdown.values()), 1)
+    grade = "excellent" if total >= 70 else "good" if total >= 40 else "fair" if total >= 20 else "weak"
+    top_factors = sorted(breakdown.items(), key=lambda item: item[1], reverse=True)
+    summary_parts = [f"{name} +{value}" for name, value in top_factors[:3] if value > 0]
+    summary = "; ".join(summary_parts) if summary_parts else "No strong match signals"
     return {
         "property": property_row,
         "score": total,
+        "score_percent": total,
+        "grade": grade,
+        "summary": summary,
+        "eligible": total >= criteria.min_score,
         "breakdown": breakdown,
         "reasons": reasons,
         "distance_km": round(distance_km, 2) if distance_km is not None else None,
@@ -164,5 +173,6 @@ def score_property(property_row: dict[str, object], criteria: MatchCriteria) -> 
 
 def rank_properties(properties: Iterable[dict[str, object]], criteria: MatchCriteria) -> list[dict[str, object]]:
     ranked = [score_property(property_row, criteria) for property_row in properties]
+    ranked = [item for item in ranked if float(item["score"]) >= criteria.min_score]
     ranked.sort(key=lambda item: (item["score"], item["property"].get("id", 0)), reverse=True)
     return ranked[: max(criteria.limit, 1)]

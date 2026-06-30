@@ -116,19 +116,64 @@
               <input name="city" type="text" placeholder="Douala">
             </label>
             <label>
+              <span>Region</span>
+              <input name="region" type="text" placeholder="Littoral">
+            </label>
+            <label>
               <span>Type</span>
               <input name="property_type" type="text" placeholder="apartment">
             </label>
+            <div class="two-up">
+              <label>
+                <span>Price min</span>
+                <input name="price_min" type="number" min="0" step="1" placeholder="150000">
+              </label>
+              <label>
+                <span>Price max</span>
+                <input name="price_max" type="number" min="0" step="1" placeholder="350000">
+              </label>
+            </div>
             <label>
               <span>Status</span>
               <select name="status">
                 <option value="published">published</option>
                 <option value="">any</option>
+                <option value="draft">draft</option>
+                <option value="archived">archived</option>
               </select>
             </label>
+            <div class="two-up">
+              <label>
+                <span>Sort</span>
+                <select name="sort">
+                  <option value="created_at">created_at</option>
+                  <option value="price_min">price_min</option>
+                  <option value="title">title</option>
+                  <option value="city">city</option>
+                </select>
+              </label>
+              <label>
+                <span>Order</span>
+                <select name="order">
+                  <option value="desc">desc</option>
+                  <option value="asc">asc</option>
+                </select>
+              </label>
+            </div>
+            <div class="two-up">
+              <label>
+                <span>Page</span>
+                <input name="page" type="number" min="1" step="1" value="1">
+              </label>
+              <label>
+                <span>Limit</span>
+                <input name="limit" type="number" min="1" max="50" step="1" value="10">
+              </label>
+            </div>
             <div class="actions">
               <button type="submit" class="button primary">Search</button>
             </div>
+            <p class="muted" id="property-search-meta">No search executed yet.</p>
           </form>
         </section>
 
@@ -165,6 +210,10 @@
             <label>
               <span>Limit</span>
               <input name="limit" type="number" min="1" max="20" step="1" value="5">
+            </label>
+            <label>
+              <span>Min score</span>
+              <input name="min_score" type="number" min="0" max="100" step="1" placeholder="10">
             </label>
             <div class="actions">
               <button type="submit" class="button primary">Refresh matches</button>
@@ -433,10 +482,30 @@
           <article class="panel card">
             <div class="section-heading">
               <h2>Notifications</h2>
-              <p class="muted">In-app alerts for messages and conversation updates.</p>
+              <p class="muted">In-app alerts for messages, matches and conversation updates.</p>
             </div>
+            <form id="notification-filter-form" class="stacked-form inline-filter">
+              <label>
+                <span>Kind</span>
+                <select name="kind">
+                  <option value="">all</option>
+                  <option value="match_found">match_found</option>
+                  <option value="message_received">message_received</option>
+                  <option value="conversation_created">conversation_created</option>
+                  <option value="conversation_updated">conversation_updated</option>
+                </select>
+              </label>
+              <label class="checkbox-label">
+                <input name="unread_only" type="checkbox">
+                <span>Unread only</span>
+              </label>
+              <div class="actions single">
+                <button type="submit" class="button ghost">Apply filter</button>
+              </div>
+            </form>
             <div class="actions single">
               <button type="button" id="mark-notifications-read" class="button ghost">Mark all read</button>
+              <span class="chip subtle" id="notification-unread-count">0 unread</span>
             </div>
             <div id="notifications-list" class="card-list"></div>
           </article>
@@ -467,6 +536,15 @@
             </label>
             <div class="actions">
               <button type="submit" class="button primary">Send reply</button>
+            </div>
+          </form>
+          <form id="negotiation-form" class="stacked-form negotiation-form hidden">
+            <label>
+              <span>Negotiation stage</span>
+              <select name="negotiation_stage"></select>
+            </label>
+            <div class="actions">
+              <button type="submit" class="button ghost">Update stage</button>
             </div>
           </form>
         </section>

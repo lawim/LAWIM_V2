@@ -415,6 +415,8 @@ class LawimServices:
         owner_organization_id: int | None = None,
         include_deleted: bool = False,
         search: str | None = None,
+        price_min: int | None = None,
+        price_max: int | None = None,
         page: int = 1,
         limit: int = 10,
         sort: str = "created_at",
@@ -430,6 +432,8 @@ class LawimServices:
             owner_organization_id=owner_organization_id,
             include_deleted=include_deleted,
             search=search,
+            price_min=price_min,
+            price_max=price_max,
             page=page,
             limit=limit,
             sort=sort,
@@ -791,20 +795,25 @@ class LawimServices:
         matches = [match_dto(item) for item in ranked]
         if actor is not None and matches:
             top = matches[0]
-            property_payload = top.get("property")
-            if isinstance(property_payload, dict):
-                title = str(property_payload.get("title") or "Property")
-                property_id = property_payload.get("id")
-            else:
-                title = "Property"
-                property_id = None
-            self.repository.create_notification(
-                user_id=int(actor["id"]),
-                kind="match_found",
-                title="Correspondance trouvée",
-                body=f"{title} — score {top.get('score')}",
-                payload={"property_id": property_id, "score": top.get("score")},
-            )
+            if top.get("eligible", True):
+                property_payload = top.get("property")
+                if isinstance(property_payload, dict):
+                    title = str(property_payload.get("title") or "Property")
+                    property_id = property_payload.get("id")
+                else:
+                    title = "Property"
+                    property_id = None
+                if property_id is not None and not self.repository.has_match_notification(
+                    user_id=int(actor["id"]),
+                    property_id=int(property_id),
+                ):
+                    self.repository.create_notification(
+                        user_id=int(actor["id"]),
+                        kind="match_found",
+                        title="Correspondance trouvée",
+                        body=f"{title} — score {top.get('score')} ({top.get('grade')})",
+                        payload={"property_id": property_id, "score": top.get("score"), "summary": top.get("summary")},
+                    )
         return {
             "matches": matches,
             "criteria": {
@@ -820,6 +829,7 @@ class LawimServices:
                 "availability": criteria.availability,
                 "status": criteria.status,
                 "limit": criteria.limit,
+                "min_score": criteria.min_score,
                 "weights": asdict(criteria.weights.normalized()),
             },
         }
@@ -829,10 +839,30 @@ class LawimServices:
         *,
         actor: dict[str, object],
         unread_only: bool = False,
+        kind: str | None = None,
+        page: int = 1,
         limit: int = 50,
     ) -> dict[str, object]:
-        rows = self.repository.list_notifications(user_id=int(actor["id"]), unread_only=unread_only, limit=limit)
-        return {"notifications": [notification_dto(row) for row in rows]}
+        result = self.repository.list_notifications(
+            user_id=int(actor["id"]),
+            unread_only=unread_only,
+            kind=kind,
+            page=page,
+            limit=limit,
+        )
+        pagination = PaginationMeta(
+            page=int(result["pagination"]["page"]),
+            limit=int(result["pagination"]["limit"]),
+            total=int(result["pagination"]["total"]),
+            pages=int(result["pagination"]["pages"]),
+            sort=str(result["pagination"]["sort"]),
+            order=str(result["pagination"]["order"]),
+        )
+        return paginated_payload(
+            [notification_dto(row) for row in result["items"]],
+            key="notifications",
+            pagination=pagination,
+        )
 
     def mark_notification_read(self, *, actor: dict[str, object], notification_id: int) -> dict[str, object]:
         row = self.repository.mark_notification_read(notification_id, user_id=int(actor["id"]))

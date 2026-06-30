@@ -44,6 +44,8 @@ class AppConfig:
     geocoding_api_key: str | None
     cdn_base_url: str | None
     metrics_enabled: bool
+    match_min_score: float
+    max_json_body_bytes: int
 
     @classmethod
     def from_env(cls) -> "AppConfig":
@@ -72,6 +74,8 @@ class AppConfig:
             geocoding_api_key=geocoding_api_key.strip() if geocoding_api_key else None,
             cdn_base_url=cdn_base_url.strip() if cdn_base_url else None,
             metrics_enabled=_bool_env("LAWIM_METRICS_ENABLED", True),
+            match_min_score=float(os.getenv("LAWIM_MATCH_MIN_SCORE", "10")),
+            max_json_body_bytes=_int_env("LAWIM_MAX_JSON_BODY_BYTES", 1_048_576),
         )
 
     def ensure_runtime_dir(self) -> None:

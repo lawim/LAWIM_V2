@@ -73,6 +73,8 @@ class LawimTestHarness(TestCase):
             geocoding_api_key=None,
             cdn_base_url=None,
             metrics_enabled=True,
+            match_min_score=10.0,
+            max_json_body_bytes=MAX_JSON_BODY_BYTES,
         )
 
     def tearDown(self) -> None:
@@ -158,4 +160,4 @@ class LawimTestHarness(TestCase):
 
     @property
     def max_json_body_bytes(self) -> int:
-        return MAX_JSON_BODY_BYTES
+        return self.config.max_json_body_bytes

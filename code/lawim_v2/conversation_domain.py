@@ -40,3 +40,9 @@ def validate_stage_transition(current: str, nxt: str) -> None:
     allowed = STAGE_TRANSITIONS.get(current_norm, frozenset({next_norm}))
     if next_norm not in allowed:
         raise ValueError(f"invalid negotiation stage transition: {current_norm} -> {next_norm}")
+
+
+def allowed_stage_transitions(current: str) -> list[str]:
+    current_norm = current.lower()
+    allowed = STAGE_TRANSITIONS.get(current_norm, frozenset({current_norm}))
+    return sorted(allowed)

@@ -19,7 +19,7 @@ from .persistence import (
     build_schema_fingerprint,
     build_seed_profile,
 )
-from .api_query import ListQuery, build_media_query, build_property_query, pagination_meta
+from .api_query import ListQuery, build_media_query, build_notification_query, build_property_query, pagination_meta
 from .geo_domain import build_geo_dto, location_matches_query
 from .media_domain import build_thumbnail_url, normalize_kind, normalize_metadata as normalize_media_metadata, validate_media_url
 from .property_domain import (
@@ -1107,6 +1107,8 @@ class LawimRepository:
         owner_organization_id: int | None = None,
         include_deleted: bool = False,
         search: str | None = None,
+        price_min: int | None = None,
+        price_max: int | None = None,
         limit: int = 50,
         page: int = 1,
         sort: str = "created_at",
@@ -1126,6 +1128,8 @@ class LawimRepository:
             owner_organization_id=owner_organization_id,
             include_deleted=include_deleted,
             search=search,
+            price_min=price_min,
+            price_max=price_max,
         )
         return self._list_properties(query)
 
@@ -1161,6 +1165,12 @@ class LawimRepository:
             )
             needle = f"%{query.search.lower()}%"
             params.extend([needle, needle, needle, needle])
+        if query.price_min is not None:
+            clauses.append("(p.price_max IS NULL OR p.price_max >= ?)")
+            params.append(query.price_min)
+        if query.price_max is not None:
+            clauses.append("(p.price_min IS NULL OR p.price_min <= ?)")
+            params.append(query.price_max)
         where = " AND ".join(clauses)
         sort_column = {
             "created_at": "p.created_at",
@@ -1673,25 +1683,47 @@ class LawimRepository:
         *,
         user_id: int,
         unread_only: bool = False,
+        kind: str | None = None,
+        page: int = 1,
         limit: int = 50,
-    ) -> list[dict[str, object]]:
-        if limit < 1:
-            raise ValidationError("limit must be positive")
+    ) -> dict[str, object]:
+        query = build_notification_query(page=page, limit=limit, kind=kind, unread_only=unread_only)
         clauses = ["user_id = ?"]
         params: list[object] = [user_id]
-        if unread_only:
+        if query.unread_only:
             clauses.append("read_at IS NULL")
-        params.append(limit)
-        return self.all(
+        if query.kind:
+            clauses.append("LOWER(kind) = LOWER(?)")
+            params.append(query.kind)
+        where = " AND ".join(clauses)
+        total = self.scalar(f"SELECT COUNT(*) FROM notifications WHERE {where}", tuple(params))
+        rows = self.all(
             f"""
             SELECT *
             FROM notifications
-            WHERE {' AND '.join(clauses)}
+            WHERE {where}
             ORDER BY created_at DESC, id DESC
-            LIMIT ?
+            LIMIT ? OFFSET ?
             """,
-            tuple(params),
+            tuple(params + [query.limit, query.offset]),
         )
+        return {
+            "items": rows,
+            "pagination": pagination_meta(page=query.page, limit=query.limit, total=int(total), sort="created_at", order="desc").to_dict(),
+        }
+
+    def has_match_notification(self, *, user_id: int, property_id: int) -> bool:
+        row = self.one(
+            """
+            SELECT id
+            FROM notifications
+            WHERE user_id = ? AND kind = 'match_found'
+              AND json_extract(payload_json, '$.property_id') = ?
+            LIMIT 1
+            """,
+            (user_id, property_id),
+        )
+        return row is not None
 
     def mark_notification_read(self, notification_id: int, *, user_id: int) -> dict[str, object]:
         row = self.one("SELECT * FROM notifications WHERE id = ? AND user_id = ?", (notification_id, user_id))
@@ -1746,7 +1778,8 @@ class LawimRepository:
         }
 
     def recommendations(self, criteria: MatchCriteria) -> list[dict[str, object]]:
-        properties = self.list_properties(status="published", limit=100)["items"]
+        status = criteria.status or "published"
+        properties = self.list_properties(status=status, limit=100)["items"]
         return rank_properties(properties, criteria)
 
     def matched_properties(self, criteria: MatchCriteria) -> list[dict[str, object]]:

@@ -120,14 +120,22 @@ def error_dto(code: str, message: str) -> dict[str, object]:
     return {"error": {"code": code, "message": message}}
 
 
+from .conversation_domain import allowed_stage_transitions
+
+
 def match_dto(match_row: dict[str, object]) -> dict[str, object]:
     property_row = match_row.get("property")
     if isinstance(property_row, dict):
         property_payload = property_dto(property_row)
     else:
         property_payload = property_row
+    score = match_row.get("score", 0)
     return {
-        "score": match_row.get("score", 0),
+        "score": score,
+        "score_percent": match_row.get("score_percent", score),
+        "grade": match_row.get("grade", "weak"),
+        "summary": match_row.get("summary", ""),
+        "eligible": match_row.get("eligible", True),
         "breakdown": match_row.get("breakdown", {}),
         "reasons": match_row.get("reasons", []),
         "distance_km": match_row.get("distance_km"),
@@ -151,11 +159,17 @@ def message_dto(message_row: dict[str, object]) -> dict[str, object]:
 
 
 def conversation_dto(conversation_row: dict[str, object], *, messages: list[dict[str, object]] | None = None) -> dict[str, object]:
+    stage = str(conversation_row.get("negotiation_stage", "inquiry"))
     payload: dict[str, object] = {
         "id": conversation_row["id"],
         "subject": conversation_row["subject"],
         "status": conversation_row["status"],
-        "negotiation_stage": conversation_row.get("negotiation_stage", "inquiry"),
+        "negotiation_stage": stage,
+        "negotiation": {
+            "stage": stage,
+            "allowed_stages": allowed_stage_transitions(stage),
+            "history": [],
+        },
         "property": {
             "id": conversation_row.get("property_id"),
             "title": conversation_row.get("property_title"),
@@ -179,6 +193,20 @@ def conversation_dto(conversation_row: dict[str, object], *, messages: list[dict
     }
     if messages is not None:
         payload["messages"] = [message_dto(item) for item in messages]
+        payload["negotiation"] = {
+            "stage": stage,
+            "allowed_stages": allowed_stage_transitions(stage),
+            "history": [
+                {
+                    "type": "message",
+                    "id": item["id"],
+                    "body": item["body"],
+                    "sender_user_id": item["sender_user_id"],
+                    "created_at": item.get("created_at"),
+                }
+                for item in messages
+            ],
+        }
     return payload
 
 

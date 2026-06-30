@@ -168,6 +168,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/properties":
+            price_min = self._first_int(query, "price_min", minimum=0)
+            price_max = self._first_int(query, "price_max", minimum=0)
+            if price_min is not None and price_max is not None and price_min > price_max:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'price_min' cannot exceed 'price_max'")
             self._send_json(
                 self.services.list_properties(
                     city=self._first(query, "city"),
@@ -179,6 +183,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                     owner_organization_id=self._first_int(query, "owner_organization_id", minimum=1),
                     include_deleted=self._first_bool(query, "include_deleted"),
                     search=self._first(query, "search"),
+                    price_min=price_min,
+                    price_max=price_max,
                     page=self._query_page(query),
                     limit=self._query_limit(query),
                     sort=self._first(query, "sort") or "created_at",
@@ -269,6 +275,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 self.services.list_notifications(
                     actor=actor,
                     unread_only=self._first_bool(query, "unread_only"),
+                    kind=self._first(query, "kind"),
+                    page=self._query_page(query),
                     limit=self._query_limit(query),
                 )
             )
@@ -638,7 +646,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_content_length", "Content-Length must be non-negative")
         if length <= 0:
             return {}
-        if length > MAX_JSON_BODY_BYTES:
+        if length > self.config.max_json_body_bytes:
             raise ApiError(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, "payload_too_large", "Request body exceeds the supported size")
         content_type = self.headers.get("Content-Type", "")
         if "application/json" not in content_type.lower():
@@ -906,6 +914,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         budget_max = self._first_int(query, "budget_max", minimum=0)
         if budget_min is not None and budget_max is not None and budget_min > budget_max:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'budget_min' cannot exceed 'budget_max'")
+        query_min_score = self._first_float(query, "min_score")
+        min_score = query_min_score if query_min_score is not None else self.config.match_min_score
+        if min_score < 0:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'min_score' must be non-negative")
         weights = MatchWeights(
             status=self._first_float(query, "weight_status") or MatchWeights().status,
             city=self._first_float(query, "weight_city") or MatchWeights().city,
@@ -928,6 +940,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             availability=self._first(query, "availability"),
             status=self._first(query, "status") or "published",
             limit=self._query_limit(query),
+            min_score=min_score,
             weights=weights.normalized(),
         )
 

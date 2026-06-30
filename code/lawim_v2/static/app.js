@@ -48,6 +48,10 @@ function cacheRefs() {
     journeyNav: byId("journey-nav"),
     registerForm: byId("register-form"),
     propertySearchForm: byId("property-search-form"),
+    propertySearchMeta: byId("property-search-meta"),
+    notificationFilterForm: byId("notification-filter-form"),
+    notificationUnreadCount: byId("notification-unread-count"),
+    negotiationForm: byId("negotiation-form"),
     buyerConversationForm: byId("buyer-conversation-form"),
     adminOrgForm: byId("admin-org-form"),
     adminUserForm: byId("admin-user-form"),
@@ -58,9 +62,26 @@ function cacheRefs() {
   });
 }
 
-function setNotice(message, tone = "neutral") {
+function setNotice(message, tone = "neutral", code = "") {
   refs.notice.dataset.tone = tone;
-  refs.notice.textContent = message;
+  refs.notice.textContent = code ? `[${code}] ${message}` : message;
+}
+
+function formatApiError(payload, status) {
+  const code = payload?.error?.code;
+  const message = payload?.error?.message || payload?.message || `HTTP ${status}`;
+  return { code: code || "", message };
+}
+
+function statusChipClass(status) {
+  const normalized = String(status || "draft").toLowerCase();
+  if (normalized === "published") {
+    return "chip accent";
+  }
+  if (normalized === "archived") {
+    return "chip subtle";
+  }
+  return "chip subtle";
 }
 
 function setRuntimeChip(message, tone = "neutral") {
@@ -141,8 +162,10 @@ async function api(path, { method = "GET", auth = false, body = null, query = nu
   }
 
   if (!response.ok) {
-    const message = payload?.error?.message || payload?.message || `HTTP ${response.status}`;
-    throw new Error(message);
+    const formatted = formatApiError(payload, response.status);
+    const error = new Error(formatted.message);
+    error.code = formatted.code;
+    throw error;
   }
 
   return payload;
@@ -253,7 +276,7 @@ function renderProperties(items) {
     article.innerHTML = `
       <div class="mini-card__header">
         <strong>${property.title}</strong>
-        <span class="chip subtle">${property.status || "draft"}</span>
+        <span class="${statusChipClass(property.status)}" data-status="${property.status || "draft"}">${property.status || "draft"}</span>
       </div>
       <p class="muted">${property.listing_code || "no-code"} · ${property.property_type || "n/a"} · ${property.availability || "available"}</p>
       <p>${geo.city || "n/a"}, ${geo.region || "—"}, ${geo.country || "n/a"}</p>
@@ -304,11 +327,11 @@ function renderMatches(items) {
     article.innerHTML = `
       <div class="mini-card__header">
         <strong>${property.title}</strong>
-        <span class="chip accent">${match.score}</span>
+        <span class="chip accent">${match.score} · ${match.grade || "n/a"}</span>
       </div>
       <p class="muted">${geo.city || property.city}, ${geo.country || property.country}</p>
       <p>${money(price.min, price.currency)} - ${money(price.max, price.currency)}</p>
-      <p class="muted">${(match.reasons || []).join(" · ") || "No reasons returned."}</p>
+      <p class="muted">${match.summary || (match.reasons || []).join(" · ") || "No summary."}</p>
       <p class="muted breakdown">${breakdownText || "No score breakdown."}</p>
     `;
     return article;
@@ -329,10 +352,15 @@ function messageSenderName(message) {
 
 function renderConversationDetail(conversation) {
   const messages = conversation.messages || [];
+  const negotiation = conversation.negotiation || {};
+  const allowedStages = negotiation.allowed_stages || [];
   refs.conversationDetail.innerHTML = `
     <div class="detail-summary">
       <div>
-        <p class="eyebrow">${conversation.status} · ${conversation.negotiation_stage || "inquiry"}</p>
+        <p class="eyebrow">
+          <span class="chip subtle" data-status="${conversation.status}">${conversation.status}</span>
+          <span class="chip accent">${conversation.negotiation_stage || negotiation.stage || "inquiry"}</span>
+        </p>
         <h3>${conversation.subject}</h3>
         <p class="muted">
           Requester: ${conversationRequester(conversation)} · Property: ${conversationPropertyTitle(conversation)}
@@ -360,9 +388,23 @@ function renderConversationDetail(conversation) {
     </div>
   `;
   refs.messageForm.classList.toggle("hidden", !state.token);
+  if (refs.negotiationForm) {
+    const stageSelect = refs.negotiationForm.querySelector('[name="negotiation_stage"]');
+    if (stageSelect) {
+      stageSelect.innerHTML = allowedStages
+        .map((stage) => `<option value="${stage}" ${stage === (conversation.negotiation_stage || "inquiry") ? "selected" : ""}>${stage}</option>`)
+        .join("");
+    }
+    refs.negotiationForm.classList.toggle("hidden", !state.token || !allowedStages.length);
+  }
 }
 
 function renderNotifications(items) {
+  const unread = (items || []).filter((notification) => !notification.read).length;
+  if (refs.notificationUnreadCount) {
+    refs.notificationUnreadCount.textContent = `${unread} unread`;
+    refs.notificationUnreadCount.dataset.tone = unread ? "warn" : "ok";
+  }
   renderList(refs.notificationsList, items, (notification) => {
     const article = document.createElement("article");
     article.className = "mini-card mini-card--notification";
@@ -375,11 +417,28 @@ function renderNotifications(items) {
         <span class="chip subtle">${notification.kind}</span>
       </div>
       <p>${notification.body}</p>
-      <p class="muted">${notification.created_at || ""}</p>
+      <p class="muted">${notification.read ? "read" : "unread"} · ${notification.created_at || ""}</p>
     `;
     article.addEventListener("click", () => markNotificationRead(notification.id));
     return article;
   }, "No notifications yet.");
+}
+
+async function refreshNotifications() {
+  if (!state.token) {
+    renderNotifications([]);
+    return;
+  }
+  const form = refs.notificationFilterForm ? new FormData(refs.notificationFilterForm) : null;
+  const payload = await api("/api/notifications", {
+    auth: true,
+    query: {
+      limit: 20,
+      kind: form?.get("kind") || undefined,
+      unread_only: form?.get("unread_only") ? "true" : undefined,
+    },
+  });
+  renderNotifications(payload.notifications || []);
 }
 
 async function markNotificationRead(notificationId) {
@@ -405,15 +464,6 @@ async function markAllNotificationsRead() {
   } catch (error) {
     setNotice(error.message, "error");
   }
-}
-
-async function refreshNotifications() {
-  if (!state.token) {
-    renderNotifications([]);
-    return;
-  }
-  const payload = await api("/api/notifications?limit=20", { auth: true });
-  renderNotifications(payload.notifications || []);
 }
 
 function renderConversations(items) {
@@ -628,10 +678,11 @@ async function handleMatchSearch(event) {
         latitude: parseNumber(form.get("latitude")),
         longitude: parseNumber(form.get("longitude")),
         limit: parseNumber(form.get("limit")),
+        min_score: parseNumber(form.get("min_score")),
       },
     });
     renderMatches(payload.matches || []);
-    setNotice(`Returned ${payload.matches?.length || 0} ranked matches.`, "success");
+    setNotice(`Returned ${payload.matches?.length || 0} ranked matches (min score ${payload.criteria?.min_score ?? "n/a"}).`, "success");
     if (state.token) {
       await refreshNotifications();
     }
@@ -784,15 +835,25 @@ async function handlePropertySearch(event) {
     const payload = await api("/api/properties", {
       query: {
         city: form.get("city"),
+        region: form.get("region"),
         property_type: form.get("property_type"),
         status: form.get("status"),
-        limit: 20,
+        price_min: parseNumber(form.get("price_min")),
+        price_max: parseNumber(form.get("price_max")),
+        sort: form.get("sort") || "created_at",
+        order: form.get("order") || "desc",
+        page: parseNumber(form.get("page")) || 1,
+        limit: parseNumber(form.get("limit")) || 10,
       },
     });
     renderProperties(payload.properties || []);
+    const pagination = payload.pagination || {};
+    if (refs.propertySearchMeta) {
+      refs.propertySearchMeta.textContent = `Page ${pagination.page || 1}/${pagination.pages || 1} · ${pagination.total ?? payload.properties?.length ?? 0} total · sort ${pagination.sort || "created_at"} ${pagination.order || "desc"}`;
+    }
     setNotice(`Found ${payload.properties?.length || 0} listings.`, "success");
   } catch (error) {
-    setNotice(error.message, "error");
+    setNotice(error.message, "error", error.code || "");
   }
 }
 
@@ -859,7 +920,39 @@ async function handleBuyerConversation(event) {
     await refresh();
     await selectConversation(payload.conversation.id);
   } catch (error) {
-    setNotice(error.message, "error");
+    setNotice(error.message, "error", error.code || "");
+  }
+}
+
+async function handleNegotiationUpdate(event) {
+  event.preventDefault();
+  if (!state.token || !state.selectedConversationId) {
+    setNotice("Select a conversation first.", "error");
+    return;
+  }
+  try {
+    const form = new FormData(refs.negotiationForm);
+    const payload = await api(`/api/conversations/${state.selectedConversationId}`, {
+      method: "PATCH",
+      auth: true,
+      body: { negotiation_stage: form.get("negotiation_stage") },
+    });
+    renderConversationDetail(payload.conversation);
+    setNotice(`Negotiation stage updated to ${payload.conversation.negotiation_stage}.`, "success");
+    await refresh();
+    await refreshNotifications();
+  } catch (error) {
+    setNotice(error.message, "error", error.code || "");
+  }
+}
+
+async function handleNotificationFilter(event) {
+  event.preventDefault();
+  try {
+    await refreshNotifications();
+    setNotice("Notification filter applied.", "success");
+  } catch (error) {
+    setNotice(error.message, "error", error.code || "");
   }
 }
 
@@ -923,6 +1016,8 @@ function bindEvents() {
   refs.mediaUploadForm.addEventListener("submit", handleMediaUpload);
   refs.messageForm.addEventListener("submit", handleMessageCreate);
   refs.buyerConversationForm?.addEventListener("submit", handleBuyerConversation);
+  refs.negotiationForm?.addEventListener("submit", handleNegotiationUpdate);
+  refs.notificationFilterForm?.addEventListener("submit", handleNotificationFilter);
   refs.adminOrgForm?.addEventListener("submit", handleAdminOrgCreate);
   refs.adminUserForm?.addEventListener("submit", handleAdminUserCreate);
   refs.publishPropertyButton?.addEventListener("click", handlePublishProperty);

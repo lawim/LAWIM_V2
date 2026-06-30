@@ -41,6 +41,9 @@ class ListQuery:
     property_id: int | None = None
     kind: str | None = None
     search: str | None = None
+    price_min: int | None = None
+    price_max: int | None = None
+    unread_only: bool = False
 
     @property
     def offset(self) -> int:
@@ -52,6 +55,14 @@ def parse_page(value: int | None) -> int:
         return 1
     if value < 1:
         raise ValidationError("page must be positive")
+    return value
+
+
+def parse_price(value: int | None, *, field: str) -> int | None:
+    if value is None:
+        return None
+    if value < 0:
+        raise ValidationError(f"{field} must be non-negative")
     return value
 
 
@@ -80,7 +91,13 @@ def build_property_query(
     owner_organization_id: int | None = None,
     include_deleted: bool = False,
     search: str | None = None,
+    price_min: int | None = None,
+    price_max: int | None = None,
 ) -> ListQuery:
+    parsed_price_min = parse_price(price_min, field="price_min")
+    parsed_price_max = parse_price(price_max, field="price_max")
+    if parsed_price_min is not None and parsed_price_max is not None and parsed_price_min > parsed_price_max:
+        raise ValidationError("price_min cannot exceed price_max")
     return ListQuery(
         page=parse_page(page),
         limit=parse_limit(limit),
@@ -95,6 +112,23 @@ def build_property_query(
         owner_organization_id=owner_organization_id,
         include_deleted=include_deleted,
         search=_optional_text(search),
+        price_min=parsed_price_min,
+        price_max=parsed_price_max,
+    )
+
+
+def build_notification_query(
+    *,
+    page: int | None = None,
+    limit: int | None = None,
+    kind: str | None = None,
+    unread_only: bool = False,
+) -> ListQuery:
+    return ListQuery(
+        page=parse_page(page),
+        limit=parse_limit(limit),
+        kind=_optional_text(kind),
+        unread_only=unread_only,
     )
 
 

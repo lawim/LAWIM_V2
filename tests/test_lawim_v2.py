@@ -73,6 +73,8 @@ class LawimV2ExecutableBaselineTest(TestCase):
             geocoding_api_key=None,
             cdn_base_url=None,
             metrics_enabled=True,
+            match_min_score=10.0,
+            max_json_body_bytes=1_048_576,
         )
 
     def tearDown(self) -> None:
