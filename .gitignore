@@ -12,3 +12,6 @@ data/runtime/
 data/*.sqlite3
 data/*.db
 *.log
+
+# Local developer platform virtualenv
+.venv-platform/
