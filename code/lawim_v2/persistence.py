@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 6
+APPLICATION_SCHEMA_VERSION = 7
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -134,6 +134,22 @@ APPLICATION_SEED = SeedSpec(
         "Includes one demo buyer project with guided journey steps.",
     ),
 )
+
+
+def _intelligent_table_specs() -> tuple[TableSpec, ...]:
+    from .intelligent.schema_v7_ddl import V7_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x intelligent core entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="cascade"),) if name not in {"user_contexts", "trust_scores"} else (),
+        )
+        for name in V7_TABLE_NAMES
+    )
+
 
 APPLICATION_SCHEMA = SchemaManifest(
     name="lawim_v2_runtime_schema",
@@ -326,6 +342,8 @@ APPLICATION_SCHEMA = SchemaManifest(
                 "priority",
                 "progress_percent",
                 "metadata_json",
+                "primary_goal_key",
+                "intelligence_json",
                 "archived_at",
                 "created_at",
                 "updated_at",
@@ -401,7 +419,8 @@ APPLICATION_SCHEMA = SchemaManifest(
             ),
             indexes=("idx_project_step_history_project",),
         ),
-    ),
+    )
+    + _intelligent_table_specs(),
 )
 
 

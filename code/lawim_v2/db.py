@@ -36,6 +36,7 @@ from .security import create_session_token, hash_password, verify_password
 from .schema_ddl import SQLITE_INIT_SCRIPT
 from .schema_migrations import apply_sqlite_legacy_migrations
 from .project_repository import ProjectRepositoryMixin
+from .intelligent.repository import IntelligentRepositoryMixin
 
 
 SCHEMA = SQLITE_INIT_SCRIPT
@@ -73,7 +74,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(ProjectRepositoryMixin):
+class LawimRepository(IntelligentRepositoryMixin, ProjectRepositoryMixin):
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)

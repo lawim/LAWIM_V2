@@ -21,6 +21,8 @@ class RuntimeMetrics:
     matches_total: int = 0
     conversations_total: int = 0
     notifications_total: int = 0
+    projects_total: int = 0
+    intelligent_workspace_total: int = 0
     lock: threading.Lock = field(default_factory=threading.Lock)
     _latency_samples: list[float] = field(default_factory=list)
     _route_counts: dict[str, int] = field(default_factory=dict)
@@ -36,6 +38,10 @@ class RuntimeMetrics:
                 self.conversations_total += 1
             elif name == "notifications":
                 self.notifications_total += 1
+            elif name == "projects":
+                self.projects_total += 1
+            elif name == "intelligent_workspace":
+                self.intelligent_workspace_total += 1
 
     def record_request(self, *, route: str, duration_ms: float, failed: bool = False) -> None:
         with self.lock:
@@ -59,6 +65,8 @@ class RuntimeMetrics:
                 "matches_total": self.matches_total,
                 "conversations_total": self.conversations_total,
                 "notifications_total": self.notifications_total,
+                "projects_total": self.projects_total,
+                "intelligent_workspace_total": self.intelligent_workspace_total,
                 "latency_ms": {
                     "p50": _percentile(samples, 0.50),
                     "p95": _percentile(samples, 0.95),

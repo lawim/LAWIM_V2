@@ -323,10 +323,11 @@ async function selectProject(projectId) {
   }
   state.selectedProjectId = projectId;
   try {
-    const payload = await api(`/api/v2/projects/${projectId}`, { auth: true });
-    const project = payload.project;
-    const progress = payload.progress || {};
-    const stepsHtml = (payload.steps || [])
+    const payload = await api(`/api/v2/projects/${projectId}/workspace`, { auth: true });
+    const workspace = payload.workspace || payload;
+    const project = workspace.project;
+    const progress = workspace.progress || {};
+    const stepsHtml = (workspace.steps || [])
       .map(
         (step) => `
           <article class="message">
@@ -339,8 +340,34 @@ async function selectProject(projectId) {
         `,
       )
       .join("");
-    const actionsHtml = (payload.next_actions || [])
-      .map((action) => `<li>${escapeHtml(action.next_action || action.title)}</li>`)
+    const goalsHtml = (workspace.goals || [])
+      .slice(0, 5)
+      .map((goal) => `<li>${escapeHtml(goal.title || goal.goal_key)} · ${escapeHtml(goal.status || "active")}</li>`)
+      .join("");
+    const timeline = workspace.timeline || {};
+    const timelineHtml = (timeline.past_events || timeline.history || [])
+      .slice(0, 4)
+      .map((entry) => `<li>${escapeHtml(entry.title || entry.to_status || entry.kind || "Event")}</li>`)
+      .join("");
+    const tasksHtml = (workspace.tasks || [])
+      .slice(0, 5)
+      .map((task) => `<li>${escapeHtml(task.title)} · ${escapeHtml(task.status || "pending")}</li>`)
+      .join("");
+    const lifeEventsHtml = (workspace.life_events || [])
+      .slice(0, 4)
+      .map((event) => `<li>${escapeHtml(event.title || event.event_type)}</li>`)
+      .join("");
+    const knowledgeHtml = (workspace.knowledge || [])
+      .slice(0, 4)
+      .map((fact) => `<li>${escapeHtml(fact.title)} · ${escapeHtml(fact.category || "")}</li>`)
+      .join("");
+    const actionsListHtml = (workspace.actions || [])
+      .slice(0, 4)
+      .map((action) => `<li>${escapeHtml(action.title)} · ${escapeHtml(action.status || "pending")}</li>`)
+      .join("");
+    const recommendationsHtml = (workspace.recommendations || workspace.next_actions || [])
+      .slice(0, 3)
+      .map((action) => `<li>${escapeHtml(action.title || action.next_action || "Action")}</li>`)
       .join("");
     refs.projectDetail.innerHTML = `
       <div class="detail-summary">
@@ -348,11 +375,44 @@ async function selectProject(projectId) {
           <p class="eyebrow">${escapeHtml(project.project_type)} project</p>
           <h3>${escapeHtml(project.title)}</h3>
           <p>${escapeHtml(project.objective)}</p>
-          <p class="muted">Progress ${progress.progress_percent ?? 0}% · ${progress.steps_completed ?? 0}/${progress.steps_total ?? 0} steps</p>
+          <p class="muted">Progress ${progress.progress_percent ?? 0}% · ${progress.steps_completed ?? 0}/${progress.steps_total ?? 0} steps · Journey ${escapeHtml(workspace.journey?.status || workspace.journey_state?.status || "active")}</p>
         </div>
       </div>
-      <h4>Next actions</h4>
-      <ul>${actionsHtml || "<li class='muted'>No pending actions</li>"}</ul>
+      <div class="detail-grid">
+        <section>
+          <h4>Goals</h4>
+          <ul>${goalsHtml || "<li class='muted'>No goals</li>"}</ul>
+        </section>
+        <section>
+          <h4>Recommendations</h4>
+          <ul>${recommendationsHtml || "<li class='muted'>No recommendations</li>"}</ul>
+        </section>
+        <section>
+          <h4>Intelligence</h4>
+          <p class="muted">Blockers: ${workspace.intelligence?.blockers?.open_high_risks ?? 0} high risks · Trust ${workspace.trust_score?.score ?? "n/a"}</p>
+          <p class="muted">Priorities: ${escapeHtml((workspace.intelligence?.priorities || []).slice(0, 2).join(" · ") || "—")}</p>
+        </section>
+        <section>
+          <h4>Timeline</h4>
+          <ul>${timelineHtml || "<li class='muted'>No timeline entries</li>"}</ul>
+        </section>
+        <section>
+          <h4>Actions</h4>
+          <ul>${actionsListHtml || "<li class='muted'>No actions</li>"}</ul>
+        </section>
+        <section>
+          <h4>Tasks</h4>
+          <ul>${tasksHtml || "<li class='muted'>No tasks</li>"}</ul>
+        </section>
+        <section>
+          <h4>Life events</h4>
+          <ul>${lifeEventsHtml || "<li class='muted'>No life events</li>"}</ul>
+        </section>
+        <section>
+          <h4>Knowledge</h4>
+          <ul>${knowledgeHtml || "<li class='muted'>No knowledge facts</li>"}</ul>
+        </section>
+      </div>
       <h4>Journey steps</h4>
       <div class="message-stream">${stepsHtml}</div>
     `;

@@ -10,7 +10,7 @@ from tests.lawim_harness import LawimTestHarness
 
 class Program002ProjectTests(LawimTestHarness):
     def test_schema_version_is_v6(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 6)
+        self.assertEqual(self.repository.schema_version(), 7)
 
     def test_legacy_migration_adds_project_tables(self) -> None:
         import sqlite3
@@ -22,8 +22,38 @@ class Program002ProjectTests(LawimTestHarness):
         db_path = Path(tempfile.mkdtemp()) / "legacy.sqlite3"
         conn = sqlite3.connect(db_path)
         conn.executescript(SQLITE_INIT_SCRIPT)
-        for table in ("project_step_history", "project_checklist_items", "project_steps", "projects"):
+        conn.execute("PRAGMA foreign_keys = OFF")
+        for table in (
+            "trust_scores",
+            "service_suggestions",
+            "partner_suggestions",
+            "progress_snapshots",
+            "timeline_entries",
+            "project_resources",
+            "project_milestones",
+            "project_tasks",
+            "project_actions",
+            "project_recommendations",
+            "project_decisions",
+            "project_opportunities",
+            "project_risks",
+            "project_life_events",
+            "project_funding",
+            "project_preferences",
+            "project_constraints",
+            "project_needs",
+            "project_goals",
+            "project_contexts",
+            "user_contexts",
+            "knowledge_facts",
+            "journeys",
+            "project_step_history",
+            "project_checklist_items",
+            "project_steps",
+            "projects",
+        ):
             conn.execute(f"DROP TABLE IF EXISTS {table}")
+        conn.execute("PRAGMA foreign_keys = ON")
         conn.execute("INSERT OR REPLACE INTO schema_meta (key, value) VALUES ('schema_version', '5')")
         apply_sqlite_legacy_migrations(conn)
         tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}

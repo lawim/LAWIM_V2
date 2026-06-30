@@ -1,4 +1,4 @@
-"""Unified DDL for SQLite and PostgreSQL runtimes (persistence manifest v6)."""
+"""Unified DDL for SQLite and PostgreSQL runtimes (persistence manifest v7)."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import hashlib
 import re
 
 from .persistence import APPLICATION_SCHEMA_VERSION
+from .intelligent.schema_v7_ddl import POSTGRESQL_V7_STATEMENTS, SQLITE_V7_TABLES_SCRIPT
 
 POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     """
@@ -176,6 +177,8 @@ POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
         priority TEXT NOT NULL DEFAULT 'normal',
         progress_percent INTEGER NOT NULL DEFAULT 0,
         metadata_json TEXT NOT NULL DEFAULT '{}',
+        primary_goal_key TEXT,
+        intelligence_json TEXT NOT NULL DEFAULT '{}',
         archived_at TEXT,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL
@@ -400,6 +403,8 @@ CREATE TABLE IF NOT EXISTS projects (
     priority TEXT NOT NULL DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high')),
     progress_percent INTEGER NOT NULL DEFAULT 0 CHECK (progress_percent >= 0 AND progress_percent <= 100),
     metadata_json TEXT NOT NULL DEFAULT '{}',
+    primary_goal_key TEXT,
+    intelligence_json TEXT NOT NULL DEFAULT '{}',
     archived_at TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
@@ -455,7 +460,11 @@ CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at, id);
 CREATE INDEX IF NOT EXISTS idx_project_steps_project_position ON project_steps(project_id, position);
 CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_items(project_id, step_id, position);
 CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);
-"""
+""" + SQLITE_V7_TABLES_SCRIPT
+
+POSTGRESQL_INIT_STATEMENTS = POSTGRESQL_INIT_STATEMENTS + tuple(
+    statement for statement in POSTGRESQL_V7_STATEMENTS if "ALTER TABLE" not in statement
+)
 
 
 def manifest_table_names() -> tuple[str, ...]:

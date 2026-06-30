@@ -393,6 +393,19 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"media": self.services.get_media(media_id)})
             return
 
+        if path == "/api/v2/knowledge":
+            actor = self._require_user()
+            self._send_json(
+                {
+                    "knowledge": self.services.intelligent.search_knowledge_global(
+                        actor=actor,
+                        category=self._first(query, "category"),
+                        limit=self._query_limit(query),
+                    )
+                }
+            )
+            return
+
         if path.startswith("/api/v2/projects/"):
             self._handle_v2_project_get(path, query)
             return
@@ -580,6 +593,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                     postal_code=self._optional_text(body.get("postal_code")),
                 )
             )
+            return
+
+        if path.startswith("/api/v2/projects/"):
+            self._handle_v2_project_post(path, body, actor)
             return
 
         if path == "/api/v2/projects":
@@ -1147,6 +1164,53 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
     def _handle_v2_project_get(self, path: str, query: dict[str, list[str]]) -> None:
         actor = self._require_user()
+        intel = self.services.intelligent
+        if path.endswith("/workspace"):
+            project_id = self._extract_project_id(path, suffix="/workspace")
+            self._send_json({"workspace": intel.get_workspace(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/journey/state"):
+            project_id = self._extract_project_id(path, suffix="/journey/state")
+            self._send_json({"journey_state": intel.journey_state(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/goals"):
+            project_id = self._extract_project_id(path, suffix="/goals")
+            self._send_json({"goals": intel.list_goals(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/knowledge"):
+            project_id = self._extract_project_id(path, suffix="/knowledge")
+            self._send_json(
+                {"knowledge": intel.list_knowledge(actor=actor, project_id=project_id, category=self._first(query, "category"))}
+            )
+            return
+        if path.endswith("/recommendations"):
+            project_id = self._extract_project_id(path, suffix="/recommendations")
+            self._send_json({"recommendations": intel.list_recommendations(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/decisions"):
+            project_id = self._extract_project_id(path, suffix="/decisions")
+            self._send_json({"decisions": intel.list_decisions(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/actions"):
+            project_id = self._extract_project_id(path, suffix="/actions")
+            self._send_json({"actions": intel.list_actions(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/tasks"):
+            project_id = self._extract_project_id(path, suffix="/tasks")
+            self._send_json({"tasks": intel.list_tasks(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/life-events"):
+            project_id = self._extract_project_id(path, suffix="/life-events")
+            self._send_json({"life_events": intel.list_life_events(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/timeline"):
+            project_id = self._extract_project_id(path, suffix="/timeline")
+            self._send_json({"timeline": intel.get_timeline(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/resources"):
+            project_id = self._extract_project_id(path, suffix="/resources")
+            self._send_json({"resources": intel.list_resources(actor=actor, project_id=project_id)})
+            return
         if path.endswith("/steps"):
             project_id = self._extract_project_id(path, suffix="/steps")
             self._send_json({"steps": self.services.projects.list_project_steps(actor=actor, project_id=project_id)})
@@ -1220,6 +1284,84 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
         )
         self._send_json({"project": project})
+
+    def _handle_v2_project_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        intel = self.services.intelligent
+        if path.endswith("/intelligence/refresh"):
+            project_id = self._extract_project_id(path, suffix="/intelligence/refresh")
+            self._send_json({"intelligence": intel.refresh_intelligence(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/journey/replan"):
+            project_id = self._extract_project_id(path, suffix="/journey/replan")
+            self._send_json({"replan": intel.replan_journey(actor=actor, project_id=project_id)})
+            return
+        if path.endswith("/goals"):
+            project_id = self._extract_project_id(path, suffix="/goals")
+            goal = intel.create_goal(
+                actor=actor,
+                project_id=project_id,
+                goal_key=self._require_text(body, "goal_key"),
+                title=self._require_text(body, "title"),
+                priority=self._optional_text(body.get("priority")) or "normal",
+            )
+            self._send_json({"goal": goal}, status=HTTPStatus.CREATED)
+            return
+        if path.endswith("/knowledge"):
+            project_id = self._extract_project_id(path, suffix="/knowledge")
+            fact = intel.create_knowledge(
+                actor=actor,
+                project_id=project_id,
+                category=self._require_text(body, "category"),
+                fact_key=self._require_text(body, "fact_key"),
+                title=self._require_text(body, "title"),
+                content=self._require_text(body, "content"),
+            )
+            self._send_json({"knowledge": fact}, status=HTTPStatus.CREATED)
+            return
+        if path.endswith("/actions"):
+            project_id = self._extract_project_id(path, suffix="/actions")
+            action = intel.create_action(
+                actor=actor,
+                project_id=project_id,
+                action_key=self._require_text(body, "action_key"),
+                title=self._require_text(body, "title"),
+                priority=self._optional_text(body.get("priority")) or "normal",
+                due_at=self._optional_text(body.get("due_at")),
+            )
+            self._send_json({"action": action}, status=HTTPStatus.CREATED)
+            return
+        if path.endswith("/tasks"):
+            project_id = self._extract_project_id(path, suffix="/tasks")
+            task = intel.create_task(
+                actor=actor,
+                project_id=project_id,
+                title=self._require_text(body, "title"),
+                action_id=self._optional_int(body.get("action_id"), minimum=1),
+                due_at=self._optional_text(body.get("due_at")),
+            )
+            self._send_json({"task": task}, status=HTTPStatus.CREATED)
+            return
+        if path.endswith("/life-events"):
+            project_id = self._extract_project_id(path, suffix="/life-events")
+            event = intel.create_life_event(
+                actor=actor,
+                project_id=project_id,
+                event_type=self._require_text(body, "event_type"),
+                title=self._require_text(body, "title"),
+                occurred_at=self._optional_text(body.get("occurred_at")),
+            )
+            self._send_json({"life_event": event}, status=HTTPStatus.CREATED)
+            return
+        if path.endswith("/resources"):
+            project_id = self._extract_project_id(path, suffix="/resources")
+            resource = intel.link_property(
+                actor=actor,
+                project_id=project_id,
+                property_id=self._require_int(body, "property_id", minimum=1),
+            )
+            self._send_json({"resource": resource}, status=HTTPStatus.CREATED)
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
 
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:

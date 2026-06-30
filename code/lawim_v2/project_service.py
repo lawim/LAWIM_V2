@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from http import HTTPStatus
 
+from .observability import METRICS
 from .dto import paginated_payload, project_dto, project_progress_dto, project_step_dto
 from .errors import ValidationError
 from .project_domain import PROJECT_TYPES, PROJECT_STATUSES, PROJECT_PRIORITIES, TIMELINE_HORIZONS
@@ -98,6 +99,7 @@ class ProjectService:
             priority=priority,
             metadata=metadata,
         )
+        METRICS.increment("projects")
         return project_dto(row)
 
     def list_projects(

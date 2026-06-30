@@ -22,6 +22,7 @@ from .matching import MatchCriteria, MatchWeights
 from .media_domain import LocalMediaStorage, decode_upload_content, validate_upload_bytes
 from .observability import METRICS
 from .project_service import ProjectPermissionDenied, ProjectService
+from .intelligent.service import IntelligentCoreService
 from .security import validate_email, validate_password
 
 
@@ -110,6 +111,7 @@ class LawimServices:
             api_key=config.geocoding_api_key,
         )
         self.projects = ProjectService(repository, self.policy)
+        self.intelligent = IntelligentCoreService(repository, self.projects)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()
