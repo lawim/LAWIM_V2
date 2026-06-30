@@ -150,7 +150,7 @@ class LawimV2ExecutableBaselineTest(TestCase):
         self.assertEqual(property_lookup.body_json()["error"]["code"], "not_found")
 
         conversation_messages = self.invoke("/api/conversations/999999/messages")
-        self.assertEqual(conversation_messages.status, HTTPStatus.NOT_FOUND)
+        self.assertEqual(conversation_messages.status, HTTPStatus.UNAUTHORIZED)
 
         unauthorized = self.invoke("/api/me")
         self.assertEqual(unauthorized.status, HTTPStatus.UNAUTHORIZED)

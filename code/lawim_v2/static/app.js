@@ -459,7 +459,7 @@ function renderBootstrap(payload) {
 
 async function selectConversation(conversationId) {
   state.selectedConversationId = conversationId;
-  const payload = await api(`/api/conversations/${conversationId}`, { auth: Boolean(state.token) });
+  const payload = await api(`/api/conversations/${conversationId}`, { auth: true });
   renderConversationDetail(payload.conversation);
   renderConversations(state.bootstrap?.conversations || []);
 }

@@ -742,6 +742,8 @@ class LawimServices:
         status: str | None = None,
         limit: int = 50,
     ) -> dict[str, object]:
+        if actor is None:
+            return {"conversations": []}
         resolved_user_id = user_id
         resolved_org_id = organization_id
         if actor is not None and not self.policy.is_admin(actor):

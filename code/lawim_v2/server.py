@@ -250,7 +250,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/conversations":
-            actor = self._require_user(optional=True)
+            actor = self._require_user()
             self._send_json(
                 self.services.list_conversations(
                     actor=actor,
@@ -275,24 +275,16 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path.startswith("/api/conversations/") and path.endswith("/messages"):
-            actor = self._require_user(optional=True)
+            actor = self._require_user()
             conversation_id = self._extract_conversation_id(path, suffix="/messages")
-            if actor is not None:
-                payload = self.services.get_conversation(actor=actor, conversation_id=conversation_id)
-                self._send_json({"messages": payload.get("messages", [])})
-                return
-            self._send_json({"messages": self.repository.list_messages(conversation_id)})
+            payload = self.services.get_conversation(actor=actor, conversation_id=conversation_id)
+            self._send_json({"messages": payload.get("messages", [])})
             return
 
         if path.startswith("/api/conversations/"):
-            actor = self._require_user(optional=True)
+            actor = self._require_user()
             conversation_id = self._extract_conversation_id(path)
-            if actor is not None:
-                self._send_json({"conversation": self.services.get_conversation(actor=actor, conversation_id=conversation_id)})
-                return
-            conversation = self.repository.get_conversation(conversation_id)
-            conversation["messages"] = self.repository.list_messages(conversation_id)
-            self._send_json({"conversation": conversation})
+            self._send_json({"conversation": self.services.get_conversation(actor=actor, conversation_id=conversation_id)})
             return
 
         if path == "/api/matches":
@@ -709,6 +701,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         )
         self._send_json({"media": media_row}, status=HTTPStatus.CREATED)
 
+    def _send_security_headers(self) -> None:
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+
     def _send_json(
         self,
         payload: dict[str, Any],
@@ -728,9 +725,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if extra_headers:
             for header, value in extra_headers.items():
                 self.send_header(header, value)
-        self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("X-Frame-Options", "DENY")
-        self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+        self._send_security_headers()
         self.end_headers()
         self.wfile.write(body)
 
@@ -746,9 +741,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             "Content-Security-Policy",
             "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'self'; form-action 'self'",
         )
-        self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("X-Frame-Options", "DENY")
-        self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+        self._send_security_headers()
         self.end_headers()
         self.wfile.write(body)
 
@@ -772,6 +765,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Access-Control-Allow-Origin", "*")
+        self._send_security_headers()
         self.end_headers()
         self.wfile.write(body)
 
