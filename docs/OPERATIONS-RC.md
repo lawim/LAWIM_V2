@@ -7,6 +7,15 @@ Guide minimal pour lancer et valider LAWIM_V2 en local.
 - Python 3.12+
 - `docker compose` (optionnel, pour conteneurs)
 
+## Installation (machine vierge)
+
+```bash
+./scripts/install.sh
+./scripts/validate-install.sh
+```
+
+Voir aussi [README.md](../README.md) à la racine du dépôt.
+
 ## Lancer localement (SQLite)
 
 ```bash

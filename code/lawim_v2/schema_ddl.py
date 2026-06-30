@@ -1,15 +1,25 @@
--- LAWIM_V2 schema v5 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
+"""PostgreSQL DDL aligned with persistence.APPLICATION_SCHEMA v5."""
 
-CREATE TABLE IF NOT EXISTS organizations (
+from __future__ import annotations
+
+import hashlib
+import re
+
+from .persistence import APPLICATION_SCHEMA_VERSION
+
+POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
+    """
+    CREATE TABLE IF NOT EXISTS organizations (
         id SERIAL PRIMARY KEY,
         name TEXT NOT NULL,
         slug TEXT NOT NULL UNIQUE,
         kind TEXT NOT NULL DEFAULT 'agency',
         city TEXT,
         created_at TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS users (
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email TEXT NOT NULL UNIQUE,
         full_name TEXT NOT NULL,
@@ -18,16 +28,18 @@ CREATE TABLE IF NOT EXISTS users (
         password_salt TEXT NOT NULL,
         password_hash TEXT NOT NULL,
         created_at TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS sessions (
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS sessions (
         token TEXT PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         created_at TEXT NOT NULL,
         expires_at TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS properties (
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS properties (
         id SERIAL PRIMARY KEY,
         listing_code TEXT UNIQUE,
         title TEXT NOT NULL,
@@ -55,9 +67,10 @@ CREATE TABLE IF NOT EXISTS properties (
         published_at TEXT,
         deleted_at TEXT,
         created_at TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS media (
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS media (
         id SERIAL PRIMARY KEY,
         property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
         kind TEXT NOT NULL,
@@ -72,9 +85,10 @@ CREATE TABLE IF NOT EXISTS media (
         version INTEGER NOT NULL DEFAULT 1,
         deleted_at TEXT,
         created_at TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS conversations (
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS conversations (
         id SERIAL PRIMARY KEY,
         property_id INTEGER REFERENCES properties(id),
         user_id INTEGER NOT NULL REFERENCES users(id),
@@ -84,24 +98,27 @@ CREATE TABLE IF NOT EXISTS conversations (
         negotiation_stage TEXT NOT NULL DEFAULT 'inquiry',
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS messages (
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS messages (
         id SERIAL PRIMARY KEY,
         conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
         sender_user_id INTEGER NOT NULL REFERENCES users(id),
         body TEXT NOT NULL,
         created_at TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS events (
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS events (
         id SERIAL PRIMARY KEY,
         kind TEXT NOT NULL,
         payload TEXT NOT NULL,
         created_at TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS notifications (
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS notifications (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         kind TEXT NOT NULL,
@@ -110,25 +127,57 @@ CREATE TABLE IF NOT EXISTS notifications (
         payload_json TEXT NOT NULL DEFAULT '{}',
         read_at TEXT,
         created_at TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS schema_meta (
+    )
+    """,
+    """
+    CREATE TABLE IF NOT EXISTS schema_meta (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
-    );
+    )
+    """,
+    "CREATE INDEX IF NOT EXISTS idx_properties_status_city ON properties(status, city)",
+    "CREATE INDEX IF NOT EXISTS idx_properties_search_key ON properties(search_key)",
+    "CREATE INDEX IF NOT EXISTS idx_properties_deleted_at ON properties(deleted_at)",
+    "CREATE INDEX IF NOT EXISTS idx_media_property_position ON media(property_id, position)",
+    "CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token)",
+    "CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at)",
+    "CREATE INDEX IF NOT EXISTS idx_conversations_user_updated ON conversations(user_id, updated_at)",
+    "CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at)",
+)
 
-CREATE INDEX IF NOT EXISTS idx_properties_status_city ON properties(status, city);
 
-CREATE INDEX IF NOT EXISTS idx_properties_search_key ON properties(search_key);
+def normalize_sql_statement(statement: str) -> str:
+    return " ".join(statement.strip().rstrip(";").split())
 
-CREATE INDEX IF NOT EXISTS idx_properties_deleted_at ON properties(deleted_at);
 
-CREATE INDEX IF NOT EXISTS idx_media_property_position ON media(property_id, position);
+def normalized_ddl_fingerprint(statements: tuple[str, ...] | None = None) -> str:
+    payload = statements if statements is not None else POSTGRESQL_INIT_STATEMENTS
+    canonical = "|".join(normalize_sql_statement(stmt) for stmt in payload)
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
-CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
 
-CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at);
+def extract_sql_statements(text: str) -> tuple[str, ...]:
+    without_comments = re.sub(r"--[^\n]*", "", text)
+    parts = [part.strip() for part in without_comments.split(";") if part.strip()]
+    return tuple(parts)
 
-CREATE INDEX IF NOT EXISTS idx_conversations_user_updated ON conversations(user_id, updated_at);
 
-CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at);
+def postgresql_migration_sql(*, header: str | None = None) -> str:
+    lines: list[str] = []
+    if header is not None:
+        lines.append(header.rstrip())
+        lines.append("")
+    for statement in POSTGRESQL_INIT_STATEMENTS:
+        normalized = statement.strip()
+        if not normalized.endswith(";"):
+            normalized = f"{normalized};"
+        lines.append(normalized)
+        lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def migration_header() -> str:
+    return (
+        f"-- LAWIM_V2 schema v{APPLICATION_SCHEMA_VERSION} initial migration "
+        f"(generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)"
+    )

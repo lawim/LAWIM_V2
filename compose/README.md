@@ -32,7 +32,7 @@ docker compose -f compose/docker-compose.base.yml -f compose/docker-compose.dev.
 | `docker-compose.dev.yml` | Montage code local, log debug |
 | `docker-compose.postgres.yml` | PostgreSQL optionnel (non obligatoire) |
 
-Miroir canonique : `docker/compose/` (mêmes contrats, chemins relatifs adaptés).
+Miroir de compatibilité : `docker/compose/` contient des symlinks vers `compose/` (source de vérité unique).
 
 ## Secrets
 

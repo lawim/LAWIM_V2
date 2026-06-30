@@ -1,18 +1,1 @@
-version: "3.9"
-
-x-lawim-profile-contract:
-  profile: production
-  purpose: locked-down runtime
-  environment_contract:
-    APP_ENV: production
-    STACK_PROFILE: production
-    LOG_LEVEL: info
-    PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:3000}
-    SECRET_PROVIDER: ${SECRET_PROVIDER:-external}
-
-services:
-  app:
-    environment:
-      APP_ENV: production
-      STACK_PROFILE: production
-      LOG_LEVEL: info
+../../compose/docker-compose.prod.yml

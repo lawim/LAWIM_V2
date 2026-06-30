@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from .persistence import build_postgresql_profile, build_persistence_profile
+from .repository_contract import LawimRepositoryContract
 
 if TYPE_CHECKING:
     from .db import LawimRepository
@@ -19,7 +20,7 @@ class SQLitePersistenceAdapter:
     def __init__(self, db_path: Path) -> None:
         self.db_path = Path(db_path)
 
-    def create_repository(self, *, seed: object | None = None) -> "LawimRepository":
+    def create_repository(self, *, seed: object | None = None) -> LawimRepositoryContract:
         from .db import DemoSeed, LawimRepository
 
         demo_seed = seed if isinstance(seed, DemoSeed) else None
@@ -46,7 +47,7 @@ class PostgreSQLPersistenceAdapter:
         profile["status"] = "active"
         return profile
 
-    def create_repository(self, *, seed: object | None = None) -> "LawimRepository":
+    def create_repository(self, *, seed: object | None = None) -> LawimRepositoryContract:
         from .db import DemoSeed, LawimRepository
         from .postgresql_repository import PostgreSQLLawimRepository, check_postgres_connection, postgres_available
 
