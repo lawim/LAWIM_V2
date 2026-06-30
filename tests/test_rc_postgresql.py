@@ -49,7 +49,7 @@ class PostgreSQLReleaseCandidateTest(unittest.TestCase):
         repository.initialize(seed_demo_data=True)
         summary = repository.summary()
         self.assertGreaterEqual(summary["organizations"], 3)
-        self.assertGreaterEqual(summary["properties"], 1)
+        self.assertGreaterEqual(summary["published_properties"], 1)
 
     def test_postgresql_authenticates_seeded_admin(self) -> None:
         repository = self._open_repository()

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import sqlite3
 import threading
 from contextlib import contextmanager
 from pathlib import Path
@@ -17,9 +18,26 @@ def _adapt_sql(sql: str) -> str:
     if "INSERT INTO schema_meta" in adapted and "ON CONFLICT" not in adapted:
         adapted = adapted.replace(
             "VALUES (?, ?)",
-            "VALUES (%s, %s) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
+            "VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
         )
-    return adapted.replace("?", "%s")
+
+    counter = 0
+
+    def replace_placeholder(_match: re.Match[str]) -> str:
+        nonlocal counter
+        counter += 1
+        return f"${counter}"
+
+    return re.sub(r"\?", replace_placeholder, adapted)
+
+
+def _map_pg_exception(exc: Exception) -> Exception:
+    if exc.__class__.__name__ != "DatabaseError":
+        return exc
+    payload = exc.args[0] if exc.args else None
+    if isinstance(payload, dict) and payload.get("C") == "23505":
+        return sqlite3.IntegrityError("duplicate key")
+    return exc
 
 
 class _PgCursor:
@@ -49,22 +67,30 @@ class _PgConnection:
 
     def execute(self, sql: str, params: tuple[object, ...] = ()) -> _PgCursor:
         adapted = _adapt_sql(sql)
-        add_returning = adapted.strip().upper().startswith("INSERT INTO") and "RETURNING" not in adapted.upper()
+        add_returning = (
+            adapted.strip().upper().startswith("INSERT INTO")
+            and "RETURNING" not in adapted.upper()
+            and "schema_meta" not in adapted.lower()
+        )
         if add_returning:
             adapted = adapted.rstrip().rstrip(";") + " RETURNING id"
+        run_kwargs = {f"__p{i}": value for i, value in enumerate(params)}
         try:
-            result = self._conn.run(adapted, params)
-        except Exception:
+            rows = list(self._conn.run(adapted, **run_kwargs) or [])
+        except Exception as exc:
             if add_returning:
                 adapted = _adapt_sql(sql)
-                result = self._conn.run(adapted, params)
+                try:
+                    rows = list(self._conn.run(adapted, **run_kwargs) or [])
+                except Exception as retry_exc:
+                    raise _map_pg_exception(retry_exc) from retry_exc
             else:
-                raise
-        columns = [col["name"] if isinstance(col, dict) else str(col) for col in getattr(result, "columns", [])]
-        rows = list(getattr(result, "rows", []) or [])
+                raise _map_pg_exception(exc) from exc
+        columns_meta = self._conn.columns or []
+        columns = [col["name"] if isinstance(col, dict) else str(col) for col in columns_meta]
         last_id = None
-        if rows and columns and columns[0] == "id":
-            last_id = rows[0][0]
+        if rows and columns and "id" in columns:
+            last_id = rows[0][columns.index("id")]
         return _PgCursor(columns, rows, last_id)
 
     def executescript(self, script: str) -> None:
