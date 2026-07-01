@@ -37,6 +37,7 @@ from .schema_ddl import SQLITE_INIT_SCRIPT
 from .schema_migrations import apply_sqlite_legacy_migrations
 from .project_repository import ProjectRepositoryMixin
 from .intelligent.repository import IntelligentRepositoryMixin
+from .ecosystem.repository import EcosystemRepositoryMixin
 
 
 SCHEMA = SQLITE_INIT_SCRIPT
@@ -74,7 +75,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(IntelligentRepositoryMixin, ProjectRepositoryMixin):
+class LawimRepository(EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -115,6 +116,12 @@ class LawimRepository(IntelligentRepositoryMixin, ProjectRepositoryMixin):
                 conn.execute("INSERT OR REPLACE INTO schema_meta (key, value) VALUES (?, ?)", (key, value))
         if seed_demo_data:
             self.seed_demo_data()
+        if hasattr(self, "seed_ecosystem_catalog"):
+            self.seed_ecosystem_catalog()
+            self.seed_demo_partners()
+            project = self.one("SELECT id FROM projects ORDER BY id ASC LIMIT 1")
+            if project and hasattr(self, "bootstrap_project_ecosystem"):
+                self.bootstrap_project_ecosystem(int(project["id"]))
 
     def schema_version(self) -> int:
         row = self.one("SELECT value FROM schema_meta WHERE key = 'schema_version'")

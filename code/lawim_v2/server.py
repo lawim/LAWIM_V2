@@ -406,6 +406,22 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             )
             return
 
+        if (
+            path.startswith("/api/v2/partners")
+            or path.startswith("/api/v2/services")
+            or path.startswith("/api/v2/workflows")
+            or path.startswith("/api/v2/matching")
+            or path.startswith("/api/v2/reputation")
+            or path.startswith("/api/v2/notifications/ecosystem")
+            or path.startswith("/api/v2/resources")
+            or (
+                path.startswith("/api/v2/projects/")
+                and ("/orchestration" in path or "/matching" in path or "/workflows" in path)
+            )
+        ):
+            self._handle_v2_ecosystem_get(path, query)
+            return
+
         if path.startswith("/api/v2/projects/"):
             self._handle_v2_project_get(path, query)
             return
@@ -593,6 +609,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                     postal_code=self._optional_text(body.get("postal_code")),
                 )
             )
+            return
+
+        if path.startswith("/api/v2/partners") or path == "/api/v2/matching" or (path.startswith("/api/v2/projects/") and path.endswith("/matching/run")):
+            self._handle_v2_ecosystem_post(path, body, actor)
             return
 
         if path.startswith("/api/v2/projects/"):
@@ -1362,6 +1382,107 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"resource": resource}, status=HTTPStatus.CREATED)
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
+
+    def _handle_v2_ecosystem_get(self, path: str, query: dict[str, list[str]]) -> None:
+        actor = self._require_user()
+        eco = self.services.ecosystem
+        if path == "/api/v2/partners":
+            self._send_json(
+                eco.list_partners(
+                    actor=actor,
+                    partner_type=self._first(query, "partner_type"),
+                    city=self._first(query, "city"),
+                    page=self._query_page(query),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path.startswith("/api/v2/partners/"):
+            partner_id = self._extract_path_id(path, marker="/api/v2/partners/", resource="Partner")
+            self._send_json(eco.get_partner(actor=actor, partner_id=partner_id))
+            return
+        if path == "/api/v2/services":
+            self._send_json(
+                eco.list_services(
+                    actor=actor,
+                    category=self._first(query, "category"),
+                    page=self._query_page(query),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path.startswith("/api/v2/services/"):
+            service_id = self._extract_path_id(path, marker="/api/v2/services/", resource="Service")
+            self._send_json(eco.get_service(actor=actor, service_id=service_id))
+            return
+        if path == "/api/v2/workflows":
+            self._send_json(eco.list_workflows(actor=actor))
+            return
+        if path == "/api/v2/matching":
+            project_id = self._first_int(query, "project_id", minimum=1)
+            if project_id is None:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "validation_error", "project_id is required")
+            self._send_json(eco.list_project_matching(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/reputation":
+            subject_type = self._require_text_query(query, "subject_type")
+            subject_id = self._first_int(query, "subject_id", minimum=1)
+            if subject_id is None:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "validation_error", "subject_id is required")
+            self._send_json(eco.get_reputation(actor=actor, subject_type=subject_type, subject_id=subject_id))
+            return
+        if path == "/api/v2/notifications/ecosystem":
+            self._send_json(eco.list_ecosystem_notifications(actor=actor, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/resources":
+            project_id = self._first_int(query, "project_id", minimum=1)
+            if project_id is None:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "validation_error", "project_id is required")
+            self._send_json(eco.list_project_resources_ecosystem(actor=actor, project_id=project_id))
+            return
+        if path.endswith("/matching") and path.startswith("/api/v2/projects/"):
+            project_id = self._extract_project_id(path, suffix="/matching")
+            self._send_json(eco.list_project_matching(actor=actor, project_id=project_id))
+            return
+        if path.endswith("/orchestration") and path.startswith("/api/v2/projects/"):
+            project_id = self._extract_project_id(path, suffix="/orchestration")
+            self._send_json(eco.get_orchestration(actor=actor, project_id=project_id))
+            return
+        if path.endswith("/workflows") and path.startswith("/api/v2/projects/"):
+            project_id = self._extract_project_id(path, suffix="/workflows")
+            self._send_json(eco.get_project_workflow(actor=actor, project_id=project_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown ecosystem route")
+
+    def _handle_v2_ecosystem_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        eco = self.services.ecosystem
+        if path == "/api/v2/partners":
+            partner = eco.create_partner(
+                actor=actor,
+                organization_id=self._require_int(body, "organization_id", minimum=1),
+                partner_type=self._require_text(body, "partner_type"),
+                display_name=self._require_text(body, "display_name"),
+                description=self._optional_text(body.get("description")),
+                city=self._optional_text(body.get("city")),
+                region=self._optional_text(body.get("region")),
+            )
+            self._send_json(partner, status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/matching":
+            project_id = self._require_int(body, "project_id", minimum=1)
+            self._send_json(eco.run_matching(actor=actor, project_id=project_id))
+            return
+        if path.endswith("/matching/run") and path.startswith("/api/v2/projects/"):
+            project_id = self._extract_project_id(path, suffix="/matching/run")
+            self._send_json(eco.run_matching(actor=actor, project_id=project_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown ecosystem route")
+
+    def _require_text_query(self, query: dict[str, list[str]], key: str) -> str:
+        value = self._first(query, key)
+        if not value:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "validation_error", f"{key} is required")
+        return value
 
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:

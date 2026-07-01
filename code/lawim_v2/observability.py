@@ -23,6 +23,13 @@ class RuntimeMetrics:
     notifications_total: int = 0
     projects_total: int = 0
     intelligent_workspace_total: int = 0
+    ecosystem_partners_total: int = 0
+    ecosystem_services_total: int = 0
+    ecosystem_matching_total: int = 0
+    ecosystem_workflows_total: int = 0
+    ecosystem_reputation_total: int = 0
+    ecosystem_notifications_total: int = 0
+    ecosystem_orchestration_total: int = 0
     lock: threading.Lock = field(default_factory=threading.Lock)
     _latency_samples: list[float] = field(default_factory=list)
     _route_counts: dict[str, int] = field(default_factory=dict)
@@ -42,6 +49,20 @@ class RuntimeMetrics:
                 self.projects_total += 1
             elif name == "intelligent_workspace":
                 self.intelligent_workspace_total += 1
+            elif name == "ecosystem_partners":
+                self.ecosystem_partners_total += 1
+            elif name == "ecosystem_services":
+                self.ecosystem_services_total += 1
+            elif name == "ecosystem_matching":
+                self.ecosystem_matching_total += 1
+            elif name == "ecosystem_workflows":
+                self.ecosystem_workflows_total += 1
+            elif name == "ecosystem_reputation":
+                self.ecosystem_reputation_total += 1
+            elif name == "ecosystem_notifications":
+                self.ecosystem_notifications_total += 1
+            elif name == "ecosystem_orchestration":
+                self.ecosystem_orchestration_total += 1
 
     def record_request(self, *, route: str, duration_ms: float, failed: bool = False) -> None:
         with self.lock:
@@ -67,6 +88,13 @@ class RuntimeMetrics:
                 "notifications_total": self.notifications_total,
                 "projects_total": self.projects_total,
                 "intelligent_workspace_total": self.intelligent_workspace_total,
+                "ecosystem_partners_total": self.ecosystem_partners_total,
+                "ecosystem_services_total": self.ecosystem_services_total,
+                "ecosystem_matching_total": self.ecosystem_matching_total,
+                "ecosystem_workflows_total": self.ecosystem_workflows_total,
+                "ecosystem_reputation_total": self.ecosystem_reputation_total,
+                "ecosystem_notifications_total": self.ecosystem_notifications_total,
+                "ecosystem_orchestration_total": self.ecosystem_orchestration_total,
                 "latency_ms": {
                     "p50": _percentile(samples, 0.50),
                     "p95": _percentile(samples, 0.95),

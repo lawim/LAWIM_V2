@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 7
+APPLICATION_SCHEMA_VERSION = 8
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -134,6 +134,35 @@ APPLICATION_SEED = SeedSpec(
         "Includes one demo buyer project with guided journey steps.",
     ),
 )
+
+
+def _ecosystem_table_specs() -> tuple[TableSpec, ...]:
+    from .ecosystem.schema_v8_ddl import V8_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x ecosystem platform entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="cascade"),)
+            if name
+            not in {
+                "partner_profiles",
+                "partner_zones",
+                "partner_skills",
+                "partner_certifications",
+                "partner_availability",
+                "partner_sla",
+                "service_catalog",
+                "service_catalog_partners",
+                "workflows",
+                "workflow_steps",
+            }
+            else (),
+        )
+        for name in V8_TABLE_NAMES
+    )
 
 
 def _intelligent_table_specs() -> tuple[TableSpec, ...]:
@@ -420,7 +449,8 @@ APPLICATION_SCHEMA = SchemaManifest(
             indexes=("idx_project_step_history_project",),
         ),
     )
-    + _intelligent_table_specs(),
+    + _intelligent_table_specs()
+    + _ecosystem_table_specs(),
 )
 
 

@@ -23,6 +23,7 @@ from .media_domain import LocalMediaStorage, decode_upload_content, validate_upl
 from .observability import METRICS
 from .project_service import ProjectPermissionDenied, ProjectService
 from .intelligent.service import IntelligentCoreService
+from .ecosystem.service import EcosystemService
 from .security import validate_email, validate_password
 
 
@@ -112,6 +113,7 @@ class LawimServices:
         )
         self.projects = ProjectService(repository, self.policy)
         self.intelligent = IntelligentCoreService(repository, self.projects)
+        self.ecosystem = EcosystemService(repository, self.projects, self.policy)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()

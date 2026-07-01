@@ -10,13 +10,14 @@ from tests.lawim_harness import LawimTestHarness
 
 class Program002ProjectTests(LawimTestHarness):
     def test_schema_version_is_v6(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 7)
+        self.assertEqual(self.repository.schema_version(), 8)
 
     def test_legacy_migration_adds_project_tables(self) -> None:
         import sqlite3
         import tempfile
         from pathlib import Path
 
+        from lawim_v2.ecosystem.schema_v8_ddl import V8_TABLE_NAMES
         from lawim_v2.schema_ddl import SQLITE_INIT_SCRIPT
 
         db_path = Path(tempfile.mkdtemp()) / "legacy.sqlite3"
@@ -24,6 +25,7 @@ class Program002ProjectTests(LawimTestHarness):
         conn.executescript(SQLITE_INIT_SCRIPT)
         conn.execute("PRAGMA foreign_keys = OFF")
         for table in (
+            *V8_TABLE_NAMES,
             "trust_scores",
             "service_suggestions",
             "partner_suggestions",

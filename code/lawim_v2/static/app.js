@@ -67,6 +67,8 @@ function cacheRefs() {
     projectForm: byId("project-form"),
     projectsList: byId("projects-list"),
     projectDetail: byId("project-detail"),
+    partnersList: byId("partners-list"),
+    servicesList: byId("services-list"),
   });
 }
 
@@ -317,14 +319,57 @@ function renderProjects(items) {
   }, state.token ? "No projects yet — create one from the sidebar." : "Sign in to view projects.");
 }
 
+async function refreshEcosystemLists() {
+  if (!state.token) {
+    renderList(refs.partnersList, [], () => document.createElement("div"), "Sign in to load partners.");
+    renderList(refs.servicesList, [], () => document.createElement("div"), "Sign in to load services.");
+    return;
+  }
+  try {
+    const [partnersPayload, servicesPayload] = await Promise.all([
+      api("/api/v2/partners", { auth: true, query: { limit: 8 } }),
+      api("/api/v2/services", { auth: true, query: { limit: 8 } }),
+    ]);
+    renderList(refs.partnersList, partnersPayload.partners || [], (partner) => {
+      const article = document.createElement("article");
+      article.className = "mini-card";
+      article.innerHTML = `
+        <strong>${escapeHtml(partner.display_name)}</strong>
+        <p class="muted">${escapeHtml(partner.partner_type)} · Trust ${partner.trust_score ?? "n/a"}</p>
+      `;
+      return article;
+    }, "No partners in directory.");
+    renderList(refs.servicesList, servicesPayload.services || [], (service) => {
+      const article = document.createElement("article");
+      article.className = "mini-card";
+      const pricing = service.pricing || {};
+      article.innerHTML = `
+        <strong>${escapeHtml(service.title)}</strong>
+        <p class="muted">${escapeHtml(service.category)} · ${money(pricing.min, pricing.currency)} - ${money(pricing.max, pricing.currency)}</p>
+      `;
+      return article;
+    }, "No services in catalog.");
+  } catch (error) {
+    renderList(refs.partnersList, [], () => document.createElement("div"), error.message);
+  }
+}
+
 async function selectProject(projectId) {
   if (!state.token || !refs.projectDetail) {
     return;
   }
   state.selectedProjectId = projectId;
   try {
-    const payload = await api(`/api/v2/projects/${projectId}/workspace`, { auth: true });
+    const [payload, orchPayload, matchPayload, wfPayload] = await Promise.all([
+      api(`/api/v2/projects/${projectId}/workspace`, { auth: true }),
+      api(`/api/v2/projects/${projectId}/orchestration`, { auth: true }),
+      api(`/api/v2/matching?project_id=${projectId}`, { auth: true }),
+      api(`/api/v2/projects/${projectId}/workflows`, { auth: true }),
+    ]);
     const workspace = payload.workspace || payload;
+    const orchestration = orchPayload.orchestration || {};
+    const matches = matchPayload.matches || [];
+    const workflow = wfPayload.workflow_instance || {};
     const project = workspace.project;
     const progress = workspace.progress || {};
     const stepsHtml = (workspace.steps || [])
@@ -369,6 +414,26 @@ async function selectProject(projectId) {
       .slice(0, 3)
       .map((action) => `<li>${escapeHtml(action.title || action.next_action || "Action")}</li>`)
       .join("");
+    const partnerMatchesHtml = matches
+      .filter((m) => m.match_type === "partner" || m.partner)
+      .slice(0, 4)
+      .map((m) => {
+        const label = m.partner?.display_name || m.partner_type || "Partner";
+        return `<li>${escapeHtml(label)} · score ${m.score} · ${escapeHtml((m.rationale?.[0]?.label) || "")}</li>`;
+      })
+      .join("");
+    const serviceMatchesHtml = matches
+      .filter((m) => m.match_type === "service" || m.service)
+      .slice(0, 4)
+      .map((m) => {
+        const label = m.service?.title || m.service_key || "Service";
+        return `<li>${escapeHtml(label)} · score ${m.score}</li>`;
+      })
+      .join("");
+    const interventionsHtml = (orchestration.planning || [])
+      .slice(0, 4)
+      .map((item) => `<li>${escapeHtml(item.title || item.type)} · ${escapeHtml(item.status || "")}</li>`)
+      .join("");
     refs.projectDetail.innerHTML = `
       <div class="detail-summary">
         <div>
@@ -379,6 +444,26 @@ async function selectProject(projectId) {
         </div>
       </div>
       <div class="detail-grid">
+        <section>
+          <h4>Ecosystem — partner matches</h4>
+          <ul>${partnerMatchesHtml || "<li class='muted'>No partner matches</li>"}</ul>
+        </section>
+        <section>
+          <h4>Ecosystem — service matches</h4>
+          <ul>${serviceMatchesHtml || "<li class='muted'>No service matches</li>"}</ul>
+        </section>
+        <section>
+          <h4>Workflow</h4>
+          <p class="muted">${escapeHtml(workflow.status || "—")} · ${workflow.progress_percent ?? 0}% · step ${escapeHtml(workflow.current_step_key || "—")}</p>
+        </section>
+        <section>
+          <h4>Interventions</h4>
+          <ul>${interventionsHtml || "<li class='muted'>No interventions planned</li>"}</ul>
+        </section>
+        <section>
+          <h4>Orchestration</h4>
+          <p class="muted">${orchestration.partners_engaged ?? 0} partners · ${orchestration.services_recommended ?? 0} services · ${money(orchestration.cost_summary?.estimated, orchestration.cost_summary?.currency)} estimated</p>
+        </section>
         <section>
           <h4>Goals</h4>
           <ul>${goalsHtml || "<li class='muted'>No goals</li>"}</ul>
@@ -822,6 +907,7 @@ async function refresh() {
     renderHealth(health);
     renderBootstrap(bootstrap);
     await refreshProjects();
+    await refreshEcosystemLists();
     applyJourney(state.activeJourney);
     setNotice("Runtime is available and ready.", "success");
   } catch (error) {

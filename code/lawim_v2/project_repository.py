@@ -69,6 +69,9 @@ class ProjectRepositoryMixin:
         if hasattr(self, "bootstrap_project_intelligence"):
             self.bootstrap_project_intelligence(project_id, goal_key=str(payload["project_type"]))
             project = self.get_project(project_id)
+        if hasattr(self, "bootstrap_project_ecosystem"):
+            self.bootstrap_project_ecosystem(project_id)
+            project = self.get_project(project_id)
         return project
 
     def _seed_project_journey(self, project_id: int, project_type: str, *, now: str | None = None) -> None:

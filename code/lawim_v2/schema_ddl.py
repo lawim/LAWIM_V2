@@ -7,6 +7,7 @@ import re
 
 from .persistence import APPLICATION_SCHEMA_VERSION
 from .intelligent.schema_v7_ddl import POSTGRESQL_V7_STATEMENTS, SQLITE_V7_TABLES_SCRIPT
+from .ecosystem.schema_v8_ddl import POSTGRESQL_V8_STATEMENTS, SQLITE_V8_TABLES_SCRIPT
 
 POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     """
@@ -460,11 +461,11 @@ CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at, id);
 CREATE INDEX IF NOT EXISTS idx_project_steps_project_position ON project_steps(project_id, position);
 CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_items(project_id, step_id, position);
 CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);
-""" + SQLITE_V7_TABLES_SCRIPT
+""" + SQLITE_V7_TABLES_SCRIPT + SQLITE_V8_TABLES_SCRIPT
 
 POSTGRESQL_INIT_STATEMENTS = POSTGRESQL_INIT_STATEMENTS + tuple(
     statement for statement in POSTGRESQL_V7_STATEMENTS if "ALTER TABLE" not in statement
-)
+) + POSTGRESQL_V8_STATEMENTS
 
 
 def manifest_table_names() -> tuple[str, ...]:
