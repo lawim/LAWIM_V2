@@ -28,7 +28,7 @@ from tests.lawim_harness import LawimTestHarness
 
 class ReleaseProgramCPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v10(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 13)
+        self.assertEqual(self.repository.schema_version(), 14)
 
     def test_cognition_tables_present(self) -> None:
         self.assertTrue(self.repository.cognition_tables_present())
@@ -365,12 +365,12 @@ class ReleaseProgramCUiTests(LawimTestHarness):
 class ReleaseProgramCHealthTests(LawimTestHarness):
     def test_health_schema_v10(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 13)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 14)
 
     def test_migration_strategy_v10(self) -> None:
         from lawim_v2.schema_migrations import migration_strategy_profile
 
-        self.assertEqual(migration_strategy_profile()["schema_version"], 13)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 14)
 
     def test_metrics_include_cognition_counters(self) -> None:
         token = self.login(email="admin@lawim.local")

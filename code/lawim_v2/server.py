@@ -429,6 +429,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_cognition_get(path, query)
             return
 
+        if path.startswith("/api/v2/crm"):
+            self._handle_v2_crm_get(path, query)
+            return
+
         if path.startswith("/api/v2/properties"):
             self._handle_v2_rei_get(path, query)
             return
@@ -648,6 +652,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/v2/knowledge/"):
             self._handle_v2_knowledge_subroutes_post(path, body, actor)
+            return
+
+        if path.startswith("/api/v2/crm"):
+            self._handle_v2_crm_post(path, body, actor)
             return
 
         if path.startswith("/api/v2/properties"):
@@ -1309,6 +1317,202 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json(kp.stats(actor=actor))
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown knowledge API route")
+
+    def _extract_crm_id(self, path: str, *, resource: str, suffix: str = "") -> int:
+        marker = f"/api/v2/crm/{resource}/"
+        return self._extract_path_id(path, marker=marker, suffix=suffix, resource=resource.capitalize())
+
+    def _handle_v2_crm_get(self, path: str, query: dict[str, list[str]]) -> None:
+        if path == "/api/v2/crm/official-contact":
+            self._send_json(self.services.crm.official_contact(actor=None))
+            return
+        actor = self._require_user()
+        crm = self.services.crm
+        if path == "/api/v2/crm/contacts":
+            self._send_json(crm.list_contacts(actor=actor, contact_type=self._first(query, "type"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/crm/leads":
+            self._send_json(crm.list_leads(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/crm/leads/sources":
+            self._send_json(crm.list_lead_sources(actor=actor))
+            return
+        if path == "/api/v2/crm/customers":
+            self._send_json(crm.list_customers(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/crm/opportunities":
+            contact_id = self._optional_int(self._first(query, "contact_id"), minimum=1)
+            self._send_json(crm.list_opportunities(actor=actor, contact_id=contact_id, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/crm/pipelines":
+            self._send_json(crm.list_pipelines(actor=actor))
+            return
+        if path.startswith("/api/v2/crm/pipelines/") and path.endswith("/board"):
+            pipeline_id = self._extract_path_id(path, marker="/api/v2/crm/pipelines/", suffix="/board", resource="Pipeline")
+            self._send_json(crm.pipeline_board(actor=actor, pipeline_id=pipeline_id))
+            return
+        if path == "/api/v2/crm/communications":
+            contact_id = self._optional_int(self._first(query, "contact_id"), minimum=1)
+            self._send_json(crm.list_communications(actor=actor, contact_id=contact_id, channel=self._first(query, "channel")))
+            return
+        if path == "/api/v2/crm/reminders":
+            contact_id = self._optional_int(self._first(query, "contact_id"), minimum=1)
+            self._send_json(crm.list_reminders(actor=actor, contact_id=contact_id))
+            return
+        if path == "/api/v2/crm/followups":
+            contact_id = self._optional_int(self._first(query, "contact_id"), minimum=1)
+            self._send_json(crm.list_followups(actor=actor, contact_id=contact_id, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/crm/campaigns":
+            self._send_json(crm.list_campaigns(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/crm/segments":
+            self._send_json(crm.list_segments(actor=actor))
+            return
+        if path == "/api/v2/crm/satisfaction/surveys":
+            self._send_json(crm.satisfaction_surveys(actor=actor))
+            return
+        if path.startswith("/api/v2/crm/satisfaction/") and path.endswith("/summary"):
+            survey_id = self._extract_path_id(path, marker="/api/v2/crm/satisfaction/", suffix="/summary", resource="Survey")
+            self._send_json(crm.satisfaction_summary(actor=actor, survey_id=survey_id))
+            return
+        if path == "/api/v2/crm/ai/suggestions":
+            contact_id = self._optional_int(self._first(query, "contact_id"), minimum=1)
+            self._send_json(crm.list_ai_suggestions(actor=actor, contact_id=contact_id))
+            return
+        if path == "/api/v2/crm/search":
+            self._send_json(crm.search(actor=actor, query=self._first(query, "q") or "", limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/crm/analytics":
+            self._send_json(crm.analytics(actor=actor))
+            return
+        if path == "/api/v2/crm/stats":
+            self._send_json(crm.stats(actor=actor))
+            return
+        if path == "/api/v2/crm/dashboard":
+            self._send_json(crm.dashboard(actor=actor))
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.endswith("/360"):
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", suffix="/360", resource="Contact")
+            self._send_json(crm.customer_360(actor=actor, contact_id=contact_id))
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.endswith("/timeline"):
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", suffix="/timeline", resource="Contact")
+            self._send_json(crm.timeline(actor=actor, contact_id=contact_id))
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.endswith("/journey"):
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", suffix="/journey", resource="Contact")
+            self._send_json(crm.journey(actor=actor, contact_id=contact_id))
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.endswith("/notes"):
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", suffix="/notes", resource="Contact")
+            self._send_json(crm.list_notes(actor=actor, contact_id=contact_id))
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.endswith("/scores"):
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", suffix="/scores", resource="Contact")
+            self._send_json(crm.scores(actor=actor, contact_id=contact_id))
+            return
+        if path.startswith("/api/v2/crm/leads/") and path.count("/") == 5:
+            lead_id = self._extract_path_id(path, marker="/api/v2/crm/leads/", resource="Lead")
+            self._send_json(crm.get_lead(actor=actor, lead_id=lead_id))
+            return
+        if path.startswith("/api/v2/crm/customers/") and path.count("/") == 5:
+            customer_id = self._extract_path_id(path, marker="/api/v2/crm/customers/", resource="Customer")
+            self._send_json(crm.get_customer(actor=actor, customer_id=customer_id))
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.count("/") == 5:
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", resource="Contact")
+            self._send_json(crm.get_contact(actor=actor, contact_id=contact_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown CRM API route")
+
+    def _handle_v2_crm_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        crm = self.services.crm
+        if path == "/api/v2/crm/contacts":
+            self._send_json(crm.create_contact(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/leads":
+            self._send_json(crm.create_lead(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/customers":
+            self._send_json(crm.create_customer(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/opportunities":
+            self._send_json(crm.create_opportunity(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/pipelines":
+            self._send_json(crm.create_pipeline(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/whatsapp":
+            self._send_json(crm.send_whatsapp(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/telegram":
+            self._send_json(crm.send_telegram(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/email":
+            self._send_json(crm.send_email(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/sms":
+            self._send_json(crm.send_sms(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/reminders":
+            self._send_json(crm.create_reminder(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/followups":
+            self._send_json(crm.schedule_followup(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/campaigns":
+            self._send_json(crm.create_campaign(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/segments":
+            self._send_json(crm.create_segment(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/satisfaction/responses":
+            self._send_json(crm.submit_satisfaction(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/notes":
+            self._send_json(crm.add_note(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/crm/seed":
+            self._send_json(crm.seed_catalog(actor=actor))
+            return
+        if path.startswith("/api/v2/crm/leads/") and path.endswith("/convert"):
+            lead_id = self._extract_path_id(path, marker="/api/v2/crm/leads/", suffix="/convert", resource="Lead")
+            self._send_json(crm.convert_lead(actor=actor, lead_id=lead_id, body=body))
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.endswith("/tags"):
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", suffix="/tags", resource="Contact")
+            self._send_json(crm.add_contact_tag(actor=actor, contact_id=contact_id, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.endswith("/consents"):
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", suffix="/consents", resource="Contact")
+            self._send_json(crm.grant_consent(actor=actor, contact_id=contact_id, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.endswith("/scores/compute"):
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", suffix="/scores/compute", resource="Contact")
+            self._send_json(crm.compute_scores(actor=actor, contact_id=contact_id))
+            return
+        if path.startswith("/api/v2/crm/contacts/") and path.endswith("/ai/suggestions"):
+            contact_id = self._extract_path_id(path, marker="/api/v2/crm/contacts/", suffix="/ai/suggestions", resource="Contact")
+            self._send_json(crm.ai_suggestions(actor=actor, contact_id=contact_id))
+            return
+        if path.startswith("/api/v2/crm/campaigns/") and path.endswith("/launch"):
+            campaign_id = self._extract_path_id(path, marker="/api/v2/crm/campaigns/", suffix="/launch", resource="Campaign")
+            self._send_json(crm.launch_campaign(actor=actor, campaign_id=campaign_id))
+            return
+        if path.startswith("/api/v2/crm/followups/") and path.endswith("/complete"):
+            followup_id = self._extract_path_id(path, marker="/api/v2/crm/followups/", suffix="/complete", resource="Followup")
+            self._send_json(crm.complete_followup(actor=actor, followup_id=followup_id))
+            return
+        if path.startswith("/api/v2/crm/pipeline-items/") and path.endswith("/move"):
+            item_id = self._extract_path_id(path, marker="/api/v2/crm/pipeline-items/", suffix="/move", resource="PipelineItem")
+            self._send_json(crm.move_pipeline_item(actor=actor, item_id=item_id, body=body))
+            return
+        if path.startswith("/api/v2/crm/pipeline-items/") and path.endswith("/advance"):
+            item_id = self._extract_path_id(path, marker="/api/v2/crm/pipeline-items/", suffix="/advance", resource="PipelineItem")
+            self._send_json(crm.advance_pipeline_item(actor=actor, item_id=item_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown CRM API route")
 
     def _extract_rei_property_id(self, path: str, suffix: str = "") -> int:
         return self._extract_path_id(path, marker="/api/v2/properties/", suffix=suffix, resource="Property")

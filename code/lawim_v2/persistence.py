@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 13
+APPLICATION_SCHEMA_VERSION = 14
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -134,6 +134,23 @@ APPLICATION_SEED = SeedSpec(
         "Includes one demo buyer project with guided journey steps.",
     ),
 )
+
+
+def _crm_table_specs() -> tuple[TableSpec, ...]:
+    from .crm.schema_v14_ddl import V14_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x CRM entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("contact_id", "crm_contact_profiles.id", on_delete="cascade"),)
+            if "contact_id" in name and name != "crm_contact_profiles"
+            else (),
+        )
+        for name in V14_TABLE_NAMES
+    )
 
 
 def _real_estate_intelligence_table_specs() -> tuple[TableSpec, ...]:
@@ -567,7 +584,8 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _assistant_table_specs()
     + _knowledge_platform_table_specs()
     + _workflow_automation_table_specs()
-    + _real_estate_intelligence_table_specs(),
+    + _real_estate_intelligence_table_specs()
+    + _crm_table_specs(),
 )
 
 

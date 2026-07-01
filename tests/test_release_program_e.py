@@ -33,8 +33,8 @@ from tests.lawim_harness import LawimTestHarness
 
 class ReleaseProgramEPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v11(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 13)
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 13)
+        self.assertEqual(self.repository.schema_version(), 14)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 14)
 
     def test_expert_knowledge_tables_present(self) -> None:
         self.assertTrue(self.repository.expert_knowledge_tables_present())
@@ -501,10 +501,10 @@ class ReleaseProgramEUiTests(LawimTestHarness):
 class ReleaseProgramEHealthTests(LawimTestHarness):
     def test_health_schema_v11(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 13)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 14)
 
     def test_migration_strategy_v11(self) -> None:
-        self.assertEqual(migration_strategy_profile()["schema_version"], 13)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 14)
 
     def test_metrics_include_knowledge_counters(self) -> None:
         token = self.login(email="agent@lawim.local")

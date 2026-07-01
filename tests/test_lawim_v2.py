@@ -16,7 +16,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         health_payload = health.body_json()
         self.assertEqual(health_payload["status"], "ok")
         self.assertEqual(health_payload["database"]["driver"], "sqlite")
-        self.assertEqual(health_payload["database"]["schema_version"], 13)
+        self.assertEqual(health_payload["database"]["schema_version"], 14)
         self.assertNotIn("audit", health_payload)
         self.assertIn("app_env", health_payload["environment"])
         self.assertEqual(health_payload["summary"]["organizations"], 3)
@@ -103,7 +103,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
                 profile = repository.backend_profile()
                 self.assertEqual(profile["driver"], "sqlite")
                 self.assertEqual(profile["adapter"], "sqlite-repository")
-                self.assertEqual(profile["schema_version"], 13)
+                self.assertEqual(profile["schema_version"], 14)
                 self.assertEqual(profile["migration"]["orm"], "prisma")
                 self.assertEqual(profile["migration"]["target_engine"], "postgresql")
                 self.assertEqual(profile["seed"]["name"], "demo")
@@ -120,7 +120,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
 
                 first_seed = repository.seed_demo_data()
                 self.assertTrue(first_seed["seeded"])
-                self.assertEqual(first_seed["schema_version"], 13)
+                self.assertEqual(first_seed["schema_version"], 14)
                 self.assertEqual(repository.summary()["organizations"], 3)
 
                 second_seed = repository.seed_demo_data()
@@ -559,7 +559,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         from lawim_v2.persistence_adapter import PostgreSQLPersistenceAdapter
 
         adapter = PostgreSQLPersistenceAdapter("postgresql://example.test/lawim", allow_sqlite_fallback=True)
-        profile = adapter.backend_profile(schema_version=13)
+        profile = adapter.backend_profile(schema_version=14)
         self.assertEqual(profile["driver"], "postgresql")
         self.assertEqual(profile["adapter"], "postgresql-repository")
         self.assertEqual(profile["status"], "active")
@@ -643,7 +643,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         self.assertEqual(first["provider"], "local")
 
     def test_schema_version_is_five(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 13)
+        self.assertEqual(self.repository.schema_version(), 14)
 
     def test_advanced_matching_breakdown_and_weights(self) -> None:
         matches = self.invoke(

@@ -85,6 +85,10 @@ function cacheRefs() {
     reiAdminList: byId("rei-admin-list"),
     reiSearchForm: byId("rei-search-form"),
     reiSearchResults: byId("rei-search-results"),
+    crmAdminStats: byId("crm-admin-stats"),
+    crmAdminList: byId("crm-admin-list"),
+    crmSearchForm: byId("crm-search-form"),
+    crmSearchResults: byId("crm-search-results"),
   });
 }
 
@@ -1039,6 +1043,7 @@ async function refresh() {
     await refreshEcosystemLists();
     await refreshKnowledgeAdmin();
     await refreshReiAdmin();
+    await refreshCrmAdmin();
     await refreshWorkflowAdmin();
     applyJourney(state.activeJourney);
     setNotice("Runtime is available and ready.", "success");
@@ -1107,6 +1112,67 @@ async function handleKnowledgeSearch(event) {
       .join("") || "<p class='muted'>No results.</p>";
   } catch (error) {
     setNotice(error.message, "error");
+  }
+}
+
+async function refreshCrmAdmin() {
+  if (!state.token || !refs.crmAdminStats) {
+    return;
+  }
+  try {
+    const [statsPayload, contactsPayload, officialPayload] = await Promise.all([
+      api("/api/v2/crm/stats", { auth: true }),
+      api("/api/v2/crm/contacts", { auth: true }),
+      api("/api/v2/crm/official-contact", { auth: true }),
+    ]);
+    const stats = statsPayload.stats || {};
+    const official = officialPayload.contact || {};
+    refs.crmAdminStats.innerHTML = `
+      <p class="muted">${stats.contacts ?? 0} contacts · ${stats.leads ?? 0} leads · ${stats.customers ?? 0} customers · ${stats.campaigns ?? 0} campaigns</p>
+      <p class="muted">Official: ${escapeHtml(official.phone_number || "")} · ${escapeHtml(official.whatsapp_username || "")} · ${escapeHtml(official.telegram_bot || "")}</p>
+    `;
+    refs.crmSearchForm?.classList.remove("hidden");
+    const contacts = contactsPayload.contacts || [];
+    refs.crmAdminList.innerHTML = contacts
+      .slice(0, 8)
+      .map(
+        (contact) => `
+          <article class="mini-card">
+            <strong>${escapeHtml(contact.full_name)}</strong>
+            <p class="muted">${escapeHtml(contact.contact_type || "")} · ${escapeHtml(contact.email || contact.phone || "")}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No CRM contacts yet.</p>";
+  } catch (error) {
+    refs.crmAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function handleCrmSearch(event) {
+  event.preventDefault();
+  if (!state.token || !refs.crmSearchForm) {
+    return;
+  }
+  const query = String(new FormData(refs.crmSearchForm).get("query") || "").trim();
+  if (!query) {
+    return;
+  }
+  try {
+    const payload = await api(`/api/v2/crm/search?q=${encodeURIComponent(query)}`, { auth: true });
+    const results = payload.results || [];
+    refs.crmSearchResults.innerHTML = results
+      .map(
+        (item) => `
+          <article class="message">
+            <div class="message__meta"><strong>${escapeHtml(item.full_name || "")}</strong> · ${escapeHtml(item.contact_type || "")}</div>
+            <p>${escapeHtml(item.email || item.phone || "")}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No matches.</p>";
+  } catch (error) {
+    refs.crmSearchResults.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
   }
 }
 
@@ -1657,6 +1723,7 @@ function bindEvents() {
   refs.assistantForm?.addEventListener("submit", handleAssistantChat);
   refs.knowledgeSearchForm?.addEventListener("submit", handleKnowledgeSearch);
   refs.reiSearchForm?.addEventListener("submit", handleReiSearch);
+  refs.crmSearchForm?.addEventListener("submit", handleCrmSearch);
   refs.workflowMonitorForm?.addEventListener("submit", handleWorkflowMonitor);
   refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);
   refs.matchForm.addEventListener("submit", handleMatchSearch);

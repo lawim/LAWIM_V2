@@ -39,6 +39,7 @@ from .project_repository import ProjectRepositoryMixin
 from .intelligent.repository import IntelligentRepositoryMixin
 from .knowledge_platform.repository import KnowledgePlatformRepositoryMixin
 from .workflow_automation.repository import WorkflowAutomationRepositoryMixin
+from .crm.repository import CrmRepositoryMixin
 from .real_estate_intelligence.repository import RealEstateIntelligenceRepositoryMixin
 from .assistant.repository import AssistantRepositoryMixin
 from .cognition.repository import CognitionRepositoryMixin
@@ -80,7 +81,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
+class LawimRepository(CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -139,6 +140,8 @@ class LawimRepository(RealEstateIntelligenceRepositoryMixin, WorkflowAutomationR
             self.seed_automation_catalog()
         if hasattr(self, "seed_rei_catalog"):
             self.seed_rei_catalog()
+        if hasattr(self, "seed_crm_catalog"):
+            self.seed_crm_catalog()
 
     def schema_version(self) -> int:
         row = self.one("SELECT value FROM schema_meta WHERE key = 'schema_version'")
@@ -1645,8 +1648,11 @@ class LawimRepository(RealEstateIntelligenceRepositoryMixin, WorkflowAutomationR
                 conversations = self.list_conversations(user_id=int(current_user["id"]), limit=10)
         else:
             conversations = self.list_conversations(limit=10) if current_user is not None else []
+        from .contact import to_public_dict
+
         return {
             "summary": self.summary(),
+            "official_contact": to_public_dict(),
             "current_user": self._public_user(current_user) if current_user else None,
             "organizations": self.list_organizations(limit=10),
             "users": users,

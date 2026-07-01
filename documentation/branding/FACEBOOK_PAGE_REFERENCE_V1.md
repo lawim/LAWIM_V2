@@ -48,7 +48,7 @@ Spécialiste en immobilier
 🏠 Achat • Vente • Location • Terrains • Investissement
 🤝 Accompagnement immobilier personnalisé
 📍 Cameroun
-📲 WhatsApp : +237 620 397 846
+📲 WhatsApp : +237 686 822 667
 L'immobilier, autrement.
 
 7. Description complète
@@ -70,15 +70,21 @@ Chez LAWIM, nous privilégions une relation fondée sur l'écoute, la transparen
 Parce qu'un projet immobilier est avant tout un projet de vie.
 
 Restons en contact
-📲 WhatsApp : +237 620 397 846
+📲 WhatsApp : +237 686 822 667
 📧 bonjour.lawim@gmail.com
 🤖 Telegram : @lawim_assistant_bot
 
 8. Coordonnées
 Téléphone
-+237 620 397 846
++237 686 822 667
 WhatsApp
-+237 620 397 846
++237 686 822 667
+Facebook
+@lawimofficial
+WhatsApp (username)
+@lawimofficial
+Telegram Bot
+@lawim_assistant_bot
 E-mail
 bonjour.lawim@gmail.com
 Site web
@@ -217,7 +223,7 @@ Résolution minimale : 1024 × 1024 px.
 21. Bouton principal
 Envoyer un message WhatsApp
 Numéro :
-+237 620 397 846
++237 686 822 667
 
 22. Message automatique Messenger
 Bonjour et bienvenue chez LAWIM.
@@ -230,7 +236,7 @@ Quel est votre projet immobilier ?
 6️⃣ Autre projet
 Répondez simplement par le numéro correspondant ou décrivez votre besoin.
 Notre équipe vous répondra dans les meilleurs délais.
-📲 WhatsApp : +237 620 397 846
+📲 WhatsApp : +237 686 822 667
 🤖 Telegram : @lawim_assistant_bot
 
 23. Ton éditorial

@@ -1,4 +1,4 @@
--- LAWIM_V2 schema v13 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
+-- LAWIM_V2 schema v14 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
 
 CREATE TABLE IF NOT EXISTS organizations (
         id SERIAL PRIMARY KEY,
@@ -1958,3 +1958,405 @@ CREATE INDEX IF NOT EXISTS idx_rei_recommendations_user ON rei_recommendations(u
 CREATE INDEX IF NOT EXISTS idx_rei_intelligence_scores_property ON rei_intelligence_scores(property_id, score_key);
 
 CREATE INDEX IF NOT EXISTS idx_rei_search_index_text ON rei_search_index(index_text);
+
+CREATE TABLE IF NOT EXISTS crm_contact_profiles (
+            id SERIAL PRIMARY KEY,
+            contact_key TEXT NOT NULL UNIQUE,
+            contact_type TEXT NOT NULL DEFAULT 'individual',
+            full_name TEXT NOT NULL,
+            email TEXT NOT NULL DEFAULT '',
+            phone TEXT NOT NULL DEFAULT '',
+            whatsapp TEXT NOT NULL DEFAULT '',
+            telegram TEXT NOT NULL DEFAULT '',
+            company TEXT NOT NULL DEFAULT '',
+            country TEXT NOT NULL DEFAULT 'Cameroon',
+            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_contact_tags (
+            id SERIAL PRIMARY KEY,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            tag TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            UNIQUE (contact_id, tag)
+        );
+
+CREATE TABLE IF NOT EXISTS crm_contact_consents (
+            id SERIAL PRIMARY KEY,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            consent_type TEXT NOT NULL DEFAULT 'marketing',
+            granted INTEGER NOT NULL DEFAULT 0,
+            granted_at TEXT,
+            revoked_at TEXT,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            UNIQUE (contact_id, consent_type)
+        );
+
+CREATE TABLE IF NOT EXISTS crm_lead_sources (
+            id SERIAL PRIMARY KEY,
+            source_key TEXT NOT NULL UNIQUE,
+            name TEXT NOT NULL,
+            channel TEXT NOT NULL DEFAULT 'web',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_leads (
+            id SERIAL PRIMARY KEY,
+            lead_key TEXT NOT NULL UNIQUE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            source_id INTEGER REFERENCES crm_lead_sources(id) ON DELETE SET NULL,
+            status TEXT NOT NULL DEFAULT 'new',
+            score INTEGER NOT NULL DEFAULT 0,
+            title TEXT NOT NULL DEFAULT '',
+            notes TEXT NOT NULL DEFAULT '',
+            assigned_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            converted_customer_id INTEGER,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_customers (
+            id SERIAL PRIMARY KEY,
+            customer_key TEXT NOT NULL UNIQUE,
+            contact_id INTEGER NOT NULL UNIQUE REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            status TEXT NOT NULL DEFAULT 'active',
+            lifetime_value INTEGER NOT NULL DEFAULT 0,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_customer_roles (
+            id SERIAL PRIMARY KEY,
+            customer_id INTEGER NOT NULL REFERENCES crm_customers(id) ON DELETE CASCADE,
+            role TEXT NOT NULL DEFAULT 'buyer',
+            assigned_at TEXT NOT NULL,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            UNIQUE (customer_id, role)
+        );
+
+CREATE TABLE IF NOT EXISTS crm_pipelines (
+            id SERIAL PRIMARY KEY,
+            pipeline_key TEXT NOT NULL UNIQUE,
+            name TEXT NOT NULL,
+            is_default INTEGER NOT NULL DEFAULT 0,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_pipeline_stages (
+            id SERIAL PRIMARY KEY,
+            pipeline_id INTEGER NOT NULL REFERENCES crm_pipelines(id) ON DELETE CASCADE,
+            stage_key TEXT NOT NULL,
+            label TEXT NOT NULL,
+            position INTEGER NOT NULL DEFAULT 0,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            UNIQUE (pipeline_id, stage_key)
+        );
+
+CREATE TABLE IF NOT EXISTS crm_pipeline_items (
+            id SERIAL PRIMARY KEY,
+            pipeline_id INTEGER NOT NULL REFERENCES crm_pipelines(id) ON DELETE CASCADE,
+            stage_id INTEGER NOT NULL REFERENCES crm_pipeline_stages(id) ON DELETE CASCADE,
+            entity_type TEXT NOT NULL DEFAULT 'lead',
+            entity_id INTEGER NOT NULL,
+            position INTEGER NOT NULL DEFAULT 0,
+            entered_at TEXT NOT NULL,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_opportunities (
+            id SERIAL PRIMARY KEY,
+            opportunity_key TEXT NOT NULL UNIQUE,
+            customer_id INTEGER REFERENCES crm_customers(id) ON DELETE SET NULL,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            title TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'open',
+            amount INTEGER,
+            currency TEXT NOT NULL DEFAULT 'XAF',
+            probability INTEGER NOT NULL DEFAULT 50,
+            pipeline_item_id INTEGER REFERENCES crm_pipeline_items(id) ON DELETE SET NULL,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            closed_at TEXT
+        );
+
+CREATE TABLE IF NOT EXISTS crm_journey_events (
+            id SERIAL PRIMARY KEY,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            event_type TEXT NOT NULL,
+            event_key TEXT NOT NULL,
+            summary TEXT NOT NULL DEFAULT '',
+            payload_json TEXT NOT NULL DEFAULT '{}',
+            actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            created_at TEXT NOT NULL,
+            UNIQUE (contact_id, event_key)
+        );
+
+CREATE TABLE IF NOT EXISTS crm_timeline_entries (
+            id SERIAL PRIMARY KEY,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            entry_type TEXT NOT NULL,
+            summary TEXT NOT NULL DEFAULT '',
+            reference_type TEXT,
+            reference_id INTEGER,
+            payload_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_communications (
+            id SERIAL PRIMARY KEY,
+            communication_key TEXT NOT NULL UNIQUE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            channel TEXT NOT NULL DEFAULT 'email',
+            direction TEXT NOT NULL DEFAULT 'outbound',
+            status TEXT NOT NULL DEFAULT 'pending',
+            subject TEXT NOT NULL DEFAULT '',
+            body TEXT NOT NULL DEFAULT '',
+            sender_json TEXT NOT NULL DEFAULT '{}',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            sent_at TEXT,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_whatsapp_messages (
+            id SERIAL PRIMARY KEY,
+            communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            from_number TEXT NOT NULL DEFAULT '',
+            to_number TEXT NOT NULL DEFAULT '',
+            body TEXT NOT NULL DEFAULT '',
+            status TEXT NOT NULL DEFAULT 'pending',
+            lawim_sender_json TEXT NOT NULL DEFAULT '{}',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            sent_at TEXT,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_telegram_messages (
+            id SERIAL PRIMARY KEY,
+            communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            from_handle TEXT NOT NULL DEFAULT '',
+            to_handle TEXT NOT NULL DEFAULT '',
+            body TEXT NOT NULL DEFAULT '',
+            status TEXT NOT NULL DEFAULT 'pending',
+            lawim_sender_json TEXT NOT NULL DEFAULT '{}',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            sent_at TEXT,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_email_messages (
+            id SERIAL PRIMARY KEY,
+            communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            from_email TEXT NOT NULL DEFAULT '',
+            to_email TEXT NOT NULL DEFAULT '',
+            subject TEXT NOT NULL DEFAULT '',
+            body TEXT NOT NULL DEFAULT '',
+            status TEXT NOT NULL DEFAULT 'pending',
+            lawim_sender_json TEXT NOT NULL DEFAULT '{}',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            sent_at TEXT,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_sms_messages (
+            id SERIAL PRIMARY KEY,
+            communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            from_number TEXT NOT NULL DEFAULT '',
+            to_number TEXT NOT NULL DEFAULT '',
+            body TEXT NOT NULL DEFAULT '',
+            status TEXT NOT NULL DEFAULT 'pending',
+            lawim_sender_json TEXT NOT NULL DEFAULT '{}',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            sent_at TEXT,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_reminders (
+            id SERIAL PRIMARY KEY,
+            reminder_key TEXT NOT NULL UNIQUE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            assigned_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            title TEXT NOT NULL,
+            due_at TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'pending',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            completed_at TEXT
+        );
+
+CREATE TABLE IF NOT EXISTS crm_followups (
+            id SERIAL PRIMARY KEY,
+            followup_key TEXT NOT NULL UNIQUE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            lead_id INTEGER REFERENCES crm_leads(id) ON DELETE SET NULL,
+            opportunity_id INTEGER REFERENCES crm_opportunities(id) ON DELETE SET NULL,
+            channel TEXT NOT NULL DEFAULT 'whatsapp',
+            scheduled_at TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'scheduled',
+            notes TEXT NOT NULL DEFAULT '',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            completed_at TEXT
+        );
+
+CREATE TABLE IF NOT EXISTS crm_campaigns (
+            id SERIAL PRIMARY KEY,
+            campaign_key TEXT NOT NULL UNIQUE,
+            name TEXT NOT NULL,
+            channel TEXT NOT NULL DEFAULT 'email',
+            status TEXT NOT NULL DEFAULT 'draft',
+            audience_json TEXT NOT NULL DEFAULT '{}',
+            content_json TEXT NOT NULL DEFAULT '{}',
+            scheduled_at TEXT,
+            started_at TEXT,
+            completed_at TEXT,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_campaign_targets (
+            id SERIAL PRIMARY KEY,
+            campaign_id INTEGER NOT NULL REFERENCES crm_campaigns(id) ON DELETE CASCADE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            status TEXT NOT NULL DEFAULT 'pending',
+            sent_at TEXT,
+            response_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            UNIQUE (campaign_id, contact_id)
+        );
+
+CREATE TABLE IF NOT EXISTS crm_segments (
+            id SERIAL PRIMARY KEY,
+            segment_key TEXT NOT NULL UNIQUE,
+            name TEXT NOT NULL,
+            criteria_json TEXT NOT NULL DEFAULT '{}',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_segment_members (
+            id SERIAL PRIMARY KEY,
+            segment_id INTEGER NOT NULL REFERENCES crm_segments(id) ON DELETE CASCADE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            added_at TEXT NOT NULL,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            UNIQUE (segment_id, contact_id)
+        );
+
+CREATE TABLE IF NOT EXISTS crm_customer_scores (
+            id SERIAL PRIMARY KEY,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            score_key TEXT NOT NULL,
+            score INTEGER NOT NULL DEFAULT 0,
+            factors_json TEXT NOT NULL DEFAULT '{}',
+            computed_at TEXT NOT NULL,
+            UNIQUE (contact_id, score_key)
+        );
+
+CREATE TABLE IF NOT EXISTS crm_satisfaction_surveys (
+            id SERIAL PRIMARY KEY,
+            survey_key TEXT NOT NULL UNIQUE,
+            title TEXT NOT NULL,
+            survey_type TEXT NOT NULL DEFAULT 'csat',
+            questions_json TEXT NOT NULL DEFAULT '[]',
+            status TEXT NOT NULL DEFAULT 'draft',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_satisfaction_responses (
+            id SERIAL PRIMARY KEY,
+            survey_id INTEGER NOT NULL REFERENCES crm_satisfaction_surveys(id) ON DELETE CASCADE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            rating INTEGER NOT NULL DEFAULT 3,
+            answers_json TEXT NOT NULL DEFAULT '{}',
+            submitted_at TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_notes (
+            id SERIAL PRIMARY KEY,
+            note_key TEXT NOT NULL UNIQUE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            author_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            content TEXT NOT NULL,
+            visibility TEXT NOT NULL DEFAULT 'internal',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_documents (
+            id SERIAL PRIMARY KEY,
+            document_key TEXT NOT NULL UNIQUE,
+            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+            title TEXT NOT NULL,
+            document_type TEXT NOT NULL DEFAULT 'other',
+            storage_ref TEXT NOT NULL DEFAULT '',
+            status TEXT NOT NULL DEFAULT 'pending',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_ai_suggestions (
+            id SERIAL PRIMARY KEY,
+            suggestion_key TEXT NOT NULL UNIQUE,
+            contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
+            suggestion_type TEXT NOT NULL DEFAULT 'followup',
+            title TEXT NOT NULL,
+            rationale TEXT NOT NULL DEFAULT '',
+            payload_json TEXT NOT NULL DEFAULT '{}',
+            status TEXT NOT NULL DEFAULT 'pending',
+            sources_json TEXT NOT NULL DEFAULT '[]',
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS crm_analytics_snapshots (
+            id SERIAL PRIMARY KEY,
+            snapshot_key TEXT NOT NULL UNIQUE,
+            scope TEXT NOT NULL DEFAULT 'global',
+            metrics_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL
+        );
+
+CREATE INDEX IF NOT EXISTS idx_crm_leads_status ON crm_leads(status, score);
+
+CREATE INDEX IF NOT EXISTS idx_crm_leads_contact ON crm_leads(contact_id);
+
+CREATE INDEX IF NOT EXISTS idx_crm_customers_status ON crm_customers(status);
+
+CREATE INDEX IF NOT EXISTS idx_crm_opportunities_status ON crm_opportunities(status, amount);
+
+CREATE INDEX IF NOT EXISTS idx_crm_pipeline_items_stage ON crm_pipeline_items(stage_id, position);
+
+CREATE INDEX IF NOT EXISTS idx_crm_communications_contact ON crm_communications(contact_id, channel);
+
+CREATE INDEX IF NOT EXISTS idx_crm_timeline_contact ON crm_timeline_entries(contact_id, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_crm_journey_contact ON crm_journey_events(contact_id, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_crm_campaign_targets_campaign ON crm_campaign_targets(campaign_id, status);
+
+CREATE INDEX IF NOT EXISTS idx_crm_customer_scores_contact ON crm_customer_scores(contact_id, score_key);
+
+CREATE INDEX IF NOT EXISTS idx_crm_followups_scheduled ON crm_followups(scheduled_at, status);
