@@ -516,6 +516,24 @@
 
           <article class="panel card" data-journey-panel="project buyer">
             <div class="section-heading">
+              <h2>AI Assistant</h2>
+              <p class="muted">Project-scoped assistant with deterministic fallback (API v2).</p>
+            </div>
+            <div id="assistant-summary" class="card-list muted">Select a project to chat with the assistant.</div>
+            <form id="assistant-form" class="stacked-form hidden">
+              <label>
+                <span>Message</span>
+                <textarea name="message" rows="2" placeholder="Ask about your project…"></textarea>
+              </label>
+              <div class="actions">
+                <button type="submit" class="button primary">Send to assistant</button>
+              </div>
+            </form>
+            <div id="assistant-chat" class="message-stream muted"></div>
+          </article>
+
+          <article class="panel card" data-journey-panel="project buyer">
+            <div class="section-heading">
               <h2>Ecosystem partners</h2>
               <p class="muted">Partner platform directory (API v2).</p>
             </div>

@@ -393,6 +393,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"media": self.services.get_media(media_id)})
             return
 
+        if path.startswith("/api/v2/assistant"):
+            self._handle_v2_assistant_get(path, query)
+            return
+
         if path.startswith("/api/v2/knowledge/"):
             self._handle_v2_cognition_get(path, query)
             return
@@ -628,6 +632,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                     postal_code=self._optional_text(body.get("postal_code")),
                 )
             )
+            return
+
+        if path.startswith("/api/v2/assistant"):
+            self._handle_v2_assistant_post(path, body, actor)
             return
 
         if path.startswith("/api/v2/knowledge/") or path in {"/api/v2/simulations"} or path == "/api/v2/knowledge/refresh":
@@ -1267,6 +1275,74 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             )
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown cognition API route")
+
+    def _assistant_project_id(self, query: dict[str, list[str]], body: dict[str, Any] | None = None) -> int:
+        if body is not None and body.get("project_id") is not None:
+            project_id = self._optional_int(body.get("project_id"), minimum=1)
+            if project_id is not None:
+                return project_id
+        return self._first_int(query, "project_id", minimum=1)
+
+    def _handle_v2_assistant_get(self, path: str, query: dict[str, list[str]]) -> None:
+        actor = self._require_user()
+        assistant = self.services.assistant
+        if path == "/api/v2/assistant/agents":
+            self._send_json(assistant.list_agents(actor=actor))
+            return
+        if path == "/api/v2/assistant/prompts":
+            self._send_json(assistant.list_prompts(actor=actor))
+            return
+        project_id = self._assistant_project_id(query)
+        if path == "/api/v2/assistant/sessions":
+            self._send_json(assistant.list_sessions(actor=actor, project_id=project_id))
+            return
+        if path.startswith("/api/v2/assistant/sessions/"):
+            session_id = self._extract_path_id(path, marker="/api/v2/assistant/sessions/", resource="AssistantSession")
+            self._send_json(assistant.get_session(actor=actor, project_id=project_id, session_id=session_id))
+            return
+        if path == "/api/v2/assistant/messages":
+            session_id = self._first_int(query, "session_id", minimum=1)
+            self._send_json(assistant.list_messages(actor=actor, project_id=project_id, session_id=session_id))
+            return
+        if path == "/api/v2/assistant/context":
+            session_id = self._optional_int(self._first(query, "session_id"), minimum=1)
+            self._send_json(assistant.get_context(actor=actor, project_id=project_id, session_id=session_id))
+            return
+        if path == "/api/v2/assistant/rag":
+            query_text = self._first(query, "query") or ""
+            self._send_json(assistant.retrieve_rag(actor=actor, project_id=project_id, query=query_text))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown assistant API route")
+
+    def _handle_v2_assistant_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        assistant = self.services.assistant
+        project_id = self._assistant_project_id({}, body)
+        if path == "/api/v2/assistant/sessions":
+            self._send_json(
+                assistant.create_session(
+                    actor=actor,
+                    project_id=project_id,
+                    agent_key=self._optional_text(body.get("agent_key")) or "project_advisor",
+                ),
+                status=HTTPStatus.CREATED,
+            )
+            return
+        if path == "/api/v2/assistant/rag/refresh":
+            self._send_json(assistant.refresh_rag(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/assistant/chat" or path == "/api/v2/assistant":
+            self._send_json(
+                assistant.chat(
+                    actor=actor,
+                    project_id=project_id,
+                    message=self._require_text(body, "message"),
+                    session_id=self._optional_int(body.get("session_id"), minimum=1),
+                    agent_key=self._optional_text(body.get("agent_key")),
+                ),
+                status=HTTPStatus.CREATED,
+            )
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown assistant API route")
 
     def _handle_v2_project_get(self, path: str, query: dict[str, list[str]]) -> None:
         actor = self._require_user()

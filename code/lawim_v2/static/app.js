@@ -8,6 +8,7 @@ const state = {
   selectedPropertyVersion: null,
   selectedPropertyTitle: null,
   selectedProjectId: null,
+  assistantSessionId: null,
   refreshInFlight: false,
 };
 
@@ -69,6 +70,9 @@ function cacheRefs() {
     projectDetail: byId("project-detail"),
     partnersList: byId("partners-list"),
     servicesList: byId("services-list"),
+    assistantSummary: byId("assistant-summary"),
+    assistantForm: byId("assistant-form"),
+    assistantChat: byId("assistant-chat"),
   });
 }
 
@@ -547,6 +551,75 @@ async function selectProject(projectId) {
     `;
   } catch (error) {
     refs.projectDetail.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+  await refreshAssistant(state.selectedProjectId);
+}
+
+async function refreshAssistant(projectId) {
+  if (!state.token || !projectId || !refs.assistantSummary) {
+    if (refs.assistantForm) {
+      refs.assistantForm.classList.add("hidden");
+    }
+    return;
+  }
+  try {
+    const [agentsPayload, messagesPayload] = await Promise.all([
+      api("/api/v2/assistant/agents", { auth: true }),
+      api(`/api/v2/assistant/sessions?project_id=${projectId}`, { auth: true }),
+    ]);
+    const sessions = messagesPayload.sessions || [];
+    const session = sessions[0];
+    state.assistantSessionId = session?.id || null;
+    refs.assistantSummary.innerHTML = `
+      <p class="muted">${(agentsPayload.agents || []).length} agents · session ${session?.session_key || "new"}</p>
+    `;
+    refs.assistantForm?.classList.remove("hidden");
+    if (session?.id) {
+      const msgPayload = await api(
+        `/api/v2/assistant/messages?project_id=${projectId}&session_id=${session.id}`,
+        { auth: true },
+      );
+      const messages = msgPayload.messages || [];
+      if (refs.assistantChat) {
+        refs.assistantChat.innerHTML = messages
+          .map(
+            (msg) => `
+              <article class="message">
+                <div class="message__meta"><strong>${escapeHtml(msg.role)}</strong></div>
+                <p>${escapeHtml(msg.content)}</p>
+              </article>
+            `,
+          )
+          .join("") || "<p class='muted'>No assistant messages yet.</p>";
+      }
+    } else if (refs.assistantChat) {
+      refs.assistantChat.innerHTML = "<p class='muted'>No assistant messages yet.</p>";
+    }
+  } catch (error) {
+    refs.assistantSummary.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function handleAssistantChat(event) {
+  event.preventDefault();
+  if (!state.token || !state.selectedProjectId || !refs.assistantForm) {
+    return;
+  }
+  const form = new FormData(refs.assistantForm);
+  const message = String(form.get("message") || "").trim();
+  if (!message) {
+    return;
+  }
+  try {
+    const body = { project_id: state.selectedProjectId, message };
+    if (state.assistantSessionId) {
+      body.session_id = state.assistantSessionId;
+    }
+    await api("/api/v2/assistant/chat", { auth: true, method: "POST", body });
+    refs.assistantForm.reset();
+    await refreshAssistant(state.selectedProjectId);
+  } catch (error) {
+    setNotice(error.message, "error");
   }
 }
 
@@ -1382,6 +1455,7 @@ function bindEvents() {
   refs.demoButton.addEventListener("click", populateDemoCredentials);
   refs.registerForm?.addEventListener("submit", handleRegister);
   refs.projectForm?.addEventListener("submit", handleProjectCreate);
+  refs.assistantForm?.addEventListener("submit", handleAssistantChat);
   refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);
   refs.matchForm.addEventListener("submit", handleMatchSearch);
   refs.propertyForm.addEventListener("submit", handlePropertyCreate);

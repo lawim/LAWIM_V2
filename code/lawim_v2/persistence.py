@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 9
+APPLICATION_SCHEMA_VERSION = 10
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -134,6 +134,33 @@ APPLICATION_SEED = SeedSpec(
         "Includes one demo buyer project with guided journey steps.",
     ),
 )
+
+
+def _assistant_table_specs() -> tuple[TableSpec, ...]:
+    from .assistant.schema_v10_ddl import V10_TABLE_NAMES
+
+    global_tables = {"assistant_agents", "assistant_prompt_versions"}
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x assistant platform entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(),
+        )
+        for name in V10_TABLE_NAMES
+        if name in global_tables
+    ) + tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x assistant platform entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="cascade"),),
+        )
+        for name in V10_TABLE_NAMES
+        if name not in global_tables
+    )
 
 
 def _cognition_table_specs() -> tuple[TableSpec, ...]:
@@ -466,7 +493,8 @@ APPLICATION_SCHEMA = SchemaManifest(
     )
     + _intelligent_table_specs()
     + _ecosystem_table_specs()
-    + _cognition_table_specs(),
+    + _cognition_table_specs()
+    + _assistant_table_specs(),
 )
 
 
