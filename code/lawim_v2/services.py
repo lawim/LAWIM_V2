@@ -123,6 +123,9 @@ class LawimServices:
         from .knowledge_platform.service import KnowledgePlatformService
 
         self.knowledge_platform = KnowledgePlatformService(repository, self.projects, self.policy)
+        from .workflow_automation.service import WorkflowAutomationService
+
+        self.workflow_automation = WorkflowAutomationService(repository, self.projects, self.policy)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()

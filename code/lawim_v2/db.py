@@ -38,6 +38,7 @@ from .schema_migrations import apply_sqlite_legacy_migrations
 from .project_repository import ProjectRepositoryMixin
 from .intelligent.repository import IntelligentRepositoryMixin
 from .knowledge_platform.repository import KnowledgePlatformRepositoryMixin
+from .workflow_automation.repository import WorkflowAutomationRepositoryMixin
 from .assistant.repository import AssistantRepositoryMixin
 from .cognition.repository import CognitionRepositoryMixin
 from .ecosystem.repository import EcosystemRepositoryMixin
@@ -78,7 +79,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
+class LawimRepository(WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -133,6 +134,8 @@ class LawimRepository(KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin
                 self.bootstrap_project_assistant(int(project["id"]))
         if hasattr(self, "seed_expert_knowledge_catalog"):
             self.seed_expert_knowledge_catalog()
+        if hasattr(self, "seed_automation_catalog"):
+            self.seed_automation_catalog()
 
     def schema_version(self) -> int:
         row = self.one("SELECT value FROM schema_meta WHERE key = 'schema_version'")

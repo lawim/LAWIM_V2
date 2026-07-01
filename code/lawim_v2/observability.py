@@ -52,9 +52,28 @@ class RuntimeMetrics:
     knowledge_index_total: int = 0
     rag_requests_total: int = 0
     rag_context_size_total: int = 0
+    workflow_definitions_total: int = 0
+    workflow_created_total: int = 0
+    process_executions_total: int = 0
+    task_list_total: int = 0
+    task_completed_total: int = 0
+    queue_list_total: int = 0
+    queue_enqueue_total: int = 0
+    queue_dequeue_total: int = 0
+    event_list_total: int = 0
+    automation_events_total: int = 0
+    automation_started_total: int = 0
+    automation_retry_total: int = 0
+    automation_escalation_total: int = 0
+    approval_list_total: int = 0
+    approval_created_total: int = 0
+    approval_decided_total: int = 0
+    automation_notifications_total: int = 0
+    notification_sent_total: int = 0
     lock: threading.Lock = field(default_factory=threading.Lock)
     _latency_samples: list[float] = field(default_factory=list)
     _knowledge_search_latency_samples: list[float] = field(default_factory=list)
+    _process_execution_latency_samples: list[float] = field(default_factory=list)
     _route_counts: dict[str, int] = field(default_factory=dict)
 
     def increment(self, name: str, *, failed: bool = False) -> None:
@@ -126,6 +145,42 @@ class RuntimeMetrics:
                 self.knowledge_import_total += 1
             elif name == "knowledge_index":
                 self.knowledge_index_total += 1
+            elif name == "workflow_definitions":
+                self.workflow_definitions_total += 1
+            elif name == "workflow_created":
+                self.workflow_created_total += 1
+            elif name == "process_executions":
+                self.process_executions_total += 1
+            elif name == "task_list":
+                self.task_list_total += 1
+            elif name == "task_completed":
+                self.task_completed_total += 1
+            elif name == "queue_list":
+                self.queue_list_total += 1
+            elif name == "queue_enqueue":
+                self.queue_enqueue_total += 1
+            elif name == "queue_dequeue":
+                self.queue_dequeue_total += 1
+            elif name == "event_list":
+                self.event_list_total += 1
+            elif name == "automation_events":
+                self.automation_events_total += 1
+            elif name == "automation_started":
+                self.automation_started_total += 1
+            elif name == "automation_retry":
+                self.automation_retry_total += 1
+            elif name == "automation_escalation":
+                self.automation_escalation_total += 1
+            elif name == "approval_list":
+                self.approval_list_total += 1
+            elif name == "approval_created":
+                self.approval_created_total += 1
+            elif name == "approval_decided":
+                self.approval_decided_total += 1
+            elif name == "automation_notifications":
+                self.automation_notifications_total += 1
+            elif name == "notification_sent":
+                self.notification_sent_total += 1
 
     def record_knowledge_search(self, *, latency_ms: float) -> None:
         with self.lock:
@@ -133,6 +188,12 @@ class RuntimeMetrics:
             self._knowledge_search_latency_samples.append(latency_ms)
             if len(self._knowledge_search_latency_samples) > 500:
                 self._knowledge_search_latency_samples = self._knowledge_search_latency_samples[-500:]
+
+    def record_process_execution(self, *, duration_ms: float) -> None:
+        with self.lock:
+            self._process_execution_latency_samples.append(duration_ms)
+            if len(self._process_execution_latency_samples) > 500:
+                self._process_execution_latency_samples = self._process_execution_latency_samples[-500:]
 
     def record_rag_request(self, *, context_size: int) -> None:
         with self.lock:
@@ -192,6 +253,29 @@ class RuntimeMetrics:
                 "knowledge_index_total": self.knowledge_index_total,
                 "rag_requests_total": self.rag_requests_total,
                 "rag_context_size_total": self.rag_context_size_total,
+                "workflow_definitions_total": self.workflow_definitions_total,
+                "workflow_created_total": self.workflow_created_total,
+                "process_executions_total": self.process_executions_total,
+                "task_list_total": self.task_list_total,
+                "task_completed_total": self.task_completed_total,
+                "queue_list_total": self.queue_list_total,
+                "queue_enqueue_total": self.queue_enqueue_total,
+                "queue_dequeue_total": self.queue_dequeue_total,
+                "event_list_total": self.event_list_total,
+                "automation_events_total": self.automation_events_total,
+                "automation_started_total": self.automation_started_total,
+                "automation_retry_total": self.automation_retry_total,
+                "automation_escalation_total": self.automation_escalation_total,
+                "approval_list_total": self.approval_list_total,
+                "approval_created_total": self.approval_created_total,
+                "approval_decided_total": self.approval_decided_total,
+                "automation_notifications_total": self.automation_notifications_total,
+                "notification_sent_total": self.notification_sent_total,
+                "process_execution_latency_ms": {
+                    "p50": _percentile(self._process_execution_latency_samples, 0.50),
+                    "p95": _percentile(self._process_execution_latency_samples, 0.95),
+                    "samples": len(self._process_execution_latency_samples),
+                },
                 "knowledge_search_latency_ms": {
                     "p50": _percentile(self._knowledge_search_latency_samples, 0.50),
                     "p95": _percentile(self._knowledge_search_latency_samples, 0.95),

@@ -429,10 +429,14 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_cognition_get(path, query)
             return
 
+        if path.startswith("/api/v2/workflows/"):
+            self._handle_v2_workflow_automation_get(path, query)
+            return
+
         if (
             path.startswith("/api/v2/partners")
             or path.startswith("/api/v2/services")
-            or path.startswith("/api/v2/workflows")
+            or path == "/api/v2/workflows"
             or path.startswith("/api/v2/matching")
             or path.startswith("/api/v2/reputation")
             or path.startswith("/api/v2/notifications/ecosystem")
@@ -640,6 +644,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/v2/knowledge/"):
             self._handle_v2_knowledge_subroutes_post(path, body, actor)
+            return
+
+        if path.startswith("/api/v2/workflows/"):
+            self._handle_v2_workflow_automation_post(path, body, actor)
             return
 
         if path in {"/api/v2/simulations"}:
@@ -1293,6 +1301,145 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json(kp.stats(actor=actor))
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown knowledge API route")
+
+    def _handle_v2_workflow_automation_get(self, path: str, query: dict[str, list[str]]) -> None:
+        actor = self._require_user()
+        wa = self.services.workflow_automation
+        if path == "/api/v2/workflows/definitions":
+            self._send_json(wa.list_workflows(actor=actor, domain=self._first(query, "domain"), status=self._first(query, "status")))
+            return
+        if path.startswith("/api/v2/workflows/definitions/"):
+            workflow_key = path.removeprefix("/api/v2/workflows/definitions/")
+            self._send_json(wa.get_workflow(actor=actor, workflow_key=workflow_key))
+            return
+        if path == "/api/v2/workflows/templates":
+            self._send_json(wa.list_templates(actor=actor, domain=self._first(query, "domain")))
+            return
+        if path == "/api/v2/workflows/executions":
+            instance_id = self._optional_int(self._first(query, "instance_id"), minimum=1)
+            self._send_json(wa.list_executions(actor=actor, instance_id=instance_id))
+            return
+        if path == "/api/v2/workflows/instances":
+            project_id = self._optional_int(self._first(query, "project_id"), minimum=1)
+            self._send_json(wa.list_instances(actor=actor, project_id=project_id, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/workflows/tasks":
+            instance_id = self._optional_int(self._first(query, "instance_id"), minimum=1)
+            self._send_json(wa.list_tasks(actor=actor, instance_id=instance_id, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/workflows/queues":
+            self._send_json(wa.list_queues(actor=actor))
+            return
+        if path == "/api/v2/workflows/events":
+            instance_id = self._optional_int(self._first(query, "instance_id"), minimum=1)
+            self._send_json(wa.list_events(actor=actor, instance_id=instance_id))
+            return
+        if path == "/api/v2/workflows/approvals":
+            instance_id = self._optional_int(self._first(query, "instance_id"), minimum=1)
+            self._send_json(wa.list_approvals(actor=actor, instance_id=instance_id))
+            return
+        if path == "/api/v2/workflows/rules":
+            self._send_json(wa.list_rules(actor=actor, domain=self._first(query, "domain")))
+            return
+        if path == "/api/v2/workflows/schedules":
+            self._send_json(wa.list_schedules(actor=actor))
+            return
+        if path == "/api/v2/workflows/timers":
+            instance_id = self._optional_int(self._first(query, "instance_id"), minimum=1)
+            self._send_json(wa.list_timers(actor=actor, instance_id=instance_id))
+            return
+        if path == "/api/v2/workflows/notifications":
+            instance_id = self._optional_int(self._first(query, "instance_id"), minimum=1)
+            self._send_json(wa.list_notifications(actor=actor, instance_id=instance_id))
+            return
+        if path == "/api/v2/workflows/history":
+            instance_id = self._first_int(query, "instance_id", minimum=1)
+            self._send_json(wa.history(actor=actor, instance_id=instance_id))
+            return
+        if path == "/api/v2/workflows/audit":
+            self._send_json(wa.audit(actor=actor))
+            return
+        if path == "/api/v2/workflows/metrics":
+            self._send_json(wa.metrics(actor=actor))
+            return
+        if path == "/api/v2/workflows/monitoring":
+            self._send_json(wa.monitoring(actor=actor))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown workflow automation API route")
+
+    def _handle_v2_workflow_automation_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        wa = self.services.workflow_automation
+        if path == "/api/v2/workflows/definitions":
+            self._send_json(wa.create_workflow(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.endswith("/duplicate") and path.startswith("/api/v2/workflows/definitions/"):
+            workflow_key = path.removeprefix("/api/v2/workflows/definitions/").removesuffix("/duplicate")
+            self._send_json(wa.duplicate_workflow(actor=actor, workflow_key=workflow_key), status=HTTPStatus.CREATED)
+            return
+        if path.endswith("/activate") and path.startswith("/api/v2/workflows/definitions/"):
+            workflow_key = path.removeprefix("/api/v2/workflows/definitions/").removesuffix("/activate")
+            self._send_json(wa.activate_workflow(actor=actor, workflow_key=workflow_key))
+            return
+        if path.endswith("/deactivate") and path.startswith("/api/v2/workflows/definitions/"):
+            workflow_key = path.removeprefix("/api/v2/workflows/definitions/").removesuffix("/deactivate")
+            self._send_json(wa.deactivate_workflow(actor=actor, workflow_key=workflow_key))
+            return
+        if path == "/api/v2/workflows/templates":
+            self._send_json(wa.create_template(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/workflows/instances":
+            self._send_json(wa.start_instance(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.endswith("/advance") and path.startswith("/api/v2/workflows/instances/"):
+            instance_id = self._extract_path_id(path, marker="/api/v2/workflows/instances/", suffix="/advance", resource="Instance")
+            self._send_json(wa.advance_instance(actor=actor, instance_id=instance_id))
+            return
+        if path.endswith("/complete") and path.startswith("/api/v2/workflows/tasks/"):
+            task_id = self._extract_path_id(path, marker="/api/v2/workflows/tasks/", suffix="/complete", resource="Task")
+            self._send_json(wa.complete_task(actor=actor, task_id=task_id, body=body))
+            return
+        if path == "/api/v2/workflows/queues/enqueue":
+            self._send_json(wa.enqueue(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/workflows/queues/dequeue":
+            self._send_json(wa.dequeue(actor=actor, queue_key=self._require_text(body, "queue_key")))
+            return
+        if path == "/api/v2/workflows/events":
+            self._send_json(wa.publish_event(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/workflows/approvals":
+            self._send_json(wa.create_approval(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.endswith("/decide") and path.startswith("/api/v2/workflows/approvals/"):
+            approval_id = self._extract_path_id(path, marker="/api/v2/workflows/approvals/", suffix="/decide", resource="Approval")
+            self._send_json(wa.decide_approval(actor=actor, approval_id=approval_id, body=body))
+            return
+        if path == "/api/v2/workflows/rules":
+            self._send_json(wa.create_rule(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/workflows/rules/evaluate":
+            self._send_json(wa.evaluate_rules(actor=actor, body=body))
+            return
+        if path == "/api/v2/workflows/timers":
+            self._send_json(wa.create_timer(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/workflows/notifications":
+            self._send_json(wa.send_notification(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/workflows/metrics/snapshot":
+            self._send_json(wa.reindex_metrics(actor=actor))
+            return
+        if path.endswith("/retry") and path.startswith("/api/v2/workflows/executions/"):
+            execution_id = self._extract_path_id(path, marker="/api/v2/workflows/executions/", suffix="/retry", resource="Execution")
+            self._send_json(wa.retry_execution(actor=actor, execution_id=execution_id))
+            return
+        if path == "/api/v2/workflows/escalations":
+            self._send_json(wa.escalate(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/workflows/ai-hook":
+            self._send_json(wa.ai_hook(actor=actor, body=body))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown workflow automation API route")
 
     def _handle_v2_knowledge_subroutes_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
         if path == "/api/v2/knowledge/refresh":

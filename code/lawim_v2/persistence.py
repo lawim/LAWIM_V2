@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 11
+APPLICATION_SCHEMA_VERSION = 12
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -134,6 +134,44 @@ APPLICATION_SEED = SeedSpec(
         "Includes one demo buyer project with guided journey steps.",
     ),
 )
+
+
+def _workflow_automation_table_specs() -> tuple[TableSpec, ...]:
+    from .workflow_automation.schema_v12_ddl import V12_TABLE_NAMES
+
+    global_tables = {
+        "automation_workflow_definitions",
+        "automation_templates",
+        "automation_queues",
+        "automation_rules",
+        "automation_rule_bindings",
+        "automation_schedules",
+        "automation_sla_policies",
+        "automation_metrics_snapshots",
+    }
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x workflow automation entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(),
+        )
+        for name in V12_TABLE_NAMES
+        if name in global_tables
+    ) + tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x workflow automation entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="set null"),)
+            if name == "automation_process_instances"
+            else (),
+        )
+        for name in V12_TABLE_NAMES
+        if name not in global_tables
+    )
 
 
 def _knowledge_platform_table_specs() -> tuple[TableSpec, ...]:
@@ -510,7 +548,8 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _ecosystem_table_specs()
     + _cognition_table_specs()
     + _assistant_table_specs()
-    + _knowledge_platform_table_specs(),
+    + _knowledge_platform_table_specs()
+    + _workflow_automation_table_specs(),
 )
 
 

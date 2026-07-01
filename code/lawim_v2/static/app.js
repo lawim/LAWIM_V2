@@ -77,6 +77,10 @@ function cacheRefs() {
     knowledgeAdminList: byId("knowledge-admin-list"),
     knowledgeSearchForm: byId("knowledge-search-form"),
     knowledgeSearchResults: byId("knowledge-search-results"),
+    workflowAdminStats: byId("workflow-admin-stats"),
+    workflowAdminList: byId("workflow-admin-list"),
+    workflowMonitorForm: byId("workflow-monitor-form"),
+    workflowMonitorResults: byId("workflow-monitor-results"),
   });
 }
 
@@ -1030,6 +1034,7 @@ async function refresh() {
     await refreshProjects();
     await refreshEcosystemLists();
     await refreshKnowledgeAdmin();
+    await refreshWorkflowAdmin();
     applyJourney(state.activeJourney);
     setNotice("Runtime is available and ready.", "success");
   } catch (error) {
@@ -1095,6 +1100,71 @@ async function handleKnowledgeSearch(event) {
         `,
       )
       .join("") || "<p class='muted'>No results.</p>";
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function refreshWorkflowAdmin() {
+  if (!state.token || !refs.workflowAdminStats) {
+    return;
+  }
+  try {
+    const [metricsPayload, defsPayload, instancesPayload] = await Promise.all([
+      api("/api/v2/workflows/metrics", { auth: true }),
+      api("/api/v2/workflows/definitions", { auth: true }),
+      api("/api/v2/workflows/instances?limit=8", { auth: true }),
+    ]);
+    const metrics = metricsPayload.metrics || {};
+    refs.workflowAdminStats.innerHTML = `
+      <p class="muted">${metrics.workflows ?? 0} workflows · ${metrics.instances ?? 0} instances · ${metrics.tasks ?? 0} tasks</p>
+    `;
+    refs.workflowMonitorForm?.classList.remove("hidden");
+    const defs = defsPayload.workflows || [];
+    refs.workflowAdminList.innerHTML = defs
+      .slice(0, 6)
+      .map(
+        (row) => `
+          <article class="mini-card">
+            <strong>${escapeHtml(row.title)}</strong>
+            <p class="muted">${escapeHtml(row.domain || "")} · ${escapeHtml(row.status || "")}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No automation workflows.</p>";
+    const instances = instancesPayload.instances || [];
+    if (instances.length && refs.workflowMonitorResults) {
+      refs.workflowMonitorResults.innerHTML = instances
+        .slice(0, 4)
+        .map(
+          (inst) => `
+            <article class="message">
+              <div class="message__meta"><strong>${escapeHtml(inst.workflow_key || "")}</strong> · ${escapeHtml(inst.status || "")}</div>
+              <p class="muted">state ${escapeHtml(inst.current_state_key || "—")}</p>
+            </article>
+          `,
+        )
+        .join("");
+    }
+  } catch (error) {
+    refs.workflowAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function handleWorkflowMonitor(event) {
+  event.preventDefault();
+  if (!state.token) {
+    return;
+  }
+  try {
+    const payload = await api("/api/v2/workflows/monitoring", { auth: true });
+    const monitoring = payload.monitoring || {};
+    refs.workflowMonitorResults.innerHTML = `
+      <article class="message">
+        <div class="message__meta"><strong>Monitoring</strong></div>
+        <p class="muted">SLA policies: ${monitoring.sla_policies ?? 0} · pending approvals: ${monitoring.pending_approvals ?? 0} · open escalations: ${monitoring.open_escalations ?? 0}</p>
+      </article>
+    `;
   } catch (error) {
     setNotice(error.message, "error");
   }
@@ -1521,6 +1591,7 @@ function bindEvents() {
   refs.projectForm?.addEventListener("submit", handleProjectCreate);
   refs.assistantForm?.addEventListener("submit", handleAssistantChat);
   refs.knowledgeSearchForm?.addEventListener("submit", handleKnowledgeSearch);
+  refs.workflowMonitorForm?.addEventListener("submit", handleWorkflowMonitor);
   refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);
   refs.matchForm.addEventListener("submit", handleMatchSearch);
   refs.propertyForm.addEventListener("submit", handlePropertyCreate);

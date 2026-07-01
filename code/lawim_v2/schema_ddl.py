@@ -11,6 +11,7 @@ from .ecosystem.schema_v8_ddl import POSTGRESQL_V8_STATEMENTS, SQLITE_V8_TABLES_
 from .cognition.schema_v9_ddl import POSTGRESQL_V9_STATEMENTS, SQLITE_V9_TABLES_SCRIPT
 from .assistant.schema_v10_ddl import POSTGRESQL_V10_STATEMENTS, SQLITE_V10_TABLES_SCRIPT
 from .knowledge_platform.schema_v11_ddl import POSTGRESQL_V11_STATEMENTS, SQLITE_V11_TABLES_SCRIPT
+from .workflow_automation.schema_v12_ddl import POSTGRESQL_V12_STATEMENTS, SQLITE_V12_TABLES_SCRIPT
 
 POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     """
@@ -464,11 +465,11 @@ CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at, id);
 CREATE INDEX IF NOT EXISTS idx_project_steps_project_position ON project_steps(project_id, position);
 CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_items(project_id, step_id, position);
 CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);
-""" + SQLITE_V7_TABLES_SCRIPT + SQLITE_V8_TABLES_SCRIPT + SQLITE_V9_TABLES_SCRIPT + SQLITE_V10_TABLES_SCRIPT + SQLITE_V11_TABLES_SCRIPT
+""" + SQLITE_V7_TABLES_SCRIPT + SQLITE_V8_TABLES_SCRIPT + SQLITE_V9_TABLES_SCRIPT + SQLITE_V10_TABLES_SCRIPT + SQLITE_V11_TABLES_SCRIPT + SQLITE_V12_TABLES_SCRIPT
 
 POSTGRESQL_INIT_STATEMENTS = POSTGRESQL_INIT_STATEMENTS + tuple(
     statement for statement in POSTGRESQL_V7_STATEMENTS if "ALTER TABLE" not in statement
-) + POSTGRESQL_V8_STATEMENTS + POSTGRESQL_V9_STATEMENTS + POSTGRESQL_V10_STATEMENTS + POSTGRESQL_V11_STATEMENTS
+) + POSTGRESQL_V8_STATEMENTS + POSTGRESQL_V9_STATEMENTS + POSTGRESQL_V10_STATEMENTS + POSTGRESQL_V11_STATEMENTS + POSTGRESQL_V12_STATEMENTS
 
 
 def manifest_table_names() -> tuple[str, ...]:
