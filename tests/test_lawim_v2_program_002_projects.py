@@ -10,7 +10,7 @@ from tests.lawim_harness import LawimTestHarness
 
 class Program002ProjectTests(LawimTestHarness):
     def test_schema_version_is_v6(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 10)
+        self.assertEqual(self.repository.schema_version(), 11)
 
     def test_legacy_migration_adds_project_tables(self) -> None:
         import sqlite3

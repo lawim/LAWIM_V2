@@ -120,6 +120,9 @@ class LawimServices:
         from .assistant.service import AssistantService
 
         self.assistant = AssistantService(repository, self.projects)
+        from .knowledge_platform.service import KnowledgePlatformService
+
+        self.knowledge_platform = KnowledgePlatformService(repository, self.projects, self.policy)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()

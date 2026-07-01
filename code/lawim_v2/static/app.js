@@ -73,6 +73,10 @@ function cacheRefs() {
     assistantSummary: byId("assistant-summary"),
     assistantForm: byId("assistant-form"),
     assistantChat: byId("assistant-chat"),
+    knowledgeAdminStats: byId("knowledge-admin-stats"),
+    knowledgeAdminList: byId("knowledge-admin-list"),
+    knowledgeSearchForm: byId("knowledge-search-form"),
+    knowledgeSearchResults: byId("knowledge-search-results"),
   });
 }
 
@@ -1025,6 +1029,7 @@ async function refresh() {
     renderBootstrap(bootstrap);
     await refreshProjects();
     await refreshEcosystemLists();
+    await refreshKnowledgeAdmin();
     applyJourney(state.activeJourney);
     setNotice("Runtime is available and ready.", "success");
   } catch (error) {
@@ -1033,6 +1038,65 @@ async function refresh() {
   } finally {
     state.refreshInFlight = false;
     setLoading(false);
+  }
+}
+
+async function refreshKnowledgeAdmin() {
+  if (!state.token || !refs.knowledgeAdminStats) {
+    return;
+  }
+  try {
+    const [statsPayload, docsPayload, catsPayload] = await Promise.all([
+      api("/api/v2/knowledge/stats", { auth: true }),
+      api("/api/v2/knowledge/documents", { auth: true }),
+      api("/api/v2/knowledge/categories", { auth: true }),
+    ]);
+    const stats = statsPayload.stats || {};
+    refs.knowledgeAdminStats.innerHTML = `
+      <p class="muted">${stats.documents ?? 0} documents · ${stats.chunks ?? 0} chunks · ${stats.categories ?? 0} categories</p>
+    `;
+    refs.knowledgeSearchForm?.classList.remove("hidden");
+    const docs = docsPayload.documents || [];
+    refs.knowledgeAdminList.innerHTML = docs
+      .slice(0, 8)
+      .map(
+        (doc) => `
+          <article class="mini-card">
+            <strong>${escapeHtml(doc.title)}</strong>
+            <p class="muted">${escapeHtml(doc.status || "draft")} · ${escapeHtml(doc.format || "")}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No expert documents.</p>";
+  } catch (error) {
+    refs.knowledgeAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function handleKnowledgeSearch(event) {
+  event.preventDefault();
+  if (!state.token || !refs.knowledgeSearchForm) {
+    return;
+  }
+  const query = String(new FormData(refs.knowledgeSearchForm).get("query") || "").trim();
+  if (!query) {
+    return;
+  }
+  try {
+    const payload = await api(`/api/v2/knowledge/search?q=${encodeURIComponent(query)}`, { auth: true });
+    const results = payload.results || [];
+    refs.knowledgeSearchResults.innerHTML = results
+      .map(
+        (row) => `
+          <article class="message">
+            <div class="message__meta"><strong>${escapeHtml(row.title || "Result")}</strong> · score ${row.score ?? 0}</div>
+            <p class="muted">${escapeHtml(row.snippet || "")}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No results.</p>";
+  } catch (error) {
+    setNotice(error.message, "error");
   }
 }
 
@@ -1456,6 +1520,7 @@ function bindEvents() {
   refs.registerForm?.addEventListener("submit", handleRegister);
   refs.projectForm?.addEventListener("submit", handleProjectCreate);
   refs.assistantForm?.addEventListener("submit", handleAssistantChat);
+  refs.knowledgeSearchForm?.addEventListener("submit", handleKnowledgeSearch);
   refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);
   refs.matchForm.addEventListener("submit", handleMatchSearch);
   refs.propertyForm.addEventListener("submit", handlePropertyCreate);

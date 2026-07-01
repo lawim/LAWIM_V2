@@ -398,7 +398,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path.startswith("/api/v2/knowledge/"):
-            self._handle_v2_cognition_get(path, query)
+            self._handle_v2_knowledge_subroutes_get(path, query)
             return
 
         if path == "/api/v2/knowledge":
@@ -638,7 +638,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_assistant_post(path, body, actor)
             return
 
-        if path.startswith("/api/v2/knowledge/") or path in {"/api/v2/simulations"} or path == "/api/v2/knowledge/refresh":
+        if path.startswith("/api/v2/knowledge/"):
+            self._handle_v2_knowledge_subroutes_post(path, body, actor)
+            return
+
+        if path in {"/api/v2/simulations"}:
             self._handle_v2_cognition_post(path, body, actor)
             return
 
@@ -1219,6 +1223,110 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             if project_id is not None:
                 return project_id
         return self._first_int(query, "project_id", minimum=1)
+
+    def _handle_v2_knowledge_subroutes_get(self, path: str, query: dict[str, list[str]]) -> None:
+        if path in {"/api/v2/knowledge/graph", "/api/v2/knowledge/context"}:
+            self._handle_v2_cognition_get(path, query)
+            return
+        actor = self._require_user()
+        kp = self.services.knowledge_platform
+        if path == "/api/v2/knowledge/search":
+            self._send_json(
+                kp.search(
+                    actor=actor,
+                    query=self._first(query, "q") or self._first(query, "query") or "",
+                    domain=self._first(query, "domain"),
+                    category=self._first(query, "category"),
+                    tag=self._first(query, "tag"),
+                    author=self._first(query, "author"),
+                    project_id=self._optional_int(self._first(query, "project_id"), minimum=1),
+                    partner_id=self._optional_int(self._first(query, "partner_id"), minimum=1),
+                    service_id=self._optional_int(self._first(query, "service_id"), minimum=1),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path == "/api/v2/knowledge/articles":
+            self._send_json(kp.list_articles(actor=actor, status=self._first(query, "status")))
+            return
+        if path.startswith("/api/v2/knowledge/articles/"):
+            article_id = self._extract_path_id(path, marker="/api/v2/knowledge/articles/", resource="Article")
+            self._send_json(kp.get_article(actor=actor, article_id=article_id))
+            return
+        if path == "/api/v2/knowledge/documents":
+            self._send_json(kp.list_documents(actor=actor, status=self._first(query, "status")))
+            return
+        if path.startswith("/api/v2/knowledge/documents/"):
+            document_id = self._extract_path_id(path, marker="/api/v2/knowledge/documents/", resource="Document")
+            self._send_json(kp.get_document(actor=actor, document_id=document_id))
+            return
+        if path == "/api/v2/knowledge/categories":
+            self._send_json(kp.list_categories(actor=actor, domain=self._first(query, "domain")))
+            return
+        if path == "/api/v2/knowledge/tags":
+            self._send_json(kp.list_tags(actor=actor, domain=self._first(query, "domain")))
+            return
+        if path == "/api/v2/knowledge/sources":
+            self._send_json(kp.list_sources(actor=actor))
+            return
+        if path == "/api/v2/knowledge/rag":
+            self._send_json(
+                kp.rag(
+                    actor=actor,
+                    query=self._first(query, "q") or self._first(query, "query") or "",
+                    domain=self._first(query, "domain"),
+                    category=self._first(query, "category"),
+                    tag=self._first(query, "tag"),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path == "/api/v2/knowledge/citations":
+            document_id = self._optional_int(self._first(query, "document_id"), minimum=1)
+            self._send_json(kp.list_citations(actor=actor, document_id=document_id))
+            return
+        if path == "/api/v2/knowledge/references":
+            document_id = self._optional_int(self._first(query, "document_id"), minimum=1)
+            self._send_json(kp.list_references(actor=actor, document_id=document_id))
+            return
+        if path == "/api/v2/knowledge/stats":
+            self._send_json(kp.stats(actor=actor))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown knowledge API route")
+
+    def _handle_v2_knowledge_subroutes_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        if path == "/api/v2/knowledge/refresh":
+            self._handle_v2_cognition_post(path, body, actor)
+            return
+        kp = self.services.knowledge_platform
+        if path == "/api/v2/knowledge/import":
+            if isinstance(body.get("records"), list):
+                self._send_json(kp.bulk_import(actor=actor, records=body["records"]), status=HTTPStatus.CREATED)
+            else:
+                self._send_json(kp.import_document(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/knowledge/export":
+            self._send_json(kp.export(actor=actor, format_name=self._optional_text(body.get("format")) or "json"))
+            return
+        if path == "/api/v2/knowledge/reindex":
+            document_id = self._optional_int(body.get("document_id"), minimum=1)
+            self._send_json(kp.reindex(actor=actor, document_id=document_id))
+            return
+        if path == "/api/v2/knowledge/rag":
+            self._send_json(
+                kp.rag(actor=actor, query=self._require_text(body, "query"), domain=self._optional_text(body.get("domain"))),
+                status=HTTPStatus.CREATED,
+            )
+            return
+        if path.endswith("/publish") and path.startswith("/api/v2/knowledge/documents/"):
+            document_id = self._extract_path_id(path, marker="/api/v2/knowledge/documents/", suffix="/publish", resource="Document")
+            self._send_json(kp.publish(actor=actor, document_id=document_id))
+            return
+        if path.endswith("/approve") and path.startswith("/api/v2/knowledge/documents/"):
+            document_id = self._extract_path_id(path, marker="/api/v2/knowledge/documents/", suffix="/approve", resource="Document")
+            self._send_json(kp.approve(actor=actor, document_id=document_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown knowledge API route")
 
     def _handle_v2_cognition_get(self, path: str, query: dict[str, list[str]]) -> None:
         actor = self._require_user()

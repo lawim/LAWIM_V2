@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 10
+APPLICATION_SCHEMA_VERSION = 11
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -134,6 +134,21 @@ APPLICATION_SEED = SeedSpec(
         "Includes one demo buyer project with guided journey steps.",
     ),
 )
+
+
+def _knowledge_platform_table_specs() -> tuple[TableSpec, ...]:
+    from .knowledge_platform.schema_v11_ddl import V11_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x expert knowledge platform entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(),
+        )
+        for name in V11_TABLE_NAMES
+    )
 
 
 def _assistant_table_specs() -> tuple[TableSpec, ...]:
@@ -494,7 +509,8 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _intelligent_table_specs()
     + _ecosystem_table_specs()
     + _cognition_table_specs()
-    + _assistant_table_specs(),
+    + _assistant_table_specs()
+    + _knowledge_platform_table_specs(),
 )
 
 

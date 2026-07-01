@@ -1,4 +1,4 @@
-// LAWIM_V2 runtime schema v10 — aligned with code/lawim_v2/persistence.py manifest
+// LAWIM_V2 runtime schema v11 — aligned with code/lawim_v2/persistence.py manifest
 // Fingerprint anchor: build_schema_fingerprint(build_application_schema_manifest())
 
 generator client {
