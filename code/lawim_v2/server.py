@@ -429,6 +429,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_cognition_get(path, query)
             return
 
+        if path.startswith("/api/v2/properties"):
+            self._handle_v2_rei_get(path, query)
+            return
+
         if path.startswith("/api/v2/workflows/"):
             self._handle_v2_workflow_automation_get(path, query)
             return
@@ -644,6 +648,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/v2/knowledge/"):
             self._handle_v2_knowledge_subroutes_post(path, body, actor)
+            return
+
+        if path.startswith("/api/v2/properties"):
+            self._handle_v2_rei_post(path, body, actor)
             return
 
         if path.startswith("/api/v2/workflows/"):
@@ -1301,6 +1309,165 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json(kp.stats(actor=actor))
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown knowledge API route")
+
+    def _extract_rei_property_id(self, path: str, suffix: str = "") -> int:
+        return self._extract_path_id(path, marker="/api/v2/properties/", suffix=suffix, resource="Property")
+
+    def _handle_v2_rei_get(self, path: str, query: dict[str, list[str]]) -> None:
+        actor = self._require_user()
+        rei = self.services.real_estate
+        if path == "/api/v2/properties":
+            self._send_json(rei.list_properties(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/properties/listings":
+            self._send_json(rei.list_listings(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/properties/recommendations":
+            self._send_json(rei.list_recommendations(actor=actor))
+            return
+        if path == "/api/v2/properties/visits":
+            property_id = self._optional_int(self._first(query, "property_id"), minimum=1)
+            self._send_json(rei.visits(actor=actor, property_id=property_id))
+            return
+        if path == "/api/v2/properties/negotiations":
+            property_id = self._optional_int(self._first(query, "property_id"), minimum=1)
+            self._send_json(rei.negotiations(actor=actor, property_id=property_id))
+            return
+        if path == "/api/v2/properties/transactions":
+            property_id = self._optional_int(self._first(query, "property_id"), minimum=1)
+            self._send_json(rei.transactions(actor=actor, property_id=property_id))
+            return
+        if path == "/api/v2/properties/search":
+            query_text = self._first(query, "q") or self._first(query, "query") or ""
+            self._send_json(rei.search(actor=actor, query=query_text, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/properties/map":
+            self._send_json(rei.map_view(actor=actor, city=self._first(query, "city")))
+            return
+        if path == "/api/v2/properties/analytics":
+            self._send_json(rei.analytics(actor=actor))
+            return
+        if path == "/api/v2/properties/stats":
+            self._send_json(rei.stats(actor=actor))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/owners"):
+            property_id = self._extract_rei_property_id(path, suffix="/owners")
+            self._send_json(rei.owners(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/documents"):
+            property_id = self._extract_rei_property_id(path, suffix="/documents")
+            self._send_json(rei.documents(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/verification"):
+            property_id = self._extract_rei_property_id(path, suffix="/verification")
+            self._send_json(rei.get_verification(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/valuation"):
+            property_id = self._extract_rei_property_id(path, suffix="/valuation")
+            self._send_json(rei.valuation(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/history"):
+            property_id = self._extract_rei_property_id(path, suffix="/history")
+            self._send_json(rei.history(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/nearby"):
+            property_id = self._extract_rei_property_id(path, suffix="/nearby")
+            self._send_json(rei.nearby(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/media"):
+            property_id = self._extract_rei_property_id(path, suffix="/media")
+            self._send_json(rei.media(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/intelligence"):
+            property_id = self._extract_rei_property_id(path, suffix="/intelligence")
+            self._send_json(rei.intelligence(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/scores"):
+            property_id = self._extract_rei_property_id(path, suffix="/scores")
+            self._send_json(rei.scores(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/reports"):
+            property_id = self._extract_rei_property_id(path, suffix="/reports")
+            report_type = self._first(query, "type") or "summary"
+            self._send_json(rei.report(actor=actor, property_id=property_id, report_type=report_type))
+            return
+        if path.startswith("/api/v2/properties/") and "/offers" in path:
+            negotiation_id = self._extract_path_id(path, marker="/api/v2/properties/negotiations/", suffix="/offers", resource="Negotiation")
+            self._send_json(rei.offers(actor=actor, negotiation_id=negotiation_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.count("/") == 4:
+            property_id = self._extract_rei_property_id(path)
+            self._send_json(rei.get_property(actor=actor, property_id=property_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown real estate intelligence API route")
+
+    def _handle_v2_rei_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        rei = self.services.real_estate
+        if path == "/api/v2/properties/listings":
+            self._send_json(rei.create_listing(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/properties/matching":
+            self._send_json(rei.matching(actor=actor, body=body))
+            return
+        if path == "/api/v2/properties/recommendations":
+            self._send_json(rei.recommendations(actor=actor, body=body))
+            return
+        if path == "/api/v2/properties/visits":
+            self._send_json(rei.schedule_visit(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/properties/negotiations":
+            self._send_json(rei.open_negotiation(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/properties/offers":
+            self._send_json(rei.submit_offer(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/properties/transactions":
+            self._send_json(rei.start_transaction(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/properties/reservations":
+            self._send_json(rei.reserve(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/publish"):
+            property_id = self._extract_rei_property_id(path, suffix="/publish")
+            self._send_json(rei.publish(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/archive"):
+            property_id = self._extract_rei_property_id(path, suffix="/archive")
+            self._send_json(rei.archive(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/duplicate"):
+            property_id = self._extract_rei_property_id(path, suffix="/duplicate")
+            self._send_json(rei.duplicate_listing(actor=actor, property_id=property_id), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/owners"):
+            property_id = self._extract_rei_property_id(path, suffix="/owners")
+            self._send_json(rei.add_owner(actor=actor, property_id=property_id, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/documents"):
+            property_id = self._extract_rei_property_id(path, suffix="/documents")
+            self._send_json(rei.add_document(actor=actor, property_id=property_id, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/properties/") and path.endswith("/verification"):
+            property_id = self._extract_rei_property_id(path, suffix="/verification")
+            self._send_json(rei.verification(actor=actor, property_id=property_id))
+            return
+        if path.startswith("/api/v2/properties/visits/") and path.endswith("/confirm"):
+            visit_id = self._extract_path_id(path, marker="/api/v2/properties/visits/", suffix="/confirm", resource="Visit")
+            self._send_json(rei.confirm_visit(actor=actor, visit_id=visit_id))
+            return
+        if path.startswith("/api/v2/properties/visits/") and path.endswith("/cancel"):
+            visit_id = self._extract_path_id(path, marker="/api/v2/properties/visits/", suffix="/cancel", resource="Visit")
+            self._send_json(rei.cancel_visit(actor=actor, visit_id=visit_id))
+            return
+        if path.startswith("/api/v2/properties/visits/") and path.endswith("/complete"):
+            visit_id = self._extract_path_id(path, marker="/api/v2/properties/visits/", suffix="/complete", resource="Visit")
+            self._send_json(rei.complete_visit(actor=actor, visit_id=visit_id, body=body))
+            return
+        if path.startswith("/api/v2/properties/transactions/") and path.endswith("/close"):
+            transaction_id = self._extract_path_id(path, marker="/api/v2/properties/transactions/", suffix="/close", resource="Transaction")
+            self._send_json(rei.close_transaction(actor=actor, transaction_id=transaction_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown real estate intelligence API route")
 
     def _handle_v2_workflow_automation_get(self, path: str, query: dict[str, list[str]]) -> None:
         actor = self._require_user()

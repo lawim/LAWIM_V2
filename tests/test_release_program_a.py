@@ -50,7 +50,7 @@ class ReleaseProgramAEngineTests(LawimTestHarness):
 
 class ReleaseProgramAPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v10(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 12)
+        self.assertEqual(self.repository.schema_version(), 13)
 
     def test_intelligent_tables_exist(self) -> None:
         self.assertTrue(self.repository.intelligent_tables_present())
@@ -484,13 +484,13 @@ class ReleaseProgramAApiExtendedTests(LawimTestHarness):
         from lawim_v2.schema_migrations import migration_strategy_profile
 
         profile = migration_strategy_profile()
-        self.assertEqual(profile["schema_version"], 12)
+        self.assertEqual(profile["schema_version"], 13)
 
 
 class ReleaseProgramAHealthTests(LawimTestHarness):
     def test_health_reports_schema_v10(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 12)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 13)
 
     def test_summary_includes_projects(self) -> None:
         summary = self.repository.summary()

@@ -1,4 +1,4 @@
--- LAWIM_V2 schema v12 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
+-- LAWIM_V2 schema v13 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
 
 CREATE TABLE IF NOT EXISTS organizations (
         id SERIAL PRIMARY KEY,
@@ -1665,3 +1665,296 @@ CREATE INDEX IF NOT EXISTS idx_automation_events_instance ON automation_events(i
 CREATE INDEX IF NOT EXISTS idx_automation_history_instance ON automation_history(instance_id, created_at);
 
 CREATE INDEX IF NOT EXISTS idx_automation_workflows_domain ON automation_workflow_definitions(domain, status);
+
+CREATE TABLE IF NOT EXISTS rei_property_profiles (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL UNIQUE REFERENCES properties(id) ON DELETE CASCADE,
+            property_type TEXT NOT NULL DEFAULT 'apartment',
+            subtype TEXT,
+            characteristics_json TEXT NOT NULL DEFAULT '{}',
+            provenance TEXT NOT NULL DEFAULT 'internal',
+            availability_status TEXT NOT NULL DEFAULT 'available',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_listings (
+            id SERIAL PRIMARY KEY,
+            listing_key TEXT NOT NULL UNIQUE,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            title TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'draft',
+            visibility TEXT NOT NULL DEFAULT 'public',
+            ai_score INTEGER NOT NULL DEFAULT 0,
+            diffusion_json TEXT NOT NULL DEFAULT '[]',
+            expires_at TEXT,
+            published_at TEXT,
+            archived_at TEXT,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_listing_publications (
+            id SERIAL PRIMARY KEY,
+            listing_id INTEGER NOT NULL REFERENCES rei_listings(id) ON DELETE CASCADE,
+            channel TEXT NOT NULL DEFAULT 'lawim',
+            status TEXT NOT NULL DEFAULT 'published',
+            published_at TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_listing_scores (
+            id SERIAL PRIMARY KEY,
+            listing_id INTEGER NOT NULL REFERENCES rei_listings(id) ON DELETE CASCADE,
+            score_type TEXT NOT NULL DEFAULT 'visibility',
+            score INTEGER NOT NULL DEFAULT 0,
+            factors_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            UNIQUE (listing_id, score_type)
+        );
+
+CREATE TABLE IF NOT EXISTS rei_property_owners (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            owner_type TEXT NOT NULL DEFAULT 'individual',
+            owner_name TEXT NOT NULL,
+            owner_contact TEXT NOT NULL DEFAULT '',
+            ownership_share REAL NOT NULL DEFAULT 100.0,
+            verified INTEGER NOT NULL DEFAULT 0,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_property_documents (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            document_key TEXT NOT NULL,
+            document_type TEXT NOT NULL DEFAULT 'other',
+            title TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'pending',
+            storage_ref TEXT NOT NULL DEFAULT '',
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            UNIQUE (property_id, document_key)
+        );
+
+CREATE TABLE IF NOT EXISTS rei_property_valuations (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            valuation_key TEXT NOT NULL UNIQUE,
+            amount INTEGER NOT NULL,
+            currency TEXT NOT NULL DEFAULT 'XAF',
+            method TEXT NOT NULL DEFAULT 'comparative',
+            confidence INTEGER NOT NULL DEFAULT 70,
+            factors_json TEXT NOT NULL DEFAULT '{}',
+            valued_at TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_verification_checks (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            check_key TEXT NOT NULL,
+            check_type TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'pending',
+            result_json TEXT NOT NULL DEFAULT '{}',
+            anomaly_flags_json TEXT NOT NULL DEFAULT '[]',
+            checked_at TEXT,
+            created_at TEXT NOT NULL,
+            UNIQUE (property_id, check_key)
+        );
+
+CREATE TABLE IF NOT EXISTS rei_verification_scores (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL UNIQUE REFERENCES properties(id) ON DELETE CASCADE,
+            trust_score INTEGER NOT NULL DEFAULT 0,
+            consistency_score INTEGER NOT NULL DEFAULT 0,
+            details_json TEXT NOT NULL DEFAULT '{}',
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_matching_sessions (
+            id SERIAL PRIMARY KEY,
+            session_key TEXT NOT NULL UNIQUE,
+            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
+            criteria_json TEXT NOT NULL DEFAULT '{}',
+            status TEXT NOT NULL DEFAULT 'active',
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_matching_results (
+            id SERIAL PRIMARY KEY,
+            session_id INTEGER NOT NULL REFERENCES rei_matching_sessions(id) ON DELETE CASCADE,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            score INTEGER NOT NULL DEFAULT 0,
+            reasons_json TEXT NOT NULL DEFAULT '[]',
+            rank_position INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_visits (
+            id SERIAL PRIMARY KEY,
+            visit_key TEXT NOT NULL UNIQUE,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            scheduled_at TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'scheduled',
+            confirmed_at TEXT,
+            cancelled_at TEXT,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_visit_reports (
+            id SERIAL PRIMARY KEY,
+            visit_id INTEGER NOT NULL UNIQUE REFERENCES rei_visits(id) ON DELETE CASCADE,
+            summary TEXT NOT NULL DEFAULT '',
+            rating INTEGER NOT NULL DEFAULT 3,
+            signed INTEGER NOT NULL DEFAULT 0,
+            report_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_negotiations (
+            id SERIAL PRIMARY KEY,
+            negotiation_key TEXT NOT NULL UNIQUE,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            buyer_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            status TEXT NOT NULL DEFAULT 'open',
+            current_offer_id INTEGER,
+            workflow_instance_id INTEGER,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_offers (
+            id SERIAL PRIMARY KEY,
+            offer_key TEXT NOT NULL UNIQUE,
+            negotiation_id INTEGER NOT NULL REFERENCES rei_negotiations(id) ON DELETE CASCADE,
+            amount INTEGER NOT NULL,
+            currency TEXT NOT NULL DEFAULT 'XAF',
+            status TEXT NOT NULL DEFAULT 'submitted',
+            offer_type TEXT NOT NULL DEFAULT 'purchase',
+            terms_json TEXT NOT NULL DEFAULT '{}',
+            submitted_at TEXT NOT NULL,
+            decided_at TEXT,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_transactions (
+            id SERIAL PRIMARY KEY,
+            transaction_key TEXT NOT NULL UNIQUE,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            transaction_type TEXT NOT NULL DEFAULT 'sale',
+            status TEXT NOT NULL DEFAULT 'pending',
+            amount INTEGER,
+            currency TEXT NOT NULL DEFAULT 'XAF',
+            buyer_id INTEGER,
+            seller_id INTEGER,
+            workflow_instance_id INTEGER,
+            closed_at TEXT,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_reservations (
+            id SERIAL PRIMARY KEY,
+            reservation_key TEXT NOT NULL UNIQUE,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            status TEXT NOT NULL DEFAULT 'pending',
+            reserved_until TEXT NOT NULL,
+            amount INTEGER,
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_property_history (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            event_type TEXT NOT NULL,
+            event_key TEXT NOT NULL,
+            summary TEXT NOT NULL DEFAULT '',
+            payload_json TEXT NOT NULL DEFAULT '{}',
+            actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            created_at TEXT NOT NULL,
+            UNIQUE (property_id, event_key)
+        );
+
+CREATE TABLE IF NOT EXISTS rei_recommendations (
+            id SERIAL PRIMARY KEY,
+            recommendation_key TEXT NOT NULL UNIQUE,
+            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
+            property_id INTEGER REFERENCES properties(id) ON DELETE SET NULL,
+            recommendation_type TEXT NOT NULL DEFAULT 'property',
+            score INTEGER NOT NULL DEFAULT 0,
+            title TEXT NOT NULL,
+            rationale TEXT NOT NULL DEFAULT '',
+            sources_json TEXT NOT NULL DEFAULT '[]',
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_intelligence_scores (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            score_key TEXT NOT NULL,
+            score INTEGER NOT NULL DEFAULT 0,
+            factors_json TEXT NOT NULL DEFAULT '{}',
+            computed_at TEXT NOT NULL,
+            UNIQUE (property_id, score_key)
+        );
+
+CREATE TABLE IF NOT EXISTS rei_analytics_snapshots (
+            id SERIAL PRIMARY KEY,
+            snapshot_key TEXT NOT NULL UNIQUE,
+            scope TEXT NOT NULL DEFAULT 'global',
+            metrics_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_search_index (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL UNIQUE REFERENCES properties(id) ON DELETE CASCADE,
+            index_text TEXT NOT NULL DEFAULT '',
+            geo_hash TEXT,
+            metadata_json TEXT NOT NULL DEFAULT '{}',
+            updated_at TEXT NOT NULL
+        );
+
+CREATE TABLE IF NOT EXISTS rei_nearby_properties (
+            id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            nearby_property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            distance_km REAL NOT NULL DEFAULT 0,
+            created_at TEXT NOT NULL,
+            UNIQUE (property_id, nearby_property_id)
+        );
+
+CREATE TABLE IF NOT EXISTS rei_property_reports (
+            id SERIAL PRIMARY KEY,
+            report_key TEXT NOT NULL UNIQUE,
+            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+            report_type TEXT NOT NULL DEFAULT 'summary',
+            payload_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL
+        );
+
+CREATE INDEX IF NOT EXISTS idx_rei_listings_property ON rei_listings(property_id, status);
+
+CREATE INDEX IF NOT EXISTS idx_rei_visits_property ON rei_visits(property_id, scheduled_at);
+
+CREATE INDEX IF NOT EXISTS idx_rei_transactions_property ON rei_transactions(property_id, status);
+
+CREATE INDEX IF NOT EXISTS idx_rei_matching_results_session ON rei_matching_results(session_id, score);
+
+CREATE INDEX IF NOT EXISTS idx_rei_recommendations_user ON rei_recommendations(user_id, recommendation_type);
+
+CREATE INDEX IF NOT EXISTS idx_rei_intelligence_scores_property ON rei_intelligence_scores(property_id, score_key);
+
+CREATE INDEX IF NOT EXISTS idx_rei_search_index_text ON rei_search_index(index_text);

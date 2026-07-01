@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 12
+APPLICATION_SCHEMA_VERSION = 13
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -134,6 +134,23 @@ APPLICATION_SEED = SeedSpec(
         "Includes one demo buyer project with guided journey steps.",
     ),
 )
+
+
+def _real_estate_intelligence_table_specs() -> tuple[TableSpec, ...]:
+    from .real_estate_intelligence.schema_v13_ddl import V13_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x real estate intelligence entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("property_id", "properties.id", on_delete="cascade"),)
+            if "property_id" in name or name.startswith("rei_property")
+            else (),
+        )
+        for name in V13_TABLE_NAMES
+    )
 
 
 def _workflow_automation_table_specs() -> tuple[TableSpec, ...]:
@@ -549,7 +566,8 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _cognition_table_specs()
     + _assistant_table_specs()
     + _knowledge_platform_table_specs()
-    + _workflow_automation_table_specs(),
+    + _workflow_automation_table_specs()
+    + _real_estate_intelligence_table_specs(),
 )
 
 

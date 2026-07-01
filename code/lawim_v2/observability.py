@@ -70,10 +70,30 @@ class RuntimeMetrics:
     approval_decided_total: int = 0
     automation_notifications_total: int = 0
     notification_sent_total: int = 0
+    property_list_total: int = 0
+    property_detail_total: int = 0
+    property_search_total: int = 0
+    listing_list_total: int = 0
+    listing_created_total: int = 0
+    listing_published_total: int = 0
+    listing_archived_total: int = 0
+    verification_run_total: int = 0
+    valuation_computed_total: int = 0
+    matching_run_total: int = 0
+    matching_results_total: int = 0
+    recommendation_generated_total: int = 0
+    visit_list_total: int = 0
+    visit_scheduled_total: int = 0
+    visit_completed_total: int = 0
+    transaction_list_total: int = 0
+    transaction_started_total: int = 0
+    transaction_closed_total: int = 0
+    intelligence_computed_total: int = 0
     lock: threading.Lock = field(default_factory=threading.Lock)
     _latency_samples: list[float] = field(default_factory=list)
     _knowledge_search_latency_samples: list[float] = field(default_factory=list)
     _process_execution_latency_samples: list[float] = field(default_factory=list)
+    _verification_latency_samples: list[float] = field(default_factory=list)
     _route_counts: dict[str, int] = field(default_factory=dict)
 
     def increment(self, name: str, *, failed: bool = False) -> None:
@@ -181,6 +201,52 @@ class RuntimeMetrics:
                 self.automation_notifications_total += 1
             elif name == "notification_sent":
                 self.notification_sent_total += 1
+            elif name == "property_list":
+                self.property_list_total += 1
+            elif name == "property_detail":
+                self.property_detail_total += 1
+            elif name == "property_search":
+                self.property_search_total += 1
+            elif name == "listing_list":
+                self.listing_list_total += 1
+            elif name == "listing_created":
+                self.listing_created_total += 1
+            elif name == "listing_published":
+                self.listing_published_total += 1
+            elif name == "listing_archived":
+                self.listing_archived_total += 1
+            elif name == "verification_run":
+                self.verification_run_total += 1
+            elif name == "valuation_computed":
+                self.valuation_computed_total += 1
+            elif name == "matching_run":
+                self.matching_run_total += 1
+            elif name == "recommendation_generated":
+                self.recommendation_generated_total += 1
+            elif name == "visit_list":
+                self.visit_list_total += 1
+            elif name == "visit_scheduled":
+                self.visit_scheduled_total += 1
+            elif name == "visit_completed":
+                self.visit_completed_total += 1
+            elif name == "transaction_list":
+                self.transaction_list_total += 1
+            elif name == "transaction_started":
+                self.transaction_started_total += 1
+            elif name == "transaction_closed":
+                self.transaction_closed_total += 1
+            elif name == "intelligence_computed":
+                self.intelligence_computed_total += 1
+
+    def record_verification(self, *, latency_ms: float) -> None:
+        with self.lock:
+            self._verification_latency_samples.append(latency_ms)
+            if len(self._verification_latency_samples) > 500:
+                self._verification_latency_samples = self._verification_latency_samples[-500:]
+
+    def record_matching(self, *, score: int) -> None:
+        with self.lock:
+            self.matching_results_total += max(0, score)
 
     def record_knowledge_search(self, *, latency_ms: float) -> None:
         with self.lock:
@@ -271,6 +337,30 @@ class RuntimeMetrics:
                 "approval_decided_total": self.approval_decided_total,
                 "automation_notifications_total": self.automation_notifications_total,
                 "notification_sent_total": self.notification_sent_total,
+                "property_list_total": self.property_list_total,
+                "property_detail_total": self.property_detail_total,
+                "property_search_total": self.property_search_total,
+                "listing_list_total": self.listing_list_total,
+                "listing_created_total": self.listing_created_total,
+                "listing_published_total": self.listing_published_total,
+                "listing_archived_total": self.listing_archived_total,
+                "verification_run_total": self.verification_run_total,
+                "valuation_computed_total": self.valuation_computed_total,
+                "matching_run_total": self.matching_run_total,
+                "matching_results_total": self.matching_results_total,
+                "recommendation_generated_total": self.recommendation_generated_total,
+                "visit_list_total": self.visit_list_total,
+                "visit_scheduled_total": self.visit_scheduled_total,
+                "visit_completed_total": self.visit_completed_total,
+                "transaction_list_total": self.transaction_list_total,
+                "transaction_started_total": self.transaction_started_total,
+                "transaction_closed_total": self.transaction_closed_total,
+                "intelligence_computed_total": self.intelligence_computed_total,
+                "verification_latency_ms": {
+                    "p50": _percentile(self._verification_latency_samples, 0.50),
+                    "p95": _percentile(self._verification_latency_samples, 0.95),
+                    "samples": len(self._verification_latency_samples),
+                },
                 "process_execution_latency_ms": {
                     "p50": _percentile(self._process_execution_latency_samples, 0.50),
                     "p95": _percentile(self._process_execution_latency_samples, 0.95),

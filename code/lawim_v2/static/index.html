@@ -553,6 +553,25 @@
 
           <article class="panel card" data-journey-panel="admin project">
             <div class="section-heading">
+              <h2>Real Estate Intelligence</h2>
+              <p class="muted">Property lifecycle, listings, verification, matching and transactions (API v2).</p>
+            </div>
+            <div id="rei-admin-stats" class="card-list muted">Sign in to load real estate stats.</div>
+            <div id="rei-admin-list" class="card-list"></div>
+            <form id="rei-search-form" class="stacked-form hidden">
+              <label>
+                <span>Search properties</span>
+                <input name="query" type="text" placeholder="City, title, listing code…">
+              </label>
+              <div class="actions">
+                <button type="submit" class="button primary">Search</button>
+              </div>
+            </form>
+            <div id="rei-search-results" class="message-stream muted"></div>
+          </article>
+
+          <article class="panel card" data-journey-panel="admin project">
+            <div class="section-heading">
               <h2>Workflow automation</h2>
               <p class="muted">Process engine, tasks, queues, rules and monitoring (API v2).</p>
             </div>

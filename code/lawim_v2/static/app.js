@@ -81,6 +81,10 @@ function cacheRefs() {
     workflowAdminList: byId("workflow-admin-list"),
     workflowMonitorForm: byId("workflow-monitor-form"),
     workflowMonitorResults: byId("workflow-monitor-results"),
+    reiAdminStats: byId("rei-admin-stats"),
+    reiAdminList: byId("rei-admin-list"),
+    reiSearchForm: byId("rei-search-form"),
+    reiSearchResults: byId("rei-search-results"),
   });
 }
 
@@ -1034,6 +1038,7 @@ async function refresh() {
     await refreshProjects();
     await refreshEcosystemLists();
     await refreshKnowledgeAdmin();
+    await refreshReiAdmin();
     await refreshWorkflowAdmin();
     applyJourney(state.activeJourney);
     setNotice("Runtime is available and ready.", "success");
@@ -1102,6 +1107,66 @@ async function handleKnowledgeSearch(event) {
       .join("") || "<p class='muted'>No results.</p>";
   } catch (error) {
     setNotice(error.message, "error");
+  }
+}
+
+async function refreshReiAdmin() {
+  if (!state.token || !refs.reiAdminStats) {
+    return;
+  }
+  try {
+    const [statsPayload, listingsPayload, analyticsPayload] = await Promise.all([
+      api("/api/v2/properties/stats", { auth: true }),
+      api("/api/v2/properties/listings", { auth: true }),
+      api("/api/v2/properties/analytics", { auth: true }),
+    ]);
+    const stats = statsPayload.stats || {};
+    const analytics = analyticsPayload.analytics || {};
+    refs.reiAdminStats.innerHTML = `
+      <p class="muted">${stats.properties ?? 0} properties · ${stats.listings ?? 0} listings · ${stats.transactions ?? 0} transactions · trust avg ${analytics.avg_trust_score ?? "—"}</p>
+    `;
+    refs.reiSearchForm?.classList.remove("hidden");
+    const listings = listingsPayload.listings || [];
+    refs.reiAdminList.innerHTML = listings
+      .slice(0, 8)
+      .map(
+        (listing) => `
+          <article class="mini-card">
+            <strong>${escapeHtml(listing.title)}</strong>
+            <p class="muted">${escapeHtml(listing.status || "draft")} · AI ${listing.ai_score ?? 0}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No listings yet.</p>";
+  } catch (error) {
+    refs.reiAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function handleReiSearch(event) {
+  event.preventDefault();
+  if (!state.token || !refs.reiSearchForm) {
+    return;
+  }
+  const query = String(new FormData(refs.reiSearchForm).get("query") || "").trim();
+  if (!query) {
+    return;
+  }
+  try {
+    const payload = await api(`/api/v2/properties/search?q=${encodeURIComponent(query)}`, { auth: true });
+    const results = payload.results || [];
+    refs.reiSearchResults.innerHTML = results
+      .map(
+        (item) => `
+          <article class="message">
+            <div class="message__meta"><strong>${escapeHtml(item.title || item.listing_key || "")}</strong> · ${escapeHtml(item.status || "")}</div>
+            <p>${escapeHtml(item.city || "")} · score ${item.ai_score ?? "—"}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No matches.</p>";
+  } catch (error) {
+    refs.reiSearchResults.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
   }
 }
 
@@ -1591,6 +1656,7 @@ function bindEvents() {
   refs.projectForm?.addEventListener("submit", handleProjectCreate);
   refs.assistantForm?.addEventListener("submit", handleAssistantChat);
   refs.knowledgeSearchForm?.addEventListener("submit", handleKnowledgeSearch);
+  refs.reiSearchForm?.addEventListener("submit", handleReiSearch);
   refs.workflowMonitorForm?.addEventListener("submit", handleWorkflowMonitor);
   refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);
   refs.matchForm.addEventListener("submit", handleMatchSearch);

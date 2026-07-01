@@ -32,7 +32,7 @@ class ProductizationContractTest(unittest.TestCase):
     def test_schema_ddl_fingerprint_is_stable(self) -> None:
         fingerprint = normalized_ddl_fingerprint()
         self.assertEqual(len(fingerprint), 64)
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 12)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 13)
 
     def test_compose_alias_tree_points_to_canonical_compose(self) -> None:
         root = Path(__file__).resolve().parent.parent

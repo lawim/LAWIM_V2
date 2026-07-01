@@ -18,7 +18,7 @@ from tests.lawim_harness import LawimTestHarness
 
 class ReleaseProgramBPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v10(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 12)
+        self.assertEqual(self.repository.schema_version(), 13)
 
     def test_ecosystem_tables_present(self) -> None:
         self.assertTrue(self.repository.ecosystem_tables_present())
@@ -409,12 +409,12 @@ class ReleaseProgramBUiTests(LawimTestHarness):
 class ReleaseProgramBHealthTests(LawimTestHarness):
     def test_health_schema_v10(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 12)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 13)
 
     def test_migration_strategy_v10(self) -> None:
         from lawim_v2.schema_migrations import migration_strategy_profile
 
-        self.assertEqual(migration_strategy_profile()["schema_version"], 12)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 13)
 
 
 class ReleaseProgramBPartnerTypeTests(LawimTestHarness):
