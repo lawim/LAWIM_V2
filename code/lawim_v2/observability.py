@@ -90,6 +90,7 @@ class RuntimeMetrics:
     transaction_closed_total: int = 0
     intelligence_computed_total: int = 0
     crm_requests_total: int = 0
+    marketplace_requests_total: int = 0
     lock: threading.Lock = field(default_factory=threading.Lock)
     _latency_samples: list[float] = field(default_factory=list)
     _knowledge_search_latency_samples: list[float] = field(default_factory=list)
@@ -255,10 +256,34 @@ class RuntimeMetrics:
                     "followup_",
                     "journey_",
                     "pipeline_",
-                    "analytics_",
                 )
             ):
                 self.crm_requests_total += 1
+                self._crm_metric_counts[name] = self._crm_metric_counts.get(name, 0) + 1
+            elif any(
+                name.startswith(prefix)
+                for prefix in (
+                    "marketplace_",
+                    "partner_",
+                    "provider_",
+                    "service_",
+                    "catalog_",
+                    "request_",
+                    "quote_",
+                    "contract_",
+                    "mission_",
+                    "review_",
+                    "rating_",
+                    "reputation_",
+                    "subscription_",
+                    "commission_",
+                    "dispute_",
+                    "matching_",
+                    "recommendation_",
+                    "analytics_",
+                )
+            ):
+                self.marketplace_requests_total += 1
                 self._crm_metric_counts[name] = self._crm_metric_counts.get(name, 0) + 1
 
     def record_verification(self, *, latency_ms: float) -> None:
@@ -380,6 +405,7 @@ class RuntimeMetrics:
                 "transaction_closed_total": self.transaction_closed_total,
                 "intelligence_computed_total": self.intelligence_computed_total,
                 "crm_requests_total": self.crm_requests_total,
+                "marketplace_requests_total": self.marketplace_requests_total,
                 "crm_metrics": dict(self._crm_metric_counts),
                 "verification_latency_ms": {
                     "p50": _percentile(self._verification_latency_samples, 0.50),

@@ -429,6 +429,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_cognition_get(path, query)
             return
 
+        if path.startswith("/api/v2/marketplace"):
+            self._handle_v2_marketplace_get(path, query)
+            return
+
         if path.startswith("/api/v2/crm"):
             self._handle_v2_crm_get(path, query)
             return
@@ -652,6 +656,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/v2/knowledge/"):
             self._handle_v2_knowledge_subroutes_post(path, body, actor)
+            return
+
+        if path.startswith("/api/v2/marketplace"):
+            self._handle_v2_marketplace_post(path, body, actor)
             return
 
         if path.startswith("/api/v2/crm"):
@@ -1321,6 +1329,171 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
     def _extract_crm_id(self, path: str, *, resource: str, suffix: str = "") -> int:
         marker = f"/api/v2/crm/{resource}/"
         return self._extract_path_id(path, marker=marker, suffix=suffix, resource=resource.capitalize())
+
+    def _handle_v2_marketplace_get(self, path: str, query: dict[str, list[str]]) -> None:
+        if path == "/api/v2/marketplace/integrations":
+            self._send_json(self.services.marketplace.integration_sources(actor=None))
+            return
+        actor = self._require_user()
+        mp = self.services.marketplace
+        if path == "/api/v2/marketplace/partners":
+            self._send_json(mp.list_partner_registrations(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/marketplace/providers":
+            self._send_json(mp.list_providers(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/marketplace/catalog/categories":
+            self._send_json(mp.list_catalog_categories(actor=actor))
+            return
+        if path == "/api/v2/marketplace/catalog":
+            self._send_json(mp.list_catalog_items(actor=actor, category=self._first(query, "category")))
+            return
+        if path == "/api/v2/marketplace/requests":
+            self._send_json(mp.list_requests(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/marketplace/quotes":
+            request_id = self._optional_int(self._first(query, "request_id"), minimum=1)
+            self._send_json(mp.list_quotes(actor=actor, request_id=request_id))
+            return
+        if path == "/api/v2/marketplace/contracts":
+            self._send_json(mp.list_contracts(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/marketplace/missions":
+            self._send_json(mp.list_missions(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/marketplace/reviews":
+            provider_id = self._optional_int(self._first(query, "provider_id"), minimum=1)
+            self._send_json(mp.list_reviews(actor=actor, provider_id=provider_id))
+            return
+        if path == "/api/v2/marketplace/commissions":
+            contract_id = self._optional_int(self._first(query, "contract_id"), minimum=1)
+            self._send_json(mp.list_commissions(actor=actor, contract_id=contract_id))
+            return
+        if path == "/api/v2/marketplace/subscriptions/plans":
+            self._send_json(mp.list_subscription_plans(actor=actor))
+            return
+        if path == "/api/v2/marketplace/disputes":
+            self._send_json(mp.list_disputes(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/marketplace/recommendations":
+            request_id = self._optional_int(self._first(query, "request_id"), minimum=1)
+            self._send_json(mp.list_recommendations(actor=actor, request_id=request_id))
+            return
+        if path == "/api/v2/marketplace/analytics":
+            self._send_json(mp.analytics(actor=actor))
+            return
+        if path == "/api/v2/marketplace/stats":
+            self._send_json(mp.stats(actor=actor))
+            return
+        if path == "/api/v2/marketplace/dashboard":
+            self._send_json(mp.dashboard(actor=actor))
+            return
+        if path.startswith("/api/v2/marketplace/providers/") and path.endswith("/availability"):
+            provider_id = self._extract_path_id(path, marker="/api/v2/marketplace/providers/", suffix="/availability", resource="Provider")
+            self._send_json(mp.provider_availability(actor=actor, provider_id=provider_id))
+            return
+        if path.startswith("/api/v2/marketplace/providers/") and path.endswith("/portfolio"):
+            provider_id = self._extract_path_id(path, marker="/api/v2/marketplace/providers/", suffix="/portfolio", resource="Provider")
+            self._send_json(mp.provider_portfolio(actor=actor, provider_id=provider_id))
+            return
+        if path.startswith("/api/v2/marketplace/providers/") and path.endswith("/reputation"):
+            provider_id = self._extract_path_id(path, marker="/api/v2/marketplace/providers/", suffix="/reputation", resource="Provider")
+            self._send_json(mp.provider_reputation(actor=actor, provider_id=provider_id))
+            return
+        if path.startswith("/api/v2/marketplace/matching/"):
+            session_id = self._extract_path_id(path, marker="/api/v2/marketplace/matching/", resource="Session")
+            self._send_json(mp.get_matching_session(actor=actor, session_id=session_id))
+            return
+        if path.startswith("/api/v2/marketplace/catalog/") and path.count("/") == 5:
+            item_id = self._extract_path_id(path, marker="/api/v2/marketplace/catalog/", resource="CatalogItem")
+            self._send_json(mp.get_catalog_item(actor=actor, item_id=item_id))
+            return
+        if path.startswith("/api/v2/marketplace/requests/") and path.count("/") == 5:
+            request_id = self._extract_path_id(path, marker="/api/v2/marketplace/requests/", resource="Request")
+            self._send_json(mp.get_request(actor=actor, request_id=request_id))
+            return
+        if path.startswith("/api/v2/marketplace/missions/") and path.count("/") == 5:
+            mission_id = self._extract_path_id(path, marker="/api/v2/marketplace/missions/", resource="Mission")
+            self._send_json(mp.get_mission(actor=actor, mission_id=mission_id))
+            return
+        if path.startswith("/api/v2/marketplace/providers/") and path.count("/") == 5:
+            provider_id = self._extract_path_id(path, marker="/api/v2/marketplace/providers/", resource="Provider")
+            self._send_json(mp.get_provider(actor=actor, provider_id=provider_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown marketplace API route")
+
+    def _handle_v2_marketplace_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        mp = self.services.marketplace
+        if path == "/api/v2/marketplace/partners":
+            self._send_json(mp.create_partner_registration(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/providers":
+            self._send_json(mp.create_provider(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/catalog":
+            self._send_json(mp.create_catalog_item(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/requests":
+            self._send_json(mp.create_request(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/quotes":
+            self._send_json(mp.create_quote(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/contracts":
+            self._send_json(mp.create_contract(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/reviews":
+            self._send_json(mp.create_review(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/disputes":
+            self._send_json(mp.open_dispute(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/subscriptions":
+            self._send_json(mp.subscribe(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/payments/prepare":
+            self._send_json(mp.prepare_payment(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/marketplace/seed":
+            self._send_json(mp.seed_catalog(actor=actor))
+            return
+        if path.startswith("/api/v2/marketplace/partners/") and path.endswith("/approve"):
+            registration_id = self._extract_path_id(path, marker="/api/v2/marketplace/partners/", suffix="/approve", resource="Registration")
+            self._send_json(mp.approve_partner_registration(actor=actor, registration_id=registration_id))
+            return
+        if path.startswith("/api/v2/marketplace/partners/") and path.endswith("/qualify"):
+            registration_id = self._extract_path_id(path, marker="/api/v2/marketplace/partners/", suffix="/qualify", resource="Registration")
+            self._send_json(mp.qualify_partner_registration(actor=actor, registration_id=registration_id))
+            return
+        if path.startswith("/api/v2/marketplace/providers/") and path.endswith("/availability"):
+            provider_id = self._extract_path_id(path, marker="/api/v2/marketplace/providers/", suffix="/availability", resource="Provider")
+            self._send_json(mp.set_provider_availability(actor=actor, provider_id=provider_id, body=body))
+            return
+        if path.startswith("/api/v2/marketplace/quotes/") and path.endswith("/send"):
+            quote_id = self._extract_path_id(path, marker="/api/v2/marketplace/quotes/", suffix="/send", resource="Quote")
+            self._send_json(mp.send_quote(actor=actor, quote_id=quote_id))
+            return
+        if path.startswith("/api/v2/marketplace/quotes/") and path.endswith("/accept"):
+            quote_id = self._extract_path_id(path, marker="/api/v2/marketplace/quotes/", suffix="/accept", resource="Quote")
+            self._send_json(mp.accept_quote(actor=actor, quote_id=quote_id))
+            return
+        if path.startswith("/api/v2/marketplace/contracts/") and path.endswith("/activate"):
+            contract_id = self._extract_path_id(path, marker="/api/v2/marketplace/contracts/", suffix="/activate", resource="Contract")
+            self._send_json(mp.activate_contract(actor=actor, contract_id=contract_id))
+            return
+        if path.startswith("/api/v2/marketplace/requests/") and path.endswith("/matching"):
+            request_id = self._extract_path_id(path, marker="/api/v2/marketplace/requests/", suffix="/matching", resource="Request")
+            self._send_json(mp.run_matching(actor=actor, request_id=request_id))
+            return
+        if path.startswith("/api/v2/marketplace/requests/") and path.endswith("/recommendations"):
+            request_id = self._extract_path_id(path, marker="/api/v2/marketplace/requests/", suffix="/recommendations", resource="Request")
+            self._send_json(mp.generate_recommendations(actor=actor, request_id=request_id))
+            return
+        if path.startswith("/api/v2/marketplace/disputes/") and path.endswith("/resolve"):
+            dispute_id = self._extract_path_id(path, marker="/api/v2/marketplace/disputes/", suffix="/resolve", resource="Dispute")
+            self._send_json(mp.resolve_dispute(actor=actor, dispute_id=dispute_id, body=body))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown marketplace API route")
 
     def _handle_v2_crm_get(self, path: str, query: dict[str, list[str]]) -> None:
         if path == "/api/v2/crm/official-contact":

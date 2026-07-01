@@ -89,6 +89,10 @@ function cacheRefs() {
     crmAdminList: byId("crm-admin-list"),
     crmSearchForm: byId("crm-search-form"),
     crmSearchResults: byId("crm-search-results"),
+    marketplaceAdminStats: byId("marketplace-admin-stats"),
+    marketplaceAdminList: byId("marketplace-admin-list"),
+    marketplaceSearchForm: byId("marketplace-search-form"),
+    marketplaceSearchResults: byId("marketplace-search-results"),
   });
 }
 
@@ -1044,6 +1048,7 @@ async function refresh() {
     await refreshKnowledgeAdmin();
     await refreshReiAdmin();
     await refreshCrmAdmin();
+    await refreshMarketplaceAdmin();
     await refreshWorkflowAdmin();
     applyJourney(state.activeJourney);
     setNotice("Runtime is available and ready.", "success");
@@ -1112,6 +1117,78 @@ async function handleKnowledgeSearch(event) {
       .join("") || "<p class='muted'>No results.</p>";
   } catch (error) {
     setNotice(error.message, "error");
+  }
+}
+
+async function refreshMarketplaceAdmin() {
+  if (!state.token || !refs.marketplaceAdminStats) {
+    return;
+  }
+  try {
+    const [statsPayload, providersPayload, catalogPayload] = await Promise.all([
+      api("/api/v2/marketplace/stats", { auth: true }),
+      api("/api/v2/marketplace/providers", { auth: true }),
+      api("/api/v2/marketplace/catalog", { auth: true }),
+    ]);
+    const stats = statsPayload.stats || {};
+    refs.marketplaceAdminStats.innerHTML = `
+      <p class="muted">${stats.providers ?? 0} providers · ${stats.requests ?? 0} requests · ${stats.missions ?? 0} missions · ${stats.contracts ?? 0} contracts</p>
+    `;
+    refs.marketplaceSearchForm?.classList.remove("hidden");
+    const providers = providersPayload.providers || [];
+    refs.marketplaceAdminList.innerHTML = providers
+      .slice(0, 6)
+      .map(
+        (provider) => `
+          <article class="mini-card">
+            <strong>${escapeHtml(provider.headline || provider.provider_key || "")}</strong>
+            <p class="muted">${escapeHtml(provider.provider_type || "")} · score ${provider.quality_score ?? "—"}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No marketplace providers yet.</p>";
+    const items = catalogPayload.items || [];
+    if (items.length && refs.marketplaceSearchResults) {
+      refs.marketplaceSearchResults.innerHTML = items
+        .slice(0, 4)
+        .map(
+          (item) => `
+            <article class="message">
+              <div class="message__meta"><strong>${escapeHtml(item.title || "")}</strong> · ${escapeHtml(item.category || "")}</div>
+            </article>
+          `,
+        )
+        .join("");
+    }
+  } catch (error) {
+    refs.marketplaceAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function handleMarketplaceSearch(event) {
+  event.preventDefault();
+  if (!state.token || !refs.marketplaceSearchForm) {
+    return;
+  }
+  const query = String(new FormData(refs.marketplaceSearchForm).get("query") || "").trim();
+  if (!query) {
+    return;
+  }
+  try {
+    const payload = await api(`/api/v2/marketplace/catalog?category=${encodeURIComponent(query)}`, { auth: true });
+    const results = payload.items || [];
+    refs.marketplaceSearchResults.innerHTML = results
+      .map(
+        (item) => `
+          <article class="message">
+            <div class="message__meta"><strong>${escapeHtml(item.title || "")}</strong> · ${escapeHtml(item.category || "")}</div>
+            <p>${escapeHtml(item.description || "")}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No catalog matches.</p>";
+  } catch (error) {
+    refs.marketplaceSearchResults.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
   }
 }
 
@@ -1724,6 +1801,7 @@ function bindEvents() {
   refs.knowledgeSearchForm?.addEventListener("submit", handleKnowledgeSearch);
   refs.reiSearchForm?.addEventListener("submit", handleReiSearch);
   refs.crmSearchForm?.addEventListener("submit", handleCrmSearch);
+  refs.marketplaceSearchForm?.addEventListener("submit", handleMarketplaceSearch);
   refs.workflowMonitorForm?.addEventListener("submit", handleWorkflowMonitor);
   refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);
   refs.matchForm.addEventListener("submit", handleMatchSearch);

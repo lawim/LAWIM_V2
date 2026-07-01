@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 14
+APPLICATION_SCHEMA_VERSION = 15
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -150,6 +150,25 @@ def _crm_table_specs() -> tuple[TableSpec, ...]:
             else (),
         )
         for name in V14_TABLE_NAMES
+    )
+
+
+def _marketplace_table_specs() -> tuple[TableSpec, ...]:
+    from .marketplace.schema_v15_ddl import V15_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x marketplace entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("partner_profile_id", "partner_profiles.id", on_delete="cascade"),)
+            if "partner_profile_id" in name
+            else (ForeignKeySpec("service_catalog_id", "service_catalog.id", on_delete="set null"),)
+            if "service_catalog_id" in name
+            else (),
+        )
+        for name in V15_TABLE_NAMES
     )
 
 
@@ -585,7 +604,8 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _knowledge_platform_table_specs()
     + _workflow_automation_table_specs()
     + _real_estate_intelligence_table_specs()
-    + _crm_table_specs(),
+    + _crm_table_specs()
+    + _marketplace_table_specs(),
 )
 
 

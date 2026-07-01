@@ -132,6 +132,9 @@ class LawimServices:
         from .crm.service import CrmService
 
         self.crm = CrmService(repository, self.projects, self.policy)
+        from .marketplace.service import MarketplaceService
+
+        self.marketplace = MarketplaceService(repository, self.projects, self.policy)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()

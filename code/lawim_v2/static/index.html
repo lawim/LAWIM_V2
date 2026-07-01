@@ -572,6 +572,25 @@
 
           <article class="panel card" data-journey-panel="admin project">
             <div class="section-heading">
+              <h2>Marketplace &amp; Partner Ecosystem</h2>
+              <p class="muted">Partners, providers, catalog, requests, quotes, missions and matching (API v2).</p>
+            </div>
+            <div id="marketplace-admin-stats" class="card-list muted">Sign in to load marketplace stats.</div>
+            <div id="marketplace-admin-list" class="card-list"></div>
+            <form id="marketplace-search-form" class="stacked-form hidden">
+              <label>
+                <span>Search catalog</span>
+                <input name="query" type="text" placeholder="Service, category, provider…">
+              </label>
+              <div class="actions">
+                <button type="submit" class="button primary">Search marketplace</button>
+              </div>
+            </form>
+            <div id="marketplace-search-results" class="message-stream muted"></div>
+          </article>
+
+          <article class="panel card" data-journey-panel="admin project">
+            <div class="section-heading">
               <h2>Real Estate Intelligence</h2>
               <p class="muted">Property lifecycle, listings, verification, matching and transactions (API v2).</p>
             </div>
