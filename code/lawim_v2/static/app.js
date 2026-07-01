@@ -360,16 +360,26 @@ async function selectProject(projectId) {
   }
   state.selectedProjectId = projectId;
   try {
-    const [payload, orchPayload, matchPayload, wfPayload] = await Promise.all([
+    const [payload, orchPayload, matchPayload, wfPayload, graphPayload, intelPayload, nbaPayload, risksPayload, oppPayload] = await Promise.all([
       api(`/api/v2/projects/${projectId}/workspace`, { auth: true }),
       api(`/api/v2/projects/${projectId}/orchestration`, { auth: true }),
       api(`/api/v2/matching?project_id=${projectId}`, { auth: true }),
       api(`/api/v2/projects/${projectId}/workflows`, { auth: true }),
+      api("/api/v2/knowledge/graph", { auth: true, query: { project_id: projectId } }),
+      api("/api/v2/intelligence", { auth: true, query: { project_id: projectId } }),
+      api("/api/v2/next-actions", { auth: true, query: { project_id: projectId } }),
+      api("/api/v2/risks", { auth: true, query: { project_id: projectId } }),
+      api("/api/v2/opportunities", { auth: true, query: { project_id: projectId } }),
     ]);
     const workspace = payload.workspace || payload;
     const orchestration = orchPayload.orchestration || {};
     const matches = matchPayload.matches || [];
     const workflow = wfPayload.workflow_instance || {};
+    const graph = graphPayload.graph || {};
+    const cognitionIntel = intelPayload.intelligence || {};
+    const nextAction = nbaPayload.next_action || {};
+    const cognitionRisks = risksPayload.risks || [];
+    const cognitionOpportunities = oppPayload.opportunities || [];
     const project = workspace.project;
     const progress = workspace.progress || {};
     const stepsHtml = (workspace.steps || [])
@@ -401,6 +411,18 @@ async function selectProject(projectId) {
     const lifeEventsHtml = (workspace.life_events || [])
       .slice(0, 4)
       .map((event) => `<li>${escapeHtml(event.title || event.event_type)}</li>`)
+      .join("");
+    const graphNodesHtml = (graph.nodes || [])
+      .slice(0, 6)
+      .map((node) => `<li>${escapeHtml(node.title || node.node_key)} · ${escapeHtml(node.node_type || "")}</li>`)
+      .join("");
+    const cognitionRisksHtml = cognitionRisks
+      .slice(0, 4)
+      .map((risk) => `<li>${escapeHtml(risk.risk_key || "risk")} · score ${risk.score ?? "n/a"}</li>`)
+      .join("");
+    const cognitionOpportunitiesHtml = cognitionOpportunities
+      .slice(0, 4)
+      .map((item) => `<li>${escapeHtml(item.opportunity_key || "opportunity")} · ${item.opportunity_score ?? "n/a"}</li>`)
       .join("");
     const knowledgeHtml = (workspace.knowledge || [])
       .slice(0, 4)
@@ -492,6 +514,28 @@ async function selectProject(projectId) {
         <section>
           <h4>Life events</h4>
           <ul>${lifeEventsHtml || "<li class='muted'>No life events</li>"}</ul>
+        </section>
+        <section>
+          <h4>Knowledge graph</h4>
+          <p class="muted">${(graph.nodes || []).length} nodes · ${(graph.edges || []).length} edges</p>
+          <ul>${graphNodesHtml || "<li class='muted'>No graph nodes</li>"}</ul>
+        </section>
+        <section>
+          <h4>Decision platform</h4>
+          <p class="muted">${escapeHtml(nextAction.title || "—")} · confidence ${nextAction.confidence ?? "n/a"}</p>
+          <p class="muted">${escapeHtml(nextAction.justification || cognitionIntel.snapshot?.decision?.reason || "—")}</p>
+        </section>
+        <section>
+          <h4>Next best action</h4>
+          <p class="muted">${escapeHtml(nextAction.title || "—")} · score ${nextAction.score ?? "n/a"}</p>
+        </section>
+        <section>
+          <h4>Risk intelligence</h4>
+          <ul>${cognitionRisksHtml || "<li class='muted'>No risk scores</li>"}</ul>
+        </section>
+        <section>
+          <h4>Opportunity intelligence</h4>
+          <ul>${cognitionOpportunitiesHtml || "<li class='muted'>No opportunities scored</li>"}</ul>
         </section>
         <section>
           <h4>Knowledge</h4>

@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 8
+APPLICATION_SCHEMA_VERSION = 9
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -134,6 +134,21 @@ APPLICATION_SEED = SeedSpec(
         "Includes one demo buyer project with guided journey steps.",
     ),
 )
+
+
+def _cognition_table_specs() -> tuple[TableSpec, ...]:
+    from .cognition.schema_v9_ddl import V9_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x cognition platform entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="cascade"),),
+        )
+        for name in V9_TABLE_NAMES
+    )
 
 
 def _ecosystem_table_specs() -> tuple[TableSpec, ...]:
@@ -450,7 +465,8 @@ APPLICATION_SCHEMA = SchemaManifest(
         ),
     )
     + _intelligent_table_specs()
-    + _ecosystem_table_specs(),
+    + _ecosystem_table_specs()
+    + _cognition_table_specs(),
 )
 
 

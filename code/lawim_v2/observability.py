@@ -30,6 +30,15 @@ class RuntimeMetrics:
     ecosystem_reputation_total: int = 0
     ecosystem_notifications_total: int = 0
     ecosystem_orchestration_total: int = 0
+    cognition_graph_total: int = 0
+    cognition_context_total: int = 0
+    cognition_refresh_total: int = 0
+    cognition_reasoning_total: int = 0
+    cognition_simulation_total: int = 0
+    cognition_intelligence_total: int = 0
+    cognition_next_action_total: int = 0
+    cognition_risks_total: int = 0
+    cognition_opportunities_total: int = 0
     lock: threading.Lock = field(default_factory=threading.Lock)
     _latency_samples: list[float] = field(default_factory=list)
     _route_counts: dict[str, int] = field(default_factory=dict)
@@ -63,6 +72,24 @@ class RuntimeMetrics:
                 self.ecosystem_notifications_total += 1
             elif name == "ecosystem_orchestration":
                 self.ecosystem_orchestration_total += 1
+            elif name == "cognition_graph":
+                self.cognition_graph_total += 1
+            elif name == "cognition_context":
+                self.cognition_context_total += 1
+            elif name == "cognition_refresh":
+                self.cognition_refresh_total += 1
+            elif name == "cognition_reasoning":
+                self.cognition_reasoning_total += 1
+            elif name == "cognition_simulation":
+                self.cognition_simulation_total += 1
+            elif name == "cognition_intelligence":
+                self.cognition_intelligence_total += 1
+            elif name == "cognition_next_action":
+                self.cognition_next_action_total += 1
+            elif name == "cognition_risks":
+                self.cognition_risks_total += 1
+            elif name == "cognition_opportunities":
+                self.cognition_opportunities_total += 1
 
     def record_request(self, *, route: str, duration_ms: float, failed: bool = False) -> None:
         with self.lock:
@@ -95,6 +122,15 @@ class RuntimeMetrics:
                 "ecosystem_reputation_total": self.ecosystem_reputation_total,
                 "ecosystem_notifications_total": self.ecosystem_notifications_total,
                 "ecosystem_orchestration_total": self.ecosystem_orchestration_total,
+                "cognition_graph_total": self.cognition_graph_total,
+                "cognition_context_total": self.cognition_context_total,
+                "cognition_refresh_total": self.cognition_refresh_total,
+                "cognition_reasoning_total": self.cognition_reasoning_total,
+                "cognition_simulation_total": self.cognition_simulation_total,
+                "cognition_intelligence_total": self.cognition_intelligence_total,
+                "cognition_next_action_total": self.cognition_next_action_total,
+                "cognition_risks_total": self.cognition_risks_total,
+                "cognition_opportunities_total": self.cognition_opportunities_total,
                 "latency_ms": {
                     "p50": _percentile(samples, 0.50),
                     "p95": _percentile(samples, 0.95),

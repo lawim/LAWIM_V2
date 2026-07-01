@@ -393,6 +393,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"media": self.services.get_media(media_id)})
             return
 
+        if path.startswith("/api/v2/knowledge/"):
+            self._handle_v2_cognition_get(path, query)
+            return
+
         if path == "/api/v2/knowledge":
             actor = self._require_user()
             self._send_json(
@@ -404,6 +408,21 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                     )
                 }
             )
+            return
+
+        if (
+            path in {
+                "/api/v2/decisions",
+                "/api/v2/simulations",
+                "/api/v2/reasoning",
+                "/api/v2/intelligence",
+                "/api/v2/next-actions",
+                "/api/v2/opportunities",
+                "/api/v2/risks",
+            }
+            or path.startswith("/api/v2/decisions/")
+        ):
+            self._handle_v2_cognition_get(path, query)
             return
 
         if (
@@ -609,6 +628,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                     postal_code=self._optional_text(body.get("postal_code")),
                 )
             )
+            return
+
+        if path.startswith("/api/v2/knowledge/") or path in {"/api/v2/simulations"} or path == "/api/v2/knowledge/refresh":
+            self._handle_v2_cognition_post(path, body, actor)
             return
 
         if path.startswith("/api/v2/partners") or path == "/api/v2/matching" or (path.startswith("/api/v2/projects/") and path.endswith("/matching/run")):
@@ -1181,6 +1204,69 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
     def _extract_project_id(self, path: str, suffix: str = "") -> int:
         return self._extract_path_id(path, marker="/api/v2/projects/", suffix=suffix, resource="Project")
+
+    def _cognition_project_id(self, query: dict[str, list[str]], body: dict[str, Any] | None = None) -> int:
+        if body is not None and body.get("project_id") is not None:
+            project_id = self._optional_int(body.get("project_id"), minimum=1)
+            if project_id is not None:
+                return project_id
+        return self._first_int(query, "project_id", minimum=1)
+
+    def _handle_v2_cognition_get(self, path: str, query: dict[str, list[str]]) -> None:
+        actor = self._require_user()
+        cog = self.services.cognition
+        project_id = self._cognition_project_id(query)
+        if path == "/api/v2/knowledge/graph":
+            self._send_json(cog.get_graph(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/knowledge/context":
+            self._send_json(cog.get_context(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/decisions":
+            self._send_json(cog.list_decisions(actor=actor, project_id=project_id))
+            return
+        if path.startswith("/api/v2/decisions/"):
+            decision_id = self._extract_path_id(path, marker="/api/v2/decisions/", resource="Decision")
+            self._send_json(cog.get_decision(actor=actor, project_id=project_id, decision_id=decision_id))
+            return
+        if path == "/api/v2/reasoning":
+            self._send_json(cog.list_reasoning(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/simulations":
+            self._send_json(cog.list_simulations(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/intelligence":
+            self._send_json(cog.get_intelligence(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/next-actions":
+            self._send_json(cog.get_next_action(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/risks":
+            self._send_json(cog.list_risks(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/opportunities":
+            self._send_json(cog.list_opportunities(actor=actor, project_id=project_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown cognition API route")
+
+    def _handle_v2_cognition_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        cog = self.services.cognition
+        project_id = self._cognition_project_id({}, body)
+        if path == "/api/v2/knowledge/refresh":
+            self._send_json(cog.refresh(actor=actor, project_id=project_id))
+            return
+        if path == "/api/v2/simulations":
+            self._send_json(
+                cog.run_simulation(
+                    actor=actor,
+                    project_id=project_id,
+                    scenario_key=self._require_text(body, "scenario_key"),
+                    parameters=body.get("parameters") if isinstance(body.get("parameters"), dict) else None,
+                ),
+                status=HTTPStatus.CREATED,
+            )
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown cognition API route")
 
     def _handle_v2_project_get(self, path: str, query: dict[str, list[str]]) -> None:
         actor = self._require_user()

@@ -114,6 +114,9 @@ class LawimServices:
         self.projects = ProjectService(repository, self.policy)
         self.intelligent = IntelligentCoreService(repository, self.projects)
         self.ecosystem = EcosystemService(repository, self.projects, self.policy)
+        from .cognition.service import CognitionService
+
+        self.cognition = CognitionService(repository, self.projects)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()
