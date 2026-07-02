@@ -41,6 +41,7 @@ from .knowledge_platform.repository import KnowledgePlatformRepositoryMixin
 from .workflow_automation.repository import WorkflowAutomationRepositoryMixin
 from .crm.repository import CrmRepositoryMixin
 from .marketplace.repository import MarketplaceRepositoryMixin
+from .security.repository import SecurityRepositoryMixin
 from .real_estate_intelligence.repository import RealEstateIntelligenceRepositoryMixin
 from .assistant.repository import AssistantRepositoryMixin
 from .cognition.repository import CognitionRepositoryMixin
@@ -82,7 +83,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
+class LawimRepository(SecurityRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -145,6 +146,8 @@ class LawimRepository(MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstate
             self.seed_crm_catalog()
         if hasattr(self, "seed_marketplace_catalog"):
             self.seed_marketplace_catalog()
+        if hasattr(self, "seed_security_catalog"):
+            self.seed_security_catalog()
 
     def schema_version(self) -> int:
         row = self.one("SELECT value FROM schema_meta WHERE key = 'schema_version'")

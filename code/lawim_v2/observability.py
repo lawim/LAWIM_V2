@@ -91,6 +91,7 @@ class RuntimeMetrics:
     intelligence_computed_total: int = 0
     crm_requests_total: int = 0
     marketplace_requests_total: int = 0
+    security_requests_total: int = 0
     lock: threading.Lock = field(default_factory=threading.Lock)
     _latency_samples: list[float] = field(default_factory=list)
     _knowledge_search_latency_samples: list[float] = field(default_factory=list)
@@ -285,6 +286,23 @@ class RuntimeMetrics:
             ):
                 self.marketplace_requests_total += 1
                 self._crm_metric_counts[name] = self._crm_metric_counts.get(name, 0) + 1
+            elif any(
+                name.startswith(prefix)
+                for prefix in (
+                    "security_",
+                    "iam_",
+                    "access_",
+                    "role_",
+                    "permission_",
+                    "session_",
+                    "audit_",
+                    "compliance_",
+                    "privacy_",
+                    "risk_",
+                )
+            ):
+                self.security_requests_total += 1
+                self._crm_metric_counts[name] = self._crm_metric_counts.get(name, 0) + 1
 
     def record_verification(self, *, latency_ms: float) -> None:
         with self.lock:
@@ -406,6 +424,7 @@ class RuntimeMetrics:
                 "intelligence_computed_total": self.intelligence_computed_total,
                 "crm_requests_total": self.crm_requests_total,
                 "marketplace_requests_total": self.marketplace_requests_total,
+                "security_requests_total": self.security_requests_total,
                 "crm_metrics": dict(self._crm_metric_counts),
                 "verification_latency_ms": {
                     "p50": _percentile(self._verification_latency_samples, 0.50),

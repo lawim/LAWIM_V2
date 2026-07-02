@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 15
+APPLICATION_SCHEMA_VERSION = 16
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -169,6 +169,25 @@ def _marketplace_table_specs() -> tuple[TableSpec, ...]:
             else (),
         )
         for name in V15_TABLE_NAMES
+    )
+
+
+def _security_table_specs() -> tuple[TableSpec, ...]:
+    from .security.schema_v16_ddl import V16_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x security IAM entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("user_id", "users.id", on_delete="cascade"),)
+            if "user_id" in name and name != "iam_user_roles"
+            else (ForeignKeySpec("role_id", "iam_roles.id", on_delete="cascade"),)
+            if "role_id" in name
+            else (),
+        )
+        for name in V16_TABLE_NAMES
     )
 
 
@@ -605,7 +624,8 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _workflow_automation_table_specs()
     + _real_estate_intelligence_table_specs()
     + _crm_table_specs()
-    + _marketplace_table_specs(),
+    + _marketplace_table_specs()
+    + _security_table_specs(),
 )
 
 

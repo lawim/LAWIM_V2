@@ -429,6 +429,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_cognition_get(path, query)
             return
 
+        if path.startswith("/api/v2/security"):
+            self._handle_v2_security_get(path, query)
+            return
+
         if path.startswith("/api/v2/marketplace"):
             self._handle_v2_marketplace_get(path, query)
             return
@@ -656,6 +660,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/v2/knowledge/"):
             self._handle_v2_knowledge_subroutes_post(path, body, actor)
+            return
+
+        if path.startswith("/api/v2/security"):
+            self._handle_v2_security_post(path, body, actor)
             return
 
         if path.startswith("/api/v2/marketplace"):
@@ -1329,6 +1337,140 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
     def _extract_crm_id(self, path: str, *, resource: str, suffix: str = "") -> int:
         marker = f"/api/v2/crm/{resource}/"
         return self._extract_path_id(path, marker=marker, suffix=suffix, resource=resource.capitalize())
+
+    def _handle_v2_security_get(self, path: str, query: dict[str, list[str]]) -> None:
+        if path == "/api/v2/security/integrations":
+            self._send_json(self.services.security.integration_sources(actor=None))
+            return
+        actor = self._require_user()
+        sec = self.services.security
+        if path == "/api/v2/security/users":
+            self._send_json(sec.list_users(actor=actor, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/security/roles":
+            self._send_json(sec.list_roles(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/security/permissions":
+            self._send_json(sec.list_permissions(actor=actor))
+            return
+        if path == "/api/v2/security/policies":
+            self._send_json(sec.list_policies(actor=actor))
+            return
+        if path == "/api/v2/security/sessions":
+            user_id = self._optional_int(self._first(query, "user_id"), minimum=1)
+            self._send_json(sec.list_sessions(actor=actor, user_id=user_id))
+            return
+        if path == "/api/v2/security/devices":
+            user_id = self._optional_int(self._first(query, "user_id"), minimum=1)
+            self._send_json(sec.list_devices(actor=actor, user_id=user_id))
+            return
+        if path == "/api/v2/security/api-keys":
+            user_id = self._optional_int(self._first(query, "user_id"), minimum=1)
+            self._send_json(sec.list_api_keys(actor=actor, user_id=user_id))
+            return
+        if path == "/api/v2/security/audit":
+            self._send_json(sec.list_audit_trail(actor=actor, event_type=self._first(query, "event_type")))
+            return
+        if path == "/api/v2/security/compliance/policies":
+            self._send_json(sec.list_compliance_policies(actor=actor))
+            return
+        if path == "/api/v2/security/compliance/consents":
+            user_id = self._optional_int(self._first(query, "user_id"), minimum=1)
+            self._send_json(sec.list_compliance_consents(actor=actor, user_id=user_id))
+            return
+        if path == "/api/v2/security/compliance/retention":
+            self._send_json(sec.list_retention_rules(actor=actor))
+            return
+        if path == "/api/v2/security/privacy/exports":
+            user_id = self._optional_int(self._first(query, "user_id"), minimum=1)
+            self._send_json(sec.list_privacy_exports(actor=actor, user_id=user_id))
+            return
+        if path == "/api/v2/security/privacy/erasure":
+            self._send_json(sec.list_privacy_erasure_requests(actor=actor))
+            return
+        if path == "/api/v2/security/risk/signals":
+            user_id = self._optional_int(self._first(query, "user_id"), minimum=1)
+            self._send_json(sec.list_risk_signals(actor=actor, user_id=user_id))
+            return
+        if path == "/api/v2/security/risk/alerts":
+            self._send_json(sec.list_risk_alerts(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/security/incidents":
+            self._send_json(sec.list_incidents(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/security/analytics":
+            self._send_json(sec.analytics(actor=actor))
+            return
+        if path == "/api/v2/security/stats":
+            self._send_json(sec.stats(actor=actor))
+            return
+        if path == "/api/v2/security/dashboard":
+            self._send_json(sec.dashboard(actor=actor))
+            return
+        if path.startswith("/api/v2/security/users/") and path.count("/") == 5:
+            user_id = self._extract_path_id(path, marker="/api/v2/security/users/", resource="User")
+            self._send_json(sec.get_user(actor=actor, user_id=user_id))
+            return
+        if path.startswith("/api/v2/security/risk/scores/") and path.count("/") == 6:
+            user_id = self._extract_path_id(path, marker="/api/v2/security/risk/scores/", resource="User")
+            self._send_json(sec.compute_risk_score(actor=actor, user_id=user_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown security API route")
+
+    def _handle_v2_security_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        sec = self.services.security
+        if path == "/api/v2/security/roles":
+            self._send_json(sec.create_role(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/permissions":
+            self._send_json(sec.create_permission(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/policies":
+            self._send_json(sec.create_policy(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/api-keys":
+            self._send_json(sec.create_api_key(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/audit":
+            self._send_json(sec.record_audit(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/compliance/deletion":
+            self._send_json(sec.create_deletion_request(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/privacy/exports":
+            self._send_json(sec.create_privacy_export(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/privacy/erasure":
+            self._send_json(sec.create_privacy_erasure_request(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/risk/signals":
+            self._send_json(sec.record_risk_signal(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/incidents":
+            self._send_json(sec.create_incident(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/security/seed":
+            self._send_json(sec.seed_catalog(actor=actor))
+            return
+        if path.startswith("/api/v2/security/users/") and path.endswith("/roles"):
+            user_id = self._extract_path_id(path, marker="/api/v2/security/users/", suffix="/roles", resource="User")
+            payload = dict(body)
+            payload.setdefault("user_id", user_id)
+            self._send_json(sec.assign_user_role(actor=actor, body=payload))
+            return
+        if path.startswith("/api/v2/security/sessions/") and path.endswith("/revoke"):
+            session_record_id = self._extract_path_id(path, marker="/api/v2/security/sessions/", suffix="/revoke", resource="Session")
+            self._send_json(sec.revoke_session(actor=actor, session_record_id=session_record_id))
+            return
+        if path.startswith("/api/v2/security/api-keys/") and path.endswith("/revoke"):
+            api_key_id = self._extract_path_id(path, marker="/api/v2/security/api-keys/", suffix="/revoke", resource="ApiKey")
+            self._send_json(sec.revoke_api_key(actor=actor, api_key_id=api_key_id))
+            return
+        if path.startswith("/api/v2/security/compliance/consents/") and path.endswith("/grant"):
+            consent_id = self._extract_path_id(path, marker="/api/v2/security/compliance/consents/", suffix="/grant", resource="Consent")
+            self._send_json(sec.grant_consent_by_id(actor=actor, consent_id=consent_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown security API route")
 
     def _handle_v2_marketplace_get(self, path: str, query: dict[str, list[str]]) -> None:
         if path == "/api/v2/marketplace/integrations":

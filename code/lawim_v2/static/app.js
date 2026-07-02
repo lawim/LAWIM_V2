@@ -93,6 +93,10 @@ function cacheRefs() {
     marketplaceAdminList: byId("marketplace-admin-list"),
     marketplaceSearchForm: byId("marketplace-search-form"),
     marketplaceSearchResults: byId("marketplace-search-results"),
+    securityAdminStats: byId("security-admin-stats"),
+    securityAdminList: byId("security-admin-list"),
+    securityAuditForm: byId("security-audit-form"),
+    securityAuditResults: byId("security-audit-results"),
   });
 }
 
@@ -1048,6 +1052,7 @@ async function refresh() {
     await refreshKnowledgeAdmin();
     await refreshReiAdmin();
     await refreshCrmAdmin();
+    await refreshSecurityAdmin();
     await refreshMarketplaceAdmin();
     await refreshWorkflowAdmin();
     applyJourney(state.activeJourney);
@@ -1115,6 +1120,77 @@ async function handleKnowledgeSearch(event) {
         `,
       )
       .join("") || "<p class='muted'>No results.</p>";
+  } catch (error) {
+    setNotice(error.message, "error");
+  }
+}
+
+async function refreshSecurityAdmin() {
+  if (!state.token || !refs.securityAdminStats) {
+    return;
+  }
+  try {
+    const [statsPayload, rolesPayload, sessionsPayload] = await Promise.all([
+      api("/api/v2/security/stats", { auth: true }),
+      api("/api/v2/security/roles", { auth: true }),
+      api("/api/v2/security/sessions", { auth: true }),
+    ]);
+    const stats = statsPayload.stats || {};
+    refs.securityAdminStats.innerHTML = `
+      <p class="muted">${stats.users ?? 0} users · ${stats.roles ?? 0} roles · ${stats.active_sessions ?? 0} sessions · ${stats.audit_entries ?? 0} audit entries · risk ${stats.risk_alerts ?? 0}</p>
+    `;
+    refs.securityAuditForm?.classList.remove("hidden");
+    const roles = rolesPayload.roles || [];
+    refs.securityAdminList.innerHTML = roles
+      .slice(0, 6)
+      .map(
+        (role) => `
+          <article class="mini-card">
+            <strong>${escapeHtml(role.name || role.role_key || "")}</strong>
+            <p class="muted">${escapeHtml(role.status || "")} · ${escapeHtml(role.scope || "global")}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No IAM roles loaded.</p>";
+    const sessions = sessionsPayload.sessions || [];
+    if (sessions.length && refs.securityAuditResults) {
+      refs.securityAuditResults.innerHTML = sessions
+        .slice(0, 4)
+        .map(
+          (session) => `
+            <article class="message">
+              <div class="message__meta"><strong>Session ${escapeHtml(String(session.id || ""))}</strong> · ${escapeHtml(session.status || "")}</div>
+            </article>
+          `,
+        )
+        .join("");
+    }
+  } catch (error) {
+    refs.securityAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function handleSecurityAudit(event) {
+  event.preventDefault();
+  if (!state.token || !refs.securityAuditForm) {
+    return;
+  }
+  const eventType = String(new FormData(refs.securityAuditForm).get("event_type") || "").trim();
+  try {
+    const query = eventType ? `?event_type=${encodeURIComponent(eventType)}` : "";
+    const payload = await api(`/api/v2/security/audit${query}`, { auth: true });
+    const entries = payload.entries || [];
+    refs.securityAuditResults.innerHTML = entries
+      .slice(0, 10)
+      .map(
+        (entry) => `
+          <article class="message">
+            <div class="message__meta"><strong>${escapeHtml(entry.action || entry.event_type || "event")}</strong> · ${escapeHtml(entry.outcome || "")}</div>
+            <p class="muted">${escapeHtml(entry.resource_type || "")} ${escapeHtml(String(entry.resource_id || ""))}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No audit entries.</p>";
   } catch (error) {
     setNotice(error.message, "error");
   }
@@ -1802,6 +1878,7 @@ function bindEvents() {
   refs.reiSearchForm?.addEventListener("submit", handleReiSearch);
   refs.crmSearchForm?.addEventListener("submit", handleCrmSearch);
   refs.marketplaceSearchForm?.addEventListener("submit", handleMarketplaceSearch);
+  refs.securityAuditForm?.addEventListener("submit", handleSecurityAudit);
   refs.workflowMonitorForm?.addEventListener("submit", handleWorkflowMonitor);
   refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);
   refs.matchForm.addEventListener("submit", handleMatchSearch);
