@@ -80,10 +80,10 @@ SAMPLE_REQUEST: dict[str, object] = {
 
 class ReleaseProgramIPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v15(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 16)
+        self.assertEqual(self.repository.schema_version(), 18)
 
     def test_application_schema_version_constant(self) -> None:
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 16)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 18)
 
     def test_marketplace_tables_present(self) -> None:
         self.assertTrue(self.repository.marketplace_tables_present())
@@ -1359,10 +1359,10 @@ class ReleaseProgramIUiTests(LawimTestHarness):
 class ReleaseProgramIHealthTests(LawimTestHarness):
     def test_health_schema_v15(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 16)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 18)
 
     def test_migration_strategy_v15(self) -> None:
-        self.assertEqual(migration_strategy_profile()["schema_version"], 16)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 18)
 
     def test_metrics_include_marketplace_counters(self) -> None:
         token = self.login(email="agent@lawim.local")

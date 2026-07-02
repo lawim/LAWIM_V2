@@ -429,6 +429,14 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_cognition_get(path, query)
             return
 
+        if path.startswith("/api/v2/analytics"):
+            self._handle_v2_analytics_get(path, query)
+            return
+
+        if path.startswith("/api/v2/communication"):
+            self._handle_v2_communication_get(path, query)
+            return
+
         if path.startswith("/api/v2/security"):
             self._handle_v2_security_get(path, query)
             return
@@ -660,6 +668,14 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/v2/knowledge/"):
             self._handle_v2_knowledge_subroutes_post(path, body, actor)
+            return
+
+        if path.startswith("/api/v2/analytics"):
+            self._handle_v2_analytics_post(path, body, actor)
+            return
+
+        if path.startswith("/api/v2/communication"):
+            self._handle_v2_communication_post(path, body, actor)
             return
 
         if path.startswith("/api/v2/security"):
@@ -1337,6 +1353,259 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
     def _extract_crm_id(self, path: str, *, resource: str, suffix: str = "") -> int:
         marker = f"/api/v2/crm/{resource}/"
         return self._extract_path_id(path, marker=marker, suffix=suffix, resource=resource.capitalize())
+
+    def _handle_v2_communication_get(self, path: str, query: dict[str, list[str]]) -> None:
+        if path == "/api/v2/communication/integrations":
+            self._send_json(self.services.communication.integration_sources(actor=None))
+            return
+        if path == "/api/v2/communication/health":
+            self._send_json(self.services.communication.health(actor=None))
+            return
+        actor = self._require_user()
+        comm = self.services.communication
+        if path == "/api/v2/communication/messages":
+            self._send_json(
+                comm.list_messages(
+                    actor=actor,
+                    channel_type=self._first(query, "channel_type"),
+                    status=self._first(query, "status"),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path == "/api/v2/communication/channels":
+            self._send_json(comm.list_channels(actor=actor))
+            return
+        if path == "/api/v2/communication/conversations":
+            self._send_json(comm.list_conversations(actor=actor, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/communication/history":
+            self._send_json(comm.list_history(actor=actor, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/communication/groups":
+            self._send_json(comm.list_groups(actor=actor, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/communication/events":
+            self._send_json(comm.list_events(actor=actor, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/communication/templates":
+            self._send_json(comm.list_templates(actor=actor, channel_type=self._first(query, "channel_type")))
+            return
+        if path == "/api/v2/communication/preferences":
+            self._send_json(comm.get_preferences(actor=actor, channel_type=self._first(query, "channel_type") or "email"))
+            return
+        if path == "/api/v2/communication/campaigns":
+            self._send_json(comm.list_campaigns(actor=actor, status=self._first(query, "status")))
+            return
+        if path == "/api/v2/communication/notifications":
+            user_id = self._optional_int(self._first(query, "user_id"), minimum=1)
+            self._send_json(comm.list_notifications(actor=actor, user_id=user_id))
+            return
+        if path == "/api/v2/communication/email":
+            self._send_json(comm.list_email_messages(actor=actor))
+            return
+        if path == "/api/v2/communication/sms":
+            self._send_json(comm.list_sms_messages(actor=actor))
+            return
+        if path == "/api/v2/communication/whatsapp":
+            self._send_json(comm.list_whatsapp_messages(actor=actor))
+            return
+        if path == "/api/v2/communication/telegram":
+            self._send_json(comm.list_telegram_messages(actor=actor))
+            return
+        if path == "/api/v2/communication/push":
+            self._send_json(comm.list_push_notifications(actor=actor))
+            return
+        if path == "/api/v2/communication/inapp":
+            user_id = self._optional_int(self._first(query, "user_id"), minimum=1)
+            self._send_json(comm.list_inapp(actor=actor, user_id=user_id))
+            return
+        if path == "/api/v2/communication/queue":
+            self._send_json(comm.list_queue_jobs(actor=actor, job_status=self._first(query, "status")))
+            return
+        if path == "/api/v2/communication/statistics":
+            self._send_json(comm.stats(actor=actor))
+            return
+        if path == "/api/v2/communication/dashboard":
+            self._send_json(comm.dashboard(actor=actor))
+            return
+        if path == "/api/v2/communication/analytics":
+            self._send_json(comm.analytics(actor=actor))
+            return
+        if path == "/api/v2/communication/reports":
+            self._send_json(comm.reports(actor=actor))
+            return
+        if path == "/api/v2/communication/search":
+            q = self._first(query, "q") or self._first(query, "query") or ""
+            self._send_json(comm.search(actor=actor, query=q, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/communication/export":
+            self._send_json(comm.export_data(actor=actor))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown communication API route")
+
+    def _handle_v2_communication_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        comm = self.services.communication
+        if path == "/api/v2/communication/messages":
+            self._send_json(comm.create_message(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/communication/messages/send":
+            self._send_json(comm.send_message(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/communication/conversations":
+            self._send_json(comm.create_conversation(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/communication/templates":
+            self._send_json(comm.create_template(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/communication/preferences":
+            self._send_json(comm.update_preferences(actor=actor, body=body))
+            return
+        if path == "/api/v2/communication/campaigns":
+            self._send_json(comm.create_campaign(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/communication/notifications":
+            self._send_json(comm.create_notification(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/communication/queue":
+            self._send_json(comm.enqueue_job(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/communication/events":
+            self._send_json(comm.process_event(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/communication/import":
+            self._send_json(comm.import_data(actor=actor, body=body))
+            return
+        if path == "/api/v2/communication/seed":
+            self._send_json(comm.seed_catalog(actor=actor))
+            return
+        if path.startswith("/api/v2/communication/campaigns/") and path.endswith("/execute"):
+            campaign_id = self._extract_path_id(path, marker="/api/v2/communication/campaigns/", suffix="/execute", resource="Campaign")
+            self._send_json(comm.execute_campaign(actor=actor, campaign_id=campaign_id))
+            return
+        if path.startswith("/api/v2/communication/queue/") and path.endswith("/retry"):
+            job_id = self._extract_path_id(path, marker="/api/v2/communication/queue/", suffix="/retry", resource="Job")
+            self._send_json(comm.retry_queue_job(actor=actor, job_id=job_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown communication API route")
+
+    def _handle_v2_analytics_get(self, path: str, query: dict[str, list[str]]) -> None:
+        if path in {"/api/v2/analytics/integrations", "/api/v2/analytics/health"}:
+            analytics = self.services.analytics
+            if path == "/api/v2/analytics/integrations":
+                self._send_json(analytics.integration_sources(actor=None))
+            else:
+                self._send_json(analytics.health(actor=None))
+            return
+        actor = self._require_user()
+        analytics = self.services.analytics
+        if path == "/api/v2/analytics/events":
+            self._send_json(analytics.list_events(actor=actor, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/analytics/metrics":
+            self._send_json(analytics.list_metrics(actor=actor, limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/analytics/kpis":
+            self._send_json(analytics.kpi.compute())
+            return
+        if path == "/api/v2/analytics/dashboards":
+            self._send_json(analytics.dashboards.list(limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/analytics/reports":
+            self._send_json(analytics.reporting.list(limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/analytics/bi":
+            self._send_json(analytics.bi.summary())
+            return
+        if path == "/api/v2/analytics/datamarts":
+            self._send_json(analytics.datamarts.list(limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/analytics/trends":
+            self._send_json(analytics.trends.analyze())
+            return
+        if path == "/api/v2/analytics/scores":
+            self._send_json(analytics.scores.compute())
+            return
+        if path == "/api/v2/analytics/realtime":
+            self._send_json(analytics.realtime.summary())
+            return
+        if path == "/api/v2/analytics/exports":
+            self._send_json(analytics.exports.list(limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/analytics/ai":
+            self._send_json(analytics.ai.list_insights(limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/analytics/executive":
+            self._send_json(analytics.executive.get())
+            return
+        if path == "/api/v2/analytics/dashboard":
+            self._send_json(analytics.dashboard(actor=actor))
+            return
+        if path == "/api/v2/analytics/statistics":
+            self._send_json(analytics.statistics(actor=actor))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown analytics API route")
+
+    def _handle_v2_analytics_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        analytics = self.services.analytics
+        if path == "/api/v2/analytics/events":
+            self._send_json(analytics.record_event(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/analytics/metrics":
+            self._send_json(analytics.create_metric(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/analytics/kpis":
+            self._send_json(analytics.kpi.compute())
+            return
+        if path == "/api/v2/analytics/dashboards":
+            self._send_json(analytics.dashboards.list())
+            return
+        if path == "/api/v2/analytics/reports":
+            self._send_json(
+                analytics.reporting.create(
+                    name=str(body.get("name") or "Analytics Report"),
+                    report_type=str(body.get("report_type") or "standard"),
+                    config=dict(body.get("config") or {}),
+                ),
+                status=HTTPStatus.CREATED,
+            )
+            return
+        if path == "/api/v2/analytics/bi":
+            self._send_json(analytics.bi.summary())
+            return
+        if path == "/api/v2/analytics/datamarts":
+            mart_id = int(body.get("mart_id") or 1)
+            self._send_json(analytics.datamarts.refresh(mart_id))
+            return
+        if path == "/api/v2/analytics/trends":
+            self._send_json(analytics.trends.analyze())
+            return
+        if path == "/api/v2/analytics/scores":
+            self._send_json(analytics.scores.compute())
+            return
+        if path == "/api/v2/analytics/realtime":
+            self._send_json(
+                analytics.realtime.record_event(
+                    event_type=str(body.get("event_type") or "generic"),
+                    payload=dict(body.get("payload") or {}),
+                )
+            )
+            return
+        if path == "/api/v2/analytics/exports":
+            self._send_json(
+                analytics.exports.create(
+                    name=str(body.get("name") or "Analytics Export"),
+                    export_type=str(body.get("export_type") or "json"),
+                    config=dict(body.get("config") or {}),
+                    requested_by=int(actor["id"]) if actor.get("id") is not None else None,
+                ),
+                status=HTTPStatus.CREATED,
+            )
+            return
+        if path == "/api/v2/analytics/ai":
+            self._send_json(analytics.ai.generate())
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown analytics API route")
 
     def _handle_v2_security_get(self, path: str, query: dict[str, list[str]]) -> None:
         if path == "/api/v2/security/integrations":

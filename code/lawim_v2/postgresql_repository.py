@@ -13,13 +13,34 @@ from .persistence import build_postgresql_profile, build_schema_fingerprint, bui
 from .schema_ddl import POSTGRESQL_INIT_STATEMENTS
 
 
+_POSTGRESQL_REPLACE_CONFLICT_TARGETS: dict[str, tuple[str, ...]] = {
+    "reasoning_traces": ("project_id", "trace_key"),
+    "knowledge_inferences": ("project_id", "inference_key"),
+    "next_best_actions": ("project_id", "action_key"),
+    "intelligence_snapshots": ("project_id", "snapshot_key"),
+    "knowledge_snapshots": ("project_id", "snapshot_key"),
+    "expert_knowledge_indexes": ("document_id", "index_key"),
+    "expert_knowledge_publications": ("publication_key",),
+    "crm_contact_consents": ("contact_id", "consent_type"),
+    "crm_customer_scores": ("contact_id", "score_key"),
+    "iam_user_roles": ("user_id", "role_id"),
+    "rei_verification_checks": ("property_id", "check_key"),
+    "rei_verification_scores": ("property_id",),
+    "rei_visit_reports": ("visit_id",),
+    "rei_intelligence_scores": ("property_id", "score_key"),
+    "rei_search_index": ("property_id",),
+}
+
+
 def _adapt_sql(sql: str) -> str:
-    adapted = sql.replace("INSERT OR REPLACE INTO schema_meta", "INSERT INTO schema_meta")
+    adapted = _normalize_postgresql_create_table(sql)
+    adapted = adapted.replace("INSERT OR REPLACE INTO schema_meta", "INSERT INTO schema_meta")
     if "INSERT INTO schema_meta" in adapted and "ON CONFLICT" not in adapted:
         adapted = adapted.replace(
             "VALUES (?, ?)",
             "VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value",
         )
+    adapted = _rewrite_postgresql_insert_conflicts(adapted)
 
     counter = 0
 
@@ -29,6 +50,127 @@ def _adapt_sql(sql: str) -> str:
         return f"${counter}"
 
     return re.sub(r"\?", replace_placeholder, adapted)
+
+
+def _rewrite_postgresql_insert_conflicts(sql: str) -> str:
+    stripped = sql.lstrip()
+    if not stripped.upper().startswith("INSERT OR "):
+        return sql
+
+    ignore_match = re.match(r"^\s*INSERT OR IGNORE INTO\s+", sql, re.IGNORECASE)
+    if ignore_match:
+        return re.sub(r"^\s*INSERT OR IGNORE INTO\s+", "INSERT INTO ", sql, count=1, flags=re.IGNORECASE).rstrip() + " ON CONFLICT DO NOTHING"
+
+    replace_match = re.match(
+        r"^\s*INSERT OR REPLACE INTO\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:\((.*?)\))?\s*(VALUES\b.*|SELECT\b.*)$",
+        sql,
+        re.IGNORECASE | re.DOTALL,
+    )
+    if not replace_match:
+        return sql
+
+    table = replace_match.group(1)
+    columns_block = replace_match.group(2)
+    tail = replace_match.group(3).rstrip()
+    if table == "schema_meta":
+        return sql
+
+    conflict_target = _POSTGRESQL_REPLACE_CONFLICT_TARGETS.get(table)
+    if not conflict_target:
+        return re.sub(r"^\s*INSERT OR REPLACE INTO\s+", "INSERT INTO ", sql, count=1, flags=re.IGNORECASE).rstrip() + " ON CONFLICT DO NOTHING"
+    if not columns_block:
+        return re.sub(r"^\s*INSERT OR REPLACE INTO\s+", "INSERT INTO ", sql, count=1, flags=re.IGNORECASE).rstrip() + " ON CONFLICT DO NOTHING"
+
+    columns = [column.strip() for column in columns_block.split(",") if column.strip()]
+    update_columns = [column for column in columns if column not in conflict_target]
+    if not update_columns:
+        return re.sub(r"^\s*INSERT OR REPLACE INTO\s+", "INSERT INTO ", sql, count=1, flags=re.IGNORECASE).rstrip() + " ON CONFLICT DO NOTHING"
+
+    assignments = ", ".join(f"{column} = EXCLUDED.{column}" for column in update_columns)
+    conflict_clause = ", ".join(conflict_target)
+    return f"INSERT INTO {table} ({columns_block}) {tail} ON CONFLICT ({conflict_clause}) DO UPDATE SET {assignments}"
+
+
+def _normalize_postgresql_create_table(sql: str) -> str:
+    stripped = sql.lstrip()
+    if not stripped.upper().startswith("CREATE TABLE"):
+        return sql
+
+    output: list[str] = []
+    seen_columns: set[str] = set()
+    inside_table = False
+
+    def trim_trailing_comma() -> None:
+        for index in range(len(output) - 1, -1, -1):
+            candidate = output[index]
+            if candidate.strip():
+                output[index] = candidate.rstrip().rstrip(",")
+                return
+
+    def expand_line_fragments(line: str) -> list[str]:
+        stripped_line = line.strip()
+        if not inside_table:
+            return [line]
+        if not stripped_line:
+            return [line]
+        if stripped_line.startswith(("FOREIGN KEY", "PRIMARY KEY", "UNIQUE", "CHECK", "CONSTRAINT", ")")):
+            return [line]
+        if "," not in line:
+            return [line]
+
+        parts = [part.strip() for part in line.split(",") if part.strip()]
+        if len(parts) <= 1:
+            return [line]
+
+        indent = re.match(r"^\s*", line).group(0)
+        ends_with_comma = line.rstrip().endswith(",")
+        fragments: list[str] = []
+        for index, part in enumerate(parts):
+            suffix = "," if ends_with_comma or index < len(parts) - 1 else ""
+            fragments.append(f"{indent}{part}{suffix}")
+        return fragments
+
+    for line in sql.splitlines():
+        if not inside_table:
+            output.append(line)
+            if "(" in line:
+                inside_table = True
+            continue
+
+        for fragment in expand_line_fragments(line):
+            stripped_line = fragment.strip()
+            upper_line = stripped_line.upper()
+
+            if not stripped_line:
+                output.append(fragment)
+                continue
+
+            if upper_line.startswith(")"):
+                trim_trailing_comma()
+                output.append(fragment)
+                inside_table = False
+                break
+
+            if upper_line.startswith(("FOREIGN KEY", "PRIMARY KEY", "UNIQUE", "CHECK", "CONSTRAINT")):
+                output.append(fragment)
+                continue
+
+            match = re.match(r"^(\s*)([A-Za-z_][A-Za-z0-9_]*)\b(.*)$", fragment)
+            if not match:
+                output.append(fragment)
+                continue
+
+            indent, column_name, _ = match.groups()
+            if column_name not in seen_columns:
+                seen_columns.add(column_name)
+                output.append(fragment)
+                continue
+
+            # Drop duplicated PostgreSQL column declarations emitted by the generated
+            # runtime DDL. The first plain column definition is kept and the
+            # duplicate line is discarded to preserve creation order.
+
+    return "\n".join(output)
 
 
 def _map_pg_exception(exc: Exception) -> Exception:

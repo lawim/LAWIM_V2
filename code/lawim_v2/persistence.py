@@ -98,7 +98,7 @@ class SchemaManifest:
         }
 
 
-APPLICATION_SCHEMA_VERSION = 16
+APPLICATION_SCHEMA_VERSION = 18
 
 APPLICATION_MIGRATION = MigrationSpec(
     target_engine="postgresql",
@@ -188,6 +188,42 @@ def _security_table_specs() -> tuple[TableSpec, ...]:
             else (),
         )
         for name in V16_TABLE_NAMES
+    )
+
+
+def _analytics_table_specs() -> tuple[TableSpec, ...]:
+    from .analytics.schema_v18_ddl import V18_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x analytics BI entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("user_id", "users.id", on_delete="set null"),)
+            if "user_id" in name
+            else (),
+        )
+        for name in V18_TABLE_NAMES
+    )
+
+
+def _communication_table_specs() -> tuple[TableSpec, ...]:
+    from .communication.schema_v17_ddl import V17_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x communication entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("user_id", "users.id", on_delete="set null"),)
+            if "user_id" in name
+            else (ForeignKeySpec("contact_id", "crm_contact_profiles.id", on_delete="set null"),)
+            if "contact_id" in name
+            else (),
+        )
+        for name in V17_TABLE_NAMES
     )
 
 
@@ -625,7 +661,9 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _real_estate_intelligence_table_specs()
     + _crm_table_specs()
     + _marketplace_table_specs()
-    + _security_table_specs(),
+    + _security_table_specs()
+    + _communication_table_specs()
+    + _analytics_table_specs(),
 )
 
 

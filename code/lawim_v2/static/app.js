@@ -93,6 +93,10 @@ function cacheRefs() {
     marketplaceAdminList: byId("marketplace-admin-list"),
     marketplaceSearchForm: byId("marketplace-search-form"),
     marketplaceSearchResults: byId("marketplace-search-results"),
+    communicationAdminStats: byId("communication-admin-stats"),
+    communicationAdminList: byId("communication-admin-list"),
+    analyticsAdminStats: byId("analytics-admin-stats"),
+    analyticsAdminList: byId("analytics-admin-list"),
     securityAdminStats: byId("security-admin-stats"),
     securityAdminList: byId("security-admin-list"),
     securityAuditForm: byId("security-audit-form"),
@@ -1052,6 +1056,8 @@ async function refresh() {
     await refreshKnowledgeAdmin();
     await refreshReiAdmin();
     await refreshCrmAdmin();
+    await refreshCommunicationAdmin();
+    await refreshAnalyticsAdmin();
     await refreshSecurityAdmin();
     await refreshMarketplaceAdmin();
     await refreshWorkflowAdmin();
@@ -1122,6 +1128,82 @@ async function handleKnowledgeSearch(event) {
       .join("") || "<p class='muted'>No results.</p>";
   } catch (error) {
     setNotice(error.message, "error");
+  }
+}
+
+async function refreshCommunicationAdmin() {
+  if (!state.token || !refs.communicationAdminStats) {
+    return;
+  }
+  try {
+    const [statsPayload, messagesPayload, channelsPayload] = await Promise.all([
+      api("/api/v2/communication/statistics", { auth: true }),
+      api("/api/v2/communication/messages", { auth: true }),
+      api("/api/v2/communication/channels", { auth: true }),
+    ]);
+    const stats = statsPayload.stats || {};
+    refs.communicationAdminStats.innerHTML = `
+      <p class="muted">${stats.messages ?? 0} messages · ${stats.notifications ?? 0} notifications · ${stats.queue_pending ?? 0} queue pending · ${stats.campaigns ?? 0} campaigns</p>
+    `;
+    const messages = messagesPayload.messages || [];
+    refs.communicationAdminList.innerHTML = messages
+      .slice(0, 6)
+      .map(
+        (message) => `
+          <article class="mini-card">
+            <strong>${escapeHtml(message.subject || message.channel_type || "Message")}</strong>
+            <p class="muted">${escapeHtml(message.status || "")} · ${escapeHtml(message.channel_type || "")}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No communication messages loaded.</p>";
+    const channels = channelsPayload.channels || [];
+    if (channels.length && refs.communicationAdminList) {
+      const channelSummary = channels
+        .slice(0, 3)
+        .map((channel) => escapeHtml(channel.name || channel.channel_type || ""))
+        .join(" · ");
+      if (channelSummary) {
+        refs.communicationAdminStats.innerHTML += `<p class="muted">Channels: ${channelSummary}</p>`;
+      }
+    }
+  } catch (error) {
+    refs.communicationAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function refreshAnalyticsAdmin() {
+  if (!state.token || !refs.analyticsAdminStats) {
+    return;
+  }
+  try {
+    const [statsPayload, executivePayload, integrationsPayload] = await Promise.all([
+      api("/api/v2/analytics/statistics", { auth: true }),
+      api("/api/v2/analytics/executive", { auth: true }),
+      api("/api/v2/analytics/integrations", { auth: true }),
+    ]);
+    const stats = statsPayload.statistics || {};
+    refs.analyticsAdminStats.innerHTML = `
+      <p class="muted">${stats.total_kpis ?? 0} KPI · ${stats.dashboards_active ?? 0} dashboards · ${stats.reports_generated ?? 0} reports · ${stats.exports_completed ?? 0} exports · ${stats.ai_insights ?? 0} AI insights · health ${stats.platform_health_score ?? 0}</p>
+    `;
+    const executive = executivePayload.executive || {};
+    const kpis = executive.kpis || [];
+    refs.analyticsAdminList.innerHTML = kpis
+      .slice(0, 6)
+      .map(
+        (kpi) => `
+          <article class="mini-card">
+            <strong>${escapeHtml(kpi.name || kpi.kpi_key || "KPI")}</strong>
+            <p class="muted">${escapeHtml(String(kpi.value ?? 0))}</p>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No executive KPIs loaded.</p>";
+    const programs = integrationsPayload.programs || {};
+    const integrated = Object.values(programs).filter(Boolean).length;
+    refs.analyticsAdminStats.innerHTML += `<p class="muted">Sources integrated: ${integrated} programs</p>`;
+  } catch (error) {
+    refs.analyticsAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
   }
 }
 

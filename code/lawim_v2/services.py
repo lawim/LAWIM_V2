@@ -138,6 +138,12 @@ class LawimServices:
         from .security.service import SecurityService
 
         self.security = SecurityService(repository, self.projects, self.policy)
+        from .communication.service import CommunicationService
+
+        self.communication = CommunicationService(repository, self.projects, self.policy)
+        from .analytics.service import AnalyticsService
+
+        self.analytics = AnalyticsService(repository, self.projects, self.policy)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()

@@ -92,6 +92,36 @@ class RuntimeMetrics:
     crm_requests_total: int = 0
     marketplace_requests_total: int = 0
     security_requests_total: int = 0
+    communication_requests_total: int = 0
+    communication_messages_total: int = 0
+    communication_notifications_total: int = 0
+    communication_campaigns_total: int = 0
+    communication_queue_jobs_total: int = 0
+    communication_failures_total: int = 0
+    communication_retry_total: int = 0
+    email_messages_total: int = 0
+    sms_messages_total: int = 0
+    whatsapp_messages_total: int = 0
+    telegram_messages_total: int = 0
+    push_notifications_total: int = 0
+    template_usage_total: int = 0
+    campaign_success_total: int = 0
+    campaign_failure_total: int = 0
+    communication_ai_recommendations_total: int = 0
+    analytics_requests_total: int = 0
+    analytics_events_total: int = 0
+    analytics_metrics_total: int = 0
+    analytics_kpi_total: int = 0
+    analytics_dashboard_views_total: int = 0
+    analytics_report_runs_total: int = 0
+    analytics_exports_total: int = 0
+    analytics_ai_insights_total: int = 0
+    analytics_query_latency_seconds: float = 0.0
+    analytics_aggregation_latency_seconds: float = 0.0
+    analytics_realtime_events_total: int = 0
+    analytics_failures_total: int = 0
+    bi_queries_total: int = 0
+    reporting_outputs_total: int = 0
     lock: threading.Lock = field(default_factory=threading.Lock)
     _latency_samples: list[float] = field(default_factory=list)
     _knowledge_search_latency_samples: list[float] = field(default_factory=list)
@@ -241,6 +271,88 @@ class RuntimeMetrics:
                 self.transaction_closed_total += 1
             elif name == "intelligence_computed":
                 self.intelligence_computed_total += 1
+            elif name.startswith("analytics_") or name in {
+                "bi_queries_total",
+                "reporting_outputs_total",
+            }:
+                self.analytics_requests_total += 1
+                self._crm_metric_counts[name] = self._crm_metric_counts.get(name, 0) + 1
+                if name == "analytics_events_total":
+                    self.analytics_events_total += 1
+                elif name == "analytics_metrics_total":
+                    self.analytics_metrics_total += 1
+                elif name == "analytics_kpi_total":
+                    self.analytics_kpi_total += 1
+                elif name == "analytics_dashboard_views_total":
+                    self.analytics_dashboard_views_total += 1
+                elif name == "analytics_report_runs_total":
+                    self.analytics_report_runs_total += 1
+                elif name == "analytics_exports_total":
+                    self.analytics_exports_total += 1
+                elif name == "analytics_ai_insights_total":
+                    self.analytics_ai_insights_total += 1
+                elif name == "analytics_realtime_events_total":
+                    self.analytics_realtime_events_total += 1
+                elif name == "analytics_failures_total":
+                    self.analytics_failures_total += 1
+                elif name == "analytics_query_latency_seconds":
+                    self.analytics_query_latency_seconds += 1.0
+                elif name == "analytics_aggregation_latency_seconds":
+                    self.analytics_aggregation_latency_seconds += 1.0
+                elif name == "bi_queries_total":
+                    self.bi_queries_total += 1
+                elif name == "reporting_outputs_total":
+                    self.reporting_outputs_total += 1
+            elif any(
+                name.startswith(prefix)
+                for prefix in (
+                    "communication_",
+                    "notification_",
+                    "channel_",
+                    "queue_",
+                    "inapp_",
+                    "campaign_",
+                    "template_",
+                    "email_",
+                    "sms_",
+                    "whatsapp_",
+                    "telegram_",
+                    "push_",
+                    "delivery_",
+                )
+            ):
+                self.communication_requests_total += 1
+                self._crm_metric_counts[name] = self._crm_metric_counts.get(name, 0) + 1
+                if name == "communication_messages_total":
+                    self.communication_messages_total += 1
+                elif name == "communication_notifications_total":
+                    self.communication_notifications_total += 1
+                elif name == "communication_campaigns_total":
+                    self.communication_campaigns_total += 1
+                elif name == "communication_queue_jobs_total":
+                    self.communication_queue_jobs_total += 1
+                elif name == "communication_failures_total":
+                    self.communication_failures_total += 1
+                elif name == "communication_retry_total":
+                    self.communication_retry_total += 1
+                elif name == "email_messages_total":
+                    self.email_messages_total += 1
+                elif name == "sms_messages_total":
+                    self.sms_messages_total += 1
+                elif name == "whatsapp_messages_total":
+                    self.whatsapp_messages_total += 1
+                elif name == "telegram_messages_total":
+                    self.telegram_messages_total += 1
+                elif name == "push_notifications_total":
+                    self.push_notifications_total += 1
+                elif name == "template_usage_total":
+                    self.template_usage_total += 1
+                elif name == "campaign_success_total":
+                    self.campaign_success_total += 1
+                elif name == "campaign_failure_total":
+                    self.campaign_failure_total += 1
+                elif name == "communication_ai_recommendations_total":
+                    self.communication_ai_recommendations_total += 1
             elif any(
                 name.startswith(prefix)
                 for prefix in (
@@ -248,12 +360,6 @@ class RuntimeMetrics:
                     "lead_",
                     "contact_",
                     "customer_",
-                    "campaign_",
-                    "communication_",
-                    "whatsapp_",
-                    "telegram_",
-                    "email_",
-                    "sms_",
                     "followup_",
                     "journey_",
                     "pipeline_",
@@ -281,7 +387,6 @@ class RuntimeMetrics:
                     "dispute_",
                     "matching_",
                     "recommendation_",
-                    "analytics_",
                 )
             ):
                 self.marketplace_requests_total += 1
@@ -425,6 +530,36 @@ class RuntimeMetrics:
                 "crm_requests_total": self.crm_requests_total,
                 "marketplace_requests_total": self.marketplace_requests_total,
                 "security_requests_total": self.security_requests_total,
+                "communication_requests_total": self.communication_requests_total,
+                "communication_messages_total": self.communication_messages_total,
+                "communication_notifications_total": self.communication_notifications_total,
+                "communication_campaigns_total": self.communication_campaigns_total,
+                "communication_queue_jobs_total": self.communication_queue_jobs_total,
+                "communication_failures_total": self.communication_failures_total,
+                "communication_retry_total": self.communication_retry_total,
+                "email_messages_total": self.email_messages_total,
+                "sms_messages_total": self.sms_messages_total,
+                "whatsapp_messages_total": self.whatsapp_messages_total,
+                "telegram_messages_total": self.telegram_messages_total,
+                "push_notifications_total": self.push_notifications_total,
+                "template_usage_total": self.template_usage_total,
+                "campaign_success_total": self.campaign_success_total,
+                "campaign_failure_total": self.campaign_failure_total,
+                "communication_ai_recommendations_total": self.communication_ai_recommendations_total,
+                "analytics_requests_total": self.analytics_requests_total,
+                "analytics_events_total": self.analytics_events_total,
+                "analytics_metrics_total": self.analytics_metrics_total,
+                "analytics_kpi_total": self.analytics_kpi_total,
+                "analytics_dashboard_views_total": self.analytics_dashboard_views_total,
+                "analytics_report_runs_total": self.analytics_report_runs_total,
+                "analytics_exports_total": self.analytics_exports_total,
+                "analytics_ai_insights_total": self.analytics_ai_insights_total,
+                "analytics_query_latency_seconds": self.analytics_query_latency_seconds,
+                "analytics_aggregation_latency_seconds": self.analytics_aggregation_latency_seconds,
+                "analytics_realtime_events_total": self.analytics_realtime_events_total,
+                "analytics_failures_total": self.analytics_failures_total,
+                "bi_queries_total": self.bi_queries_total,
+                "reporting_outputs_total": self.reporting_outputs_total,
                 "crm_metrics": dict(self._crm_metric_counts),
                 "verification_latency_ms": {
                     "p50": _percentile(self._verification_latency_samples, 0.50),

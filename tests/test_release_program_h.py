@@ -160,10 +160,10 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
 
 class ReleaseProgramHPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v14(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 16)
+        self.assertEqual(self.repository.schema_version(), 18)
 
     def test_application_schema_version_constant(self) -> None:
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 16)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 18)
 
     def test_crm_tables_present(self) -> None:
         self.assertTrue(self.repository.crm_tables_present())
@@ -1259,10 +1259,10 @@ class ReleaseProgramHUiTests(LawimTestHarness):
 class ReleaseProgramHHealthTests(LawimTestHarness):
     def test_health_schema_v14(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 16)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 18)
 
     def test_migration_strategy_v14(self) -> None:
-        self.assertEqual(migration_strategy_profile()["schema_version"], 16)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 18)
 
     def test_metrics_include_crm_counters(self) -> None:
         token = self.login(email="agent@lawim.local")

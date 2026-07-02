@@ -12,7 +12,7 @@ from .persistence import APPLICATION_SCHEMA_VERSION
 PRODUCTION_MIGRATION_TOOL = "prisma"
 SQLITE_RUNTIME_INIT = "schema_ddl.SQLITE_INIT_SCRIPT"
 MIGRATION_STRATEGY_NOTES = (
-    "Fresh installs use schema_ddl init scripts aligned with persistence manifest v16.",
+    "Fresh installs use schema_ddl init scripts aligned with persistence manifest v17.",
     "SQLite legacy databases receive idempotent ALTER/backfill steps in apply_sqlite_legacy_migrations().",
     "PostgreSQL production deployments should prefer prisma migrate deploy over runtime DDL init.",
     "Future schema versions must add a Prisma migration and optional SQLite legacy steps.",
@@ -298,6 +298,12 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
     from .security.schema_v16_ddl import SQLITE_V16_TABLES_SCRIPT
 
     conn.executescript(SQLITE_V16_TABLES_SCRIPT)
+    from .communication.schema_v17_ddl import SQLITE_V17_TABLES_SCRIPT
+
+    conn.executescript(SQLITE_V17_TABLES_SCRIPT)
+    from .analytics.schema_v18_ddl import SQLITE_V18_TABLES_SCRIPT
+
+    conn.executescript(SQLITE_V18_TABLES_SCRIPT)
 
 
 def migration_strategy_profile() -> dict[str, object]:
