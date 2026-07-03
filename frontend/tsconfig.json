@@ -42,7 +42,9 @@
       "@digital-twin": ["packages/digital-twin/src/index.ts"],
       "@digital-twin/*": ["packages/digital-twin/src/*"],
       "@learning": ["packages/learning/src/index.ts"],
-      "@learning/*": ["packages/learning/src/*"]
+      "@learning/*": ["packages/learning/src/*"],
+      "@agents": ["packages/agents/src/index.ts"],
+      "@agents/*": ["packages/agents/src/*"]
     }
   },
   "include": ["apps/**/*", "packages/**/*", "tests/**/*", "vite-env.d.ts"],

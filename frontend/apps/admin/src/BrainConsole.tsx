@@ -1,11 +1,13 @@
 import { Badge, Card, PageShell, Button } from '@ui';
-import { BrainOrchestrator, BrainRegistry, createDemoBrainContext, createDemoIntent } from '@brain';
+import { BrainRegistry } from '@brain';
 import { ConversationEngine } from '@conversation';
 import { MemoryService, SummaryGenerator, createMemoryRetentionPolicy } from '@memory';
 import { DigitalTwin, DigitalTwinDashboard } from '@digital-twin';
 import { ObservationCollector, LearningAnalyzer, RecommendationGenerator, ValidationWorkflow } from '@learning';
+import { createMockAgentPlatform } from '@agents';
 
 export function BrainConsolePage() {
+  const agentPlatform = createMockAgentPlatform();
   const registry = new BrainRegistry();
   registry.register({
     name: 'search',
@@ -20,7 +22,6 @@ export function BrainConsolePage() {
     }
   });
 
-  const orchestrator = new BrainOrchestrator(registry);
   const conversationEngine = new ConversationEngine();
   const memory = new MemoryService({ retentionPolicy: createMemoryRetentionPolicy({ maxItems: 3, retainRaw: false }) });
   const summaryGenerator = new SummaryGenerator();
@@ -62,6 +63,12 @@ export function BrainConsolePage() {
   const recommendation = recommendationGenerator.generate(recommendations[0]);
   const validatedRecommendation = validationWorkflow.validate(recommendation, 'accepted');
   const dashboard = new DigitalTwinDashboard([digitalTwin]).build();
+  const agentCandidates = agentPlatform.registry.createRoutingPlan('CreateLead');
+  const orchestrationPreview = {
+    brainModules: registry.list().length,
+    intent: 'CreateLead',
+    agentCandidates
+  };
 
   return (
     <PageShell eyebrow="LAWIM Brain" title="Brain Console" description="A new orchestration console for intent routing, conversations, memory, digital twin, and learning." actions={<Button>Launch review</Button>}>
@@ -72,7 +79,7 @@ export function BrainConsolePage() {
             <Badge variant="success">Plan ready</Badge>
           </div>
           <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-300">
-            {JSON.stringify(orchestrator.orchestrate(createDemoIntent('SearchProperty', 'Find a luxury villa in Lyon'), createDemoBrainContext()).then(() => 'ready'))}
+            {JSON.stringify(orchestrationPreview, null, 2)}
           </div>
         </Card>
         <Card title="Conversation" description="Current conversation intent and summary.">

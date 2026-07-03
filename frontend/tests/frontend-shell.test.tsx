@@ -36,5 +36,6 @@ describe('LAWIM frontend shell', () => {
     expect(screen.getByRole('heading', { name: /manage operations and oversight/i })).toBeInTheDocument();
     expect(screen.getByText(/administrative controls, governance workflows, and deployment readiness in one place/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /operations/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /agents/i })).toBeInTheDocument();
   });
 });

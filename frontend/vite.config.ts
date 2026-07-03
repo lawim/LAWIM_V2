@@ -71,7 +71,8 @@ export default defineConfig({
       '@conversation': path.resolve(__dirname, './packages/conversation/src/index.ts'),
       '@memory': path.resolve(__dirname, './packages/memory/src/index.ts'),
       '@digital-twin': path.resolve(__dirname, './packages/digital-twin/src/index.ts'),
-      '@learning': path.resolve(__dirname, './packages/learning/src/index.ts')
+      '@learning': path.resolve(__dirname, './packages/learning/src/index.ts'),
+      '@agents': path.resolve(__dirname, './packages/agents/src/index.ts')
     }
   },
   build: {

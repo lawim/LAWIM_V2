@@ -1,3 +1,5 @@
+import type { AgentRegistry } from '@agents';
+
 export interface BrainIntent {
   type: string;
   description: string;
@@ -31,6 +33,7 @@ export interface BrainExecutionPlanStep {
 export interface BrainExecutionPlan {
   steps: BrainExecutionPlanStep[];
   summary: string;
+  agentCandidates?: Array<{ agentId: string; agentName: string; intent: string; reason: string }>;
 }
 
 export interface BrainResult {
@@ -77,13 +80,14 @@ export class BrainRouter {
 export class BrainOrchestrator {
   private readonly router = new BrainRouter();
 
-  constructor(private readonly registry: BrainRegistry) {}
+  constructor(private readonly registry: BrainRegistry, private readonly agentRegistry?: AgentRegistry) {}
 
   async orchestrate(intent: BrainIntent, context: BrainContext): Promise<BrainResult> {
     const steps = this.router.selectModules(intent, this.registry, context);
     const plan: BrainExecutionPlan = {
       steps,
-      summary: `${intent.description} routed through ${steps.length} module(s)`
+      summary: `${intent.description} routed through ${steps.length} module(s)`,
+      agentCandidates: this.agentRegistry?.createRoutingPlan(intent.type) ?? []
     };
 
     const outputs = [] as Array<{ module: string; result: unknown }>;
