@@ -32,9 +32,19 @@
       "@charts": ["packages/charts/src/index.ts"],
       "@charts/*": ["packages/charts/src/*"],
       "@forms": ["packages/forms/src/index.ts"],
-      "@forms/*": ["packages/forms/src/*"]
+      "@forms/*": ["packages/forms/src/*"],
+      "@brain": ["packages/brain/src/index.ts"],
+      "@brain/*": ["packages/brain/src/*"],
+      "@conversation": ["packages/conversation/src/index.ts"],
+      "@conversation/*": ["packages/conversation/src/*"],
+      "@memory": ["packages/memory/src/index.ts"],
+      "@memory/*": ["packages/memory/src/*"],
+      "@digital-twin": ["packages/digital-twin/src/index.ts"],
+      "@digital-twin/*": ["packages/digital-twin/src/*"],
+      "@learning": ["packages/learning/src/index.ts"],
+      "@learning/*": ["packages/learning/src/*"]
     }
   },
-  "include": ["apps/**/*", "packages/**/*", "tests/**/*"],
+  "include": ["apps/**/*", "packages/**/*", "tests/**/*", "vite-env.d.ts"],
   "references": []
 }

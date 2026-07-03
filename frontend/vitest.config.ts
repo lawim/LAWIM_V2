@@ -12,7 +12,12 @@ export default defineConfig({
       '@auth': path.resolve(__dirname, './packages/auth/src/index.ts'),
       '@maps': path.resolve(__dirname, './packages/maps/src/index.ts'),
       '@charts': path.resolve(__dirname, './packages/charts/src/index.ts'),
-      '@forms': path.resolve(__dirname, './packages/forms/src/index.ts')
+      '@forms': path.resolve(__dirname, './packages/forms/src/index.ts'),
+      '@brain': path.resolve(__dirname, './packages/brain/src/index.ts'),
+      '@conversation': path.resolve(__dirname, './packages/conversation/src/index.ts'),
+      '@memory': path.resolve(__dirname, './packages/memory/src/index.ts'),
+      '@digital-twin': path.resolve(__dirname, './packages/digital-twin/src/index.ts'),
+      '@learning': path.resolve(__dirname, './packages/learning/src/index.ts')
     }
   },
   test: {

@@ -1,5 +1,6 @@
 import { NavLink, Route, Routes } from 'react-router-dom';
 import { Badge, Button, Card, Input, PageShell, Select, Textarea } from '@ui';
+import { BrainConsolePage } from './BrainConsole';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -15,6 +16,7 @@ const navItems = [
   { to: '/deployment', label: 'Deployment' },
   { to: '/backup', label: 'Backup' },
   { to: '/releases', label: 'Releases' },
+  { to: '/brain', label: 'Brain' },
   { to: '/source-intelligence', label: 'Source Intelligence' },
   { to: '/settings', label: 'Settings' }
 ];
@@ -220,6 +222,7 @@ export function AdminApp() {
         <Route path="/deployment" element={<DeploymentPage />} />
         <Route path="/backup" element={<BackupPage />} />
         <Route path="/releases" element={<ReleasesPage />} />
+        <Route path="/brain" element={<BrainConsolePage />} />
         <Route path="/source-intelligence" element={<SourceIntelligencePage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<DashboardPage />} />
