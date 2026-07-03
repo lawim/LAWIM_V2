@@ -32,10 +32,10 @@ function DashboardPage() {
         </>
       }
     >
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card title="Signal review" description="Inspect and validate incoming intelligence flows." />
-        <Card title="Access control" description="Manage role-based controls and approvals." />
-        <Card title="Release health" description="Monitor delivery quality and team readiness." />
+      <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr_0.9fr]">
+        <Card title="Signal review" description="Inspect and validate incoming intelligence flows."><div className="mt-4 flex items-center gap-3 text-sm text-slate-300"><Badge variant="warning">12 pending</Badge><span>Focus on the highest-priority items first.</span></div></Card>
+        <Card title="Access control" description="Manage role-based controls and approvals."><div className="mt-4 flex items-center gap-3 text-sm text-slate-300"><Badge variant="success">Protected</Badge><span>Policies remain aligned with governance controls.</span></div></Card>
+        <Card title="Release health" description="Monitor delivery quality and team readiness."><div className="mt-4 flex items-center gap-3 text-sm text-slate-300"><Badge variant="info">Healthy</Badge><span>Delivery confidence remains strong.</span></div></Card>
       </div>
     </PageShell>
   );
@@ -45,8 +45,8 @@ function CrmPage() {
   return (
     <PageShell eyebrow="CRM" title="Customer relationship command center" description="Track accounts and opportunities with an admin-ready view.">
       <div className="grid gap-6 md:grid-cols-2">
-        <Card title="Active accounts" description="24 engaged accounts this month" />
-        <Card title="Open deals" description="6 opportunities need follow-up" />
+        <Card title="Active accounts" description="24 engaged accounts this month"><div className="mt-4 text-sm text-slate-300">Priority accounts are moving steadily through the funnel.</div></Card>
+        <Card title="Open deals" description="6 opportunities need follow-up"><div className="mt-4 text-sm text-slate-300">A dedicated follow-up queue keeps momentum high.</div></Card>
       </div>
     </PageShell>
   );
@@ -56,7 +56,10 @@ function RealEstatePage() {
   return (
     <PageShell eyebrow="Immobilier" title="Property operations" description="Coordinate listing quality, compliance, and approvals.">
       <Card title="Portfolio pulse" description="All assets are currently aligned with policy.">
-        <Badge variant="success">Healthy</Badge>
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-300">
+          <Badge variant="success">Healthy</Badge>
+          <span>Portfolio readiness is above target for this week.</span>
+        </div>
       </Card>
     </PageShell>
   );
@@ -82,6 +85,7 @@ function UsersPage() {
           <Badge variant="success">Operator</Badge>
           <Badge variant="warning">Viewer</Badge>
         </div>
+        <p className="mt-4 text-sm text-slate-300">Teams remain synchronized with the current operating model.</p>
       </Card>
     </PageShell>
   );
@@ -180,15 +184,21 @@ function SettingsPage() {
 export function AdminApp() {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
-      <nav className="border-b border-slate-300 bg-white px-4 py-4 text-slate-700 sm:px-6">
+      <nav aria-label="Primary" className="sticky top-0 z-20 border-b border-slate-300 bg-white/90 px-4 py-4 text-slate-700 backdrop-blur sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
-          <div className="font-semibold text-slate-900">LAWIM Admin</div>
-          <div className="flex flex-wrap gap-3 text-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">LA</div>
+            <div>
+              <div className="font-semibold text-slate-900">LAWIM Admin</div>
+              <div className="text-xs text-slate-500">Operations console</div>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 text-sm">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
-                className={({ isActive }) => (isActive ? 'text-slate-900' : 'text-slate-500 hover:text-slate-900')}
+                className={({ isActive }) => (isActive ? 'rounded-full bg-slate-900 px-3 py-2 text-white' : 'rounded-full px-3 py-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900')}
               >
                 {item.label}
               </NavLink>

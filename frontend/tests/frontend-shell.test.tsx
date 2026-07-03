@@ -24,6 +24,12 @@ describe('LAWIM frontend shell', () => {
     expect(screen.getByText(/search/i)).toBeInTheDocument();
   });
 
+  it('exposes accessible primary navigation for the public shell', () => {
+    renderWithProviders(<WebApp />);
+
+    expect(screen.getByRole('navigation', { name: /primary/i })).toBeInTheDocument();
+  });
+
   it('renders the administration shell', () => {
     renderWithProviders(<AdminApp />);
 

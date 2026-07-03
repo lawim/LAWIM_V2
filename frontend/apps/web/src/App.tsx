@@ -65,10 +65,10 @@ function HomePage() {
         </>
       }
     >
-      <div className="grid gap-6 md:grid-cols-3">
-        {summaryPending ? <LoadingState label="Loading dashboard summary" /> : summaryError ? <ErrorState message="Unable to load the dashboard summary." retry={() => void refetchProperties()} /> : <Card title="Dashboard" description="Operational overview" children={<p className="text-sm text-slate-300">{summaryData?.data.properties ?? 0} properties • {summaryData?.data.opportunities ?? 0} opportunities</p>} />}
-        {profilePending ? <LoadingState label="Loading profile" /> : profileError ? <ErrorState message="Unable to load profile." /> : <Card title="Profile" description="Signed-in workspace" children={<p className="text-sm text-slate-300">{profileData?.data.name ?? 'Viewer'}</p>} />}
-        {propertiesPending ? <LoadingState label="Loading opportunities" /> : propertiesError ? <ErrorState message="Unable to load opportunities." /> : <Card title="Latest opportunities" description="Fresh demand from the backend" children={<div className="space-y-2 text-sm text-slate-300">{(propertiesData?.data ?? []).slice(0, 3).map((property) => <div key={property.id}>{property.title}</div>)}</div>} />}
+      <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr_0.9fr]">
+        {summaryPending ? <LoadingState label="Loading dashboard summary" /> : summaryError ? <ErrorState message="Unable to load the dashboard summary." retry={() => void refetchProperties()} /> : <Card title="Dashboard" description="Operational overview"><div className="space-y-3 text-sm text-slate-300"><p className="text-3xl font-semibold text-white">{summaryData?.data.properties ?? 0}</p><p>{summaryData?.data.opportunities ?? 0} active opportunities and {summaryData?.data.communications ?? 0} recent communications.</p><Button variant="secondary">Open dashboard</Button></div></Card>}
+        {profilePending ? <LoadingState label="Loading profile" /> : profileError ? <ErrorState message="Unable to load profile." /> : <Card title="Profile" description="Signed-in workspace"><div className="space-y-3 text-sm text-slate-300"><p className="text-xl font-semibold text-white">{profileData?.data.name ?? 'Viewer'}</p><p>{profileData?.data.role ?? 'Director'}</p><p>{profileData?.data.email ?? 'No email available'}</p></div></Card>}
+        {propertiesPending ? <LoadingState label="Loading opportunities" /> : propertiesError ? <ErrorState message="Unable to load opportunities." /> : <Card title="Latest opportunities" description="Fresh demand from the backend"><div className="space-y-2 text-sm text-slate-300">{(propertiesData?.data ?? []).slice(0, 3).map((property) => <div key={property.id} className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2">{property.title}</div>)}</div></Card>}
       </div>
     </PageShell>
   );
@@ -87,12 +87,17 @@ function SearchPage() {
     <PageShell eyebrow="Discovery" title="Search opportunities" description="Browse the latest listings and refine your next move.">
       <div className="grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
         <div className="space-y-4">
-          <Input label="Search" placeholder="Search by title or location" value={query} onChange={(event) => setQuery(event.target.value)} />
+          <div className="rounded-3xl border border-slate-800/80 bg-slate-900/60 p-4">
+            <Input label="Search" placeholder="Search by title or location" value={query} onChange={(event) => setQuery(event.target.value)} />
+          </div>
           {isPending ? <LoadingState label="Loading properties" /> : error ? <ErrorState message="Unable to load properties." retry={() => void refetch()} /> : properties.length === 0 ? <EmptyState label="No properties matched the current filter." /> : properties.map((property) => (
             <Card key={property.id} title={property.title} description={`${property.location} • ${property.type}`}>
-              <div className="flex items-center justify-between text-sm text-slate-300">
+              <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-slate-300">
                 <span>{property.location}</span>
-                <span className="font-semibold text-white">€{property.price.toLocaleString()}</span>
+                <div className="flex items-center gap-3">
+                  <Badge variant="success">Hot lead</Badge>
+                  <span className="font-semibold text-white">€{property.price.toLocaleString()}</span>
+                </div>
               </div>
             </Card>
           ))}
@@ -105,6 +110,7 @@ function SearchPage() {
               <option>Commercial</option>
             </Select>
             <Checkbox label="Ready to review" />
+            <Button>Apply filters</Button>
           </div>
         </Card>
       </div>
@@ -200,7 +206,7 @@ function EstimationPage() {
         </Card>
         <Card title="Suggested outcome" description="A guided result for the current workflow.">
           <div className="space-y-3 text-sm text-slate-300">
-            <p>{result ?? 'Ready to generate an estimate.'}</p>
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">{result ?? 'Ready to generate an estimate.'}</div>
             {error ? <p className="text-rose-300">{error}</p> : null}
             <Button className="w-full" onClick={() => void onSubmit()}>Generate estimate</Button>
           </div>
@@ -230,15 +236,15 @@ function AssistantPage() {
     <PageShell eyebrow="AI assistant" title="Ask your intelligent copilot" description="Use the assistant to surface the right next action.">
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <Card title="Suggested prompts" description="Get started faster with prepared workflows.">
-          {isPending ? <LoadingState label="Loading prompts" /> : error ? <ErrorState message="Failed to load prompts." retry={() => void refetch()} /> : <div className="flex flex-col gap-2 text-sm text-slate-300">{(data?.data ?? []).map((item) => <div key={item.title}>{item.title} — {item.description}</div>)}</div>}
+          {isPending ? <LoadingState label="Loading prompts" /> : error ? <ErrorState message="Failed to load prompts." retry={() => void refetch()} /> : <div className="flex flex-col gap-2 text-sm text-slate-300">{(data?.data ?? []).map((item) => <div key={item.title} className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2">{item.title} — {item.description}</div>)}</div>}
         </Card>
         <Card title="Conversation" description="The assistant is ready to support your team.">
           <Textarea label="Message" placeholder="What do you want to understand today?" value={message} onChange={(event) => setMessage(event.target.value)} />
-          <div className="mt-4 flex gap-3">
+          <div className="mt-4 flex flex-wrap gap-3">
             <Button onClick={() => void sendMessage()}>Send</Button>
             <Button variant="secondary">Save draft</Button>
           </div>
-          {reply ? <p className="mt-4 text-sm text-slate-300">{reply}</p> : null}
+          {reply ? <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm text-emerald-200">{reply}</div> : null}
           {assistantError ? <p className="mt-2 text-sm text-rose-300">{assistantError}</p> : null}
         </Card>
       </div>
@@ -361,12 +367,18 @@ export function WebApp() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <nav className="border-b border-slate-800 bg-slate-950/80 px-4 py-4 text-slate-300 sm:px-6">
+      <nav aria-label="Primary" className="sticky top-0 z-20 border-b border-slate-800/80 bg-slate-950/90 px-4 py-4 text-slate-300 backdrop-blur sm:px-6">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
-          <div className="font-semibold text-white">LAWIM</div>
-          <div className="flex flex-wrap gap-3 text-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600/20 text-sm font-semibold text-brand-300">LW</div>
+            <div>
+              <div className="font-semibold text-white">LAWIM</div>
+              <div className="text-xs text-slate-500">Product experience</div>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 text-sm">
             {navItems.map((item) => (
-              <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'text-white' : 'text-slate-400 hover:text-white')}>
+              <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'rounded-full bg-slate-800 px-3 py-2 text-white' : 'rounded-full px-3 py-2 text-slate-400 hover:bg-slate-900 hover:text-white')}>
                 {item.label}
               </NavLink>
             ))}
