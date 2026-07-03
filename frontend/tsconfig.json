@@ -44,7 +44,9 @@
       "@learning": ["packages/learning/src/index.ts"],
       "@learning/*": ["packages/learning/src/*"],
       "@agents": ["packages/agents/src/index.ts"],
-      "@agents/*": ["packages/agents/src/*"]
+      "@agents/*": ["packages/agents/src/*"],
+      "@knowledge": ["packages/knowledge/src/index.ts"],
+      "@knowledge/*": ["packages/knowledge/src/*"]
     }
   },
   "include": ["apps/**/*", "packages/**/*", "tests/**/*", "vite-env.d.ts"],
