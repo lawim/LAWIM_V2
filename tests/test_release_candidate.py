@@ -60,6 +60,7 @@ class ReleaseCandidateSecurityTest(LawimTestHarness):
         from pathlib import Path
 
         root = Path(__file__).resolve().parent.parent
+        compose = root / "platform" / "compose.sh"
         pairs = (
             ("compose/docker-compose.base.yml", "compose/docker-compose.dev.yml"),
             ("compose/docker-compose.base.yml", "compose/docker-compose.postgres.yml"),
@@ -68,7 +69,7 @@ class ReleaseCandidateSecurityTest(LawimTestHarness):
         )
         for base, overlay in pairs:
             result = subprocess.run(
-                ["docker", "compose", "-f", str(root / base), "-f", str(root / overlay), "config"],
+                [str(compose), "-f", str(root / base), "-f", str(root / overlay), "config"],
                 capture_output=True,
                 text=True,
                 check=False,

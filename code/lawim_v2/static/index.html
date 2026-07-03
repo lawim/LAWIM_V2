@@ -590,6 +590,145 @@
 
           <article class="panel card" data-journey-panel="admin project">
             <div class="section-heading">
+              <h2>Source Intelligence Engine</h2>
+              <p class="muted">Reference codes, imports, source context, analysis, WhatsApp links and source governance (API v2).</p>
+            </div>
+            <div id="sie-admin-stats" class="card-list muted">Sign in to load source intelligence stats.</div>
+            <div id="sie-admin-list" class="card-list"></div>
+            <form id="sie-import-form" class="stacked-form hidden">
+              <label>
+                <span>Source URL</span>
+                <input name="url" type="url" required placeholder="https://example.cm/publication">
+              </label>
+              <div class="two-up">
+                <label>
+                  <span>Source name</span>
+                  <input name="name" type="text" placeholder="Publication source">
+                </label>
+                <label>
+                  <span>Channel</span>
+                  <select name="channel">
+                    <option value="web">web</option>
+                    <option value="whatsapp">whatsapp</option>
+                    <option value="referral">referral</option>
+                    <option value="internal">internal</option>
+                    <option value="publication">publication</option>
+                    <option value="other">other</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                <span>Import notes</span>
+                <textarea name="notes" rows="2" placeholder="Import context and comments"></textarea>
+              </label>
+              <div class="actions">
+                <button type="submit" class="button primary">Import source</button>
+              </div>
+            </form>
+            <form id="sie-source-form" class="stacked-form hidden">
+              <label>
+                <span>Selected source ID</span>
+                <input name="source_id" type="number" min="1" readonly>
+              </label>
+              <div class="two-up">
+                <label>
+                  <span>Network</span>
+                  <input name="network" type="text" placeholder="web">
+                </label>
+                <label>
+                  <span>Publication URL</span>
+                  <input name="publication_url" type="url" placeholder="https://example.cm/publication">
+                </label>
+              </div>
+              <div class="two-up">
+                <label>
+                  <span>Publication title</span>
+                  <input name="publication_title" type="text" placeholder="Publication title">
+                </label>
+                <label>
+                  <span>Publication author</span>
+                  <input name="publication_author" type="text" placeholder="Author name">
+                </label>
+              </div>
+              <label>
+                <span>Publication text</span>
+                <textarea name="publication_text" rows="3" placeholder="Extract or summary of the source"></textarea>
+              </label>
+              <div class="two-up">
+                <label>
+                  <span>Campaign</span>
+                  <input name="campaign" type="text" placeholder="campaign key">
+                </label>
+                <label>
+                  <span>City</span>
+                  <input name="city" type="text" placeholder="Douala">
+                </label>
+              </div>
+              <div class="two-up">
+                <label>
+                  <span>District</span>
+                  <input name="district" type="text" placeholder="Bonanjo">
+                </label>
+                <label>
+                  <span>Property type</span>
+                  <input name="property_type" type="text" placeholder="apartment">
+                </label>
+              </div>
+              <div class="two-up">
+                <label>
+                  <span>Target audience</span>
+                  <input name="target_audience" type="text" placeholder="prospects">
+                </label>
+                <label>
+                  <span>Format</span>
+                  <input name="format" type="text" placeholder="link">
+                </label>
+              </div>
+              <div class="two-up">
+                <label>
+                  <span>Language</span>
+                  <input name="language" type="text" placeholder="fr">
+                </label>
+                <label>
+                  <span>Tags</span>
+                  <input name="tags" type="text" placeholder="lawim, source, web">
+                </label>
+              </div>
+              <div class="two-up">
+                <label>
+                  <span>AI classification</span>
+                  <input name="ai_classification" type="text" placeholder="web_publication">
+                </label>
+                <label>
+                  <span>AI confidence</span>
+                  <input name="ai_confidence" type="number" min="0" max="1" step="0.01" placeholder="0.78">
+                </label>
+              </div>
+              <label>
+                <span>Notes</span>
+                <textarea name="notes" rows="2" placeholder="Context notes"></textarea>
+              </label>
+              <div class="actions">
+                <button type="submit" class="button primary">Update context</button>
+                <button type="button" id="sie-analyze-button" class="button secondary">Run analysis</button>
+                <button type="button" id="sie-whatsapp-button" class="button ghost">Generate WhatsApp link</button>
+              </div>
+            </form>
+            <form id="sie-reference-form" class="stacked-form hidden">
+              <label>
+                <span>Reference seed</span>
+                <input name="seed" type="text" placeholder="optional-seed">
+              </label>
+              <div class="actions">
+                <button type="submit" class="button ghost">Generate reference code</button>
+              </div>
+            </form>
+            <div id="sie-reference-result" class="message-stream muted"></div>
+            <div id="sie-link-result" class="message-stream muted"></div>
+          </article>
+
+          <article class="panel card" data-journey-panel="admin project">
+            <div class="section-heading">
               <h2>Security &amp; Compliance</h2>
               <p class="muted">IAM, audit trail, compliance, privacy, risk and security dashboard (API v2).</p>
             </div>

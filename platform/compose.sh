@@ -12,13 +12,22 @@ fi
 
 COMPOSE="${LAWIM_COMPOSE:-}"
 if [[ -z "${COMPOSE}" ]]; then
-  if command -v podman-compose >/dev/null 2>&1 && podman info >/dev/null 2>&1; then
-    if docker compose version 2>&1 | grep -qi "docker-compose version 1"; then
+  if command -v podman-compose >/dev/null 2>&1; then
+    docker_compose_version=""
+    if command -v docker >/dev/null 2>&1; then
+      docker_compose_version="$(docker compose version 2>&1 || true)"
+    fi
+    if [[ -n "${docker_compose_version}" ]] && grep -qi "Emulate Docker CLI using podman" <<<"${docker_compose_version}"; then
       COMPOSE="podman-compose"
-    elif [[ -z "$(docker compose version 2>/dev/null | grep -i 'compose version v2')" ]]; then
-      COMPOSE="podman-compose"
-    else
+    elif [[ -n "${docker_compose_version}" ]] && grep -qi "compose version v2" <<<"${docker_compose_version}"; then
       COMPOSE="docker compose"
+    elif command -v podman >/dev/null 2>&1 && podman info >/dev/null 2>&1; then
+      COMPOSE="podman-compose"
+    elif command -v docker >/dev/null 2>&1; then
+      COMPOSE="docker compose"
+    else
+      echo "No compose command available. Run platform/detect-runtime.sh" >&2
+      exit 1
     fi
   elif command -v docker >/dev/null 2>&1; then
     COMPOSE="docker compose"
@@ -26,6 +35,14 @@ if [[ -z "${COMPOSE}" ]]; then
     echo "No compose command available. Run platform/detect-runtime.sh" >&2
     exit 1
   fi
+fi
+
+if [[ "${COMPOSE}" == "podman-compose" ]]; then
+  runtime_dir="${LAWIM_PODMAN_RUNTIME_DIR:-/tmp/lawim_v2_podman_runtime}"
+  export XDG_RUNTIME_DIR="${runtime_dir}"
+  export TMPDIR="${runtime_dir}"
+  mkdir -p "${runtime_dir}/podman" "${runtime_dir}/libpod/tmp/events"
+  chmod 700 "${runtime_dir}" 2>/dev/null || true
 fi
 
 exec ${COMPOSE} "$@"

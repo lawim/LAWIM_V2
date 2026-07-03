@@ -8,6 +8,8 @@ const state = {
   selectedPropertyVersion: null,
   selectedPropertyTitle: null,
   selectedProjectId: null,
+  selectedSourceIntelligenceId: null,
+  sourceIntelligenceDashboard: null,
   assistantSessionId: null,
   refreshInFlight: false,
 };
@@ -97,6 +99,15 @@ function cacheRefs() {
     communicationAdminList: byId("communication-admin-list"),
     analyticsAdminStats: byId("analytics-admin-stats"),
     analyticsAdminList: byId("analytics-admin-list"),
+    sieAdminStats: byId("sie-admin-stats"),
+    sieAdminList: byId("sie-admin-list"),
+    sieImportForm: byId("sie-import-form"),
+    sieSourceForm: byId("sie-source-form"),
+    sieReferenceForm: byId("sie-reference-form"),
+    sieReferenceResult: byId("sie-reference-result"),
+    sieLinkResult: byId("sie-link-result"),
+    sieAnalyzeButton: byId("sie-analyze-button"),
+    sieWhatsappButton: byId("sie-whatsapp-button"),
     securityAdminStats: byId("security-admin-stats"),
     securityAdminList: byId("security-admin-list"),
     securityAuditForm: byId("security-audit-form"),
@@ -1058,6 +1069,7 @@ async function refresh() {
     await refreshCrmAdmin();
     await refreshCommunicationAdmin();
     await refreshAnalyticsAdmin();
+    await refreshSourceIntelligenceAdmin();
     await refreshSecurityAdmin();
     await refreshMarketplaceAdmin();
     await refreshWorkflowAdmin();
@@ -1204,6 +1216,293 @@ async function refreshAnalyticsAdmin() {
     refs.analyticsAdminStats.innerHTML += `<p class="muted">Sources integrated: ${integrated} programs</p>`;
   } catch (error) {
     refs.analyticsAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+function fillSourceIntelligenceForm(source) {
+  if (!refs.sieSourceForm || !source) {
+    return;
+  }
+  const elements = refs.sieSourceForm.elements;
+  const setValue = (name, value) => {
+    if (elements[name]) {
+      elements[name].value = value ?? "";
+    }
+  };
+  setValue("source_id", source.id ?? "");
+  setValue("network", source.network || source.channel || "");
+  setValue("publication_url", source.publication_url || "");
+  setValue("publication_title", source.publication_title || source.name || "");
+  setValue("publication_text", source.publication_text || "");
+  setValue("publication_author", source.publication_author || "");
+  setValue("campaign", source.campaign || "");
+  setValue("city", source.city || "");
+  setValue("district", source.district || "");
+  setValue("property_type", source.property_type || "");
+  setValue("target_audience", source.target_audience || "");
+  setValue("format", source.format || "");
+  setValue("language", source.language || "");
+  setValue("tags", Array.isArray(source.tags) ? source.tags.join(", ") : "");
+  setValue("ai_classification", source.ai_classification || "");
+  setValue("ai_confidence", source.ai_confidence ?? "");
+  setValue("notes", source.notes || "");
+}
+
+function selectSourceIntelligence(source) {
+  if (!source) {
+    return;
+  }
+  state.selectedSourceIntelligenceId = source.id || null;
+  fillSourceIntelligenceForm(source);
+  if (refs.sieReferenceResult && source.reference_code) {
+    refs.sieReferenceResult.innerHTML = `
+      <article class="message">
+        <div class="message__meta"><strong>${escapeHtml(source.name || source.source_key || "Source")}</strong> · ${escapeHtml(source.reference_code || "")}</div>
+      </article>
+    `;
+  } else if (refs.sieReferenceResult) {
+    refs.sieReferenceResult.innerHTML = "";
+  }
+  if (refs.sieLinkResult && source.whatsapp_link) {
+    refs.sieLinkResult.innerHTML = `
+      <article class="message">
+        <div class="message__meta"><strong>WhatsApp</strong> · ${escapeHtml(source.whatsapp_link || "")}</div>
+      </article>
+    `;
+  } else if (refs.sieLinkResult) {
+    refs.sieLinkResult.innerHTML = "";
+  }
+}
+
+async function refreshSourceIntelligenceAdmin() {
+  if (!state.token || !refs.sieAdminStats || !refs.sieAdminList) {
+    return;
+  }
+  try {
+    const payload = await api("/api/v2/source-intelligence/dashboard", { auth: true, query: { limit: 8 } });
+    const dashboard = payload.dashboard || {};
+    const stats = dashboard.stats || {};
+    state.sourceIntelligenceDashboard = dashboard;
+    refs.sieAdminStats.innerHTML = `
+      <p class="muted">${stats.total ?? 0} sources · ${stats.active ?? stats.active_sources ?? 0} active · ${stats.with_context ?? stats.sources_with_context ?? 0} with context · ${stats.imports_total ?? 0} imports · confidence ${(Number(stats.average_ai_confidence) || 0).toFixed(2)}</p>
+    `;
+    refs.sieImportForm?.classList.remove("hidden");
+    refs.sieSourceForm?.classList.remove("hidden");
+    refs.sieReferenceForm?.classList.remove("hidden");
+    const sources = dashboard.top_sources || dashboard.sources || [];
+    if (sources.length) {
+      const selected =
+        sources.find((source) => Number(source.id) === Number(state.selectedSourceIntelligenceId)) || sources[0];
+      if (selected) {
+        selectSourceIntelligence(selected);
+      }
+    }
+    refs.sieAdminList.innerHTML = sources
+      .slice(0, 8)
+      .map(
+        (source) => `
+          <article class="mini-card" data-sie-source-id="${escapeHtml(String(source.id || ""))}">
+            <strong>${escapeHtml(source.name || source.source_key || "Source")}</strong>
+            <p class="muted">${escapeHtml(source.reference_code || "")} · ${escapeHtml(source.channel || source.network || "")} · ${escapeHtml(source.status || "")}</p>
+            <p class="muted">${escapeHtml(source.city || "")} · leads ${source.lead_count ?? 0} · customers ${source.customer_count ?? 0} · imports ${source.import_count ?? 0}</p>
+            <div class="actions single">
+              <button type="button" class="button ghost" data-sie-select-source="${escapeHtml(String(source.id || ""))}">Select</button>
+            </div>
+          </article>
+        `,
+      )
+      .join("") || "<p class='muted'>No source intelligence records.</p>";
+    refs.sieAdminList.querySelectorAll("[data-sie-select-source]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const sourceId = Number(button.getAttribute("data-sie-select-source") || 0);
+        const source = sources.find((item) => Number(item.id) === sourceId);
+        if (source) {
+          selectSourceIntelligence(source);
+          setNotice(`Selected ${source.name || source.source_key || "source"}.`, "success");
+        }
+      });
+    });
+  } catch (error) {
+    refs.sieAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+async function handleSourceIntelligenceImport(event) {
+  event.preventDefault();
+  if (!state.token || !refs.sieImportForm) {
+    return;
+  }
+  try {
+    const form = new FormData(refs.sieImportForm);
+    const payload = await api("/api/v2/source-intelligence/imports", {
+      method: "POST",
+      auth: true,
+      body: {
+        url: form.get("url"),
+        name: form.get("name"),
+        channel: form.get("channel"),
+        notes: form.get("notes"),
+      },
+    });
+    const source = { ...(payload.source || {}), whatsapp_link: payload.whatsapp_link || payload.context?.whatsapp_link || "" };
+    if (source.id) {
+      state.selectedSourceIntelligenceId = source.id;
+      selectSourceIntelligence(source);
+    }
+    refs.sieImportForm.reset();
+    setNotice("SIE import completed.", "success");
+    await refreshSourceIntelligenceAdmin();
+  } catch (error) {
+    setNotice(error.message, "error", error.code || "");
+  }
+}
+
+async function handleSourceIntelligenceContext(event) {
+  event.preventDefault();
+  if (!state.token || !refs.sieSourceForm) {
+    return;
+  }
+  try {
+    const form = new FormData(refs.sieSourceForm);
+    const sourceId = parseNumber(form.get("source_id"));
+    if (!sourceId) {
+      throw new Error("Select a source first.");
+    }
+    const tags = String(form.get("tags") || "")
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean);
+    await api(`/api/v2/source-intelligence/sources/${sourceId}/context`, {
+      method: "PATCH",
+      auth: true,
+      body: {
+        network: form.get("network"),
+        publication_url: form.get("publication_url"),
+        publication_title: form.get("publication_title"),
+        publication_text: form.get("publication_text"),
+        publication_author: form.get("publication_author"),
+        campaign: form.get("campaign"),
+        city: form.get("city"),
+        district: form.get("district"),
+        property_type: form.get("property_type"),
+        target_audience: form.get("target_audience"),
+        format: form.get("format"),
+        language: form.get("language"),
+        tags,
+        ai_classification: form.get("ai_classification"),
+        ai_confidence: parseNumber(form.get("ai_confidence")) || 0,
+        notes: form.get("notes"),
+      },
+    });
+    setNotice("Source context updated.", "success");
+    await refreshSourceIntelligenceAdmin();
+  } catch (error) {
+    setNotice(error.message, "error", error.code || "");
+  }
+}
+
+async function handleSourceIntelligenceAnalyze() {
+  if (!state.token || !refs.sieSourceForm) {
+    return;
+  }
+  try {
+    const form = new FormData(refs.sieSourceForm);
+    const sourceId = parseNumber(form.get("source_id"));
+    if (!sourceId) {
+      throw new Error("Select a source first.");
+    }
+    const tags = String(form.get("tags") || "")
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean);
+    const payload = await api("/api/v2/source-intelligence/analyze", {
+      method: "POST",
+      auth: true,
+      body: {
+        source_id: sourceId,
+        network: form.get("network"),
+        url: form.get("publication_url"),
+        title: form.get("publication_title"),
+        text: form.get("publication_text"),
+        author: form.get("publication_author"),
+        campaign: form.get("campaign"),
+        city: form.get("city"),
+        district: form.get("district"),
+        property_type: form.get("property_type"),
+        target_audience: form.get("target_audience"),
+        format: form.get("format"),
+        language: form.get("language"),
+        tags,
+        notes: form.get("notes"),
+      },
+    });
+    const analysis = payload.analysis || {};
+    if (analysis.source) {
+      selectSourceIntelligence({ ...analysis.source, whatsapp_link: analysis.context?.whatsapp_link || analysis.source.whatsapp_link || "" });
+    }
+    if (analysis.context) {
+      fillSourceIntelligenceForm(analysis.context);
+    }
+    if (analysis.import?.import_key) {
+      refs.sieReferenceResult.innerHTML = `
+        <article class="message">
+          <div class="message__meta"><strong>${escapeHtml(analysis.import.import_key)}</strong> · ${escapeHtml(analysis.import.import_status || "")}</div>
+        </article>
+      `;
+    }
+    setNotice("Source analysis completed.", "success");
+    await refreshSourceIntelligenceAdmin();
+  } catch (error) {
+    setNotice(error.message, "error", error.code || "");
+  }
+}
+
+async function handleSourceIntelligenceWhatsApp() {
+  if (!state.token || !refs.sieSourceForm) {
+    return;
+  }
+  try {
+    const sourceId = parseNumber(new FormData(refs.sieSourceForm).get("source_id"));
+    if (!sourceId) {
+      throw new Error("Select a source first.");
+    }
+    const payload = await api(`/api/v2/source-intelligence/sources/${sourceId}/whatsapp-link`, {
+      auth: true,
+    });
+    const link = payload.whatsapp_link || "";
+    refs.sieLinkResult.innerHTML = `
+      <article class="message">
+        <div class="message__meta"><strong>WhatsApp link</strong> · ${escapeHtml(link)}</div>
+      </article>
+    `;
+    setNotice("WhatsApp link generated.", "success");
+    await refreshSourceIntelligenceAdmin();
+  } catch (error) {
+    setNotice(error.message, "error", error.code || "");
+  }
+}
+
+async function handleSourceIntelligenceReference(event) {
+  event.preventDefault();
+  if (!state.token || !refs.sieReferenceForm) {
+    return;
+  }
+  try {
+    const form = new FormData(refs.sieReferenceForm);
+    const payload = await api("/api/v2/source-intelligence/reference-code", {
+      method: "POST",
+      auth: true,
+      body: { seed: form.get("seed") },
+    });
+    const referenceCode = payload.reference_code || "";
+    refs.sieReferenceResult.innerHTML = `
+      <article class="message">
+        <div class="message__meta"><strong>Reference code</strong> · ${escapeHtml(referenceCode)}</div>
+      </article>
+    `;
+    setNotice("Reference code generated.", "success");
+  } catch (error) {
+    setNotice(error.message, "error", error.code || "");
   }
 }
 
@@ -1960,6 +2259,11 @@ function bindEvents() {
   refs.reiSearchForm?.addEventListener("submit", handleReiSearch);
   refs.crmSearchForm?.addEventListener("submit", handleCrmSearch);
   refs.marketplaceSearchForm?.addEventListener("submit", handleMarketplaceSearch);
+  refs.sieImportForm?.addEventListener("submit", handleSourceIntelligenceImport);
+  refs.sieSourceForm?.addEventListener("submit", handleSourceIntelligenceContext);
+  refs.sieReferenceForm?.addEventListener("submit", handleSourceIntelligenceReference);
+  refs.sieAnalyzeButton?.addEventListener("click", handleSourceIntelligenceAnalyze);
+  refs.sieWhatsappButton?.addEventListener("click", handleSourceIntelligenceWhatsApp);
   refs.securityAuditForm?.addEventListener("submit", handleSecurityAudit);
   refs.workflowMonitorForm?.addEventListener("submit", handleWorkflowMonitor);
   refs.propertySearchForm?.addEventListener("submit", handlePropertySearch);

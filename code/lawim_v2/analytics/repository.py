@@ -110,6 +110,7 @@ class AnalyticsRepositoryMixin:
             "knowledge_platform": hasattr(self, "expert_rag_query"),
             "workflow_automation": hasattr(self, "start_automation_instance"),
             "real_estate_intelligence": hasattr(self, "get_rei_property_bundle"),
+            "source_intelligence": hasattr(self, "source_intelligence_dashboard"),
             "crm": hasattr(self, "get_crm_contact"),
             "marketplace": hasattr(self, "get_marketplace_provider"),
             "security": hasattr(self, "record_audit_trail"),
@@ -158,6 +159,11 @@ class AnalyticsRepositoryMixin:
                 collected["rei_metrics"] = self.rei_analytics()
             except Exception:
                 collected["rei_metrics"] = {}
+        if hasattr(self, "source_intelligence_stats"):
+            try:
+                collected["source_intelligence_metrics"] = self.source_intelligence_stats()
+            except Exception:
+                collected["source_intelligence_metrics"] = {}
         if hasattr(self, "workflow_metrics"):
             try:
                 collected["workflow_metrics"] = self.workflow_metrics()

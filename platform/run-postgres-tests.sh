@@ -27,6 +27,7 @@ fi
 
 export PYTHONPATH="${ROOT}/code:${ROOT}/tests${PYTHONPATH:+:${PYTHONPATH}}"
 export LAWIM_TEST_POSTGRES_URL="${LAWIM_TEST_POSTGRES_URL:-postgresql://lawim:lawim@127.0.0.1:${LAWIM_POSTGRES_PORT:-5433}/lawim_v2}"
+export LAWIM_TEST_MODE=1
 
 echo "Running PostgreSQL integration tests (${LAWIM_TEST_POSTGRES_URL})..."
 "${PYTHON}" -m unittest tests.test_productization.PostgreSQLIntegrationTest tests.test_rc_postgresql -v

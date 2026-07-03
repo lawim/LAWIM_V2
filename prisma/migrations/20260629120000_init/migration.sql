@@ -1,4 +1,4 @@
--- LAWIM_V2 schema v17 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
+-- LAWIM_V2 schema v18 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
 
 CREATE TABLE IF NOT EXISTS organizations (
         id SERIAL PRIMARY KEY,
@@ -1999,11 +1999,20 @@ CREATE TABLE IF NOT EXISTS crm_contact_consents (
 CREATE TABLE IF NOT EXISTS crm_lead_sources (
             id SERIAL PRIMARY KEY,
             source_key TEXT NOT NULL UNIQUE,
+            reference_code TEXT NOT NULL DEFAULT '' UNIQUE,
             name TEXT NOT NULL,
             channel TEXT NOT NULL DEFAULT 'web',
+            target TEXT NOT NULL DEFAULT 'acquisition',
+            status TEXT NOT NULL DEFAULT 'active',
+            created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
             metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
         );
+
+CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_reference_code ON crm_lead_sources(reference_code);
+
+CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_status ON crm_lead_sources(status, created_at);
 
 CREATE TABLE IF NOT EXISTS crm_leads (
             id SERIAL PRIMARY KEY,
@@ -4476,7 +4485,7 @@ CREATE TABLE IF NOT EXISTS communication_ai_recommendations (
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_ai_recommendations_status ON communication_ai_recommendations(status, created_at);
--- Schema v18 Analytics BI Reporting (Release Program L)
+
 CREATE TABLE IF NOT EXISTS analytics_events (
     id SERIAL PRIMARY KEY,
     event_key TEXT NOT NULL UNIQUE,
@@ -5470,3 +5479,49 @@ CREATE TABLE IF NOT EXISTS analytics_ai_feedback (
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_ai_feedback_status ON analytics_ai_feedback(status, created_at);
+
+CREATE TABLE IF NOT EXISTS source_intelligence_source_contexts (
+        id SERIAL PRIMARY KEY,
+        source_id INTEGER NOT NULL UNIQUE REFERENCES crm_lead_sources(id) ON DELETE CASCADE,
+        network TEXT NOT NULL DEFAULT '',
+        publication_url TEXT NOT NULL DEFAULT '',
+        publication_title TEXT NOT NULL DEFAULT '',
+        publication_text TEXT NOT NULL DEFAULT '',
+        publication_author TEXT NOT NULL DEFAULT '',
+        campaign TEXT NOT NULL DEFAULT '',
+        city TEXT NOT NULL DEFAULT '',
+        district TEXT NOT NULL DEFAULT '',
+        property_type TEXT NOT NULL DEFAULT '',
+        target_audience TEXT NOT NULL DEFAULT '',
+        format TEXT NOT NULL DEFAULT '',
+        language TEXT NOT NULL DEFAULT '',
+        tags_json TEXT NOT NULL DEFAULT '[]',
+        ai_classification TEXT NOT NULL DEFAULT '',
+        ai_confidence DOUBLE PRECISION NOT NULL DEFAULT 0,
+        analysis_json TEXT NOT NULL DEFAULT '{}',
+        notes TEXT NOT NULL DEFAULT '',
+        whatsapp_link TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+
+CREATE INDEX IF NOT EXISTS idx_source_intelligence_contexts_source ON source_intelligence_source_contexts(source_id, updated_at);
+
+CREATE TABLE IF NOT EXISTS source_intelligence_imports (
+        id SERIAL PRIMARY KEY,
+        import_key TEXT NOT NULL UNIQUE,
+        source_id INTEGER NOT NULL REFERENCES crm_lead_sources(id) ON DELETE CASCADE,
+        source_url TEXT NOT NULL DEFAULT '',
+        import_status TEXT NOT NULL DEFAULT 'pending',
+        source_channel TEXT NOT NULL DEFAULT '',
+        imported_at TEXT NOT NULL,
+        analyzed_at TEXT,
+        payload_json TEXT NOT NULL DEFAULT '{}',
+        result_json TEXT NOT NULL DEFAULT '{}',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+
+CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_source ON source_intelligence_imports(source_id, imported_at);
+
+CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_status ON source_intelligence_imports(import_status, imported_at);

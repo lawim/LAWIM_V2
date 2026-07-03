@@ -108,6 +108,13 @@ class RuntimeMetrics:
     campaign_success_total: int = 0
     campaign_failure_total: int = 0
     communication_ai_recommendations_total: int = 0
+    source_intelligence_requests_total: int = 0
+    source_intelligence_sources_total: int = 0
+    source_intelligence_contexts_total: int = 0
+    source_intelligence_imports_total: int = 0
+    source_intelligence_analysis_total: int = 0
+    source_intelligence_whatsapp_links_total: int = 0
+    source_intelligence_dashboard_total: int = 0
     analytics_requests_total: int = 0
     analytics_events_total: int = 0
     analytics_metrics_total: int = 0
@@ -128,6 +135,7 @@ class RuntimeMetrics:
     _process_execution_latency_samples: list[float] = field(default_factory=list)
     _verification_latency_samples: list[float] = field(default_factory=list)
     _crm_metric_counts: dict[str, int] = field(default_factory=dict)
+    _source_intelligence_metric_counts: dict[str, int] = field(default_factory=dict)
     _route_counts: dict[str, int] = field(default_factory=dict)
 
     def increment(self, name: str, *, failed: bool = False) -> None:
@@ -271,6 +279,27 @@ class RuntimeMetrics:
                 self.transaction_closed_total += 1
             elif name == "intelligence_computed":
                 self.intelligence_computed_total += 1
+            elif name == "source_intelligence_sources_total":
+                self.source_intelligence_sources_total += 1
+                self._source_intelligence_metric_counts[name] = self._source_intelligence_metric_counts.get(name, 0) + 1
+            elif name == "source_intelligence_contexts_total":
+                self.source_intelligence_contexts_total += 1
+                self._source_intelligence_metric_counts[name] = self._source_intelligence_metric_counts.get(name, 0) + 1
+            elif name == "source_intelligence_imports_total":
+                self.source_intelligence_imports_total += 1
+                self._source_intelligence_metric_counts[name] = self._source_intelligence_metric_counts.get(name, 0) + 1
+            elif name == "source_intelligence_analysis_total":
+                self.source_intelligence_analysis_total += 1
+                self._source_intelligence_metric_counts[name] = self._source_intelligence_metric_counts.get(name, 0) + 1
+            elif name == "source_intelligence_whatsapp_links_total":
+                self.source_intelligence_whatsapp_links_total += 1
+                self._source_intelligence_metric_counts[name] = self._source_intelligence_metric_counts.get(name, 0) + 1
+            elif name == "source_intelligence_dashboard_total":
+                self.source_intelligence_dashboard_total += 1
+                self._source_intelligence_metric_counts[name] = self._source_intelligence_metric_counts.get(name, 0) + 1
+            elif name.startswith("source_intelligence_"):
+                self.source_intelligence_requests_total += 1
+                self._source_intelligence_metric_counts[name] = self._source_intelligence_metric_counts.get(name, 0) + 1
             elif name.startswith("analytics_") or name in {
                 "bi_queries_total",
                 "reporting_outputs_total",
@@ -546,6 +575,13 @@ class RuntimeMetrics:
                 "campaign_success_total": self.campaign_success_total,
                 "campaign_failure_total": self.campaign_failure_total,
                 "communication_ai_recommendations_total": self.communication_ai_recommendations_total,
+                "source_intelligence_requests_total": self.source_intelligence_requests_total,
+                "source_intelligence_sources_total": self.source_intelligence_sources_total,
+                "source_intelligence_contexts_total": self.source_intelligence_contexts_total,
+                "source_intelligence_imports_total": self.source_intelligence_imports_total,
+                "source_intelligence_analysis_total": self.source_intelligence_analysis_total,
+                "source_intelligence_whatsapp_links_total": self.source_intelligence_whatsapp_links_total,
+                "source_intelligence_dashboard_total": self.source_intelligence_dashboard_total,
                 "analytics_requests_total": self.analytics_requests_total,
                 "analytics_events_total": self.analytics_events_total,
                 "analytics_metrics_total": self.analytics_metrics_total,
@@ -561,6 +597,7 @@ class RuntimeMetrics:
                 "bi_queries_total": self.bi_queries_total,
                 "reporting_outputs_total": self.reporting_outputs_total,
                 "crm_metrics": dict(self._crm_metric_counts),
+                "source_intelligence_metrics": dict(self._source_intelligence_metric_counts),
                 "verification_latency_ms": {
                     "p50": _percentile(self._verification_latency_samples, 0.50),
                     "p95": _percentile(self._verification_latency_samples, 0.95),

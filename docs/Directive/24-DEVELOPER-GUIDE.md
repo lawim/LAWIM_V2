@@ -142,15 +142,15 @@ Le développement doit s'aligner sur 30-I18N-L10N-REFERENCE.md, 30B-TRANSLATION-
 
 ---
 
-# CHAPITRE 12 — TRACKING MARKETING ET CONVENTIONS CODE
+# CHAPITRE 12 — SOURCE INTELLIGENCE ET CONVENTIONS CODE
 
-Le développement doit respecter les conventions suivantes pour le tracking marketing :
+Le développement doit respecter les conventions suivantes pour le Source Intelligence Engine :
 
-* le Tracking Code est immuable ;
+* le Reference Code est immuable ;
 * l'actorId est immuable ;
 * le rôle de l'acteur est historisé séparément ;
-* aucune logique locale ne doit recalculer le Tracking Code ;
-* les événements de tracking doivent être partagés entre les moteurs ;
+* aucune logique locale ne doit recalculer le Reference Code ;
+* les événements SIE doivent être partagés entre les moteurs ;
 * les statistiques doivent rester recalculables par jointure ;
 * aucune commission immobilière ne doit être introduite par les données marketing.
 

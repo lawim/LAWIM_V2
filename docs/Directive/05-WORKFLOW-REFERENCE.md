@@ -4648,13 +4648,13 @@ Tous les développements futurs devront respecter les règles définies dans ce 
 
 ---
 
-# CHAPITRE 211 — TRACKING MARKETING TRANSVERSE
+# CHAPITRE 211 — SOURCE INTELLIGENCE TRANSVERSE
 
-Le Tracking Marketing constitue une capacité transverse partagée.
+Le Source Intelligence Engine (SIE) constitue la capacité transverse officielle de gestion des sources d'acquisition.
 
 Il ne constitue pas un workflow indépendant et ne doit jamais être implémenté comme une logique séparée.
 
-Les événements de tracking enrichissent les workflows existants, notamment la publication, la redirection, la conversation, le matching, la visite, le paiement et le reporting.
+Les événements de source intelligence enrichissent les workflows existants, notamment la publication, l'import d'URL, la redirection, la conversation, le matching, la visite, le paiement et le reporting.
 
 ---
 
@@ -4666,7 +4666,7 @@ Création de la publication
 ↓
 Validation
 ↓
-Génération automatique du Tracking Code
+Génération automatique du Reference Code via le SIE
 ↓
 Association à une campagne éventuelle
 ↓
@@ -4684,7 +4684,7 @@ Mise à jour des statistiques
 ↓
 Disponibilité des dashboards
 
-Le rôle de l'acteur est historisé séparément du Tracking Code.
+Le rôle de l'acteur est historisé séparément du Reference Code.
 
 ---
 
@@ -4694,7 +4694,7 @@ Utilisateur
 ↓
 Clic sur le lien
 ↓
-Validation du Tracking Code
+Validation du Reference Code
 ↓
 Contrôle d'intégrité
 ↓

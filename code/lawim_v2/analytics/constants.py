@@ -23,6 +23,7 @@ METRIC_CATEGORIES: frozenset[str] = frozenset(
         "workflow",
         "rei",
         "communication",
+        "source_intelligence",
         "security",
         "cognition",
         "knowledge",

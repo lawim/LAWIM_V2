@@ -7,6 +7,7 @@ Dossier source : /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/
 Objectif du pack : Alimenter les chats de pilotage stratégique, de direction générale, de PMO, de CTO et de Chief Architect.
 Public cible : Chat Maître, Direction Générale, PMO, CTO, Chief Architect
 Nombre de documents inclus : 27
+Référence transverse : le Source Intelligence Engine (SIE) est le référentiel unique des sources d'acquisition et des Reference Codes.
 Liste des documents inclus :
 1. 00-CONSTITUTION.md
 2. 13-ARCHITECTURE-GOVERNANCE-REFERENCE.md

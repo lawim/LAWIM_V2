@@ -9,6 +9,7 @@
 | DDL PostgreSQL | `code/lawim_v2/schema_ddl.py` → `POSTGRESQL_INIT_STATEMENTS` | Init runtime PG |
 | Migrations SQLite legacy | `code/lawim_v2/schema_migrations.py` | Upgrades idempotents v1→v5 |
 | Prisma | `prisma/schema.prisma` + `prisma/migrations/` | Production PostgreSQL |
+| Source Intelligence Engine | `code/lawim_v2/source_intelligence/` | Référentiel transverse des sources d'acquisition |
 
 Validation : `python3 scripts/validate_prisma_manifest.py`
 
@@ -37,7 +38,8 @@ Régénération migration Prisma : `python3 scripts/sync_prisma_migration.py`
 
 ## Version courante
 
-- **Schema version :** 5
+- **Schema version :** 18
+- **Manifest version :** 18
 - **Outil production :** Prisma (`schema_migrations.PRODUCTION_MIGRATION_TOOL`)
 
 ## Compatibilité
@@ -45,3 +47,4 @@ Régénération migration Prisma : `python3 scripts/sync_prisma_migration.py`
 - SQLite reste le moteur par défaut
 - PostgreSQL reste optionnel (`LAWIM_DB_DRIVER=postgresql`)
 - Le runtime actuel n'est pas modifié : init + legacy migrations conservés
+- Le Source Intelligence Engine est chargé au démarrage comme référentiel unique des sources d'acquisition

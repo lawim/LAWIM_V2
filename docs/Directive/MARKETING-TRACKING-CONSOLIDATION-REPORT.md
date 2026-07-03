@@ -18,7 +18,7 @@ Objectifs atteints :
 * enrichissement des dashboards existants sans création de dashboard supplémentaire ;
 * enrichissement du Reporting Engine avec les KPI marketing ;
 * enrichissement du Business Dictionary avec le vocabulaire marketing ;
-* intégration documentaire du Tracking Code comme clé de traçabilité immuable.
+* intégration documentaire du Source Intelligence Engine comme référentiel de traçabilité immuable des sources et Reference Codes.
 
 Impacts documentaires :
 
@@ -35,13 +35,13 @@ Impacts documentaires :
 * [07-DASHBOARD-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/07-DASHBOARD-REFERENCE.md) - enrichissement des dashboards existants.
 * [10-NOTIFICATION-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/10-NOTIFICATION-REFERENCE.md) - ajout des notifications marketing et des sources de tracking transverse.
 * [11-REPORTING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/11-REPORTING-REFERENCE.md) - enrichissement des rapports, KPI et vues marketing.
-* [12-TESTS-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/12-TESTS-REFERENCE.md) - ajout des scénarios de validation du tracking et de l'attribution.
+* [12-TESTS-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/12-TESTS-REFERENCE.md) - ajout des scénarios de validation du Source Intelligence Engine, du Reference Code et de l'attribution.
 * [13-ARCHITECTURE-GOVERNANCE-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/13-ARCHITECTURE-GOVERNANCE-REFERENCE.md) - clarification du tracking comme capacité transverse.
 * [16-API-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/16-API-REFERENCE.md) - enrichissement des endpoints de tracking et analytics.
 * [18-LAWIM-AI-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/18-LAWIM-AI-REFERENCE.md) - optimisation marketing et analyse des performances.
 * [19-ADMINISTRATION-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/19-ADMINISTRATION-REFERENCE.md) - supervision des campagnes, publications et attributions.
 * [21-UX-UI-DESIGN-SYSTEM.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/21-UX-UI-DESIGN-SYSTEM.md) - affichage des blocs marketing dans les écrans existants.
-* [24-DEVELOPER-GUIDE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/24-DEVELOPER-GUIDE.md) - conventions code de tracking et immutabilité.
+* [24-DEVELOPER-GUIDE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/24-DEVELOPER-GUIDE.md) - conventions du Source Intelligence Engine, du Reference Code et de l'immutabilité.
 * [25-USER-GUIDE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/25-USER-GUIDE.md) - compréhension utilisateur de la traçabilité des campagnes.
 * [26-MASTER-INDEX.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/26-MASTER-INDEX.md) - indexation explicite du rapport marketing.
 * [27-TRACEABILITY-MATRIX.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/27-TRACEABILITY-MATRIX.md) - chaîne complète de traçabilité marketing.
@@ -215,8 +215,8 @@ KPI marketing documentés :
 
 Scénarios de tests documentés dans [12-TESTS-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/12-TESTS-REFERENCE.md) :
 
-* validation d'un Tracking Code ;
-* unicité d'un Tracking Code ;
+* validation d'un Reference Code ;
+* unicité d'un Reference Code ;
 * génération séquentielle et simultanée ;
 * redirections valides vers LAWIM, Telegram et WhatsApp ;
 * détection de bot ;
@@ -281,7 +281,7 @@ Les recommandations restent soumises à validation humaine.
 
 Le paiement Campay peut désormais être relié analytiquement :
 
-* au Tracking Code ;
+* au Reference Code ;
 * à la campagne ;
 * à la publication ;
 * au canal ;

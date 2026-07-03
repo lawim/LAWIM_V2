@@ -7,6 +7,7 @@ Dossier source : /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/
 Objectif du pack : Consolider tous les documents officiels de LAWIM_V2 selon l ordre de l index maitre.
 Public cible : Tous les chats LAWIM_V2
 Nombre de documents inclus : 83
+Référence transverse : le Source Intelligence Engine (SIE) remplace l'ancien référentiel de Tracking Code pour toutes les sources d'acquisition.
 Liste des documents inclus :
 1. 00-CONSTITUTION.md
 2. 01-GLOSSAIRE.md

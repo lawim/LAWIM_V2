@@ -54,7 +54,9 @@ Le modèle de données applique obligatoirement :
 * 09-GEOLOCATION-REFERENCE.md ;
 * 10-NOTIFICATION-REFERENCE.md ;
 * 11-REPORTING-REFERENCE.md ;
-* 14-STORAGE-REFERENCE.md.
+* 14-STORAGE-REFERENCE.md ;
+* ADR-001_Source_Intelligence_Engine.md ;
+* LAWIM_V2_Source_Intelligence_Engine_Implementation.md.
 
 ---
 
@@ -498,21 +500,23 @@ Publication marketing ou de diffusion avec les attributs suivants :
 * publishedAt ;
 * status.
 
-## TrackingCode
+## ReferenceCode
 
-Clé unique de traçabilité.
+Clé unique de traçabilité fournie par le Source Intelligence Engine.
 
 Format officiel :
 
-* `FB-LAWIM-000128-2026-06-001` ;
-* `WA-LAWIM-000014-2026-06-014` ;
-* `TG-LAWIM-000045-2026-07-003`.
+* `#A9D3Q7` ;
+* `#K4P8X2` ;
+* `#R6M2TZ`.
 
-Le Tracking Code est stable, lisible, partageable et immuable après création.
+Le Reference Code est stable, lisible, partageable et immuable après création.
 
 ## LeadSource
 
 Source d'origine d'un lead.
+
+La gestion opérationnelle des sources d'acquisition et du Reference Code relève du Source Intelligence Engine.
 
 ## LeadAttribution
 

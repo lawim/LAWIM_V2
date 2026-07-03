@@ -153,6 +153,69 @@ def _crm_table_specs() -> tuple[TableSpec, ...]:
     )
 
 
+def _source_intelligence_table_specs() -> tuple[TableSpec, ...]:
+    from .source_intelligence.schema_ddl import SIE_TABLE_NAMES
+
+    table_specs = {
+        "source_intelligence_source_contexts": TableSpec(
+            name="source_intelligence_source_contexts",
+            purpose="LAWIM 2.x source intelligence context entity.",
+            primary_key="id",
+            columns=(
+                "id",
+                "source_id",
+                "network",
+                "publication_url",
+                "publication_title",
+                "publication_text",
+                "publication_author",
+                "campaign",
+                "city",
+                "district",
+                "property_type",
+                "target_audience",
+                "format",
+                "language",
+                "tags_json",
+                "ai_classification",
+                "ai_confidence",
+                "analysis_json",
+                "notes",
+                "whatsapp_link",
+                "created_at",
+                "updated_at",
+            ),
+            foreign_keys=(ForeignKeySpec("source_id", "crm_lead_sources.id", on_delete="cascade"),),
+            indexes=("idx_source_intelligence_contexts_source",),
+        ),
+        "source_intelligence_imports": TableSpec(
+            name="source_intelligence_imports",
+            purpose="LAWIM 2.x source intelligence import entity.",
+            primary_key="id",
+            columns=(
+                "id",
+                "import_key",
+                "source_id",
+                "source_url",
+                "import_status",
+                "source_channel",
+                "imported_at",
+                "analyzed_at",
+                "payload_json",
+                "result_json",
+                "created_at",
+                "updated_at",
+            ),
+            foreign_keys=(ForeignKeySpec("source_id", "crm_lead_sources.id", on_delete="cascade"),),
+            indexes=(
+                "idx_source_intelligence_imports_source",
+                "idx_source_intelligence_imports_status",
+            ),
+        ),
+    }
+    return tuple(table_specs[name] for name in SIE_TABLE_NAMES)
+
+
 def _marketplace_table_specs() -> tuple[TableSpec, ...]:
     from .marketplace.schema_v15_ddl import V15_TABLE_NAMES
 
@@ -660,6 +723,7 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _workflow_automation_table_specs()
     + _real_estate_intelligence_table_specs()
     + _crm_table_specs()
+    + _source_intelligence_table_specs()
     + _marketplace_table_specs()
     + _security_table_specs()
     + _communication_table_specs()

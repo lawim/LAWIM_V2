@@ -288,6 +288,15 @@ Le Dashboard Continuous Learning peut afficher notamment :
 * les langues les plus efficaces ;
 * les recommandations IA.
 
+Le Dashboard Administration peut également afficher les tableaux SIE :
+
+* les sources d'acquisition actives ;
+* les sources avec contexte enrichi ;
+* les imports d'URL ;
+* les Reference Codes ;
+* les liens WhatsApp générés ;
+* les statistiques de conversion par source.
+
 ---
 
 # CHAPITRE 17 — OBJECTIF FINAL

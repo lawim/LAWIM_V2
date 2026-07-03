@@ -27,7 +27,7 @@ La migration couvre notamment :
 * les sauvegardes ;
 * l'IA ;
 * les traductions.
-* les campagnes, publications, Tracking Codes, redirections, attributions et analytics marketing.
+* les campagnes, publications, Reference Codes, redirections, attributions et analytics marketing, orchestrés par le Source Intelligence Engine.
 
 ---
 
@@ -62,3 +62,5 @@ Toute migration doit être :
 Le plan de migration garantit une transition contrôlée vers la version opérationnelle de LAWIM.
 
 Les historiques marketing doivent rester réconciliables après migration afin de conserver la traçabilité des performances et des attributions.
+
+Les sources d'acquisition doivent être consolidées dans le Source Intelligence Engine avant bascule.

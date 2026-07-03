@@ -213,6 +213,7 @@ class IntegrationBridge:
         "real_estate_intelligence",
         "crm",
         "marketplace",
+        "source_intelligence",
     )
 
     def sources(self) -> list[str]:

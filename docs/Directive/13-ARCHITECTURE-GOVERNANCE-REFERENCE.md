@@ -40,6 +40,7 @@ Workflow Engine ;
 Matching Engine ;
 Conversation Engine ;
 Dashboard Engine ;
+Source Intelligence Engine ;
 Notification Engine ;
 Geo Engine ;
 Role Engine ;
@@ -99,6 +100,7 @@ Exemples :
 
 les rôles → Role Engine ;
 les workflows → Workflow Engine ;
+les sources d'acquisition → Source Intelligence Engine ;
 les indicateurs → Reporting Engine ;
 les notifications → Notification Engine ;
 les localisations → Geo Engine.

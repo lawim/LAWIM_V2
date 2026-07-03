@@ -34,24 +34,14 @@ class CrmRepositoryMixin:
 
     def seed_crm_catalog(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM crm_contact_profiles") > 0:
+            if hasattr(self, "seed_source_intelligence_catalog"):
+                self.seed_source_intelligence_catalog()
             return
         now = _utcnow()
         engine = CrmPlatformEngine()
+        if hasattr(self, "seed_source_intelligence_catalog"):
+            self.seed_source_intelligence_catalog()
         with self._transaction() as conn:
-            sources = [
-                ("source-web", "Site web LAWIM", "web"),
-                ("source-whatsapp", "WhatsApp entrant", "whatsapp"),
-                ("source-referral", "Recommandation", "referral"),
-                ("source-rei", "Real Estate Intelligence", "rei"),
-            ]
-            for source_key, name, channel in sources:
-                conn.execute(
-                    """
-                    INSERT OR IGNORE INTO crm_lead_sources (source_key, name, channel, created_at)
-                    VALUES (?, ?, ?, ?)
-                    """,
-                    (source_key, name, channel, now),
-                )
             pipeline_key = "pipeline-default"
             conn.execute(
                 """
@@ -114,8 +104,16 @@ class CrmRepositoryMixin:
                 "company": "",
             },
         ]
-        source = self.one("SELECT id FROM crm_lead_sources WHERE source_key = 'source-web'")
-        source_id = int(source["id"]) if source else None
+        source_id = None
+        if hasattr(self, "resolve_source_intelligence_source"):
+            try:
+                source = self.resolve_source_intelligence_source(source_key="source-web")
+                source_id = int(source["id"])
+            except Exception:
+                source_id = None
+        if source_id is None:
+            source = self.one("SELECT id FROM crm_lead_sources WHERE source_key = 'source-web'")
+            source_id = int(source["id"]) if source else None
         pipeline = self.one("SELECT id FROM crm_pipelines WHERE is_default = 1 ORDER BY id ASC LIMIT 1")
         pipeline_id = int(pipeline["id"]) if pipeline else 1
         first_stage = self.one(
@@ -328,7 +326,19 @@ class CrmRepositoryMixin:
                 """,
                 (lead_key, contact_id, source_id, status, score, title, notes, assigned_user_id, _json(metadata or {}), now, now),
             )
-        row = dict(self.one("SELECT * FROM crm_leads WHERE lead_key = ?", (lead_key,)))
+        row = dict(
+            self.one(
+                """
+                SELECT l.*, s.source_key AS source_key, s.reference_code AS source_reference_code,
+                       s.name AS source_name, s.channel AS source_channel, s.target AS source_target,
+                       s.status AS source_status
+                FROM crm_leads l
+                LEFT JOIN crm_lead_sources s ON s.id = l.source_id
+                WHERE l.lead_key = ?
+                """,
+                (lead_key,),
+            )
+        )
         self._record_crm_journey(contact_id, event_type="lead_created", summary=f"Lead créé: {title or lead_key}")
         self._append_crm_timeline(contact_id, entry_type="lead", summary=f"Nouveau lead: {title}", reference_type="lead", reference_id=int(row["id"]))
         if hasattr(self, "start_automation_instance"):
@@ -339,7 +349,17 @@ class CrmRepositoryMixin:
         return row
 
     def get_crm_lead(self, lead_id: int) -> dict[str, object]:
-        row = self.one("SELECT * FROM crm_leads WHERE id = ?", (lead_id,))
+        row = self.one(
+            """
+            SELECT l.*, s.source_key AS source_key, s.reference_code AS source_reference_code,
+                   s.name AS source_name, s.channel AS source_channel, s.target AS source_target,
+                   s.status AS source_status
+            FROM crm_leads l
+            LEFT JOIN crm_lead_sources s ON s.id = l.source_id
+            WHERE l.id = ?
+            """,
+            (lead_id,),
+        )
         if row is None:
             from ..errors import NotFoundError
             raise NotFoundError("lead not found")
@@ -347,9 +367,32 @@ class CrmRepositoryMixin:
 
     def list_crm_leads(self, *, status: str | None = None, limit: int = 50) -> list[dict[str, object]]:
         if status:
-            rows = self.all("SELECT * FROM crm_leads WHERE status = ? ORDER BY score DESC, id DESC LIMIT ?", (status, limit))
+            rows = self.all(
+                """
+                SELECT l.*, s.source_key AS source_key, s.reference_code AS source_reference_code,
+                       s.name AS source_name, s.channel AS source_channel, s.target AS source_target,
+                       s.status AS source_status
+                FROM crm_leads l
+                LEFT JOIN crm_lead_sources s ON s.id = l.source_id
+                WHERE l.status = ?
+                ORDER BY l.score DESC, l.id DESC
+                LIMIT ?
+                """,
+                (status, limit),
+            )
         else:
-            rows = self.all("SELECT * FROM crm_leads ORDER BY id DESC LIMIT ?", (limit,))
+            rows = self.all(
+                """
+                SELECT l.*, s.source_key AS source_key, s.reference_code AS source_reference_code,
+                       s.name AS source_name, s.channel AS source_channel, s.target AS source_target,
+                       s.status AS source_status
+                FROM crm_leads l
+                LEFT JOIN crm_lead_sources s ON s.id = l.source_id
+                ORDER BY l.id DESC
+                LIMIT ?
+                """,
+                (limit,),
+            )
         return [dict(r) for r in rows]
 
     def update_crm_lead(self, lead_id: int, **fields: object) -> dict[str, object]:
@@ -406,6 +449,8 @@ class CrmRepositoryMixin:
         return customer
 
     def list_crm_lead_sources(self) -> list[dict[str, object]]:
+        if hasattr(self, "list_source_intelligence_sources"):
+            return self.list_source_intelligence_sources(limit=1000)
         return [dict(r) for r in self.all("SELECT * FROM crm_lead_sources ORDER BY id ASC")]
 
     # --- Customers ---
@@ -1304,6 +1349,9 @@ class CrmRepositoryMixin:
             "followups_pending": self.scalar("SELECT COUNT(*) FROM crm_followups WHERE status = 'scheduled'"),
             "pipeline_items": self.scalar("SELECT COUNT(*) FROM crm_pipeline_items"),
             "avg_lead_score": self.scalar("SELECT COALESCE(AVG(score), 0) FROM crm_leads"),
+            "sources": self.scalar("SELECT COUNT(*) FROM crm_lead_sources"),
+            "sources_with_context": self.scalar("SELECT COUNT(*) FROM source_intelligence_source_contexts"),
+            "source_imports": self.scalar("SELECT COUNT(*) FROM source_intelligence_imports"),
             "official_sender": to_public_dict(),
         }
 

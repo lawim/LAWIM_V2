@@ -9,12 +9,13 @@ echo "=== LAWIM_V2 install validation ==="
 "${ROOT}/infra/check-env.sh"
 
 export PYTHONPATH="${ROOT}/code:${ROOT}/tests${PYTHONPATH:+:${PYTHONPATH}}"
+export LAWIM_TEST_MODE=1
 
 echo "Compiling Python sources..."
 python3 -m compileall code tests scripts >/dev/null
 
 echo "Running unit tests..."
-python3 -m unittest discover -s tests -q
+python3 -m unittest discover -s tests -v
 
 echo "Validating Prisma / schema contract..."
 python3 "${ROOT}/scripts/validate_prisma_manifest.py"
@@ -22,7 +23,7 @@ python3 "${ROOT}/scripts/validate_prisma_manifest.py"
 echo "Running runtime smoke..."
 python3 "${ROOT}/scripts/smoke_runtime.py"
 
-COMPOSE="${COMPOSE:-docker compose}"
+COMPOSE="${COMPOSE:-${ROOT}/platform/compose.sh}"
 validate_compose() {
   local base="$1"
   local overlay="$2"

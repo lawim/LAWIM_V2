@@ -1875,12 +1875,12 @@ KPI :
 
 ---
 
-# CHAPITRE 118 — TRACKING MARKETING, ATTRIBUTION ET STATISTIQUES
+# CHAPITRE 118 — SOURCE INTELLIGENCE, ATTRIBUTION ET STATISTIQUES
 
 Les tests doivent couvrir notamment :
 
-* validation d'un Tracking Code ;
-* unicité d'un Tracking Code ;
+* validation d'un Reference Code ;
+* unicité d'un Reference Code ;
 * génération séquentielle ;
 * génération simultanée ;
 * redirection valide ;
@@ -1911,7 +1911,7 @@ Les tests doivent couvrir notamment :
 
 KPI :
 
-* taux d'unicité des Tracking Codes ;
+* taux d'unicité des Reference Codes ;
 * taux de collisions ;
 * latence de redirection ;
 * taux de détection bot ;

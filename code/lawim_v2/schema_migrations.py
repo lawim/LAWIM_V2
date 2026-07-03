@@ -6,13 +6,14 @@ import sqlite3
 from typing import Protocol
 
 from .persistence import APPLICATION_SCHEMA_VERSION
+from .source_intelligence.engines import ReferenceCodeEngine
 
 # Production PostgreSQL: apply prisma/migrations via `prisma migrate deploy`.
 # Development SQLite: runtime init (schema_ddl.SQLITE_INIT_SCRIPT) + legacy steps below.
 PRODUCTION_MIGRATION_TOOL = "prisma"
 SQLITE_RUNTIME_INIT = "schema_ddl.SQLITE_INIT_SCRIPT"
 MIGRATION_STRATEGY_NOTES = (
-    "Fresh installs use schema_ddl init scripts aligned with persistence manifest v17.",
+    f"Fresh installs use schema_ddl init scripts aligned with persistence manifest v{APPLICATION_SCHEMA_VERSION}.",
     "SQLite legacy databases receive idempotent ALTER/backfill steps in apply_sqlite_legacy_migrations().",
     "PostgreSQL production deployments should prefer prisma migrate deploy over runtime DDL init.",
     "Future schema versions must add a Prisma migration and optional SQLite legacy steps.",
@@ -50,6 +51,20 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
     }
     for column, definition in property_columns.items():
         _ensure_column(conn, "properties", column, definition)
+
+    from .crm.schema_v14_ddl import SQLITE_V14_TABLES_SCRIPT
+
+    conn.executescript(SQLITE_V14_TABLES_SCRIPT)
+
+    crm_source_columns = {
+        "reference_code": "TEXT NOT NULL DEFAULT ''",
+        "target": "TEXT NOT NULL DEFAULT 'acquisition'",
+        "status": "TEXT NOT NULL DEFAULT 'active'",
+        "created_by": "INTEGER",
+        "updated_at": "TEXT NOT NULL DEFAULT ''",
+    }
+    for column, definition in crm_source_columns.items():
+        _ensure_column(conn, "crm_lead_sources", column, definition)
 
     media_columns = {
         "storage_path": "TEXT",
@@ -127,6 +142,23 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
         WHERE listing_code IS NULL OR TRIM(listing_code) = ''
         """
     )
+    reference_code_engine = ReferenceCodeEngine()
+    rows = conn.execute("SELECT id, source_key, reference_code FROM crm_lead_sources").fetchall()
+    for row in rows:
+        source_id = int(row[0])
+        source_key = str(row[1] or f"source-{source_id}")
+        current_reference_code = str(row[2] or "")
+        if not current_reference_code.strip():
+            conn.execute(
+                "UPDATE crm_lead_sources SET reference_code = ?, updated_at = COALESCE(NULLIF(updated_at, ''), created_at) WHERE id = ?",
+                (reference_code_engine.generate(seed=f"legacy:{source_key}"), source_id),
+            )
+    conn.execute("UPDATE crm_lead_sources SET target = COALESCE(NULLIF(target, ''), 'acquisition')")
+    conn.execute("UPDATE crm_lead_sources SET status = COALESCE(NULLIF(status, ''), 'active')")
+    conn.execute("UPDATE crm_lead_sources SET updated_at = COALESCE(NULLIF(updated_at, ''), created_at)")
+    conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_crm_lead_sources_reference_code ON crm_lead_sources(reference_code)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_status ON crm_lead_sources(status, created_at)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_channel ON crm_lead_sources(channel, created_at)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_search_key ON properties(search_key)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_deleted_at ON properties(deleted_at)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_properties_created_at ON properties(created_at, id)")
@@ -266,6 +298,54 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
         CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);
         """
     )
+
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS source_intelligence_source_contexts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            source_id INTEGER NOT NULL UNIQUE,
+            network TEXT NOT NULL DEFAULT '',
+            publication_url TEXT NOT NULL DEFAULT '',
+            publication_title TEXT NOT NULL DEFAULT '',
+            publication_text TEXT NOT NULL DEFAULT '',
+            publication_author TEXT NOT NULL DEFAULT '',
+            campaign TEXT NOT NULL DEFAULT '',
+            city TEXT NOT NULL DEFAULT '',
+            district TEXT NOT NULL DEFAULT '',
+            property_type TEXT NOT NULL DEFAULT '',
+            target_audience TEXT NOT NULL DEFAULT '',
+            format TEXT NOT NULL DEFAULT '',
+            language TEXT NOT NULL DEFAULT '',
+            tags_json TEXT NOT NULL DEFAULT '[]',
+            ai_classification TEXT NOT NULL DEFAULT '',
+            ai_confidence REAL NOT NULL DEFAULT 0,
+            analysis_json TEXT NOT NULL DEFAULT '{}',
+            notes TEXT NOT NULL DEFAULT '',
+            whatsapp_link TEXT NOT NULL DEFAULT '',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY (source_id) REFERENCES crm_lead_sources(id) ON DELETE CASCADE
+        );
+        CREATE INDEX IF NOT EXISTS idx_source_intelligence_contexts_source ON source_intelligence_source_contexts(source_id, updated_at);
+        CREATE TABLE IF NOT EXISTS source_intelligence_imports (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            import_key TEXT NOT NULL UNIQUE,
+            source_id INTEGER NOT NULL,
+            source_url TEXT NOT NULL DEFAULT '',
+            import_status TEXT NOT NULL DEFAULT 'pending',
+            source_channel TEXT NOT NULL DEFAULT '',
+            imported_at TEXT NOT NULL,
+            analyzed_at TEXT,
+            payload_json TEXT NOT NULL DEFAULT '{}',
+            result_json TEXT NOT NULL DEFAULT '{}',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            FOREIGN KEY (source_id) REFERENCES crm_lead_sources(id) ON DELETE CASCADE
+        );
+        CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_source ON source_intelligence_imports(source_id, imported_at);
+        CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_status ON source_intelligence_imports(import_status, imported_at);
+        """
+    )
     _ensure_column(conn, "projects", "primary_goal_key", "TEXT")
     _ensure_column(conn, "projects", "intelligence_json", "TEXT NOT NULL DEFAULT '{}'")
     from .intelligent.schema_v7_ddl import SQLITE_V7_TABLES_SCRIPT
@@ -289,9 +369,6 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
     from .real_estate_intelligence.schema_v13_ddl import SQLITE_V13_TABLES_SCRIPT
 
     conn.executescript(SQLITE_V13_TABLES_SCRIPT)
-    from .crm.schema_v14_ddl import SQLITE_V14_TABLES_SCRIPT
-
-    conn.executescript(SQLITE_V14_TABLES_SCRIPT)
     from .marketplace.schema_v15_ddl import SQLITE_V15_TABLES_SCRIPT
 
     conn.executescript(SQLITE_V15_TABLES_SCRIPT)

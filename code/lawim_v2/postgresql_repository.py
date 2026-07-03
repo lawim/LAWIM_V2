@@ -333,6 +333,28 @@ class PostgreSQLLawimRepository(LawimRepository):
 
         with self._transaction() as conn:
             for statement in POSTGRESQL_INIT_STATEMENTS:
+                if statement == "CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_reference_code ON crm_lead_sources(reference_code)":
+                    conn.execute(
+                        "ALTER TABLE crm_lead_sources ADD COLUMN IF NOT EXISTS reference_code TEXT NOT NULL DEFAULT ''"
+                    )
+                    conn.execute(
+                        "ALTER TABLE crm_lead_sources ADD COLUMN IF NOT EXISTS channel TEXT NOT NULL DEFAULT 'web'"
+                    )
+                    conn.execute(
+                        "ALTER TABLE crm_lead_sources ADD COLUMN IF NOT EXISTS target TEXT NOT NULL DEFAULT 'acquisition'"
+                    )
+                    conn.execute(
+                        "ALTER TABLE crm_lead_sources ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active'"
+                    )
+                    conn.execute(
+                        "ALTER TABLE crm_lead_sources ADD COLUMN IF NOT EXISTS created_by INTEGER"
+                    )
+                    conn.execute(
+                        "ALTER TABLE crm_lead_sources ADD COLUMN IF NOT EXISTS metadata_json TEXT NOT NULL DEFAULT '{}'"
+                    )
+                    conn.execute(
+                        "ALTER TABLE crm_lead_sources ADD COLUMN IF NOT EXISTS updated_at TEXT NOT NULL DEFAULT ''"
+                    )
                 conn.execute(statement)
             metadata = {
                 "schema_version": str(SCHEMA_VERSION),

@@ -260,6 +260,7 @@ class AiIntegrationBridge:
         "workflow_automation",
         "real_estate_intelligence",
         "crm",
+        "source_intelligence",
     )
 
     def sources(self) -> list[str]:

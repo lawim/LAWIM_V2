@@ -196,7 +196,7 @@ Les tests obligatoires couvrent :
 
 Lorsqu'un paiement Campay est confirmé, les données peuvent être reliées à :
 
-* un Tracking Code ;
+* un Reference Code ;
 * une campagne ;
 * une publication ;
 * un canal ;

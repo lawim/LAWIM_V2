@@ -1175,7 +1175,7 @@ Chaque ambassadeur disposera :
 
 - d'un actorId ;
 
-- d'un Tracking Code personnel ;
+- d'un Reference Code personnel fourni par le Source Intelligence Engine ;
 
 - de statistiques ;
 
@@ -1671,7 +1671,7 @@ Chaque ambassadeur dispose :
 
 - d'un actorId ;
 
-- d'un Tracking Code personnel ;
+- d'un Reference Code personnel fourni par le Source Intelligence Engine ;
 
 - de statistiques ;
 

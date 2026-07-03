@@ -402,6 +402,7 @@ class IntegrationBridge:
         "crm",
         "marketplace",
         "security",
+        "source_intelligence",
     )
 
     def sources(self) -> list[str]:

@@ -259,7 +259,7 @@ class WorkflowAutomationRepositoryMixin:
     ) -> dict[str, object]:
         self.get_automation_workflow(workflow_key)
         now = _utcnow()
-        instance_key = f"inst-{uuid.uuid4().hex[:10]}"
+        instance_key = f"inst-{uuid.uuid4().hex}"
         engine = ProcessEngine()
         with self._transaction() as conn:
             cursor = conn.execute(
@@ -272,7 +272,7 @@ class WorkflowAutomationRepositoryMixin:
                 (instance_key, workflow_key, project_id, _json(context or {}), priority, now, now, now),
             )
             instance_id = int(cursor.lastrowid)
-            exec_key = f"exec-{uuid.uuid4().hex[:10]}"
+            exec_key = f"exec-{uuid.uuid4().hex}"
             conn.execute(
                 """
                 INSERT INTO automation_executions (

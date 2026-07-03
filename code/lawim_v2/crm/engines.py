@@ -186,6 +186,7 @@ class AiIntegrationBridge:
         "knowledge_platform",
         "workflow_automation",
         "real_estate_intelligence",
+        "source_intelligence",
     )
 
     def sources(self) -> list[str]:

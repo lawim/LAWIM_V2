@@ -7,6 +7,7 @@ Dossier source : /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/
 Objectif du pack : fournir au Chat Maitre un corpus autonome de gouvernance, de pilotage et de reconstruction du programme LAWIM_V2.
 Public cible : Chat Maitre, Direction Generale, PMO, CTO, Chief Architect
 Nombre de documents inclus : 35
+Référence transverse : le Source Intelligence Engine (SIE) constitue désormais le référentiel unique des sources d'acquisition et du Reference Code.
 Liste des documents inclus :
 - 1. Vision et contexte directeur
 - 2. CONSTITUTION OFFICIELLE

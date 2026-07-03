@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
 export PYTHONPATH="${ROOT}/code:${ROOT}/tests${PYTHONPATH:+:${PYTHONPATH}}"
+export LAWIM_TEST_MODE=1
 
 if command -v node >/dev/null 2>&1; then
   echo "Checking frontend JavaScript syntax..."

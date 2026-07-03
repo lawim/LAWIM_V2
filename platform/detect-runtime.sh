@@ -61,6 +61,21 @@ elif command -v docker-compose >/dev/null 2>&1; then
   compose_cmd="docker-compose"
 fi
 
+if [[ "${runtime}" == "none" ]]; then
+  if command -v podman-compose >/dev/null 2>&1; then
+    runtime="podman"
+    notes+=("podman info unavailable — using podman-compose fallback")
+  elif command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+    if docker compose version 2>&1 | grep -qi "Emulate Docker CLI using podman"; then
+      runtime="podman"
+      notes+=("docker CLI is a Podman emulation shim")
+    else
+      runtime="docker"
+      notes+=("docker info unavailable — using docker compose availability as fallback")
+    fi
+  fi
+fi
+
 cat <<EOF
 LAWIM_V2 runtime detection
   repository: ${ROOT}

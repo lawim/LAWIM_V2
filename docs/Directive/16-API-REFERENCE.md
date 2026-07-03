@@ -50,6 +50,7 @@ Les surfaces exposées sont notamment :
 * Partenaires ;
 * Reporting ;
 * IA ;
+* Source Intelligence ;
 * Campay Payment Engine ;
 * API Gateway.
 
@@ -197,29 +198,32 @@ Les formats de dates, de nombres et de devises doivent rester cohérents avec la
 
 ---
 
-# CHAPITRE 13 — TRACKING MARKETING ET ANALYTICS
+# CHAPITRE 13 — SOURCE INTELLIGENCE ET ANALYTICS
 
-Les API existantes doivent être enrichies pour exposer le tracking marketing transverse sans créer une nouvelle architecture API.
+Les API existantes doivent exposer le Source Intelligence Engine comme référentiel unique des sources d'acquisition.
 
 Les endpoints officiels incluent notamment :
 
-* `POST /tracking/codes` ;
-* `GET /tracking/codes/{code}` ;
-* `GET /r/{trackingCode}` ;
-* `POST /tracking/events` ;
-* `GET /analytics/channels` ;
-* `GET /analytics/actors` ;
-* `GET /analytics/campaigns` ;
-* `GET /analytics/publications` ;
-* `GET /analytics/conversions` ;
-* `GET /analytics/funnel` ;
-* `GET /analytics/performance` ;
-* `GET /analytics/revenue` ;
-* `GET /analytics/geography`.
+* `GET /api/v2/source-intelligence` ;
+* `GET /api/v2/source-intelligence/dashboard` ;
+* `GET /api/v2/source-intelligence/stats` ;
+* `GET /api/v2/source-intelligence/sources` ;
+* `GET /api/v2/source-intelligence/sources/{id}` ;
+* `GET /api/v2/source-intelligence/sources/{id}/context` ;
+* `GET /api/v2/source-intelligence/sources/{id}/whatsapp-link` ;
+* `GET /api/v2/source-intelligence/imports` ;
+* `POST /api/v2/source-intelligence/reference-code` ;
+* `POST /api/v2/source-intelligence/sources` ;
+* `POST /api/v2/source-intelligence/imports` ;
+* `POST /api/v2/source-intelligence/analyze` ;
+* `PATCH /api/v2/source-intelligence/sources/{id}` ;
+* `PATCH /api/v2/source-intelligence/sources/{id}/context`.
+
+L'alias `/api/v2/sie` reste pris en charge pour compatibilité.
 
 Ces routes utilisent la couche API existante, les permissions existantes et la journalisation officielle.
 
-Le code de tracking doit rester lisible, stable, unique et exploitable par jointure.
+Le Reference Code doit rester lisible, stable, unique et exploitable par jointure.
 
 ---
 

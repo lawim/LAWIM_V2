@@ -620,7 +620,7 @@ Profils possibles :
     • influenceurs locaux.
 Chaque ambassadeur disposera :
     • d'un actorId ;
-    • d'un Tracking Code personnel ;
+    • d'un Reference Code personnel fourni par le Source Intelligence Engine ;
     • de statistiques ;
     • d'un tableau de bord.
 Les récompenses porteront exclusivement sur les services LAWIM et les avantages prévus par le modèle économique, jamais sur une commission immobilière.
@@ -900,7 +900,7 @@ Elle ne la remplace jamais.
 Créer progressivement un réseau d'ambassadeurs.
 Chaque ambassadeur dispose :
     • d'un actorId ;
-    • d'un Tracking Code personnel ;
+    • d'un Reference Code personnel fourni par le Source Intelligence Engine ;
     • de statistiques ;
     • d'objectifs.
 Le programme récompense la qualité des contributions.
@@ -1755,4 +1755,3 @@ Toute évolution future devra être cohérente avec :
 L'objectif ultime n'est pas de construire la plus grande plateforme immobilière du Cameroun.
 L'objectif est de construire la plateforme immobilière la plus digne de confiance, capable d'accompagner durablement les particuliers, les professionnels et la diaspora dans leurs projets immobiliers.
 FIN DU PLAN STRATÉGIQUE DE DÉPLOIEMENT – VERSION 1.0
-

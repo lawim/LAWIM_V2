@@ -214,7 +214,7 @@ class AIIntegrationBridge:
             "hook_type": hook_type,
             "query": query,
             "project_id": project_id,
-            "sources": ["assistant", "knowledge_platform", "cognition"],
+            "sources": ["assistant", "knowledge_platform", "cognition", "source_intelligence"],
         }
 
     def resolve_hook_action(self, hook_type: str) -> str:

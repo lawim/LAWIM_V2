@@ -7,6 +7,7 @@ Dossier source : /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/
 Objectif du pack : Alimenter les chats métier, marketing, commercial, support, knowledge, formation et relations partenaires.
 Public cible : Marketing, Commercial, Support, Business, Knowledge, Formation, Relations partenaires
 Nombre de documents inclus : 39
+Référence transverse : le Source Intelligence Engine (SIE) centralise les sources d'acquisition, les Reference Codes et l'attribution analytique.
 Liste des documents inclus :
 1. 01-GLOSSAIRE.md
 2. 02-PROPERTY-REFERENCE.md

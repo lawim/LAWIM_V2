@@ -13,11 +13,30 @@ elif [[ -f "${ROOT}/platform/platform.env.example" ]]; then
 fi
 
 export LAWIM_POSTGRES_PORT="${LAWIM_POSTGRES_PORT:-5433}"
-BASE="${ROOT}/compose/docker-compose.base.yml"
-PG="${ROOT}/compose/docker-compose.postgres.yml"
+VOLUME="${LAWIM_VOLUME_POSTGRES_NAME:-lawim_v2_postgres}"
+CONTAINER_NAME="${LAWIM_POSTGRES_CONTAINER_NAME:-compose_postgres_1}"
+
+if command -v podman >/dev/null 2>&1; then
+  RUNTIME="podman"
+elif command -v docker >/dev/null 2>&1; then
+  RUNTIME="docker"
+else
+  echo "No container runtime available. Run platform/detect-runtime.sh" >&2
+  exit 1
+fi
 
 echo "Starting PostgreSQL dev container on port ${LAWIM_POSTGRES_PORT}..."
-LAWIM_POSTGRES_PORT="${LAWIM_POSTGRES_PORT}" "${ROOT}/platform/compose.sh" -f "${BASE}" -f "${PG}" up -d postgres "$@"
+"${RUNTIME}" rm -f "${CONTAINER_NAME}" >/dev/null 2>&1 || true
+"${RUNTIME}" run -d \
+  --name "${CONTAINER_NAME}" \
+  --network host \
+  -e POSTGRES_DB="${LAWIM_POSTGRES_DB:-lawim_v2}" \
+  -e POSTGRES_USER="${LAWIM_POSTGRES_USER:-lawim}" \
+  -e POSTGRES_PASSWORD="${LAWIM_POSTGRES_PASSWORD:-lawim}" \
+  -v "${VOLUME}:/var/lib/postgresql/data" \
+  postgres:16-alpine \
+  -c "port=${LAWIM_POSTGRES_PORT}" \
+  "$@" >/dev/null
 
 echo "Waiting for PostgreSQL..."
 "${ROOT}/platform/wait-postgres.sh"

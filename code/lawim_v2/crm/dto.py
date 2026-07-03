@@ -25,6 +25,12 @@ def lead_dto(row: dict[str, object]) -> dict[str, object]:
         "score": row.get("score"),
         "title": row.get("title"),
         "source_id": row.get("source_id"),
+        "source_key": row.get("source_key"),
+        "source_reference_code": row.get("source_reference_code"),
+        "source_name": row.get("source_name"),
+        "source_channel": row.get("source_channel"),
+        "source_target": row.get("source_target"),
+        "source_status": row.get("source_status"),
         "assigned_user_id": row.get("assigned_user_id"),
     }
 

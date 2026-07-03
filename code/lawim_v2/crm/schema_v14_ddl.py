@@ -78,11 +78,19 @@ CREATE TABLE IF NOT EXISTS crm_contact_consents (
 CREATE TABLE IF NOT EXISTS crm_lead_sources (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     source_key TEXT NOT NULL UNIQUE,
+    reference_code TEXT NOT NULL DEFAULT '' UNIQUE,
     name TEXT NOT NULL,
     channel TEXT NOT NULL DEFAULT 'web',
+    target TEXT NOT NULL DEFAULT 'acquisition',
+    status TEXT NOT NULL DEFAULT 'active',
+    created_by INTEGER,
     metadata_json TEXT NOT NULL DEFAULT '{}',
-    created_at TEXT NOT NULL
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
+CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_reference_code ON crm_lead_sources(reference_code);
+CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_status ON crm_lead_sources(status, created_at);
 
 CREATE TABLE IF NOT EXISTS crm_leads (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -517,12 +525,19 @@ POSTGRESQL_V14_STATEMENTS: tuple[str, ...] = tuple(
         CREATE TABLE IF NOT EXISTS crm_lead_sources (
             id SERIAL PRIMARY KEY,
             source_key TEXT NOT NULL UNIQUE,
+            reference_code TEXT NOT NULL DEFAULT '' UNIQUE,
             name TEXT NOT NULL,
             channel TEXT NOT NULL DEFAULT 'web',
+            target TEXT NOT NULL DEFAULT 'acquisition',
+            status TEXT NOT NULL DEFAULT 'active',
+            created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
             metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
         )
         """,
+        "CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_reference_code ON crm_lead_sources(reference_code)",
+        "CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_status ON crm_lead_sources(status, created_at)",
         """
         CREATE TABLE IF NOT EXISTS crm_leads (
             id SERIAL PRIMARY KEY,

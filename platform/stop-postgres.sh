@@ -9,9 +9,15 @@ if [[ -f "${ROOT}/.env.platform" ]]; then
   source "${ROOT}/.env.platform"
 fi
 
-BASE="${ROOT}/compose/docker-compose.base.yml"
-PG="${ROOT}/compose/docker-compose.postgres.yml"
+CONTAINER_NAME="${LAWIM_POSTGRES_CONTAINER_NAME:-compose_postgres_1}"
+if command -v podman >/dev/null 2>&1; then
+  RUNTIME="podman"
+elif command -v docker >/dev/null 2>&1; then
+  RUNTIME="docker"
+else
+  echo "No container runtime available. Run platform/detect-runtime.sh" >&2
+  exit 1
+fi
 
 echo "Stopping PostgreSQL dev container..."
-"${ROOT}/platform/compose.sh" -f "${BASE}" -f "${PG}" stop postgres 2>/dev/null || true
-"${ROOT}/platform/compose.sh" -f "${BASE}" -f "${PG}" rm -f postgres 2>/dev/null || true
+"${RUNTIME}" rm -f "${CONTAINER_NAME}" 2>/dev/null || true

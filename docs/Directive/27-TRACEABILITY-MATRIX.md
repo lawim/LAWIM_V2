@@ -37,7 +37,7 @@ Chaque exigence doit pouvoir être reliée à :
 | Qualification du besoin | 00, 01, 03, 02H, 02I | Conversation Engine | demande, critères, budget | fonctionnels, conversationnels | Produit |
 | Matching des biens | 00, 02, 02H, 02I, 04 | Matching Engine | lead, score, préférence | matching, régression | Produit |
 | Support multilingue | 00, 01, 03, 04, 07, 10, 11, 16, 18, 20, 21, 25, 30, 30A, 30B, 30C, 30D | I18N / L10N Stack | langue, locale, traduction, fallback | multilingue, localisation | Produit |
-| Tracking marketing transverse | 05, 06, 07, 11, 12, 16, 18, 19, 26, 27, 28, 29, 30A | Fonction transverse partagée | campaign, publication, trackingCode, lead, conversion | tracking, attribution, analytics | Produit |
+| Source Intelligence transverse | 05, 06, 07, 11, 12, 16, 18, 19, 26, 27, 28, 29, 30A | Source Intelligence Engine | source, sourceContext, referenceCode, lead, conversion | source intelligence, attribution, analytics | Produit |
 | Gel documentaire et release | 26, DOCUMENTATION-AUDIT-V1, LAWIM-DOCUMENTATION-V1.0, CHANGELOG-V1, DOCUMENTATION-GOVERNANCE, DOCUMENTATION-STRUCTURE, LAWIM-DOCUMENTATION-RELEASE-V1.0, LAWIM-DOCUMENTATION-V1.0-CERTIFICATION | Gouvernance documentaire | version, release, audit, certification | audit, release, certification | Gouvernance |
 | Publication d'un bien | 02, 02A-02I, 05, 06 | Workflow Engine | bien, média, statut | publication, validation | Opérations |
 | API et webhooks | 15, 16, 29 | API Gateway | endpoint, webhook, contrat | API, webhook, intégration | Technique |
@@ -97,7 +97,7 @@ Chaque modification majeure doit préciser :
 
 # CHAPITRE 8 — CHAÎNE DE TRAÇABILITÉ MARKETING
 
-La chaîne officielle de traçabilité marketing est la suivante :
+La chaîne officielle de traçabilité marketing et d'acquisition est la suivante :
 
 Canal
 ↓
@@ -105,7 +105,9 @@ Campagne
 ↓
 Publication
 ↓
-Tracking Code
+Source Intelligence Engine
+↓
+Reference Code
 ↓
 Redirection
 ↓

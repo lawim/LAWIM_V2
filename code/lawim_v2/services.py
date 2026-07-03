@@ -144,6 +144,9 @@ class LawimServices:
         from .analytics.service import AnalyticsService
 
         self.analytics = AnalyticsService(repository, self.projects, self.policy)
+        from .source_intelligence.service import SourceIntelligenceService
+
+        self.source_intelligence = SourceIntelligenceService(repository, self.projects, self.policy)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()

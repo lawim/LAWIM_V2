@@ -7,6 +7,7 @@ Dossier source : /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/
 Objectif du pack : Alimenter les chats techniques backend, frontend, base de donnees, mobile, DevOps, QA, AI et infrastructure.
 Public cible : Backend, Frontend, Database, Mobile, DevOps, QA, AI, Infrastructure
 Nombre de documents inclus : 57
+Référence transverse : le Source Intelligence Engine (SIE) est la couche officielle de gestion des sources d'acquisition et du Reference Code.
 Liste des documents inclus :
 1. 00-CONSTITUTION.md
 2. 01-GLOSSAIRE.md

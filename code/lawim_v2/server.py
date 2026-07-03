@@ -433,6 +433,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_analytics_get(path, query)
             return
 
+        if path.startswith("/api/v2/source-intelligence") or path.startswith("/api/v2/sie"):
+            self._handle_v2_source_intelligence_get(path, query)
+            return
+
         if path.startswith("/api/v2/communication"):
             self._handle_v2_communication_get(path, query)
             return
@@ -674,6 +678,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_analytics_post(path, body, actor)
             return
 
+        if path.startswith("/api/v2/source-intelligence") or path.startswith("/api/v2/sie"):
+            self._handle_v2_source_intelligence_post(path, body, actor)
+            return
+
         if path.startswith("/api/v2/communication"):
             self._handle_v2_communication_post(path, body, actor)
             return
@@ -863,6 +871,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/v2/projects/"):
             self._handle_v2_project_mutation(path, method, body, actor)
+            return
+
+        if path.startswith("/api/v2/source-intelligence") or path.startswith("/api/v2/sie"):
+            self._handle_v2_source_intelligence_mutation(path, method, body, actor)
             return
 
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
@@ -1606,6 +1618,86 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json(analytics.ai.generate())
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown analytics API route")
+
+    def _handle_v2_source_intelligence_get(self, path: str, query: dict[str, list[str]]) -> None:
+        actor = self._require_user()
+        sie = self.services.source_intelligence
+        if path in {"/api/v2/source-intelligence", "/api/v2/source-intelligence/dashboard", "/api/v2/sie", "/api/v2/sie/dashboard"}:
+            self._send_json(sie.dashboard_view(actor=actor, limit=self._query_limit(query)))
+            return
+        if path in {"/api/v2/source-intelligence/stats", "/api/v2/sie/stats"}:
+            self._send_json(sie.stats(actor=actor))
+            return
+        if path in {"/api/v2/source-intelligence/sources", "/api/v2/sie/sources"}:
+            self._send_json(
+                sie.list_sources(
+                    actor=actor,
+                    status=self._first(query, "status"),
+                    query=self._first(query, "q"),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path in {"/api/v2/source-intelligence/imports", "/api/v2/sie/imports"}:
+            self._send_json(
+                {
+                    "imports": self.repository.list_source_intelligence_imports(
+                        limit=self._query_limit(query),
+                        source_id=self._optional_int(self._first(query, "source_id"), minimum=1),
+                    )
+                }
+            )
+            return
+        if path.startswith("/api/v2/source-intelligence/sources/") or path.startswith("/api/v2/sie/sources/"):
+            marker = "/api/v2/sie/sources/" if path.startswith("/api/v2/sie/sources/") else "/api/v2/source-intelligence/sources/"
+            if path.endswith("/context"):
+                source_id = self._extract_path_id(path, marker=marker, suffix="/context", resource="Source")
+                self._send_json(sie.get_context(actor=actor, source_id=source_id))
+                return
+            if path.endswith("/whatsapp-link"):
+                source_id = self._extract_path_id(path, marker=marker, suffix="/whatsapp-link", resource="Source")
+                self._send_json(sie.build_whatsapp_link(actor=actor, source_id=source_id))
+                return
+            source_id = self._extract_path_id(path, marker=marker, resource="Source")
+            self._send_json(sie.get_source(actor=actor, source_id=source_id))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown source intelligence API route")
+
+    def _handle_v2_source_intelligence_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        sie = self.services.source_intelligence
+        if path in {"/api/v2/source-intelligence/reference-code", "/api/v2/sie/reference-code"}:
+            self._send_json(sie.references.generate(seed=self._optional_text(body.get("seed"))))
+            return
+        if path in {"/api/v2/source-intelligence/sources", "/api/v2/sie/sources"}:
+            self._send_json(sie.create_source(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path in {"/api/v2/source-intelligence/imports", "/api/v2/sie/imports"}:
+            self._send_json(sie.import_source(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path in {"/api/v2/source-intelligence/analyze", "/api/v2/sie/analyze"}:
+            self._send_json(sie.analyze_source(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path in {"/api/v2/source-intelligence/whatsapp-link", "/api/v2/sie/whatsapp-link"}:
+            source_id = self._require_int(body, "source_id", minimum=1)
+            self._send_json(sie.build_whatsapp_link(actor=actor, source_id=source_id), status=HTTPStatus.CREATED)
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown source intelligence API route")
+
+    def _handle_v2_source_intelligence_mutation(self, path: str, method: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        sie = self.services.source_intelligence
+        if path.startswith("/api/v2/source-intelligence/sources/") or path.startswith("/api/v2/sie/sources/"):
+            marker = "/api/v2/sie/sources/" if path.startswith("/api/v2/sie/sources/") else "/api/v2/source-intelligence/sources/"
+            if path.endswith("/context"):
+                source_id = self._extract_path_id(path, marker=marker, suffix="/context", resource="Source")
+                self._send_json(sie.update_context(actor=actor, source_id=source_id, body=body))
+                return
+            source_id = self._extract_path_id(path, marker=marker, resource="Source")
+            if method == "DELETE":
+                self._send_json(sie.archive_source(actor=actor, source_id=source_id))
+                return
+            self._send_json(sie.update_source(actor=actor, source_id=source_id, body=body))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown source intelligence API route")
 
     def _handle_v2_security_get(self, path: str, query: dict[str, list[str]]) -> None:
         if path == "/api/v2/security/integrations":

@@ -1,9 +1,14 @@
 from __future__ import annotations
 
+import atexit
 import base64
 import io
 import json
+import os
+import sqlite3
 import tempfile
+import threading
+from dataclasses import dataclass
 from http import HTTPStatus
 from pathlib import Path
 from unittest import TestCase
@@ -23,6 +28,89 @@ MINIMAL_JPEG_BYTES = (
 
 def minimal_jpeg_base64() -> str:
     return base64.b64encode(MINIMAL_JPEG_BYTES).decode("ascii")
+
+
+_TRUE_VALUES = {"1", "true", "yes", "on"}
+_TEST_TEMPLATE_LOCK = threading.Lock()
+_TEST_TEMPLATE_REPOSITORY: LawimRepository | None = None
+_TEST_TEMPLATE_TEMPDIR: tempfile.TemporaryDirectory[str] | None = None
+
+
+def _test_mode_enabled() -> bool:
+    return os.getenv("LAWIM_TEST_MODE", "").strip().lower() in _TRUE_VALUES
+
+
+def _cleanup_test_template() -> None:
+    global _TEST_TEMPLATE_REPOSITORY, _TEST_TEMPLATE_TEMPDIR
+    if _TEST_TEMPLATE_REPOSITORY is not None:
+        _TEST_TEMPLATE_REPOSITORY.close()
+        _TEST_TEMPLATE_REPOSITORY = None
+    if _TEST_TEMPLATE_TEMPDIR is not None:
+        _TEST_TEMPLATE_TEMPDIR.cleanup()
+        _TEST_TEMPLATE_TEMPDIR = None
+
+
+atexit.register(_cleanup_test_template)
+
+
+def _test_template_repository() -> LawimRepository:
+    global _TEST_TEMPLATE_REPOSITORY, _TEST_TEMPLATE_TEMPDIR
+    if _TEST_TEMPLATE_REPOSITORY is not None:
+        return _TEST_TEMPLATE_REPOSITORY
+
+    with _TEST_TEMPLATE_LOCK:
+        if _TEST_TEMPLATE_REPOSITORY is None:
+            template_tempdir = tempfile.TemporaryDirectory(prefix="lawim-test-template-")
+            template_db_path = Path(template_tempdir.name) / "lawim.sqlite3"
+            repository = LawimRepository(template_db_path)
+            repository.initialize(seed_demo_data=True)
+            _TEST_TEMPLATE_TEMPDIR = template_tempdir
+            _TEST_TEMPLATE_REPOSITORY = repository
+    return _TEST_TEMPLATE_REPOSITORY
+
+
+def _clone_test_template(db_path: Path) -> None:
+    template_repository = _test_template_repository()
+    with sqlite3.connect(db_path) as clone_connection:
+        template_repository.connection.backup(clone_connection)
+
+
+@dataclass(slots=True)
+class TestFixture:
+    tempdir: tempfile.TemporaryDirectory[str]
+    db_path: Path
+    media_path: Path
+    repository: LawimRepository
+    config: AppConfig
+    auth_limiter: AuthRateLimiter
+
+
+def build_test_fixture() -> TestFixture:
+    tempdir = tempfile.TemporaryDirectory()
+    db_path = Path(tempdir.name) / "lawim.sqlite3"
+    media_path = Path(tempdir.name) / "media"
+
+    test_mode = _test_mode_enabled()
+    if test_mode:
+        _clone_test_template(db_path)
+
+    repository = LawimRepository(db_path)
+    if not test_mode:
+        repository.initialize(seed_demo_data=True)
+
+    config = AppConfig.for_test(db_path=db_path, media_storage_path=media_path)
+    auth_limiter = AuthRateLimiter(
+        max_attempts=config.auth_rate_limit_max,
+        window_seconds=config.auth_rate_limit_window_seconds,
+    )
+    return TestFixture(
+        tempdir=tempdir,
+        db_path=db_path,
+        media_path=media_path,
+        repository=repository,
+        config=config,
+        auth_limiter=auth_limiter,
+    )
 
 
 class DummyHandler(LawimRequestHandler):
@@ -59,16 +147,13 @@ class DummyHandler(LawimRequestHandler):
 
 class LawimTestHarness(TestCase):
     def setUp(self) -> None:
-        self.tempdir = tempfile.TemporaryDirectory()
-        self.db_path = Path(self.tempdir.name) / "lawim.sqlite3"
-        self.media_path = Path(self.tempdir.name) / "media"
-        self.repository = LawimRepository(self.db_path)
-        self.repository.initialize(seed_demo_data=True)
-        self.config = AppConfig.for_test(db_path=self.db_path, media_storage_path=self.media_path)
-        self.auth_limiter = AuthRateLimiter(
-            max_attempts=self.config.auth_rate_limit_max,
-            window_seconds=self.config.auth_rate_limit_window_seconds,
-        )
+        fixture = build_test_fixture()
+        self.tempdir = fixture.tempdir
+        self.db_path = fixture.db_path
+        self.media_path = fixture.media_path
+        self.repository = fixture.repository
+        self.config = fixture.config
+        self.auth_limiter = fixture.auth_limiter
 
     def tearDown(self) -> None:
         self.repository.close()

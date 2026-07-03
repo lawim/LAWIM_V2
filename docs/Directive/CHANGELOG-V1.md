@@ -113,7 +113,7 @@ Ce document conserve le premier historique officiel de LAWIM Documentation Versi
 # 9. Tracking
 
 * Tracking transverse intégré dans les référentiels concernés ;
-* Tracking Code immuable ;
+* Reference Code immuable ;
 * traçabilité des campagnes, publications, leads, conversions et revenus de services.
 
 ---

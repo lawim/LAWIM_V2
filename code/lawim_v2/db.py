@@ -39,6 +39,7 @@ from .project_repository import ProjectRepositoryMixin
 from .intelligent.repository import IntelligentRepositoryMixin
 from .knowledge_platform.repository import KnowledgePlatformRepositoryMixin
 from .workflow_automation.repository import WorkflowAutomationRepositoryMixin
+from .source_intelligence.repository import SourceIntelligenceRepositoryMixin
 from .crm.repository import CrmRepositoryMixin
 from .marketplace.repository import MarketplaceRepositoryMixin
 from .analytics.repository import AnalyticsRepositoryMixin
@@ -85,7 +86,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
+class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -1629,7 +1630,10 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
                 (SELECT COUNT(*) FROM media) AS media,
                 (SELECT COUNT(*) FROM events) AS events,
                 (SELECT COUNT(*) FROM sessions) AS sessions,
-                (SELECT COUNT(*) FROM projects WHERE status != 'archived') AS projects
+                (SELECT COUNT(*) FROM projects WHERE status != 'archived') AS projects,
+                (SELECT COUNT(*) FROM crm_lead_sources) AS sources,
+                (SELECT COUNT(*) FROM source_intelligence_source_contexts) AS source_contexts,
+                (SELECT COUNT(*) FROM source_intelligence_imports) AS source_imports
             """
         )
         assert row is not None
@@ -1644,6 +1648,9 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
             "events": int(row["events"]),
             "sessions": int(row["sessions"]),
             "projects": int(row["projects"]),
+            "sources": int(row["sources"]),
+            "source_contexts": int(row["source_contexts"]),
+            "source_imports": int(row["source_imports"]),
         }
 
     def bootstrap_payload(self, *, token: str | None = None) -> dict[str, object]:

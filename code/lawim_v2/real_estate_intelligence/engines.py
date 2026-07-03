@@ -201,4 +201,12 @@ class RealEstatePlatformEngine:
         self.search = SearchEngine()
 
     def integration_sources(self) -> list[str]:
-        return ["intelligent_core", "ecosystem", "cognition", "assistant", "knowledge_platform", "workflow_automation"]
+        return [
+            "intelligent_core",
+            "ecosystem",
+            "cognition",
+            "assistant",
+            "knowledge_platform",
+            "workflow_automation",
+            "source_intelligence",
+        ]
