@@ -49,6 +49,7 @@ from .real_estate_intelligence.repository import RealEstateIntelligenceRepositor
 from .assistant.repository import AssistantRepositoryMixin
 from .cognition.repository import CognitionRepositoryMixin
 from .ecosystem.repository import EcosystemRepositoryMixin
+from .program_m_support import ProgramMRepositoryMixinBase
 
 
 SCHEMA = SQLITE_INIT_SCRIPT
@@ -86,7 +87,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin):
+class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase):
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)

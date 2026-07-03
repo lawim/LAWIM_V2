@@ -25,6 +25,7 @@ from .project_service import ProjectPermissionDenied, ProjectService
 from .intelligent.service import IntelligentCoreService
 from .ecosystem.service import EcosystemService
 from .security import validate_email, validate_password
+from .program_m_support import ProgramMServiceBase
 
 
 class ServiceError(Exception):
@@ -114,6 +115,12 @@ class LawimServices:
         self.projects = ProjectService(repository, self.policy)
         self.intelligent = IntelligentCoreService(repository, self.projects)
         self.ecosystem = EcosystemService(repository, self.projects, self.policy)
+        self.program_m = ProgramMServiceBase(repository)
+        self.operations = self.program_m
+        self.deployment = self.program_m
+        self.backup = self.program_m
+        self.installer = self.program_m
+        self.release_manager = self.program_m
         from .cognition.service import CognitionService
 
         self.cognition = CognitionService(repository, self.projects)

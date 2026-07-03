@@ -5525,3 +5525,98 @@ CREATE TABLE IF NOT EXISTS source_intelligence_imports (
 CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_source ON source_intelligence_imports(source_id, imported_at);
 
 CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_status ON source_intelligence_imports(import_status, imported_at);
+
+CREATE TABLE IF NOT EXISTS operations (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_operations_status ON operations(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_operations_record_key ON operations(record_key);
+
+CREATE TABLE IF NOT EXISTS deployment (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_deployment_status ON deployment(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_deployment_record_key ON deployment(record_key);
+
+CREATE TABLE IF NOT EXISTS backup (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_backup_status ON backup(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_backup_record_key ON backup(record_key);
+
+CREATE TABLE IF NOT EXISTS installer (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_installer_status ON installer(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_installer_record_key ON installer(record_key);
+
+CREATE TABLE IF NOT EXISTS releases (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_releases_status ON releases(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_releases_record_key ON releases(record_key);

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from .program_m_support import build_sqlite_tables_script, build_postgresql_statements, PROGRAM_M_SCHEMA_VERSION
+
 import hashlib
 import json
 from dataclasses import dataclass
@@ -253,6 +255,23 @@ def _security_table_specs() -> tuple[TableSpec, ...]:
         for name in V16_TABLE_NAMES
     )
 
+
+
+
+
+def _program_m_table_specs() -> tuple[TableSpec, ...]:
+    from .program_m_support import COMMON_TABLE_COLUMNS
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x Program M entity ({name}).",
+            primary_key="id",
+            columns=COMMON_TABLE_COLUMNS,
+            indexes=("idx_%s_name" % name,),
+        )
+        for name in ("operations", "deployment", "backup", "installer", "releases")
+    )
 
 def _analytics_table_specs() -> tuple[TableSpec, ...]:
     from .analytics.schema_v18_ddl import V18_TABLE_NAMES
@@ -727,7 +746,8 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _marketplace_table_specs()
     + _security_table_specs()
     + _communication_table_specs()
-    + _analytics_table_specs(),
+    + _analytics_table_specs()
+    + _program_m_table_specs(),
 )
 
 

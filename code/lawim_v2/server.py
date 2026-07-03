@@ -219,6 +219,30 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"users": self.services.list_users(actor=actor, limit=self._query_limit(query))})
             return
 
+        if path.startswith("/api/v2/operations"):
+            self._send_json({"data": self.services.operations.list(limit=self._query_limit(query))})
+            return
+
+        if path.startswith("/api/v2/deployment"):
+            self._send_json({"data": self.services.deployment.list(limit=self._query_limit(query))})
+            return
+
+        if path.startswith("/api/v2/backup"):
+            self._send_json({"data": self.services.backup.list(limit=self._query_limit(query))})
+            return
+
+        if path.startswith("/api/v2/installer"):
+            self._send_json({"data": self.services.installer.list(limit=self._query_limit(query))})
+            return
+
+        if path.startswith("/api/v2/releases"):
+            self._send_json({"data": self.services.release_manager.list(limit=self._query_limit(query))})
+            return
+
+        if path.startswith("/api/v2/releases"):
+            self._send_json({"data": self.services.release_manager.list(limit=self._query_limit(query))})
+            return
+
         if path == "/api/properties":
             try:
                 listing = build_property_query(
