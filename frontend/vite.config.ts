@@ -1,0 +1,83 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+import path from 'path';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'robots.txt', 'logo.svg'],
+      manifest: {
+        name: 'LAWIM',
+        short_name: 'LAWIM',
+        description: 'LAWIM V2 Frontend Platform',
+        theme_color: '#0f172a',
+        background_color: '#0f172a',
+        display: 'standalone',
+        start_url: '/web.html',
+        icons: [
+          {
+            src: 'logo.svg',
+            sizes: '192x192',
+            type: 'image/svg+xml'
+          },
+          {
+            src: 'logo.svg',
+            sizes: '512x512',
+            type: 'image/svg+xml'
+          }
+        ]
+      },
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|webp)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30
+              }
+            }
+          },
+          {
+            urlPattern: /^https?:.*\/_api\//,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+              networkTimeoutSeconds: 10
+            }
+          }
+        ]
+      },
+      devOptions: {
+        enabled: true
+      }
+    })
+  ],
+  resolve: {
+    alias: {
+      '@ui': path.resolve(__dirname, './packages/ui/src/index.ts'),
+      '@design-system': path.resolve(__dirname, './packages/design-system/src/index.ts'),
+      '@api-sdk': path.resolve(__dirname, './packages/api-sdk/src/index.ts'),
+      '@auth': path.resolve(__dirname, './packages/auth/src/index.ts'),
+      '@maps': path.resolve(__dirname, './packages/maps/src/index.ts'),
+      '@charts': path.resolve(__dirname, './packages/charts/src/index.ts'),
+      '@forms': path.resolve(__dirname, './packages/forms/src/index.ts')
+    }
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        web: path.resolve(__dirname, 'apps/web/index.html'),
+        admin: path.resolve(__dirname, 'apps/admin/index.html')
+      }
+    }
+  },
+  server: {
+    port: 4173
+  }
+});

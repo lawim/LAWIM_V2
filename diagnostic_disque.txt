@@ -1,0 +1,38 @@
+===================== DISQUES =====================
+Sys. de fichiers    Taille Utilisé Dispo Uti% Monté sur
+tmpfs                 782M    3,0M  780M   1% /run
+efivarfs              100K     97K     0 100% /sys/firmware/efi/efivars
+/dev/nvme0n1p5         70G     68G     0 100% /
+tmpfs                 3,9G     71M  3,8G   2% /dev/shm
+tmpfs                 5,0M    8,0K  5,0M   1% /run/lock
+/dev/nvme0n1p1         96M    6,2M   90M   7% /boot/efi
+tmpfs                 782M    224K  782M   1% /run/user/1000
+/home/abel/.Private    70G     68G     0 100% /home/abel
+/dev/nvme0n1p3        164G    1,9G  153G   2% /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850
+
+===================== RACINE / =====================
+4,0K	/bin.usr-is-merged
+4,0K	/cdrom
+4,0K	/lib.usr-is-merged
+4,0K	/sbin.usr-is-merged
+4,0K	/srv
+8,0K	/mnt
+16K	/lost+found
+32K	/media
+2,8M	/tmp
+6,0M	/root
+20M	/etc
+422M	/opt
+654M	/boot
+12G	/usr
+12G	/var
+13G	/timeshift
+23G	/home
+68G	/
+
+===================== HOME =====================
+184K	/home/lybonar
+23G	/home
+23G	/home/.ecryptfs
+
+===================== DOSSIER UTILISATEUR =====================

@@ -1,0 +1,34 @@
+===================== /VAR =====================
+4,0K	/var/local
+4,0K	/var/mail
+4,0K	/var/metrics
+4,0K	/var/opt
+12K	/var/www
+56K	/var/spool
+456K	/var/crash
+17M	/var/backups
+377M	/var/tmp
+578M	/var/cache
+3,4G	/var/log
+7,0G	/var/lib
+12G	/var
+
+===================== TIMESHIFT =====================
+Mounted '/dev/nvme0n1p5' at '/run/timeshift/111144/backup'
+Device : /dev/nvme0n1p5
+UUID   : 08a0a0ae-3ed5-42a8-ab64-c665887dd739
+Path   : /run/timeshift/111144/backup
+Mode   : RSYNC
+Status : No snapshots on this device
+First snapshot requires: 0 B
+
+No snapshots found
+
+===================== JOURNAUX SYSTEME =====================
+Archived and active journals take up 618.5M in the file system.
+
+===================== CACHE APT =====================
+505M	/var/cache/apt
+
+===================== LOGS =====================
+3,4G	/var/log
