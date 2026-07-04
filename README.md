@@ -50,8 +50,15 @@ Comptes démo (mot de passe `lawim-demo`) : `admin@lawim.local`, `agent@lawim.lo
 | Document | Contenu |
 |----------|---------|
 | [docs/OPERATIONS-RC.md](docs/OPERATIONS-RC.md) | Guide d'exploitation release candidate |
+| [docs/I18N_LANGUAGES.md](docs/I18N_LANGUAGES.md) | Module langues LAWIM_V2 |
+| [docs/MIGRATION_FRAMEWORK.md](docs/MIGRATION_FRAMEWORK.md) | Scaffold de préparation migration |
+| [docs/MIGRATION_GUIDE.md](docs/MIGRATION_GUIDE.md) | Guide de préparation à la migration |
+| [docs/OVH_DEPLOYMENT_MANIFEST.md](docs/OVH_DEPLOYMENT_MANIFEST.md) | Manifeste minimal de déploiement OVH |
+| [release/README_DEPLOY.md](release/README_DEPLOY.md) | Projection de release et paquet OVH |
+| [docs/TRACEABILITY_MATRIX.md](docs/TRACEABILITY_MATRIX.md) | Matrice de traçabilité globale |
 | [compose/README.md](compose/README.md) | Stacks Docker Compose (source de vérité) |
 | [tests/README.md](tests/README.md) | Suite de tests |
+| [reports/program/RELEASE-PROGRAM-W-PRODUCTION-MIGRATION-PREPARATION.md](reports/program/RELEASE-PROGRAM-W-PRODUCTION-MIGRATION-PREPARATION.md) | Programme W de préparation migration |
 | [reports/program/FULL-ENGINEERING-REVIEW-REPORT.md](reports/program/FULL-ENGINEERING-REVIEW-REPORT.md) | Revue engineering |
 
 ## Schéma & persistance

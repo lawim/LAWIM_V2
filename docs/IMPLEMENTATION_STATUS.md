@@ -13,6 +13,12 @@
 - Fallback français appliqué par défaut.
 - Non invasif, sans impact base de données, prêt avant la phase Migration.
 
+## Projection de release OVH
+
+- Projection `release/` ajoutée pour la release industrialisée et les manifestes de déploiement.
+- Paquet OVH décrit comme projection minimale, sans documentation interne, sans tests et sans secret réel.
+- Aucun impact sur le schéma de base de données, les règles métier ou la phase Migration.
+
 ## Règle de gouvernance
 
 Toute future référence à la sécurité globale de production doit utiliser les noms AAE/AAF/AAG/AAH/AAI/AAJ selon le périmètre concerné.

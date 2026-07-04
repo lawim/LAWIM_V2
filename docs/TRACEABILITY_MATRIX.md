@@ -126,6 +126,7 @@ This matrix traces every functional requirement through release programs to impl
 |--------|------|----------------|-------|--------|
 | API Query | api_query.py | API docs (Swagger) | ✅ | ✅ 🚀 |
 | Configuration | config.py | README.md | ✅ | ✅ 🚀 |
+| Localization (i18n) | i18n.py | I18N_LANGUAGES.md | ✅ | ✅ 🚀 |
 | Database | db.py (73KB) | DEPLOYMENT.md | ✅ | ✅ 🚀 |
 | DTOs | dto.py | API docs | ✅ | ✅ 🚀 |
 | Contact Domain | contact.py | Domain docs | ✅ | ✅ 🚀 |
@@ -141,8 +142,11 @@ This matrix traces every functional requirement through release programs to impl
 | Knowledge Platform | knowledge_platform/ | KNOWLEDGE.md | ✅ | ✅ 🚀 |
 | Marketplace | marketplace/ | INTEGRATIONS.md | ✅ | ✅ 🚀 |
 | Observability | observability.py | OBSERVABILITY.md | ✅ | ✅ 🚀 |
+| Migration scaffold (local only) | migration.py | MIGRATION_FRAMEWORK.md | ✅ | ✅ 🧪 |
 
-**Status:** All 17 backend modules complete ✅ 🚀
+**Status:** All 19 backend modules complete ✅ 🚀
+
+**Note:** The migration scaffold is documented for certification purposes and remains outside the OVH runtime bundle until AAF starts.
 
 ### Infrastructure Modules
 
@@ -181,7 +185,9 @@ This matrix traces every functional requirement through release programs to impl
 | Frontend | tests/frontend-shell.test.tsx | 5 | ✅ | ✅ 🚀 |
 | Acceptance | tests/acceptance.test.ts | 2 | ✅ | ✅ 🚀 |
 | Other Core | tests/*.test.ts | 9 | ✅ | ✅ 🚀 |
-| **TOTAL** | **25 files** | **97 tests** | **100%** | **✅ 🚀** |
+| I18N Languages | tests/test_i18n_languages.py | 7 | ✅ | ✅ 🚀 |
+| Migration scaffold | tests/test_migration_framework.py | 4 | ✅ | ✅ 🧪 |
+| **TOTAL** | **27 files** | **108 tests** | **100%** | **✅ 🚀** |
 
 ---
 
@@ -217,6 +223,13 @@ This matrix traces every functional requirement through release programs to impl
 | OPERATIONS.md | AF | Operations | Feature | ✅ 📄 |
 | DEPLOYMENT.md | Z,AA-AF | Deployment | Guide | ✅ 📄 |
 | DOCKER.md | Z | Infrastructure | Guide | ✅ 📄 |
+| I18N_LANGUAGES.md | All | Localization | Feature | ✅ 📄 |
+| MIGRATION_FRAMEWORK.md | AAF | Migration | Infrastructure | ✅ 📄 |
+| OVH_DEPLOYMENT_MANIFEST.md | AAF | Deployment | Guide | ✅ 📄 |
+| RELEASE_MANIFEST.md | AAF | Deployment | Guide | ✅ 📄 |
+| SECURITY_CLASSIFICATION.md | AAF | Deployment | Guide | ✅ 📄 |
+| DEPLOYMENT_MANIFEST.md | AAF | Deployment | Guide | ✅ 📄 |
+| README_DEPLOY.md | AAF | Deployment | Guide | ✅ 📄 |
 | KNOWLEDGE.md | All | Knowledge | Architecture | ✅ 📄 |
 | MEMORY.md | All | Memory | Architecture | ✅ 📄 |
 | LEARNING_FRAMEWORK.md | All | Learning | Architecture | ✅ 📄 |
@@ -286,10 +299,10 @@ This matrix traces every functional requirement through release programs to impl
 | Release Programs | 28 | 28 | 100% ✅ |
 | Admin Pages | 23 | 23 | 100% ✅ |
 | Documentation Files | 50+ | 50+ | 100% ✅ |
-| Test Files | 25 | 25 | 100% ✅ |
-| Tests Passing | 97 | 97 | 100% ✅ |
+| Test Files | 27 | 27 | 100% ✅ |
+| Tests Passing | 108 | 108 | 100% ✅ |
 | Git Tags | 27 | 27 | 100% ✅ |
-| Backend Modules | 17 | 17 | 100% ✅ |
+| Backend Modules | 19 | 19 | 100% ✅ |
 | Infrastructure Modules | 13 | 13 | 100% ✅ |
 | Frontend Modules | 18 | 18 | 100% ✅ |
 
@@ -323,4 +336,3 @@ No undocumented modules.
 All requirements traced from release to implementation to test to deployment.
 
 **Production readiness: VERIFIED** ✅ 🚀
-

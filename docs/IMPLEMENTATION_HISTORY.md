@@ -22,3 +22,9 @@ L’historique de code et de tags reste intact. Seule la classification document
 - Langues officielles: `fr`, `en`, `pcm`.
 - Fallback français.
 - Aucun impact sur le schéma de base de données.
+
+## Industrialisation de release
+
+- Projection `release/` ajoutée avec manifestes, checksums et documentation d'exploitation.
+- Paquet OVH décrit comme dérivé minimal et non invasif.
+- Aucun changement de règle métier, aucune migration, aucun secret réel.
