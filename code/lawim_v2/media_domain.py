@@ -9,7 +9,8 @@ import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
+from urllib.parse import urlparse
 
 from .errors import ValidationError
 
@@ -25,11 +26,107 @@ THUMBNAIL_CONTRACT = {
 
 @dataclass(frozen=True, slots=True)
 class StoredMedia:
+    provider_name: str
+    provider_object_id: str | None
     storage_path: str
     public_url: str
     mime_type: str
     size_bytes: int
     thumbnail_url: str
+
+
+class MediaProvider(Protocol):
+    @property
+    def name(self) -> str: ...
+
+    def store(
+        self,
+        *,
+        property_id: int,
+        filename: str,
+        content: bytes,
+        mime_type: str | None = None,
+    ) -> StoredMedia: ...
+
+    def delete(self, storage_path: str) -> None: ...
+
+
+MEDIA_LIFECYCLE_STATES = frozenset({"active", "deleted", "archived", "pending"})
+MEDIA_BACKUP_STATES = frozenset({"available", "archived", "restored", "missing"})
+
+
+class MediaRegistry:
+    def __init__(self, providers: list[MediaProvider]) -> None:
+        self.providers = {provider.name: provider for provider in providers}
+
+    def get(self, provider_name: str) -> MediaProvider:
+        provider = self.providers.get(provider_name)
+        if provider is None:
+            raise ValidationError(f"unknown media provider: {provider_name}")
+        return provider
+
+    def register(self, provider: MediaProvider) -> None:
+        self.providers[provider.name] = provider
+
+
+class StorageOrchestrator:
+    def __init__(self, registry: MediaRegistry, default_provider: str = "local") -> None:
+        self.registry = registry
+        self.default_provider = default_provider
+        self.registry.get(default_provider)
+
+    def store(
+        self,
+        *,
+        property_id: int,
+        filename: str,
+        content: bytes,
+        mime_type: str | None = None,
+        provider_name: str | None = None,
+    ) -> StoredMedia:
+        resolved_provider = provider_name or self.default_provider
+        provider = self.registry.get(resolved_provider)
+        return provider.store(property_id=property_id, filename=filename, content=content, mime_type=mime_type)
+
+    def delete(self, provider_name: str, storage_path: str) -> None:
+        provider = self.registry.get(provider_name)
+        provider.delete(storage_path)
+
+
+def parse_storage_path(storage_path: str, default_provider: str = "local") -> tuple[str, str]:
+    normalized = storage_path.strip()
+    if not normalized:
+        raise ValidationError("storage_path is required")
+    if ":" in normalized:
+        provider_name, object_id = normalized.split(":", 1)
+        if not provider_name or not object_id:
+            raise ValidationError("storage_path must include a provider prefix and object id")
+        return provider_name, object_id
+    return default_provider, normalized
+
+
+class MediaLifecycleEngine:
+    def transition(self, current_state: str, target_state: str) -> str:
+        if target_state not in MEDIA_LIFECYCLE_STATES:
+            raise ValidationError(f"unsupported lifecycle state: {target_state}")
+        if current_state not in MEDIA_LIFECYCLE_STATES:
+            raise ValidationError(f"invalid current lifecycle state: {current_state}")
+        if current_state == "deleted" and target_state not in {"deleted", "archived"}:
+            raise ValidationError("deleted media cannot be reverted except to archived")
+        return target_state
+
+
+class BackupCenter:
+    def __init__(self) -> None:
+        pass
+
+    def validate_backup_state(self, backup_state: str) -> str:
+        if backup_state not in MEDIA_BACKUP_STATES:
+            raise ValidationError(f"unsupported backup state: {backup_state}")
+        return backup_state
+
+    def build_metadata(self, metadata: dict[str, Any] | str | None) -> str:
+        return normalize_metadata(metadata)
 
 
 class MediaStorage(ABC):
@@ -48,6 +145,8 @@ class MediaStorage(ABC):
 
 
 class LocalMediaStorage(MediaStorage):
+    name = "local"
+
     def __init__(self, root: Path, *, public_base_url: str, cdn_base_url: str | None = None) -> None:
         self.root = Path(root)
         self.public_base_url = public_base_url.rstrip("/")
@@ -77,6 +176,8 @@ class LocalMediaStorage(MediaStorage):
         public_url = self._public_url(relative)
         thumbnail_url = build_thumbnail_url(public_url, safe_name)
         return StoredMedia(
+            provider_name=self.name,
+            provider_object_id=relative.as_posix(),
             storage_path=relative.as_posix(),
             public_url=public_url,
             mime_type=resolved_mime,
@@ -198,5 +299,9 @@ def validate_media_url(url: str) -> str:
     if not normalized:
         raise ValidationError("url is required")
     if normalized.startswith(("http://", "https://", "data:", "/media/")):
+        parsed = urlparse(normalized)
+        host = (parsed.netloc or "").lower()
+        if host.endswith("drive.google.com") or host.endswith("docs.google.com") or "drive.google.com" in host or "docs.google.com" in host:
+            raise ValidationError("Google Drive URLs are not supported for media storage")
         return normalized
     raise ValidationError("url must be http(s), data or /media/ path")

@@ -68,11 +68,15 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
 
     media_columns = {
         "storage_path": "TEXT",
+        "provider_name": "TEXT NOT NULL DEFAULT 'local'",
+        "provider_object_id": "TEXT",
         "mime_type": "TEXT",
         "size_bytes": "INTEGER",
         "thumbnail_url": "TEXT",
         "metadata_json": "TEXT NOT NULL DEFAULT '{}'",
         "position": "INTEGER NOT NULL DEFAULT 0",
+        "lifecycle_state": "TEXT NOT NULL DEFAULT 'active'",
+        "backup_state": "TEXT NOT NULL DEFAULT 'available'",
         "version": "INTEGER NOT NULL DEFAULT 1",
         "deleted_at": "TEXT",
     }

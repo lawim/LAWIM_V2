@@ -121,6 +121,10 @@ def media_dto(media_row: dict[str, object]) -> dict[str, object]:
         "url": media_row["url"],
         "caption": media_row["caption"],
         "storage_path": media_row.get("storage_path"),
+        "provider": {
+            "name": media_row.get("provider_name") or "local",
+            "object_id": media_row.get("provider_object_id"),
+        },
         "mime_type": media_row.get("mime_type"),
         "size_bytes": media_row.get("size_bytes"),
         "thumbnail": {
@@ -133,6 +137,8 @@ def media_dto(media_row: dict[str, object]) -> dict[str, object]:
             "created_at": media_row.get("created_at"),
             "deleted_at": media_row.get("deleted_at"),
         },
+        "lifecycle_state": media_row.get("lifecycle_state") or "active",
+        "backup_state": media_row.get("backup_state") or "available",
         "version": media_row.get("version", 1),
     }
 

@@ -60,6 +60,7 @@ class AppConfig:
     seed_demo_data: bool
     session_ttl_seconds: int
     media_storage_path: Path
+    media_provider: str
     max_upload_bytes: int
     geocoding_provider: str
     geocoding_base_url: str
@@ -97,6 +98,7 @@ class AppConfig:
             seed_demo_data=_bool_env("LAWIM_SEED_DEMO_DATA", True),
             session_ttl_seconds=_int_env("LAWIM_SESSION_TTL_SECONDS", 7 * 24 * 60 * 60),
             media_storage_path=media_storage_path,
+            media_provider=os.getenv("LAWIM_MEDIA_PROVIDER", "local").strip().lower(),
             max_upload_bytes=_int_env("LAWIM_MAX_UPLOAD_BYTES", 5 * 1024 * 1024),
             geocoding_provider=os.getenv("LAWIM_GEOCODING_PROVIDER", "local"),
             geocoding_base_url=os.getenv("LAWIM_GEOCODING_BASE_URL", "https://nominatim.openstreetmap.org/search"),
@@ -138,6 +140,8 @@ class AppConfig:
                 errors.append("PUBLIC_BASE_URL must use https when APP_ENV=production")
             if self.public_media:
                 errors.append("LAWIM_PUBLIC_MEDIA must be false when APP_ENV=production")
+        if not self.media_provider:
+            errors.append("LAWIM_MEDIA_PROVIDER must be set to a non-empty provider name")
         if errors:
             raise ValueError("Invalid LAWIM_V2 configuration: " + "; ".join(errors))
 
@@ -168,6 +172,7 @@ class AppConfig:
             seed_demo_data=True,
             session_ttl_seconds=3600,
             media_storage_path=media_storage_path,
+            media_provider="local",
             max_upload_bytes=5 * 1024 * 1024,
             geocoding_provider="local",
             geocoding_base_url="https://nominatim.openstreetmap.org/search",

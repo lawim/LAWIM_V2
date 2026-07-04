@@ -1148,16 +1148,24 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         url: str,
         caption: str,
         storage_path: str | None = None,
+        provider_name: str | None = None,
+        provider_object_id: str | None = None,
         mime_type: str | None = None,
         size_bytes: int | None = None,
         thumbnail_url: str | None = None,
         metadata: dict[str, object] | str | None = None,
         position: int | None = None,
+        lifecycle_state: str = "active",
+        backup_state: str = "available",
     ) -> dict[str, object]:
         kind = normalize_kind(kind)
         url = validate_media_url(url)
         caption = _require_text(caption, "caption")
         metadata_json = normalize_media_metadata(metadata)
+        effective_provider_name = provider_name or "local"
+        effective_provider_object_id = provider_object_id
+        effective_lifecycle_state = lifecycle_state or "active"
+        effective_backup_state = backup_state or "available"
         self.get_property(property_id)
         if position is None:
             position = self.scalar(
@@ -1170,9 +1178,9 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
             cursor = conn.execute(
                 """
                 INSERT INTO media
-                    (property_id, kind, url, caption, storage_path, mime_type, size_bytes, thumbnail_url,
-                     metadata_json, position, version, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
+                    (property_id, kind, url, caption, storage_path, provider_name, provider_object_id, mime_type, size_bytes, thumbnail_url,
+                     metadata_json, position, lifecycle_state, backup_state, version, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
                 """,
                 (
                     property_id,
@@ -1180,11 +1188,15 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
                     url,
                     caption,
                     storage_path,
+                    effective_provider_name,
+                    effective_provider_object_id,
                     mime_type,
                     size_bytes,
                     thumbnail_url or build_thumbnail_url(url, caption),
                     metadata_json,
                     position,
+                    effective_lifecycle_state,
+                    effective_backup_state,
                     utcnow(),
                 ),
             )

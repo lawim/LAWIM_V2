@@ -19,7 +19,14 @@ from .dto import (
 )
 from .geocoding_provider import resolve_geocoding_provider
 from .matching import MatchCriteria, MatchWeights
-from .media_domain import LocalMediaStorage, decode_upload_content, validate_upload_bytes
+from .media_domain import (
+    LocalMediaStorage,
+    MediaRegistry,
+    StorageOrchestrator,
+    decode_upload_content,
+    parse_storage_path,
+    validate_upload_bytes,
+)
 from .observability import METRICS
 from .project_service import ProjectPermissionDenied, ProjectService
 from .intelligent.service import IntelligentCoreService
@@ -107,6 +114,8 @@ class LawimServices:
             public_base_url=config.public_base_url,
             cdn_base_url=config.cdn_base_url,
         )
+        self.media_registry = MediaRegistry([self.media_storage])
+        self.storage_orchestrator = StorageOrchestrator(self.media_registry, default_provider=config.media_provider)
         self.geocoder = resolve_geocoding_provider(
             provider_name=config.geocoding_provider,
             base_url=config.geocoding_base_url,
@@ -641,7 +650,7 @@ class LawimServices:
         if not self.policy.can_manage_media(actor, property_row):
             raise PermissionDenied("Media access is restricted to administrators and the owning organization")
         resolved_mime = validate_upload_bytes(content, mime_type=mime_type, filename=filename, max_bytes=self.config.max_upload_bytes)
-        stored = self.media_storage.store(
+        stored = self.storage_orchestrator.store(
             property_id=property_id,
             filename=filename,
             content=content,
@@ -653,6 +662,8 @@ class LawimServices:
             url=stored.public_url,
             caption=caption,
             storage_path=stored.storage_path,
+            provider_name=stored.provider_name,
+            provider_object_id=stored.provider_object_id,
             mime_type=stored.mime_type,
             size_bytes=stored.size_bytes,
             thumbnail_url=stored.thumbnail_url,
@@ -696,7 +707,13 @@ class LawimServices:
             raise PermissionDenied("Media access is restricted to administrators and the owning organization")
         result = self.repository.delete_media(media_id, hard=hard)
         if hard and current.get("storage_path"):
-            self.media_storage.delete(str(current["storage_path"]))
+            provider_name = current.get("provider_name") if current.get("provider_name") else None
+            provider_object_id = current.get("provider_object_id") if current.get("provider_object_id") else None
+            if provider_name and provider_object_id:
+                self.storage_orchestrator.delete(provider_name, provider_object_id)
+            else:
+                provider_name, provider_object_id = parse_storage_path(str(current["storage_path"]))
+                self.storage_orchestrator.delete(provider_name, provider_object_id)
         return result
 
     def get_media(self, media_id: int) -> dict[str, object]:
