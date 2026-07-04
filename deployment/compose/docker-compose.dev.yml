@@ -1,0 +1,244 @@
+version: '3.9'
+
+services:
+  # Frontend - React SPA
+  frontend:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.frontend
+    container_name: lawim-frontend-dev
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      VITE_LAWIM_API_URL: http://localhost:8000
+      VITE_LAWIM_USE_MOCKS: "false"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - lawim-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Backend - FastAPI
+  backend:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.backend
+    container_name: lawim-backend-dev
+    ports:
+      - "8000:8000"
+    environment:
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: postgresql://lawim:lawim_dev@postgres:5432/lawim_dev
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: dev-secret-key-change-in-production
+      ENVIRONMENT: development
+    volumes:
+      - ./code:/app/lawim_v2
+    networks:
+      - lawim-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: lawim-postgres-dev
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: lawim
+      POSTGRES_PASSWORD: lawim_dev
+      POSTGRES_DB: lawim_dev
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lawim -d lawim_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lawim-network
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: lawim-redis-dev
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redis_data_dev:/data
+    networks:
+      - lawim-network
+    restart: unless-stopped
+
+  # Celery Worker
+  worker:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.worker
+    container_name: lawim-worker-dev
+    environment:
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: postgresql://lawim:lawim_dev@postgres:5432/lawim_dev
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    volumes:
+      - ./code:/app/lawim_v2
+    networks:
+      - lawim-network
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  # Celery Beat Scheduler
+  scheduler:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.scheduler
+    container_name: lawim-scheduler-dev
+    environment:
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: postgresql://lawim:lawim_dev@postgres:5432/lawim_dev
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    volumes:
+      - ./code:/app/lawim_v2
+    networks:
+      - lawim-network
+    depends_on:
+      - redis
+      - postgres
+    restart: unless-stopped
+
+  # Brain Service
+  brain:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.brain
+    container_name: lawim-brain-dev
+    ports:
+      - "8001:8001"
+    environment:
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: postgresql://lawim:lawim_dev@postgres:5432/lawim_dev
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    volumes:
+      - ./code:/app/lawim_v2
+    networks:
+      - lawim-network
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  # Agents Service
+  agents:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.agents
+    container_name: lawim-agents-dev
+    ports:
+      - "8002:8002"
+    environment:
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: postgresql://lawim:lawim_dev@postgres:5432/lawim_dev
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    volumes:
+      - ./code:/app/lawim_v2
+    networks:
+      - lawim-network
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  # Knowledge Service
+  knowledge:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.knowledge
+    container_name: lawim-knowledge-dev
+    ports:
+      - "8003:8003"
+    environment:
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: postgresql://lawim:lawim_dev@postgres:5432/lawim_dev
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    volumes:
+      - ./code:/app/lawim_v2
+    networks:
+      - lawim-network
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  # Communication Service
+  communication:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.communication
+    container_name: lawim-communication-dev
+    ports:
+      - "8004:8004"
+    environment:
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: postgresql://lawim:lawim_dev@postgres:5432/lawim_dev
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    volumes:
+      - ./code:/app/lawim_v2
+    networks:
+      - lawim-network
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  # Campay Payment Service
+  campay:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.campay
+    container_name: lawim-campay-dev
+    ports:
+      - "8005:8005"
+    environment:
+      PYTHONUNBUFFERED: 1
+      DATABASE_URL: postgresql://lawim:lawim_dev@postgres:5432/lawim_dev
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    volumes:
+      - ./code:/app/lawim_v2
+    networks:
+      - lawim-network
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+volumes:
+  postgres_data_dev:
+  redis_data_dev:
+
+networks:
+  lawim-network:
+    driver: bridge

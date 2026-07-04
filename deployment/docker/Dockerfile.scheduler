@@ -1,0 +1,21 @@
+# Scheduler Service - Task scheduling
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  postgresql-client redis-tools gcc \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt requirements-postgresql.txt ./
+RUN pip install --no-cache-dir -r requirements.txt -r requirements-postgresql.txt celery redis
+
+COPY code/lawim_v2 ./lawim_v2
+COPY pyproject.toml ./
+
+ENV PYTHONUNBUFFERED=1
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD python -c "import redis; redis.Redis(host='redis', port=6379, socket_connect_timeout=5).ping()"
+
+CMD ["celery", "-A", "lawim_v2.tasks", "beat", "--loglevel=info", "--scheduler", "redbeat.RedBeatScheduler"]
