@@ -1,0 +1,12 @@
+{
+  "name": "@workflows",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "zustand": "^4.5.7",
+    "zod": "^3.25.4"
+  }
+}

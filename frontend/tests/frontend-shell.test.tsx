@@ -5,6 +5,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WebApp } from '../apps/web/src/App';
 import { AdminApp } from '../apps/admin/src/App';
+import { WorkflowOrchestratorPage } from '../apps/web/src/WorkflowOrchestratorPage';
+import { ObservabilityPage } from '../apps/admin/src/ObservabilityPage';
+import { ProductReadinessPage } from '../apps/admin/src/ProductReadinessPage';
 
 function renderWithProviders(ui: React.ReactElement) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -37,5 +40,27 @@ describe('LAWIM frontend shell', () => {
     expect(screen.getByText(/administrative controls, governance workflows, and deployment readiness in one place/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /operations/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /agents/i })).toBeInTheDocument();
+  });
+
+  it('renders the workflow orchestrator experience', () => {
+    render(<WorkflowOrchestratorPage />);
+
+    expect(screen.getByRole('heading', { name: /workflow orchestration/i })).toBeInTheDocument();
+    expect(screen.getAllByText(/status: ready/i)).toHaveLength(3);
+    expect(screen.getAllByText(/escalation path/i)).toHaveLength(2);
+  });
+
+  it('renders the observability and readiness panels', () => {
+    render(
+      <>
+        <ObservabilityPage />
+        <ProductReadinessPage />
+      </>
+    );
+
+    expect(screen.getByRole('heading', { name: /observability console/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /product readiness/i })).toBeInTheDocument();
+    expect(screen.getByText(/brain decisions/i)).toBeInTheDocument();
+    expect(screen.getByText(/test coverage/i)).toBeInTheDocument();
   });
 });

@@ -2,6 +2,8 @@ import { NavLink, Route, Routes } from 'react-router-dom';
 import { Badge, Button, Card, Input, PageShell, Select, Textarea } from '@ui';
 import { AgentsConsolePage } from './AgentsConsole';
 import { BrainConsolePage } from './BrainConsole';
+import { ObservabilityPage } from './ObservabilityPage';
+import { ProductReadinessPage } from './ProductReadinessPage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -20,7 +22,9 @@ const navItems = [
   { to: '/brain', label: 'Brain' },
   { to: '/agents', label: 'Agents' },
   { to: '/source-intelligence', label: 'Source Intelligence' },
-  { to: '/settings', label: 'Settings' }
+  { to: '/settings', label: 'Settings' },
+  { to: '/observability', label: 'Observability' },
+  { to: '/readiness', label: 'Readiness' }
 ];
 
 function DashboardPage() {
@@ -228,6 +232,8 @@ export function AdminApp() {
         <Route path="/agents" element={<AgentsConsolePage />} />
         <Route path="/source-intelligence" element={<SourceIntelligencePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/observability" element={<ObservabilityPage />} />
+        <Route path="/readiness" element={<ProductReadinessPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Routes>
     </div>

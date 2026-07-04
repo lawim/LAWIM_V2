@@ -4,6 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { apiSdk, type PropertySummary } from '@api-sdk';
 import { Badge, Button, Card, Checkbox, Input, PageShell, Select, Textarea } from '@ui';
 import { ProtectedRoute, useAuthStore } from '@auth';
+import { WorkflowOrchestratorPage } from './WorkflowOrchestratorPage';
+import { ObservabilityConsolePage } from './ObservabilityConsolePage';
+import { ProductReadinessDashboardPage } from './ProductReadinessDashboardPage';
 
 const navItems = [
   { to: '/', label: 'Home' },
@@ -19,7 +22,10 @@ const navItems = [
   { to: '/favorites', label: 'Favorites' },
   { to: '/notifications', label: 'Notifications' },
   { to: '/requests', label: 'Requests' },
-  { to: '/documents', label: 'Documents' }
+  { to: '/documents', label: 'Documents' },
+  { to: '/workflow', label: 'Workflow' },
+  { to: '/observability', label: 'Observability' },
+  { to: '/readiness', label: 'Readiness' }
 ];
 
 function LoadingState({ label }: { label: string }) {
@@ -401,6 +407,9 @@ export function WebApp() {
         <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
         <Route path="/requests" element={<ProtectedRoute><RequestsPage /></ProtectedRoute>} />
         <Route path="/documents" element={<ProtectedRoute><DocumentsPage /></ProtectedRoute>} />
+        <Route path="/workflow" element={<WorkflowOrchestratorPage />} />
+        <Route path="/observability" element={<ObservabilityConsolePage />} />
+        <Route path="/readiness" element={<ProductReadinessDashboardPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
       {!isAuthenticated ? <div className="mx-auto max-w-6xl px-4 pb-4 text-sm text-slate-500">Use the Login route to authenticate and unlock protected areas.</div> : null}
