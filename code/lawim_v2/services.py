@@ -31,7 +31,7 @@ from .observability import METRICS
 from .project_service import ProjectPermissionDenied, ProjectService
 from .intelligent.service import IntelligentCoreService
 from .ecosystem.service import EcosystemService
-from .security import validate_email, validate_password
+from .security import AADAuthenticator, resolve_aad_config, validate_email, validate_password
 from .program_m_support import ProgramMServiceBase
 
 
@@ -125,6 +125,7 @@ class LawimServices:
         self.intelligent = IntelligentCoreService(repository, self.projects)
         self.ecosystem = EcosystemService(repository, self.projects, self.policy)
         self.program_m = ProgramMServiceBase(repository)
+        self.aad_authenticator = AADAuthenticator(resolve_aad_config())
         self.operations = self.program_m
         self.deployment = self.program_m
         self.backup = self.program_m
@@ -258,8 +259,16 @@ class LawimServices:
             "notifications": notifications,
         }
 
-    def login(self, *, email: str, password: str) -> dict[str, object]:
+    def _authenticate_with_optional_aad(self, *, email: str, password: str) -> dict[str, object] | None:
         user = self.repository.authenticate(email=email, password=password)
+        if user is not None:
+            return user
+        if self.aad_authenticator.is_enabled():
+            self.aad_authenticator.authenticate(email=email, password=password)
+        return None
+
+    def login(self, *, email: str, password: str) -> dict[str, object]:
+        user = self._authenticate_with_optional_aad(email=email, password=password)
         if user is None:
             raise AuthenticationError("Invalid email or password")
         session = self.repository.create_session(user_id=user["id"], ttl_seconds=self.config.session_ttl_seconds)

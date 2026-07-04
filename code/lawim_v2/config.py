@@ -60,19 +60,81 @@ class AppConfig:
     seed_demo_data: bool
     session_ttl_seconds: int
     media_storage_path: Path
-    media_provider: str
-    max_upload_bytes: int
-    geocoding_provider: str
-    geocoding_base_url: str
-    geocoding_api_key: str | None
-    cdn_base_url: str | None
-    metrics_enabled: bool
-    match_min_score: float
-    max_json_body_bytes: int
-    cors_allowed_origins: tuple[str, ...]
-    auth_rate_limit_max: int
-    auth_rate_limit_window_seconds: int
-    public_media: bool
+    media_provider: str = "local"
+    max_upload_bytes: int = 5 * 1024 * 1024
+    geocoding_provider: str = "local"
+    geocoding_base_url: str = "https://nominatim.openstreetmap.org/search"
+    geocoding_api_key: str | None = None
+    cdn_base_url: str | None = None
+    metrics_enabled: bool = True
+    match_min_score: float = 10.0
+    max_json_body_bytes: int = 1_048_576
+    cors_allowed_origins: tuple[str, ...] = ()
+    auth_rate_limit_max: int = 30
+    auth_rate_limit_window_seconds: int = 300
+    public_media: bool = True
+
+    @classmethod
+    def legacy_construct(
+        cls,
+        *,
+        host: str,
+        port: int,
+        db_path: Path,
+        db_driver: str,
+        database_url: str,
+        db_fallback: bool,
+        app_env: str,
+        stack_profile: str,
+        log_level: str,
+        public_base_url: str,
+        secret_provider: str,
+        seed_demo_data: bool,
+        session_ttl_seconds: int,
+        media_storage_path: Path,
+        media_provider: str = "local",
+        max_upload_bytes: int = 5 * 1024 * 1024,
+        geocoding_provider: str = "local",
+        geocoding_base_url: str = "https://nominatim.openstreetmap.org/search",
+        geocoding_api_key: str | None = None,
+        cdn_base_url: str | None = None,
+        metrics_enabled: bool = True,
+        match_min_score: float = 10.0,
+        max_json_body_bytes: int = 1_048_576,
+        cors_allowed_origins: tuple[str, ...] = (),
+        auth_rate_limit_max: int = 30,
+        auth_rate_limit_window_seconds: int = 300,
+        public_media: bool = True,
+    ) -> "AppConfig":
+        return cls(
+            host=host,
+            port=port,
+            db_path=db_path,
+            db_driver=db_driver,
+            database_url=database_url,
+            db_fallback=db_fallback,
+            app_env=app_env,
+            stack_profile=stack_profile,
+            log_level=log_level,
+            public_base_url=public_base_url,
+            secret_provider=secret_provider,
+            seed_demo_data=seed_demo_data,
+            session_ttl_seconds=session_ttl_seconds,
+            media_storage_path=media_storage_path,
+            media_provider=media_provider,
+            max_upload_bytes=max_upload_bytes,
+            geocoding_provider=geocoding_provider,
+            geocoding_base_url=geocoding_base_url,
+            geocoding_api_key=geocoding_api_key,
+            cdn_base_url=cdn_base_url,
+            metrics_enabled=metrics_enabled,
+            match_min_score=match_min_score,
+            max_json_body_bytes=max_json_body_bytes,
+            cors_allowed_origins=cors_allowed_origins,
+            auth_rate_limit_max=auth_rate_limit_max,
+            auth_rate_limit_window_seconds=auth_rate_limit_window_seconds,
+            public_media=public_media,
+        )
 
     @classmethod
     def from_env(cls) -> "AppConfig":

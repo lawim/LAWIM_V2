@@ -30,7 +30,7 @@ class ConfigValidationTest(TestCase):
     def test_invalid_config_reports_readable_errors(self) -> None:
         from lawim_v2.config import AppConfig
 
-        config = AppConfig(
+        config = AppConfig.legacy_construct(
             host="127.0.0.1",
             port=0,
             db_path=Path("data/runtime/lawim.sqlite3"),
