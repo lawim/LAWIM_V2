@@ -4,6 +4,7 @@ import { AgentsConsolePage } from './AgentsConsole';
 import { BrainConsolePage } from './BrainConsole';
 import { ObservabilityPage } from './ObservabilityPage';
 import { ProductReadinessPage } from './ProductReadinessPage';
+import { InfrastructureMigrationPage } from './InfrastructureMigrationPage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -24,7 +25,8 @@ const navItems = [
   { to: '/source-intelligence', label: 'Source Intelligence' },
   { to: '/settings', label: 'Settings' },
   { to: '/observability', label: 'Observability' },
-  { to: '/readiness', label: 'Readiness' }
+  { to: '/readiness', label: 'Readiness' },
+  { to: '/migration', label: 'Migration' }
 ];
 
 function DashboardPage() {
@@ -234,6 +236,7 @@ export function AdminApp() {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/observability" element={<ObservabilityPage />} />
         <Route path="/readiness" element={<ProductReadinessPage />} />
+        <Route path="/migration" element={<InfrastructureMigrationPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Routes>
     </div>
