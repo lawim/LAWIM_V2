@@ -21,6 +21,18 @@ import { DigitalTwinIntelligencePage } from './DigitalTwinIntelligencePage';
 import { BrainIntelligencePage } from './BrainIntelligencePage';
 import { ConversationIntelligencePage } from './ConversationIntelligencePage';
 import { IntelligenceGovernancePage } from './IntelligenceGovernancePage';
+import { CognitiveCorePage } from './CognitiveCorePage';
+import { PermanentConversationPage } from './PermanentConversationPage';
+import { AdvancedDigitalTwinPage } from './AdvancedDigitalTwinPage';
+import { DistributedIntelligencePage } from './DistributedIntelligencePage';
+import { AutonomousWorkflowPreviewPage } from './AutonomousWorkflowPreviewPage';
+import { CognitiveKnowledgeEvolutionPage } from './CognitiveKnowledgeEvolutionPage';
+import { PredictiveIntelligencePreviewPage } from './PredictiveIntelligencePreviewPage';
+import { AutonomyGovernancePage } from './AutonomyGovernancePage';
+import { CognitiveOperationsPage } from './CognitiveOperationsPage';
+import { Lawim3ConsolePage } from './Lawim3ConsolePage';
+import { FutureCompatibilityPage } from './FutureCompatibilityPage';
+import { Lawim3ConstitutionPage } from './Lawim3ConstitutionPage';
 import { Lawim2ConsolePage } from './Lawim2ConsolePage';
 
 const navItems = [
@@ -60,7 +72,19 @@ const navItems = [
   { to: '/brain-intelligence', label: 'Brain' },
   { to: '/conversation-intelligence', label: 'Conversation' },
   { to: '/intelligence-governance', label: 'Governance' },
-  { to: '/lawim2-console', label: 'LAWIM 2.0' }
+  { to: '/lawim2-console', label: 'LAWIM 2.0' },
+  { to: '/cognitive-core', label: 'Cognitive Core' },
+  { to: '/permanent-conversation', label: 'Persistent Conv' },
+  { to: '/advanced-digital-twin', label: 'Adv. Twin' },
+  { to: '/distributed-intelligence', label: 'Multi-Agent' },
+  { to: '/autonomous-workflow', label: 'Workflow Preview' },
+  { to: '/knowledge-evolution', label: 'Knowledge' },
+  { to: '/predictive-intelligence', label: 'Prediction' },
+  { to: '/autonomy-governance', label: 'Autonomy' },
+  { to: '/cognitive-operations', label: 'Cog. Ops' },
+  { to: '/lawim3-console', label: 'LAWIM 3.0' },
+  { to: '/future-compatibility', label: 'Future' },
+  { to: '/lawim3-constitution', label: 'Constitution' }
 ];
 
 function DashboardPage() {
@@ -288,6 +312,18 @@ export function AdminApp() {
         <Route path="/conversation-intelligence" element={<ConversationIntelligencePage />} />
         <Route path="/intelligence-governance" element={<IntelligenceGovernancePage />} />
         <Route path="/lawim2-console" element={<Lawim2ConsolePage />} />
+        <Route path="/cognitive-core" element={<CognitiveCorePage />} />
+        <Route path="/permanent-conversation" element={<PermanentConversationPage />} />
+        <Route path="/advanced-digital-twin" element={<AdvancedDigitalTwinPage />} />
+        <Route path="/distributed-intelligence" element={<DistributedIntelligencePage />} />
+        <Route path="/autonomous-workflow" element={<AutonomousWorkflowPreviewPage />} />
+        <Route path="/knowledge-evolution" element={<CognitiveKnowledgeEvolutionPage />} />
+        <Route path="/predictive-intelligence" element={<PredictiveIntelligencePreviewPage />} />
+        <Route path="/autonomy-governance" element={<AutonomyGovernancePage />} />
+        <Route path="/cognitive-operations" element={<CognitiveOperationsPage />} />
+        <Route path="/lawim3-console" element={<Lawim3ConsolePage />} />
+        <Route path="/future-compatibility" element={<FutureCompatibilityPage />} />
+        <Route path="/lawim3-constitution" element={<Lawim3ConstitutionPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Routes>
     </div>
