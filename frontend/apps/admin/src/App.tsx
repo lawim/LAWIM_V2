@@ -8,6 +8,12 @@ import { InfrastructureMigrationPage } from './InfrastructureMigrationPage';
 import { DeploymentOrchestratorPage } from './DeploymentOrchestratorPage';
 import { AcceptanceDashboardPage } from './AcceptanceDashboardPage';
 import { ReleaseZPackagePage } from './ReleaseZPackagePage';
+import { PerformancePage } from './PerformancePage';
+import { SecurityPage as SecurityPlatformPage } from './SecurityPage';
+import { ObservabilityPage as ObservabilityPlatformPage } from './ObservabilityPage';
+import { IntegrationsPage } from './IntegrationsPage';
+import { QualityPage } from './QualityPage';
+import { OperationsPage as OperationsPlatformPage } from './OperationsPage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -32,7 +38,13 @@ const navItems = [
   { to: '/migration', label: 'Migration' },
   { to: '/deployment-orchestrator', label: 'Orchestrator' },
   { to: '/acceptance', label: 'Acceptance' },
-  { to: '/release-z', label: 'Release Z' }
+  { to: '/release-z', label: 'Release Z' },
+  { to: '/performance', label: 'Performance' },
+  { to: '/security-platform', label: 'Security Platform' },
+  { to: '/observability-platform', label: 'Observability Platform' },
+  { to: '/integrations', label: 'Integrations' },
+  { to: '/quality', label: 'Quality' },
+  { to: '/operations-platform', label: 'Ops Center' }
 ];
 
 function DashboardPage() {
@@ -246,6 +258,12 @@ export function AdminApp() {
         <Route path="/deployment-orchestrator" element={<DeploymentOrchestratorPage />} />
         <Route path="/acceptance" element={<AcceptanceDashboardPage />} />
         <Route path="/release-z" element={<ReleaseZPackagePage />} />
+        <Route path="/performance" element={<PerformancePage />} />
+        <Route path="/security-platform" element={<SecurityPlatformPage />} />
+        <Route path="/observability-platform" element={<ObservabilityPlatformPage />} />
+        <Route path="/integrations" element={<IntegrationsPage />} />
+        <Route path="/quality" element={<QualityPage />} />
+        <Route path="/operations-platform" element={<OperationsPlatformPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Routes>
     </div>

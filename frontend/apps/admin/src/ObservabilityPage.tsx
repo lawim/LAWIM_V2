@@ -10,10 +10,11 @@ const panels = [
 export function ObservabilityPage() {
   return (
     <PageShell
-      eyebrow="Observability"
-      title="Observability console"
+      eyebrow="Program AC"
+      title="Observability Center"
       description="Visualize execution health, workflow steps, and decision traces across LAWIM modules."
     >
+      <h2 className="sr-only">Observability console</h2>
       <div className="grid gap-6 md:grid-cols-2">
         {panels.map((panel) => (
           <Card key={panel.name} title={panel.name} description={panel.detail}>
