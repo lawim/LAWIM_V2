@@ -167,6 +167,19 @@ class StorageOptimizer:
 
 
 @dataclass(slots=True)
+class ConversationArchivePolicy:
+    drive_target: str = "drive-8"
+    retention_days: int = 365
+    use_thumbnails: bool = True
+
+
+@dataclass(slots=True)
+class ConversationRestorePolicy:
+    allow_mock_restore: bool = True
+    require_media_id: bool = True
+
+
+@dataclass(slots=True)
 class SetupWizardConfiguration:
     architecture: str
     backup_center_enabled: bool
@@ -251,6 +264,8 @@ class ExternalDiskProvider:
 class StorageOrchestrator:
     providers: list[StorageProvider]
     policy: StorageOrchestratorPolicy = field(default_factory=StorageOrchestratorPolicy)
+    conversation_policy: ConversationArchivePolicy = field(default_factory=ConversationArchivePolicy)
+    restore_policy: ConversationRestorePolicy = field(default_factory=ConversationRestorePolicy)
 
     def __post_init__(self) -> None:
         provider_names = {provider.name for provider in self.providers}
@@ -272,10 +287,27 @@ class StorageOrchestrator:
     def register_provider(self, provider: StorageProvider) -> None:
         self.providers.append(provider)
 
+    def resolve_conversation_archive_access(self, *, conversation_id: int, kind: str = "conversation_archive") -> dict[str, Any]:
+        return {
+            "conversation_id": conversation_id,
+            "kind": kind,
+            "provider": self.conversation_policy.drive_target,
+            "temporary_access_url": f"https://mock.example/{self.conversation_policy.drive_target}/{conversation_id}",
+            "ttl_seconds": self.policy.temporary_access_ttl_seconds,
+            "policy": {
+                "drive_target": self.conversation_policy.drive_target,
+                "retention_days": self.conversation_policy.retention_days,
+                "use_thumbnails": self.conversation_policy.use_thumbnails,
+                "require_media_id": self.restore_policy.require_media_id,
+            },
+        }
+
 
 __all__ = [
     "BackupCenter",
     "BackupCenterProvider",
+    "ConversationArchivePolicy",
+    "ConversationRestorePolicy",
     "BackupJob",
     "BackupManager",
     "BandwidthPolicy",

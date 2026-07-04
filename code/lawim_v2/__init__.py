@@ -2,6 +2,27 @@
 
 from __future__ import annotations
 
-__all__ = ["__version__"]
+from .conversation_registry import (
+    ConversationArchiveManager,
+    ConversationArchiveManifest,
+    ConversationLifecycleEngine,
+    ConversationRegistry,
+    ConversationRestoreEngine,
+    ConversationStorageProvider,
+    OVHStorageOptimizer,
+    StorageOrchestrator,
+)
+
+__all__ = [
+    "__version__",
+    "ConversationArchiveManager",
+    "ConversationArchiveManifest",
+    "ConversationLifecycleEngine",
+    "ConversationRegistry",
+    "ConversationRestoreEngine",
+    "ConversationStorageProvider",
+    "OVHStorageOptimizer",
+    "StorageOrchestrator",
+]
 
 __version__ = "0.1.0"

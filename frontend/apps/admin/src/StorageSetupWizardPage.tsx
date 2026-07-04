@@ -2,8 +2,10 @@ import { Button, Card, PageShell } from '@ui';
 
 const steps = [
   'Architecture overview',
+  'Conversation Registry',
   'Backup Center',
   'Google Drive x10',
+  'Drive 8 conversation archive',
   'External disk',
   'Lifecycle policies',
   'Optimization',
@@ -30,9 +32,11 @@ export function StorageSetupWizardPage() {
         <Card title="Configuration summary" description="No secrets are stored; all sensitive inputs remain placeholders.">
           <div className="mt-4 space-y-2 text-sm text-slate-300">
             <div className="rounded-lg border border-slate-800 px-3 py-2">Architecture: OVH VPS + Backup Center + 10 Google Drive + external disk</div>
+            <div className="rounded-lg border border-slate-800 px-3 py-2">Conversation Registry: deduplicated ConversationID + MediaID links</div>
+            <div className="rounded-lg border border-slate-800 px-3 py-2">Drive 8: conversation archives and archive index</div>
             <div className="rounded-lg border border-slate-800 px-3 py-2">Lifecycle: hot, warm, cold, archived</div>
             <div className="rounded-lg border border-slate-800 px-3 py-2">Optimization: compression, deduplication, bandwidth policy</div>
-            <div className="rounded-lg border border-slate-800 px-3 py-2">Health checks: mock-ready placeholders only</div>
+            <div className="rounded-lg border border-slate-800 px-3 py-2">Health checks: mock-ready placeholders only, no real secrets</div>
           </div>
         </Card>
       </div>

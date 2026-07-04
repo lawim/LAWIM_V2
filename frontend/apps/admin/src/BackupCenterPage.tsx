@@ -8,7 +8,7 @@ const drives = [
   { name: 'Drive 5', kind: 'Documents', used: '19%', status: 'healthy' },
   { name: 'Drive 6', kind: 'PostgreSQL + registry', used: '14%', status: 'healthy' },
   { name: 'Drive 7', kind: 'Cold archive', used: '8%', status: 'healthy' },
-  { name: 'Drive 8', kind: 'Overflow', used: '11%', status: 'warning' },
+  { name: 'Drive 8', kind: 'Conversation archives + index', used: '11%', status: 'warning' },
   { name: 'Drive 9', kind: 'Quarantine/restore', used: '6%', status: 'healthy' },
   { name: 'Drive 10', kind: 'Critical replication', used: '13%', status: 'healthy' },
 ];
@@ -46,6 +46,7 @@ export function BackupCenterPage() {
             <div className="flex items-center justify-between rounded-lg border border-slate-800 px-3 py-2"><span>Last backup</span><Badge variant="success">2 min ago</Badge></div>
             <div className="flex items-center justify-between rounded-lg border border-slate-800 px-3 py-2"><span>Last sync</span><Badge variant="info">7 min ago</Badge></div>
             <div className="flex items-center justify-between rounded-lg border border-slate-800 px-3 py-2"><span>Checksum alerts</span><Badge variant="warning">1</Badge></div>
+            <div className="flex items-center justify-between rounded-lg border border-slate-800 px-3 py-2"><span>Conversation archives</span><Badge variant="info">Drive 8 ready</Badge></div>
             <div className="flex items-center justify-between rounded-lg border border-slate-800 px-3 py-2"><span>Hot/Warm/Cold</span><Badge variant="success">Balanced</Badge></div>
           </div>
         </Card>

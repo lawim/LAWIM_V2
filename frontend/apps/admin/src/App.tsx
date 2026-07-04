@@ -36,6 +36,9 @@ import { Lawim3ConstitutionPage } from './Lawim3ConstitutionPage';
 import { Lawim2ConsolePage } from './Lawim2ConsolePage';
 import { BackupCenterPage } from './BackupCenterPage';
 import { BackupManagerPage } from './BackupManagerPage';
+import { ConversationRegistryPage } from './ConversationRegistryPage';
+import { ArchiveCenterPage } from './ArchiveCenterPage';
+import { StorageHealthPage } from './StorageHealthPage';
 import { StorageSetupWizardPage } from './StorageSetupWizardPage';
 
 const navItems = [
@@ -89,6 +92,9 @@ const navItems = [
   { to: '/future-compatibility', label: 'Future' },
   { to: '/lawim3-constitution', label: 'Constitution' },
   { to: '/admin/backup-center', label: 'Backup Center' },
+  { to: '/admin/storage-health', label: 'Storage Health' },
+  { to: '/admin/conversation-registry', label: 'Conversation Registry' },
+  { to: '/admin/archive-center', label: 'Archive Center' },
   { to: '/admin/backup-manager', label: 'Backup Manager' },
   { to: '/admin/storage-setup', label: 'Setup Wizard' }
 ];
@@ -331,6 +337,9 @@ export function AdminApp() {
         <Route path="/future-compatibility" element={<FutureCompatibilityPage />} />
         <Route path="/lawim3-constitution" element={<Lawim3ConstitutionPage />} />
         <Route path="/admin/backup-center" element={<BackupCenterPage />} />
+        <Route path="/admin/storage-health" element={<StorageHealthPage />} />
+        <Route path="/admin/conversation-registry" element={<ConversationRegistryPage />} />
+        <Route path="/admin/archive-center" element={<ArchiveCenterPage />} />
         <Route path="/admin/backup-manager" element={<BackupManagerPage />} />
         <Route path="/admin/storage-setup" element={<StorageSetupWizardPage />} />
         <Route path="*" element={<DashboardPage />} />
