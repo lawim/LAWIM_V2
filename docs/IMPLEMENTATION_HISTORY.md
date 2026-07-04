@@ -15,3 +15,10 @@
 ## Principe de conservation
 
 L’historique de code et de tags reste intact. Seule la classification documentaire est harmonisée.
+
+## Complément transverse documenté
+
+- Module langues LAWIM_V2 intégré sous forme de scaffold minimal.
+- Langues officielles: `fr`, `en`, `pcm`.
+- Fallback français.
+- Aucun impact sur le schéma de base de données.

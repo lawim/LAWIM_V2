@@ -12,3 +12,10 @@
 | AAJ | Production Deployment | À démarrer |
 
 La phase AAD est close. La prochaine release officielle est AAE.
+
+## Module langues prêt avant migration
+
+- Le module langues LAWIM_V2 est intégré, minimal et non invasif.
+- Langues officielles: `fr`, `en`, `pcm`.
+- Le fallback français est actif par défaut.
+- Aucun impact base de données ni migration.
