@@ -261,6 +261,18 @@ This matrix traces every functional requirement through release programs to impl
 | AY | release-program-ay | dd88a138 | develop/2.0-intelligent-platform | ✅ 🚀 |
 | AZ | release-program-az | dd88a138 | develop/2.0-intelligent-platform | ✅ 🚀 |
 
+### Release classification normalisée
+
+| Release | Statut | Date | Commit | Tag | Objectif | État |
+|---|---|---|---|---|---|---|
+| AAD | Clôturée | 2026-07-04 | current | — | Microsoft Entra ID / Identity Provider / Authentication Scaffold | ✅ |
+| AAE | Planifiée | 2026-07-04 | current | release-program-aae-bootstrap | Production Security & Secrets | 📝 |
+| AAF | Planifiée | 2026-07-04 | current | — | Migration OVH | 📝 |
+| AAG | Planifiée | 2026-07-04 | current | — | Monitoring & Observability | 📝 |
+| AAH | Planifiée | 2026-07-04 | current | — | Performance & Load Testing | 📝 |
+| AAI | Planifiée | 2026-07-04 | current | — | Go Live Certification | 📝 |
+| AAJ | Planifiée | 2026-07-04 | current | — | Production Deployment | 📝 |
+
 **Status:** 27 release tags complete ✅ 🚀
 
 ---
