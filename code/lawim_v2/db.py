@@ -1140,6 +1140,12 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
             ).to_dict(),
         }
 
+    def _infer_provider_resource_type(self, kind: str) -> str:
+        normalized = (kind or "image").strip().lower()
+        if normalized in {"image", "video", "document", "audio", "archive", "other"}:
+            return normalized
+        return "image"
+
     def create_media(
         self,
         *,
@@ -1150,6 +1156,10 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         storage_path: str | None = None,
         provider_name: str | None = None,
         provider_object_id: str | None = None,
+        provider_media_id: str | None = None,
+        provider_public_id: str | None = None,
+        provider_resource_type: str | None = None,
+        provider_storage_key: str | None = None,
         mime_type: str | None = None,
         size_bytes: int | None = None,
         thumbnail_url: str | None = None,
@@ -1164,6 +1174,9 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         metadata_json = normalize_media_metadata(metadata)
         effective_provider_name = provider_name or "local"
         effective_provider_object_id = provider_object_id
+        effective_provider_public_id = provider_public_id or provider_object_id
+        effective_provider_resource_type = provider_resource_type or self._infer_provider_resource_type(kind)
+        effective_provider_storage_key = provider_storage_key or storage_path
         effective_lifecycle_state = lifecycle_state or "active"
         effective_backup_state = backup_state or "available"
         self.get_property(property_id)
@@ -1175,31 +1188,42 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         if size_bytes is not None and size_bytes < 0:
             raise ValidationError("size_bytes must be non-negative")
         with self._transaction() as conn:
-            cursor = conn.execute(
-                """
-                INSERT INTO media
-                    (property_id, kind, url, caption, storage_path, provider_name, provider_object_id, mime_type, size_bytes, thumbnail_url,
-                     metadata_json, position, lifecycle_state, backup_state, version, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
-                """,
-                (
-                    property_id,
-                    kind,
-                    url,
-                    caption,
-                    storage_path,
-                    effective_provider_name,
-                    effective_provider_object_id,
-                    mime_type,
-                    size_bytes,
-                    thumbnail_url or build_thumbnail_url(url, caption),
-                    metadata_json,
-                    position,
-                    effective_lifecycle_state,
-                    effective_backup_state,
-                    utcnow(),
-                ),
+            media_columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(media)").fetchall()}
+            insert_columns: list[str] = []
+            insert_values: list[object] = []
+
+            for column_name, value in (
+                ("property_id", property_id),
+                ("kind", kind),
+                ("url", url),
+                ("caption", caption),
+                ("storage_path", storage_path),
+                ("provider_name", effective_provider_name),
+                ("provider_media_id", provider_media_id),
+                ("provider_public_id", effective_provider_public_id),
+                ("provider_resource_type", effective_provider_resource_type),
+                ("provider_storage_key", effective_provider_storage_key),
+                ("provider_object_id", effective_provider_object_id),
+                ("mime_type", mime_type),
+                ("size_bytes", size_bytes),
+                ("thumbnail_url", thumbnail_url or build_thumbnail_url(url, caption)),
+                ("metadata_json", metadata_json),
+                ("position", position),
+                ("lifecycle_state", effective_lifecycle_state),
+                ("backup_state", effective_backup_state),
+                ("version", 1),
+                ("created_at", utcnow()),
+            ):
+                if column_name in media_columns:
+                    insert_columns.append(column_name)
+                    insert_values.append(value)
+
+            insert_sql = (
+                "INSERT INTO media "
+                f"({', '.join(insert_columns)}) "
+                f"VALUES ({', '.join('?' for _ in insert_columns)})"
             )
+            cursor = conn.execute(insert_sql, tuple(insert_values))
         media_row = self.get_media(int(cursor.lastrowid))
         self.record_event("media_created", {"property_id": property_id, "kind": kind, "media_id": media_row["id"]})
         return media_row

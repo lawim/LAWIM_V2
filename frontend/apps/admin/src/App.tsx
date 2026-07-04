@@ -34,6 +34,9 @@ import { Lawim3ConsolePage } from './Lawim3ConsolePage';
 import { FutureCompatibilityPage } from './FutureCompatibilityPage';
 import { Lawim3ConstitutionPage } from './Lawim3ConstitutionPage';
 import { Lawim2ConsolePage } from './Lawim2ConsolePage';
+import { BackupCenterPage } from './BackupCenterPage';
+import { BackupManagerPage } from './BackupManagerPage';
+import { StorageSetupWizardPage } from './StorageSetupWizardPage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -84,7 +87,10 @@ const navItems = [
   { to: '/cognitive-operations', label: 'Cog. Ops' },
   { to: '/lawim3-console', label: 'LAWIM 3.0' },
   { to: '/future-compatibility', label: 'Future' },
-  { to: '/lawim3-constitution', label: 'Constitution' }
+  { to: '/lawim3-constitution', label: 'Constitution' },
+  { to: '/admin/backup-center', label: 'Backup Center' },
+  { to: '/admin/backup-manager', label: 'Backup Manager' },
+  { to: '/admin/storage-setup', label: 'Setup Wizard' }
 ];
 
 function DashboardPage() {
@@ -324,6 +330,9 @@ export function AdminApp() {
         <Route path="/lawim3-console" element={<Lawim3ConsolePage />} />
         <Route path="/future-compatibility" element={<FutureCompatibilityPage />} />
         <Route path="/lawim3-constitution" element={<Lawim3ConstitutionPage />} />
+        <Route path="/admin/backup-center" element={<BackupCenterPage />} />
+        <Route path="/admin/backup-manager" element={<BackupManagerPage />} />
+        <Route path="/admin/storage-setup" element={<StorageSetupWizardPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Routes>
     </div>

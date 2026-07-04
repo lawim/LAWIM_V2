@@ -8,6 +8,9 @@ import { AdminApp } from '../apps/admin/src/App';
 import { WorkflowOrchestratorPage } from '../apps/web/src/WorkflowOrchestratorPage';
 import { ObservabilityPage } from '../apps/admin/src/ObservabilityPage';
 import { ProductReadinessPage } from '../apps/admin/src/ProductReadinessPage';
+import { BackupCenterPage } from '../apps/admin/src/BackupCenterPage';
+import { BackupManagerPage } from '../apps/admin/src/BackupManagerPage';
+import { StorageSetupWizardPage } from '../apps/admin/src/StorageSetupWizardPage';
 
 function renderWithProviders(ui: React.ReactElement) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -48,6 +51,20 @@ describe('LAWIM frontend shell', () => {
     expect(screen.getByRole('heading', { name: /workflow orchestration/i })).toBeInTheDocument();
     expect(screen.getAllByText(/status: ready/i)).toHaveLength(3);
     expect(screen.getAllByText(/escalation path/i)).toHaveLength(2);
+  });
+
+  it('renders the backup center, manager, and setup wizard experiences', () => {
+    render(
+      <>
+        <BackupCenterPage />
+        <BackupManagerPage />
+        <StorageSetupWizardPage />
+      </>
+    );
+
+    expect(screen.getByRole('heading', { name: /admin backup and storage control center/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /simplified manager console/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /mock setup for the aac-b2 storage platform/i })).toBeInTheDocument();
   });
 
   it('renders the observability and readiness panels', () => {

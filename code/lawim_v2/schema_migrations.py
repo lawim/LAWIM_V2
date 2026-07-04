@@ -69,6 +69,10 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
     media_columns = {
         "storage_path": "TEXT",
         "provider_name": "TEXT NOT NULL DEFAULT 'local'",
+        "provider_media_id": "TEXT",
+        "provider_public_id": "TEXT",
+        "provider_resource_type": "TEXT DEFAULT 'image'",
+        "provider_storage_key": "TEXT",
         "provider_object_id": "TEXT",
         "mime_type": "TEXT",
         "size_bytes": "INTEGER",
@@ -109,6 +113,34 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
         UPDATE media
         SET metadata_json = '{}'
         WHERE metadata_json IS NULL OR TRIM(metadata_json) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE media
+        SET provider_name = 'local'
+        WHERE provider_name IS NULL OR TRIM(provider_name) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE media
+        SET provider_resource_type = 'image'
+        WHERE provider_resource_type IS NULL OR TRIM(provider_resource_type) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE media
+        SET lifecycle_state = 'active'
+        WHERE lifecycle_state IS NULL OR TRIM(lifecycle_state) = ''
+        """
+    )
+    conn.execute(
+        """
+        UPDATE media
+        SET backup_state = 'available'
+        WHERE backup_state IS NULL OR TRIM(backup_state) = ''
         """
     )
     conn.execute(
