@@ -5,6 +5,8 @@ import { BrainConsolePage } from './BrainConsole';
 import { ObservabilityPage } from './ObservabilityPage';
 import { ProductReadinessPage } from './ProductReadinessPage';
 import { InfrastructureMigrationPage } from './InfrastructureMigrationPage';
+import { DeploymentOrchestratorPage } from './DeploymentOrchestratorPage';
+import { AcceptanceDashboardPage } from './AcceptanceDashboardPage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -26,7 +28,9 @@ const navItems = [
   { to: '/settings', label: 'Settings' },
   { to: '/observability', label: 'Observability' },
   { to: '/readiness', label: 'Readiness' },
-  { to: '/migration', label: 'Migration' }
+  { to: '/migration', label: 'Migration' },
+  { to: '/deployment-orchestrator', label: 'Orchestrator' },
+  { to: '/acceptance', label: 'Acceptance' }
 ];
 
 function DashboardPage() {
@@ -237,6 +241,8 @@ export function AdminApp() {
         <Route path="/observability" element={<ObservabilityPage />} />
         <Route path="/readiness" element={<ProductReadinessPage />} />
         <Route path="/migration" element={<InfrastructureMigrationPage />} />
+        <Route path="/deployment-orchestrator" element={<DeploymentOrchestratorPage />} />
+        <Route path="/acceptance" element={<AcceptanceDashboardPage />} />
         <Route path="*" element={<DashboardPage />} />
       </Routes>
     </div>
