@@ -19,7 +19,9 @@ export default defineConfig({
       '@digital-twin': path.resolve(__dirname, './packages/digital-twin/src/index.ts'),
       '@learning': path.resolve(__dirname, './packages/learning/src/index.ts'),
       '@agents': path.resolve(__dirname, './packages/agents/src/index.ts'),
-      '@knowledge': path.resolve(__dirname, './packages/knowledge/src/index.ts')
+      '@knowledge': path.resolve(__dirname, './packages/knowledge/src/index.ts'),
+      '@workflows': path.resolve(__dirname, './packages/workflows/src/index.ts'),
+      '@workflows/*': path.resolve(__dirname, './packages/workflows/src/*')
     }
   },
   test: {
