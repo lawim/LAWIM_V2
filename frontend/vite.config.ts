@@ -78,10 +78,31 @@ export default defineConfig({
     }
   },
   build: {
+    target: 'es2020',
+    sourcemap: false,
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 800,
     rollupOptions: {
       input: {
         web: path.resolve(__dirname, 'apps/web/index.html'),
         admin: path.resolve(__dirname, 'apps/admin/index.html')
+      },
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-router')) return 'vendor-router';
+            if (id.includes('react') || id.includes('react-dom')) return 'vendor-react';
+            if (id.includes('@tanstack')) return 'vendor-query';
+            if (id.includes('workbox') || id.includes('vite-plugin-pwa')) return 'vendor-pwa';
+            return 'vendor';
+          }
+          if (id.includes('/packages/ui/')) return 'ui';
+          if (id.includes('/packages/api-sdk/')) return 'api-sdk';
+          if (id.includes('/packages/auth/')) return 'auth';
+          if (id.includes('/packages/brain/')) return 'brain';
+          if (id.includes('/packages/conversation/')) return 'conversation';
+          if (id.includes('/packages/workflows/')) return 'workflows';
+        }
       }
     }
   },

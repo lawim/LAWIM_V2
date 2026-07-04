@@ -1,0 +1,1 @@
+var i=Object.defineProperty;var l=(e,s,r)=>s in e?i(e,s,{enumerable:!0,configurable:!0,writable:!0,value:r}):e[s]=r;var t=(e,s,r)=>l(e,typeof s!="symbol"?s+"":s,r);class o{constructor(){t(this,"modules",[])}register(s){this.modules.push(s)}list(){return this.modules}}export{o as B};
