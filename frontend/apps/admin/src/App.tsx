@@ -7,6 +7,7 @@ import { ProductReadinessPage } from './ProductReadinessPage';
 import { InfrastructureMigrationPage } from './InfrastructureMigrationPage';
 import { DeploymentOrchestratorPage } from './DeploymentOrchestratorPage';
 import { AcceptanceDashboardPage } from './AcceptanceDashboardPage';
+import { ReleaseZPackagePage } from './ReleaseZPackagePage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -30,7 +31,8 @@ const navItems = [
   { to: '/readiness', label: 'Readiness' },
   { to: '/migration', label: 'Migration' },
   { to: '/deployment-orchestrator', label: 'Orchestrator' },
-  { to: '/acceptance', label: 'Acceptance' }
+  { to: '/acceptance', label: 'Acceptance' },
+  { to: '/release-z', label: 'Release Z' }
 ];
 
 function DashboardPage() {
@@ -243,6 +245,7 @@ export function AdminApp() {
         <Route path="/migration" element={<InfrastructureMigrationPage />} />
         <Route path="/deployment-orchestrator" element={<DeploymentOrchestratorPage />} />
         <Route path="/acceptance" element={<AcceptanceDashboardPage />} />
+        <Route path="/release-z" element={<ReleaseZPackagePage />} />
         <Route path="*" element={<DashboardPage />} />
       </Routes>
     </div>

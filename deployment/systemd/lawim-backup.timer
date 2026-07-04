@@ -1,0 +1,10 @@
+[Unit]
+Description=LAWIM backup timer
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+Unit=lawim-backup.service
+
+[Install]
+WantedBy=timers.target

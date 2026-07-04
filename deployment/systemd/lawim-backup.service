@@ -1,0 +1,7 @@
+[Unit]
+Description=LAWIM backup service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/lawim/deployment/backup/backup.sh
+WorkingDirectory=/opt/lawim
