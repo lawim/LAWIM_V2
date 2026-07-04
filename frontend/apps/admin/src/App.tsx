@@ -14,6 +14,14 @@ import { ObservabilityPage as ObservabilityPlatformPage } from './ObservabilityP
 import { IntegrationsPage } from './IntegrationsPage';
 import { QualityPage } from './QualityPage';
 import { OperationsPage as OperationsPlatformPage } from './OperationsPage';
+import { MemoryEvolutionPage } from './MemoryEvolutionPage';
+import { MonthlyReviewPage } from './MonthlyReviewPage';
+import { SupervisedLearningPage } from './SupervisedLearningPage';
+import { DigitalTwinIntelligencePage } from './DigitalTwinIntelligencePage';
+import { BrainIntelligencePage } from './BrainIntelligencePage';
+import { ConversationIntelligencePage } from './ConversationIntelligencePage';
+import { IntelligenceGovernancePage } from './IntelligenceGovernancePage';
+import { Lawim2ConsolePage } from './Lawim2ConsolePage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -44,7 +52,15 @@ const navItems = [
   { to: '/observability-platform', label: 'Observability Platform' },
   { to: '/integrations', label: 'Integrations' },
   { to: '/quality', label: 'Quality' },
-  { to: '/operations-platform', label: 'Ops Center' }
+  { to: '/operations-platform', label: 'Ops Center' },
+  { to: '/memory-evolution', label: 'Memory' },
+  { to: '/monthly-review', label: 'Monthly Review' },
+  { to: '/supervised-learning', label: 'Learning' },
+  { to: '/digital-twin-intelligence', label: 'Digital Twin' },
+  { to: '/brain-intelligence', label: 'Brain' },
+  { to: '/conversation-intelligence', label: 'Conversation' },
+  { to: '/intelligence-governance', label: 'Governance' },
+  { to: '/lawim2-console', label: 'LAWIM 2.0' }
 ];
 
 function DashboardPage() {
@@ -264,6 +280,14 @@ export function AdminApp() {
         <Route path="/integrations" element={<IntegrationsPage />} />
         <Route path="/quality" element={<QualityPage />} />
         <Route path="/operations-platform" element={<OperationsPlatformPage />} />
+        <Route path="/memory-evolution" element={<MemoryEvolutionPage />} />
+        <Route path="/monthly-review" element={<MonthlyReviewPage />} />
+        <Route path="/supervised-learning" element={<SupervisedLearningPage />} />
+        <Route path="/digital-twin-intelligence" element={<DigitalTwinIntelligencePage />} />
+        <Route path="/brain-intelligence" element={<BrainIntelligencePage />} />
+        <Route path="/conversation-intelligence" element={<ConversationIntelligencePage />} />
+        <Route path="/intelligence-governance" element={<IntelligenceGovernancePage />} />
+        <Route path="/lawim2-console" element={<Lawim2ConsolePage />} />
         <Route path="*" element={<DashboardPage />} />
       </Routes>
     </div>
