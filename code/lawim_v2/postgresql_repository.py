@@ -32,6 +32,32 @@ _POSTGRESQL_REPLACE_CONFLICT_TARGETS: dict[str, tuple[str, ...]] = {
 }
 
 
+def _extract_postgresql_id_returning_tables() -> frozenset[str]:
+    tables: set[str] = set()
+    table_pattern = re.compile(r"^\s*CREATE TABLE IF NOT EXISTS\s+([A-Za-z_][A-Za-z0-9_]*)", re.IGNORECASE | re.DOTALL)
+    id_pattern = re.compile(r"^\s*id\s+(?:SERIAL|BIGSERIAL|SMALLSERIAL|INTEGER|INT|BIGINT)\b", re.IGNORECASE | re.MULTILINE)
+    for statement in POSTGRESQL_INIT_STATEMENTS:
+        match = table_pattern.match(statement)
+        if match and id_pattern.search(statement):
+            tables.add(match.group(1))
+    return frozenset(tables)
+
+
+_POSTGRESQL_ID_RETURNING_TABLES = _extract_postgresql_id_returning_tables()
+
+
+def _should_return_postgresql_id(sql: str) -> bool:
+    if "RETURNING" in sql.upper():
+        return False
+    match = re.match(r"^\s*INSERT\s+INTO\s+([A-Za-z_][A-Za-z0-9_]*)\b", sql, re.IGNORECASE)
+    if not match:
+        return False
+    table = match.group(1)
+    if table == "schema_meta":
+        return False
+    return table in _POSTGRESQL_ID_RETURNING_TABLES
+
+
 def _adapt_sql(sql: str) -> str:
     adapted = _normalize_postgresql_create_table(sql)
     adapted = adapted.replace("INSERT OR REPLACE INTO schema_meta", "INSERT INTO schema_meta")
@@ -209,25 +235,14 @@ class _PgConnection:
 
     def execute(self, sql: str, params: tuple[object, ...] = ()) -> _PgCursor:
         adapted = _adapt_sql(sql)
-        add_returning = (
-            adapted.strip().upper().startswith("INSERT INTO")
-            and "RETURNING" not in adapted.upper()
-            and "schema_meta" not in adapted.lower()
-        )
+        add_returning = _should_return_postgresql_id(adapted)
         if add_returning:
             adapted = adapted.rstrip().rstrip(";") + " RETURNING id"
         run_kwargs = {f"__p{i}": value for i, value in enumerate(params)}
         try:
             rows = list(self._conn.run(adapted, **run_kwargs) or [])
         except Exception as exc:
-            if add_returning:
-                adapted = _adapt_sql(sql)
-                try:
-                    rows = list(self._conn.run(adapted, **run_kwargs) or [])
-                except Exception as retry_exc:
-                    raise _map_pg_exception(retry_exc) from retry_exc
-            else:
-                raise _map_pg_exception(exc) from exc
+            raise _map_pg_exception(exc) from exc
         columns_meta = self._conn.columns or []
         columns = [col["name"] if isinstance(col, dict) else str(col) for col in columns_meta]
         last_id = None

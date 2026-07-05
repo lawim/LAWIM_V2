@@ -3,6 +3,8 @@
 ## Local only
 
 - docs, reports, prompts, tests, notes, roadmaps, and governance files
+- the local operating memory under `OPS/`
+- the local operating notes under `ops/ovh/`
 - raw LAWIM and LAWIMA source snapshots used for analysis
 - internal comparison reports under `reports/comparison/` and the storage prompt `prompts/Storage_organisation_lawim.md`
 - the local migration scaffold `code/lawim_v2/migration.py` and its validation harness `tests/test_migration_framework.py`

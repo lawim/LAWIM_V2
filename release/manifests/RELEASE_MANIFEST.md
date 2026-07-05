@@ -3,8 +3,8 @@
 ## Snapshot
 
 - Release family: LAWIM_V2 Gate 1
-- Snapshot id: `release-program-aae-bootstrap-2-gc3ccd0ac`
-- Source commit: `c3ccd0ac`
+- Snapshot id: `release-program-aae-bootstrap-2-bc46a686`
+- Source commit: `bc46a686`
 - Git tag: `pre-ovh-final`
 - Purpose: reproducible release projection before Gate 2 migration
 
@@ -22,6 +22,8 @@
 - `manifests/` for packaging rules and security classification
 - `checksums/` for materialized SHA256 files
 - `deployment/` for operator-facing procedures
+- `OPS/` for the certified long-lived local operations memory
+- `ops/ovh/` for local-only server pilot notes
 
 ## Geo Intelligence closure
 
@@ -57,6 +59,8 @@
 - `docs/`
 - `reports/`
 - `prompts/`
+- `ops/ovh/`
+- `OPS/`
 - `tests/`
 - caches, logs, temp files, backups, archives, and generated build outputs
 - local-only migration scaffold files

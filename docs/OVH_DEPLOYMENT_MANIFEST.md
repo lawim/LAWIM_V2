@@ -33,6 +33,8 @@ Les serveurs distribues conservent uniquement les donnees d'execution:
 Le depot maitre conserve tout ce qui sert a la certification, a l'analyse et a la gouvernance:
 
 - [`docs/`](../docs/), hors manifestes de deploiement;
+- le patrimoine d'exploitation local [`OPS/`](../OPS/) et le workspace local [`ops/ovh/`];
+- le dossier d'exploitation local [`ops/ovh/`](../ops/ovh/) et ses notes de pilotage serveur;
 - [`reports/`](../reports/);
 - les rapports de comparaison sous [`reports/comparison/`](../reports/comparison/);
 - [`prompts/`](../prompts/);
@@ -43,6 +45,14 @@ Le depot maitre conserve tout ce qui sert a la certification, a l'analyse et a l
 - [`release/`](../release/), qui porte la projection et la documentation de release;
 - les scripts de validation, de benchmark et de generation de tests;
 - le scaffold local de migration dans [`code/lawim_v2/migration.py`](../code/lawim_v2/migration.py), son harness de validation [`tests/test_migration_framework.py`](../tests/test_migration_framework.py) et sa documentation [`docs/MIGRATION_FRAMEWORK.md`](../docs/MIGRATION_FRAMEWORK.md), tant que la phase AAF n'est pas lancee.
+
+## Operational notes for the OVH target
+
+- The target server uses Docker for the application, PostgreSQL and Redis.
+- Nginx is installed natively on Ubuntu and proxies the runtime stack on the server.
+- The production root is `/opt/lawim` with persistent data under `/opt/lawim/data`, `/opt/lawim/shared`, `/opt/lawim/logs` and `/opt/lawim/backups`.
+- The local `OPS/` archive remains in the master repository only.
+- The temporary validation host can use the IPv4 address until DNS and TLS are finalized.
 
 ## Archived on external disk
 

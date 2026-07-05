@@ -60,9 +60,12 @@ Keep from `deployment/environments/production/` only example values.
 ## Explicit exclusions
 
 - `release/`
+- `OPS/`
 - `docs/`
 - `reports/`
 - `prompts/`
+- `ops/ovh/`
+- `OPS/`
 - `tests/`
 - `scripts/validate-packaging.sh`
 - `scripts/benchmark_runtime.py`
