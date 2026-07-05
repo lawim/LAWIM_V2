@@ -40,7 +40,7 @@ package-dir = { "" = "code" }
 where = ["code"]
 
 [tool.setuptools.package-data]
-lawim_v2 = ["static/*"]
+lawim_v2 = ["static/*", "data/*.json"]
 
 [tool.setuptools.exclude-package-data]
 "*" = ["*.pyc", "__pycache__"]

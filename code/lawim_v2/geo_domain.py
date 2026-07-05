@@ -4,6 +4,7 @@ import re
 import unicodedata
 
 from .errors import ValidationError
+from .geo_reference import resolve_reference_city
 
 
 _COUNTRY_ALIASES: dict[str, str] = {
@@ -44,6 +45,9 @@ def normalize_city(city: str) -> str:
     normalized = _collapse_whitespace(city)
     if not normalized:
         raise ValidationError("city is required")
+    reference = resolve_reference_city(normalized)
+    if reference is not None:
+        return str(reference.get("city") or reference.get("name") or normalized.title())
     return normalized.title()
 
 
@@ -52,6 +56,11 @@ def normalize_region(region: str | None, *, city: str | None = None) -> str | No
         normalized = _collapse_whitespace(region)
         return normalized.title() if normalized else None
     if city:
+        reference = resolve_reference_city(city)
+        if reference is not None:
+            resolved_region = reference.get("region")
+            if isinstance(resolved_region, str) and resolved_region.strip():
+                return _collapse_whitespace(resolved_region).title()
         inferred = _REGION_BY_CITY.get(city.lower())
         if inferred:
             return inferred

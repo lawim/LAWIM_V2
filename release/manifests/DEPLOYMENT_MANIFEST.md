@@ -31,6 +31,8 @@ Include:
 - `deployment/backup/backup.sh`
 - `deployment/backup/restore.sh`
 - `deployment/backup/rclone.example.conf`
+- `deployment/backup/postgres-init.sql`
+- `deployment/backup/postgresql.conf`
 - `deployment/environments/production/.env.production.example`
 - `deployment/environments/production/.env.production.template`
 - `deployment/environments/production/secrets.example`
@@ -39,6 +41,15 @@ Include:
 - `scripts/run-compose-prod.sh`
 
 Keep from `code/lawim_v2/` only runtime code and assets.
+
+Geo runtime payload included in the OVH bundle:
+
+- `code/lawim_v2/geo_domain.py`
+- `code/lawim_v2/geo_reference.py`
+- `code/lawim_v2/geocoding_provider.py`
+- `code/lawim_v2/services.py`
+- `code/lawim_v2/dto.py`
+- `code/lawim_v2/data/cameroon_locations.json`
 
 Keep from `frontend/` only source, build configuration, and public runtime assets.
 
@@ -90,3 +101,4 @@ Keep from `deployment/environments/production/` only example values.
 - the deployment platform also carries `deployment/compose/`, Docker images, Nginx, systemd, health checks, and server scripts
 - no real secret is copied into OVH
 - no migration is started during packaging
+- no raw LAWIM or LAWIMA source tree is copied into OVH

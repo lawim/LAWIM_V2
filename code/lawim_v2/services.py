@@ -17,6 +17,7 @@ from .dto import (
     paginated_payload,
     property_dto,
 )
+from .geo_reference import search_reference_locations
 from .geocoding_provider import resolve_geocoding_provider
 from .matching import MatchCriteria, MatchWeights
 from .media_domain import (
@@ -803,7 +804,65 @@ class LawimServices:
         )
 
     def search_locations(self, *, query: str | None = None, limit: int = 20) -> list[dict[str, object]]:
-        return [geo_location_dto(item) for item in self.repository.search_locations(query=query, limit=limit)]
+        candidates: list[dict[str, object]] = []
+        for item in self.repository.search_locations(query=query, limit=limit):
+            candidates.append(
+                {
+                    **item,
+                    "kind": "city",
+                    "name": item.get("city"),
+                    "source": "database",
+                    "sources": ["database:properties"],
+                    "confidence": 1.0,
+                    "match_score": 1_000.0 + float(item.get("property_count") or 0),
+                }
+            )
+        if query:
+            for item in search_reference_locations(query=query, limit=limit):
+                reference_item = dict(item)
+                reference_item.setdefault("source", "lawim_reference")
+                reference_item.setdefault("sources", ["lawim_reference"])
+                candidates.append(reference_item)
+
+        merged: dict[tuple[str, str, str, str], dict[str, object]] = {}
+        for item in candidates:
+            key = (
+                str(item.get("kind") or "city").lower(),
+                str(item.get("city") or "").casefold(),
+                str(item.get("region") or "").casefold(),
+                str(item.get("name") or item.get("city") or "").casefold(),
+            )
+            existing = merged.get(key)
+            if existing is None:
+                merged[key] = item
+                continue
+            existing["property_count"] = max(int(existing.get("property_count") or 0), int(item.get("property_count") or 0))
+            existing["match_score"] = max(float(existing.get("match_score") or 0.0), float(item.get("match_score") or 0.0))
+            for field in ("latitude", "longitude", "department", "country", "market_segment", "source"):
+                current = existing.get(field)
+                incoming = item.get(field)
+                if current in (None, "", []) and incoming not in (None, "", []):
+                    existing[field] = incoming
+            for field in ("aliases", "typos", "landmarks", "informal_references", "related_zones", "target", "common_property_types", "sources"):
+                existing_list = list(existing.get(field) or [])
+                for value in item.get(field) or []:
+                    if value not in existing_list:
+                        existing_list.append(value)
+                if existing_list:
+                    existing[field] = existing_list
+
+        ordered = sorted(
+            merged.values(),
+            key=lambda item: (
+                float(item.get("match_score") or 0.0),
+                int(item.get("property_count") or 0),
+                1 if item.get("kind") == "city" else 0,
+                -int(item.get("priority_rank") or 0),
+                str(item.get("name") or ""),
+            ),
+            reverse=True,
+        )
+        return [geo_location_dto(item) for item in ordered[:limit]]
 
     def create_conversation(
         self,

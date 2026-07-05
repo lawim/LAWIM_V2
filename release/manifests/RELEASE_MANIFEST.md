@@ -22,6 +22,14 @@
 - `checksums/` for materialized SHA256 files
 - `deployment/` for operator-facing procedures
 
+## Geo Intelligence closure
+
+- Module: `code/lawim_v2/geo_reference.py`
+- Runtime support: `code/lawim_v2/geo_domain.py`, `code/lawim_v2/geocoding_provider.py`, `code/lawim_v2/services.py`, `code/lawim_v2/dto.py`
+- Reference data: `code/lawim_v2/data/cameroon_locations.json`
+- Runtime capabilities: city and neighborhood alias normalization, offline geocoding, local search merge, deterministic fallback, and distance scoring
+- Excluded from OVH: raw LAWIM / LAWIMA trees, reports, prompts, tests, and release analysis artifacts
+
 ## Source inputs
 
 - `Dockerfile`
@@ -53,4 +61,3 @@
 - keep secrets external and out of the repository;
 - write bundle hashes to `checksums/`;
 - compare the manifest and checksum files between releases before promotion.
-

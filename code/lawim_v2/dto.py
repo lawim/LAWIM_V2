@@ -144,13 +144,36 @@ def media_dto(media_row: dict[str, object]) -> dict[str, object]:
 
 
 def geo_location_dto(location: dict[str, object]) -> dict[str, object]:
-    return {
+    payload: dict[str, object] = {
+        "kind": location.get("kind") or "city",
+        "name": location.get("name") or location.get("display_name") or location.get("city"),
         "city": location.get("city"),
         "region": location.get("region"),
+        "department": location.get("department"),
         "country": location.get("country"),
         "property_count": location.get("property_count", 0),
         "search_key": location.get("search_key"),
+        "latitude": location.get("latitude"),
+        "longitude": location.get("longitude"),
+        "confidence": location.get("confidence"),
+        "match_score": location.get("match_score"),
     }
+    for key in (
+        "aliases",
+        "typos",
+        "landmarks",
+        "informal_references",
+        "related_zones",
+        "target",
+        "common_property_types",
+        "sources",
+        "market_segment",
+        "source",
+    ):
+        value = location.get(key)
+        if value is not None:
+            payload[key] = value
+    return payload
 
 
 def error_dto(code: str, message: str) -> dict[str, object]:

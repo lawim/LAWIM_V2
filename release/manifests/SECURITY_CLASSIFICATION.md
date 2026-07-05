@@ -3,6 +3,7 @@
 ## Local only
 
 - docs, reports, prompts, tests, notes, roadmaps, and governance files
+- raw LAWIM and LAWIMA source snapshots used for analysis
 - caches, logs, temp directories, generated build outputs, and archives
 - local tooling such as benchmarks, smoke helpers, and validation harnesses
 - local-only migration scaffold files
@@ -10,7 +11,7 @@
 
 ## Distributed servers
 
-- runtime code under `code/lawim_v2/`
+- runtime code under `code/lawim_v2/`, including the curated geo stack and `code/lawim_v2/data/`
 - frontend source and runtime assets under `frontend/`
 - database contracts under `prisma/`
 - compose and deployment manifests under `compose/` and `deployment/`
@@ -20,7 +21,7 @@
 ## OVH
 
 - the minimized payload defined in `DEPLOYMENT_MANIFEST.md`
-- runtime code, runtime assets, Docker and compose definitions, Nginx, systemd, health checks, and example configuration
+- runtime code, runtime assets, the curated geo reference bundle, Docker and compose definitions, Nginx, systemd, health checks, and example configuration
 - no real secret, no test, and no internal document
 
 ## External backup
@@ -35,4 +36,3 @@
 ## Rule
 
 No real secret lives in Git. Only placeholder example files are allowed in the repository.
-

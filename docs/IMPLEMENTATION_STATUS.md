@@ -19,6 +19,14 @@
 - Paquet OVH décrit comme projection minimale, sans documentation interne, sans tests et sans secret réel.
 - Aucun impact sur le schéma de base de données, les règles métier ou la phase Migration.
 
+## Integration geo selective
+
+- Catalogue geo Cameroon v1 ajoute dans `code/lawim_v2/data/cameroon_locations.json`.
+- Le moteur local de geocodage et la normalisation exploitent maintenant les alias curates de `LAWIM` et `LAWIMA`.
+- La recherche `/api/geo/search` peut maintenant retourner des quartiers de reference en plus des lieux observes en base.
+- Aucune configuration dangereuse ni secret de `LAWIMA` n'est repris.
+- GEO Intelligence: runtime termine, packaging OVH conforme, tests valides et release certifiee.
+
 ## Règle de gouvernance
 
 Toute future référence à la sécurité globale de production doit utiliser les noms AAE/AAF/AAG/AAH/AAI/AAJ selon le périmètre concerné.

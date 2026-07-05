@@ -336,3 +336,16 @@ No undocumented modules.
 All requirements traced from release to implementation to test to deployment.
 
 **Production readiness: VERIFIED** ✅ 🚀
+
+---
+
+## Selective Geo Reference Traceability
+
+| Feature | Module | Documentation | Tests | Status |
+|---|---|---|---|---|
+| Curated Cameroon location catalog | `code/lawim_v2/geo_reference.py`, `code/lawim_v2/data/cameroon_locations.json` | `docs/GEOLOCATION_ENGINE.md`, `docs/REFERENCE_DATA.md` | `tests/test_geo_reference.py` | ✅ 🚀 |
+| Geo normalization aliases | `code/lawim_v2/geo_domain.py` | `docs/GEOLOCATION_ENGINE.md` | `tests/test_geo_reference.py`, `tests/test_lawim_v2.py` | ✅ 🚀 |
+| Local geocoding fallback | `code/lawim_v2/geocoding_provider.py` | `docs/GEOLOCATION_ENGINE.md` | `tests/test_geo_reference.py` | ✅ 🚀 |
+| Geo search merge | `code/lawim_v2/services.py`, `code/lawim_v2/dto.py` | `docs/GEOLOCATION_ENGINE.md` | `tests/test_geo_reference.py`, `tests/test_product_depth.py` | ✅ 🚀 |
+
+**Geo Intelligence release status:** certified on 2026-07-05.

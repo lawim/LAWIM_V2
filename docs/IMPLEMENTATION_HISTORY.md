@@ -28,3 +28,11 @@ L’historique de code et de tags reste intact. Seule la classification document
 - Projection `release/` ajoutée avec manifestes, checksums et documentation d'exploitation.
 - Paquet OVH décrit comme dérivé minimal et non invasif.
 - Aucun changement de règle métier, aucune migration, aucun secret réel.
+
+## Integrations selectives geo
+
+- Ajout d'un referentiel geo Cameroon v1 dans `code/lawim_v2/data/cameroon_locations.json`.
+- Ajout d'un module `code/lawim_v2/geo_reference.py` pour charger, valider et rechercher les lieux curates.
+- Branchage de la normalisation, du geocoding local et de la recherche geo sur ce referentiel.
+- Tests de non-regression ajoutes pour les alias, la recherche, le fallback local et l'API geo.
+- Geo Intelligence release closed and certified on 2026-07-05.

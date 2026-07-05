@@ -1,0 +1,945 @@
+{
+  "version": 1,
+  "country": "Cameroon",
+  "provenance": [
+    {
+      "repository": "LAWIM",
+      "path": "ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md",
+      "role": "geo_business_model"
+    },
+    {
+      "repository": "LAWIM",
+      "path": "ARCHIVES/GEO_MODEL_ALIGNMENT_PLAN.md",
+      "role": "geo_schema_alignment"
+    },
+    {
+      "repository": "LAWIMA",
+      "path": "02_KNOWLEDGE/cities/cameroon_cities.json",
+      "role": "city_aliases_and_typos"
+    },
+    {
+      "repository": "LAWIMA",
+      "path": "02_KNOWLEDGE/neighborhoods/douala.json",
+      "role": "douala_neighborhood_aliases"
+    },
+    {
+      "repository": "LAWIMA",
+      "path": "02_KNOWLEDGE/neighborhoods/yaounde.json",
+      "role": "yaounde_neighborhood_aliases"
+    }
+  ],
+  "cities": [
+    {
+      "kind": "city",
+      "name": "Yaounde",
+      "city": "Yaounde",
+      "region": "Centre",
+      "department": "Mfoundi",
+      "priority_rank": 1,
+      "aliases": [
+        "Yde",
+        "Yaounde Ville",
+        "Yaounde Centre",
+        "Capitale",
+        "Ville aux Sept Collines"
+      ],
+      "typos": [
+        "yaound",
+        "yaoundee",
+        "yaonde",
+        "yaond",
+        "yyaounde"
+      ],
+      "latitude": 3.867,
+      "longitude": 11.516,
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.98
+    },
+    {
+      "kind": "city",
+      "name": "Douala",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "priority_rank": 2,
+      "aliases": [
+        "Dla",
+        "Douala Ville",
+        "Douala Cameroun"
+      ],
+      "typos": [
+        "doula",
+        "doualaa",
+        "doual",
+        "doulla"
+      ],
+      "latitude": 4.05,
+      "longitude": 9.7,
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.98
+    },
+    {
+      "kind": "city",
+      "name": "Bamenda",
+      "city": "Bamenda",
+      "region": "North West",
+      "department": "Mezam",
+      "priority_rank": 3,
+      "aliases": [
+        "Bamenda Town",
+        "Bamenda City"
+      ],
+      "typos": [
+        "bamnda",
+        "bameda",
+        "bamendah",
+        "bamender"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.93
+    },
+    {
+      "kind": "city",
+      "name": "Bafoussam",
+      "city": "Bafoussam",
+      "region": "West",
+      "department": "Mifi",
+      "priority_rank": 4,
+      "aliases": [
+        "Bafoussam Ville",
+        "Bafoussam Centre"
+      ],
+      "typos": [
+        "bafousam",
+        "bafossam",
+        "bafoussamm",
+        "bafousan"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.93
+    },
+    {
+      "kind": "city",
+      "name": "Buea",
+      "city": "Buea",
+      "region": "South West",
+      "department": "Fako",
+      "priority_rank": 5,
+      "aliases": [
+        "Buea Town",
+        "UB City"
+      ],
+      "typos": [
+        "bueaa",
+        "bua",
+        "bueah",
+        "bue"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.93
+    },
+    {
+      "kind": "city",
+      "name": "Kribi",
+      "city": "Kribi",
+      "region": "South",
+      "department": "Ocean",
+      "priority_rank": 6,
+      "aliases": [
+        "Kribi Beach",
+        "Kribi Port",
+        "Kribi Centre"
+      ],
+      "typos": [
+        "kriby",
+        "kribbi",
+        "kribie",
+        "kiribi"
+      ],
+      "latitude": 2.938,
+      "longitude": 9.907,
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.98
+    },
+    {
+      "kind": "city",
+      "name": "Nkongsamba",
+      "city": "Nkongsamba",
+      "region": "Littoral",
+      "department": "Moungo",
+      "priority_rank": 7,
+      "aliases": [
+        "Nkongsamba Centre",
+        "Nkongsamba Ville"
+      ],
+      "typos": [
+        "nkonsamba",
+        "nkongsmba",
+        "nkongsambaa"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.93
+    },
+    {
+      "kind": "city",
+      "name": "Maroua",
+      "city": "Maroua",
+      "region": "Far North",
+      "department": "Diamare",
+      "priority_rank": 8,
+      "aliases": [
+        "Maroua Ville",
+        "Maroua Centre"
+      ],
+      "typos": [
+        "maroa",
+        "marouah",
+        "marouaa"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.93
+    },
+    {
+      "kind": "city",
+      "name": "Limbe",
+      "city": "Limbe",
+      "region": "South West",
+      "department": "Fako",
+      "priority_rank": 9,
+      "aliases": [
+        "Limbe Town",
+        "Limb"
+      ],
+      "typos": [
+        "limbee",
+        "limbeh",
+        "limbae"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.93
+    },
+    {
+      "kind": "city",
+      "name": "Garoua",
+      "city": "Garoua",
+      "region": "North",
+      "department": "Benoue",
+      "priority_rank": 10,
+      "aliases": [
+        "Garoua Centre",
+        "Garoua Ville"
+      ],
+      "typos": [
+        "garoa",
+        "garouah",
+        "garouaa"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/cities/cameroon_cities.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.93
+    }
+  ],
+  "neighborhoods": [
+    {
+      "kind": "neighborhood",
+      "name": "Akwa",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "Centre Akwa",
+        "Akwa Douala"
+      ],
+      "typos": [
+        "akwaa",
+        "akua"
+      ],
+      "landmarks": [
+        "Boulevard de la Liberte",
+        "Ancien Dalip"
+      ],
+      "informal_references": [
+        "centre ville",
+        "vers boulevard",
+        "akwa centre"
+      ],
+      "market_segment": "business",
+      "target": [
+        "commerce",
+        "offices",
+        "hotels"
+      ],
+      "common_property_types": [
+        "office",
+        "apartment",
+        "retail"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Bonapriso",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "Bonapriso Residentiel"
+      ],
+      "typos": [
+        "bonaprisso"
+      ],
+      "landmarks": [
+        "Rue Joffre",
+        "Consulats"
+      ],
+      "informal_references": [
+        "quartier chic",
+        "vers consulats",
+        "haut standing"
+      ],
+      "market_segment": "haut_standing",
+      "target": [
+        "diaspora",
+        "expat",
+        "diplomat"
+      ],
+      "common_property_types": [
+        "villa",
+        "duplex",
+        "furnished_apartment"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Bonanjo",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "Centre Administratif"
+      ],
+      "typos": [
+        "bonanjoo",
+        "bonajo"
+      ],
+      "landmarks": [
+        "Gouvernorat",
+        "Port de Douala"
+      ],
+      "informal_references": [
+        "centre administratif",
+        "vers port"
+      ],
+      "market_segment": "business",
+      "target": [
+        "admin",
+        "corporate"
+      ],
+      "common_property_types": [
+        "office",
+        "apartment"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Bonamoussadi",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "BMS"
+      ],
+      "typos": [
+        "bonamousadi"
+      ],
+      "landmarks": [
+        "Carrefour Maetur"
+      ],
+      "informal_references": [
+        "maetur",
+        "vers carrefour"
+      ],
+      "related_zones": [
+        "Makepe",
+        "Kotto"
+      ],
+      "market_segment": "residential_mixte",
+      "target": [
+        "families",
+        "young_professionals"
+      ],
+      "common_property_types": [
+        "apartment",
+        "house",
+        "terrain"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Makepe",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "Makepe Missoke"
+      ],
+      "typos": [
+        "makeppe"
+      ],
+      "landmarks": [
+        "Carrefour Makepe"
+      ],
+      "informal_references": [
+        "vers makepe",
+        "missoke"
+      ],
+      "related_zones": [
+        "Bonamoussadi",
+        "Logpom"
+      ],
+      "market_segment": "residential_mixte",
+      "target": [
+        "families",
+        "investors"
+      ],
+      "common_property_types": [
+        "apartment",
+        "villa",
+        "terrain"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Bepanda",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "Bepanda Omnisport"
+      ],
+      "typos": [
+        "bependa",
+        "bepandaa"
+      ],
+      "landmarks": [
+        "Omnisport Bepanda"
+      ],
+      "informal_references": [
+        "vers omnisport",
+        "bepanda tonnerre"
+      ],
+      "market_segment": "popular",
+      "target": [
+        "workers",
+        "families"
+      ],
+      "common_property_types": [
+        "apartment",
+        "room",
+        "house"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Bonaberi",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "Beri"
+      ],
+      "typos": [
+        "bonabery",
+        "bonaberri"
+      ],
+      "landmarks": [
+        "Pont du Wouri"
+      ],
+      "informal_references": [
+        "apres pont",
+        "cote bonaberi"
+      ],
+      "market_segment": "mixed",
+      "target": [
+        "families",
+        "traders"
+      ],
+      "common_property_types": [
+        "house",
+        "apartment",
+        "warehouse"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "New Bell",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "Newbell"
+      ],
+      "typos": [
+        "newbel",
+        "new belll"
+      ],
+      "landmarks": [
+        "Marche New Bell"
+      ],
+      "informal_references": [
+        "vers marche new bell"
+      ],
+      "market_segment": "popular",
+      "target": [
+        "traders",
+        "workers"
+      ],
+      "common_property_types": [
+        "room",
+        "apartment",
+        "shop"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "PK8",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "PK 8",
+        "Pk8 Douala"
+      ],
+      "typos": [
+        "pk 08",
+        "pkh8"
+      ],
+      "landmarks": [
+        "PK8"
+      ],
+      "informal_references": [
+        "zone pk8",
+        "route pk8"
+      ],
+      "market_segment": "transit",
+      "target": [
+        "investors",
+        "commuters"
+      ],
+      "common_property_types": [
+        "terrain",
+        "house",
+        "plot"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "PK12",
+      "city": "Douala",
+      "region": "Littoral",
+      "department": "Wouri",
+      "aliases": [
+        "PK 12",
+        "Pk12 Douala"
+      ],
+      "typos": [
+        "pk 012",
+        "pk12e"
+      ],
+      "landmarks": [
+        "PK12"
+      ],
+      "informal_references": [
+        "zone pk12",
+        "route pk12"
+      ],
+      "market_segment": "transit",
+      "target": [
+        "investors",
+        "commuters"
+      ],
+      "common_property_types": [
+        "terrain",
+        "house",
+        "plot"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/douala.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Bastos",
+      "city": "Yaounde",
+      "region": "Centre",
+      "department": "Mfoundi",
+      "aliases": [
+        "Quartier Bastos",
+        "Haut Bastos"
+      ],
+      "typos": [
+        "basto",
+        "bastoss",
+        "bastoos"
+      ],
+      "landmarks": [
+        "Ambassade de France",
+        "Ambassade des Etats-Unis",
+        "Mont Febe"
+      ],
+      "informal_references": [
+        "vers ambassade",
+        "derriere ambassade",
+        "haut bastos",
+        "face ambassade"
+      ],
+      "related_zones": [
+        "Hippodrome",
+        "Essos",
+        "Centre Ville"
+      ],
+      "market_segment": "haut_standing",
+      "target": [
+        "diaspora",
+        "expat",
+        "diplomat"
+      ],
+      "common_property_types": [
+        "villa",
+        "duplex",
+        "furnished_apartment"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/yaounde.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Melen",
+      "city": "Yaounde",
+      "region": "Centre",
+      "department": "Mfoundi",
+      "aliases": [
+        "Melen I",
+        "Melen II",
+        "Melen IV"
+      ],
+      "typos": [
+        "melenn",
+        "mellene",
+        "mlen"
+      ],
+      "landmarks": [
+        "Universite de Yaounde I",
+        "Campus Ngoa-Ekelle"
+      ],
+      "informal_references": [
+        "vers fac",
+        "derriere campus",
+        "quartier etudiant"
+      ],
+      "related_zones": [
+        "Ngoa-Ekelle",
+        "Obili"
+      ],
+      "market_segment": "etudiant",
+      "target": [
+        "students",
+        "young_professionals"
+      ],
+      "common_property_types": [
+        "studio",
+        "room",
+        "apartment"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/yaounde.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Ngoa-Ekelle",
+      "city": "Yaounde",
+      "region": "Centre",
+      "department": "Mfoundi",
+      "aliases": [
+        "Ngoa",
+        "Campus"
+      ],
+      "typos": [
+        "ngoaekele",
+        "ngoekelle",
+        "ngoa ekelle"
+      ],
+      "landmarks": [
+        "Universite de Yaounde I",
+        "ENSPY"
+      ],
+      "informal_references": [
+        "campus",
+        "vers universite",
+        "quartier etudiant"
+      ],
+      "related_zones": [
+        "Melen",
+        "Obili"
+      ],
+      "market_segment": "etudiant",
+      "target": [
+        "students"
+      ],
+      "common_property_types": [
+        "studio",
+        "room"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/yaounde.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Obili",
+      "city": "Yaounde",
+      "region": "Centre",
+      "department": "Mfoundi",
+      "aliases": [
+        "Carrefour Obili"
+      ],
+      "typos": [
+        "obilli",
+        "obilii",
+        "obli"
+      ],
+      "landmarks": [
+        "IRIC",
+        "Universite de Yaounde II"
+      ],
+      "informal_references": [
+        "vers iric",
+        "carrefour obili"
+      ],
+      "related_zones": [
+        "Ngoa-Ekelle",
+        "Melen"
+      ],
+      "market_segment": "mixte",
+      "target": [
+        "students",
+        "civil_servants"
+      ],
+      "common_property_types": [
+        "studio",
+        "apartment"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/yaounde.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Biyem-Assi",
+      "city": "Yaounde",
+      "region": "Centre",
+      "department": "Mfoundi",
+      "aliases": [
+        "Biyem Assi",
+        "Biyem"
+      ],
+      "typos": [
+        "biyemassi",
+        "biyem assi",
+        "biyem"
+      ],
+      "landmarks": [
+        "Carrefour Biyem-Assi",
+        "Lycee Biyem-Assi"
+      ],
+      "informal_references": [
+        "carrefour biyem",
+        "vers lycee"
+      ],
+      "related_zones": [
+        "Mendong",
+        "Simbock"
+      ],
+      "market_segment": "familial",
+      "target": [
+        "families"
+      ],
+      "common_property_types": [
+        "house",
+        "apartment",
+        "duplex"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/yaounde.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Odza",
+      "city": "Yaounde",
+      "region": "Centre",
+      "department": "Mfoundi",
+      "aliases": [
+        "Odza Messamendongo"
+      ],
+      "typos": [
+        "odzza",
+        "odsa",
+        "odzah"
+      ],
+      "landmarks": [
+        "Entree Odza",
+        "Messamendongo"
+      ],
+      "informal_references": [
+        "route aeroport",
+        "entree odza",
+        "apres station"
+      ],
+      "related_zones": [
+        "Nsimalen",
+        "Ahala"
+      ],
+      "market_segment": "croissance",
+      "target": [
+        "families",
+        "diaspora"
+      ],
+      "common_property_types": [
+        "terrain",
+        "house",
+        "villa"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/yaounde.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    },
+    {
+      "kind": "neighborhood",
+      "name": "Nsimalen",
+      "city": "Yaounde",
+      "region": "Centre",
+      "department": "Mfoundi",
+      "aliases": [
+        "Aeroport Nsimalen"
+      ],
+      "typos": [
+        "nsimallen",
+        "nsimale",
+        "nsmalen"
+      ],
+      "landmarks": [
+        "Aeroport International"
+      ],
+      "informal_references": [
+        "route aeroport",
+        "vers aeroport"
+      ],
+      "related_zones": [
+        "Odza"
+      ],
+      "market_segment": "terrain",
+      "target": [
+        "investors"
+      ],
+      "common_property_types": [
+        "terrain",
+        "villa"
+      ],
+      "sources": [
+        "LAWIMA/02_KNOWLEDGE/neighborhoods/yaounde.json",
+        "LAWIM/ARCHIVES/GEO_REFERENCE_MODEL_CAMEROON_V4.md"
+      ],
+      "confidence": 0.88
+    }
+  ]
+}
