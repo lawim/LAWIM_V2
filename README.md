@@ -60,6 +60,7 @@ Comptes démo (mot de passe `lawim-demo`) : `admin@lawim.local`, `agent@lawim.lo
 | [tests/README.md](tests/README.md) | Suite de tests |
 | [reports/program/RELEASE-PROGRAM-W-PRODUCTION-MIGRATION-PREPARATION.md](reports/program/RELEASE-PROGRAM-W-PRODUCTION-MIGRATION-PREPARATION.md) | Programme W de préparation migration |
 | [reports/program/FULL-ENGINEERING-REVIEW-REPORT.md](reports/program/FULL-ENGINEERING-REVIEW-REPORT.md) | Revue engineering |
+| [reports/program/OVH_PRODUCTION_DEPLOYMENT_COMPLETION.md](reports/program/OVH_PRODUCTION_DEPLOYMENT_COMPLETION.md) | Cloture du deploiement OVH de production |
 
 ## Schéma & persistance
 

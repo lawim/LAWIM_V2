@@ -287,9 +287,9 @@ This matrix traces every functional requirement through release programs to impl
 | AAG | Planifiée | 2026-07-04 | current | — | Monitoring & Observability | 📝 |
 | AAH | Planifiée | 2026-07-04 | current | — | Performance & Load Testing | 📝 |
 | AAI | Planifiée | 2026-07-04 | current | — | Go Live Certification | 📝 |
-| AAJ | Planifiée | 2026-07-04 | current | — | Production Deployment | 📝 |
+| AAJ | Clôturée | 2026-07-05 | 4c078fd8139f98d6cc34c6e6ff452165bee10bdd | ovh-production-4c078fd8 | Production Deployment | ✅ |
 
-**Status:** 27 release tags complete ✅ 🚀
+**Status:** 28 release tags complete ✅ 🚀
 
 ---
 
@@ -313,7 +313,7 @@ This matrix traces every functional requirement through release programs to impl
 
 ## Traceability Verification
 
-**Verification Date:** July 4, 2026  
+**Verification Date:** July 5, 2026
 **Status:** ✅ ALL REQUIREMENTS TRACED
 
 Every feature implemented in LAWIM_V2:
@@ -352,3 +352,9 @@ All requirements traced from release to implementation to test to deployment.
 | Geo search merge | `code/lawim_v2/services.py`, `code/lawim_v2/dto.py` | `docs/GEOLOCATION_ENGINE.md` | `tests/test_geo_reference.py`, `tests/test_product_depth.py` | ✅ 🚀 |
 
 **Geo Intelligence release status:** certified on 2026-07-05.
+
+## OVH Production Deployment Traceability
+
+| Date | Snapshot | Active Release | Rollback | Validation |
+|---|---|---|---|---|
+| 2026-07-05 15:08:51 WAT | `4c078fd8139f98d6cc34c6e6ff452165bee10bdd` | `/opt/lawim/current -> /opt/lawim/releases/4c078fd8` | `/opt/lawim/releases/bc46a686` | Tests, packaging, HTTPS, Nginx, Docker, PostgreSQL, Redis |

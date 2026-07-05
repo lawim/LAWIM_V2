@@ -10,7 +10,7 @@
 | AAG | Monitoring & Observability | Planifiée |
 | AAH | Performance & Load Testing | Planifiée |
 | AAI | Go Live Certification | Planifiée |
-| AAJ | Production Deployment | Planifiée |
+| AAJ | Production Deployment | Clôturée |
 
 ## Principe de conservation
 
@@ -42,3 +42,10 @@ L’historique de code et de tags reste intact. Seule la classification document
 - Branchage de la normalisation, du geocoding local et de la recherche geo sur ce referentiel.
 - Tests de non-regression ajoutes pour les alias, la recherche, le fallback local et l'API geo.
 - Geo Intelligence release closed and certified on 2026-07-05.
+
+## Deploiement OVH final
+
+- Snapshot deploye: `4c078fd8139f98d6cc34c6e6ff452165bee10bdd`
+- Release active: `/opt/lawim/current -> /opt/lawim/releases/4c078fd8`
+- Release precedente conservee: `/opt/lawim/releases/bc46a686`
+- Bascule production validee sur HTTPS, Nginx, Docker, PostgreSQL et Redis

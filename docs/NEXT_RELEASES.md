@@ -9,7 +9,7 @@
 | AAG | Monitoring & Observability | À démarrer |
 | AAH | Performance & Load Testing | À démarrer |
 | AAI | Go Live Certification | À démarrer |
-| AAJ | Production Deployment | À démarrer |
+| AAJ | Production Deployment | Clôturée |
 
 La phase AAD est close. La prochaine release officielle est AAE.
 
@@ -25,6 +25,11 @@ La phase AAD est close. La prochaine release officielle est AAE.
 - La source intelligence comprend maintenant les signaux pidgin/pcm courants du contexte camerounais.
 - Le CRM applique des heuristiques de scoring plus proches des référentiels LAWIMA retenus comme meilleurs.
 - Aucun nouveau périmètre métier n'est ouvert par cette consolidation.
+
+## Deploiement termine
+
+- La release AAJ de production est maintenant cloturee sur le snapshot `4c078fd8139f98d6cc34c6e6ff452165bee10bdd`.
+- Les prochaines activations fonctionnelles concernent la configuration Google Drive, les sauvegardes, WhatsApp Business, Facebook, le stockage distribue et l'exploitation courante.
 
 ## Geo reference follow-up
 

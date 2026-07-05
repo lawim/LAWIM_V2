@@ -16,3 +16,8 @@
 - Le nom AAD ne doit plus être utilisé pour désigner la sécurité globale de production.
 - Les tags et commits existants ne sont pas renommés.
 - Seule la documentation est normalisée.
+
+## Cloture OVH
+
+- Le deploiement de production AAJ a ete finalise sur le snapshot `4c078fd8139f98d6cc34c6e6ff452165bee10bdd`.
+- Le rollback vers `/opt/lawim/releases/bc46a686` est conserve.

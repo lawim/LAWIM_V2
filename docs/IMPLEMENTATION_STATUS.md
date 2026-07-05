@@ -33,6 +33,13 @@
 - Aucune configuration dangereuse ni secret de `LAWIMA` n'est repris.
 - GEO Intelligence: runtime termine, packaging OVH conforme, tests valides et release certifiee.
 
+## Deploiement OVH final
+
+- Snapshot `4c078fd8139f98d6cc34c6e6ff452165bee10bdd` deploye dans `/opt/lawim/releases/4c078fd8`.
+- `/opt/lawim/current` pointe maintenant vers la nouvelle release.
+- `lawim-app`, PostgreSQL, Redis, Nginx et HTTPS sont verifies et sains.
+- Le rollback vers `/opt/lawim/releases/bc46a686` reste conserve.
+
 ## Règle de gouvernance
 
 Toute future référence à la sécurité globale de production doit utiliser les noms AAE/AAF/AAG/AAH/AAI/AAJ selon le périmètre concerné.
