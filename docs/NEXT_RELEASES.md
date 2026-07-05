@@ -20,6 +20,12 @@ La phase AAD est close. La prochaine release officielle est AAE.
 - Le fallback français est actif par défaut.
 - Aucun impact base de données ni migration.
 
+## Consolidation pre-gel
+
+- La source intelligence comprend maintenant les signaux pidgin/pcm courants du contexte camerounais.
+- Le CRM applique des heuristiques de scoring plus proches des référentiels LAWIMA retenus comme meilleurs.
+- Aucun nouveau périmètre métier n'est ouvert par cette consolidation.
+
 ## Geo reference follow-up
 
 - Etendre progressivement le catalogue avec des villages, quartiers secondaires et arrondissements mieux documentes.

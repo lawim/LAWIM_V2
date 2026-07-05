@@ -19,6 +19,12 @@
 - Paquet OVH décrit comme projection minimale, sans documentation interne, sans tests et sans secret réel.
 - Aucun impact sur le schéma de base de données, les règles métier ou la phase Migration.
 
+## Consolidation fonctionnelle pre-gel
+
+- Source intelligence enrichie avec une detection pidgin/pcm minimale, en plus des signaux francais et anglais.
+- CRM enrichi avec un score de lead sensible aux signaux d'urgence, de budget, d'intention, de localisation et de diaspora.
+- Les deux ajustements restent runtime-only, sans impact base de donnees, migrations ou dependances externes.
+
 ## Integration geo selective
 
 - Catalogue geo Cameroon v1 ajoute dans `code/lawim_v2/data/cameroon_locations.json`.

@@ -136,12 +136,13 @@ This matrix traces every functional requirement through release programs to impl
 | Cognition | cognition/ | COGNITIVE_CORE.md | ✅ | ✅ 🚀 |
 | Communication | communication/ | INTEGRATIONS.md | ✅ | ✅ 🚀 |
 | Communications | communications/ | INTEGRATIONS.md | ✅ | ✅ 🚀 |
-| CRM | crm/ | Domain docs | ✅ | ✅ 🚀 |
+| CRM | crm/ | Domain docs, intent-aware lead scoring | ✅ | ✅ 🚀 |
 | Ecosystem | ecosystem/ | INTEGRATIONS.md | ✅ | ✅ 🚀 |
 | Intelligent Platform | intelligent/ | LAWIM_2_FOUNDATION.md | ✅ | ✅ 🚀 |
 | Knowledge Platform | knowledge_platform/ | KNOWLEDGE.md | ✅ | ✅ 🚀 |
 | Marketplace | marketplace/ | INTEGRATIONS.md | ✅ | ✅ 🚀 |
 | Observability | observability.py | OBSERVABILITY.md | ✅ | ✅ 🚀 |
+| Source Intelligence | source_intelligence/ | Domain docs, pidgin-aware language inference | ✅ | ✅ 🚀 |
 | Migration scaffold (local only) | migration.py | MIGRATION_FRAMEWORK.md | ✅ | ✅ 🧪 |
 
 **Status:** All 19 backend modules complete ✅ 🚀
@@ -186,8 +187,10 @@ This matrix traces every functional requirement through release programs to impl
 | Acceptance | tests/acceptance.test.ts | 2 | ✅ | ✅ 🚀 |
 | Other Core | tests/*.test.ts | 9 | ✅ | ✅ 🚀 |
 | I18N Languages | tests/test_i18n_languages.py | 7 | ✅ | ✅ 🚀 |
+| CRM lead scoring | tests/test_release_program_h.py | 1 | ✅ | ✅ 🚀 |
+| Source Intelligence language inference | tests/test_source_intelligence.py | 2 | ✅ | ✅ 🚀 |
 | Migration scaffold | tests/test_migration_framework.py | 4 | ✅ | ✅ 🧪 |
-| **TOTAL** | **27 files** | **108 tests** | **100%** | **✅ 🚀** |
+| **TOTAL** | **29 files** | **111 tests** | **100%** | **✅ 🚀** |
 
 ---
 

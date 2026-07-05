@@ -5,10 +5,28 @@ from datetime import datetime, timezone
 from typing import Any
 
 from ..contact import COMPANY_NAME, official_signature_block, to_public_dict
-from .constants import PIPELINE_STAGES, SCORE_KEYS
+from .constants import LEAD_SCORING_SIGNAL_BONUSES, PIPELINE_STAGES, SCORE_KEYS
 
 
 class LeadScoringEngine:
+    def _lead_context_text(self, lead: dict[str, object]) -> str:
+        parts = (
+            lead.get("title"),
+            lead.get("notes"),
+            lead.get("metadata"),
+        )
+        return self._normalize(" ".join(str(part) for part in parts if part is not None))
+
+    def _signal_bonus(self, lead_text: str) -> int:
+        bonus = 0
+        for pattern, value in LEAD_SCORING_SIGNAL_BONUSES:
+            if re.search(pattern, lead_text):
+                bonus += value
+        return bonus
+
+    def _normalize(self, text: str | None) -> str:
+        return re.sub(r"\s+", " ", str(text or "").strip().lower())
+
     def compute(self, *, lead: dict[str, object], contact: dict[str, object], communications: int = 0) -> dict[str, int]:
         score = 10
         status = str(lead.get("status") or "new")
@@ -23,6 +41,7 @@ class LeadScoringEngine:
         if contact.get("company"):
             score += 5
         score += min(20, communications * 4)
+        score += self._signal_bonus(self._lead_context_text(lead))
         return {"lead_score": min(100, score)}
 
 

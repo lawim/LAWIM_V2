@@ -8,7 +8,13 @@ from typing import Any
 from urllib.parse import quote, urlparse
 
 from ..contact import PHONE_E164
-from .constants import DEFAULT_SOURCE_TARGET, REFERENCE_CODE_LENGTH, REFERENCE_CODE_PREFIX, SOURCE_CHANNELS
+from .constants import (
+    DEFAULT_SOURCE_TARGET,
+    REFERENCE_CODE_LENGTH,
+    REFERENCE_CODE_PREFIX,
+    SOURCE_CHANNELS,
+    SOURCE_LANGUAGE_MARKERS,
+)
 
 
 class ReferenceCodeEngine:
@@ -101,11 +107,13 @@ class SourceAnalysisEngine:
         normalized = self._normalize(text)
         if not normalized:
             return "fr"
-        french_markers = ("bonjour", "merci", "vente", "location", "appartement", "maison", "terrain", "quartier")
-        english_markers = ("hello", "rent", "sale", "apartment", "house", "land", "district")
-        french_hits = sum(1 for marker in french_markers if marker in normalized)
-        english_hits = sum(1 for marker in english_markers if marker in normalized)
-        return "en" if english_hits > french_hits else "fr"
+        if any(marker in normalized for marker in SOURCE_LANGUAGE_MARKERS["pcm"]):
+            return "pcm"
+        french_hits = sum(1 for marker in SOURCE_LANGUAGE_MARKERS["fr"] if marker in normalized)
+        english_hits = sum(1 for marker in SOURCE_LANGUAGE_MARKERS["en"] if marker in normalized)
+        if english_hits > french_hits:
+            return "en"
+        return "fr"
 
     def extract_tags(self, text: str | None) -> list[str]:
         tags = re.findall(r"#([A-Za-z0-9_À-ÿ-]+)", str(text or ""))

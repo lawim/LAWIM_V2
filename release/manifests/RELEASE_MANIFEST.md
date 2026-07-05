@@ -30,6 +30,12 @@
 - Runtime capabilities: city and neighborhood alias normalization, offline geocoding, local search merge, deterministic fallback, and distance scoring
 - Excluded from OVH: raw LAWIM / LAWIMA trees, reports, prompts, tests, and release analysis artifacts
 
+## Functional consolidation before freeze
+
+- Source intelligence language inference now recognizes pidgin-aware cues in addition to French and English markers, with French fallback preserved.
+- CRM lead scoring now consumes richer lead payloads and adds modest bonuses for urgency, location, diaspora, investment, visit, budget, and financing signals.
+- These additions are runtime-only and do not change the schema, migrations, or external dependencies.
+
 ## Source inputs
 
 - `Dockerfile`

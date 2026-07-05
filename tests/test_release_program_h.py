@@ -435,6 +435,17 @@ class ReleaseProgramHEnginesTests(LawimTestHarness):
         score = LeadScoringEngine().compute(lead=lead, contact=SAMPLE_CONTACT, communications=10)
         self.assertLessEqual(score["lead_score"], 100)
 
+    def test_lead_scoring_uses_signal_bonus(self) -> None:
+        baseline = LeadScoringEngine().compute(lead=SAMPLE_LEAD, contact=SAMPLE_CONTACT)
+        enriched_lead = dict(
+            SAMPLE_LEAD,
+            title="Urgent diaspora investor visit for land in Douala",
+            notes="budget 50M cashflow quick decision",
+            metadata={"intent": "invest", "user_type": "diaspora"},
+        )
+        boosted = LeadScoringEngine().compute(lead=enriched_lead, contact=SAMPLE_CONTACT)
+        self.assertGreater(boosted["lead_score"], baseline["lead_score"])
+
     def test_pipeline_default_stages_count(self) -> None:
         stages = PipelineEngine().default_stages()
         self.assertEqual(len(stages), len(PIPELINE_STAGES))

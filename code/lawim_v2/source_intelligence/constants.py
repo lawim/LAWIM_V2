@@ -32,3 +32,48 @@ SOURCE_IMPORT_STATUSES: frozenset[str] = frozenset({"pending", "imported", "anal
 REFERENCE_CODE_PREFIX = "#"
 REFERENCE_CODE_LENGTH = 6
 DEFAULT_SOURCE_TARGET = "acquisition"
+
+SOURCE_LANGUAGE_MARKERS: dict[str, tuple[str, ...]] = {
+    "fr": (
+        "bonjour",
+        "merci",
+        "vente",
+        "location",
+        "appartement",
+        "maison",
+        "terrain",
+        "quartier",
+        "cherche",
+        "recherche",
+        "acheter",
+        "louer",
+    ),
+    "en": (
+        "hello",
+        "thanks",
+        "rent",
+        "sale",
+        "apartment",
+        "house",
+        "land",
+        "district",
+        "looking for",
+        "buy",
+        "lease",
+    ),
+    "pcm": (
+        "i wan",
+        "i dey",
+        "i di",
+        "i fit",
+        "no vex",
+        "how far",
+        "wahala",
+        "wetin",
+        "small small",
+        "na so",
+        "make i",
+        "dey find",
+        "abeg",
+    ),
+}

@@ -314,7 +314,16 @@ class CrmRepositoryMixin:
         lead_key = f"lead-{uuid.uuid4().hex[:10]}"
         comm_count = self.scalar("SELECT COUNT(*) FROM crm_communications WHERE contact_id = ?", (contact_id,))
         engine = CrmPlatformEngine()
-        scoring = engine.lead_scoring.compute(lead={"status": status}, contact=contact, communications=comm_count)
+        scoring = engine.lead_scoring.compute(
+            lead={
+                "status": status,
+                "title": title,
+                "notes": notes,
+                "metadata": metadata or {},
+            },
+            contact=contact,
+            communications=comm_count,
+        )
         score = scoring["lead_score"]
         with self._transaction() as conn:
             conn.execute(

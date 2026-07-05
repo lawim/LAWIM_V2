@@ -29,6 +29,12 @@ L’historique de code et de tags reste intact. Seule la classification document
 - Paquet OVH décrit comme dérivé minimal et non invasif.
 - Aucun changement de règle métier, aucune migration, aucun secret réel.
 
+## Consolidation fonctionnelle pre-gel
+
+- Source intelligence: detection pidgin/pcm ajoutee dans le moteur local de langue.
+- CRM: score de lead enrichi par des signaux d'urgence, de localisation, de diaspora, de budget et d'intention.
+- Tests et traçabilité mis à jour sans modifier le schema de base de donnees.
+
 ## Integrations selectives geo
 
 - Ajout d'un referentiel geo Cameroon v1 dans `code/lawim_v2/data/cameroon_locations.json`.

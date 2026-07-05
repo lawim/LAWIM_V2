@@ -1,6 +1,6 @@
 # Tests
 
-Suite `unittest` pour LAWIM_V2 (74 tests au 2026-06-29).
+Suite `unittest` pour LAWIM_V2 (2619 tests au 2026-07-04 via `python3 -m unittest discover -s tests -v`).
 
 ## Lancer les tests
 
@@ -27,6 +27,10 @@ Le script exécute :
 | `test_beta_candidate.py` | Critères beta (sécurité, validation, redaction) |
 | `test_release_candidate.py` | Durcissement release candidate |
 | `test_runtime_smoke.py` | Smoke runtime et validation config |
+| `test_i18n_languages.py` | Module langues, normalisation, fallback et validation |
+| `test_release_program_h.py` | CRM, scoring métier et couverture release program H |
+| `test_source_intelligence.py` | Source intelligence, détection pidgin et import SIE |
+| `test_migration_framework.py` | Scaffold migration, validation et rollback |
 
 ## Configuration de test
 

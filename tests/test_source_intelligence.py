@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from http import HTTPStatus
+from unittest import TestCase
 
-from lawim_harness import LawimTestHarness
+from tests.lawim_harness import LawimTestHarness
+from lawim_v2.source_intelligence.engines import SourceAnalysisEngine
 
 
 class SourceIntelligenceEngineTest(LawimTestHarness):
@@ -69,3 +71,16 @@ class SourceIntelligenceEngineTest(LawimTestHarness):
         )
         self.assertEqual(context.status, HTTPStatus.OK, msg=context.body_text())
         self.assertEqual(context.body_json()["context"]["city"], "Douala")
+
+
+class SourceAnalysisLanguageTests(TestCase):
+    def setUp(self) -> None:
+        self.engine = SourceAnalysisEngine()
+
+    def test_infer_language_detects_pidgin_signals(self) -> None:
+        self.assertEqual(self.engine.infer_language("I wan buy land in Buea"), "pcm")
+        self.assertEqual(self.engine.infer_language("No vex, I fit pay 15M cash"), "pcm")
+
+    def test_infer_language_prefers_official_languages_when_clear(self) -> None:
+        self.assertEqual(self.engine.infer_language("Bonjour, je cherche appartement à Douala"), "fr")
+        self.assertEqual(self.engine.infer_language("Hello, I need apartment in Douala"), "en")
