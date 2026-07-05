@@ -18,5 +18,7 @@ The distribution model uses ten logical Google Drive placeholders to organize co
 ## Canonical references
 
 - `docs/STORAGE_RESOURCE_REGISTRY.md`
+- `docs/GOOGLE_DRIVE_CONNECTOR.md`
+- `docs/GOOGLE_DRIVE_ADMIN_CENTER.md`
 - `docs/STORAGE_ROUTING_POLICY.md`
 - `docs/GOOGLE_DRIVE_FUNCTIONAL_CONFIGURATION.md`

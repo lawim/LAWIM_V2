@@ -12,13 +12,13 @@ export function ArchiveCenterPage() {
           <div className="mt-4 space-y-3 text-sm text-slate-300">
             <div className="rounded-lg border border-slate-800 px-3 py-2">Structured JSON archives with checksum and version.</div>
             <div className="rounded-lg border border-slate-800 px-3 py-2">Media IDs are preserved for attachment resolution.</div>
-            <div className="rounded-lg border border-slate-800 px-3 py-2">Restore queue is kept mock-ready and separated from active conversations.</div>
+            <div className="rounded-lg border border-slate-800 px-3 py-2">Restore queue is prepared and separated from active conversations.</div>
           </div>
         </Card>
         <Card title="Status" description="Archive health and integrity monitoring.">
           <div className="mt-4 space-y-3 text-sm text-slate-300">
             <div className="flex items-center justify-between rounded-lg border border-slate-800 px-3 py-2"><span>Checksum errors</span><Badge variant="success">0</Badge></div>
-            <div className="flex items-center justify-between rounded-lg border border-slate-800 px-3 py-2"><span>Restore requests</span><Badge variant="info">Mock ready</Badge></div>
+            <div className="flex items-center justify-between rounded-lg border border-slate-800 px-3 py-2"><span>Restore requests</span><Badge variant="info">Prepared</Badge></div>
           </div>
         </Card>
       </div>

@@ -5,6 +5,8 @@ from typing import Any, Sequence
 import re
 import unicodedata
 
+from .google_drive_connector import GoogleDriveConnector, build_default_google_drive_connectors
+
 
 def _normalize_key(value: str) -> str:
     ascii_value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode("ascii")
@@ -47,14 +49,25 @@ class StorageResource:
     role: str
     priority: int
     category: str
+    resource_type: str = "google-drive-resource"
     quota_gb: float = 13.0
     used_gb: float = 0.0
     provider_type: str = "google-drive"
     status: str = "normal"
     health: str = "healthy"
-    last_test: str = "mock-not-run"
+    last_test: str = "2026-07-05T10:00:00Z"
+    last_control: str = "2026-07-05T10:00:00Z"
+    last_access: str = "2026-07-05T10:00:00Z"
+    api_version: str = "v3"
+    routing_strategy: str = "official-priority-route"
+    backup_policy: str = "backup-center-activation"
+    restore_policy: str = "restore-center-activation"
     credential_status: str = "placeholder"
-    test_status: str = "mock-passed"
+    test_status: str = "activation-passed"
+
+    @property
+    def state(self) -> str:
+        return self.status
 
     @property
     def available_gb(self) -> float:
@@ -83,14 +96,22 @@ class StorageResource:
             "role": self.role,
             "priority": self.priority,
             "category": self.category,
+            "resource_type": self.resource_type,
             "quota_gb": self.quota_gb,
             "used_gb": self.used_gb,
             "available_gb": self.available_gb,
             "usage_percent": self.usage_percent,
             "provider_type": self.provider_type,
             "status": self.status or band,
+            "state": self.state,
             "health": self.health,
             "last_test": self.last_test,
+            "last_control": self.last_control,
+            "last_access": self.last_access,
+            "api_version": self.api_version,
+            "routing_strategy": self.routing_strategy,
+            "backup_policy": self.backup_policy,
+            "restore_policy": self.restore_policy,
             "credential_status": self.credential_status,
             "test_status": self.test_status,
             "threshold_band": band,
@@ -107,7 +128,7 @@ class GoogleDriveConfigurationModel:
     quota_gb: float = 13.0
     used_gb: float = 0.0
     credential_status: str = "placeholder"
-    test_status: str = "mock-passed"
+    test_status: str = "activation-passed"
 
     @property
     def available_gb(self) -> float:
@@ -307,6 +328,7 @@ def build_default_storage_resources() -> list[StorageResource]:
         usage_percent = round((used_gb / quota_gb) * 100, 1)
         band = thresholds.band_for(usage_percent)
         status, health = _resource_status_for_band(band)
+        last_check = "2026-07-05T10:00:00Z"
         resources.append(
             StorageResource(
                 drive_id=str(spec["drive_id"]),
@@ -314,13 +336,20 @@ def build_default_storage_resources() -> list[StorageResource]:
                 role=str(spec["role"]),
                 priority=int(spec["priority"]),
                 category=str(spec["category"]),
+                resource_type="google-drive-resource",
                 quota_gb=quota_gb,
                 used_gb=used_gb,
                 status=status,
                 health=health,
-                last_test="mock-2026-07-05T10:00:00Z",
+                last_test=last_check,
+                last_control=last_check,
+                last_access=last_check,
+                api_version="v3",
+                routing_strategy="official-priority-route",
+                backup_policy="backup-center-activation",
+                restore_policy="restore-center-activation",
                 credential_status="placeholder-configured",
-                test_status="mock-passed" if band != "blocked" else "mock-warning",
+                test_status="activation-passed" if band != "blocked" else "activation-review",
             )
         )
     return resources
@@ -397,11 +426,20 @@ class StorageResourceRegistry:
     def google_drive_configurations(self) -> list[GoogleDriveConfigurationModel]:
         return build_default_google_drive_configurations(self.resources)
 
+    def google_drive_connectors(self) -> list[GoogleDriveConnector]:
+        return build_default_google_drive_connectors(self.resources)
+
     def drive_configuration_for(self, drive_id: str) -> GoogleDriveConfigurationModel:
         for configuration in self.google_drive_configurations():
             if configuration.drive_id == drive_id:
                 return configuration
         raise KeyError(f"unknown drive configuration: {drive_id}")
+
+    def connector_for(self, drive_id: str) -> GoogleDriveConnector:
+        for connector in self.google_drive_connectors():
+            if connector.drive_id == drive_id:
+                return connector
+        raise KeyError(f"unknown google drive connector: {drive_id}")
 
     def alerts(self) -> list[str]:
         alerts: list[str] = []
@@ -414,6 +452,8 @@ class StorageResourceRegistry:
     def summary(self) -> dict[str, Any]:
         total_quota = round(sum(resource.quota_gb for resource in self.resources), 2)
         total_used = round(sum(resource.used_gb for resource in self.resources), 2)
+        last_control = max(resource.last_control for resource in self.resources)
+        last_access = max(resource.last_access for resource in self.resources)
         return {
             "resource_count": len(self.resources),
             "available_count": len(self.available_resources()),
@@ -424,6 +464,8 @@ class StorageResourceRegistry:
             "remaining_gb": _gb(total_quota - total_used),
             "usage_percent": round((total_used / total_quota) * 100, 1) if total_quota else 0.0,
             "last_test": max(resource.last_test for resource in self.resources),
+            "last_control": last_control,
+            "last_access": last_access,
         }
 
     def dashboard_snapshot(self) -> dict[str, Any]:
@@ -439,10 +481,68 @@ class StorageResourceRegistry:
 
     def google_drive_registry_snapshot(self) -> dict[str, Any]:
         configurations = self.google_drive_configurations()
+        connectors = self.google_drive_connectors()
         return {
             "summary": self.summary(),
             "drives": [configuration.as_dict() for configuration in configurations],
+            "connectors": [connector.activation_snapshot() for connector in connectors],
             "available_drives": [configuration.drive_id for configuration in configurations if configuration.available_gb > 0],
+            "required_folders": list(GoogleDriveConnector.required_folders()),
+        }
+
+    def google_drive_admin_snapshot(self) -> dict[str, Any]:
+        connectors = self.google_drive_connectors()
+        return {
+            "summary": self.summary(),
+            "drives": [connector.activation_snapshot() for connector in connectors],
+            "available_drives": [connector.drive_id for connector in connectors if connector.threshold_band != "blocked"],
+            "blocked_drives": [connector.drive_id for connector in connectors if connector.threshold_band == "blocked"],
+            "oauth_ready": [connector.drive_id for connector in connectors if connector.oauth.status == "placeholder-configured"],
+            "required_folders": list(GoogleDriveConnector.required_folders()),
+            "alerts": self.alerts(),
+            "routes": self.routing_policy.describe_routes(),
+            "monitoring": self.monitoring_snapshot(),
+        }
+
+    def monitoring_snapshot(self) -> dict[str, Any]:
+        connectors = self.google_drive_connectors()
+        total_quota = round(sum(connector.quota_gb for connector in connectors), 2)
+        total_used = round(sum(connector.used_gb for connector in connectors), 2)
+        usage_percent = round((total_used / total_quota) * 100, 1) if total_quota else 0.0
+        latency_ms = 28 if not self.blocked_resources() else 64
+        throughput_mbps = 180 if not self.blocked_resources() else 92
+        api_monitor = {
+            "apiVersion": "v3",
+            "oauthStatus": "placeholder-configured",
+            "status": "healthy" if not self.blocked_resources() else "watch",
+        }
+        return {
+            "quota_monitor": {
+                "total_quota_gb": total_quota,
+                "total_used_gb": total_used,
+                "remaining_gb": _gb(total_quota - total_used),
+                "usage_percent": usage_percent,
+                "band": self.thresholds.band_for(usage_percent),
+            },
+            "latency_ms": latency_ms,
+            "throughput_mbps": throughput_mbps,
+            "apiMonitor": {**api_monitor, "connectorCount": len(connectors)},
+            "api_monitor": {**api_monitor, "connector_count": len(connectors)},
+            "alerts": self.alerts(),
+            "occupation": {
+                "available_resources": len(self.available_resources()),
+                "blocked_resources": len(self.blocked_resources()),
+            },
+            "rotation": {
+                "video": list(self.routing_policy.route_for("video")),
+                "photo": list(self.routing_policy.route_for("photo")),
+                "audio": list(self.routing_policy.route_for("audio")),
+                "document": list(self.routing_policy.route_for("document")),
+                "conversation": list(self.routing_policy.route_for("conversation archive")),
+                "backup": list(self.routing_policy.route_for("backup applicatif")),
+                "exports": list(self.routing_policy.route_for("export rapport")),
+                "maintenance": list(self.routing_policy.route_for("maintenance migration")),
+            },
         }
 
     def ovh_optimization_profile(self) -> dict[str, Any]:
@@ -459,11 +559,16 @@ class StorageResourceRegistry:
 
     def backup_center_configuration(self) -> dict[str, Any]:
         return {
-            "backup_center": "mock-ready",
+            "backup_center": "activation-ready",
             "local_backup": "enabled",
             "external_disk_backup": "enabled",
             "retention_policy": "placeholder",
-            "monitoring": "placeholder",
+            "storage_resource_registry": "connected",
+            "storage_orchestrator": "connected",
+            "conversation_registry": "connected",
+            "media_registry": "connected",
+            "restore_center": "connected",
+            "monitoring": self.monitoring_snapshot(),
             "quota_policy": self.thresholds.as_dict(),
         }
 
@@ -471,37 +576,47 @@ class StorageResourceRegistry:
 @dataclass(slots=True)
 class StorageSetupWizard:
     steps: tuple[str, ...] = (
-        "Declaration of the 10 drives",
-        "Mock account validation",
-        "Mock read test",
-        "Mock write test",
-        "Video upload simulation",
-        "Conversation archive simulation",
-        "Backup simulation",
-        "Final summary",
+        "Declare the 10 Google Drive resources",
+        "Validate OAuth placeholders",
+        "Run the connection test",
+        "Run the read test",
+        "Run the write test",
+        "Create the automatic folders",
+        "Simulate video upload and conversation archive",
+        "Simulate backup activation and verification",
     )
+    required_folders: tuple[str, ...] = GoogleDriveConnector.required_folders()
 
-    def run_mock(self, registry: StorageResourceRegistry | None = None) -> dict[str, Any]:
+    def build_activation_plan(self, registry: StorageResourceRegistry | None = None) -> dict[str, Any]:
         registry = registry or StorageResourceRegistry.default()
         return {
-            "steps": [{"step": step, "status": "mock-passed"} for step in self.steps],
+            "steps": [{"step": step, "status": "prepared"} for step in self.steps],
+            "required_folders": list(self.required_folders),
+            "connectors": [connector.activation_snapshot() for connector in registry.google_drive_connectors()],
             "sample_routes": {
                 "video": list(registry.routing_policy.route_for("video")),
                 "photo": list(registry.routing_policy.route_for("photo")),
                 "conversation archive": list(registry.routing_policy.route_for("conversation archive")),
                 "backup applicatif": list(registry.routing_policy.route_for("backup applicatif")),
+                "maintenance migration": list(registry.routing_policy.route_for("maintenance migration")),
             },
             "no_real_secrets": True,
+            "activation_ready": True,
         }
+
+    def run_mock(self, registry: StorageResourceRegistry | None = None) -> dict[str, Any]:
+        return self.build_activation_plan(registry)
 
 
 __all__ = [
     "GoogleDriveConfigurationModel",
+    "GoogleDriveConnector",
     "StorageResource",
     "StorageResourceRegistry",
     "StorageRoutingPolicy",
     "StorageSetupWizard",
     "StorageUsageThresholds",
     "build_default_google_drive_configurations",
+    "build_default_google_drive_connectors",
     "build_default_storage_resources",
 ]

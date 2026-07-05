@@ -14,11 +14,16 @@ from .conversation_registry import (
 )
 from .storage_registry import (
     GoogleDriveConfigurationModel,
+    GoogleDriveConnector,
     StorageResource,
     StorageResourceRegistry,
     StorageRoutingPolicy,
     StorageSetupWizard,
     StorageUsageThresholds,
+)
+from .google_drive_connector import (
+    GoogleDriveOAuthCredentials,
+    build_default_google_drive_connectors,
 )
 from .security import (
     AADAuthResult,
@@ -86,6 +91,9 @@ __all__ = [
     "ConversationRestoreEngine",
     "ConversationStorageProvider",
     "GoogleDriveConfigurationModel",
+    "GoogleDriveConnector",
+    "GoogleDriveOAuthCredentials",
+    "build_default_google_drive_connectors",
     "OVHStorageOptimizer",
     "StorageResource",
     "StorageResourceRegistry",

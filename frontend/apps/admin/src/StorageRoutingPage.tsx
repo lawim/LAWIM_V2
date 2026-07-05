@@ -30,7 +30,7 @@ export function StorageRoutingPage() {
             ))}
           </div>
         </Card>
-        <Card title="Routing rules" description="Selection remains ordered and mock-safe.">
+        <Card title="Routing rules" description="Selection remains ordered and activation-ready.">
           <div className="mt-4 space-y-3 text-sm text-slate-300">
             <div className="rounded-xl border border-slate-800 px-3 py-2">Video: Drive 1, then Drive 2, then Drive 8.</div>
             <div className="rounded-xl border border-slate-800 px-3 py-2">Photo and audio: Drive 3, then Drive 8.</div>
@@ -63,7 +63,7 @@ export function StorageRoutingPage() {
             </div>
           </div>
         </Card>
-        <Card title="Operational note" description="The routing policy is ready for the secure assistant phase with real Google credentials.">
+        <Card title="Operational note" description="The routing policy is ready for secure onboarding with real Google credentials later.">
           <div className="mt-4 space-y-3 text-sm text-slate-300">
             <div className="rounded-xl border border-slate-800 px-3 py-2">No Google Drive URLs are present in any business object.</div>
             <div className="rounded-xl border border-slate-800 px-3 py-2">The Storage Orchestrator chooses the first available drive in the route.</div>

@@ -25,7 +25,7 @@ The Storage Orchestrator chooses the first available resource on the ordered rou
 ## Band handling
 
 - Normal resources are preferred
-- Attention and slowdown resources remain selectable for mock routing
+- Attention and slowdown resources remain selectable for fallback routing
 - Blocked resources are not used for large-file routing
 
 ## Storage Orchestrator contract

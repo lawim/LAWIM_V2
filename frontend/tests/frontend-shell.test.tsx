@@ -26,7 +26,7 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />);
 
     expect(screen.getByRole('heading', { name: /operational intelligence for modern teams/i })).toBeInTheDocument();
-    expect(screen.getByText(/live data flowing from the lawim backend with mock-safe fallbacks/i)).toBeInTheDocument();
+    expect(screen.getByText(/live data flowing from the lawim backend with activation-ready routing/i)).toBeInTheDocument();
     expect(screen.getByText(/search/i)).toBeInTheDocument();
   });
 
@@ -64,7 +64,7 @@ describe('LAWIM frontend shell', () => {
 
     expect(screen.getByRole('heading', { name: /admin backup and storage control center/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /simplified manager console/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /mock setup for the aac-b2 storage platform/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /google drive activation wizard/i })).toBeInTheDocument();
   });
 
   it('renders the observability and readiness panels', () => {

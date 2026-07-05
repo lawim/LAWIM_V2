@@ -1,6 +1,6 @@
 # OVH Storage Optimization
 
-The LAWIM_V2 storage layer is prepared for OVH production with mock-safe optimization policies.
+The LAWIM_V2 storage layer is prepared for OVH production with activation-ready optimization policies.
 
 ## Optimization rules
 
@@ -17,3 +17,4 @@ The LAWIM_V2 storage layer is prepared for OVH production with mock-safe optimiz
 - No real Google Drive URL is stored in business data
 - No real token, client secret, or refresh token is stored in the repository
 - Duplicate storage is controlled through the registry and the routing policy
+- The ten Google Drive connectors are placeholder-only and ready for later activation

@@ -39,8 +39,8 @@ class StorageOrchestratorPolicy:
 @dataclass(slots=True)
 class ProviderHealth:
     name: str
-    status: str = "mock-ready"
-    note: str = "placeholder health snapshot"
+    status: str = "activation-ready"
+    note: str = "activation health snapshot"
 
 
 @dataclass(slots=True)
@@ -183,12 +183,17 @@ class ConversationArchivePolicy:
     fallback_drive_target: str = "drive-8"
     retention_days: int = 365
     use_thumbnails: bool = True
+    allow_restore_preview: bool = True
 
 
 @dataclass(slots=True)
 class ConversationRestorePolicy:
     allow_mock_restore: bool = True
     require_media_id: bool = True
+
+    @property
+    def allow_restore_preview(self) -> bool:
+        return self.allow_mock_restore
 
 
 @dataclass(slots=True)
@@ -197,7 +202,7 @@ class SetupWizardConfiguration:
     backup_center_enabled: bool
     external_disk_enabled: bool
     google_drive_count: int = 10
-    placeholder_notes: tuple[str, ...] = ("mock configuration", "no secrets stored")
+    placeholder_notes: tuple[str, ...] = ("activation configuration", "no secrets stored")
 
 
 @dataclass(slots=True)
@@ -206,19 +211,19 @@ class LocalStorageProvider:
     kind: str = "local"
     quota_gb: int = 1000
     used_gb: int = 0
-    status: str = "mock-ready"
+    status: str = "activation-ready"
 
     def resolve_access(self, *, media_id: int, kind: str) -> dict[str, Any]:
         return {
             "media_id": media_id,
             "kind": kind,
             "provider": self.name,
-            "temporary_access_url": f"https://mock.example/{self.name}/{media_id}",
+            "temporary_access_url": f"https://access.placeholder.lawim.invalid/{self.name}/{media_id}",
             "ttl_seconds": 900,
         }
 
     def sync(self, *, media_id: int, direction: str = "outbound") -> dict[str, Any]:
-        return {"media_id": media_id, "provider": self.name, "direction": direction, "status": "mock-synced"}
+        return {"media_id": media_id, "provider": self.name, "direction": direction, "status": "activation-synced"}
 
 
 @dataclass(slots=True)
@@ -226,7 +231,7 @@ class GoogleDriveProvider:
     name: str
     quota_gb: int = 1000
     used_gb: int = 0
-    status: str = "mock-ready"
+    status: str = "activation-ready"
     kind: str = "google-drive"
 
     def resolve_access(self, *, media_id: int, kind: str) -> dict[str, Any]:
@@ -234,12 +239,12 @@ class GoogleDriveProvider:
             "media_id": media_id,
             "kind": kind,
             "provider": self.name,
-            "temporary_access_url": f"https://mock.example/{self.name}/{media_id}",
+            "temporary_access_url": f"https://access.placeholder.lawim.invalid/{self.name}/{media_id}",
             "ttl_seconds": 900,
         }
 
     def sync(self, *, media_id: int, direction: str = "outbound") -> dict[str, Any]:
-        return {"media_id": media_id, "provider": self.name, "direction": direction, "status": "mock-synced"}
+        return {"media_id": media_id, "provider": self.name, "direction": direction, "status": "activation-synced"}
 
 
 @dataclass(slots=True)
@@ -248,13 +253,13 @@ class BackupCenterProvider:
     kind: str = "backup"
     quota_gb: int = 5000
     used_gb: int = 0
-    status: str = "mock-ready"
+    status: str = "activation-ready"
 
     def resolve_access(self, *, media_id: int, kind: str) -> dict[str, Any]:
-        return {"media_id": media_id, "kind": kind, "provider": self.name, "temporary_access_url": f"https://mock.example/{self.name}/{media_id}", "ttl_seconds": 900}
+        return {"media_id": media_id, "kind": kind, "provider": self.name, "temporary_access_url": f"https://access.placeholder.lawim.invalid/{self.name}/{media_id}", "ttl_seconds": 900}
 
     def sync(self, *, media_id: int, direction: str = "outbound") -> dict[str, Any]:
-        return {"media_id": media_id, "provider": self.name, "direction": direction, "status": "mock-synced"}
+        return {"media_id": media_id, "provider": self.name, "direction": direction, "status": "activation-synced"}
 
 
 @dataclass(slots=True)
@@ -262,14 +267,14 @@ class ExternalDiskProvider:
     name: str
     capacity_gb: int = 200
     used_gb: int = 0
-    status: str = "mock-ready"
+    status: str = "activation-ready"
     kind: str = "external-disk"
 
     def resolve_access(self, *, media_id: int, kind: str) -> dict[str, Any]:
-        return {"media_id": media_id, "kind": kind, "provider": self.name, "temporary_access_url": f"https://mock.example/{self.name}/{media_id}", "ttl_seconds": 900}
+        return {"media_id": media_id, "kind": kind, "provider": self.name, "temporary_access_url": f"https://access.placeholder.lawim.invalid/{self.name}/{media_id}", "ttl_seconds": 900}
 
     def sync(self, *, media_id: int, direction: str = "outbound") -> dict[str, Any]:
-        return {"media_id": media_id, "provider": self.name, "direction": direction, "status": "mock-synced"}
+        return {"media_id": media_id, "provider": self.name, "direction": direction, "status": "activation-synced"}
 
 
 @dataclass(slots=True)
@@ -322,13 +327,14 @@ class StorageOrchestrator:
             "kind": kind,
             "provider": selected_resource.drive_id,
             "fallback_provider": self.conversation_policy.fallback_drive_target,
-            "temporary_access_url": f"https://mock.example/{selected_resource.drive_id}/{conversation_id}",
+            "temporary_access_url": f"https://access.placeholder.lawim.invalid/{selected_resource.drive_id}/{conversation_id}",
             "ttl_seconds": self.policy.temporary_access_ttl_seconds,
             "policy": {
                 "drive_target": self.conversation_policy.drive_target,
                 "fallback_drive_target": self.conversation_policy.fallback_drive_target,
                 "retention_days": self.conversation_policy.retention_days,
                 "use_thumbnails": self.conversation_policy.use_thumbnails,
+                "allow_restore_preview": self.conversation_policy.allow_restore_preview,
                 "require_media_id": self.restore_policy.require_media_id,
             },
             "routing": {

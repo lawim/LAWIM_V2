@@ -8,10 +8,10 @@ export function StorageResourcesPage() {
     <PageShell
       eyebrow="Admin Storage Registry"
       title="Storage Resource Registry"
-      description="The ten Google Drive resources, their quota bands, and the mock health posture used by the Storage Orchestrator."
+      description="The ten Google Drive resources, their activation state, and the policy metadata used by the Storage Orchestrator."
     >
       <div className="grid gap-6 xl:grid-cols-[1.25fr_0.75fr]">
-        <Card title="Registry summary" description="Ten logical resources, 13 GB theoretical quota each, and mock validation status.">
+        <Card title="Registry summary" description="Ten logical resources, 13 GB theoretical quota each, and activation-ready control data.">
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="text-sm text-slate-400">Total quota</div>
@@ -28,6 +28,10 @@ export function StorageResourcesPage() {
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="text-sm text-slate-400">Blocked resources</div>
               <div className="mt-2 text-2xl font-semibold text-white">{snapshot.blockedCount}</div>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <div className="text-sm text-slate-400">OAuth-ready connectors</div>
+              <div className="mt-2 text-2xl font-semibold text-white">{snapshot.oauthReadyCount}</div>
             </div>
           </div>
         </Card>
@@ -53,7 +57,7 @@ export function StorageResourcesPage() {
         </Card>
       </div>
 
-      <Card title="Drive inventory" description="Roles, quotas, occupation, last test, and the official route hint.">
+      <Card title="Drive inventory" description="Roles, quotas, control timestamps, API version, and the official route hint.">
         <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-2">
           {storageResources.map((drive) => (
             <div key={drive.driveId} className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4">
@@ -62,9 +66,9 @@ export function StorageResourcesPage() {
                   <div className="text-xs uppercase tracking-[0.3em] text-slate-500">{drive.driveId}</div>
                   <div className="mt-1 text-lg font-semibold text-white">{drive.role}</div>
                 </div>
-                <Badge variant={badgeVariantForStatus(drive.status)}>{drive.status}</Badge>
+                <Badge variant={badgeVariantForStatus(drive.state)}>{drive.state}</Badge>
               </div>
-              <div className="mt-2 text-sm text-slate-400">{drive.logicalName} · {drive.category}</div>
+              <div className="mt-2 text-sm text-slate-400">{drive.logicalName} · {drive.category} · {drive.resourceType}</div>
               <div className="mt-4 h-2 rounded-full bg-slate-800">
                 <div
                   className={`h-2 rounded-full ${
@@ -96,9 +100,17 @@ export function StorageResourcesPage() {
               <div className="mt-4 flex flex-wrap gap-2">
                 <Badge variant={badgeVariantForStatus(drive.thresholdBand)}>{drive.thresholdBand}</Badge>
                 <Badge variant={badgeVariantForStatus(drive.health)}>{drive.health}</Badge>
-                <Badge variant="default">{drive.lastTest}</Badge>
+                <Badge variant={badgeVariantForStatus(drive.apiVersion)}>{drive.apiVersion}</Badge>
+                <Badge variant={badgeVariantForStatus(drive.credentialStatus)}>{drive.credentialStatus}</Badge>
               </div>
-              <div className="mt-4 text-xs text-slate-500">Route hint: {drive.routeHint}</div>
+              <div className="mt-4 space-y-2 text-xs text-slate-500">
+                <div>Last control: {drive.lastControl}</div>
+                <div>Last access: {drive.lastAccess}</div>
+                <div>Route strategy: {drive.routingStrategy}</div>
+                <div>Backup policy: {drive.backupPolicy}</div>
+                <div>Restore policy: {drive.restorePolicy}</div>
+                <div>Route hint: {drive.routeHint}</div>
+              </div>
             </div>
           ))}
         </div>

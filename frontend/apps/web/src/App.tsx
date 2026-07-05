@@ -63,7 +63,7 @@ function HomePage() {
     <PageShell
       eyebrow="LAWIM Intelligence Platform"
       title="Operational intelligence for modern teams"
-      description="Live data flowing from the LAWIM backend with mock-safe fallbacks."
+      description="Live data flowing from the LAWIM backend with activation-ready routing."
       actions={
         <>
           <Button>Launch workspace</Button>

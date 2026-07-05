@@ -5,13 +5,15 @@
 | Release | Objectif | Statut |
 |---|---|---|
 | AAE | Production Security & Secrets | À démarrer |
-| AAF | Migration OVH | À démarrer |
+| AAF | Production Storage Activation & Google Drive Distributed Storage | À démarrer |
 | AAG | Monitoring & Observability | À démarrer |
 | AAH | Performance & Load Testing | À démarrer |
 | AAI | Go Live Certification | À démarrer |
 | AAJ | Production Deployment | Clôturée |
 
 La phase AAD est close. La prochaine release officielle est AAE.
+
+Les releases suivantes doivent rester orientées produit ou intégration réelle, afin de refléter l'évolution effective de LAWIM_V2.
 
 ## Module langues prêt avant migration
 

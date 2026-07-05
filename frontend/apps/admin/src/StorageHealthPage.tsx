@@ -10,7 +10,7 @@ export function StorageHealthPage() {
     <PageShell
       eyebrow="Storage Health"
       title="Storage health and drive distribution"
-      description="Monitor the mock OVH/Drive architecture, quota bands, and the latest registry test."
+      description="Monitor the OVH/Drive architecture, quota bands, and the latest control snapshot."
     >
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <Card title="Drive route health" description="The route model now follows the official 10-drive allocation.">
@@ -23,7 +23,7 @@ export function StorageHealthPage() {
             <div className="rounded-xl border border-slate-800 px-3 py-2">Drive 9 stays reserved and Drive 10 covers maintenance and migration.</div>
           </div>
         </Card>
-        <Card title="Policy snapshot" description="Thresholds and safety gates are mock configured.">
+        <Card title="Policy snapshot" description="Thresholds and safety gates are activation configured.">
           <div className="mt-4 space-y-3 text-sm text-slate-300">
             <div className="flex items-center justify-between rounded-xl border border-slate-800 px-3 py-2">
               <span>Normal</span>
@@ -41,16 +41,20 @@ export function StorageHealthPage() {
               <span>Blocked resources</span>
               <Badge variant={blocked.length > 0 ? 'warning' : 'success'}>{blocked.length}</Badge>
             </div>
+            <div className="flex items-center justify-between rounded-xl border border-slate-800 px-3 py-2">
+              <span>Latency</span>
+              <Badge variant="info">{snapshot.monitoring.latencyMs} ms</Badge>
+            </div>
           </div>
         </Card>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <Card title="Latest registry state" description="Mock test results and the current health posture.">
+        <Card title="Latest registry state" description="Control results and the current health posture.">
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
-              <div className="text-sm text-slate-400">Last test</div>
-              <div className="mt-2 text-sm font-semibold text-white">{snapshot.lastTest}</div>
+              <div className="text-sm text-slate-400">Last control</div>
+              <div className="mt-2 text-sm font-semibold text-white">{snapshot.lastControl}</div>
             </div>
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="text-sm text-slate-400">Available resources</div>
@@ -63,6 +67,10 @@ export function StorageHealthPage() {
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="text-sm text-slate-400">Backup posture</div>
               <div className="mt-2 text-2xl font-semibold text-white">{snapshot.backupStatus}</div>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <div className="text-sm text-slate-400">Throughput</div>
+              <div className="mt-2 text-2xl font-semibold text-white">{snapshot.monitoring.throughputMbps} Mbps</div>
             </div>
           </div>
         </Card>
@@ -81,6 +89,9 @@ export function StorageHealthPage() {
             ))}
             <div className="rounded-xl border border-slate-800 px-3 py-2">
               The blocked set is currently: {snapshot.blockedResources.join(', ')}.
+            </div>
+            <div className="rounded-xl border border-slate-800 px-3 py-2">
+              API state: {snapshot.monitoring.apiMonitor.status} · version {snapshot.monitoring.apiMonitor.apiVersion}.
             </div>
           </div>
         </Card>

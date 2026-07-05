@@ -58,7 +58,7 @@ const navItems = [
   { to: '/deployment', label: 'Deployment' },
   { to: '/backup', label: 'Backup' },
   { to: '/admin/storage-resources', label: 'Storage Resources' },
-  { to: '/admin/google-drive-registry', label: 'Drive Registry' },
+  { to: '/admin/google-drive-admin-center', label: 'Drive Center' },
   { to: '/admin/storage-routing', label: 'Storage Routing' },
   { to: '/releases', label: 'Releases' },
   { to: '/brain', label: 'Brain' },
@@ -306,6 +306,7 @@ export function AdminApp() {
         <Route path="/deployment" element={<DeploymentPage />} />
         <Route path="/backup" element={<BackupPage />} />
         <Route path="/admin/storage-resources" element={<StorageResourcesPage />} />
+        <Route path="/admin/google-drive-admin-center" element={<GoogleDriveRegistryPage />} />
         <Route path="/admin/google-drive-registry" element={<GoogleDriveRegistryPage />} />
         <Route path="/admin/storage-routing" element={<StorageRoutingPage />} />
         <Route path="/releases" element={<ReleasesPage />} />

@@ -11,7 +11,7 @@ export function BackupCenterPage() {
       description="Operational view for the ten Google Drive resources, routing bands, and backup readiness."
     >
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card title="Global storage overview" description="Capacity, alert posture, and latest mock test status.">
+        <Card title="Global storage overview" description="Capacity, alert posture, and latest control status.">
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4">
               <div className="text-sm text-slate-400">Total used</div>
@@ -26,12 +26,12 @@ export function BackupCenterPage() {
               <div className="mt-2 text-2xl font-semibold text-white">{snapshot.alertCount}</div>
             </div>
             <div className="rounded-2xl border border-slate-800/80 bg-slate-950/70 p-4">
-              <div className="text-sm text-slate-400">Last test</div>
-              <div className="mt-2 text-sm font-semibold text-white">{snapshot.lastTest}</div>
+              <div className="text-sm text-slate-400">Last control</div>
+              <div className="mt-2 text-sm font-semibold text-white">{snapshot.lastControl}</div>
             </div>
           </div>
         </Card>
-        <Card title="Operations" description="Backup posture and route health.">
+        <Card title="Operations" description="Backup posture, route health, and connector readiness.">
           <div className="mt-4 space-y-3 text-sm text-slate-300">
             <div className="flex items-center justify-between rounded-xl border border-slate-800 px-3 py-2">
               <span>Backup status</span>
@@ -53,6 +53,10 @@ export function BackupCenterPage() {
               <span>Route readiness</span>
               <Badge variant="info">Drive 1, 3, 5, 7 and 10 ready</Badge>
             </div>
+            <div className="flex items-center justify-between rounded-xl border border-slate-800 px-3 py-2">
+              <span>OAuth ready</span>
+              <Badge variant="info">{snapshot.oauthReadyCount}</Badge>
+            </div>
           </div>
         </Card>
       </div>
@@ -67,7 +71,7 @@ export function BackupCenterPage() {
                     <div className="text-xs uppercase tracking-[0.3em] text-slate-500">{drive.driveId}</div>
                     <div className="mt-1 text-lg font-semibold text-white">{drive.role}</div>
                   </div>
-                  <Badge variant={badgeVariantForStatus(drive.status)}>{drive.status}</Badge>
+                  <Badge variant={badgeVariantForStatus(drive.state)}>{drive.state}</Badge>
                 </div>
                 <div className="mt-2 text-sm text-slate-400">{drive.logicalName} · {drive.category}</div>
                 <div className="mt-4 h-2 rounded-full bg-slate-800">
@@ -101,7 +105,7 @@ export function BackupCenterPage() {
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Badge variant={badgeVariantForStatus(drive.thresholdBand)}>{drive.thresholdBand}</Badge>
                   <Badge variant={badgeVariantForStatus(drive.health)}>{drive.health}</Badge>
-                  <Badge variant="default">{drive.lastTest}</Badge>
+                  <Badge variant="default">{drive.apiVersion}</Badge>
                 </div>
                 <div className="mt-4 text-xs text-slate-500">Route: {drive.routeHint}</div>
               </div>
@@ -117,6 +121,9 @@ export function BackupCenterPage() {
             ))}
             <div className="rounded-xl border border-slate-800 px-3 py-2">
               Thresholds: normal 0-70%, attention 70-85%, slowdown 85-92%, blocked &gt;92%.
+            </div>
+            <div className="rounded-xl border border-slate-800 px-3 py-2">
+              Monitoring: {snapshot.monitoring.latencyMs} ms latency, {snapshot.monitoring.throughputMbps} Mbps throughput.
             </div>
           </div>
         </Card>

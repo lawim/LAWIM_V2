@@ -41,7 +41,7 @@ Each Drive entry includes:
 ## Configuration status
 
 - `credential_status`: placeholder until the secure assistant phase
-- `test_status`: mock validation result
+- `test_status`: activation validation result
 - `provider`: `google-drive`
 - `quota`: `13 GB` theoretical per Drive
 

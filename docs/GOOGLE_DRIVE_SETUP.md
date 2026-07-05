@@ -1,6 +1,6 @@
-# Storage Setup Wizard
+# Google Drive Setup
 
-The storage setup wizard is an activation-first assistant for configuring the LAWIM_V2 distributed storage platform.
+The setup wizard prepares LAWIM_V2 for real Google Drive onboarding without modifying the code later.
 
 ## Steps
 
@@ -26,9 +26,9 @@ The storage setup wizard is an activation-first assistant for configuring the LA
 - TEMP
 - LOGS
 
-## Wizard output
+## Wizard guarantees
 
-- All drive declarations remain placeholders
-- No real Google secret is required
-- The wizard previews the official routes before secure onboarding
-- The summary highlights blocked resources, remaining capacity, and OAuth readiness
+- Placeholders only
+- No real Google secret is requested
+- Official routes are previewed before activation
+- The summary surfaces capacity, alerts, and OAuth readiness

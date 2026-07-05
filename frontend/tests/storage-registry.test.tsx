@@ -19,7 +19,7 @@ describe('storage registry frontend surfaces', () => {
   it('renders the google drive registry dashboard', () => {
     render(<GoogleDriveRegistryPage />);
 
-    expect(screen.getByRole('heading', { name: /google drive functional configuration/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /google drive operational control center/i })).toBeInTheDocument();
     expect(screen.getByText(/drive-1@placeholder\.lawim\.invalid/i)).toBeInTheDocument();
     expect(screen.getByText(/no token, client secret, or refresh token/i)).toBeInTheDocument();
   });
@@ -40,9 +40,10 @@ describe('storage registry frontend surfaces', () => {
       </>
     );
 
-    expect(screen.getByRole('heading', { name: /mock setup for the aac-b2 storage platform/i })).toBeInTheDocument();
-    expect(screen.getByText(/declaration of the 10 drives/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /google drive activation wizard/i })).toBeInTheDocument();
+    expect(screen.getByText(/declare the 10 google drive resources/i)).toBeInTheDocument();
+    expect(screen.getByText(/automatic folders:/i)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /simplified manager console/i })).toBeInTheDocument();
-    expect(screen.getByText(/global storage, alerts, last test, and backup status at a glance/i)).toBeInTheDocument();
+    expect(screen.getByText(/global storage, alerts, control timestamps, and backup status at a glance/i)).toBeInTheDocument();
   });
 });

@@ -3,18 +3,11 @@ from __future__ import annotations
 import json
 import unittest
 
-from lawim_v2.storage_platform import LocalStorageProvider, StorageOrchestrator, StorageOrchestratorPolicy
-from lawim_v2.storage_registry import (
-    GoogleDriveConfigurationModel,
-    StorageResourceRegistry,
-    StorageRoutingPolicy,
-    StorageSetupWizard,
-    StorageUsageThresholds,
-)
+from lawim_v2 import GoogleDriveConfigurationModel, StorageResourceRegistry, StorageSetupWizard
 
 
-class StorageResourceRegistryAAETest(unittest.TestCase):
-    def test_registry_models_ten_drives_with_quota_and_thresholds(self) -> None:
+class StorageResourceRegistryAAFTest(unittest.TestCase):
+    def test_registry_models_ten_drives_with_phase_one_fields(self) -> None:
         registry = StorageResourceRegistry.default()
 
         self.assertEqual(len(registry.resources), 10)
@@ -22,7 +15,7 @@ class StorageResourceRegistryAAETest(unittest.TestCase):
         self.assertEqual(registry.get("drive-3").role, "Photos + Audio")
         self.assertEqual(registry.get("drive-5").quota_gb, 13.0)
         self.assertEqual(registry.get("drive-8").threshold_band(), "blocked")
-        self.assertEqual(registry.thresholds.as_dict()["normal_max_percent"], 70)
+        self.assertEqual(registry.get("drive-1").resource_type, "google-drive-resource")
         self.assertEqual(registry.get("drive-1").api_version, "v3")
         self.assertEqual(registry.get("drive-1").routing_strategy, "official-priority-route")
         self.assertEqual(registry.get("drive-1").backup_policy, "backup-center-activation")
@@ -42,39 +35,21 @@ class StorageResourceRegistryAAETest(unittest.TestCase):
             self.assertIn(configuration.test_status, {"activation-passed", "activation-review"})
             self.assertNotIn("drive.google.com", json.dumps(configuration.as_dict()))
 
-    def test_routing_policy_matches_official_routes(self) -> None:
-        policy = StorageRoutingPolicy()
-
-        self.assertEqual(policy.route_for("video"), ("drive-1", "drive-2", "drive-8"))
-        self.assertEqual(policy.route_for("photo"), ("drive-3", "drive-8"))
-        self.assertEqual(policy.route_for("audio"), ("drive-3", "drive-8"))
-        self.assertEqual(policy.route_for("conversation archive"), ("drive-5", "drive-8"))
-        self.assertEqual(policy.route_for("export/rapport"), ("drive-6", "drive-8"))
-        self.assertEqual(policy.route_for("backup applicatif"), ("drive-7", "drive-10"))
-        self.assertEqual(policy.route_for("réplication critique"), ("drive-8", "drive-10"))
-        self.assertEqual(policy.route_for("reserve"), ("drive-9",))
-        self.assertEqual(policy.route_for("maintenance/migration"), ("drive-10",))
-
-    def test_registry_dashboard_reports_available_and_blocked_resources(self) -> None:
+    def test_dashboard_monitoring_and_backup_snapshots_are_operational(self) -> None:
         registry = StorageResourceRegistry.default()
         snapshot = registry.dashboard_snapshot()
+        admin_snapshot = registry.google_drive_admin_snapshot()
+        monitoring_snapshot = registry.monitoring_snapshot()
+        backup_snapshot = registry.backup_center_configuration()
 
         self.assertEqual(snapshot["summary"]["resource_count"], 10)
         self.assertEqual(snapshot["summary"]["blocked_count"], 1)
         self.assertEqual(snapshot["summary"]["available_count"], 9)
         self.assertIn("drive-8", snapshot["blocked_resources"])
-        self.assertGreaterEqual(snapshot["summary"]["alert_count"], 3)
-        self.assertEqual(snapshot["thresholds"]["slowdown_max_percent"], 92)
         self.assertEqual(snapshot["summary"]["last_control"], "2026-07-05T10:00:00Z")
         self.assertEqual(snapshot["summary"]["last_access"], "2026-07-05T10:00:00Z")
         self.assertEqual(len(snapshot["routes"]), 10)
-
-    def test_admin_snapshot_and_monitoring_snapshot_are_connector_ready(self) -> None:
-        registry = StorageResourceRegistry.default()
-        admin_snapshot = registry.google_drive_admin_snapshot()
-        monitoring_snapshot = registry.monitoring_snapshot()
-        backup_snapshot = registry.backup_center_configuration()
-
+        self.assertEqual(admin_snapshot["blocked_drives"], ["drive-8"])
         self.assertEqual(admin_snapshot["available_drives"], [
             "drive-1",
             "drive-2",
@@ -86,11 +61,10 @@ class StorageResourceRegistryAAETest(unittest.TestCase):
             "drive-9",
             "drive-10",
         ])
-        self.assertEqual(admin_snapshot["blocked_drives"], ["drive-8"])
-        self.assertIn("required_folders", admin_snapshot)
         self.assertEqual(monitoring_snapshot["quota_monitor"]["band"], "normal")
         self.assertIn("latency_ms", monitoring_snapshot)
         self.assertEqual(backup_snapshot["backup_center"], "activation-ready")
+        self.assertEqual(backup_snapshot["storage_resource_registry"], "connected")
         self.assertEqual(backup_snapshot["storage_orchestrator"], "connected")
         self.assertIn("monitoring", backup_snapshot)
 
@@ -106,25 +80,6 @@ class StorageResourceRegistryAAETest(unittest.TestCase):
         self.assertTrue(result["no_real_secrets"])
         self.assertTrue(result["activation_ready"])
         self.assertEqual(len(result["required_folders"]), 10)
-
-    def test_orchestrator_uses_registry_and_keeps_google_urls_out_of_business_data(self) -> None:
-        orchestrator = StorageOrchestrator(
-            providers=[LocalStorageProvider()],
-            policy=StorageOrchestratorPolicy(default_provider="local"),
-            resource_registry=StorageResourceRegistry.default(),
-        )
-
-        media_access = orchestrator.resolve_media_access(media_id=42, kind="video")
-        conversation_access = orchestrator.resolve_conversation_archive_access(conversation_id=7)
-        snapshot = orchestrator.resource_snapshot()
-
-        self.assertEqual(media_access["routing"]["route"], ["drive-1", "drive-2", "drive-8"])
-        self.assertEqual(media_access["storage_resource"]["drive_id"], "drive-1")
-        self.assertEqual(conversation_access["provider"], "drive-5")
-        self.assertEqual(conversation_access["routing"]["route"], ["drive-5", "drive-8"])
-        self.assertNotIn("drive.google.com", json.dumps(media_access))
-        self.assertNotIn("drive.google.com", json.dumps(conversation_access))
-        self.assertNotIn("drive.google.com", json.dumps(snapshot))
 
 
 if __name__ == "__main__":

@@ -10,6 +10,11 @@ The Backup Center is the operational layer that coordinates local backup, extern
 - Drive 8 for overflow and replication pressure
 - Drive 9 for reserve
 - Drive 10 for maintenance and migration
+- Storage Resource Registry connected
+- Storage Orchestrator connected
+- Conversation Registry connected
+- Media Registry connected
+- Restore Center connected
 
 ## Operating rules
 
@@ -23,12 +28,15 @@ The Backup Center is the operational layer that coordinates local backup, extern
 
 - Global storage summary
 - Alerts and blocked resources
-- Last mock test timestamp
+- Last control timestamp
 - Capacity remaining
 - Backup status
+- Monitoring snapshot reused from the storage registry
 
 ## Related configuration
 
 - `docs/STORAGE_RESOURCE_REGISTRY.md`
 - `docs/STORAGE_ROUTING_POLICY.md`
 - `docs/GOOGLE_DRIVE_QUOTA_POLICY.md`
+- `docs/GOOGLE_DRIVE_CONNECTOR.md`
+- `docs/GOOGLE_DRIVE_MONITORING.md`

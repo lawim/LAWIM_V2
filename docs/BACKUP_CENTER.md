@@ -1,6 +1,6 @@
 # Backup Center
 
-This document describes the mock backup center architecture for LAWIM_V2. The implementation is additive and does not alter the existing media registry contract.
+This document describes the activation-ready backup center architecture for LAWIM_V2. The implementation is additive and does not alter the existing media registry contract.
 
 ## Scope
 
@@ -22,3 +22,5 @@ This document describes the mock backup center architecture for LAWIM_V2. The im
 - `docs/BACKUP_CENTER_CONFIGURATION.md`
 - `docs/STORAGE_RESOURCE_REGISTRY.md`
 - `docs/STORAGE_ROUTING_POLICY.md`
+- `docs/GOOGLE_DRIVE_CONNECTOR.md`
+- `docs/GOOGLE_DRIVE_ADMIN_CENTER.md`

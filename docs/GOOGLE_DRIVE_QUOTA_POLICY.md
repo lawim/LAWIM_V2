@@ -13,7 +13,7 @@ The storage registry uses a theoretical quota of `13 GB` per logical Google Driv
 
 - Normal resources stay in the primary selection pool
 - Attention resources remain selectable and are surfaced in alerts
-- Slowdown resources are visible in the dashboard and can still serve mock routing
+- Slowdown resources are visible in the dashboard and can still serve fallback routing
 - Blocked resources are skipped for large-file selection when a fallback exists
 
 ## Quota distribution
@@ -24,6 +24,6 @@ The storage registry uses a theoretical quota of `13 GB` per logical Google Driv
 
 ## Notes
 
-- The quota policy is mock-safe
+- The quota policy is activation-ready
 - No real Google Drive capacity is consumed by this repository
 - The secure assistant phase will later bind the real accounts to these placeholders
