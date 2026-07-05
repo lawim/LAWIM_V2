@@ -43,6 +43,8 @@ describe('LAWIM frontend shell', () => {
     expect(screen.getByText(/administrative controls, governance workflows, and deployment readiness in one place/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /operations/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /agents/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /credential vault/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /drive security/i })).toBeInTheDocument();
   });
 
   it('renders the workflow orchestrator experience', () => {

@@ -5,6 +5,7 @@ from typing import Any, Sequence
 import re
 import unicodedata
 
+from .credential_vault import CredentialReference, CredentialStatus, CredentialVault, build_default_credential_vault
 from .google_drive_connector import GoogleDriveConnector, build_default_google_drive_connectors
 
 
@@ -49,6 +50,7 @@ class StorageResource:
     role: str
     priority: int
     category: str
+    credential_id: str = ""
     resource_type: str = "google-drive-resource"
     quota_gb: float = 13.0
     used_gb: float = 0.0
@@ -58,11 +60,16 @@ class StorageResource:
     last_test: str = "2026-07-05T10:00:00Z"
     last_control: str = "2026-07-05T10:00:00Z"
     last_access: str = "2026-07-05T10:00:00Z"
+    last_connection_test: str = "2026-07-05T10:00:00Z"
+    last_upload_test: str = "2026-07-05T10:00:00Z"
+    last_download_test: str = "2026-07-05T10:00:00Z"
+    last_healthcheck: str = "2026-07-05T10:00:00Z"
     api_version: str = "v3"
     routing_strategy: str = "official-priority-route"
     backup_policy: str = "backup-center-activation"
     restore_policy: str = "restore-center-activation"
-    credential_status: str = "placeholder"
+    credential_status: str = CredentialStatus.PLACEHOLDER_CONFIGURED
+    oauth_status: str = CredentialStatus.PLACEHOLDER_CONFIGURED
     test_status: str = "activation-passed"
 
     @property
@@ -96,6 +103,7 @@ class StorageResource:
             "role": self.role,
             "priority": self.priority,
             "category": self.category,
+            "credential_id": self.credential_id,
             "resource_type": self.resource_type,
             "quota_gb": self.quota_gb,
             "used_gb": self.used_gb,
@@ -108,11 +116,16 @@ class StorageResource:
             "last_test": self.last_test,
             "last_control": self.last_control,
             "last_access": self.last_access,
+            "last_connection_test": self.last_connection_test,
+            "last_upload_test": self.last_upload_test,
+            "last_download_test": self.last_download_test,
+            "last_healthcheck": self.last_healthcheck,
             "api_version": self.api_version,
             "routing_strategy": self.routing_strategy,
             "backup_policy": self.backup_policy,
             "restore_policy": self.restore_policy,
             "credential_status": self.credential_status,
+            "oauth_status": self.oauth_status,
             "test_status": self.test_status,
             "threshold_band": band,
         }
@@ -125,9 +138,15 @@ class GoogleDriveConfigurationModel:
     email_placeholder: str
     provider: str = "google-drive"
     category: str = "general"
+    credential_id: str = ""
     quota_gb: float = 13.0
     used_gb: float = 0.0
-    credential_status: str = "placeholder"
+    credential_status: str = CredentialStatus.PLACEHOLDER_CONFIGURED
+    oauth_status: str = CredentialStatus.PLACEHOLDER_CONFIGURED
+    last_connection_test: str = "2026-07-05T10:00:00Z"
+    last_upload_test: str = "2026-07-05T10:00:00Z"
+    last_download_test: str = "2026-07-05T10:00:00Z"
+    last_healthcheck: str = "2026-07-05T10:00:00Z"
     test_status: str = "activation-passed"
 
     @property
@@ -141,10 +160,16 @@ class GoogleDriveConfigurationModel:
             "email_placeholder": self.email_placeholder,
             "provider": self.provider,
             "category": self.category,
+            "credential_id": self.credential_id,
             "quota_gb": self.quota_gb,
             "used_gb": self.used_gb,
             "available_gb": self.available_gb,
             "credential_status": self.credential_status,
+            "oauth_status": self.oauth_status,
+            "last_connection_test": self.last_connection_test,
+            "last_upload_test": self.last_upload_test,
+            "last_download_test": self.last_download_test,
+            "last_healthcheck": self.last_healthcheck,
             "test_status": self.test_status,
         }
 
@@ -336,6 +361,7 @@ def build_default_storage_resources() -> list[StorageResource]:
                 role=str(spec["role"]),
                 priority=int(spec["priority"]),
                 category=str(spec["category"]),
+                credential_id=f"cred-{spec['drive_id']}",
                 resource_type="google-drive-resource",
                 quota_gb=quota_gb,
                 used_gb=used_gb,
@@ -344,11 +370,16 @@ def build_default_storage_resources() -> list[StorageResource]:
                 last_test=last_check,
                 last_control=last_check,
                 last_access=last_check,
+                last_connection_test=last_check,
+                last_upload_test=last_check,
+                last_download_test=last_check,
+                last_healthcheck=last_check,
                 api_version="v3",
                 routing_strategy="official-priority-route",
                 backup_policy="backup-center-activation",
                 restore_policy="restore-center-activation",
                 credential_status="placeholder-configured",
+                oauth_status="placeholder-configured",
                 test_status="activation-passed" if band != "blocked" else "activation-review",
             )
         )
@@ -368,9 +399,15 @@ def build_default_google_drive_configurations(
                 email_placeholder=f"{resource.drive_id}@placeholder.lawim.invalid",
                 provider=resource.provider_type,
                 category=resource.category,
+                credential_id=resource.credential_id,
                 quota_gb=resource.quota_gb,
                 used_gb=resource.used_gb,
                 credential_status=resource.credential_status,
+                oauth_status=resource.oauth_status,
+                last_connection_test=resource.last_connection_test,
+                last_upload_test=resource.last_upload_test,
+                last_download_test=resource.last_download_test,
+                last_healthcheck=resource.last_healthcheck,
                 test_status=resource.test_status,
             )
         )
@@ -382,6 +419,13 @@ class StorageResourceRegistry:
     resources: list[StorageResource] = field(default_factory=build_default_storage_resources)
     routing_policy: StorageRoutingPolicy = field(default_factory=StorageRoutingPolicy)
     thresholds: StorageUsageThresholds = field(default_factory=StorageUsageThresholds)
+    credential_vault: CredentialVault = field(default_factory=lambda: build_default_credential_vault(_RESOURCE_SPECS))
+
+    def __post_init__(self) -> None:
+        resource_ids = {resource.credential_id for resource in self.resources if resource.credential_id}
+        vault_ids = {record.credential_id for record in self.credential_vault.list_records()}
+        if not resource_ids or resource_ids != vault_ids:
+            self.credential_vault = build_default_credential_vault(self.resources)
 
     @classmethod
     def default(cls) -> "StorageResourceRegistry":
@@ -427,7 +471,14 @@ class StorageResourceRegistry:
         return build_default_google_drive_configurations(self.resources)
 
     def google_drive_connectors(self) -> list[GoogleDriveConnector]:
-        return build_default_google_drive_connectors(self.resources)
+        return build_default_google_drive_connectors(self.resources, vault=self.credential_vault)
+
+    def credential_reference_for(self, drive_id: str) -> CredentialReference:
+        resource = self.get(drive_id)
+        return self.credential_vault.reference_for(resource.credential_id)
+
+    def credential_vault_snapshot(self) -> dict[str, Any]:
+        return self.credential_vault.snapshot()
 
     def drive_configuration_for(self, drive_id: str) -> GoogleDriveConfigurationModel:
         for configuration in self.google_drive_configurations():
@@ -486,6 +537,7 @@ class StorageResourceRegistry:
             "summary": self.summary(),
             "drives": [configuration.as_dict() for configuration in configurations],
             "connectors": [connector.activation_snapshot() for connector in connectors],
+            "credential_vault": self.credential_vault_snapshot(),
             "available_drives": [configuration.drive_id for configuration in configurations if configuration.available_gb > 0],
             "required_folders": list(GoogleDriveConnector.required_folders()),
         }
@@ -497,7 +549,8 @@ class StorageResourceRegistry:
             "drives": [connector.activation_snapshot() for connector in connectors],
             "available_drives": [connector.drive_id for connector in connectors if connector.threshold_band != "blocked"],
             "blocked_drives": [connector.drive_id for connector in connectors if connector.threshold_band == "blocked"],
-            "oauth_ready": [connector.drive_id for connector in connectors if connector.oauth.status == "placeholder-configured"],
+            "oauth_ready": [connector.drive_id for connector in connectors if connector.oauth.status == CredentialStatus.PLACEHOLDER_CONFIGURED],
+            "credential_vault": self.credential_vault_snapshot(),
             "required_folders": list(GoogleDriveConnector.required_folders()),
             "alerts": self.alerts(),
             "routes": self.routing_policy.describe_routes(),
@@ -528,6 +581,8 @@ class StorageResourceRegistry:
             "throughput_mbps": throughput_mbps,
             "apiMonitor": {**api_monitor, "connectorCount": len(connectors)},
             "api_monitor": {**api_monitor, "connector_count": len(connectors)},
+            "credentialMonitor": self.credential_vault.monitoring_snapshot(),
+            "credential_monitor": self.credential_vault.monitoring_snapshot(),
             "alerts": self.alerts(),
             "occupation": {
                 "available_resources": len(self.available_resources()),
@@ -568,6 +623,7 @@ class StorageResourceRegistry:
             "conversation_registry": "connected",
             "media_registry": "connected",
             "restore_center": "connected",
+            "credential_vault": "connected",
             "monitoring": self.monitoring_snapshot(),
             "quota_policy": self.thresholds.as_dict(),
         }
@@ -576,14 +632,17 @@ class StorageResourceRegistry:
 @dataclass(slots=True)
 class StorageSetupWizard:
     steps: tuple[str, ...] = (
+        "Register the credential vault",
         "Declare the 10 Google Drive resources",
-        "Validate OAuth placeholders",
-        "Run the connection test",
+        "Bind credential references",
+        "Validate OAuth connection",
+        "Validate permissions",
+        "Create the automatic folders",
         "Run the read test",
         "Run the write test",
-        "Create the automatic folders",
-        "Simulate video upload and conversation archive",
-        "Simulate backup activation and verification",
+        "Run the upload test",
+        "Run the download test",
+        "Run the final validation",
     )
     required_folders: tuple[str, ...] = GoogleDriveConnector.required_folders()
 
@@ -593,6 +652,7 @@ class StorageSetupWizard:
             "steps": [{"step": step, "status": "prepared"} for step in self.steps],
             "required_folders": list(self.required_folders),
             "connectors": [connector.activation_snapshot() for connector in registry.google_drive_connectors()],
+            "credential_vault": registry.credential_vault_snapshot(),
             "sample_routes": {
                 "video": list(registry.routing_policy.route_for("video")),
                 "photo": list(registry.routing_policy.route_for("photo")),

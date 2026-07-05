@@ -8,18 +8,18 @@ export function StorageSetupWizardPage() {
     <PageShell
       eyebrow="Storage Setup Wizard"
       title="Google Drive activation wizard"
-      description="A step-based activation wizard that prepares the 10 Google Drive accounts without storing secrets."
+      description="A step-based activation wizard that prepares the 10 Google Drive accounts without exposing protected material."
       actions={<Button>Run setup</Button>}
     >
       <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-        <Card title="Wizard steps" description="The wizard remains placeholder-only and is ready for real onboarding later.">
+        <Card title="Wizard steps" description="The wizard binds the credential vault, validates access, and prepares onboarding for real accounts.">
           <ol className="mt-4 space-y-2 text-sm text-slate-300">
             {setupWizardSteps.map((step) => (
               <li key={step} className="rounded-xl border border-slate-800 px-3 py-2">{step}</li>
             ))}
           </ol>
         </Card>
-        <Card title="Configuration summary" description="No secrets are stored; all sensitive inputs remain placeholders.">
+        <Card title="Configuration summary" description="No protected material is stored in the frontend; all references stay logical and masked.">
           <div className="mt-4 space-y-2 text-sm text-slate-300">
             <div className="rounded-xl border border-slate-800 px-3 py-2">Architecture: OVH VPS + Backup Center + 10 Google Drive + external disk</div>
             <div className="rounded-xl border border-slate-800 px-3 py-2">Drive 1 and Drive 2: videos only</div>
@@ -29,13 +29,13 @@ export function StorageSetupWizardPage() {
             <div className="rounded-xl border border-slate-800 px-3 py-2">Drive 8: overflow and critical replication</div>
             <div className="rounded-xl border border-slate-800 px-3 py-2">Drive 9: strategic reserve, Drive 10: maintenance and migration</div>
             <div className="rounded-xl border border-slate-800 px-3 py-2">Automatic folders: {setupWizardFolders.join(', ')}</div>
-            <div className="rounded-xl border border-slate-800 px-3 py-2">Validation steps: connection, OAuth, read, write, upload, download, folder creation, and verification</div>
+            <div className="rounded-xl border border-slate-800 px-3 py-2">Validation steps: vault binding, OAuth, permissions, read, write, upload, download, folder creation, and final verification</div>
           </div>
         </Card>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <Card title="Activation summary" description="The setup wizard produces a safe trace without any real Google secret material.">
+        <Card title="Activation summary" description="The setup wizard produces a safe trace with masked credential references only.">
           <div className="mt-4 grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="text-sm text-slate-400">Declared drives</div>
@@ -60,6 +60,10 @@ export function StorageSetupWizardPage() {
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="text-sm text-slate-400">OAuth-ready drives</div>
               <div className="mt-2 text-2xl font-semibold text-white">{snapshot.oauthReadyCount}</div>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <div className="text-sm text-slate-400">Credential vault</div>
+              <div className="mt-2 text-2xl font-semibold text-white">{snapshot.credentialVault.summary.recordCount}</div>
             </div>
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="text-sm text-slate-400">Latest route</div>

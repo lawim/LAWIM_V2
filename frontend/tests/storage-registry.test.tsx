@@ -21,7 +21,7 @@ describe('storage registry frontend surfaces', () => {
 
     expect(screen.getByRole('heading', { name: /google drive operational control center/i })).toBeInTheDocument();
     expect(screen.getByText(/drive-1@placeholder\.lawim\.invalid/i)).toBeInTheDocument();
-    expect(screen.getByText(/no token, client secret, or refresh token/i)).toBeInTheDocument();
+    expect(screen.getByText(/credential vault keeps protected material encrypted/i)).toBeInTheDocument();
   });
 
   it('renders the storage routing dashboard', () => {
@@ -41,6 +41,7 @@ describe('storage registry frontend surfaces', () => {
     );
 
     expect(screen.getByRole('heading', { name: /google drive activation wizard/i })).toBeInTheDocument();
+    expect(screen.getByText(/register the credential vault/i)).toBeInTheDocument();
     expect(screen.getByText(/declare the 10 google drive resources/i)).toBeInTheDocument();
     expect(screen.getByText(/automatic folders:/i)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /simplified manager console/i })).toBeInTheDocument();

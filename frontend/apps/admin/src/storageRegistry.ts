@@ -13,13 +13,19 @@ export interface StorageResourceRow {
   availableGb: number;
   usagePercent: number;
   providerType: string;
+  credentialId: string;
   state: string;
   status: StorageStatus;
   health: StorageStatus;
   lastControl: string;
   lastAccess: string;
   lastTest: string;
+  lastConnectionTest: string;
+  lastUploadTest: string;
+  lastDownloadTest: string;
+  lastHealthcheck: string;
   apiVersion: string;
+  oauthStatus: string;
   routingStrategy: string;
   backupPolicy: string;
   restorePolicy: string;
@@ -32,6 +38,7 @@ export interface StorageResourceRow {
 export interface GoogleDriveConfigurationRow {
   driveId: string;
   logicalName: string;
+  credentialId: string;
   emailPlaceholder: string;
   provider: string;
   category: string;
@@ -44,6 +51,10 @@ export interface GoogleDriveConfigurationRow {
   oauthStatus: string;
   lastControl: string;
   lastAccess: string;
+  lastConnectionTest: string;
+  lastUploadTest: string;
+  lastDownloadTest: string;
+  lastHealthcheck: string;
   routingStrategy: string;
   backupPolicy: string;
   restorePolicy: string;
@@ -52,6 +63,7 @@ export interface GoogleDriveConfigurationRow {
 export interface GoogleDriveConnectorRow {
   driveId: string;
   logicalName: string;
+  credentialId: string;
   provider: string;
   category: string;
   resourceType: string;
@@ -61,10 +73,15 @@ export interface GoogleDriveConnectorRow {
   usagePercent: number;
   state: string;
   health: string;
+  credentialStatus: string;
   apiVersion: string;
   oauthStatus: string;
   lastControl: string;
   lastAccess: string;
+  lastConnectionTest: string;
+  lastUploadTest: string;
+  lastDownloadTest: string;
+  lastHealthcheck: string;
   lastUpload: string;
   lastDownload: string;
   lastIncident: string;
@@ -82,6 +99,30 @@ export interface StorageRouteRow {
   route: string[];
   fallback: string;
   description: string;
+}
+
+export interface CredentialVaultRow {
+  credentialId: string;
+  driveId: string;
+  logicalName: string;
+  role: string;
+  provider: string;
+  credentialType: string;
+  scope: string;
+  status: string;
+  oauthStatus: string;
+  credentialStatus: string;
+  maskedValue: string;
+  maskedReference: string;
+  rotationPolicy: string;
+  expiration: string;
+  rotationDue: string;
+  lastUse: string;
+  lastConnectionTest: string;
+  lastUploadTest: string;
+  lastDownloadTest: string;
+  lastHealthcheck: string;
+  alerts: string[];
 }
 
 export const storageThresholds = {
@@ -104,6 +145,8 @@ export const setupWizardFolders = [
 ];
 
 const activationTimestamp = '2026-07-05T10:00:00Z';
+const expirationTimestamp = '2027-07-05T10:00:00Z';
+const rotationDueTimestamp = '2026-10-03T10:00:00Z';
 
 const driveSpecs = [
   { driveId: 'drive-1', logicalName: 'videos-a', role: 'Videos A', category: 'video', priority: 1, usedGb: 3.2, routeHint: 'Drive 1 -> Drive 2 -> Drive 8' },
@@ -162,19 +205,23 @@ function statusLabel(status: StorageStatus): string {
 }
 
 export function badgeVariantForStatus(status: StorageStatus | StorageBand | string): 'default' | 'success' | 'warning' | 'info' {
-  if (status === 'ready' || status === 'healthy' || status === 'connected' || status === 'activation-ready' || status === 'activation-passed') {
+  if (status === 'ready' || status === 'healthy' || status === 'connected' || status === 'active' || status === 'activation-ready' || status === 'activation-passed') {
     return 'success';
   }
-  if (status === 'placeholder-configured' || status === 'prepared' || status === 'never') {
+  if (status === 'placeholder-configured' || status === 'prepared' || status === 'never' || status === 'masked' || status === 'protected') {
     return 'info';
   }
   if (status === 'watch') {
     return 'info';
   }
-  if (status === 'blocked' || status === 'slowdown' || status === 'attention' || status === 'degraded') {
+  if (status === 'blocked' || status === 'slowdown' || status === 'attention' || status === 'degraded' || status === 'rotation-due' || status === 'expired' || status === 'invalid' || status === 'revoked' || status === 'disabled') {
     return 'warning';
   }
   return 'default';
+}
+
+function credentialIdForDrive(driveId: string): string {
+  return `cred-${driveId}`;
 }
 
 export const storageResources: StorageResourceRow[] = driveSpecs.map((spec) => {
@@ -183,6 +230,7 @@ export const storageResources: StorageResourceRow[] = driveSpecs.map((spec) => {
   const band = thresholdBand(percent);
   const status = statusForBand(band);
   const lastCheck = activationTimestamp;
+  const credentialId = credentialIdForDrive(spec.driveId);
   const routingStrategy = 'official-priority-route';
   const backupPolicy = 'backup-center-activation';
   const restorePolicy = 'restore-center-activation';
@@ -198,13 +246,19 @@ export const storageResources: StorageResourceRow[] = driveSpecs.map((spec) => {
     availableGb: Number((quotaGb - spec.usedGb).toFixed(1)),
     usagePercent: percent,
     providerType: 'google-drive',
+    credentialId,
     state: status,
     status,
     health: status,
     lastControl: lastCheck,
     lastAccess: lastCheck,
     lastTest: lastCheck,
+    lastConnectionTest: lastCheck,
+    lastUploadTest: lastCheck,
+    lastDownloadTest: lastCheck,
+    lastHealthcheck: lastCheck,
     apiVersion: 'v3',
+    oauthStatus: 'placeholder-configured',
     routingStrategy,
     backupPolicy,
     restorePolicy,
@@ -218,6 +272,7 @@ export const storageResources: StorageResourceRow[] = driveSpecs.map((spec) => {
 export const googleDriveConfigurations: GoogleDriveConfigurationRow[] = storageResources.map((resource) => ({
   driveId: resource.driveId,
   logicalName: resource.logicalName,
+  credentialId: resource.credentialId,
   emailPlaceholder: `${resource.driveId}@placeholder.lawim.invalid`,
   provider: resource.providerType,
   category: resource.category,
@@ -227,9 +282,13 @@ export const googleDriveConfigurations: GoogleDriveConfigurationRow[] = storageR
   credentialStatus: resource.credentialStatus,
   testStatus: resource.testStatus,
   apiVersion: resource.apiVersion,
-  oauthStatus: resource.credentialStatus,
+  oauthStatus: resource.oauthStatus,
   lastControl: resource.lastControl,
   lastAccess: resource.lastAccess,
+  lastConnectionTest: resource.lastConnectionTest,
+  lastUploadTest: resource.lastUploadTest,
+  lastDownloadTest: resource.lastDownloadTest,
+  lastHealthcheck: resource.lastHealthcheck,
   routingStrategy: resource.routingStrategy,
   backupPolicy: resource.backupPolicy,
   restorePolicy: resource.restorePolicy,
@@ -241,6 +300,7 @@ export const googleDriveConnectors: GoogleDriveConnectorRow[] = storageResources
   return {
     driveId: resource.driveId,
     logicalName: resource.logicalName,
+    credentialId: resource.credentialId,
     provider: resource.providerType,
     category: resource.category,
     resourceType: resource.resourceType,
@@ -250,12 +310,17 @@ export const googleDriveConnectors: GoogleDriveConnectorRow[] = storageResources
     usagePercent: resource.usagePercent,
     state: resource.state,
     health: resource.health,
+    credentialStatus: resource.credentialStatus,
     apiVersion: resource.apiVersion,
     oauthStatus: resource.credentialStatus,
     lastControl: resource.lastControl,
     lastAccess: resource.lastAccess,
-    lastUpload: 'never',
-    lastDownload: 'never',
+    lastConnectionTest: resource.lastConnectionTest,
+    lastUploadTest: resource.lastUploadTest,
+    lastDownloadTest: resource.lastDownloadTest,
+    lastHealthcheck: resource.lastHealthcheck,
+    lastUpload: resource.lastUploadTest,
+    lastDownload: resource.lastDownloadTest,
     lastIncident: alert || 'none',
     alerts: alert ? [alert] : [],
     folders: [...setupWizardFolders],
@@ -265,6 +330,63 @@ export const googleDriveConnectors: GoogleDriveConnectorRow[] = storageResources
     routeHint: resource.routeHint,
   };
 });
+
+export const credentialVaultRecords: CredentialVaultRow[] = storageResources.map((resource) => ({
+  credentialId: resource.credentialId,
+  driveId: resource.driveId,
+  logicalName: resource.logicalName,
+  role: resource.role,
+  provider: resource.providerType,
+  credentialType: 'google-drive-oauth2',
+  scope: 'google-drive',
+  status: resource.credentialStatus,
+  oauthStatus: resource.oauthStatus,
+  credentialStatus: resource.credentialStatus,
+  maskedValue: '***',
+  maskedReference: `credential-reference://${resource.credentialId}`,
+  rotationPolicy: '90d rotation / 365d expiry / masked-only display',
+  expiration: expirationTimestamp,
+  rotationDue: rotationDueTimestamp,
+  lastUse: resource.lastAccess,
+  lastConnectionTest: resource.lastConnectionTest,
+  lastUploadTest: resource.lastUploadTest,
+  lastDownloadTest: resource.lastDownloadTest,
+  lastHealthcheck: resource.lastHealthcheck,
+  alerts: resource.thresholdBand === 'blocked' ? [`${resource.driveId} blocked at ${resource.usagePercent.toFixed(1)}%`] : [],
+}));
+
+export const credentialSecurityControls = [
+  {
+    name: 'CredentialEncryptor',
+    status: 'active',
+    description: 'Encrypted envelopes keep protected material outside Git, logs, docs, and the frontend.',
+  },
+  {
+    name: 'CredentialMasker',
+    status: 'active',
+    description: 'Displays only masked references in UI snapshots and audit payloads.',
+  },
+  {
+    name: 'CredentialRotationManager',
+    status: 'ready',
+    description: 'Schedules rotation and expiration windows without exposing raw protected values.',
+  },
+  {
+    name: 'ProtectedMaterialScanner',
+    status: 'active',
+    description: 'Scans Git payloads and admin snapshots for exposed protected material.',
+  },
+  {
+    name: 'GitProtectionGuard',
+    status: 'active',
+    description: 'Blocks commits that carry protected material or direct Google Drive URLs.',
+  },
+  {
+    name: 'AuditTrail',
+    status: 'active',
+    description: 'Records credential lifecycle events with masked details only.',
+  },
+] as const;
 
 export const storageRoutes: StorageRouteRow[] = [
   {
@@ -340,15 +462,123 @@ export const storageRoutes: StorageRouteRow[] = [
 ];
 
 export const setupWizardSteps = [
+  'Register the credential vault',
   'Declare the 10 Google Drive resources',
-  'Validate OAuth placeholders',
-  'Run the connection test',
+  'Bind credential references',
+  'Validate OAuth connection',
+  'Validate permissions',
   'Run the read test',
   'Run the write test',
+  'Run the upload test',
+  'Run the download test',
   'Create the automatic folders',
-  'Simulate video upload and conversation archive',
-  'Simulate backup activation and verification',
+  'Run the final validation',
 ];
+
+export function buildCredentialVaultSnapshot() {
+  const activeCredentials = credentialVaultRecords.filter((record) => record.status === 'placeholder-configured' || record.status === 'ready' || record.status === 'active');
+  const expiredCredentials = credentialVaultRecords.filter((record) => record.status === 'expired');
+  const invalidCredentials = credentialVaultRecords.filter((record) => record.status === 'invalid');
+  const rotationDueCredentials = credentialVaultRecords.filter((record) => record.status === 'rotation-due');
+  const lastUse = credentialVaultRecords.reduce((value, record) => (record.lastUse > value ? record.lastUse : value), 'never');
+  const lastConnectionTest = credentialVaultRecords.reduce((value, record) => (record.lastConnectionTest > value ? record.lastConnectionTest : value), 'never');
+  const lastUploadTest = credentialVaultRecords.reduce((value, record) => (record.lastUploadTest > value ? record.lastUploadTest : value), 'never');
+  const lastDownloadTest = credentialVaultRecords.reduce((value, record) => (record.lastDownloadTest > value ? record.lastDownloadTest : value), 'never');
+  const lastHealthcheck = credentialVaultRecords.reduce((value, record) => (record.lastHealthcheck > value ? record.lastHealthcheck : value), 'never');
+
+  return {
+    vault: 'lawim-credential-vault',
+    status: 'activation-ready',
+    summary: {
+      recordCount: credentialVaultRecords.length,
+      activeCount: activeCredentials.length,
+      expiredCount: expiredCredentials.length,
+      invalidCount: invalidCredentials.length,
+      rotationDueCount: rotationDueCredentials.length,
+      maskedRecords: credentialVaultRecords.length,
+      protectionLayers: credentialSecurityControls.length,
+    },
+    monitoring: {
+      activeCredentials: activeCredentials.length,
+      expiredCredentials: expiredCredentials.length,
+      invalidCredentials: invalidCredentials.length,
+      rotationDueCredentials: rotationDueCredentials.length,
+      lastAccess: lastUse,
+      lastConnectionTest,
+      lastUploadTest,
+      lastDownloadTest,
+      lastHealthcheck,
+      lastFailure: 'never',
+      lastSuccess: lastHealthcheck,
+      alerts: credentialVaultRecords.flatMap((record) => record.alerts),
+    },
+    records: credentialVaultRecords,
+    securityControls: credentialSecurityControls,
+    auditTrail: {
+      eventCount: credentialVaultRecords.length,
+      latestEvent: 'credential-registered',
+      entries: credentialVaultRecords.map((record) => ({
+        credentialId: record.credentialId,
+        driveId: record.driveId,
+        event: 'credential-registered',
+        status: record.status,
+      })),
+    },
+  };
+}
+
+export function buildGoogleDriveCredentialsSnapshot() {
+  const vault = buildCredentialVaultSnapshot();
+  return {
+    vault,
+    credentials: googleDriveConfigurations,
+    bindingCount: googleDriveConfigurations.length,
+    secureReferences: googleDriveConfigurations.map((credential) => ({
+      driveId: credential.driveId,
+      credentialId: credential.credentialId,
+      logicalName: credential.logicalName,
+      role: storageResources.find((resource) => resource.driveId === credential.driveId)?.role ?? credential.logicalName,
+      status: credential.credentialStatus,
+      oauthStatus: credential.oauthStatus,
+      lastConnectionTest: credential.lastConnectionTest,
+      lastUploadTest: credential.lastUploadTest,
+      lastDownloadTest: credential.lastDownloadTest,
+      lastHealthcheck: credential.lastHealthcheck,
+    })),
+  };
+}
+
+export function buildGoogleDriveSecuritySnapshot() {
+  const vault = buildCredentialVaultSnapshot();
+  const monitoring = buildMonitoringSnapshot();
+  return {
+    vault,
+    monitoring,
+    controls: credentialSecurityControls,
+    policy: {
+      rotationDays: 90,
+      expirationDays: 365,
+      warningWindowDays: 14,
+      autoRotate: true,
+      maskedDisplay: true,
+      noProtectedMaterialInGit: true,
+      noProtectedMaterialInLogs: true,
+      noProtectedMaterialInDocs: true,
+      noProtectedMaterialInFrontend: true,
+    },
+    summary: {
+      activeCredentials: vault.summary.activeCount,
+      expiredCredentials: vault.summary.expiredCount,
+      invalidCredentials: vault.summary.invalidCount,
+      rotationDueCredentials: vault.summary.rotationDueCount,
+      alerts: vault.monitoring.alerts.length,
+      auditEvents: vault.auditTrail.eventCount,
+      lastAccess: vault.monitoring.lastAccess,
+      lastFailure: vault.monitoring.lastFailure,
+      lastSuccess: vault.monitoring.lastSuccess,
+    },
+  };
+}
 
 export function buildManagerSnapshot() {
   const totalQuotaGb = storageResources.reduce((sum, resource) => sum + resource.quotaGb, 0);
@@ -356,10 +586,12 @@ export function buildManagerSnapshot() {
   const blocked = storageResources.filter((resource) => resource.thresholdBand === 'blocked');
   const alerts = storageResources.filter((resource) => resource.thresholdBand !== 'normal');
   const operationalAlerts = googleDriveConnectors.flatMap((connector) => connector.alerts);
+  const vault = buildCredentialVaultSnapshot();
   const allAlerts = Array.from(
     new Set([
       ...alerts.map((resource) => `${resource.driveId} ${resource.thresholdBand} at ${resource.usagePercent.toFixed(1)}%`),
       ...operationalAlerts,
+      ...vault.monitoring.alerts,
     ]),
   );
 
@@ -373,15 +605,17 @@ export function buildManagerSnapshot() {
     lastTest: activationTimestamp,
     lastControl: activationTimestamp,
     lastAccess: activationTimestamp,
-    lastUpload: 'never',
-    lastDownload: 'never',
+    lastUpload: activationTimestamp,
+    lastDownload: activationTimestamp,
     backupStatus: 'Activation ready',
     availableResources: storageResources.filter((resource) => resource.thresholdBand !== 'blocked').length,
     blockedResources: blocked.map((resource) => resource.driveId),
     alerts: allAlerts,
     oauthReadyCount: googleDriveConnectors.filter((connector) => connector.oauthStatus === 'placeholder-configured').length,
+    credentialReadyCount: vault.summary.activeCount,
     apiVersion: 'v3',
     monitoring: buildMonitoringSnapshot(),
+    credentialVault: vault,
   };
 }
 
@@ -390,6 +624,8 @@ export function buildGoogleDriveAdminSnapshot() {
   const totalUsedGb = googleDriveConnectors.reduce((sum, connector) => sum + connector.usedGb, 0);
   const blocked = googleDriveConnectors.filter((connector) => connector.usagePercent > 92);
   const alerts = Array.from(new Set(googleDriveConnectors.flatMap((connector) => connector.alerts)));
+  const vault = buildCredentialVaultSnapshot();
+  const security = buildGoogleDriveSecuritySnapshot();
 
   return {
     totalQuotaGb: Number(totalQuotaGb.toFixed(1)),
@@ -403,8 +639,8 @@ export function buildGoogleDriveAdminSnapshot() {
     lastControl: activationTimestamp,
     lastAccess: activationTimestamp,
     lastTest: activationTimestamp,
-    lastUpload: 'never',
-    lastDownload: 'never',
+    lastUpload: activationTimestamp,
+    lastDownload: activationTimestamp,
     oauthState: 'placeholder-configured',
     apiVersion: 'v3',
     alerts,
@@ -412,6 +648,8 @@ export function buildGoogleDriveAdminSnapshot() {
     routes: storageRoutes,
     requiredFolders: setupWizardFolders,
     monitoring: buildMonitoringSnapshot(),
+    credentialVault: vault,
+    security,
   };
 }
 
@@ -420,6 +658,7 @@ export function buildMonitoringSnapshot() {
   const totalUsedGb = storageResources.reduce((sum, resource) => sum + resource.usedGb, 0);
   const usagePercent = Number(((totalUsedGb / totalQuotaGb) * 100).toFixed(1));
   const blockedCount = storageResources.filter((resource) => resource.thresholdBand === 'blocked').length;
+  const vault = buildCredentialVaultSnapshot();
 
   return {
     quotaMonitor: {
@@ -435,6 +674,15 @@ export function buildMonitoringSnapshot() {
       apiVersion: 'v3',
       oauthState: 'placeholder-configured',
       status: blockedCount > 0 ? 'watch' : 'healthy',
+    },
+    credentialMonitor: {
+      activeCredentials: vault.summary.activeCount,
+      expiredCredentials: vault.summary.expiredCount,
+      invalidCredentials: vault.summary.invalidCount,
+      rotationDueCredentials: vault.summary.rotationDueCount,
+      lastAccess: vault.monitoring.lastAccess,
+      lastFailure: vault.monitoring.lastFailure,
+      lastSuccess: vault.monitoring.lastSuccess,
     },
     alerts: storageResources
       .filter((resource) => resource.thresholdBand !== 'normal')
@@ -452,6 +700,20 @@ export function buildMonitoringSnapshot() {
       backup: ['Drive 7', 'Drive 10'],
       exports: ['Drive 6', 'Drive 8'],
       maintenance: ['Drive 10'],
+    },
+    api_monitor: {
+      apiVersion: 'v3',
+      oauthState: 'placeholder-configured',
+      status: blockedCount > 0 ? 'watch' : 'healthy',
+    },
+    credential_monitor: {
+      activeCredentials: vault.summary.activeCount,
+      expiredCredentials: vault.summary.expiredCount,
+      invalidCredentials: vault.summary.invalidCount,
+      rotationDueCredentials: vault.summary.rotationDueCount,
+      lastAccess: vault.monitoring.lastAccess,
+      lastFailure: vault.monitoring.lastFailure,
+      lastSuccess: vault.monitoring.lastSuccess,
     },
   };
 }

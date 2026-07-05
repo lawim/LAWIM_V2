@@ -43,6 +43,9 @@ import { StorageSetupWizardPage } from './StorageSetupWizardPage';
 import { StorageResourcesPage } from './StorageResourcesPage';
 import { GoogleDriveRegistryPage } from './GoogleDriveRegistryPage';
 import { StorageRoutingPage } from './StorageRoutingPage';
+import { CredentialVaultPage } from './CredentialVaultPage';
+import { GoogleDriveCredentialsPage } from './GoogleDriveCredentialsPage';
+import { GoogleDriveSecurityPage } from './GoogleDriveSecurityPage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -59,6 +62,9 @@ const navItems = [
   { to: '/backup', label: 'Backup' },
   { to: '/admin/storage-resources', label: 'Storage Resources' },
   { to: '/admin/google-drive-admin-center', label: 'Drive Center' },
+  { to: '/admin/credential-vault', label: 'Credential Vault' },
+  { to: '/admin/google-drive-credentials', label: 'Drive Credentials' },
+  { to: '/admin/google-drive-security', label: 'Drive Security' },
   { to: '/admin/storage-routing', label: 'Storage Routing' },
   { to: '/releases', label: 'Releases' },
   { to: '/brain', label: 'Brain' },
@@ -308,6 +314,9 @@ export function AdminApp() {
         <Route path="/admin/storage-resources" element={<StorageResourcesPage />} />
         <Route path="/admin/google-drive-admin-center" element={<GoogleDriveRegistryPage />} />
         <Route path="/admin/google-drive-registry" element={<GoogleDriveRegistryPage />} />
+        <Route path="/admin/credential-vault" element={<CredentialVaultPage />} />
+        <Route path="/admin/google-drive-credentials" element={<GoogleDriveCredentialsPage />} />
+        <Route path="/admin/google-drive-security" element={<GoogleDriveSecurityPage />} />
         <Route path="/admin/storage-routing" element={<StorageRoutingPage />} />
         <Route path="/releases" element={<ReleasesPage />} />
         <Route path="/brain" element={<BrainConsolePage />} />

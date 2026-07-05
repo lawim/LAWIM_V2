@@ -73,13 +73,14 @@ class StorageResourceRegistryAAFTest(unittest.TestCase):
         registry = StorageResourceRegistry.default()
         result = wizard.build_activation_plan(registry)
 
-        self.assertEqual(len(result["steps"]), 8)
-        self.assertEqual(result["steps"][0]["step"], "Declare the 10 Google Drive resources")
+        self.assertEqual(len(result["steps"]), 11)
+        self.assertEqual(result["steps"][0]["step"], "Register the credential vault")
         self.assertEqual(result["sample_routes"]["video"], ["drive-1", "drive-2", "drive-8"])
         self.assertEqual(result["sample_routes"]["conversation archive"], ["drive-5", "drive-8"])
         self.assertTrue(result["no_real_secrets"])
         self.assertTrue(result["activation_ready"])
         self.assertEqual(len(result["required_folders"]), 10)
+        self.assertIn("credential_vault", result)
 
 
 if __name__ == "__main__":
