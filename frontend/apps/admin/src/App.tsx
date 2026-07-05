@@ -40,6 +40,9 @@ import { ConversationRegistryPage } from './ConversationRegistryPage';
 import { ArchiveCenterPage } from './ArchiveCenterPage';
 import { StorageHealthPage } from './StorageHealthPage';
 import { StorageSetupWizardPage } from './StorageSetupWizardPage';
+import { StorageResourcesPage } from './StorageResourcesPage';
+import { GoogleDriveRegistryPage } from './GoogleDriveRegistryPage';
+import { StorageRoutingPage } from './StorageRoutingPage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -54,6 +57,9 @@ const navItems = [
   { to: '/operations', label: 'Operations' },
   { to: '/deployment', label: 'Deployment' },
   { to: '/backup', label: 'Backup' },
+  { to: '/admin/storage-resources', label: 'Storage Resources' },
+  { to: '/admin/google-drive-registry', label: 'Drive Registry' },
+  { to: '/admin/storage-routing', label: 'Storage Routing' },
   { to: '/releases', label: 'Releases' },
   { to: '/brain', label: 'Brain' },
   { to: '/agents', label: 'Agents' },
@@ -299,6 +305,9 @@ export function AdminApp() {
         <Route path="/operations" element={<OperationsPage />} />
         <Route path="/deployment" element={<DeploymentPage />} />
         <Route path="/backup" element={<BackupPage />} />
+        <Route path="/admin/storage-resources" element={<StorageResourcesPage />} />
+        <Route path="/admin/google-drive-registry" element={<GoogleDriveRegistryPage />} />
+        <Route path="/admin/storage-routing" element={<StorageRoutingPage />} />
         <Route path="/releases" element={<ReleasesPage />} />
         <Route path="/brain" element={<BrainConsolePage />} />
         <Route path="/agents" element={<AgentsConsolePage />} />

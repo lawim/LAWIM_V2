@@ -12,6 +12,14 @@ from .conversation_registry import (
     OVHStorageOptimizer,
     StorageOrchestrator,
 )
+from .storage_registry import (
+    GoogleDriveConfigurationModel,
+    StorageResource,
+    StorageResourceRegistry,
+    StorageRoutingPolicy,
+    StorageSetupWizard,
+    StorageUsageThresholds,
+)
 from .security import (
     AADAuthResult,
     AADAuthenticator,
@@ -77,7 +85,13 @@ __all__ = [
     "ConversationRegistry",
     "ConversationRestoreEngine",
     "ConversationStorageProvider",
+    "GoogleDriveConfigurationModel",
     "OVHStorageOptimizer",
+    "StorageResource",
+    "StorageResourceRegistry",
+    "StorageRoutingPolicy",
+    "StorageSetupWizard",
+    "StorageUsageThresholds",
     "StorageOrchestrator",
     "resolve_aad_config",
 ]

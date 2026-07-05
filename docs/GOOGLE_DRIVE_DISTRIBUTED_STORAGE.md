@@ -4,13 +4,19 @@ The distribution model uses ten logical Google Drive placeholders to organize co
 
 ## Assignment sketch
 
-- Drive 1: videos/audio A
-- Drive 2: videos/audio B
-- Drive 3: videos/audio C
-- Drive 4: original photos
-- Drive 5: documents
-- Drive 6: PostgreSQL + media registry + encrypted configs
-- Drive 7: cold archive
-- Drive 8: intelligent overflow
-- Drive 9: quarantine/restoration
-- Drive 10: critical replication + global index
+- Drive 1: videos A
+- Drive 2: videos B
+- Drive 3: photos + audio
+- Drive 4: documents
+- Drive 5: conversation registry
+- Drive 6: exports / reports / statistics
+- Drive 7: application backups
+- Drive 8: replication / overflow
+- Drive 9: strategic reserve
+- Drive 10: maintenance / migration
+
+## Canonical references
+
+- `docs/STORAGE_RESOURCE_REGISTRY.md`
+- `docs/STORAGE_ROUTING_POLICY.md`
+- `docs/GOOGLE_DRIVE_FUNCTIONAL_CONFIGURATION.md`

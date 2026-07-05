@@ -4,6 +4,17 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Protocol
 
+from .storage_registry import (
+    GoogleDriveConfigurationModel,
+    StorageResource,
+    StorageResourceRegistry,
+    StorageRoutingPolicy,
+    StorageSetupWizard,
+    StorageUsageThresholds,
+    build_default_google_drive_configurations,
+    build_default_storage_resources,
+)
+
 
 class StorageProvider(Protocol):
     name: str
@@ -168,7 +179,8 @@ class StorageOptimizer:
 
 @dataclass(slots=True)
 class ConversationArchivePolicy:
-    drive_target: str = "drive-8"
+    drive_target: str = "drive-5"
+    fallback_drive_target: str = "drive-8"
     retention_days: int = 365
     use_thumbnails: bool = True
 
@@ -266,6 +278,8 @@ class StorageOrchestrator:
     policy: StorageOrchestratorPolicy = field(default_factory=StorageOrchestratorPolicy)
     conversation_policy: ConversationArchivePolicy = field(default_factory=ConversationArchivePolicy)
     restore_policy: ConversationRestorePolicy = field(default_factory=ConversationRestorePolicy)
+    resource_registry: StorageResourceRegistry = field(default_factory=StorageResourceRegistry.default)
+    routing_policy: StorageRoutingPolicy = field(default_factory=StorageRoutingPolicy)
 
     def __post_init__(self) -> None:
         provider_names = {provider.name for provider in self.providers}
@@ -276,30 +290,53 @@ class StorageOrchestrator:
         provider = next((item for item in self.providers if item.name == (provider_name or self.policy.default_provider)), None)
         if provider is None:
             raise ValueError("unknown provider")
+        selected_resource = self.select_storage_resource(kind=kind)
+        route_category = self.routing_policy.canonicalize(kind)
         resolved = provider.resolve_access(media_id=media_id, kind=kind)
         resolved["lifecycle_state"] = "hot"
         resolved["policy"] = {
             "temporary_access_ttl_seconds": self.policy.temporary_access_ttl_seconds,
             "bandwidth_limit_mbps": self.policy.bandwidth_limit_mbps,
         }
+        resolved["storage_resource"] = selected_resource.as_dict(self.resource_registry.thresholds)
+        resolved["routing"] = {
+            "category": route_category,
+            "route": list(self.routing_policy.route_for(kind)),
+            "selected_drive_id": selected_resource.drive_id,
+        }
         return resolved
 
     def register_provider(self, provider: StorageProvider) -> None:
         self.providers.append(provider)
 
+    def select_storage_resource(self, *, kind: str, size_gb: float = 0.0) -> StorageResource:
+        return self.resource_registry.select(category=kind, size_gb=size_gb, routing_policy=self.routing_policy)
+
+    def resource_snapshot(self) -> dict[str, Any]:
+        return self.resource_registry.dashboard_snapshot()
+
     def resolve_conversation_archive_access(self, *, conversation_id: int, kind: str = "conversation_archive") -> dict[str, Any]:
+        selected_resource = self.select_storage_resource(kind="conversation archive")
         return {
             "conversation_id": conversation_id,
             "kind": kind,
-            "provider": self.conversation_policy.drive_target,
-            "temporary_access_url": f"https://mock.example/{self.conversation_policy.drive_target}/{conversation_id}",
+            "provider": selected_resource.drive_id,
+            "fallback_provider": self.conversation_policy.fallback_drive_target,
+            "temporary_access_url": f"https://mock.example/{selected_resource.drive_id}/{conversation_id}",
             "ttl_seconds": self.policy.temporary_access_ttl_seconds,
             "policy": {
                 "drive_target": self.conversation_policy.drive_target,
+                "fallback_drive_target": self.conversation_policy.fallback_drive_target,
                 "retention_days": self.conversation_policy.retention_days,
                 "use_thumbnails": self.conversation_policy.use_thumbnails,
                 "require_media_id": self.restore_policy.require_media_id,
             },
+            "routing": {
+                "category": "conversation archive",
+                "route": list(self.routing_policy.route_for("conversation archive")),
+                "selected_drive_id": selected_resource.drive_id,
+            },
+            "storage_resource": selected_resource.as_dict(self.resource_registry.thresholds),
         }
 
 
@@ -317,6 +354,7 @@ __all__ = [
     "DriveBalancingRule",
     "DriveQuotaManager",
     "ExternalDiskProvider",
+    "GoogleDriveConfigurationModel",
     "GoogleDriveProvider",
     "LifecycleStateMachine",
     "LocalStorageProvider",
@@ -324,6 +362,11 @@ __all__ = [
     "RestoreJob",
     "RestorationEngine",
     "SetupWizardConfiguration",
+    "StorageResource",
+    "StorageResourceRegistry",
+    "StorageRoutingPolicy",
+    "StorageSetupWizard",
+    "StorageUsageThresholds",
     "StorageOptimizer",
     "StorageOrchestrator",
     "StorageOrchestratorPolicy",
