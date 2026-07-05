@@ -4,9 +4,10 @@
 
 - docs, reports, prompts, tests, notes, roadmaps, and governance files
 - raw LAWIM and LAWIMA source snapshots used for analysis
+- internal comparison reports under `reports/comparison/` and the storage prompt `prompts/Storage_organisation_lawim.md`
+- the local migration scaffold `code/lawim_v2/migration.py` and its validation harness `tests/test_migration_framework.py`
 - caches, logs, temp directories, generated build outputs, and archives
 - local tooling such as benchmarks, smoke helpers, and validation harnesses
-- local-only migration scaffold files
 - hidden tooling folders such as `.agents`, `.cursor`, `.lawim`
 
 ## Distributed servers
@@ -22,6 +23,7 @@
 
 - the minimized payload defined in `DEPLOYMENT_MANIFEST.md`
 - runtime code, runtime assets, the curated geo reference bundle, Docker and compose definitions, Nginx, systemd, health checks, and example configuration
+- deployment backup placeholders under `deployment/backup/` such as `postgres-init.sql` and `postgresql.conf` when mounted by compose
 - no real secret, no test, and no internal document
 
 ## External backup

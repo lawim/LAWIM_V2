@@ -34,13 +34,15 @@ Le depot maitre conserve tout ce qui sert a la certification, a l'analyse et a l
 
 - [`docs/`](../docs/), hors manifestes de deploiement;
 - [`reports/`](../reports/);
+- les rapports de comparaison sous [`reports/comparison/`](../reports/comparison/);
 - [`prompts/`](../prompts/);
+- le prompt interne [`prompts/Storage_organisation_lawim.md`](../prompts/Storage_organisation_lawim.md);
 - [`implementation/`](../implementation/);
 - [`legacy/`](../legacy/);
 - [`tests/`](../tests/);
 - [`release/`](../release/), qui porte la projection et la documentation de release;
 - les scripts de validation, de benchmark et de generation de tests;
-- le scaffold local de migration dans [`code/lawim_v2/migration.py`](../code/lawim_v2/migration.py) et sa documentation [`docs/MIGRATION_FRAMEWORK.md`](../docs/MIGRATION_FRAMEWORK.md), tant que la phase AAF n'est pas lancee.
+- le scaffold local de migration dans [`code/lawim_v2/migration.py`](../code/lawim_v2/migration.py), son harness de validation [`tests/test_migration_framework.py`](../tests/test_migration_framework.py) et sa documentation [`docs/MIGRATION_FRAMEWORK.md`](../docs/MIGRATION_FRAMEWORK.md), tant que la phase AAF n'est pas lancee.
 
 ## Archived on external disk
 

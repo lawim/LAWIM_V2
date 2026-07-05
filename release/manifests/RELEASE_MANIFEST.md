@@ -3,8 +3,9 @@
 ## Snapshot
 
 - Release family: LAWIM_V2 Gate 1
-- Snapshot id: `release-program-aae-bootstrap-2-g749648a1-dirty`
-- Source commit: `749648a1`
+- Snapshot id: `release-program-aae-bootstrap-2-gc3ccd0ac`
+- Source commit: `c3ccd0ac`
+- Git tag: `pre-ovh-final`
 - Purpose: reproducible release projection before Gate 2 migration
 
 ## Runtime baseline

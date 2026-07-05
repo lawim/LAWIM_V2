@@ -1,6 +1,6 @@
 # Tests
 
-Suite `unittest` pour LAWIM_V2 (2619 tests au 2026-07-04 via `python3 -m unittest discover -s tests -v`).
+Suite `unittest` pour LAWIM_V2 (2631 tests au 2026-07-05 via `python3 -m unittest discover -s tests -v`).
 
 ## Lancer les tests
 

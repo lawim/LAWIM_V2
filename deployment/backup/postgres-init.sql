@@ -1,0 +1,3 @@
+-- LAWIM_V2 PostgreSQL bootstrap script.
+-- This file exists so the production and staging compose stacks can mount a
+-- valid init script without introducing schema changes.
