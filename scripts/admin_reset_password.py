@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import argparse
-import os
+import sqlite3
 import sys
 from pathlib import Path
 from typing import Sequence
@@ -13,8 +13,8 @@ if str(ROOT / "code") not in sys.path:
 
 from lawim_v2.config import AppConfig
 from lawim_v2.errors import NotFoundError, RepositoryError
-from lawim_v2.persistence_adapter import resolve_persistence_adapter
-from lawim_v2.services import LawimServices
+from lawim_v2.bootstrap import build_runtime
+from lawim_v2.services import ServiceError
 
 SYSTEM_ADMIN_ACTOR = {"id": 0, "role": "admin"}
 
@@ -35,44 +35,35 @@ def load_config() -> AppConfig:
     return config
 
 
-def create_repository(config: AppConfig):
-    if config.db_driver == "sqlite" and not config.db_path.exists():
-        raise FileNotFoundError(
-            f"SQLite database file not found: {config.db_path}. "
-            "Set LAWIM_DB_PATH to the production database file."
-        )
-    adapter = resolve_persistence_adapter(
-        config.db_path,
-        db_driver=config.db_driver,
-        database_url=config.database_url,
-        allow_sqlite_fallback=config.db_fallback,
-    )
-    return adapter.create_repository()
-
-
 def reset_password(email: str, password: str) -> int:
     config = load_config()
-    repository = create_repository(config)
+    runtime = build_runtime(config)
     try:
-        user = repository.get_user_by_email(email)
-    except NotFoundError:
-        print(f"User not found: {email}")
-        return 1
-
-    services = LawimServices(repository, config)
-    try:
-        services.update_user(actor=SYSTEM_ADMIN_ACTOR, user_id=int(user["id"]), password=password)
-    except RepositoryError as exc:
-        print(f"Failed to reset password: {exc}")
-        return 1
-
-    print(f"Password reset successfully for user: {email}")
-    return 0
+        try:
+            user = runtime.repository.get_user_by_email(email)
+            runtime.services.update_user(actor=SYSTEM_ADMIN_ACTOR, user_id=int(user["id"]), password=password)
+        except NotFoundError:
+            print(f"User not found: {email}")
+            return 1
+        except (RepositoryError, ServiceError) as exc:
+            print(f"Failed to reset password: {exc}")
+            return 1
+        print(f"Password reset successfully for user: {email}")
+        return 0
+    finally:
+        runtime.close()
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
-    return reset_password(args.email, args.password)
+    try:
+        return reset_password(args.email, args.password)
+    except ValueError as exc:
+        print(f"Invalid configuration: {exc}")
+        return 1
+    except (OSError, sqlite3.Error, RepositoryError) as exc:
+        print(f"Failed to reset password: {exc}")
+        return 1
 
 
 if __name__ == "__main__":

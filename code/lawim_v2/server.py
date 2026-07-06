@@ -18,12 +18,12 @@ from .config import AppConfig
 from .api_query import build_property_query
 from .errors import RepositoryError, ValidationError
 from .db import LawimRepository
+from .bootstrap import build_runtime
 from .dto import error_dto
 from .matching import MatchCriteria, MatchWeights
 from .media_domain import THUMBNAIL_CONTRACT
 from .multipart import parse_multipart_form_data
 from .observability import METRICS
-from .persistence_adapter import resolve_persistence_adapter
 from .rate_limit import AuthRateLimiter
 from .services import LawimServices, ServiceError
 from .project_service import ProjectPermissionDenied
@@ -2974,32 +2974,24 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
 
 def create_server(config: AppConfig) -> LawimThreadingHTTPServer:
-    config.validate()
-    adapter = resolve_persistence_adapter(
-        config.db_path,
-        db_driver=config.db_driver,
-        database_url=config.database_url,
-        allow_sqlite_fallback=config.db_fallback,
-    )
-    repository = adapter.create_repository()
-    repository.initialize(seed_demo_data=config.seed_demo_data)
-    services = LawimServices(repository, config)
+    runtime = build_runtime(config)
 
     class BoundHandler(LawimRequestHandler):
         pass
 
-    BoundHandler.repository = repository
-    BoundHandler.config = config
-    BoundHandler.services = services
+    BoundHandler.repository = runtime.repository
+    BoundHandler.config = runtime.config
+    BoundHandler.services = runtime.services
     BoundHandler.auth_limiter = AuthRateLimiter(
         max_attempts=config.auth_rate_limit_max,
         window_seconds=config.auth_rate_limit_window_seconds,
     )
 
     server = LawimThreadingHTTPServer((config.host, config.port), BoundHandler)
-    server.repository = repository  # type: ignore[attr-defined]
-    server.config = config  # type: ignore[attr-defined]
-    server.services = services  # type: ignore[attr-defined]
+    server.repository = runtime.repository  # type: ignore[attr-defined]
+    server.config = runtime.config  # type: ignore[attr-defined]
+    server.services = runtime.services  # type: ignore[attr-defined]
+    server.runtime = runtime  # type: ignore[attr-defined]
     return server
 
 
@@ -3013,7 +3005,6 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         config = AppConfig.from_env()
-        config.validate()
     except ValueError as exc:
         parser.error(str(exc))
 
@@ -3035,9 +3026,8 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     try:
-        config.ensure_runtime_dir()
         server = create_server(config)
-    except (OSError, sqlite3.Error) as exc:
+    except (ValueError, OSError, RepositoryError, sqlite3.Error) as exc:
         parser.error(str(exc))
     bound_host, bound_port = server.server_address[:2]
     LOGGER.info("LAWIM_V2 listening on http://%s:%s", bound_host, bound_port)
@@ -3049,5 +3039,5 @@ def main(argv: list[str] | None = None) -> int:
     finally:
         server.shutdown()
         server.server_close()
-        server.repository.close()  # type: ignore[attr-defined]
+        server.runtime.close()  # type: ignore[attr-defined]
     return 0

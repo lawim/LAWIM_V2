@@ -83,6 +83,17 @@ Variables optionnelles :
 
 Aucun secret réel ne doit être commité. Adapter les mots de passe via l'environnement local.
 
+## Administration
+
+Réinitialiser le mot de passe d'un utilisateur avec le bootstrap partagé du serveur :
+
+```bash
+python3 scripts/admin_reset_password.py --email user@example.com --password 'NewPassword123!'
+```
+
+Le script réutilise le bootstrap partagé `build_runtime()` pour construire `AppConfig`, le repository et `LawimServices` via le même chemin d'initialisation que `code/lawim_v2/server.py`.
+Dans le conteneur applicatif, aucune variable d'environnement supplémentaire n'est requise au-delà de la configuration déjà injectée par le runtime.
+
 ## Contrôles release candidate
 
 ```bash
