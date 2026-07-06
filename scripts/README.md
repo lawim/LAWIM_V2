@@ -15,6 +15,7 @@ Scripts idempotents pour la Release Candidate LAWIM_V2. Aucun secret embarqué.
 | `run-compose-staging.sh` | Stack staging |
 | `run-compose-prod.sh` | Stack production (seed demo off par défaut) |
 | `smoke_runtime.py` | Smoke test : serveur, health, UI, API, arrêt propre |
+| `admin_reset_password.py` | Reset a user's password with production configuration and LAWIM service APIs |
 | `validate_prisma_manifest.py` | Validation manifeste schéma + migration SQL |
 
 ## Codes de retour
