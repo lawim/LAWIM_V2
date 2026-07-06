@@ -7,6 +7,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
+from ..repository_introspection import table_exists
 from .constants import EXPORT_FORMATS, IMPORT_FORMATS, KNOWLEDGE_DOMAINS
 from .engines import RAGFoundationEngine
 from .parsers import parse_document
@@ -36,8 +37,7 @@ def _slugify(text: str) -> str:
 
 class KnowledgePlatformRepositoryMixin:
     def expert_knowledge_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='expert_knowledge_collections'")
-        return row is not None
+        return table_exists(self, "expert_knowledge_collections")
 
     def seed_expert_knowledge_catalog(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM expert_knowledge_collections") > 0:

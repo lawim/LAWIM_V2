@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import unittest
 
+from lawim_v2.db import LawimRepository
 from lawim_v2.postgresql_repository import _PgConnection, _should_return_postgresql_id
+from lawim_v2.repository_introspection import table_exists, tables_present
+from lawim_v2.security.repository import SecurityRepositoryMixin
 
 
 class _FakeNativeConnection:
@@ -50,3 +53,97 @@ class PostgreSQLRepositorySqlTest(unittest.TestCase):
 
         self.assertIn("RETURNING id", native.calls[0][0])
         self.assertEqual(cursor.lastrowid, 42)
+
+
+class _FakeIntrospectionRepository:
+    def __init__(self, driver: str, rows: list[dict[str, object]]) -> None:
+        self.driver = driver
+        self.rows = rows
+        self.calls: list[tuple[str, tuple[object, ...]]] = []
+
+    def all(self, sql: str, params: tuple[object, ...] = ()) -> list[dict[str, object]]:
+        self.calls.append((sql, params))
+        return self.rows
+
+
+class _FakeColumnsCursor:
+    def __init__(self, rows: list[dict[str, object]]) -> None:
+        self._rows = rows
+
+    def fetchall(self) -> list[dict[str, object]]:
+        return self._rows
+
+
+class _FakeColumnsConnection:
+    def __init__(self, rows: list[dict[str, object]]) -> None:
+        self.rows = rows
+        self.calls: list[tuple[str, tuple[object, ...]]] = []
+
+    def execute(self, sql: str, params: tuple[object, ...] = ()) -> _FakeColumnsCursor:
+        self.calls.append((sql, params))
+        return _FakeColumnsCursor(self.rows)
+
+
+class _SecurityStatsRepository(SecurityRepositoryMixin):
+    driver = "postgresql"
+
+    def __init__(self) -> None:
+        self.scalar_calls: list[tuple[str, tuple[object, ...]]] = []
+
+    def scalar(self, sql: str, params: tuple[object, ...] = ()) -> int:
+        self.scalar_calls.append((sql, params))
+        return 0
+
+    def list_audit_trail(self, limit: int = 5) -> list[dict[str, object]]:
+        return []
+
+    def list_security_incidents(self, status: str, limit: int = 5) -> list[dict[str, object]]:
+        return []
+
+    def list_risk_alerts(self, status: str, limit: int = 5) -> list[dict[str, object]]:
+        return []
+
+    def integration_sources(self) -> list[dict[str, object]]:
+        return []
+
+
+class PostgreSQLCompatibilityTest(unittest.TestCase):
+    def test_tables_present_uses_information_schema_for_postgresql(self) -> None:
+        repository = _FakeIntrospectionRepository(
+            "postgresql",
+            [{"name": "assistant_sessions"}, {"name": "assistant_agents"}],
+        )
+
+        self.assertTrue(tables_present(repository, ("assistant_sessions", "assistant_agents")))
+        self.assertIn("information_schema.tables", repository.calls[0][0])
+        self.assertEqual(repository.calls[0][1], ("assistant_sessions", "assistant_agents"))
+
+    def test_table_exists_uses_sqlite_catalog_for_sqlite_driver(self) -> None:
+        repository = _FakeIntrospectionRepository("sqlite", [{"name": "analytics_events"}])
+
+        self.assertTrue(table_exists(repository, "analytics_events"))
+        self.assertIn("sqlite_master", repository.calls[0][0])
+
+    def test_table_columns_switches_to_information_schema_for_postgresql(self) -> None:
+        repository = type("FakeRepository", (), {"driver": "postgresql"})()
+        connection = _FakeColumnsConnection(
+            [{"column_name": "id"}, {"column_name": "provider_name"}, {"column_name": "caption"}]
+        )
+
+        columns = LawimRepository._table_columns(repository, connection, "media")
+
+        self.assertEqual(columns, {"id", "provider_name", "caption"})
+        self.assertIn("information_schema.columns", connection.calls[0][0])
+
+    def test_security_stats_uses_bound_cutoff_instead_of_sqlite_datetime(self) -> None:
+        repository = _SecurityStatsRepository()
+
+        repository.security_stats()
+
+        audit_query, audit_params = next(
+            (sql, params) for sql, params in repository.scalar_calls if "audit_trail_entries" in sql
+        )
+        self.assertIn("created_at >= ?", audit_query)
+        self.assertNotIn("datetime(", audit_query)
+        self.assertEqual(len(audit_params), 1)
+        self.assertRegex(str(audit_params[0]), r"^\d{4}-\d{2}-\d{2}T")

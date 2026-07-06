@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from ..errors import NotFoundError, ValidationError
+from ..repository_introspection import table_exists
 from .constants import GOAL_KEYS, KNOWLEDGE_CATEGORIES, LIFE_EVENT_TYPES
 from .engines import (
     DecisionEngine,
@@ -677,5 +678,4 @@ class IntelligentRepositoryMixin:
         return row
 
     def intelligent_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='journeys'")
-        return row is not None
+        return table_exists(self, "journeys")

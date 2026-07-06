@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from ..contact import TELEGRAM_BOT, to_public_dict
+from ..repository_introspection import table_exists
 from .constants import CONSENT_TYPES, CONTACT_TYPES, CUSTOMER_ROLES, LEAD_STATUSES
 from .engines import CrmPlatformEngine
 
@@ -29,8 +30,7 @@ def _parse_json(value: str | None) -> Any:
 
 class CrmRepositoryMixin:
     def crm_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='crm_contact_profiles'")
-        return row is not None
+        return table_exists(self, "crm_contact_profiles")
 
     def seed_crm_catalog(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM crm_contact_profiles") > 0:

@@ -7,6 +7,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from ..repository_introspection import table_exists
 from .constants import (
     API_KEY_STATUSES,
     AUDIT_EVENT_TYPES,
@@ -47,8 +48,7 @@ def _parse_json(value: str | None) -> Any:
 
 class SecurityRepositoryMixin:
     def security_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='iam_roles'")
-        return row is not None
+        return table_exists(self, "iam_roles")
 
     def seed_security_catalog(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM iam_roles") > 0:
@@ -1097,12 +1097,14 @@ class SecurityRepositoryMixin:
         }
 
     def security_stats(self) -> dict[str, object]:
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=1)).replace(microsecond=0).isoformat()
         return {
             "active_roles": self.scalar("SELECT COUNT(*) FROM iam_roles WHERE status = 'active'"),
             "active_api_keys": self.scalar("SELECT COUNT(*) FROM access_api_keys WHERE status = 'active'"),
             "active_sessions": self.scalar("SELECT COUNT(*) FROM access_session_records WHERE status = 'active'"),
             "audit_entries_24h": self.scalar(
-                "SELECT COUNT(*) FROM audit_trail_entries WHERE created_at >= datetime('now', '-1 day')"
+                "SELECT COUNT(*) FROM audit_trail_entries WHERE created_at >= ?",
+                (cutoff,),
             ),
             "open_incidents": self.scalar("SELECT COUNT(*) FROM security_incidents WHERE status IN ('open', 'investigating')"),
             "high_risk_users": self.scalar("SELECT COUNT(*) FROM risk_scores WHERE level IN ('high', 'critical')"),

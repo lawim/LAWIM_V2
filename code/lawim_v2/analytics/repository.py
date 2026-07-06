@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from ..observability import METRICS
+from ..repository_introspection import table_exists
 from .constants import (
     ANALYTIC_SOURCES,
     DEFAULT_DASHBOARDS,
@@ -35,8 +36,7 @@ def _parse_json(value: str | None) -> Any:
 
 class AnalyticsRepositoryMixin:
     def analytics_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='analytics_events'")
-        return row is not None
+        return table_exists(self, "analytics_events")
 
     def seed_analytics_catalog(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM analytics_kpi_definitions") > 0:

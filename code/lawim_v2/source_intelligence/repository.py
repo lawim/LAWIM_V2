@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from ..errors import NotFoundError
+from ..repository_introspection import tables_present
 from .constants import DEFAULT_SOURCE_TARGET, SOURCE_CHANNELS, SOURCE_IMPORT_STATUSES, SOURCE_STATUSES
 from .dto import source_context_dto, source_dto, import_dto
 from .engines import DashboardEngine, ReferenceCodeEngine, SourceAnalysisEngine, WhatsAppLinkEngine
@@ -36,14 +37,7 @@ def _slugify(text: str) -> str:
 
 class SourceIntelligenceRepositoryMixin:
     def source_intelligence_tables_present(self) -> bool:
-        rows = self.all(
-            """
-            SELECT name
-            FROM sqlite_master
-            WHERE type = 'table' AND name IN ('source_intelligence_source_contexts', 'source_intelligence_imports')
-            """
-        )
-        return len(rows) == 2
+        return tables_present(self, ("source_intelligence_source_contexts", "source_intelligence_imports"))
 
     def _source_engine(self) -> SourceAnalysisEngine:
         return SourceAnalysisEngine()

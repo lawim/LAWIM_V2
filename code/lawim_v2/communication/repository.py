@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
+from ..repository_introspection import table_exists
 from .constants import (
     CAMPAIGN_STATUSES,
     CHANNEL_TYPES,
@@ -40,10 +41,7 @@ def _parse_json(value: str | None) -> Any:
 
 class CommunicationRepositoryMixin:
     def communication_tables_present(self) -> bool:
-        row = self.one(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name='communication_channels'"
-        )
-        return row is not None
+        return table_exists(self, "communication_channels")
 
     def seed_communication_catalog(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM communication_channels") > 0:

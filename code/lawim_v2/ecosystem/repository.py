@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 from ..errors import NotFoundError, ValidationError
+from ..repository_introspection import table_exists
 from .constants import DEFAULT_SERVICE_CATALOG, WORKFLOW_STEP_TEMPLATES, WORKFLOW_TYPES
 from .engines import (
     MatchingEngine2,
@@ -28,8 +29,7 @@ def _json(value: Any) -> str:
 
 class EcosystemRepositoryMixin:
     def ecosystem_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='partner_profiles'")
-        return row is not None
+        return table_exists(self, "partner_profiles")
 
     def seed_ecosystem_catalog(self) -> None:
         if self.one("SELECT id FROM service_catalog LIMIT 1") is not None:

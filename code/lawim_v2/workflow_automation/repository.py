@@ -6,6 +6,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
+from ..repository_introspection import table_exists
 from .constants import AUTOMATION_DOMAINS, DEFAULT_QUEUE_CAPACITY, DEFAULT_SLA_HOURS
 from .engines import AIIntegrationBridge, ProcessEngine
 
@@ -29,8 +30,7 @@ def _parse_json(value: str | None) -> Any:
 
 class WorkflowAutomationRepositoryMixin:
     def automation_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='automation_workflow_definitions'")
-        return row is not None
+        return table_exists(self, "automation_workflow_definitions")
 
     def seed_automation_catalog(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM automation_workflow_definitions") > 0:

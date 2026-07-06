@@ -4,6 +4,7 @@ import json
 from datetime import datetime, timezone
 from typing import Any
 
+from ..repository_introspection import table_exists
 from .constants import SIMULATION_SCENARIOS
 from .engines import (
     DecisionPlatformEngine,
@@ -35,8 +36,7 @@ def _parse_json(value: str | None) -> Any:
 
 class CognitionRepositoryMixin:
     def cognition_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='knowledge_nodes'")
-        return row is not None
+        return table_exists(self, "knowledge_nodes")
 
     def bootstrap_project_cognition(self, project_id: int) -> None:
         self.refresh_project_cognition(project_id)

@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from ..repository_introspection import table_exists
 from .constants import PROPERTY_TYPES
 from .engines import RealEstatePlatformEngine
 
@@ -28,8 +29,7 @@ def _parse_json(value: str | None) -> Any:
 
 class RealEstateIntelligenceRepositoryMixin:
     def rei_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='rei_property_profiles'")
-        return row is not None
+        return table_exists(self, "rei_property_profiles")
 
     def seed_rei_catalog(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM rei_property_profiles") > 0:

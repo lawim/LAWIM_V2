@@ -106,15 +106,16 @@ class MigrationRunResult:
 @dataclass(slots=True)
 class MigrationValidator:
     def validate(self, *, connection: sqlite3.Connection, expected_version: int) -> None:
-        row = connection.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name='schema_meta'"
-        ).fetchone()
-        if row is None:
-            raise ValueError("schema metadata table is missing")
-        metadata = connection.execute("SELECT value FROM schema_meta WHERE key = 'schema_version'").fetchone()
+        try:
+            metadata = connection.execute("SELECT value FROM schema_meta WHERE key = 'schema_version'").fetchone()
+        except Exception as exc:
+            raise ValueError("schema metadata table is missing") from exc
         if metadata is None:
             raise ValueError("schema metadata row is missing")
-        value = metadata[0]
+        try:
+            value = metadata["value"]  # type: ignore[index]
+        except Exception:
+            value = metadata[0]
         if str(value) != str(expected_version):
             raise ValueError(f"expected schema version {expected_version}, got {value}")
 
@@ -134,7 +135,7 @@ class MigrationRunner:
             """
         )
         connection.execute(
-            "INSERT OR REPLACE INTO schema_meta (key, value) VALUES (?, ?)",
+            "INSERT INTO schema_meta (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value",
             ("schema_version", str(version)),
         )
 

@@ -57,7 +57,12 @@ class MediaRegistryAACBTest(LawimTestHarness):
                     "2024-01-01T00:00:00+00:00",
                 ),
             )
-        media_id = int(self.repository.scalar("SELECT last_insert_rowid()"))
+        media_row = self.repository.one(
+            "SELECT id FROM media WHERE property_id = ? AND url = ? ORDER BY id DESC LIMIT 1",
+            (property_id, "https://example.test/legacy.jpg"),
+        )
+        self.assertIsNotNone(media_row)
+        media_id = int(media_row["id"])
         media_row = self.repository.get_media(media_id)
 
         self.assertEqual(media_row["provider_name"], "local")

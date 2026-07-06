@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from dataclasses import dataclass
 from typing import Any, Iterable
 
+from .repository_introspection import tables_present as _tables_present
+
 
 PROGRAM_M_SCHEMA_VERSION = 19
 
@@ -118,23 +120,7 @@ CREATE TABLE IF NOT EXISTS {table} (
 
 
 def tables_present(repository, table_names: Iterable[str]) -> bool:
-    names = tuple(dict.fromkeys(str(name) for name in table_names))
-    if not names:
-        return True
-    if str(getattr(repository, "driver", "sqlite")) == "postgresql":
-        placeholders = ", ".join("?" for _ in names)
-        rows = repository.all(
-            f"SELECT table_name AS name FROM information_schema.tables WHERE table_schema = 'public' AND table_name IN ({placeholders})",
-            names,
-        )
-    else:
-        placeholders = ", ".join("?" for _ in names)
-        rows = repository.all(
-            f"SELECT name FROM sqlite_master WHERE type = 'table' AND name IN ({placeholders})",
-            names,
-        )
-    present = {str(row.get("name") or row.get("table_name")) for row in rows}
-    return len(present) == len(names)
+    return _tables_present(repository, table_names)
 
 
 def list_rows(repository, table: str, *, limit: int = 50, order_by: str = "id DESC") -> list[dict[str, object]]:

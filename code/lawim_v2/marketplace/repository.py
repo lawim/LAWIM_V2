@@ -5,6 +5,7 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from ..repository_introspection import table_exists
 from .constants import (
     PARTNER_REGISTRATION_STATUSES,
     PAYMENT_METHODS,
@@ -46,8 +47,7 @@ def _marketplace_provider_to_partner_type(provider_type: str) -> str:
 
 class MarketplaceRepositoryMixin:
     def marketplace_tables_present(self) -> bool:
-        row = self.one("SELECT name FROM sqlite_master WHERE type='table' AND name='marketplace_provider_profiles'")
-        return row is not None
+        return table_exists(self, "marketplace_provider_profiles")
 
     def seed_marketplace_catalog(self) -> None:
         if self.scalar("SELECT COUNT(*) FROM marketplace_catalog_categories") > 0:

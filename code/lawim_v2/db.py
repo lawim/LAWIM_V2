@@ -88,6 +88,8 @@ __all__ = [
 
 
 class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase):
+    driver = "sqlite"
+
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -112,6 +114,20 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         with self.lock:
             with self.connection:
                 yield self.connection
+
+    def _table_columns(self, conn, table: str) -> set[str]:
+        if str(getattr(self, "driver", "sqlite")).strip().lower() in {"postgresql", "postgres"}:
+            rows = conn.execute(
+                """
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_schema = 'public' AND table_name = ?
+                """,
+                (table,),
+            ).fetchall()
+            return {str(row["column_name"]) for row in rows}
+        rows = conn.execute(f"PRAGMA table_info({table})").fetchall()
+        return {str(row["name"]) for row in rows}
 
     def initialize(self, seed_demo_data: bool = True) -> None:
         with self._transaction() as conn:
@@ -1188,7 +1204,7 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         if size_bytes is not None and size_bytes < 0:
             raise ValidationError("size_bytes must be non-negative")
         with self._transaction() as conn:
-            media_columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(media)").fetchall()}
+            media_columns = self._table_columns(conn, "media")
             insert_columns: list[str] = []
             insert_values: list[object] = []
 
