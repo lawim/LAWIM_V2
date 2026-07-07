@@ -137,6 +137,10 @@ function setLoading(isLoading, message = "Loading...") {
   }
 }
 
+function traceRuntime(step, details = {}) {
+  console.debug(step, details);
+}
+
 function formatApiError(payload, status) {
   const code = payload?.error?.code;
   const message = payload?.error?.message || payload?.message || `HTTP ${status}`;
@@ -925,6 +929,7 @@ function updateSelectedPropertyLabel() {
 }
 
 function applyJourney(journey) {
+  traceRuntime("APPLY_JOURNEY", { journey });
   state.activeJourney = journey;
   localStorage.setItem("lawim.journey", journey);
   document.querySelectorAll("[data-journey-panel]").forEach((panel) => {
@@ -937,6 +942,10 @@ function applyJourney(journey) {
   if (journey === "admin" && state.token) {
     loadAdminDashboard();
   }
+  traceRuntime("RENDER_DONE", {
+    journey,
+    adminDashboardVisible: Boolean(refs.adminDashboard && !refs.adminDashboard.hidden),
+  });
 }
 
 function journeyForRole(role) {
@@ -1060,18 +1069,29 @@ function parseNumber(value) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
-async function refresh() {
+async function refresh({ renderJourney = true } = {}) {
   if (state.refreshInFlight) {
     return;
   }
   state.refreshInFlight = true;
+  traceRuntime("REFRESH_START", {
+    token: Boolean(state.token),
+    journey: state.activeJourney,
+    renderJourney,
+  });
   setLoading(true, "Refreshing runtime state...");
+  let refreshError = null;
   try {
     const healthPromise = api("/api/health", { auth: Boolean(state.token) });
     const bootstrapPromise = api("/api/bootstrap", { auth: Boolean(state.token) });
     const [health, bootstrap] = await Promise.all([healthPromise, bootstrapPromise]);
     state.health = health;
-    renderHealth(health);
+    try {
+      renderHealth(health);
+    } catch (error) {
+      refreshError = error;
+      setRuntimeChip("DEGRADED", "warn");
+    }
     renderBootstrap(bootstrap);
     await refreshProjects();
     await refreshEcosystemLists();
@@ -1084,12 +1104,21 @@ async function refresh() {
     await refreshSecurityAdmin();
     await refreshMarketplaceAdmin();
     await refreshWorkflowAdmin();
-    applyJourney(state.activeJourney);
+    if (renderJourney) {
+      applyJourney(state.activeJourney);
+    }
     setNotice("Runtime is available and ready.", "success");
   } catch (error) {
+    refreshError = error;
     setNotice(`${error.message} — retry with refresh or check ./scripts/run-local.sh`, "error", error.code || "");
     setRuntimeChip("DEGRADED", "warn");
   } finally {
+    traceRuntime("REFRESH_DONE", {
+      token: Boolean(state.token),
+      journey: state.activeJourney,
+      renderJourney,
+      error: refreshError ? refreshError.message : null,
+    });
     state.refreshInFlight = false;
     setLoading(false);
   }
@@ -1857,8 +1886,13 @@ async function handleLogin(event) {
     });
     state.token = payload.token;
     localStorage.setItem("lawim.token", state.token);
-    await refresh();
-    applyJourney(journeyForRole(payload.user.role));
+    traceRuntime("LOGIN_OK", {
+      email: payload.user?.email || email,
+      role: payload.user?.role || "",
+      journey: journeyForRole(payload.user?.role),
+    });
+    await refresh({ renderJourney: false });
+    applyJourney(journeyForRole(payload.user?.role));
     setNotice(`Authenticated as ${payload.user.email}`, "success");
   } catch (error) {
     setNotice(error.message, "error");
@@ -2078,7 +2112,7 @@ async function handleRegister(event) {
     localStorage.setItem("lawim.token", state.token);
     applyJourney(journeyForRole(form.get("role")));
     setNotice(`Registered as ${payload.user.email}`, "success");
-    await refresh();
+    await refresh({ renderJourney: false });
   } catch (error) {
     setNotice(error.message, "error");
   }
