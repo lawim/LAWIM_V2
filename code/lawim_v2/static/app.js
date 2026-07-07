@@ -18,9 +18,133 @@ const refs = {};
 const moneyFormatter = new Intl.NumberFormat("fr-FR", {
   maximumFractionDigits: 0,
 });
+const ACCESS_ROLE_PRIORITY = ["admin", "agent", "owner"];
 
 function byId(id) {
   return document.getElementById(id);
+}
+
+function shouldTraceAuth() {
+  try {
+    return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || localStorage.getItem("lawim.debug.auth") === "1";
+  } catch {
+    return false;
+  }
+}
+
+function updateAuthShell(isAuthenticated) {
+  document.body.dataset.authenticated = isAuthenticated ? "true" : "false";
+}
+
+function extractRoleValue(role) {
+  if (typeof role === "string" || typeof role === "number") {
+    return role;
+  }
+  if (role && typeof role === "object") {
+    return role.role || role.role_key || role.key || role.name || "";
+  }
+  return "";
+}
+
+function normalizeAccessRole(role) {
+  const normalized = String(extractRoleValue(role) || "").trim().toLowerCase();
+  if (!normalized) {
+    return "";
+  }
+  if (normalized === "seller") {
+    return "agent";
+  }
+  if (normalized === "buyer" || normalized === "owner" || normalized === "tenant" || normalized === "landlord" || normalized === "investor") {
+    return "owner";
+  }
+  if (ACCESS_ROLE_PRIORITY.includes(normalized)) {
+    return normalized;
+  }
+  return "";
+}
+
+function resolveAccessRole(primaryRole, roles = []) {
+  const direct = normalizeAccessRole(primaryRole);
+  if (direct) {
+    return direct;
+  }
+  const candidates = Array.isArray(roles) ? roles : [];
+  for (const priority of ACCESS_ROLE_PRIORITY) {
+    if (candidates.some((candidate) => normalizeAccessRole(candidate) === priority)) {
+      return priority;
+    }
+  }
+  return "owner";
+}
+
+function journeyForRole(role) {
+  const normalized = normalizeAccessRole(role);
+  if (normalized === "admin") {
+    return "admin";
+  }
+  if (normalized === "agent") {
+    return "seller";
+  }
+  return "buyer";
+}
+
+function roleLabel(role) {
+  const normalized = normalizeAccessRole(role);
+  if (normalized === "admin") {
+    return "Admin";
+  }
+  if (normalized === "agent") {
+    return "Agent";
+  }
+  return "Owner";
+}
+
+function clearSession() {
+  state.token = "";
+  localStorage.removeItem("lawim.token");
+  updateAuthShell(false);
+  if (refs.currentUser) {
+    refs.currentUser.textContent = "Guest session";
+  }
+  if (refs.logoutButton) {
+    refs.logoutButton.disabled = true;
+  }
+  if (refs.loginPassword) {
+    refs.loginPassword.value = "";
+  }
+}
+
+function isServerUnavailableError(error) {
+  const status = Number(error?.status || 0);
+  return status >= 500 || (!status && /fetch|network|timeout|unavailable/i.test(String(error?.message || "")));
+}
+
+function formatLoginError(error) {
+  const status = Number(error?.status || 0);
+  if (status === 401) {
+    return "Incorrect email or password.";
+  }
+  if (status === 403) {
+    return "Access not authorized.";
+  }
+  if (isServerUnavailableError(error)) {
+    return "Server unavailable. Try again in a moment.";
+  }
+  return error?.message || "Unable to sign in.";
+}
+
+function formatSessionError(error) {
+  const status = Number(error?.status || 0);
+  if (status === 401) {
+    return { message: "Your session expired. Sign in again.", tone: "warn", clearToken: true };
+  }
+  if (status === 403) {
+    return { message: "Access not authorized.", tone: "warn", clearToken: true };
+  }
+  if (isServerUnavailableError(error)) {
+    return { message: "Server unavailable. Try again in a moment.", tone: "error", clearToken: false };
+  }
+  return { message: error?.message || "Unable to refresh the session.", tone: "error", clearToken: false };
 }
 
 function cacheRefs() {
@@ -43,7 +167,6 @@ function cacheRefs() {
     loginEmail: byId("login-email"),
     loginPassword: byId("login-password"),
     logoutButton: byId("logout-button"),
-    demoButton: byId("use-demo-button"),
     matchForm: byId("match-form"),
     propertyForm: byId("property-form"),
     geoForm: byId("geo-form"),
@@ -138,6 +261,9 @@ function setLoading(isLoading, message = "Loading...") {
 }
 
 function traceRuntime(step, details = {}) {
+  if (!shouldTraceAuth()) {
+    return;
+  }
   console.debug(step, details);
 }
 
@@ -237,6 +363,8 @@ async function api(path, { method = "GET", auth = false, body = null, query = nu
     const formatted = formatApiError(payload, response.status);
     const error = new Error(formatted.message);
     error.code = formatted.code;
+    error.status = response.status;
+    error.payload = payload;
     throw error;
   }
 
@@ -262,6 +390,8 @@ async function apiMultipart(path, { auth = false, formData }) {
     const formatted = formatApiError(payload, response.status);
     const error = new Error(formatted.message);
     error.code = formatted.code;
+    error.status = response.status;
+    error.payload = payload;
     throw error;
   }
   return payload;
@@ -932,6 +1062,7 @@ function applyJourney(journey) {
   traceRuntime("APPLY_JOURNEY", { journey });
   state.activeJourney = journey;
   localStorage.setItem("lawim.journey", journey);
+  updateAuthShell(Boolean(state.token));
   document.querySelectorAll("[data-journey-panel]").forEach((panel) => {
     const allowed = (panel.getAttribute("data-journey-panel") || "").split(/\s+/);
     panel.hidden = !allowed.includes(journey);
@@ -949,7 +1080,7 @@ function applyJourney(journey) {
 }
 
 function journeyForRole(role) {
-  const normalizedRole = String(role || "").toLowerCase();
+  const normalizedRole = normalizeAccessRole(role);
   if (normalizedRole === "admin") {
     return "admin";
   }
@@ -991,6 +1122,10 @@ async function loadAdminDashboard() {
           .join("")}
       </div>
     `;
+    traceRuntime("DASHBOARD_RENDERED", {
+      journey: state.activeJourney,
+      adminDashboardVisible: Boolean(refs.adminDashboard && !refs.adminDashboard.hidden),
+    });
   } catch (error) {
     refs.adminDashboard.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
   }
@@ -1006,19 +1141,19 @@ function renderHealth(health) {
 
 function renderBootstrap(payload) {
   state.bootstrap = payload;
-  maybePopulateDemoCredentials();
-  if (refs.demoButton) {
-    refs.demoButton.hidden = !payload.features?.demo_credentials;
-  }
   const currentUser = payload.current_user;
 
   if (currentUser) {
-    refs.currentUser.textContent = `${currentUser.full_name} · ${currentUser.email}`;
+    const resolvedRole = resolveAccessRole(currentUser.role, currentUser.roles || payload.roles || []);
+    state.activeJourney = journeyForRole(resolvedRole);
+    refs.currentUser.textContent = `${currentUser.full_name || currentUser.name || "User"} · ${currentUser.email || "n/a"} · ${roleLabel(resolvedRole)}`;
     refs.logoutButton.disabled = false;
   } else {
     refs.currentUser.textContent = "Guest session";
     refs.logoutButton.disabled = !state.token;
   }
+
+  updateAuthShell(Boolean(state.token && currentUser));
 
   renderSummary(payload.summary || {});
   renderOrganizations(payload.organizations || []);
@@ -1029,10 +1164,7 @@ function renderBootstrap(payload) {
   renderNotifications(payload.notifications || []);
 
   if (state.token && !currentUser) {
-    state.token = "";
-    localStorage.removeItem("lawim.token");
-    refs.currentUser.textContent = "Guest session";
-    refs.logoutButton.disabled = true;
+    clearSession();
   }
 
   if (!state.selectedConversationId && (payload.conversations || []).length) {
@@ -1110,7 +1242,11 @@ async function refresh({ renderJourney = true } = {}) {
     setNotice("Runtime is available and ready.", "success");
   } catch (error) {
     refreshError = error;
-    setNotice(`${error.message} — retry with refresh or check ./scripts/run-local.sh`, "error", error.code || "");
+    const sessionError = formatSessionError(error);
+    if (sessionError.clearToken) {
+      clearSession();
+    }
+    setNotice(sessionError.message, sessionError.tone, error.code || "");
     setRuntimeChip("DEGRADED", "warn");
   } finally {
     traceRuntime("REFRESH_DONE", {
@@ -1884,18 +2020,34 @@ async function handleLogin(event) {
       method: "POST",
       body: { email, password },
     });
-    state.token = payload.token;
+    const token = String(payload.token || "");
+    if (!token) {
+      throw new Error("Login response did not include a token.");
+    }
+    state.token = token;
     localStorage.setItem("lawim.token", state.token);
+    updateAuthShell(true);
+    const resolvedRole = resolveAccessRole(payload.user?.role, payload.roles || payload.user?.roles || []);
+    const resolvedJourney = journeyForRole(resolvedRole);
     traceRuntime("LOGIN_OK", {
       email: payload.user?.email || email,
-      role: payload.user?.role || "",
-      journey: journeyForRole(payload.user?.role),
+      role: resolvedRole,
+      journey: resolvedJourney,
+    });
+    traceRuntime("ROLE_RESOLVED", {
+      role: resolvedRole,
+      journey: resolvedJourney,
+    });
+    traceRuntime("DASHBOARD_SELECTED", {
+      role: resolvedRole,
+      journey: resolvedJourney,
     });
     await refresh({ renderJourney: false });
-    applyJourney(journeyForRole(payload.user?.role));
-    setNotice(`Authenticated as ${payload.user.email}`, "success");
+    applyJourney(resolvedJourney);
+    refs.loginPassword.value = "";
+    setNotice(`Authenticated as ${payload.user?.email || email}`, "success");
   } catch (error) {
-    setNotice(error.message, "error");
+    setNotice(formatLoginError(error), "error", error.code || "");
   }
 }
 
@@ -1907,8 +2059,7 @@ async function handleLogout() {
   } catch (error) {
     console.warn("Logout warning:", error);
   } finally {
-    state.token = "";
-    localStorage.removeItem("lawim.token");
+    clearSession();
     refs.messageForm.classList.add("hidden");
     refs.conversationDetail.innerHTML = '<p class="muted">No conversation selected.</p>';
     state.selectedConversationId = null;
@@ -2083,17 +2234,6 @@ async function handleMessageCreate(event) {
   }
 }
 
-function maybePopulateDemoCredentials() {
-  if (state.bootstrap?.features?.demo_credentials) {
-    populateDemoCredentials();
-  }
-}
-
-function populateDemoCredentials() {
-  refs.loginEmail.value = "admin@lawim.local";
-  refs.loginPassword.value = "lawim-demo";
-}
-
 async function handleRegister(event) {
   event.preventDefault();
   try {
@@ -2108,9 +2248,15 @@ async function handleRegister(event) {
         organization_id: parseNumber(form.get("organization_id")),
       },
     });
-    state.token = payload.token;
+    const token = String(payload.token || "");
+    if (!token) {
+      throw new Error("Registration response did not include a token.");
+    }
+    state.token = token;
     localStorage.setItem("lawim.token", state.token);
-    applyJourney(journeyForRole(form.get("role")));
+    updateAuthShell(true);
+    const resolvedRole = resolveAccessRole(payload.user?.role || form.get("role"));
+    applyJourney(journeyForRole(resolvedRole));
     setNotice(`Registered as ${payload.user.email}`, "success");
     await refresh({ renderJourney: false });
   } catch (error) {
@@ -2282,7 +2428,7 @@ async function handleAdminUserCreate(event) {
         email: form.get("email"),
         full_name: form.get("full_name"),
         role: "agent",
-        password: form.get("password") || "lawim-demo",
+        password: form.get("password") || "",
         organization_id: parseNumber(form.get("organization_id")),
       },
     });
@@ -2297,7 +2443,6 @@ async function handleAdminUserCreate(event) {
 function bindEvents() {
   refs.loginForm.addEventListener("submit", handleLogin);
   refs.logoutButton.addEventListener("click", handleLogout);
-  refs.demoButton.addEventListener("click", populateDemoCredentials);
   refs.registerForm?.addEventListener("submit", handleRegister);
   refs.projectForm?.addEventListener("submit", handleProjectCreate);
   refs.assistantForm?.addEventListener("submit", handleAssistantChat);
@@ -2336,6 +2481,7 @@ function bindEvents() {
 document.addEventListener("DOMContentLoaded", async () => {
   cacheRefs();
   bindEvents();
+  updateAuthShell(Boolean(state.token));
   applyJourney(state.activeJourney);
   updateSelectedPropertyLabel();
   await refresh();

@@ -50,7 +50,7 @@ describe('static runtime login flow', () => {
     vi.unstubAllGlobals();
   });
 
-  it('renders the admin dashboard after login and logs the refresh error path', async () => {
+  it('renders the admin dashboard after login without exposing demo credentials', async () => {
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = new URL(String(input), window.location.origin);
       const path = `${url.pathname}${url.search}`;
@@ -61,7 +61,7 @@ describe('static runtime login flow', () => {
         return createJsonResponse(
           {
             user: {
-              email: 'admin@lawim.local',
+              email: 'admin@lawim.app',
               role: 'admin',
             },
             token: 'admin-token',
@@ -107,7 +107,7 @@ describe('static runtime login flow', () => {
             ? {
                 current_user: {
                   full_name: 'Admin User',
-                  email: 'admin@lawim.local',
+                  email: 'admin@lawim.app',
                 },
                 summary: {},
                 organizations: [],
@@ -175,14 +175,21 @@ describe('static runtime login flow', () => {
       expect(document.getElementById('runtime-chip')).toHaveTextContent(/OK/i);
     });
 
+    expect(document.body).not.toHaveTextContent(/admin@lawim\.local/i);
+    expect(document.body).not.toHaveTextContent(/lawim-demo/i);
+    expect(document.getElementById('login-form')).toBeInTheDocument();
+    expect(document.querySelector('.brand-mark')).toBeInTheDocument();
+    expect(document.querySelector('.brand-lockup__copy .lede')).toHaveTextContent(/lawim secure sign-in/i);
+    expect(document.getElementById('login-form')?.querySelector('[name="role"]')).toBeNull();
+
     debugSpy.mockClear();
 
     const emailInput = document.getElementById('login-email') as HTMLInputElement;
     const passwordInput = document.getElementById('login-password') as HTMLInputElement;
     const loginForm = document.getElementById('login-form') as HTMLFormElement;
 
-    emailInput.value = 'admin@lawim.local';
-    passwordInput.value = 'lawim-demo';
+    emailInput.value = 'admin@lawim.app';
+    passwordInput.value = 'secure-password';
     loginForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
     await waitFor(() => {
@@ -192,18 +199,30 @@ describe('static runtime login flow', () => {
     });
 
     const labels = debugSpy.mock.calls.map(([label]) => label);
-    expect(labels).toEqual(['LOGIN_OK', 'REFRESH_START', 'REFRESH_DONE', 'APPLY_JOURNEY', 'RENDER_DONE']);
+    expect(labels).toEqual(['LOGIN_OK', 'ROLE_RESOLVED', 'DASHBOARD_SELECTED', 'REFRESH_START', 'REFRESH_DONE', 'APPLY_JOURNEY', 'RENDER_DONE', 'DASHBOARD_RENDERED']);
 
-    expect(debugSpy.mock.calls[1]?.[1]).toMatchObject({
-      renderJourney: false,
-    });
-    expect(debugSpy.mock.calls[2]?.[1]).toMatchObject({
-      error: expect.stringContaining('toUpperCase'),
-    });
-    expect(debugSpy.mock.calls[3]?.[1]).toMatchObject({
+    expect(debugSpy.mock.calls[0]?.[1]).toMatchObject({
+      email: 'admin@lawim.app',
+      role: 'admin',
       journey: 'admin',
     });
-    expect(debugSpy.mock.calls[4]?.[1]).toMatchObject({
+    expect(debugSpy.mock.calls[1]?.[1]).toMatchObject({
+      role: 'admin',
+      journey: 'admin',
+    });
+    expect(debugSpy.mock.calls[2]?.[1]).toMatchObject({
+      role: 'admin',
+      journey: 'admin',
+    });
+    expect(debugSpy.mock.calls[5]?.[1]).toMatchObject({
+      journey: 'admin',
+    });
+    expect(debugSpy.mock.calls[6]?.[1]).toMatchObject({
+      journey: 'admin',
+      adminDashboardVisible: true,
+    });
+    expect(debugSpy.mock.calls[7]?.[1]).toMatchObject({
+      journey: 'admin',
       adminDashboardVisible: true,
     });
   });

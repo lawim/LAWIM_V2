@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LAWIM_V2 Executable Baseline</title>
-  <meta name="description" content="Executable baseline for LAWIM_V2 with API, demo data, matching and conversations.">
+  <title>LAWIM | Secure workspace</title>
+  <meta name="description" content="LAWIM secure workspace for owners, agents, and administrators.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -13,12 +14,15 @@
 
   <div class="app-shell">
     <header class="masthead panel">
-      <div>
-        <p class="eyebrow">LAWIM_V2</p>
-        <h1>User journey console</h1>
-        <p class="lede">
-          Seller, buyer and administrator journeys over the SQLite-backed LAWIM_V2 runtime.
-        </p>
+      <div class="brand-lockup">
+        <img class="brand-mark" src="/logo.svg" alt="LAWIM logo" width="56" height="56">
+        <div class="brand-lockup__copy">
+          <p class="eyebrow">LAWIM</p>
+          <h1>Secure workspace</h1>
+          <p class="lede">
+            LAWIM secure sign-in for owners, agents, and admins. Sign in once and the right space opens automatically.
+          </p>
+        </div>
       </div>
       <div class="masthead__status">
         <span id="runtime-chip" class="chip">Booting</span>
@@ -28,10 +32,11 @@
 
     <main class="layout">
       <aside class="sidebar">
-        <section class="panel form-panel">
+        <section class="panel form-panel auth-panel">
           <div class="section-heading">
-            <h2>Authentication</h2>
-            <p class="muted">Use the demo accounts seeded by the runtime.</p>
+            <p class="eyebrow">Secure access</p>
+            <h2>Welcome back</h2>
+            <p class="muted">Sign in with email and password. No role selection is needed here.</p>
           </div>
           <form id="login-form" class="stacked-form">
             <label>
@@ -44,13 +49,9 @@
             </label>
             <div class="actions">
               <button type="submit" class="button primary">Sign in</button>
-              <button type="button" id="use-demo-button" class="button secondary">Use demo admin</button>
             </div>
           </form>
-          <div class="credential-hint">
-            <span>Demo</span>
-            <strong>admin@lawim.local / lawim-demo</strong>
-          </div>
+          <p class="muted auth-note">The matching dashboard opens automatically after sign-in.</p>
           <div class="actions single">
             <button type="button" id="logout-button" class="button ghost">Logout</button>
           </div>
@@ -58,12 +59,12 @@
 
         <section class="panel form-panel">
           <div class="section-heading">
-            <h2>User journey</h2>
-            <p class="muted">Switch the console to your role.</p>
+            <h2>Workspace</h2>
+            <p class="muted">The right dashboard is selected automatically after authentication.</p>
           </div>
           <div id="journey-nav" class="journey-nav">
-            <button type="button" class="button secondary" data-journey="seller">Seller</button>
-            <button type="button" class="button secondary" data-journey="buyer">Buyer</button>
+            <button type="button" class="button secondary" data-journey="seller">Agent</button>
+            <button type="button" class="button secondary" data-journey="buyer">Owner</button>
             <button type="button" class="button secondary" data-journey="project">Project</button>
             <button type="button" class="button secondary" data-journey="admin">Admin</button>
           </div>
@@ -81,17 +82,17 @@
             </label>
             <label>
               <span>Email</span>
-              <input name="email" type="email" required placeholder="seller@example.local">
+              <input name="email" type="email" required placeholder="owner@example.com">
             </label>
             <label>
               <span>Password</span>
-              <input name="password" type="password" required value="lawim-demo">
+              <input name="password" type="password" required placeholder="Create a password">
             </label>
             <label>
               <span>Role</span>
               <select name="role">
-                <option value="owner">owner (buyer)</option>
-                <option value="agent">agent (seller)</option>
+                <option value="owner">owner</option>
+                <option value="agent">agent</option>
               </select>
             </label>
             <label>
@@ -484,7 +485,7 @@
             </label>
             <label>
               <span>Password</span>
-              <input name="password" type="password" minlength="8" placeholder="lawim-demo">
+              <input name="password" type="password" minlength="8" placeholder="Temporary password">
             </label>
             <div class="actions">
               <button type="submit" class="button primary">Create user</button>

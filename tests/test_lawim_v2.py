@@ -30,7 +30,8 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
 
         html = self.invoke("/")
         self.assertEqual(html.status, HTTPStatus.OK)
-        self.assertIn("LAWIM_V2 Executable Baseline", html.body_text())
+        self.assertIn("LAWIM secure sign-in", html.body_text())
+        self.assertIn("Secure workspace", html.body_text())
         self.assertIn("Content-Security-Policy", html.response_headers)
         self.assertIn("default-src 'self'", html.response_headers["Content-Security-Policy"])
 
