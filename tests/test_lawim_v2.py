@@ -20,18 +20,18 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         self.assertNotIn("audit", health_payload)
         self.assertIn("app_env", health_payload["environment"])
         self.assertEqual(health_payload["summary"]["organizations"], 3)
-        self.assertEqual(health_payload["summary"]["users"], 3)
+        self.assertEqual(health_payload["summary"]["users"], 10)
 
         bootstrap = self.invoke("/api/bootstrap")
         self.assertEqual(bootstrap.status, HTTPStatus.OK)
         bootstrap_payload = bootstrap.body_json()
-        self.assertEqual(bootstrap_payload["summary"]["published_properties"], 3)
-        self.assertEqual(len(bootstrap_payload["properties"]), 3)
+        self.assertEqual(bootstrap_payload["summary"]["published_properties"], 50)
+        self.assertEqual(len(bootstrap_payload["properties"]), 10)
 
         html = self.invoke("/")
         self.assertEqual(html.status, HTTPStatus.OK)
-        self.assertIn("LAWIM secure sign-in", html.body_text())
-        self.assertIn("Secure workspace", html.body_text())
+        self.assertIn("accompagnement immobilier intelligent", html.body_text())
+        self.assertIn("Connexion", html.body_text())
         self.assertIn("Content-Security-Policy", html.response_headers)
         self.assertIn("default-src 'self'", html.response_headers["Content-Security-Policy"])
 
@@ -131,10 +131,9 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
                 repository.close()
 
     def test_referential_integrity_blocks_orphaned_deletes(self) -> None:
-        seeded_properties = self.repository.list_properties(limit=10)["items"]
-        property_with_conversation = next(
-            property_row for property_row in seeded_properties if property_row["title"] == "Bonanjo City Loft"
-        )
+        seeded_conversations = self.repository.list_conversations(limit=10)
+        self.assertTrue(seeded_conversations)
+        property_with_conversation = self.repository.get_property(int(seeded_conversations[0]["property_id"]))
         agent = self.repository.get_user_by_email("agent@lawim.local")
 
         soft_deleted = self.repository.delete_property(int(property_with_conversation["id"]))
@@ -370,7 +369,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         self.assertEqual(matches.status, HTTPStatus.OK)
         matches_payload = matches.body_json()
         self.assertEqual(len(matches_payload["matches"]), 1)
-        self.assertEqual(matches_payload["matches"][0]["property"]["title"], "Bonanjo City Loft")
+        self.assertEqual(matches_payload["matches"][0]["property"]["geo"]["city"], "Douala")
 
     def test_authenticated_writes_persist(self) -> None:
         login = self.invoke(

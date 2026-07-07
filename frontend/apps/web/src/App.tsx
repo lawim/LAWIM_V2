@@ -9,25 +9,25 @@ import { ObservabilityConsolePage } from './ObservabilityConsolePage';
 import { ProductReadinessDashboardPage } from './ProductReadinessDashboardPage';
 
 const publicNavItems = [
-  { to: '/', label: 'Home' },
-  { to: '/search', label: 'Search' },
-  { to: '/map', label: 'Map' },
+  { to: '/', label: 'Accueil' },
+  { to: '/search', label: 'Recherche' },
+  { to: '/map', label: 'Carte' },
   { to: '/estimation', label: 'Estimation' },
   { to: '/assistant', label: 'Assistant' },
   { to: '/marketplace', label: 'Marketplace' },
-  { to: '/contact', label: 'Contact' }
+  { to: '/contact', label: 'Nous écrire' }
 ];
 
 const protectedNavItems = [
-  { to: '/profile', label: 'Profile' },
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/favorites', label: 'Favorites' },
+  { to: '/profile', label: 'Profil' },
+  { to: '/dashboard', label: 'Tableau de bord' },
+  { to: '/favorites', label: 'Favoris' },
   { to: '/notifications', label: 'Notifications' },
-  { to: '/requests', label: 'Requests' },
+  { to: '/requests', label: 'Demandes' },
   { to: '/documents', label: 'Documents' },
-  { to: '/workflow', label: 'Workflow' },
-  { to: '/observability', label: 'Observability' },
-  { to: '/readiness', label: 'Readiness' }
+  { to: '/workflow', label: 'Parcours' },
+  { to: '/observability', label: 'Observabilité' },
+  { to: '/readiness', label: 'Préparation' }
 ];
 
 function LoadingState({ label }: { label: string }) {
@@ -58,53 +58,53 @@ function HomePage() {
   return (
     <PageShell
       eyebrow="LAWIM Intelligence Platform"
-      title="One workspace, three roles, zero role picker."
-      description="LAWIM keeps admin, agent, and owner journeys in the same product. Sign in with email and password, then the right dashboard opens automatically."
+      title="Un seul espace. Cinq rôles officiels. Aucun sélecteur de rôle."
+      description="LAWIM garde les parcours administrateur, manager, opérateur, partenaire et utilisateur dans le même produit. Connectez-vous avec votre email et votre mot de passe, puis le bon tableau de bord s'ouvre automatiquement."
       actions={
         <>
           <Button type="button" onClick={() => navigate('/login')}>
-            Sign in
+            Connexion
           </Button>
           <Button type="button" variant="secondary" onClick={() => navigate(isAuthenticated ? dashboardPath : '/search')}>
-            {isAuthenticated ? 'Open dashboard' : 'Explore public tools'}
+            {isAuthenticated ? 'Ouvrir le tableau de bord' : 'Explorer les outils publics'}
           </Button>
         </>
       }
     >
       <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <Card title="Role routing" description="The platform selects the workspace from the API payload.">
+        <Card title="Routage par rôle" description="La plateforme choisit l'espace à partir du payload API.">
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-              <Badge variant="info">Admin</Badge>
-              <p className="mt-3 text-sm text-slate-300">Governance, monitoring, and platform control.</p>
+              <Badge variant="info">Administrateur</Badge>
+              <p className="mt-3 text-sm text-slate-300">Gouvernance, supervision et contrôle de la plateforme.</p>
             </div>
             <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-              <Badge variant="success">Agent</Badge>
-              <p className="mt-3 text-sm text-slate-300">Pipeline, follow-up, and operational coordination.</p>
+              <Badge variant="success">Manager</Badge>
+              <p className="mt-3 text-sm text-slate-300">Pilotage opérationnel, validations et équipes.</p>
             </div>
             <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-              <Badge variant="warning">Owner</Badge>
-              <p className="mt-3 text-sm text-slate-300">Portfolio visibility, requests, and documents.</p>
+              <Badge variant="warning">Opérateur</Badge>
+              <p className="mt-3 text-sm text-slate-300">Support, qualité et traitement des demandes.</p>
             </div>
           </div>
           <div className="mt-5 flex flex-wrap gap-3">
             <Button type="button" onClick={() => navigate('/login')}>
-              Continue to sign in
+              Aller à la connexion
             </Button>
-            <Button type="button" variant="secondary" onClick={() => navigate('/dashboard')}>
-              Go to workspace
+            <Button type="button" variant="secondary" onClick={() => navigate(isAuthenticated ? dashboardPath : '/login')}>
+              Ouvrir l'espace
             </Button>
           </div>
         </Card>
-        <Card title="What you get" description="A cleaner, faster front door with no role selection form.">
+        <Card title="Ce que vous obtenez" description="Une entrée plus nette, plus rapide, sans formulaire de rôle.">
           <div className="space-y-3 text-sm text-slate-300">
-            <p>• Email and password only.</p>
-            <p>• Automatic dashboard selection from `payload.user.role`.</p>
-            <p>• Clear messages for invalid credentials, expired sessions, and server downtime.</p>
-            <p>• One shared LAWIM brand across all pages.</p>
+            <p>• Email et mot de passe uniquement.</p>
+            <p>• Sélection automatique du tableau de bord à partir de `payload.user.role`.</p>
+            <p>• Messages clairs pour les identifiants incorrects, les sessions expirées et les serveurs indisponibles.</p>
+            <p>• Une marque LAWIM cohérente sur toutes les pages.</p>
           </div>
           <div className="mt-5 rounded-2xl border border-brand-500/20 bg-brand-500/10 p-4 text-sm text-brand-100">
-            {isAuthenticated ? `Welcome back, ${user?.name || user?.email || 'user'}. Your role is ${role}.` : 'New users see the same front door as returning users.'}
+            {isAuthenticated ? `Bienvenue ${user?.name || user?.email || 'utilisateur'}. Votre rôle actif est ${role}.` : 'Les nouveaux utilisateurs voient la même porte d’entrée que les utilisateurs déjà connectés.'}
           </div>
         </Card>
       </div>
@@ -342,57 +342,93 @@ const dashboardConfig: Record<
   }
 > = {
   admin: {
-    eyebrow: 'Admin workspace',
-    title: 'Admin dashboard',
-    description: 'Governance, diagnostics, and platform health.',
-    badge: 'Control room',
+    eyebrow: 'Administration LAWIM',
+    title: 'Cockpit administrateur',
+    description: 'Gouvernance, sécurité, diagnostics et releases.',
+    badge: 'Supervision',
     badgeTone: 'info',
     metrics: {
-      properties: 'Managed assets',
-      opportunities: 'Open priorities',
-      communications: 'Alerts',
-      pendingTasks: 'Backlog'
+      properties: 'Plateforme',
+      opportunities: 'Priorités',
+      communications: 'Alertes',
+      pendingTasks: 'Tâches'
     },
-    highlights: ['Access control', 'Audit trail', 'Release readiness'],
+    highlights: ['Accès', 'Audit', 'Préparation des releases'],
     actions: {
-      primary: 'Review governance',
-      secondary: 'Open metrics'
+      primary: 'Revoir la gouvernance',
+      secondary: 'Ouvrir les métriques'
     }
   },
-  agent: {
-    eyebrow: 'Agent workspace',
-    title: 'Agent dashboard',
-    description: 'Leads, conversations, and follow-up pipelines.',
-    badge: 'Sales cockpit',
+  manager: {
+    eyebrow: 'Pilotage opérationnel',
+    title: 'Cockpit manager',
+    description: 'Équipes, validations et priorités du jour.',
+    badge: 'Coordination',
     badgeTone: 'success',
     metrics: {
-      properties: 'Tracked listings',
-      opportunities: 'Active leads',
+      properties: 'Projets',
+      opportunities: 'Validations',
       communications: 'Messages',
-      pendingTasks: 'Follow-ups'
+      pendingTasks: 'Relances'
     },
-    highlights: ['Lead queue', 'Conversation inbox', 'Pipeline focus'],
+    highlights: ['Équipes', 'Objectifs', 'Suivi opérationnel'],
     actions: {
-      primary: 'View pipeline',
-      secondary: 'Open inbox'
+      primary: 'Voir les projets',
+      secondary: 'Ouvrir les conversations'
     }
   },
-  owner: {
-    eyebrow: 'Owner workspace',
-    title: 'Owner dashboard',
-    description: 'Portfolio, requests, and documents at a glance.',
-    badge: 'Owner lounge',
+  operator: {
+    eyebrow: 'Exploitation quotidienne',
+    title: 'Cockpit opérateur',
+    description: 'Support, qualité et traitement des demandes.',
+    badge: 'Qualité',
     badgeTone: 'warning',
     metrics: {
-      properties: 'Assets in portfolio',
-      opportunities: 'Value signals',
-      communications: 'Updates',
-      pendingTasks: 'Requests'
+      properties: 'Biens',
+      opportunities: 'Demandes',
+      communications: 'Messages',
+      pendingTasks: 'Contrôles'
     },
-    highlights: ['Portfolio health', 'Pending requests', 'Documents ready'],
+    highlights: ['Support', 'Vérification', 'Modération'],
     actions: {
-      primary: 'Review portfolio',
-      secondary: 'Open documents'
+      primary: 'Voir les biens',
+      secondary: 'Ouvrir les demandes'
+    }
+  },
+  partner: {
+    eyebrow: 'Espace partenaire',
+    title: 'Cockpit partenaire',
+    description: 'Missions, rendez-vous et livrables liés à votre spécialité.',
+    badge: 'Missions',
+    badgeTone: 'success',
+    metrics: {
+      properties: 'Missions',
+      opportunities: 'Opportunités',
+      communications: 'Messages',
+      pendingTasks: 'Livrables'
+    },
+    highlights: ['Livrables', 'Disponibilités', 'Échanges'],
+    actions: {
+      primary: 'Voir les opportunités',
+      secondary: 'Ouvrir les dossiers'
+    }
+  },
+  user: {
+    eyebrow: 'Espace personnel',
+    title: 'Cockpit utilisateur',
+    description: 'Projet, biens, documents et prochaines étapes.',
+    badge: 'Projet',
+    badgeTone: 'warning',
+    metrics: {
+      properties: 'Biens suivis',
+      opportunities: 'Opportunités',
+      communications: 'Messages',
+      pendingTasks: 'Actions'
+    },
+    highlights: ['Projet', 'Documents', 'Favoris'],
+    actions: {
+      primary: 'Rechercher un bien',
+      secondary: 'Ouvrir les documents'
     }
   }
 };
@@ -408,11 +444,11 @@ function traceAuth(step: string, details: Record<string, unknown> = {}) {
 function getLoginBanner(reason?: string | null) {
   switch (reason) {
     case 'server_unavailable':
-      return 'Server unavailable. Try again in a moment.';
+      return 'Serveur indisponible. Réessayez dans un instant.';
     case 'session_expired':
-      return 'Your session expired. Sign in again.';
+      return 'Votre session a expiré. Connectez-vous de nouveau.';
     case 'unauthorized':
-      return 'Sign in to access your workspace.';
+      return 'Connectez-vous pour accéder à votre espace.';
     default:
       return null;
   }
@@ -440,8 +476,8 @@ function DashboardPage() {
       <div className="flex min-h-[60vh] items-center justify-center px-6 py-16">
         <div className="rounded-3xl border border-slate-800 bg-slate-950/70 px-6 py-8 text-center text-slate-200 shadow-[0_20px_80px_rgba(2,6,23,0.35)]">
           <p className="text-sm uppercase tracking-[0.3em] text-slate-500">LAWIM</p>
-          <h2 className="mt-2 text-2xl font-semibold text-white">Checking your session</h2>
-          <p className="mt-2 text-sm text-slate-400">We are restoring your workspace.</p>
+          <h2 className="mt-2 text-2xl font-semibold text-white">Vérification de session</h2>
+          <p className="mt-2 text-sm text-slate-400">Restauration de votre espace en cours.</p>
         </div>
       </div>
     );
@@ -468,7 +504,7 @@ function RoleDashboardPage({ role }: { role: AccessRole }) {
       const response = await apiSdk.getDashboardSummary();
       const message = response.message ?? '';
       if (message !== 'ok' && message !== 'mock') {
-        throw new Error(message.includes('401') || message.includes('403') ? 'Session expired. Please sign in again.' : 'Unable to load the dashboard.');
+        throw new Error(message.includes('401') || message.includes('403') ? 'Session expirée. Veuillez vous reconnecter.' : 'Impossible de charger le tableau de bord.');
       }
       return response;
     }
@@ -498,7 +534,7 @@ function RoleDashboardPage({ role }: { role: AccessRole }) {
     <PageShell
       eyebrow={config.eyebrow}
       title={config.title}
-      description={`${config.description} Signed in as ${user?.name || user?.email || 'user'}.`}
+      description={`${config.description} Connecté en tant que ${user?.name || user?.email || 'utilisateur'}.`}
       actions={
         <>
           <Button type="button" onClick={() => navigate('/search')}>
@@ -586,14 +622,14 @@ function LoginPage() {
       <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.96),_rgba(219,234,254,0.75)_36%,_rgba(148,163,184,0.35)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
         <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col justify-between gap-10">
           <div className="flex items-center justify-between">
-            <BrandMark tone="light" slogan="LAWIM secure sign-in" />
-            <Badge variant="info">Checking session</Badge>
+            <BrandMark tone="light" slogan="LAWIM · accompagnement immobilier intelligent" />
+            <Badge variant="info">Vérification de session</Badge>
           </div>
           <div className="flex flex-1 items-center justify-center">
             <div className="rounded-[2rem] border border-white/70 bg-white/90 px-8 py-10 text-center shadow-[0_24px_90px_rgba(15,23,42,0.14)] backdrop-blur">
               <p className="text-sm uppercase tracking-[0.32em] text-slate-500">LAWIM</p>
-              <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">Checking your session</h1>
-              <p className="mt-2 text-sm leading-7 text-slate-600">Restoring your workspace and selecting the right dashboard.</p>
+              <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">Connexion en cours</h1>
+              <p className="mt-2 text-sm leading-7 text-slate-600">Restauration de votre session et sélection du bon tableau de bord.</p>
             </div>
           </div>
         </div>
@@ -605,47 +641,55 @@ function LoginPage() {
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.96),_rgba(219,234,254,0.75)_36%,_rgba(148,163,184,0.35)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col justify-between gap-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <BrandMark tone="light" slogan="LAWIM secure sign-in" />
-          <Badge variant="info">Email + password only</Badge>
+          <BrandMark tone="light" slogan="LAWIM · accompagnement immobilier intelligent" />
+          <Badge variant="info">Email + mot de passe uniquement</Badge>
         </div>
 
         <div className="grid flex-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <section className="space-y-8">
             <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-brand-700">LAWIM access</p>
-              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">Sign in once. The right dashboard opens automatically.</h1>
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-brand-700">Accès LAWIM</p>
+              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">Connectez-vous une fois. Le bon tableau de bord s'ouvre automatiquement.</h1>
               <p className="mt-4 max-w-xl text-base leading-8 text-slate-600">
-                LAWIM keeps admin, agent, and owner journeys in one product. Enter your email and password, and the API decides which workspace to show.
+                LAWIM garde les parcours administrateur, manager, opérateur, partenaire et utilisateur dans un même produit. Saisissez votre email et votre mot de passe, puis l'API choisit l'espace à afficher.
               </p>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
               <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-                <Badge variant="info">Admin</Badge>
-                <p className="mt-3 text-sm leading-6 text-slate-600">Governance, monitoring, and release oversight.</p>
+                <Badge variant="info">Administrateur</Badge>
+                <p className="mt-3 text-sm leading-6 text-slate-600">Gouvernance, sécurité et supervision.</p>
               </div>
               <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-                <Badge variant="success">Agent</Badge>
-                <p className="mt-3 text-sm leading-6 text-slate-600">Pipeline work, follow-up, and coordination.</p>
+                <Badge variant="success">Manager</Badge>
+                <p className="mt-3 text-sm leading-6 text-slate-600">Équipes, validations et priorités.</p>
               </div>
               <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-                <Badge variant="warning">Owner</Badge>
-                <p className="mt-3 text-sm leading-6 text-slate-600">Portfolio visibility, requests, and documents.</p>
+                <Badge variant="warning">Opérateur</Badge>
+                <p className="mt-3 text-sm leading-6 text-slate-600">Support, qualité et demandes.</p>
+              </div>
+              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+                <Badge variant="info">Partenaire</Badge>
+                <p className="mt-3 text-sm leading-6 text-slate-600">Missions, livrables et disponibilité.</p>
+              </div>
+              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+                <Badge variant="warning">Utilisateur</Badge>
+                <p className="mt-3 text-sm leading-6 text-slate-600">Projet personnel, biens et documents.</p>
               </div>
             </div>
 
             <div className="rounded-[1.75rem] border border-brand-500/20 bg-brand-500/10 p-5 text-sm leading-7 text-slate-700">
-              {loginBanner ? loginBanner : 'LAWIM never asks for a role on this page. The role comes from the API payload.'}
+              {loginBanner ? loginBanner : 'LAWIM ne demande jamais de rôle sur cette page. Le rôle provient de la réponse API.'}
             </div>
           </section>
 
           <section className="rounded-[2rem] border border-white/80 bg-white/95 p-8 shadow-[0_24px_90px_rgba(15,23,42,0.14)] backdrop-blur">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-500">Secure access</p>
-                <h2 className="mt-2 text-2xl font-semibold text-slate-950">Welcome back</h2>
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-500">Accès sécurisé</p>
+                <h2 className="mt-2 text-2xl font-semibold text-slate-950">Connexion</h2>
               </div>
-              <Badge variant="success">Protected</Badge>
+              <Badge variant="success">Protégé</Badge>
             </div>
 
             <form
@@ -664,7 +708,7 @@ function LoginPage() {
                   } catch (error) {
                     setMessage({
                       tone: 'error',
-                      text: error instanceof Error ? error.message : 'Unable to sign in'
+                      text: error instanceof Error ? error.message : 'Connexion impossible.'
                     });
                   }
                 })()
@@ -683,7 +727,7 @@ function LoginPage() {
                 />
               </label>
               <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
-                <span>Password</span>
+                <span>Mot de passe</span>
                 <input
                   className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
                   placeholder="••••••••"
@@ -702,7 +746,7 @@ function LoginPage() {
               ) : null}
 
               <Button className="w-full justify-center py-3 text-base" disabled={isLoading} type="submit">
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? 'Connexion...' : 'Connexion'}
               </Button>
             </form>
 
@@ -795,14 +839,14 @@ export function WebApp() {
         ...publicNavItems,
         ...protectedNavItems.map((item) => (item.to === '/dashboard' ? { ...item, to: dashboardPath } : item))
       ]
-    : [...publicNavItems, { to: '/login', label: 'Login' }];
+    : [...publicNavItems, { to: '/login', label: 'Connexion' }];
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       {!location.pathname.startsWith('/login') ? (
         <nav aria-label="Primary" className="sticky top-0 z-20 border-b border-slate-800/80 bg-slate-950/90 px-4 py-4 text-slate-300 backdrop-blur sm:px-6">
           <div className="mx-auto flex max-w-6xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <BrandMark slogan="LAWIM role-based workspace" />
+            <BrandMark slogan="LAWIM · accompagnement immobilier intelligent" />
             <div className="flex flex-wrap gap-2 text-sm">
               {navItems.map((item) => (
                 <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'rounded-full bg-slate-800 px-3 py-2 text-white' : 'rounded-full px-3 py-2 text-slate-400 hover:bg-slate-900 hover:text-white')}>
@@ -813,7 +857,7 @@ export function WebApp() {
           </div>
         </nav>
       ) : null}
-      {isLoading && !isAuthenticated && !location.pathname.startsWith('/login') ? <div className="border-b border-slate-800/80 bg-slate-950 px-4 py-3 text-center text-xs uppercase tracking-[0.32em] text-slate-500">Restoring session</div> : null}
+      {isLoading && !isAuthenticated && !location.pathname.startsWith('/login') ? <div className="border-b border-slate-800/80 bg-slate-950 px-4 py-3 text-center text-xs uppercase tracking-[0.32em] text-slate-500">Restauration de session</div> : null}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />
@@ -827,8 +871,12 @@ export function WebApp() {
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
         <Route path="/dashboard/admin" element={<ProtectedRoute><RoleDashboardPage role="admin" /></ProtectedRoute>} />
-        <Route path="/dashboard/agent" element={<ProtectedRoute><RoleDashboardPage role="agent" /></ProtectedRoute>} />
-        <Route path="/dashboard/owner" element={<ProtectedRoute><RoleDashboardPage role="owner" /></ProtectedRoute>} />
+        <Route path="/dashboard/manager" element={<ProtectedRoute><RoleDashboardPage role="manager" /></ProtectedRoute>} />
+        <Route path="/dashboard/operator" element={<ProtectedRoute><RoleDashboardPage role="operator" /></ProtectedRoute>} />
+        <Route path="/dashboard/partner" element={<ProtectedRoute><RoleDashboardPage role="partner" /></ProtectedRoute>} />
+        <Route path="/dashboard/user" element={<ProtectedRoute><RoleDashboardPage role="user" /></ProtectedRoute>} />
+        <Route path="/dashboard/agent" element={<ProtectedRoute><Navigate to="/dashboard/operator" replace /></ProtectedRoute>} />
+        <Route path="/dashboard/owner" element={<ProtectedRoute><Navigate to="/dashboard/user" replace /></ProtectedRoute>} />
         <Route path="/favorites" element={<ProtectedRoute><FavoritesPage /></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
         <Route path="/requests" element={<ProtectedRoute><RequestsPage /></ProtectedRoute>} />
@@ -838,7 +886,7 @@ export function WebApp() {
         <Route path="/readiness" element={<ProductReadinessDashboardPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
-      {!isAuthenticated && !location.pathname.startsWith('/login') ? <div className="mx-auto max-w-6xl px-4 pb-4 text-sm text-slate-500">Use the Login route to authenticate and unlock protected areas.</div> : null}
+      {!isAuthenticated && !location.pathname.startsWith('/login') ? <div className="mx-auto max-w-6xl px-4 pb-4 text-sm text-slate-500">Utilisez la page de connexion pour accéder aux espaces protégés.</div> : null}
     </div>
   );
 }

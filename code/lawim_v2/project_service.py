@@ -6,6 +6,7 @@ from .observability import METRICS
 from .dto import paginated_payload, project_dto, project_progress_dto, project_step_dto
 from .errors import ValidationError
 from .project_domain import PROJECT_TYPES, PROJECT_STATUSES, PROJECT_PRIORITIES, TIMELINE_HORIZONS
+from .user_roles import resolve_official_user_role
 
 
 class ProjectPermissionDenied(Exception):
@@ -31,7 +32,7 @@ class ProjectService:
             return True
         organization_id = actor.get("organization_id")
         if organization_id is not None and project_row.get("organization_id") == organization_id:
-            return str(actor.get("role")) in {"admin", "agent"}
+            return resolve_official_user_role(actor.get("role")) in {"admin", "manager", "operator", "partner"}
         return False
 
     def can_manage_project(self, actor: dict[str, object] | None, project_row: dict[str, object]) -> bool:

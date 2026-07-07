@@ -5,7 +5,7 @@ export interface BrandMarkProps extends HTMLAttributes<HTMLDivElement> {
   slogan?: string;
 }
 
-export function BrandMark({ tone = 'dark', slogan = 'LAWIM role-based workspace', className = '', ...props }: BrandMarkProps) {
+export function BrandMark({ tone = 'dark', slogan = 'LAWIM · accompagnement immobilier intelligent', className = '', ...props }: BrandMarkProps) {
   const isLight = tone === 'light';
 
   return (

@@ -122,18 +122,18 @@ APPLICATION_SEED = SeedSpec(
     ),
     summary={
         "organizations": 3,
-        "users": 3,
-        "properties": 3,
-        "media": 3,
-        "conversations": 1,
-        "messages": 3,
-        "notifications": 0,
-        "projects": 1,
+        "users": 10,
+        "properties": 50,
+        "media": 50,
+        "conversations": 5,
+        "messages": 15,
+        "notifications": 10,
+        "projects": 5,
     },
     notes=(
         "Idempotent when organizations already exist.",
         "The password remains the repository demo password.",
-        "Includes one demo buyer project with guided journey steps.",
+        "Includes five role-aligned demo projects, fifty properties and ten role-alias users.",
     ),
 )
 
@@ -800,117 +800,224 @@ def build_postgresql_profile(dsn: str, schema_version: int) -> dict[str, object]
 
 
 def build_demo_seed_blueprint() -> dict[str, object]:
-    return {
-        "organizations": [
-            {"name": "LAWIM Demo Agency", "slug": "lawim-demo-agency", "kind": "agency", "city": "Douala"},
-            {"name": "LAWIM Partner Group", "slug": "lawim-partner-group", "kind": "partner", "city": "Yaounde"},
-            {"name": "LAWIM Owner Desk", "slug": "lawim-owner-desk", "kind": "owner", "city": "Kribi"},
-        ],
-        "users": [
+    def svg_data_url(title: str, fill: str) -> str:
+        safe_title = (
+            title.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace("'", "&apos;")
+            .replace('"', "&quot;")
+        )
+        return (
+            "data:image/svg+xml;utf8,"
+            "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'>"
+            f"<rect width='600' height='400' fill='{fill}'/>"
+            f"<text x='50' y='220' fill='white' font-size='38' font-family='sans-serif'>{safe_title}</text>"
+            "</svg>"
+        )
+
+    organizations = [
+        {"name": "LAWIM Demo Agency", "slug": "lawim-demo-agency", "kind": "agency", "city": "Douala"},
+        {"name": "LAWIM Partner Group", "slug": "lawim-partner-group", "kind": "partner", "city": "Yaounde"},
+        {"name": "LAWIM Owner Desk", "slug": "lawim-owner-desk", "kind": "owner", "city": "Kribi"},
+    ]
+    users = [
+        {
+            "email": "admin@lawim.local",
+            "full_name": "LAWIM Admin",
+            "role": "admin",
+            "organization_slug": "lawim-demo-agency",
+        },
+        {
+            "email": "director@lawim.local",
+            "full_name": "LAWIM Director",
+            "role": "director",
+            "organization_slug": "lawim-demo-agency",
+        },
+        {
+            "email": "manager@lawim.local",
+            "full_name": "LAWIM Manager",
+            "role": "manager",
+            "organization_slug": "lawim-demo-agency",
+        },
+        {
+            "email": "supervisor@lawim.local",
+            "full_name": "LAWIM Supervisor",
+            "role": "supervisor",
+            "organization_slug": "lawim-demo-agency",
+        },
+        {
+            "email": "operator@lawim.local",
+            "full_name": "LAWIM Operator",
+            "role": "operator",
+            "organization_slug": "lawim-demo-agency",
+        },
+        {
+            "email": "agent@lawim.local",
+            "full_name": "LAWIM Agent",
+            "role": "agent",
+            "organization_slug": "lawim-demo-agency",
+        },
+        {
+            "email": "partner@lawim.local",
+            "full_name": "LAWIM Partner",
+            "role": "partner",
+            "organization_slug": "lawim-partner-group",
+        },
+        {
+            "email": "notary@lawim.local",
+            "full_name": "LAWIM Notary",
+            "role": "notary",
+            "organization_slug": "lawim-partner-group",
+        },
+        {
+            "email": "user@lawim.local",
+            "full_name": "LAWIM User",
+            "role": "user",
+            "organization_slug": "lawim-owner-desk",
+        },
+        {
+            "email": "owner@lawim.local",
+            "full_name": "LAWIM Owner",
+            "role": "owner",
+            "organization_slug": "lawim-owner-desk",
+        },
+    ]
+
+    base_properties = [
+        {
+            "title": "Bonanjo City Loft",
+            "summary": "Appartement urbain lumineux proche des services et du centre d'affaires.",
+            "address_line": "12 Rue de la Joie, Bonanjo",
+            "city": "Douala",
+            "region": "Littoral",
+            "postal_code": "BP-4020",
+            "country": "Cameroon",
+            "latitude": 4.05,
+            "longitude": 9.7,
+            "price_min": 250000,
+            "price_max": 300000,
+            "currency": "XAF",
+            "status": "published",
+            "availability": "available",
+            "property_type": "apartment",
+            "owner_organization_slug": "lawim-owner-desk",
+            "bedrooms": 2,
+            "bathrooms": 1,
+            "area_sqm": 78,
+            "metadata": {"featured": True, "source": "demo"},
+        },
+        {
+            "title": "Kribi Beach Villa",
+            "summary": "Villa familiale avec vue mer, terrasse et accès rapide aux plages.",
+            "address_line": "Route de la Plage",
+            "city": "Kribi",
+            "region": "South",
+            "country": "Cameroon",
+            "latitude": 2.938,
+            "longitude": 9.907,
+            "price_min": 450000,
+            "price_max": 520000,
+            "currency": "XAF",
+            "status": "published",
+            "availability": "available",
+            "property_type": "villa",
+            "owner_organization_slug": "lawim-owner-desk",
+            "bedrooms": 4,
+            "bathrooms": 3,
+            "area_sqm": 210,
+        },
+        {
+            "title": "Bastos Studio",
+            "summary": "Studio compact prêt à louer pour un usage urbain et flexible.",
+            "address_line": "Avenue Kennedy",
+            "city": "Yaounde",
+            "region": "Centre",
+            "country": "Cameroon",
+            "latitude": 3.867,
+            "longitude": 11.516,
+            "price_min": 180000,
+            "price_max": 220000,
+            "currency": "XAF",
+            "status": "published",
+            "availability": "reserved",
+            "property_type": "studio",
+            "owner_organization_slug": "lawim-owner-desk",
+            "bedrooms": 1,
+            "bathrooms": 1,
+            "area_sqm": 35,
+        },
+    ]
+
+    city_catalog = (
+        ("Douala", "Littoral", 4.05, 9.7),
+        ("Yaounde", "Centre", 3.867, 11.516),
+        ("Kribi", "South", 2.938, 9.907),
+        ("Bafoussam", "West", 5.473, 10.417),
+        ("Limbe", "South-West", 4.016, 9.206),
+        ("Garoua", "North", 9.3, 13.4),
+        ("Bertoua", "East", 4.58, 13.68),
+        ("Edea", "Littoral", 3.8, 10.133),
+        ("Ngaoundere", "Adamaoua", 7.316, 13.583),
+        ("Dschang", "West", 5.448, 10.06),
+    )
+    property_templates = (
+        {"property_type": "apartment", "label": "Appartement", "price_min": 240000, "price_max": 320000, "bedrooms": 2, "bathrooms": 1, "area_sqm": 76},
+        {"property_type": "house", "label": "Maison", "price_min": 320000, "price_max": 420000, "bedrooms": 3, "bathrooms": 2, "area_sqm": 132},
+        {"property_type": "villa", "label": "Villa", "price_min": 420000, "price_max": 620000, "bedrooms": 4, "bathrooms": 3, "area_sqm": 218},
+        {"property_type": "studio", "label": "Studio", "price_min": 150000, "price_max": 210000, "bedrooms": 1, "bathrooms": 1, "area_sqm": 32},
+        {"property_type": "terrain", "label": "Terrain", "price_min": 180000, "price_max": 280000, "bedrooms": 0, "bathrooms": 0, "area_sqm": 400},
+        {"property_type": "immeuble", "label": "Immeuble", "price_min": 780000, "price_max": 1100000, "bedrooms": 8, "bathrooms": 6, "area_sqm": 540},
+        {"property_type": "bureau", "label": "Bureau", "price_min": 260000, "price_max": 360000, "bedrooms": 0, "bathrooms": 2, "area_sqm": 94},
+        {"property_type": "commerce", "label": "Commerce", "price_min": 280000, "price_max": 420000, "bedrooms": 0, "bathrooms": 1, "area_sqm": 110},
+    )
+    owner_cycle = ("lawim-owner-desk", "lawim-demo-agency", "lawim-partner-group")
+    generated_properties: list[dict[str, object]] = []
+    for index in range(47):
+        city, region, latitude, longitude = city_catalog[index % len(city_catalog)]
+        template = property_templates[index % len(property_templates)]
+        ordinal = index + 4
+        owner_slug = owner_cycle[index % len(owner_cycle)]
+        availability = ("available", "reserved", "available", "available", "unavailable")[index % 5]
+        title = f"{template['label']} {city} {ordinal:02d}"
+        generated_properties.append(
             {
-                "email": "admin@lawim.local",
-                "full_name": "LAWIM Admin",
-                "role": "admin",
-                "organization_slug": "lawim-demo-agency",
-            },
-            {
-                "email": "agent@lawim.local",
-                "full_name": "LAWIM Agent",
-                "role": "agent",
-                "organization_slug": "lawim-partner-group",
-            },
-            {
-                "email": "owner@lawim.local",
-                "full_name": "LAWIM Owner",
-                "role": "owner",
-                "organization_slug": "lawim-owner-desk",
-            },
-        ],
-        "properties": [
-            {
-                "title": "Bonanjo City Loft",
-                "summary": "Appartement urbain lumineux proche des services et du centre d'affaires.",
-                "address_line": "12 Rue de la Joie, Bonanjo",
-                "city": "Douala",
-                "region": "Littoral",
-                "postal_code": "BP-4020",
+                "title": title,
+                "summary": f"{template['label']} contemporain à {city}, pensé pour un usage {template['property_type']} premium.",
+                "address_line": f"{ordinal} Avenue LAWIM {city}",
+                "city": city,
+                "region": region,
                 "country": "Cameroon",
-                "latitude": 4.05,
-                "longitude": 9.7,
-                "price_min": 250000,
-                "price_max": 300000,
+                "latitude": latitude,
+                "longitude": longitude,
+                "price_min": template["price_min"] + (index % 4) * 10000,
+                "price_max": template["price_max"] + (index % 4) * 12000,
                 "currency": "XAF",
                 "status": "published",
-                "availability": "available",
-                "property_type": "apartment",
-                "owner_organization_slug": "lawim-owner-desk",
-                "bedrooms": 2,
-                "bathrooms": 1,
-                "area_sqm": 78,
-                "metadata": {"featured": True, "source": "demo"},
-            },
-            {
-                "title": "Kribi Beach Villa",
-                "summary": "Villa familiale avec vue mer, terrasse et accès rapide aux plages.",
-                "address_line": "Route de la Plage",
-                "city": "Kribi",
-                "region": "South",
-                "country": "Cameroon",
-                "latitude": 2.938,
-                "longitude": 9.907,
-                "price_min": 450000,
-                "price_max": 520000,
-                "currency": "XAF",
-                "status": "published",
-                "availability": "available",
-                "property_type": "villa",
-                "owner_organization_slug": "lawim-owner-desk",
-                "bedrooms": 4,
-                "bathrooms": 3,
-                "area_sqm": 210,
-            },
-            {
-                "title": "Bastos Studio",
-                "summary": "Studio compact prêt à louer pour un usage urbain et flexible.",
-                "address_line": "Avenue Kennedy",
-                "city": "Yaounde",
-                "region": "Centre",
-                "country": "Cameroon",
-                "latitude": 3.867,
-                "longitude": 11.516,
-                "price_min": 180000,
-                "price_max": 220000,
-                "currency": "XAF",
-                "status": "published",
-                "availability": "reserved",
-                "property_type": "studio",
-                "owner_organization_slug": "lawim-owner-desk",
-                "bedrooms": 1,
-                "bathrooms": 1,
-                "area_sqm": 35,
-            },
-        ],
-        "media": [
-            {
-                "property_title": "Bonanjo City Loft",
-                "kind": "image",
-                "url": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%231e293b'/><text x='50' y='220' fill='white' font-size='38' font-family='sans-serif'>Bonanjo City Loft</text></svg>",
-                "caption": "Visuel de démonstration",
-            },
-            {
-                "property_title": "Kribi Beach Villa",
-                "kind": "image",
-                "url": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%230f766e'/><text x='50' y='220' fill='white' font-size='38' font-family='sans-serif'>Kribi Beach Villa</text></svg>",
-                "caption": "Visuel de démonstration",
-            },
-            {
-                "property_title": "Bastos Studio",
-                "kind": "image",
-                "url": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%237c3aed'/><text x='50' y='220' fill='white' font-size='38' font-family='sans-serif'>Bastos Studio</text></svg>",
-                "caption": "Visuel de démonstration",
-            },
-        ],
-        "conversation": {
+                "availability": availability,
+                "property_type": template["property_type"],
+                "owner_organization_slug": owner_slug,
+                "bedrooms": template["bedrooms"],
+                "bathrooms": template["bathrooms"],
+                "area_sqm": template["area_sqm"] + (index % 3) * 4,
+                "metadata": {"featured": index % 9 == 0, "source": "demo", "rank": index + 4},
+            }
+        )
+
+    properties = base_properties + generated_properties
+    colors = ("#1e293b", "#0f766e", "#7c3aed", "#c2410c", "#0f172a", "#1d4ed8", "#134e4a", "#4338ca")
+    media = [
+        {
+            "property_title": property_row["title"],
+            "kind": "image",
+            "url": svg_data_url(str(property_row["title"]), colors[index % len(colors)]),
+            "caption": "Visuel de démonstration",
+        }
+        for index, property_row in enumerate(properties)
+    ]
+
+    conversations = [
+        {
             "property_title": "Bonanjo City Loft",
             "user_email": "agent@lawim.local",
             "sender_email": "agent@lawim.local",
@@ -928,8 +1035,220 @@ def build_demo_seed_blueprint() -> dict[str, object]:
                 },
             ],
         },
-        "project": {
+        {
+            "property_title": "Kribi Beach Villa",
+            "user_email": "owner@lawim.local",
+            "sender_email": "owner@lawim.local",
+            "subject": "Suivi de la villa de Kribi",
+            "status": "open",
+            "initial_message": "Je souhaite suivre les demandes reçues pour cette villa.",
+            "follow_up_messages": [
+                {
+                    "sender_email": "partner@lawim.local",
+                    "body": "Des photographies supplémentaires pourraient améliorer l'engagement.",
+                },
+                {
+                    "sender_email": "admin@lawim.local",
+                    "body": "Les notifications sont prêtes pour la prochaine visite.",
+                },
+            ],
+        },
+        {
+            "property_title": "Bastos Studio",
+            "user_email": "user@lawim.local",
+            "sender_email": "user@lawim.local",
+            "subject": "Location Bastos Studio",
+            "status": "open",
+            "initial_message": "Je cherche un logement compact dans ce secteur.",
+            "follow_up_messages": [
+                {
+                    "sender_email": "operator@lawim.local",
+                    "body": "Une visite peut être organisée cette semaine.",
+                },
+                {
+                    "sender_email": "manager@lawim.local",
+                    "body": "Le dossier est prioritaire.",
+                },
+            ],
+        },
+        {
+            "property_title": "Appartement Douala 04",
+            "user_email": "manager@lawim.local",
+            "sender_email": "manager@lawim.local",
+            "subject": "Projet Douala 04",
+            "status": "open",
+            "initial_message": "Merci de suivre la progression de ce projet.",
+            "follow_up_messages": [
+                {
+                    "sender_email": "operator@lawim.local",
+                    "body": "Le bien a été vérifié et peut être présenté.",
+                },
+                {
+                    "sender_email": "partner@lawim.local",
+                    "body": "Un complément documentaire serait utile.",
+                },
+            ],
+        },
+        {
+            "property_title": "Maison Yaounde 05",
+            "user_email": "partner@lawim.local",
+            "sender_email": "partner@lawim.local",
+            "subject": "Coordination Maison Yaounde 05",
+            "status": "open",
+            "initial_message": "Je centralise la mission liée à ce bien.",
+            "follow_up_messages": [
+                {
+                    "sender_email": "admin@lawim.local",
+                    "body": "La mission est suivie côté supervision.",
+                },
+                {
+                    "sender_email": "owner@lawim.local",
+                    "body": "Merci, je reste disponible pour la suite.",
+                },
+            ],
+        },
+    ]
+
+    notifications = [
+        {
+            "user_email": "admin@lawim.local",
+            "kind": "system",
+            "title": "Supervision disponible",
+            "body": "Les métriques de la plateforme sont prêtes.",
+            "payload": {"severity": "info"},
+        },
+        {
+            "user_email": "manager@lawim.local",
+            "kind": "conversation_updated",
+            "title": "Validation attendue",
+            "body": "Un dossier nécessite votre validation.",
+            "payload": {"priority": "high"},
+        },
+        {
+            "user_email": "operator@lawim.local",
+            "kind": "message_received",
+            "title": "Message reçu",
+            "body": "Une demande de support vient d'arriver.",
+            "payload": {"channel": "dashboard"},
+        },
+        {
+            "user_email": "partner@lawim.local",
+            "kind": "match_found",
+            "title": "Nouvelle mission",
+            "body": "Une opportunité compatible a été identifiée.",
+            "payload": {"category": "partner"},
+        },
+        {
+            "user_email": "user@lawim.local",
+            "kind": "conversation_created",
+            "title": "Conversation ouverte",
+            "body": "Votre demande a été transmise.",
+            "payload": {"status": "open"},
+        },
+        {
+            "user_email": "owner@lawim.local",
+            "kind": "system",
+            "title": "Publication confirmée",
+            "body": "Le bien a été ajouté au catalogue.",
+            "payload": {"status": "published"},
+        },
+        {
             "user_email": "agent@lawim.local",
+            "kind": "message_received",
+            "title": "Visite programmée",
+            "body": "La visite du week-end est confirmée.",
+            "payload": {"property": "Bonanjo City Loft"},
+        },
+        {
+            "user_email": "director@lawim.local",
+            "kind": "system",
+            "title": "Release prête",
+            "body": "La préparation de la release est terminée.",
+            "payload": {"release": "LAWIM Experience 1.0"},
+        },
+        {
+            "user_email": "supervisor@lawim.local",
+            "kind": "conversation_updated",
+            "title": "Point d'étape",
+            "body": "Le suivi opérationnel attend votre revue.",
+            "payload": {"status": "review"},
+        },
+        {
+            "user_email": "notary@lawim.local",
+            "kind": "match_found",
+            "title": "Mission notaire",
+            "body": "Une demande de mise en relation est disponible.",
+            "payload": {"speciality": "notary"},
+        },
+    ]
+
+    projects = [
+        {
+            "user_email": "admin@lawim.local",
+            "title": "Supervision plateforme LAWIM",
+            "project_type": "build",
+            "objective": "Surveiller la refonte et les releases de LAWIM.",
+            "budget_min": 900000,
+            "budget_max": 1200000,
+            "currency": "XAF",
+            "location_city": "Douala",
+            "location_region": "Littoral",
+            "location_country": "Cameroon",
+            "timeline_horizon": "1_year",
+            "status": "active",
+            "priority": "high",
+            "activate_first_step": True,
+        },
+        {
+            "user_email": "manager@lawim.local",
+            "title": "Pilotage agence Yaoundé",
+            "project_type": "sell",
+            "objective": "Coordonner les validations et la performance commerciale.",
+            "budget_min": 600000,
+            "budget_max": 800000,
+            "currency": "XAF",
+            "location_city": "Yaounde",
+            "location_region": "Centre",
+            "location_country": "Cameroon",
+            "timeline_horizon": "6_months",
+            "status": "active",
+            "priority": "high",
+            "activate_first_step": True,
+        },
+        {
+            "user_email": "operator@lawim.local",
+            "title": "Qualité annonces Douala",
+            "project_type": "other",
+            "objective": "Contrôler les publications et les médias des biens.",
+            "budget_min": 150000,
+            "budget_max": 300000,
+            "currency": "XAF",
+            "location_city": "Douala",
+            "location_region": "Littoral",
+            "location_country": "Cameroon",
+            "timeline_horizon": "3_months",
+            "status": "active",
+            "priority": "normal",
+            "activate_first_step": True,
+        },
+        {
+            "user_email": "partner@lawim.local",
+            "title": "Mission partenaire Kribi",
+            "project_type": "rent",
+            "objective": "Gérer les rendez-vous et livrables de la mission.",
+            "budget_min": 200000,
+            "budget_max": 350000,
+            "currency": "XAF",
+            "location_city": "Kribi",
+            "location_region": "South",
+            "location_country": "Cameroon",
+            "timeline_horizon": "flexible",
+            "status": "active",
+            "priority": "normal",
+            "activate_first_step": True,
+        },
+        {
+            "user_email": "user@lawim.local",
             "title": "Achat appartement Douala",
             "project_type": "buy",
             "objective": "Trouver un appartement 2 chambres à Bonanjo pour résidence principale",
@@ -944,4 +1263,14 @@ def build_demo_seed_blueprint() -> dict[str, object]:
             "priority": "normal",
             "activate_first_step": True,
         },
+    ]
+
+    return {
+        "organizations": organizations,
+        "users": users,
+        "properties": properties,
+        "media": media,
+        "conversations": conversations,
+        "notifications": notifications,
+        "projects": projects,
     }

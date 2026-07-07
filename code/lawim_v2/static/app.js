@@ -2,7 +2,9 @@ const state = {
   token: localStorage.getItem("lawim.token") || "",
   bootstrap: null,
   health: null,
-  activeJourney: localStorage.getItem("lawim.journey") || "buyer",
+  activeJourney: localStorage.getItem("lawim.journey") || "user",
+  language: localStorage.getItem("lawim.language") || "fr",
+  statsPeriod: localStorage.getItem("lawim.stats.period") || "today",
   selectedConversationId: null,
   selectedPropertyId: null,
   selectedPropertyVersion: null,
@@ -18,7 +20,194 @@ const refs = {};
 const moneyFormatter = new Intl.NumberFormat("fr-FR", {
   maximumFractionDigits: 0,
 });
-const ACCESS_ROLE_PRIORITY = ["admin", "agent", "owner"];
+const ACCESS_ROLE_PRIORITY = ["admin", "manager", "operator", "partner", "user"];
+const ROLE_LABELS = {
+  admin: "Administrateur LAWIM",
+  manager: "Manager",
+  operator: "Opérateur LAWIM",
+  partner: "Partenaire",
+  user: "Utilisateur",
+};
+const ROLE_EMOJIS = {
+  admin: "🛡️",
+  manager: "📋",
+  operator: "⚙️",
+  partner: "🤝",
+  user: "🏠",
+};
+const ROLE_JOURNEY_KEYS = {
+  admin: ["admin", "project", "buyer", "seller"],
+  manager: ["project", "buyer"],
+  operator: ["seller", "project"],
+  partner: ["project", "buyer"],
+  user: ["buyer", "project"],
+};
+const ROLE_ALIASES = {
+  admin: "admin",
+  administrator: "admin",
+  superadmin: "admin",
+  director: "admin",
+  root: "admin",
+  manager: "manager",
+  supervisor: "manager",
+  lead: "manager",
+  coordinator: "manager",
+  operator: "operator",
+  agent: "operator",
+  staff: "operator",
+  support: "operator",
+  moderator: "operator",
+  partner: "partner",
+  photographer: "partner",
+  notary: "partner",
+  bank: "partner",
+  artisan: "partner",
+  architect: "partner",
+  diagnostician: "partner",
+  decorator: "partner",
+  mover: "partner",
+  broker: "partner",
+  user: "user",
+  owner: "user",
+  buyer: "user",
+  seller: "user",
+  tenant: "user",
+  landlord: "user",
+  investor: "user",
+  promoter: "user",
+  customer: "user",
+  viewer: "user",
+  company: "user",
+  enterprise: "user",
+  business: "user",
+  particulier: "user",
+  private: "user",
+  requester: "user",
+};
+
+const UI_COPY = {
+  fr: {
+    welcome: "Bonjour",
+    loginTitle: "Connexion",
+    loginLead: "Email et mot de passe uniquement. Aucun choix de rôle.",
+    authenticated: "Déconnexion",
+    activity: "Activité du jour",
+    priorities: "Mes priorités",
+    quickActions: "Mes actions rapides",
+    statistics: "Mes statistiques",
+    recommendations: "Recommandations IA",
+    next: "Et maintenant ?",
+    support: "Nous écrire",
+    session: "Session invitée",
+    selectRole: "Cockpit sélectionné",
+    supportHint: "Suggestion, support, réclamation, signalement, partenariat ou autre demande.",
+  },
+  en: {
+    welcome: "Hello",
+    loginTitle: "Sign in",
+    loginLead: "Email and password only. No role picker.",
+    authenticated: "Sign out",
+    activity: "Today's activity",
+    priorities: "My priorities",
+    quickActions: "Quick actions",
+    statistics: "My statistics",
+    recommendations: "AI recommendations",
+    next: "What next?",
+    support: "Write to us",
+    session: "Guest session",
+    selectRole: "Cockpit selected",
+    supportHint: "Suggestion, support, complaint, report, partnership or other request.",
+  },
+  pidgin: {
+    welcome: "Hallo",
+    loginTitle: "Enter",
+    loginLead: "Email and password only. No role choice.",
+    authenticated: "Comot",
+    activity: "Today activity",
+    priorities: "My priorities",
+    quickActions: "Quick actions",
+    statistics: "My stats",
+    recommendations: "AI recommendations",
+    next: "Wetin next?",
+    support: "Write us",
+    session: "Guest session",
+    selectRole: "Cockpit selected",
+    supportHint: "Suggestion, support, complaint, report, partnership or other request.",
+  },
+};
+
+const ROLE_COCKPIT_CONFIG = {
+  admin: {
+    subtitle: "Supervision complète de la plateforme et des releases.",
+    activity: ["Suivi des utilisateurs", "Santé du runtime", "Préparation des releases"],
+    priorities: ["Vérifier les accès", "Surveiller les métriques", "Piloter les comptes internes"],
+    quickActions: [
+      { label: "Créer une organisation", href: "#admin-org-form" },
+      { label: "Créer un utilisateur", href: "#admin-user-form" },
+      { label: "Ouvrir les métriques", href: "#admin-dashboard" },
+      { label: "Nous écrire", href: "#message-form" },
+    ],
+    recommendations: ["Sécuriser les accès sensibles", "Contrôler les validations en attente", "Préparer le prochain déploiement"],
+    nextActions: ["Planifier la revue opérationnelle", "Ouvrir les alertes prioritaires", "Valider les nouveaux comptes"],
+    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+  },
+  manager: {
+    subtitle: "Pilotage opérationnel, équipes et priorités du jour.",
+    activity: ["Suivi des projets", "Validation des dossiers", "Communication d'équipe"],
+    priorities: ["Relancer les dossiers bloqués", "Valider les étapes critiques", "Répartir les actions rapides"],
+    quickActions: [
+      { label: "Voir les projets", href: "#projects-list" },
+      { label: "Suivre les conversations", href: "#conversations-list" },
+      { label: "Consulter les statistiques", href: "#status-strip" },
+      { label: "Nous écrire", href: "#message-form" },
+    ],
+    recommendations: ["Clarifier les étapes en retard", "Réduire les points de friction", "Renforcer les validations utiles"],
+    nextActions: ["Rattraper les dossiers en cours", "Prioriser les validations", "Ouvrir le suivi des notifications"],
+    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+  },
+  operator: {
+    subtitle: "Gestion quotidienne, support et contrôle qualité.",
+    activity: ["Biens à vérifier", "Photos et médias", "Messages en attente"],
+    priorities: ["Contrôler les publications", "Mettre à jour les médias", "Répondre aux demandes"],
+    quickActions: [
+      { label: "Créer un bien", href: "#property-form" },
+      { label: "Géolocaliser", href: "#geo-form" },
+      { label: "Téléverser des médias", href: "#media-upload-form" },
+      { label: "Nous écrire", href: "#message-form" },
+    ],
+    recommendations: ["Améliorer la qualité des annonces", "Vérifier les doublons de médias", "Traiter les retours clients"],
+    nextActions: ["Publier un bien prêt", "Relancer un dossier", "Ouvrir le fil de conversation"],
+    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+  },
+  partner: {
+    subtitle: "Missions, rendez-vous et échanges liés à votre spécialité.",
+    activity: ["Missions en cours", "Rendez-vous", "Documents partagés"],
+    priorities: ["Confirmer les disponibilités", "Préparer les livrables", "Répondre aux sollicitations"],
+    quickActions: [
+      { label: "Voir les opportunités", href: "#matches-list" },
+      { label: "Consulter les partenaires", href: "#partners-list" },
+      { label: "Relire les biens", href: "#properties-list" },
+      { label: "Nous écrire", href: "#message-form" },
+    ],
+    recommendations: ["Proposer une offre plus lisible", "Documenter les livrables", "Raccourcir le délai de réponse"],
+    nextActions: ["Préparer le prochain rendez-vous", "Relancer une mission", "Ouvrir les messages"],
+    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+  },
+  user: {
+    subtitle: "Votre projet immobilier, vos priorités et les prochaines étapes.",
+    activity: ["Recherche en cours", "Visites prévues", "Documents à compléter"],
+    priorities: ["Comparer les biens", "Préparer les documents", "Suivre les notifications"],
+    quickActions: [
+      { label: "Rechercher un bien", href: "#property-search-form" },
+      { label: "Créer un projet", href: "#project-form" },
+      { label: "Démarrer une conversation", href: "#buyer-conversation-form" },
+      { label: "Nous écrire", href: "#message-form" },
+    ],
+    recommendations: ["Activer les favoris utiles", "Planifier les visites", "Finaliser le dossier"],
+    nextActions: ["Lancer une recherche ciblée", "Ouvrir la carte des biens", "Comparer les opportunités"],
+    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+  },
+};
 
 function byId(id) {
   return document.getElementById(id);
@@ -32,8 +221,24 @@ function shouldTraceAuth() {
   }
 }
 
+function uiCopy() {
+  return UI_COPY[state.language] || UI_COPY.fr;
+}
+
 function updateAuthShell(isAuthenticated) {
   document.body.dataset.authenticated = isAuthenticated ? "true" : "false";
+  if (refs.workspace) {
+    refs.workspace.hidden = !isAuthenticated;
+  }
+  if (refs.runtimeChip) {
+    refs.runtimeChip.hidden = !isAuthenticated;
+  }
+  if (refs.currentUser) {
+    refs.currentUser.hidden = !isAuthenticated;
+  }
+  if (refs.logoutButton) {
+    refs.logoutButton.hidden = !isAuthenticated;
+  }
 }
 
 function extractRoleValue(role) {
@@ -51,16 +256,7 @@ function normalizeAccessRole(role) {
   if (!normalized) {
     return "";
   }
-  if (normalized === "seller") {
-    return "agent";
-  }
-  if (normalized === "buyer" || normalized === "owner" || normalized === "tenant" || normalized === "landlord" || normalized === "investor") {
-    return "owner";
-  }
-  if (ACCESS_ROLE_PRIORITY.includes(normalized)) {
-    return normalized;
-  }
-  return "";
+  return ROLE_ALIASES[normalized] || "";
 }
 
 function resolveAccessRole(primaryRole, roles = []) {
@@ -74,29 +270,16 @@ function resolveAccessRole(primaryRole, roles = []) {
       return priority;
     }
   }
-  return "owner";
+  return "user";
 }
 
 function journeyForRole(role) {
-  const normalized = normalizeAccessRole(role);
-  if (normalized === "admin") {
-    return "admin";
-  }
-  if (normalized === "agent") {
-    return "seller";
-  }
-  return "buyer";
+  return normalizeAccessRole(role) || "user";
 }
 
 function roleLabel(role) {
   const normalized = normalizeAccessRole(role);
-  if (normalized === "admin") {
-    return "Admin";
-  }
-  if (normalized === "agent") {
-    return "Agent";
-  }
-  return "Owner";
+  return ROLE_LABELS[normalized] || ROLE_LABELS.user;
 }
 
 function clearSession() {
@@ -104,10 +287,13 @@ function clearSession() {
   localStorage.removeItem("lawim.token");
   updateAuthShell(false);
   if (refs.currentUser) {
-    refs.currentUser.textContent = "Guest session";
+    refs.currentUser.textContent = uiCopy().session;
   }
   if (refs.logoutButton) {
     refs.logoutButton.disabled = true;
+  }
+  if (refs.roleCockpit) {
+    refs.roleCockpit.hidden = true;
   }
   if (refs.loginPassword) {
     refs.loginPassword.value = "";
@@ -122,38 +308,54 @@ function isServerUnavailableError(error) {
 function formatLoginError(error) {
   const status = Number(error?.status || 0);
   if (status === 401) {
-    return "Incorrect email or password.";
+    return "Identifiants incorrects.";
   }
   if (status === 403) {
-    return "Access not authorized.";
+    return "Accès non autorisé.";
   }
   if (isServerUnavailableError(error)) {
-    return "Server unavailable. Try again in a moment.";
+    return "Serveur indisponible. Réessayez dans un instant.";
   }
-  return error?.message || "Unable to sign in.";
+  return error?.message || "Connexion impossible.";
 }
 
 function formatSessionError(error) {
   const status = Number(error?.status || 0);
   if (status === 401) {
-    return { message: "Your session expired. Sign in again.", tone: "warn", clearToken: true };
+    return { message: "Session expirée. Connectez-vous de nouveau.", tone: "warn", clearToken: true };
   }
   if (status === 403) {
-    return { message: "Access not authorized.", tone: "warn", clearToken: true };
+    return { message: "Accès non autorisé.", tone: "warn", clearToken: true };
   }
   if (isServerUnavailableError(error)) {
-    return { message: "Server unavailable. Try again in a moment.", tone: "error", clearToken: false };
+    return { message: "Serveur indisponible. Réessayez dans un instant.", tone: "error", clearToken: false };
   }
-  return { message: error?.message || "Unable to refresh the session.", tone: "error", clearToken: false };
+  return { message: error?.message || "Impossible de restaurer la session.", tone: "error", clearToken: false };
 }
 
 function cacheRefs() {
   Object.assign(refs, {
     runtimeChip: byId("runtime-chip"),
+    languageSelect: byId("language-select"),
     currentUser: byId("current-user"),
+    workspace: byId("workspace"),
     notice: byId("notice"),
     bootstrapSummary: byId("bootstrap-summary"),
     statusStrip: byId("status-strip"),
+    roleCockpit: byId("role-cockpit"),
+    roleGreeting: byId("role-greeting"),
+    roleSubtitle: byId("role-subtitle"),
+    roleChip: byId("role-chip"),
+    roleActivityChip: byId("role-activity-chip"),
+    progressCard: byId("progress-card"),
+    activityCard: byId("activity-card"),
+    prioritiesCard: byId("priorities-card"),
+    quickActionsCard: byId("quick-actions-card"),
+    statsCard: byId("stats-card"),
+    statsPeriodSelect: byId("stats-period-select"),
+    recommendationsCard: byId("recommendations-card"),
+    nextActionsCard: byId("next-actions-card"),
+    supportCard: byId("support-card"),
     organizationsList: byId("organizations-list"),
     propertiesList: byId("properties-list"),
     mediaList: byId("media-list"),
@@ -419,17 +621,17 @@ function renderStat(label, value, accent = "") {
 function renderSummary(summary) {
   const fragment = document.createDocumentFragment();
   const cards = [
-    ["Organizations", summary.organizations ?? 0, "teal"],
-    ["Users", summary.users ?? 0, "gold"],
-    ["Published properties", summary.published_properties ?? 0, "violet"],
-    ["Conversations", summary.conversations ?? 0, "coral"],
-    ["Messages", summary.messages ?? 0, "sea"],
-    ["Notifications", summary.notifications ?? 0, "gold"],
-    ["Media", summary.media ?? 0, "slate"],
-    ["Projects", summary.projects ?? 0, "teal"],
+    ["🏢 Organisations", summary.organizations ?? 0, "teal"],
+    ["👥 Utilisateurs", summary.users ?? 0, "gold"],
+    ["🏠 Biens publiés", summary.published_properties ?? 0, "violet"],
+    ["💬 Conversations", summary.conversations ?? 0, "coral"],
+    ["✉️ Messages", summary.messages ?? 0, "sea"],
+    ["🔔 Notifications", summary.notifications ?? 0, "gold"],
+    ["🖼 Médias", summary.media ?? 0, "slate"],
+    ["🚧 Projets", summary.projects ?? 0, "teal"],
   ];
   cards.forEach(([label, value, accent]) => fragment.appendChild(renderStat(label, value, accent)));
-  refs.statusStrip.replaceChildren(fragment);
+  refs.statusStrip?.replaceChildren(fragment);
 }
 
 function renderList(target, items, renderer, emptyText) {
@@ -443,6 +645,203 @@ function renderList(target, items, renderer, emptyText) {
   }
   items.forEach((item) => fragment.appendChild(renderer(item)));
   target.replaceChildren(fragment);
+}
+
+function renderPillList(items, emptyText) {
+  if (!items.length) {
+    return `<p class="muted empty-state">${escapeHtml(emptyText)}</p>`;
+  }
+  return `<div class="pill-list">${items.map((item) => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>`;
+}
+
+function renderActionLinks(actions) {
+  if (!actions.length) {
+    return "<p class='muted empty-state'>—</p>";
+  }
+  return `<div class="action-link-grid">${actions
+    .map(
+      (action) => `<a class="button secondary action-link" href="${escapeHtml(action.href)}">${escapeHtml(action.label)}</a>`,
+    )
+    .join("")}</div>`;
+}
+
+function renderKeyValueRows(rows, emptyText) {
+  if (!rows.length) {
+    return `<p class="muted empty-state">${escapeHtml(emptyText)}</p>`;
+  }
+  return `<div class="cockpit-stack">${rows
+    .map(
+      (row) => `
+        <article class="cockpit-row">
+          <span class="cockpit-row__label">${escapeHtml(row.label)}</span>
+          <strong>${escapeHtml(row.value)}</strong>
+          <span class="muted">${escapeHtml(row.detail || "")}</span>
+        </article>
+      `,
+    )
+    .join("")}</div>`;
+}
+
+function pickPrimaryProject(items) {
+  return (items || []).find((project) => project.status !== "archived") || (items || [])[0] || null;
+}
+
+function formatRoleStatus(role) {
+  return `${ROLE_EMOJIS[role] || "✨"} ${roleLabel(role)}`;
+}
+
+function setLanguage(language) {
+  const normalized = ["fr", "en", "pidgin"].includes(language) ? language : "fr";
+  state.language = normalized;
+  localStorage.setItem("lawim.language", normalized);
+  document.documentElement.lang = normalized === "pidgin" ? "en" : normalized;
+  if (refs.languageSelect && refs.languageSelect.value !== normalized) {
+    refs.languageSelect.value = normalized;
+  }
+  if (state.bootstrap?.current_user) {
+    renderRoleCockpit(state.bootstrap.current_user, state.bootstrap);
+  }
+}
+
+function renderRoleCockpit(currentUser, payload) {
+  if (!refs.roleCockpit || !refs.roleGreeting || !refs.progressCard || !refs.activityCard) {
+    return;
+  }
+
+  const role = resolveAccessRole(currentUser?.role, currentUser?.roles || payload.roles || []);
+  const config = ROLE_COCKPIT_CONFIG[role] || ROLE_COCKPIT_CONFIG.user;
+  const summary = payload.summary || {};
+  const projects = payload.projects || [];
+  const conversations = payload.conversations || [];
+  const notifications = payload.notifications || [];
+  const matches = payload.matches || [];
+  const unread = notifications.filter((notification) => !notification.read);
+  const currentProject = pickPrimaryProject(projects);
+  const name = currentUser?.full_name || currentUser?.name || currentUser?.email?.split("@")?.[0] || "Utilisateur";
+  const progress = currentProject?.progress_percent ?? 0;
+  const supportHint = uiCopy().supportHint;
+  const roleStatus = formatRoleStatus(role);
+  const activeConversation = conversations[0] || null;
+  const topMatch = matches[0] || null;
+  const roleStats = [
+    { label: "Organisations", value: String(summary.organizations ?? 0), detail: "Organisation(s) connectée(s)" },
+    { label: "Utilisateurs", value: String(summary.users ?? 0), detail: "Comptes disponibles" },
+    { label: "Biens", value: String(summary.published_properties ?? 0), detail: "Biens publiés" },
+    { label: "Conversations", value: String(summary.conversations ?? 0), detail: "Fils de discussion" },
+    { label: "Messages", value: String(summary.messages ?? 0), detail: "Échanges actifs" },
+    { label: "Notifications", value: String(summary.notifications ?? 0), detail: "Alertes à traiter" },
+  ];
+
+  refs.roleGreeting.textContent = `Bonjour, ${name}`;
+  refs.roleSubtitle.textContent = `${config.subtitle} ${activeConversation ? `Conversation active: ${activeConversation.subject}` : ""}`.trim();
+  refs.roleChip.textContent = roleStatus;
+  refs.roleActivityChip.textContent = config.activity[0] || uiCopy().activity;
+  if (refs.languageSelect) {
+    refs.languageSelect.value = state.language;
+  }
+  if (refs.statsPeriodSelect) {
+    refs.statsPeriodSelect.value = state.statsPeriod;
+  }
+
+  refs.progressCard.innerHTML = renderKeyValueRows(
+    [
+      { label: "Rôle", value: roleStatus, detail: "Profil actif" },
+      {
+        label: "Progression",
+        value: `${progress}%`,
+        detail: currentProject ? `${currentProject.title} · ${currentProject.project_type}` : "Aucun projet actif",
+      },
+      {
+        label: "Prochaine étape",
+        value: currentProject ? (currentProject.location?.city || currentProject.city || "Continuer") : "Définir un projet",
+        detail: currentProject ? currentProject.objective || "Parcours en cours" : "Créez ou choisissez un projet",
+      },
+      {
+        label: "Documents manquants",
+        value: String(Math.max(0, unread.length)),
+        detail: unread[0]?.title || "Aucune alerte critique",
+      },
+    ],
+    "Aucun parcours actif.",
+  );
+
+  refs.activityCard.innerHTML = renderKeyValueRows(
+    [
+      { label: "Aujourd'hui", value: `${summary.events ?? 0} événements`, detail: "Journal d'activité" },
+      { label: "Notifications", value: `${unread.length} non lues`, detail: unread[0]?.title || "Rien à relancer" },
+      { label: "Conversations", value: `${conversations.length} ouvertes`, detail: activeConversation?.subject || "Aucun fil actif" },
+      { label: "Biens", value: `${summary.published_properties ?? 0} publiés`, detail: topMatch?.property?.title || "Catalogue disponible" },
+    ],
+    "Aucune activité disponible.",
+  );
+
+  const priorityItems = [
+    ...(unread.slice(0, 2).map((notification) => `${notification.title} · ${notification.kind}`) || []),
+    ...(conversations.slice(0, 2).map((conversation) => `${conversation.subject} · ${conversation.status}`) || []),
+    ...config.priorities,
+  ].slice(0, 4);
+  refs.prioritiesCard.innerHTML = renderPillList(priorityItems, "Aucune priorité détectée.");
+
+  refs.quickActionsCard.innerHTML = renderActionLinks(config.quickActions);
+
+  const statsPeriodLabel =
+    refs.statsPeriodSelect?.selectedOptions?.[0]?.textContent || (state.statsPeriod === "7d" ? "7 jours" : state.statsPeriod === "30d" ? "30 jours" : state.statsPeriod === "year" ? "Année" : state.statsPeriod === "custom" ? "Période personnalisée" : "Aujourd'hui");
+  refs.statsCard.innerHTML = `
+    <div class="cockpit-stack">
+      <p class="muted">Période active: ${escapeHtml(statsPeriodLabel)}</p>
+      <div class="stats-mini-grid">
+        ${roleStats
+          .map(
+            (stat) => `
+              <article class="mini-stat">
+                <span class="stat-label">${escapeHtml(stat.label)}</span>
+                <strong>${escapeHtml(stat.value)}</strong>
+                <span class="muted">${escapeHtml(stat.detail)}</span>
+              </article>
+            `,
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+
+  refs.recommendationsCard.innerHTML = renderPillList(
+    (matches
+      .slice(0, 4)
+      .map((match) => `${match.property?.title || match.title || "Bien"} · score ${match.score ?? match.score_percent ?? "n/a"}`)
+      .concat(config.recommendations)
+      .slice(0, 4)) || [],
+    "Aucune recommandation disponible.",
+  );
+
+  refs.nextActionsCard.innerHTML = renderPillList(
+    config.nextActions.concat(currentProject ? [`Poursuivre ${currentProject.title}`] : []).slice(0, 4),
+    "Aucune suggestion immédiate.",
+  );
+
+  refs.supportCard.innerHTML = `
+    <div class="cockpit-stack">
+      <p class="muted">${escapeHtml(supportHint)}</p>
+      ${renderPillList(config.support, "Aucune catégorie")}
+      <div class="action-link-grid">
+        <a class="button primary action-link" href="#message-form">Ouvrir le module</a>
+        <a class="button secondary action-link" href="#notification-filter-form">Voir les notifications</a>
+      </div>
+    </div>
+  `;
+
+  traceRuntime("DASHBOARD_RENDERED", {
+    role,
+    journey: role,
+    progress,
+    unread: unread.length,
+    projects: projects.length,
+  });
+  traceRuntime("ROLE_DASHBOARD_RENDERED", {
+    role,
+    journey: role,
+    visible: true,
+  });
 }
 
 function renderOrganizations(items) {
@@ -963,7 +1362,7 @@ function renderConversationDetail(conversation) {
 function renderNotifications(items) {
   const unread = (items || []).filter((notification) => !notification.read).length;
   if (refs.notificationUnreadCount) {
-    refs.notificationUnreadCount.textContent = `${unread} unread`;
+    refs.notificationUnreadCount.textContent = `${unread} non lues`;
     refs.notificationUnreadCount.dataset.tone = unread ? "warn" : "ok";
   }
   renderList(refs.notificationsList, items, (notification) => {
@@ -1063,9 +1462,14 @@ function applyJourney(journey) {
   state.activeJourney = journey;
   localStorage.setItem("lawim.journey", journey);
   updateAuthShell(Boolean(state.token));
+  const visibleKeys = state.token ? (ROLE_JOURNEY_KEYS[journey] || ROLE_JOURNEY_KEYS.user) : [];
   document.querySelectorAll("[data-journey-panel]").forEach((panel) => {
+    if (!state.token) {
+      panel.hidden = true;
+      return;
+    }
     const allowed = (panel.getAttribute("data-journey-panel") || "").split(/\s+/);
-    panel.hidden = !allowed.includes(journey);
+    panel.hidden = !allowed.some((key) => visibleKeys.includes(key));
   });
   document.querySelectorAll("#journey-nav [data-journey]").forEach((button) => {
     button.dataset.active = button.getAttribute("data-journey") === journey ? "true" : "false";
@@ -1081,13 +1485,7 @@ function applyJourney(journey) {
 
 function journeyForRole(role) {
   const normalizedRole = normalizeAccessRole(role);
-  if (normalizedRole === "admin") {
-    return "admin";
-  }
-  if (normalizedRole === "agent") {
-    return "seller";
-  }
-  return "buyer";
+  return normalizedRole || "user";
 }
 
 async function loadAdminDashboard() {
@@ -1135,8 +1533,8 @@ function renderHealth(health) {
   const environment = health.environment || {};
   const database = health.database || {};
   setRuntimeChip(`${health.status.toUpperCase()} · ${environment.app_env || "unknown"}`, health.status === "ok" ? "ok" : "warn");
-  const metricsNote = health.metrics ? `${health.metrics.requests_total ?? 0} requests` : "metrics admin-only";
-  refs.bootstrapSummary.textContent = `Driver ${environment.db_driver || database.driver || "sqlite"} · schema v${database.schema_version ?? "?"} · ${health.summary?.events ?? 0} events · ${metricsNote}.`;
+  const metricsNote = health.metrics ? `${health.metrics.requests_total ?? 0} requêtes` : "métriques réservées aux administrateurs";
+  refs.bootstrapSummary.textContent = `Pilote ${environment.db_driver || database.driver || "sqlite"} · schéma v${database.schema_version ?? "?"} · ${health.summary?.events ?? 0} événements · ${metricsNote}.`;
 }
 
 function renderBootstrap(payload) {
@@ -1146,11 +1544,18 @@ function renderBootstrap(payload) {
   if (currentUser) {
     const resolvedRole = resolveAccessRole(currentUser.role, currentUser.roles || payload.roles || []);
     state.activeJourney = journeyForRole(resolvedRole);
-    refs.currentUser.textContent = `${currentUser.full_name || currentUser.name || "User"} · ${currentUser.email || "n/a"} · ${roleLabel(resolvedRole)}`;
+    refs.currentUser.textContent = `${currentUser.full_name || currentUser.name || "Utilisateur"} · ${currentUser.email || "n/a"} · ${roleLabel(resolvedRole)}`;
     refs.logoutButton.disabled = false;
+    if (refs.roleCockpit) {
+      refs.roleCockpit.hidden = false;
+    }
+    renderRoleCockpit(currentUser, payload);
   } else {
-    refs.currentUser.textContent = "Guest session";
+    refs.currentUser.textContent = uiCopy().session;
     refs.logoutButton.disabled = !state.token;
+    if (refs.roleCockpit) {
+      refs.roleCockpit.hidden = true;
+    }
   }
 
   updateAuthShell(Boolean(state.token && currentUser));
@@ -1211,7 +1616,7 @@ async function refresh({ renderJourney = true } = {}) {
     journey: state.activeJourney,
     renderJourney,
   });
-  setLoading(true, "Refreshing runtime state...");
+  setLoading(true, "Actualisation de l'environnement...");
   let refreshError = null;
   try {
     const healthPromise = api("/api/health", { auth: Boolean(state.token) });
@@ -1239,7 +1644,7 @@ async function refresh({ renderJourney = true } = {}) {
     if (renderJourney) {
       applyJourney(state.activeJourney);
     }
-    setNotice("Runtime is available and ready.", "success");
+    setNotice("Environnement prêt.", "success");
   } catch (error) {
     refreshError = error;
     const sessionError = formatSessionError(error);
@@ -2045,7 +2450,7 @@ async function handleLogin(event) {
     await refresh({ renderJourney: false });
     applyJourney(resolvedJourney);
     refs.loginPassword.value = "";
-    setNotice(`Authenticated as ${payload.user?.email || email}`, "success");
+    setNotice(`Connexion réussie pour ${payload.user?.email || email}`, "success");
   } catch (error) {
     setNotice(formatLoginError(error), "error", error.code || "");
   }
@@ -2063,7 +2468,7 @@ async function handleLogout() {
     refs.messageForm.classList.add("hidden");
     refs.conversationDetail.innerHTML = '<p class="muted">No conversation selected.</p>';
     state.selectedConversationId = null;
-    setNotice("Session cleared.", "neutral");
+    setNotice("Session fermée.", "neutral");
     await refresh();
   }
 }
@@ -2470,6 +2875,16 @@ function bindEvents() {
   refs.adminUserForm?.addEventListener("submit", handleAdminUserCreate);
   refs.publishPropertyButton?.addEventListener("click", handlePublishProperty);
   refs.archivePropertyButton?.addEventListener("click", handleArchiveProperty);
+  refs.languageSelect?.addEventListener("change", (event) => {
+    setLanguage(String(event.target.value || "fr"));
+  });
+  refs.statsPeriodSelect?.addEventListener("change", (event) => {
+    state.statsPeriod = String(event.target.value || "today");
+    localStorage.setItem("lawim.stats.period", state.statsPeriod);
+    if (state.bootstrap?.current_user) {
+      renderRoleCockpit(state.bootstrap.current_user, state.bootstrap);
+    }
+  });
   refs.journeyNav?.querySelectorAll("[data-journey]").forEach((button) => {
     button.addEventListener("click", () => applyJourney(button.getAttribute("data-journey")));
   });
@@ -2482,6 +2897,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   cacheRefs();
   bindEvents();
   updateAuthShell(Boolean(state.token));
+  setLanguage(state.language);
   applyJourney(state.activeJourney);
   updateSelectedPropertyLabel();
   await refresh();

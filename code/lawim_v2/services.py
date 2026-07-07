@@ -33,6 +33,7 @@ from .project_service import ProjectPermissionDenied, ProjectService
 from .intelligent.service import IntelligentCoreService
 from .ecosystem.service import EcosystemService
 from .security import AADAuthenticator, resolve_aad_config, validate_email, validate_password
+from .user_roles import accept_user_role, resolve_official_user_role
 from .program_m_support import ProgramMServiceBase
 
 
@@ -57,7 +58,7 @@ class AuthenticationError(ServiceError):
 @dataclass(frozen=True, slots=True)
 class AccessPolicy:
     def is_admin(self, actor: dict[str, object] | None) -> bool:
-        return actor is not None and str(actor.get("role")) == "admin"
+        return actor is not None and resolve_official_user_role(actor.get("role")) == "admin"
 
     def can_manage_organization(self, actor: dict[str, object] | None) -> bool:
         return self.is_admin(actor)
@@ -294,8 +295,8 @@ class LawimServices:
             validate_password(password)
         except ValueError as exc:
             raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", str(exc)) from exc
-        normalized_role = role.lower()
-        if normalized_role not in {"admin", "agent", "owner"}:
+        normalized_role = accept_user_role(role)
+        if not normalized_role:
             raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Invalid user role")
         if actor is None and normalized_role == "admin":
             raise PermissionDenied("Public registration cannot create administrator accounts")

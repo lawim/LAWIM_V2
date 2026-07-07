@@ -3,7 +3,7 @@ import { apiSdk, type AuthCredentials, type UserProfile } from '@api-sdk';
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
-export type AccessRole = 'admin' | 'agent' | 'owner';
+export type AccessRole = 'admin' | 'manager' | 'operator' | 'partner' | 'user';
 
 export interface AuthUser {
   id: string;
@@ -30,19 +30,59 @@ export function getUserDisplayName(user: AuthUser) {
   return user.name || user.email.split('@')[0];
 }
 
-const rolePriority: AccessRole[] = ['admin', 'agent', 'owner'];
+const rolePriority: AccessRole[] = ['admin', 'manager', 'operator', 'partner', 'user'];
 
 const roleAliases: Record<string, AccessRole> = {
   admin: 'admin',
   director: 'admin',
   superadmin: 'admin',
-  owner: 'owner',
-  buyer: 'owner',
-  viewer: 'owner',
-  customer: 'owner',
-  agent: 'agent',
-  operator: 'agent',
-  seller: 'agent'
+  manager: 'manager',
+  supervisor: 'manager',
+  lead: 'manager',
+  coordinator: 'manager',
+  operator: 'operator',
+  agent: 'operator',
+  operateur: 'operator',
+  staff: 'operator',
+  support: 'operator',
+  moderator: 'operator',
+  partner: 'partner',
+  photographer: 'partner',
+  photographe: 'partner',
+  notary: 'partner',
+  notaire: 'partner',
+  bank: 'partner',
+  banque: 'partner',
+  artisan: 'partner',
+  architect: 'partner',
+  architecte: 'partner',
+  diagnostician: 'partner',
+  diagnostiqueur: 'partner',
+  decorator: 'partner',
+  decorateur: 'partner',
+  demenageur: 'partner',
+  mover: 'partner',
+  broker: 'partner',
+  user: 'user',
+  owner: 'user',
+  buyer: 'user',
+  seller: 'user',
+  vendeur: 'user',
+  acheteur: 'user',
+  viewer: 'user',
+  customer: 'user',
+  tenant: 'user',
+  locataire: 'user',
+  landlord: 'user',
+  proprietaire: 'user',
+  investor: 'user',
+  investisseur: 'user',
+  promoter: 'user',
+  promoteur: 'user',
+  company: 'user',
+  enterprise: 'user',
+  entreprise: 'user',
+  business: 'user'
 };
 
 function normalizeRoleCandidate(value: unknown): AccessRole | null {
@@ -58,11 +98,11 @@ export function resolvePrimaryRole(role: unknown, roles: unknown[] = []): Access
       return priority;
     }
   }
-  return 'owner';
+  return 'user';
 }
 
-export function resolveDashboardPath(role: AccessRole) {
-  return `/dashboard/${role}`;
+export function resolveDashboardPath(role: AccessRole | string) {
+  return `/dashboard/${resolvePrimaryRole(role)}`;
 }
 
 function formatAuthError(message: string, context: 'login' | 'session') {
@@ -72,30 +112,30 @@ function formatAuthError(message: string, context: 'login' | 'session') {
 
   if (context === 'login') {
     if (status === 401 || status === 403 || lower.includes('unauthorized') || lower.includes('forbidden')) {
-      return 'Incorrect email or password.';
+      return 'Identifiants incorrects.';
     }
     if (status === 429) {
-      return 'Too many attempts. Try again later.';
+      return 'Trop de tentatives. Réessayez plus tard.';
     }
     if (status && status >= 500) {
-      return 'Server unavailable. Try again in a moment.';
+      return 'Serveur indisponible. Réessayez dans un instant.';
     }
     if (lower.includes('fetch') || lower.includes('network')) {
-      return 'Server unavailable. Try again in a moment.';
+      return 'Serveur indisponible. Réessayez dans un instant.';
     }
-    return 'Incorrect email or password.';
+    return 'Identifiants incorrects.';
   }
 
   if (status === 401 || status === 403 || lower.includes('unauthorized') || lower.includes('forbidden')) {
-    return 'Session expired. Please sign in again.';
+    return 'Session expirée. Veuillez vous reconnecter.';
   }
   if (status && status >= 500) {
-    return 'Server unavailable. Try again in a moment.';
+    return 'Serveur indisponible. Réessayez dans un instant.';
   }
   if (lower.includes('fetch') || lower.includes('network')) {
-    return 'Server unavailable. Try again in a moment.';
+    return 'Serveur indisponible. Réessayez dans un instant.';
   }
-  return 'Session expired. Please sign in again.';
+  return 'Session expirée. Veuillez vous reconnecter.';
 }
 
 function isServerUnavailable(message: string) {

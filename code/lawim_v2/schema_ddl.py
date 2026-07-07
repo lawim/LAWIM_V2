@@ -20,6 +20,9 @@ from .communication.schema_v17_ddl import POSTGRESQL_V17_STATEMENTS, SQLITE_V17_
 from .analytics.schema_v18_ddl import POSTGRESQL_V18_STATEMENTS, SQLITE_V18_TABLES_SCRIPT
 from .source_intelligence.schema_ddl import POSTGRESQL_SIE_STATEMENTS, SQLITE_SIE_TABLES_SCRIPT
 from .program_m_support import build_postgresql_statements, build_sqlite_tables_script
+from .user_roles import USER_ROLE_VALUES
+
+USER_ROLE_VALUES_SQL = ", ".join(f"'{role}'" for role in USER_ROLE_VALUES)
 
 POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     """
@@ -37,7 +40,7 @@ POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
         id SERIAL PRIMARY KEY,
         email TEXT NOT NULL UNIQUE,
         full_name TEXT NOT NULL,
-        role TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN (__USER_ROLE_VALUES__)),
         organization_id INTEGER REFERENCES organizations(id),
         password_salt TEXT NOT NULL,
         password_hash TEXT NOT NULL,
@@ -269,7 +272,7 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL UNIQUE,
     full_name TEXT NOT NULL,
-    role TEXT NOT NULL CHECK (role IN ('admin', 'agent', 'owner')),
+    role TEXT NOT NULL CHECK (role IN (__USER_ROLE_VALUES__)),
     organization_id INTEGER,
     password_salt TEXT NOT NULL,
     password_hash TEXT NOT NULL,
@@ -491,9 +494,13 @@ CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_it
 CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);
 """ + SQLITE_V7_TABLES_SCRIPT + SQLITE_V8_TABLES_SCRIPT + SQLITE_V9_TABLES_SCRIPT + SQLITE_V10_TABLES_SCRIPT + SQLITE_V11_TABLES_SCRIPT + SQLITE_V12_TABLES_SCRIPT + SQLITE_V13_TABLES_SCRIPT + SQLITE_V14_TABLES_SCRIPT + SQLITE_V15_TABLES_SCRIPT + SQLITE_V16_TABLES_SCRIPT + SQLITE_V17_TABLES_SCRIPT + SQLITE_V18_TABLES_SCRIPT + SQLITE_SIE_TABLES_SCRIPT + build_sqlite_tables_script(("operations", "deployment", "backup", "installer", "releases"))
 
+SQLITE_INIT_SCRIPT = SQLITE_INIT_SCRIPT.replace("__USER_ROLE_VALUES__", USER_ROLE_VALUES_SQL)
+
 POSTGRESQL_INIT_STATEMENTS = POSTGRESQL_INIT_STATEMENTS + tuple(
     statement for statement in POSTGRESQL_V7_STATEMENTS if "ALTER TABLE" not in statement
 ) + POSTGRESQL_V8_STATEMENTS + POSTGRESQL_V9_STATEMENTS + POSTGRESQL_V10_STATEMENTS + POSTGRESQL_V11_STATEMENTS + POSTGRESQL_V12_STATEMENTS + POSTGRESQL_V13_STATEMENTS + POSTGRESQL_V14_STATEMENTS + POSTGRESQL_V15_STATEMENTS + POSTGRESQL_V16_STATEMENTS + POSTGRESQL_V17_STATEMENTS + POSTGRESQL_V18_STATEMENTS + POSTGRESQL_SIE_STATEMENTS + build_postgresql_statements(("operations", "deployment", "backup", "installer", "releases"))
+
+POSTGRESQL_INIT_STATEMENTS = tuple(statement.replace("__USER_ROLE_VALUES__", USER_ROLE_VALUES_SQL) for statement in POSTGRESQL_INIT_STATEMENTS)
 
 
 def manifest_table_names() -> tuple[str, ...]:

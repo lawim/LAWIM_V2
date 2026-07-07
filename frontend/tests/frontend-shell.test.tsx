@@ -74,18 +74,18 @@ describe('LAWIM frontend shell', () => {
   it('renders the public home page with branding', () => {
     renderWithProviders(<WebApp />);
 
-    expect(screen.getByRole('heading', { name: /one workspace, three roles, zero role picker\./i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /un seul espace\. cinq rôles officiels\. aucun sélecteur de rôle\./i })).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: /primary/i })).toBeInTheDocument();
     expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(2);
-    expect(screen.getAllByText(/lawim role-based workspace/i)).toHaveLength(2);
+    expect(screen.getAllByText(/lawim · accompagnement immobilier intelligent/i)).toHaveLength(2);
   });
 
   it('renders the login page without a role selector and with the LAWIM logo', async () => {
     renderWithProviders(<WebApp />, ['/login']);
 
-    expect(await screen.findByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /connectez-vous une fois\. le bon tableau de bord s'ouvre automatiquement\./i })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /lawim logo/i })).toBeInTheDocument();
-    expect(screen.getByText(/lawim secure sign-in/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/lawim · accompagnement immobilier intelligent/i)).toHaveLength(1);
     expect(screen.queryByLabelText(/role/i)).not.toBeInTheDocument();
   });
 
@@ -94,19 +94,19 @@ describe('LAWIM frontend shell', () => {
       role: 'admin',
       email: 'admin@lawim.app',
       name: 'Admin User',
-      heading: /admin dashboard/i
+      heading: /cockpit administrateur/i
     },
     {
       role: 'agent',
       email: 'agent@lawim.app',
       name: 'Agent User',
-      heading: /agent dashboard/i
+      heading: /cockpit opérateur/i
     },
     {
       role: 'owner',
       email: 'owner@lawim.app',
       name: 'Owner User',
-      heading: /owner dashboard/i
+      heading: /cockpit utilisateur/i
     }
   ])('logs in as $role and opens the matching dashboard', async ({ role, email, name, heading }) => {
     const user = userEvent.setup();
@@ -115,12 +115,12 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />, ['/login']);
 
     await user.type(await screen.findByLabelText(/email/i), email);
-    await user.type(screen.getByLabelText(/password/i), 'lawim-demo');
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.type(screen.getByLabelText(/mot de passe/i), 'lawim-demo');
+    await user.click(screen.getByRole('button', { name: /connexion/i }));
 
     expect(await screen.findByRole('heading', { name: heading })).toBeInTheDocument();
     expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(2);
-    expect(screen.getAllByText(/lawim role-based workspace/i)).toHaveLength(2);
+    expect(screen.getAllByText(/lawim · accompagnement immobilier intelligent/i)).toHaveLength(2);
     expect(window.localStorage.getItem('lawim_token')).toBe('live-token');
     expect(loginSpy).toHaveBeenCalledWith({ email, password: 'lawim-demo' });
   });
@@ -132,10 +132,10 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />, ['/login']);
 
     await user.type(await screen.findByLabelText(/email/i), 'multi@lawim.app');
-    await user.type(screen.getByLabelText(/password/i), 'lawim-demo');
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.type(screen.getByLabelText(/mot de passe/i), 'lawim-demo');
+    await user.click(screen.getByRole('button', { name: /connexion/i }));
 
-    expect(await screen.findByRole('heading', { name: /agent dashboard/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /cockpit opérateur/i })).toBeInTheDocument();
     expect(loginSpy).toHaveBeenCalledWith({ email: 'multi@lawim.app', password: 'lawim-demo' });
   });
 
@@ -146,10 +146,10 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />, ['/login']);
 
     await user.type(await screen.findByLabelText(/email/i), 'admin@lawim.app');
-    await user.type(screen.getByLabelText(/password/i), 'wrong-password');
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.type(screen.getByLabelText(/mot de passe/i), 'wrong-password');
+    await user.click(screen.getByRole('button', { name: /connexion/i }));
 
-    expect(await screen.findByText(/incorrect email or password/i)).toBeInTheDocument();
+    expect(await screen.findByText(/identifiants incorrects\./i)).toBeInTheDocument();
     expect(window.localStorage.getItem('lawim_token')).toBeNull();
   });
 
@@ -160,19 +160,19 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />, ['/login']);
 
     await user.type(await screen.findByLabelText(/email/i), 'admin@lawim.app');
-    await user.type(screen.getByLabelText(/password/i), 'lawim-demo');
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.type(screen.getByLabelText(/mot de passe/i), 'lawim-demo');
+    await user.click(screen.getByRole('button', { name: /connexion/i }));
 
-    expect(await screen.findByText(/server unavailable\. try again in a moment\./i)).toBeInTheDocument();
+    expect(await screen.findByText(/serveur indisponible\. réessayez dans un instant\./i)).toBeInTheDocument();
     expect(window.localStorage.getItem('lawim_token')).toBeNull();
   });
 
   it('redirects an unauthenticated protected route to login without a session-expired banner', async () => {
     renderWithProviders(<WebApp />, ['/dashboard/admin']);
 
-    expect(await screen.findByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
-    expect(screen.getByText(/sign in to access your workspace\./i)).toBeInTheDocument();
-    expect(screen.queryByText(/session expired/i)).not.toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /connectez-vous une fois\. le bon tableau de bord s'ouvre automatiquement\./i })).toBeInTheDocument();
+    expect(screen.getByText(/connectez-vous pour accéder à votre espace\./i)).toBeInTheDocument();
+    expect(screen.queryByText(/votre session a expiré/i)).not.toBeInTheDocument();
   });
 
   it('shows a session-expired banner when an existing token cannot be restored', async () => {
@@ -181,8 +181,8 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/dashboard/admin']);
 
-    expect(await screen.findByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
-    expect(screen.getByText(/your session expired\. sign in again\./i)).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /connectez-vous une fois\. le bon tableau de bord s'ouvre automatiquement\./i })).toBeInTheDocument();
+    expect(screen.getByText(/votre session a expiré\. connectez-vous de nouveau\./i)).toBeInTheDocument();
   });
 
   it('shows a server-unavailable banner when session refresh fails with a 5xx error', async () => {
@@ -191,8 +191,8 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/dashboard/admin']);
 
-    expect(await screen.findByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
-    expect(screen.getByText(/server unavailable\. try again in a moment\./i)).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /connectez-vous une fois\. le bon tableau de bord s'ouvre automatiquement\./i })).toBeInTheDocument();
+    expect(screen.getByText(/serveur indisponible\. réessayez dans un instant\./i)).toBeInTheDocument();
   });
 
   it('redirects authenticated users to the dashboard matching the resolved role', async () => {
@@ -213,10 +213,10 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/dashboard/admin']);
 
-    expect(await screen.findByRole('heading', { name: /agent dashboard/i })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: /admin dashboard/i })).not.toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /cockpit opérateur/i })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /cockpit administrateur/i })).not.toBeInTheDocument();
     expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(2);
-    expect(screen.getAllByText(/lawim role-based workspace/i)).toHaveLength(2);
+    expect(screen.getAllByText(/lawim · accompagnement immobilier intelligent/i)).toHaveLength(2);
   });
 
   it('emits controlled auth traces during a successful login', async () => {
@@ -227,14 +227,14 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/login']);
 
-    await screen.findByRole('heading', { name: /welcome back/i });
+    await screen.findByRole('heading', { name: /connectez-vous une fois\. le bon tableau de bord s'ouvre automatiquement\./i });
     debugSpy.mockClear();
 
     await user.type(screen.getByLabelText(/email/i), 'admin@lawim.app');
-    await user.type(screen.getByLabelText(/password/i), 'lawim-demo');
-    await user.click(screen.getByRole('button', { name: /sign in/i }));
+    await user.type(screen.getByLabelText(/mot de passe/i), 'lawim-demo');
+    await user.click(screen.getByRole('button', { name: /connexion/i }));
 
-    expect(await screen.findByRole('heading', { name: /admin dashboard/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /cockpit administrateur/i })).toBeInTheDocument();
     await waitFor(() => {
       expect(debugSpy.mock.calls.map(([label]) => label)).toEqual([
         'LOGIN_OK',

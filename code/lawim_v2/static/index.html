@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LAWIM | Secure workspace</title>
-  <meta name="description" content="LAWIM secure workspace for owners, agents, and administrators.">
+  <title>LAWIM | Espace sécurisé</title>
+  <meta name="description" content="LAWIM · accompagnement immobilier intelligent. Saisissez votre email et votre mot de passe pour ouvrir automatiquement le bon cockpit.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
 </head>
@@ -18,15 +18,23 @@
         <img class="brand-mark" src="/logo.svg" alt="LAWIM logo" width="56" height="56">
         <div class="brand-lockup__copy">
           <p class="eyebrow">LAWIM</p>
-          <h1>Secure workspace</h1>
+          <h1>Espace sécurisé</h1>
           <p class="lede">
-            LAWIM secure sign-in for owners, agents, and admins. Sign in once and the right space opens automatically.
+            LAWIM · accompagnement immobilier intelligent. Saisissez votre email et votre mot de passe. Le bon cockpit s'ouvre automatiquement selon le rôle renvoyé par l'API.
           </p>
         </div>
       </div>
       <div class="masthead__status">
-        <span id="runtime-chip" class="chip">Booting</span>
-        <span id="current-user" class="muted">Guest session</span>
+        <span id="runtime-chip" class="chip" hidden>Démarrage</span>
+        <label class="language-switcher">
+          <span class="sr-only">Langue</span>
+          <select id="language-select" name="language">
+            <option value="fr">Français</option>
+            <option value="en">English</option>
+            <option value="pidgin">Pidgin English</option>
+          </select>
+        </label>
+        <span id="current-user" class="muted" hidden>Session invitée</span>
       </div>
     </header>
 
@@ -34,9 +42,9 @@
       <aside class="sidebar">
         <section class="panel form-panel auth-panel">
           <div class="section-heading">
-            <p class="eyebrow">Secure access</p>
-            <h2>Welcome back</h2>
-            <p class="muted">Sign in with email and password. No role selection is needed here.</p>
+            <p class="eyebrow">Accès sécurisé</p>
+            <h2>Connexion</h2>
+            <p class="muted">Email et mot de passe uniquement. Aucun choix de rôle.</p>
           </div>
           <form id="login-form" class="stacked-form">
             <label>
@@ -44,40 +52,37 @@
               <input id="login-email" name="email" type="email" autocomplete="username" required>
             </label>
             <label>
-              <span>Password</span>
+              <span>Mot de passe</span>
               <input id="login-password" name="password" type="password" autocomplete="current-password" required>
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Sign in</button>
+              <button type="submit" class="button primary">Connexion</button>
+              <button type="button" class="button ghost" disabled>Mot de passe oublié</button>
+              <button type="button" class="button secondary" disabled>Créer un compte</button>
             </div>
           </form>
-          <p class="muted auth-note">The matching dashboard opens automatically after sign-in.</p>
+          <p class="muted auth-note">Le tableau de bord correspondant s'ouvre automatiquement après identification.</p>
           <div class="actions single">
-            <button type="button" id="logout-button" class="button ghost">Logout</button>
+            <button type="button" id="logout-button" class="button ghost" hidden>Déconnexion</button>
           </div>
         </section>
 
         <section class="panel form-panel">
           <div class="section-heading">
-            <h2>Workspace</h2>
-            <p class="muted">The right dashboard is selected automatically after authentication.</p>
+            <h2>Espaces</h2>
+            <p class="muted">Le cockpit est sélectionné automatiquement à partir du rôle renvoyé par l'API.</p>
           </div>
-          <div id="journey-nav" class="journey-nav">
-            <button type="button" class="button secondary" data-journey="seller">Agent</button>
-            <button type="button" class="button secondary" data-journey="buyer">Owner</button>
-            <button type="button" class="button secondary" data-journey="project">Project</button>
-            <button type="button" class="button secondary" data-journey="admin">Admin</button>
-          </div>
+          <div id="journey-nav" class="journey-nav" hidden></div>
         </section>
 
         <section class="panel form-panel" data-journey-panel="buyer seller">
           <div class="section-heading">
-            <h2>Register</h2>
-            <p class="muted">Create an owner or agent account.</p>
+            <h2>Inscription</h2>
+            <p class="muted">Créer un compte utilisateur ou partenaire depuis l'environnement interne.</p>
           </div>
           <form id="register-form" class="stacked-form">
             <label>
-              <span>Full name</span>
+              <span>Nom complet</span>
               <input name="full_name" type="text" required placeholder="Jane Seller">
             </label>
             <label>
@@ -85,24 +90,27 @@
               <input name="email" type="email" required placeholder="owner@example.com">
             </label>
             <label>
-              <span>Password</span>
+              <span>Mot de passe</span>
               <input name="password" type="password" required placeholder="Create a password">
             </label>
             <label>
-              <span>Role</span>
+              <span>Rôle</span>
               <select name="role">
-                <option value="owner">owner</option>
-                <option value="agent">agent</option>
+                <option value="user">user</option>
+                <option value="partner">partner</option>
+                <option value="operator">operator</option>
+                <option value="manager">manager</option>
+                <option value="admin">admin</option>
               </select>
             </label>
             <label>
-              <span>Organization</span>
+              <span>Organisation</span>
               <select name="organization_id" id="register-organization-select">
-                <option value="">None</option>
+                <option value="">Aucune</option>
               </select>
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Register</button>
+              <button type="submit" class="button primary">Créer</button>
             </div>
           </form>
         </section>
@@ -494,9 +502,98 @@
         </section>
       </aside>
 
-      <section class="workspace">
+      <section class="workspace" id="workspace" hidden>
         <section id="status-strip" class="stats-grid"></section>
         <section id="notice" class="notice panel">Loading runtime state...</section>
+
+        <section id="role-cockpit" class="cockpit-panel panel" hidden>
+          <div class="cockpit-panel__hero">
+            <div>
+              <p class="eyebrow">Bonjour</p>
+              <h2 id="role-greeting">Bonjour...</h2>
+              <p id="role-subtitle" class="muted">Votre cockpit LAWIM se charge.</p>
+            </div>
+            <div class="cockpit-panel__meta">
+              <span id="role-chip" class="chip accent">Utilisateur</span>
+              <span id="role-activity-chip" class="chip subtle">Activité du jour</span>
+            </div>
+          </div>
+
+          <div class="cockpit-grid">
+            <article class="panel cockpit-card">
+              <div class="section-heading">
+                <h2>🎯 Votre progression</h2>
+                <p class="muted">Étape actuelle, documents manquants et prochaine action.</p>
+              </div>
+              <div id="progress-card" class="cockpit-card__body"></div>
+            </article>
+
+            <article class="panel cockpit-card">
+              <div class="section-heading">
+                <h2>🗓 Activité du jour</h2>
+                <p class="muted">Les signaux les plus utiles de la journée.</p>
+              </div>
+              <div id="activity-card" class="cockpit-card__body"></div>
+            </article>
+
+            <article class="panel cockpit-card">
+              <div class="section-heading">
+                <h2>⚠️ Mes priorités</h2>
+                <p class="muted">Ce qui mérite votre attention maintenant.</p>
+              </div>
+              <div id="priorities-card" class="cockpit-card__body"></div>
+            </article>
+
+            <article class="panel cockpit-card">
+              <div class="section-heading">
+                <h2>⚡ Mes actions rapides</h2>
+                <p class="muted">Des raccourcis utiles pour avancer plus vite.</p>
+              </div>
+              <div id="quick-actions-card" class="cockpit-card__body"></div>
+            </article>
+
+            <article class="panel cockpit-card">
+              <div class="section-heading cockpit-card__header-row">
+                <div>
+                  <h2>📊 Mes statistiques</h2>
+                  <p class="muted">Indicateurs sobres et lisibles.</p>
+                </div>
+                <select id="stats-period-select" class="mini-select">
+                  <option value="today">Aujourd'hui</option>
+                  <option value="7d">7 jours</option>
+                  <option value="30d">30 jours</option>
+                  <option value="year">Année</option>
+                  <option value="custom">Période personnalisée</option>
+                </select>
+              </div>
+              <div id="stats-card" class="cockpit-card__body"></div>
+            </article>
+
+            <article class="panel cockpit-card">
+              <div class="section-heading">
+                <h2>⭐ Recommandations IA</h2>
+                <p class="muted">Suggestions contextuelles et discrètes.</p>
+              </div>
+              <div id="recommendations-card" class="cockpit-card__body"></div>
+            </article>
+
+            <article class="panel cockpit-card">
+              <div class="section-heading">
+                <h2>🚀 Et maintenant ?</h2>
+                <p class="muted">Les prochaines étapes les plus pertinentes.</p>
+              </div>
+              <div id="next-actions-card" class="cockpit-card__body"></div>
+            </article>
+
+            <article class="panel cockpit-card cockpit-card--support">
+              <div class="section-heading">
+                <h2>💬 Nous écrire</h2>
+                <p class="muted">Suggestion, support, réclamation ou partenariat.</p>
+              </div>
+              <div id="support-card" class="cockpit-card__body"></div>
+            </article>
+          </div>
+        </section>
 
         <section class="cards-grid">
           <article class="panel card" data-journey-panel="project buyer admin">

@@ -26,6 +26,7 @@ from .multipart import parse_multipart_form_data
 from .observability import METRICS
 from .rate_limit import AuthRateLimiter
 from .services import LawimServices, ServiceError
+from .user_roles import USER_ROLE_VALUES
 from .project_service import ProjectPermissionDenied
 
 
@@ -1152,12 +1153,16 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
     def _coerce_role(self, value: object | None) -> str:
         if value is None:
-            return "agent"
+            return "operator"
         if not isinstance(value, str):
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'role' must be a string")
         normalized = value.strip().lower()
-        if normalized not in {"admin", "agent", "owner"}:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'role' must be one of admin, agent or owner")
+        if normalized not in USER_ROLE_VALUES:
+            raise ApiError(
+                HTTPStatus.BAD_REQUEST,
+                "invalid_payload",
+                "Field 'role' must be one of admin, manager, operator, partner, user or their supported aliases",
+            )
         return normalized
 
     def _coerce_kind(self, value: object | None) -> str:

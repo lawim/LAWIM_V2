@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email TEXT NOT NULL UNIQUE,
         full_name TEXT NOT NULL,
-        role TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('admin', 'manager', 'operator', 'partner', 'user', 'administrator', 'superadmin', 'director', 'root', 'supervisor', 'lead', 'coordinator', 'agent', 'operateur', 'opérateur', 'staff', 'support', 'moderator', 'photographer', 'photographe', 'notary', 'notaire', 'bank', 'banque', 'artisan', 'architect', 'architecte', 'diagnostician', 'diagnostiqueur', 'decorator', 'decorateur', 'demenageur', 'mover', 'broker', 'owner', 'buyer', 'seller', 'vendeur', 'acheteur', 'tenant', 'locataire', 'landlord', 'proprietaire', 'investor', 'investisseur', 'promoter', 'promoteur', 'customer', 'viewer', 'company', 'enterprise', 'entreprise', 'business', 'particulier', 'private', 'requester')),
         organization_id INTEGER REFERENCES organizations(id),
         password_salt TEXT NOT NULL,
         password_hash TEXT NOT NULL,

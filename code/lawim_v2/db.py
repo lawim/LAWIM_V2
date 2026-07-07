@@ -35,6 +35,7 @@ from .notification_domain import build_notification_payload, normalize_kind as n
 from .security import create_session_token, hash_password, verify_password
 from .schema_ddl import SQLITE_INIT_SCRIPT
 from .schema_migrations import apply_sqlite_legacy_migrations
+from .user_roles import accept_user_role, resolve_official_user_role
 from .project_repository import ProjectRepositoryMixin
 from .intelligent.repository import IntelligentRepositoryMixin
 from .knowledge_platform.repository import KnowledgePlatformRepositoryMixin
@@ -261,21 +262,24 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
                 thumbnail_url=build_thumbnail_url(str(media_row["url"]), str(media_row["property_title"])),
             )
 
-        conversation_row = blueprint["conversation"]
-        conversation = self.create_conversation(
-            user_id=user_ids[str(conversation_row["user_email"])],
-            property_id=property_ids[str(conversation_row["property_title"])],
-            subject=str(conversation_row["subject"]),
-            status=str(conversation_row["status"]),
-            initial_message=str(conversation_row["initial_message"]),
-            sender_user_id=user_ids[str(conversation_row["sender_email"])],
-        )
-        for message_row in conversation_row["follow_up_messages"]:
-            self.add_message(
-                conversation["id"],
-                user_ids[str(message_row["sender_email"])],
-                str(message_row["body"]),
+        conversation_rows = blueprint.get("conversations") or ()
+        if "conversation" in blueprint:
+            conversation_rows = (*conversation_rows, blueprint["conversation"])
+        for conversation_row in conversation_rows:
+            conversation = self.create_conversation(
+                user_id=user_ids[str(conversation_row["user_email"])],
+                property_id=property_ids[str(conversation_row["property_title"])],
+                subject=str(conversation_row["subject"]),
+                status=str(conversation_row["status"]),
+                initial_message=str(conversation_row["initial_message"]),
+                sender_user_id=user_ids[str(conversation_row["sender_email"])],
             )
+            for message_row in conversation_row["follow_up_messages"]:
+                self.add_message(
+                    conversation["id"],
+                    user_ids[str(message_row["sender_email"])],
+                    str(message_row["body"]),
+                )
 
         if "project" in blueprint:
             project_row = blueprint["project"]
@@ -465,8 +469,8 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         email = _require_text(email, "email").lower()
         full_name = _require_text(full_name, "full_name")
         password = _require_text(password, "password")
-        role = _require_text(role, "role").lower()
-        if role not in {"admin", "agent", "owner"}:
+        role = accept_user_role(role)
+        if not role:
             raise ValidationError(f"unsupported user role: {role}")
         if organization_id is not None:
             self.get_organization_by_id(organization_id)
@@ -521,8 +525,8 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         if full_name is not None:
             changes["full_name"] = _require_text(full_name, "full_name")
         if role is not None:
-            normalized_role = _require_text(role, "role").lower()
-            if normalized_role not in {"admin", "agent", "owner"}:
+            normalized_role = accept_user_role(role)
+            if not normalized_role:
                 raise ValidationError(f"unsupported user role: {normalized_role}")
             changes["role"] = normalized_role
         if organization_id is not None:
@@ -1709,15 +1713,19 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
     def bootstrap_payload(self, *, token: str | None = None) -> dict[str, object]:
         current_user = self.get_user_by_session(token) if token else None
         users: list[dict[str, object]] = []
-        if current_user is not None and str(current_user.get("role")) == "admin":
+        projects: list[dict[str, object]] = []
+        if current_user is not None and resolve_official_user_role(current_user.get("role")) == "admin":
             users = [self._public_user(row) for row in self.list_users(limit=10)]
+            projects = self.list_projects(limit=10)["items"]
         conversations: list[dict[str, object]]
-        if current_user is not None and str(current_user.get("role")) != "admin":
+        if current_user is not None and resolve_official_user_role(current_user.get("role")) != "admin":
             organization_id = current_user.get("organization_id")
             if organization_id is not None:
                 conversations = self.list_conversations(organization_id=int(organization_id), limit=10)
+                projects = self.list_projects(organization_id=int(organization_id), limit=10)["items"]
             else:
                 conversations = self.list_conversations(user_id=int(current_user["id"]), limit=10)
+                projects = self.list_projects(user_id=int(current_user["id"]), limit=10)["items"]
         else:
             conversations = self.list_conversations(limit=10) if current_user is not None else []
         from .contact import to_public_dict
@@ -1728,6 +1736,7 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
             "current_user": self._public_user(current_user) if current_user else None,
             "organizations": self.list_organizations(limit=10),
             "users": users,
+            "projects": projects,
             "properties": self.list_properties(limit=10)["items"],
             "media": self.list_media(limit=10)["items"],
             "conversations": conversations,

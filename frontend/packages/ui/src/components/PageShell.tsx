@@ -18,7 +18,7 @@ export function PageShell({ eyebrow, title, description, actions, children }: Pa
       <section className="mx-auto flex max-w-6xl flex-col gap-8">
         <div className="relative z-10 flex flex-col gap-5 rounded-[2rem] border border-white/10 bg-slate-950/70 p-6 shadow-[0_28px_120px_rgba(2,6,23,0.5)] backdrop-blur-xl sm:p-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-4">
-            <BrandMark slogan="LAWIM role-based workspace" />
+            <BrandMark slogan="LAWIM · accompagnement immobilier intelligent" />
             <div className="flex flex-wrap items-center gap-3">
               {eyebrow ? <Badge variant="info">{eyebrow}</Badge> : null}
               <span className="text-xs uppercase tracking-[0.28em] text-slate-400">LAWIM</span>

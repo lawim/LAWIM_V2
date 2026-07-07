@@ -189,7 +189,7 @@ const mockProperties: PropertySummary[] = [
 const mockProfile: UserProfile = {
   id: 'u1',
   name: 'Alicia Dubois',
-  role: 'Director',
+  role: 'admin',
   email: 'alicia@lawim.example'
 };
 
@@ -197,12 +197,12 @@ export const apiSdk = {
   async login(credentials: AuthCredentials): Promise<ApiResponse<AuthSession>> {
     if (useMocks) {
       await mockDelay();
-      return { data: { user: mockProfile, token: 'mock-token', roles: ['admin', 'director'] }, message: 'mock' };
+      return { data: { user: mockProfile, token: 'mock-token', roles: ['admin'] }, message: 'mock' };
     }
     return requestJson<AuthSession>('/auth/login', { method: 'POST', body: JSON.stringify(credentials) }, {
       user: mockProfile,
       token: 'mock-token',
-      roles: ['admin', 'director']
+      roles: ['admin']
     });
   },
 

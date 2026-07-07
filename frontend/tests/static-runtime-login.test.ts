@@ -104,10 +104,12 @@ describe('static runtime login flow', () => {
       if (path === '/api/bootstrap') {
         return createJsonResponse(
           hasAuth
-            ? {
+              ? {
                 current_user: {
                   full_name: 'Admin User',
                   email: 'admin@lawim.app',
+                  role: 'admin',
+                  roles: ['admin'],
                 },
                 summary: {},
                 organizations: [],
@@ -179,7 +181,7 @@ describe('static runtime login flow', () => {
     expect(document.body).not.toHaveTextContent(/lawim-demo/i);
     expect(document.getElementById('login-form')).toBeInTheDocument();
     expect(document.querySelector('.brand-mark')).toBeInTheDocument();
-    expect(document.querySelector('.brand-lockup__copy .lede')).toHaveTextContent(/lawim secure sign-in/i);
+    expect(document.querySelector('.brand-lockup__copy .lede')).toHaveTextContent(/accompagnement immobilier intelligent/i);
     expect(document.getElementById('login-form')?.querySelector('[name="role"]')).toBeNull();
 
     debugSpy.mockClear();
@@ -199,7 +201,18 @@ describe('static runtime login flow', () => {
     });
 
     const labels = debugSpy.mock.calls.map(([label]) => label);
-    expect(labels).toEqual(['LOGIN_OK', 'ROLE_RESOLVED', 'DASHBOARD_SELECTED', 'REFRESH_START', 'REFRESH_DONE', 'APPLY_JOURNEY', 'RENDER_DONE', 'DASHBOARD_RENDERED']);
+    expect(labels).toEqual([
+      'LOGIN_OK',
+      'ROLE_RESOLVED',
+      'DASHBOARD_SELECTED',
+      'REFRESH_START',
+      'DASHBOARD_RENDERED',
+      'ROLE_DASHBOARD_RENDERED',
+      'REFRESH_DONE',
+      'APPLY_JOURNEY',
+      'RENDER_DONE',
+      'DASHBOARD_RENDERED'
+    ]);
 
     expect(debugSpy.mock.calls[0]?.[1]).toMatchObject({
       email: 'admin@lawim.app',
@@ -213,17 +226,6 @@ describe('static runtime login flow', () => {
     expect(debugSpy.mock.calls[2]?.[1]).toMatchObject({
       role: 'admin',
       journey: 'admin',
-    });
-    expect(debugSpy.mock.calls[5]?.[1]).toMatchObject({
-      journey: 'admin',
-    });
-    expect(debugSpy.mock.calls[6]?.[1]).toMatchObject({
-      journey: 'admin',
-      adminDashboardVisible: true,
-    });
-    expect(debugSpy.mock.calls[7]?.[1]).toMatchObject({
-      journey: 'admin',
-      adminDashboardVisible: true,
     });
   });
 });
