@@ -16,6 +16,7 @@ Le deploiement OVH a ete realise proprement depuis une release traçable. Les se
 
 - Commit code principal: `778ab779bcd69a585a29e0ac42b74f331df7538e`
 - Commit de packaging release: `0bbb39f8`
+- Commit final du rapport: `a9a5cb5f`
 - Tag de release cible: `release-program-j-lawim-experience-1.0`
 - Artefact OVH: `release/ovh/artefacts/lawim-v2-postgresql-compat.tar.gz`
 - SHA256 artefact: `6d9d5d8deb07f05e447676374d78da2de61b6b6b1ddf3fc4ad91ac339aa504d7`
