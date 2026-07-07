@@ -1,22 +1,24 @@
-import { useMemo, useState } from 'react';
-import { NavLink, Navigate, Route, Routes, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { NavLink, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { apiSdk, type PropertySummary } from '@api-sdk';
-import { Badge, Button, Card, Checkbox, Input, PageShell, Select, Textarea } from '@ui';
-import { ProtectedRoute, useAuthStore } from '@auth';
+import { Badge, BrandMark, Button, Card, Checkbox, Input, PageShell, Select, Textarea } from '@ui';
+import { ProtectedRoute, resolveDashboardPath, resolvePrimaryRole, type AccessRole, useAuthStore } from '@auth';
 import { WorkflowOrchestratorPage } from './WorkflowOrchestratorPage';
 import { ObservabilityConsolePage } from './ObservabilityConsolePage';
 import { ProductReadinessDashboardPage } from './ProductReadinessDashboardPage';
 
-const navItems = [
+const publicNavItems = [
   { to: '/', label: 'Home' },
   { to: '/search', label: 'Search' },
   { to: '/map', label: 'Map' },
   { to: '/estimation', label: 'Estimation' },
   { to: '/assistant', label: 'Assistant' },
   { to: '/marketplace', label: 'Marketplace' },
-  { to: '/contact', label: 'Contact' },
-  { to: '/login', label: 'Login' },
+  { to: '/contact', label: 'Contact' }
+];
+
+const protectedNavItems = [
   { to: '/profile', label: 'Profile' },
   { to: '/dashboard', label: 'Dashboard' },
   { to: '/favorites', label: 'Favorites' },
@@ -46,35 +48,65 @@ function EmptyState({ label }: { label: string }) {
 }
 
 function HomePage() {
-  const { data: propertiesData, isPending: propertiesPending, error: propertiesError, refetch: refetchProperties } = useQuery({
-    queryKey: ['properties-home'],
-    queryFn: () => apiSdk.getProperties({ page: 1, pageSize: 3 })
-  });
-  const { data: profileData, isPending: profilePending, error: profileError } = useQuery({
-    queryKey: ['profile'],
-    queryFn: () => apiSdk.getProfile()
-  });
-  const { data: summaryData, isPending: summaryPending, error: summaryError } = useQuery({
-    queryKey: ['dashboard-summary'],
-    queryFn: () => apiSdk.getDashboardSummary()
-  });
+  const user = useAuthStore((state) => state.user);
+  const roles = useAuthStore((state) => state.roles);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const navigate = useNavigate();
+  const role = resolvePrimaryRole(user?.role, roles);
+  const dashboardPath = resolveDashboardPath(role);
 
   return (
     <PageShell
       eyebrow="LAWIM Intelligence Platform"
-      title="Operational intelligence for modern teams"
-      description="Live data flowing from the LAWIM backend with activation-ready routing."
+      title="One workspace, three roles, zero role picker."
+      description="LAWIM keeps admin, agent, and owner journeys in the same product. Sign in with email and password, then the right dashboard opens automatically."
       actions={
         <>
-          <Button>Launch workspace</Button>
-          <Button variant="secondary">Explore capabilities</Button>
+          <Button type="button" onClick={() => navigate('/login')}>
+            Sign in
+          </Button>
+          <Button type="button" variant="secondary" onClick={() => navigate(isAuthenticated ? dashboardPath : '/search')}>
+            {isAuthenticated ? 'Open dashboard' : 'Explore public tools'}
+          </Button>
         </>
       }
     >
-      <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr_0.9fr]">
-        {summaryPending ? <LoadingState label="Loading dashboard summary" /> : summaryError ? <ErrorState message="Unable to load the dashboard summary." retry={() => void refetchProperties()} /> : <Card title="Dashboard" description="Operational overview"><div className="space-y-3 text-sm text-slate-300"><p className="text-3xl font-semibold text-white">{summaryData?.data.properties ?? 0}</p><p>{summaryData?.data.opportunities ?? 0} active opportunities and {summaryData?.data.communications ?? 0} recent communications.</p><Button variant="secondary">Open dashboard</Button></div></Card>}
-        {profilePending ? <LoadingState label="Loading profile" /> : profileError ? <ErrorState message="Unable to load profile." /> : <Card title="Profile" description="Signed-in workspace"><div className="space-y-3 text-sm text-slate-300"><p className="text-xl font-semibold text-white">{profileData?.data.name ?? 'Viewer'}</p><p>{profileData?.data.role ?? 'Director'}</p><p>{profileData?.data.email ?? 'No email available'}</p></div></Card>}
-        {propertiesPending ? <LoadingState label="Loading opportunities" /> : propertiesError ? <ErrorState message="Unable to load opportunities." /> : <Card title="Latest opportunities" description="Fresh demand from the backend"><div className="space-y-2 text-sm text-slate-300">{(propertiesData?.data ?? []).slice(0, 3).map((property) => <div key={property.id} className="rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2">{property.title}</div>)}</div></Card>}
+      <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+        <Card title="Role routing" description="The platform selects the workspace from the API payload.">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+              <Badge variant="info">Admin</Badge>
+              <p className="mt-3 text-sm text-slate-300">Governance, monitoring, and platform control.</p>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+              <Badge variant="success">Agent</Badge>
+              <p className="mt-3 text-sm text-slate-300">Pipeline, follow-up, and operational coordination.</p>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+              <Badge variant="warning">Owner</Badge>
+              <p className="mt-3 text-sm text-slate-300">Portfolio visibility, requests, and documents.</p>
+            </div>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Button type="button" onClick={() => navigate('/login')}>
+              Continue to sign in
+            </Button>
+            <Button type="button" variant="secondary" onClick={() => navigate('/dashboard')}>
+              Go to workspace
+            </Button>
+          </div>
+        </Card>
+        <Card title="What you get" description="A cleaner, faster front door with no role selection form.">
+          <div className="space-y-3 text-sm text-slate-300">
+            <p>• Email and password only.</p>
+            <p>• Automatic dashboard selection from `payload.user.role`.</p>
+            <p>• Clear messages for invalid credentials, expired sessions, and server downtime.</p>
+            <p>• One shared LAWIM brand across all pages.</p>
+          </div>
+          <div className="mt-5 rounded-2xl border border-brand-500/20 bg-brand-500/10 p-4 text-sm text-brand-100">
+            {isAuthenticated ? `Welcome back, ${user?.name || user?.email || 'user'}. Your role is ${role}.` : 'New users see the same front door as returning users.'}
+          </div>
+        </Card>
       </div>
     </PageShell>
   );
@@ -288,47 +320,400 @@ function ContactPage() {
   );
 }
 
+const dashboardConfig: Record<
+  AccessRole,
+  {
+    eyebrow: string;
+    title: string;
+    description: string;
+    badge: string;
+    badgeTone: 'info' | 'success' | 'warning';
+    metrics: {
+      properties: string;
+      opportunities: string;
+      communications: string;
+      pendingTasks: string;
+    };
+    highlights: string[];
+    actions: {
+      primary: string;
+      secondary: string;
+    };
+  }
+> = {
+  admin: {
+    eyebrow: 'Admin workspace',
+    title: 'Admin dashboard',
+    description: 'Governance, diagnostics, and platform health.',
+    badge: 'Control room',
+    badgeTone: 'info',
+    metrics: {
+      properties: 'Managed assets',
+      opportunities: 'Open priorities',
+      communications: 'Alerts',
+      pendingTasks: 'Backlog'
+    },
+    highlights: ['Access control', 'Audit trail', 'Release readiness'],
+    actions: {
+      primary: 'Review governance',
+      secondary: 'Open metrics'
+    }
+  },
+  agent: {
+    eyebrow: 'Agent workspace',
+    title: 'Agent dashboard',
+    description: 'Leads, conversations, and follow-up pipelines.',
+    badge: 'Sales cockpit',
+    badgeTone: 'success',
+    metrics: {
+      properties: 'Tracked listings',
+      opportunities: 'Active leads',
+      communications: 'Messages',
+      pendingTasks: 'Follow-ups'
+    },
+    highlights: ['Lead queue', 'Conversation inbox', 'Pipeline focus'],
+    actions: {
+      primary: 'View pipeline',
+      secondary: 'Open inbox'
+    }
+  },
+  owner: {
+    eyebrow: 'Owner workspace',
+    title: 'Owner dashboard',
+    description: 'Portfolio, requests, and documents at a glance.',
+    badge: 'Owner lounge',
+    badgeTone: 'warning',
+    metrics: {
+      properties: 'Assets in portfolio',
+      opportunities: 'Value signals',
+      communications: 'Updates',
+      pendingTasks: 'Requests'
+    },
+    highlights: ['Portfolio health', 'Pending requests', 'Documents ready'],
+    actions: {
+      primary: 'Review portfolio',
+      secondary: 'Open documents'
+    }
+  }
+};
+
+function traceAuth(step: string, details: Record<string, unknown> = {}) {
+  const env = (import.meta as ImportMeta & { env?: { DEV?: boolean } }).env;
+  const debugEnabled = Boolean(env?.DEV) || window.localStorage.getItem('lawim.debug.auth') === '1';
+  if (debugEnabled) {
+    console.debug(step, details);
+  }
+}
+
+function getLoginBanner(reason?: string | null) {
+  switch (reason) {
+    case 'server_unavailable':
+      return 'Server unavailable. Try again in a moment.';
+    case 'session_expired':
+      return 'Your session expired. Sign in again.';
+    case 'unauthorized':
+      return 'Sign in to access your workspace.';
+    default:
+      return null;
+  }
+}
+
+function DashboardPage() {
+  const user = useAuthStore((state) => state.user);
+  const roles = useAuthStore((state) => state.roles);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const sessionExpired = useAuthStore((state) => state.sessionExpired);
+  const role = resolvePrimaryRole(user?.role, roles);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      traceAuth('DASHBOARD_SELECTED', {
+        role,
+        path: resolveDashboardPath(role)
+      });
+    }
+  }, [isAuthenticated, role]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center px-6 py-16">
+        <div className="rounded-3xl border border-slate-800 bg-slate-950/70 px-6 py-8 text-center text-slate-200 shadow-[0_20px_80px_rgba(2,6,23,0.35)]">
+          <p className="text-sm uppercase tracking-[0.3em] text-slate-500">LAWIM</p>
+          <h2 className="mt-2 text-2xl font-semibold text-white">Checking your session</h2>
+          <p className="mt-2 text-sm text-slate-400">We are restoring your workspace.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace state={{ reason: sessionExpired ? 'session_expired' : 'unauthorized' }} />;
+  }
+
+  return <Navigate to={resolveDashboardPath(role)} replace />;
+}
+
+function RoleDashboardPage({ role }: { role: AccessRole }) {
+  const user = useAuthStore((state) => state.user);
+  const roles = useAuthStore((state) => state.roles);
+  const navigate = useNavigate();
+  const config = dashboardConfig[role];
+  const activeRole = resolvePrimaryRole(user?.role, roles);
+  const shouldRedirect = activeRole !== role;
+  const { data, isPending, error, refetch } = useQuery({
+    queryKey: ['dashboard-summary', role],
+    enabled: !shouldRedirect,
+    queryFn: async () => {
+      const response = await apiSdk.getDashboardSummary();
+      const message = response.message ?? '';
+      if (message !== 'ok' && message !== 'mock') {
+        throw new Error(message.includes('401') || message.includes('403') ? 'Session expired. Please sign in again.' : 'Unable to load the dashboard.');
+      }
+      return response;
+    }
+  });
+
+  useEffect(() => {
+    if (shouldRedirect) {
+      return;
+    }
+    traceAuth('DASHBOARD_RENDERED', {
+      role,
+      path: resolveDashboardPath(role),
+      email: user?.email ?? null
+    });
+    traceAuth('RENDER_DONE', {
+      role,
+      path: resolveDashboardPath(role),
+      dashboardVisible: true
+    });
+  }, [role, shouldRedirect, user?.email]);
+
+  if (shouldRedirect) {
+    return <Navigate to={resolveDashboardPath(activeRole)} replace />;
+  }
+
+  return (
+    <PageShell
+      eyebrow={config.eyebrow}
+      title={config.title}
+      description={`${config.description} Signed in as ${user?.name || user?.email || 'user'}.`}
+      actions={
+        <>
+          <Button type="button" onClick={() => navigate('/search')}>
+            Open search
+          </Button>
+          <Button type="button" variant="secondary" onClick={() => navigate('/profile')}>
+            Profile
+          </Button>
+        </>
+      }
+    >
+      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+        <Card title={config.badge} description="Live metrics from the backend.">
+          {isPending ? (
+            <LoadingState label="Loading dashboard metrics" />
+          ) : error ? (
+            <ErrorState message={error instanceof Error ? error.message : 'Unable to load the dashboard.'} retry={() => void refetch()} />
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{config.metrics.properties}</p>
+                <p className="mt-2 text-3xl font-semibold text-white">{data?.data.properties ?? 0}</p>
+              </div>
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{config.metrics.opportunities}</p>
+                <p className="mt-2 text-3xl font-semibold text-white">{data?.data.opportunities ?? 0}</p>
+              </div>
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{config.metrics.communications}</p>
+                <p className="mt-2 text-3xl font-semibold text-white">{data?.data.communications ?? 0}</p>
+              </div>
+              <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">{config.metrics.pendingTasks}</p>
+                <p className="mt-2 text-3xl font-semibold text-white">{data?.data.pendingTasks ?? 0}</p>
+              </div>
+            </div>
+          )}
+        </Card>
+        <Card title="Role focus" description="Your current workspace emphasis.">
+          <div className="space-y-4">
+            <Badge variant={config.badgeTone}>{config.badge}</Badge>
+            <div className="space-y-3">
+              {config.highlights.map((item) => (
+                <div key={item} className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-300">
+                  {item}
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Button type="button" onClick={() => navigate('/search')}>
+                {config.actions.primary}
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => navigate('/documents')}>
+                {config.actions.secondary}
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </PageShell>
+  );
+}
+
 function LoginPage() {
   const login = useAuthStore((state) => state.login);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const user = useAuthStore((state) => state.user);
+  const roles = useAuthStore((state) => state.roles);
+  const role = resolvePrimaryRole(user?.role, roles);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState<{ tone: 'success' | 'error'; text: string } | null>(null);
+  const loginBanner = getLoginBanner((location.state as { reason?: string } | null)?.reason ?? null);
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={resolveDashboardPath(role)} replace />;
+  }
+
+  if ((!hasHydrated || isLoading) && !email && !password && !message) {
+    return (
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.96),_rgba(219,234,254,0.75)_36%,_rgba(148,163,184,0.35)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
+        <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col justify-between gap-10">
+          <div className="flex items-center justify-between">
+            <BrandMark tone="light" slogan="LAWIM secure sign-in" />
+            <Badge variant="info">Checking session</Badge>
+          </div>
+          <div className="flex flex-1 items-center justify-center">
+            <div className="rounded-[2rem] border border-white/70 bg-white/90 px-8 py-10 text-center shadow-[0_24px_90px_rgba(15,23,42,0.14)] backdrop-blur">
+              <p className="text-sm uppercase tracking-[0.32em] text-slate-500">LAWIM</p>
+              <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">Checking your session</h1>
+              <p className="mt-2 text-sm leading-7 text-slate-600">Restoring your workspace and selecting the right dashboard.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   return (
-    <PageShell eyebrow="Auth" title="Sign in to LAWIM" description="Use your workspace credentials to continue.">
-      <Card title="Credentials" description="Secure access for clients and operators.">
-        <div className="grid gap-4">
-          <Input label="Email" placeholder="name@lawim.com" value={email} onChange={(event) => setEmail(event.target.value)} />
-          <Input label="Password" placeholder="••••••••" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-          <Button
-            type="button"
-            disabled={isLoading}
-            onClick={() =>
-              void (async () => {
-                try {
-                  await login({ email, password });
-                  setMessage({ tone: 'success', text: 'Signed in successfully' });
-                } catch (error) {
-                  setMessage({
-                    tone: 'error',
-                    text: error instanceof Error ? error.message : 'Unable to sign in'
-                  });
-                }
-              })()
-            }
-          >
-            Sign in
-          </Button>
-          {message ? <p className={`text-sm ${message.tone === 'error' ? 'text-rose-300' : 'text-emerald-300'}`}>{message.text}</p> : null}
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.96),_rgba(219,234,254,0.75)_36%,_rgba(148,163,184,0.35)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col justify-between gap-10">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <BrandMark tone="light" slogan="LAWIM secure sign-in" />
+          <Badge variant="info">Email + password only</Badge>
         </div>
-      </Card>
-    </PageShell>
+
+        <div className="grid flex-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <section className="space-y-8">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-brand-700">LAWIM access</p>
+              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">Sign in once. The right dashboard opens automatically.</h1>
+              <p className="mt-4 max-w-xl text-base leading-8 text-slate-600">
+                LAWIM keeps admin, agent, and owner journeys in one product. Enter your email and password, and the API decides which workspace to show.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+                <Badge variant="info">Admin</Badge>
+                <p className="mt-3 text-sm leading-6 text-slate-600">Governance, monitoring, and release oversight.</p>
+              </div>
+              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+                <Badge variant="success">Agent</Badge>
+                <p className="mt-3 text-sm leading-6 text-slate-600">Pipeline work, follow-up, and coordination.</p>
+              </div>
+              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+                <Badge variant="warning">Owner</Badge>
+                <p className="mt-3 text-sm leading-6 text-slate-600">Portfolio visibility, requests, and documents.</p>
+              </div>
+            </div>
+
+            <div className="rounded-[1.75rem] border border-brand-500/20 bg-brand-500/10 p-5 text-sm leading-7 text-slate-700">
+              {loginBanner ? loginBanner : 'LAWIM never asks for a role on this page. The role comes from the API payload.'}
+            </div>
+          </section>
+
+          <section className="rounded-[2rem] border border-white/80 bg-white/95 p-8 shadow-[0_24px_90px_rgba(15,23,42,0.14)] backdrop-blur">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-500">Secure access</p>
+                <h2 className="mt-2 text-2xl font-semibold text-slate-950">Welcome back</h2>
+              </div>
+              <Badge variant="success">Protected</Badge>
+            </div>
+
+            <form
+              className="mt-7 space-y-4"
+              onSubmit={(event) =>
+                void (async () => {
+                  event.preventDefault();
+                  try {
+                    const session = await login({ email, password });
+                    traceAuth('LOGIN_OK', { email: session.email, role: session.role });
+                    traceAuth('ROLE_RESOLVED', { role: session.role, source: 'payload.user.role or payload.roles' });
+                    const path = resolveDashboardPath(session.role);
+                    traceAuth('DASHBOARD_SELECTED', { role: session.role, path });
+                    traceAuth('APPLY_JOURNEY', { role: session.role, path });
+                    navigate(path, { replace: true });
+                  } catch (error) {
+                    setMessage({
+                      tone: 'error',
+                      text: error instanceof Error ? error.message : 'Unable to sign in'
+                    });
+                  }
+                })()
+              }
+            >
+              <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                <span>Email</span>
+                <input
+                  className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                  placeholder="name@lawim.app"
+                  autoComplete="username"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  required
+                  type="email"
+                />
+              </label>
+              <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                <span>Password</span>
+                <input
+                  className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                  type="password"
+                />
+              </label>
+
+              {message ? (
+                <div className={`rounded-2xl border px-4 py-3 text-sm ${message.tone === 'error' ? 'border-rose-200 bg-rose-50 text-rose-700' : 'border-emerald-200 bg-emerald-50 text-emerald-700'}`}>
+                  {message.text}
+                </div>
+              ) : null}
+
+              <Button className="w-full justify-center py-3 text-base" disabled={isLoading} type="submit">
+                {isLoading ? 'Signing in...' : 'Sign in'}
+              </Button>
+            </form>
+
+            <div className="mt-6 flex items-center justify-between text-xs uppercase tracking-[0.28em] text-slate-400">
+              <span>LAWIM</span>
+              <span>LAWIM</span>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
   );
 }
 
@@ -339,15 +724,6 @@ function ProfilePage() {
       <Card title="Preferences" description="Personalize your experience.">
         {isPending ? <LoadingState label="Loading profile" /> : error ? <ErrorState message="Unable to load your profile." retry={() => void refetch()} /> : <div className="space-y-3 text-sm text-slate-300"><p>Role: {data?.data.role}</p><p>Email: {data?.data.email}</p><p>Name: {data?.data.name}</p></div>}
       </Card>
-    </PageShell>
-  );
-}
-
-function DashboardPage() {
-  const { data, isPending, error, refetch } = useQuery({ queryKey: ['dashboard'], queryFn: () => apiSdk.getDashboardSummary() });
-  return (
-    <PageShell eyebrow="Client workspace" title="Dashboard" description="Follow the latest opportunities and actions in one place.">
-      {isPending ? <LoadingState label="Loading dashboard" /> : error ? <ErrorState message="Unable to load the dashboard." retry={() => void refetch()} /> : <div className="grid gap-6 md:grid-cols-3"><Card title="Pipeline" description={`${data?.data.opportunities ?? 0} new opportunities`} /><Card title="Communications" description={`${data?.data.communications ?? 0} recent updates`} /><Card title="Tasks" description={`${data?.data.pendingTasks ?? 0} pending tasks`} /></div>}
     </PageShell>
   );
 }
@@ -389,27 +765,55 @@ function DocumentsPage() {
 }
 
 export function WebApp() {
+  const location = useLocation();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const user = useAuthStore((state) => state.user);
+  const roles = useAuthStore((state) => state.roles);
+  const hydrate = useAuthStore((state) => state.hydrate);
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    const hadStoredToken = Boolean(window.localStorage.getItem('lawim_token'));
+    traceAuth('REFRESH_START', {
+      path,
+      hadStoredToken
+    });
+    void hydrate().then((session) => {
+      traceAuth('REFRESH_DONE', {
+        path,
+        authenticated: Boolean(session),
+        role: session?.role ?? null
+      });
+    });
+  }, [hydrate]);
+
+  const activeRole = resolvePrimaryRole(user?.role, roles);
+  const dashboardPath = resolveDashboardPath(activeRole);
+  const navItems = isAuthenticated
+    ? [
+        ...publicNavItems,
+        ...protectedNavItems.map((item) => (item.to === '/dashboard' ? { ...item, to: dashboardPath } : item))
+      ]
+    : [...publicNavItems, { to: '/login', label: 'Login' }];
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <nav aria-label="Primary" className="sticky top-0 z-20 border-b border-slate-800/80 bg-slate-950/90 px-4 py-4 text-slate-300 backdrop-blur sm:px-6">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600/20 text-sm font-semibold text-brand-300">LW</div>
-            <div>
-              <div className="font-semibold text-white">LAWIM</div>
-              <div className="text-xs text-slate-500">Product experience</div>
+      {!location.pathname.startsWith('/login') ? (
+        <nav aria-label="Primary" className="sticky top-0 z-20 border-b border-slate-800/80 bg-slate-950/90 px-4 py-4 text-slate-300 backdrop-blur sm:px-6">
+          <div className="mx-auto flex max-w-6xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <BrandMark slogan="LAWIM role-based workspace" />
+            <div className="flex flex-wrap gap-2 text-sm">
+              {navItems.map((item) => (
+                <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'rounded-full bg-slate-800 px-3 py-2 text-white' : 'rounded-full px-3 py-2 text-slate-400 hover:bg-slate-900 hover:text-white')}>
+                  {item.label}
+                </NavLink>
+              ))}
             </div>
           </div>
-          <div className="flex flex-wrap gap-2 text-sm">
-            {navItems.map((item) => (
-              <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'rounded-full bg-slate-800 px-3 py-2 text-white' : 'rounded-full px-3 py-2 text-slate-400 hover:bg-slate-900 hover:text-white')}>
-                {item.label}
-              </NavLink>
-            ))}
-          </div>
-        </div>
-      </nav>
+        </nav>
+      ) : null}
+      {isLoading && !isAuthenticated && !location.pathname.startsWith('/login') ? <div className="border-b border-slate-800/80 bg-slate-950 px-4 py-3 text-center text-xs uppercase tracking-[0.32em] text-slate-500">Restoring session</div> : null}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />
@@ -422,6 +826,9 @@ export function WebApp() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
         <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+        <Route path="/dashboard/admin" element={<ProtectedRoute><RoleDashboardPage role="admin" /></ProtectedRoute>} />
+        <Route path="/dashboard/agent" element={<ProtectedRoute><RoleDashboardPage role="agent" /></ProtectedRoute>} />
+        <Route path="/dashboard/owner" element={<ProtectedRoute><RoleDashboardPage role="owner" /></ProtectedRoute>} />
         <Route path="/favorites" element={<ProtectedRoute><FavoritesPage /></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
         <Route path="/requests" element={<ProtectedRoute><RequestsPage /></ProtectedRoute>} />
@@ -431,7 +838,7 @@ export function WebApp() {
         <Route path="/readiness" element={<ProductReadinessDashboardPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
-      {!isAuthenticated ? <div className="mx-auto max-w-6xl px-4 pb-4 text-sm text-slate-500">Use the Login route to authenticate and unlock protected areas.</div> : null}
+      {!isAuthenticated && !location.pathname.startsWith('/login') ? <div className="mx-auto max-w-6xl px-4 pb-4 text-sm text-slate-500">Use the Login route to authenticate and unlock protected areas.</div> : null}
     </div>
   );
 }

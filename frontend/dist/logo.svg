@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">LAWIM logo</title>
+  <desc id="desc">Blue gradient badge with LAWIM monogram</desc>
+  <defs>
+    <linearGradient id="lawim-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa" />
+      <stop offset="55%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1e3a8a" />
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#lawim-gradient)" />
+  <rect x="36" y="36" width="184" height="184" rx="40" fill="rgba(255,255,255,0.08)" />
+  <text x="128" y="152" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="74" font-weight="800" letter-spacing="6">LW</text>
+</svg>

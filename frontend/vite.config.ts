@@ -16,7 +16,7 @@ export default defineConfig({
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',
-        start_url: '/web.html',
+        start_url: '/',
         icons: [
           {
             src: 'logo.svg',
@@ -84,7 +84,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 800,
     rollupOptions: {
       input: {
-        web: path.resolve(__dirname, 'apps/web/index.html'),
+        web: path.resolve(__dirname, 'index.html'),
         admin: path.resolve(__dirname, 'apps/admin/index.html')
       },
       output: {

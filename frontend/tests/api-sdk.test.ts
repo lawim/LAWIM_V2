@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const testEnv = (import.meta as ImportMeta & { env: Record<string, string | boolean | undefined> }).env;
+const testEnv = import.meta.env as Record<string, string | boolean | undefined>;
 
 const loadApiSdkModule = async () => import('../packages/api-sdk/src');
 

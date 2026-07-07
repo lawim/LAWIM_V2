@@ -1,12 +1,15 @@
 import { create } from 'zustand';
-import { apiSdk, type AuthCredentials, type AuthSession, type UserProfile } from '@api-sdk';
+import { apiSdk, type AuthCredentials, type UserProfile } from '@api-sdk';
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
+
+export type AccessRole = 'admin' | 'agent' | 'owner';
 
 export interface AuthUser {
   id: string;
   email: string;
-  role: 'admin' | 'operator' | 'viewer';
+  name: string;
+  role: AccessRole;
 }
 
 export interface AuthState {
@@ -15,13 +18,108 @@ export interface AuthState {
   roles: string[];
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (credentials: AuthCredentials) => Promise<void>;
+  hasHydrated: boolean;
+  sessionExpired: boolean;
+  sessionUnavailable: boolean;
+  login: (credentials: AuthCredentials) => Promise<AuthUser>;
   logout: () => Promise<void>;
-  hydrate: () => Promise<void>;
+  hydrate: () => Promise<AuthUser | null>;
 }
 
 export function getUserDisplayName(user: AuthUser) {
-  return user.email.split('@')[0];
+  return user.name || user.email.split('@')[0];
+}
+
+const rolePriority: AccessRole[] = ['admin', 'agent', 'owner'];
+
+const roleAliases: Record<string, AccessRole> = {
+  admin: 'admin',
+  director: 'admin',
+  superadmin: 'admin',
+  owner: 'owner',
+  buyer: 'owner',
+  viewer: 'owner',
+  customer: 'owner',
+  agent: 'agent',
+  operator: 'agent',
+  seller: 'agent'
+};
+
+function normalizeRoleCandidate(value: unknown): AccessRole | null {
+  const normalized = String(value ?? '').trim().toLowerCase();
+  return roleAliases[normalized] ?? null;
+}
+
+export function resolvePrimaryRole(role: unknown, roles: unknown[] = []): AccessRole {
+  const candidates = [role, ...roles];
+  const normalized = candidates.map(normalizeRoleCandidate).filter((candidate): candidate is AccessRole => Boolean(candidate));
+  for (const priority of rolePriority) {
+    if (normalized.includes(priority)) {
+      return priority;
+    }
+  }
+  return 'owner';
+}
+
+export function resolveDashboardPath(role: AccessRole) {
+  return `/dashboard/${role}`;
+}
+
+function formatAuthError(message: string, context: 'login' | 'session') {
+  const lower = String(message || '').toLowerCase();
+  const statusMatch = lower.match(/\b(\d{3})\b/);
+  const status = statusMatch ? Number(statusMatch[1]) : null;
+
+  if (context === 'login') {
+    if (status === 401 || status === 403 || lower.includes('unauthorized') || lower.includes('forbidden')) {
+      return 'Incorrect email or password.';
+    }
+    if (status === 429) {
+      return 'Too many attempts. Try again later.';
+    }
+    if (status && status >= 500) {
+      return 'Server unavailable. Try again in a moment.';
+    }
+    if (lower.includes('fetch') || lower.includes('network')) {
+      return 'Server unavailable. Try again in a moment.';
+    }
+    return 'Incorrect email or password.';
+  }
+
+  if (status === 401 || status === 403 || lower.includes('unauthorized') || lower.includes('forbidden')) {
+    return 'Session expired. Please sign in again.';
+  }
+  if (status && status >= 500) {
+    return 'Server unavailable. Try again in a moment.';
+  }
+  if (lower.includes('fetch') || lower.includes('network')) {
+    return 'Server unavailable. Try again in a moment.';
+  }
+  return 'Session expired. Please sign in again.';
+}
+
+function isServerUnavailable(message: string) {
+  const lower = String(message || '').toLowerCase();
+  const statusMatch = lower.match(/\b(\d{3})\b/);
+  const status = statusMatch ? Number(statusMatch[1]) : null;
+  return Boolean((status && status >= 500) || lower.includes('fetch') || lower.includes('network'));
+}
+
+function normalizeSessionUser(user: UserProfile | undefined, role: AccessRole): AuthUser {
+  return {
+    id: String(user?.id ?? user?.email ?? 'user'),
+    email: String(user?.email ?? ''),
+    name: String(user?.name ?? user?.email?.split('@')[0] ?? 'User'),
+    role
+  };
+}
+
+function persistToken(token: string) {
+  window.localStorage.setItem('lawim_token', token);
+}
+
+function clearToken() {
+  window.localStorage.removeItem('lawim_token');
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -30,49 +128,87 @@ export const useAuthStore = create<AuthState>((set) => ({
   roles: [],
   isAuthenticated: false,
   isLoading: false,
+  hasHydrated: false,
+  sessionExpired: false,
+  sessionUnavailable: false,
   login: async (credentials) => {
     set({ isLoading: true });
     try {
       const response = await apiSdk.login(credentials);
       const token = response.data?.token;
+      const resolvedRole = resolvePrimaryRole(response.data?.user?.role, response.data?.roles);
+      const normalizedRoles = Array.from(new Set([resolvedRole, ...(response.data?.roles ?? []).map(normalizeRoleCandidate).filter((candidate): candidate is AccessRole => Boolean(candidate))]));
       if (!token) {
-        throw new Error(response.message && response.message !== 'ok' && response.message !== 'mock' ? response.message : 'Authentication failed');
+        throw new Error(formatAuthError(response.message ?? 'Authentication failed', 'login'));
       }
       if (response.message !== 'ok' && response.message !== 'mock') {
-        throw new Error(response.message || 'Authentication failed');
+        throw new Error(formatAuthError(response.message ?? 'Authentication failed', 'login'));
       }
-      window.localStorage.setItem('lawim_token', token);
+      persistToken(token);
+      const user = normalizeSessionUser(response.data.user, resolvedRole);
       set({
-        user: response.data.user as AuthUser,
+        user,
         token,
-        roles: response.data.roles,
-        isAuthenticated: true
+        roles: normalizedRoles,
+        isAuthenticated: true,
+        hasHydrated: true,
+        sessionExpired: false,
+        sessionUnavailable: false
       });
+      return user;
+    } catch (error) {
+      clearToken();
+      set({ user: null, token: null, roles: [], isAuthenticated: false, hasHydrated: true, sessionExpired: false, sessionUnavailable: false });
+      throw error;
     } finally {
       set({ isLoading: false });
     }
   },
   logout: async () => {
     await apiSdk.logout();
-    window.localStorage.removeItem('lawim_token');
-    set({ user: null, token: null, roles: [], isAuthenticated: false, isLoading: false });
+    clearToken();
+    set({ user: null, token: null, roles: [], isAuthenticated: false, isLoading: false, hasHydrated: true, sessionExpired: false, sessionUnavailable: false });
   },
   hydrate: async () => {
     set({ isLoading: true });
-    const response = await apiSdk.getSession();
-    if (response.data?.token) {
-      window.localStorage.setItem('lawim_token', response.data.token);
-      set({ user: response.data.user as AuthUser, token: response.data.token, roles: response.data.roles, isAuthenticated: true, isLoading: false });
-    } else {
-      window.localStorage.removeItem('lawim_token');
-      set({ user: null, token: null, roles: [], isAuthenticated: false, isLoading: false });
+    const hadStoredToken = Boolean(window.localStorage.getItem('lawim_token'));
+    try {
+      const response = await apiSdk.getSession();
+      if (response.data?.token) {
+        const resolvedRole = resolvePrimaryRole(response.data.user?.role, response.data.roles);
+        const normalizedRoles = Array.from(new Set([resolvedRole, ...(response.data.roles ?? []).map(normalizeRoleCandidate).filter((candidate): candidate is AccessRole => Boolean(candidate))]));
+        persistToken(response.data.token);
+        const user = normalizeSessionUser(response.data.user, resolvedRole);
+        set({ user, token: response.data.token, roles: normalizedRoles, isAuthenticated: true, isLoading: false, hasHydrated: true, sessionExpired: false, sessionUnavailable: false });
+        return user;
+      }
+      const unavailable = isServerUnavailable(response.message || '');
+      clearToken();
+      set({ user: null, token: null, roles: [], isAuthenticated: false, isLoading: false, hasHydrated: true, sessionExpired: hadStoredToken && !unavailable, sessionUnavailable: unavailable });
+      return null;
+    } catch (error) {
+      const unavailable = isServerUnavailable(error instanceof Error ? error.message : '');
+      clearToken();
+      set({ user: null, token: null, roles: [], isAuthenticated: false, isLoading: false, hasHydrated: true, sessionExpired: hadStoredToken && !unavailable, sessionUnavailable: unavailable });
+      return null;
     }
   }
 }));
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
+  const sessionExpired = useAuthStore((state) => state.sessionExpired);
+  const sessionUnavailable = useAuthStore((state) => state.sessionUnavailable);
+
+  if (!hasHydrated || isLoading) {
+    return <div className="min-h-screen bg-slate-950 text-slate-100" />;
+  }
+
+  const reason = sessionUnavailable ? 'server_unavailable' : sessionExpired ? 'session_expired' : 'unauthorized';
+
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace state={{ reason }} />;
 }
 
 export function useAuthUser() {
