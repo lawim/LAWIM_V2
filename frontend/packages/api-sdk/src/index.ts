@@ -102,8 +102,14 @@ export interface AssistantReply {
 
 const mockDelay = () => Promise.resolve();
 const env = (import.meta as ImportMeta & { env?: Record<string, string | boolean | undefined> }).env ?? {};
-const apiBase = String(env.VITE_LAWIM_API_URL ?? '/api').replace(/\/$/, '');
 const useMocks = env.VITE_LAWIM_USE_MOCKS === 'true';
+let apiBaseOverride: string | null = null;
+
+export function setApiBaseForTesting(value: string | null) {
+  apiBaseOverride = value ? value.replace(/\/$/, '') || '/api' : null;
+}
+
+const getApiBase = () => apiBaseOverride ?? (String(env.VITE_LAWIM_API_URL ?? '').replace(/\/$/, '') || '/api');
 
 const readStorageToken = () => {
   if (typeof window === 'undefined') return null;
@@ -137,11 +143,13 @@ const normalizePayload = <T>(payload: unknown, fallback: T): T => {
 
 const resolveUrl = (path: string) => {
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
-  if (path.startsWith('/api/auth')) return `${apiBase}${path}`;
-  if (path.startsWith('/api/v2')) return `${apiBase}${path}`;
-  if (path.startsWith('/auth')) return `${apiBase}/auth${path}`;
-  if (path.startsWith('/v2')) return `${apiBase}${path}`;
-  return `${apiBase}/v2${path}`;
+  const apiBase = getApiBase();
+  const apiRoot = apiBase.endsWith('/api') ? apiBase : `${apiBase}/api`;
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  if (normalizedPath.startsWith('/api/')) {
+    return apiBase.endsWith('/api') ? `${apiBase}${normalizedPath.slice(4)}` : `${apiBase}${normalizedPath}`;
+  }
+  return `${apiRoot}${normalizedPath}`;
 };
 
 const requestJson = async <T>(path: string, init: RequestInit = {}, fallback: T): Promise<ApiResponse<T>> => {

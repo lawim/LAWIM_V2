@@ -939,6 +939,17 @@ function applyJourney(journey) {
   }
 }
 
+function journeyForRole(role) {
+  const normalizedRole = String(role || "").toLowerCase();
+  if (normalizedRole === "admin") {
+    return "admin";
+  }
+  if (normalizedRole === "agent") {
+    return "seller";
+  }
+  return "buyer";
+}
+
 async function loadAdminDashboard() {
   if (!refs.adminDashboard || !state.token) {
     return;
@@ -1846,8 +1857,9 @@ async function handleLogin(event) {
     });
     state.token = payload.token;
     localStorage.setItem("lawim.token", state.token);
-    setNotice(`Authenticated as ${payload.user.email}`, "success");
     await refresh();
+    applyJourney(journeyForRole(payload.user.role));
+    setNotice(`Authenticated as ${payload.user.email}`, "success");
   } catch (error) {
     setNotice(error.message, "error");
   }
@@ -2064,7 +2076,7 @@ async function handleRegister(event) {
     });
     state.token = payload.token;
     localStorage.setItem("lawim.token", state.token);
-    applyJourney(form.get("role") === "agent" ? "seller" : "buyer");
+    applyJourney(journeyForRole(form.get("role")));
     setNotice(`Registered as ${payload.user.email}`, "success");
     await refresh();
   } catch (error) {

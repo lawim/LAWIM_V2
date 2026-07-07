@@ -1,8 +1,11 @@
 import '@testing-library/jest-dom/vitest';
-import { describe, it, expect } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { apiSdk } from '@api-sdk';
+import { useAuthStore } from '@auth';
 import { WebApp } from '../apps/web/src/App';
 import { AdminApp } from '../apps/admin/src/App';
 import { WorkflowOrchestratorPage } from '../apps/web/src/WorkflowOrchestratorPage';
@@ -12,14 +15,31 @@ import { BackupCenterPage } from '../apps/admin/src/BackupCenterPage';
 import { BackupManagerPage } from '../apps/admin/src/BackupManagerPage';
 import { StorageSetupWizardPage } from '../apps/admin/src/StorageSetupWizardPage';
 
-function renderWithProviders(ui: React.ReactElement) {
+function renderWithProviders(ui: React.ReactElement, initialEntries: string[] = ['/']) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter>{ui}</MemoryRouter>
+      <MemoryRouter initialEntries={initialEntries}>{ui}</MemoryRouter>
     </QueryClientProvider>
   );
 }
+
+beforeEach(() => {
+  useAuthStore.setState({
+    user: null,
+    token: null,
+    roles: [],
+    isAuthenticated: false,
+    isLoading: false
+  });
+  window.localStorage.clear();
+  vi.restoreAllMocks();
+});
+
+afterEach(() => {
+  window.localStorage.clear();
+  vi.restoreAllMocks();
+});
 
 describe('LAWIM frontend shell', () => {
   it('renders the public web app shell', () => {
@@ -34,6 +54,70 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />);
 
     expect(screen.getByRole('navigation', { name: /primary/i })).toBeInTheDocument();
+  });
+
+  it('logs in and redirects the web app to the dashboard', async () => {
+    const user = userEvent.setup();
+    vi.spyOn(apiSdk, 'login').mockResolvedValue({
+      data: {
+        user: {
+          id: 'u-1',
+          name: 'Admin User',
+          role: 'admin',
+          email: 'admin@lawim.local'
+        },
+        token: 'live-token',
+        roles: ['admin']
+      },
+      message: 'ok'
+    });
+    vi.spyOn(apiSdk, 'getDashboardSummary').mockResolvedValue({
+      data: {
+        properties: 8,
+        opportunities: 3,
+        communications: 2,
+        pendingTasks: 1
+      },
+      message: 'ok'
+    });
+
+    renderWithProviders(<WebApp />, ['/login']);
+
+    await user.type(screen.getByLabelText(/email/i), 'admin@lawim.local');
+    await user.type(screen.getByLabelText(/password/i), 'lawim-demo');
+    await user.click(screen.getByRole('button', { name: /sign in/i }));
+
+    expect(await screen.findByRole('heading', { name: /dashboard/i })).toBeInTheDocument();
+    expect(screen.getByText(/follow the latest opportunities and actions in one place/i)).toBeInTheDocument();
+    expect(window.localStorage.getItem('lawim_token')).toBe('live-token');
+    expect(apiSdk.login).toHaveBeenCalledWith({ email: 'admin@lawim.local', password: 'lawim-demo' });
+  });
+
+  it('surfaces a login error when the session payload does not include a token', async () => {
+    const user = userEvent.setup();
+    vi.spyOn(apiSdk, 'login').mockResolvedValue({
+      data: {
+        user: {
+          id: 'u-1',
+          name: 'Admin User',
+          role: 'admin',
+          email: 'admin@lawim.local'
+        },
+        token: '',
+        roles: ['admin']
+      },
+      message: 'ok'
+    });
+
+    renderWithProviders(<WebApp />, ['/login']);
+
+    await user.type(screen.getByLabelText(/email/i), 'admin@lawim.local');
+    await user.type(screen.getByLabelText(/password/i), 'lawim-demo');
+    await user.click(screen.getByRole('button', { name: /sign in/i }));
+
+    expect(await screen.findByText(/authentication failed/i)).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /dashboard/i })).not.toBeInTheDocument();
+    expect(window.localStorage.getItem('lawim_token')).toBeNull();
   });
 
   it('renders the administration shell', () => {

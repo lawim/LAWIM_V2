@@ -291,9 +291,10 @@ function ContactPage() {
 function LoginPage() {
   const login = useAuthStore((state) => state.login);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ tone: 'success' | 'error'; text: string } | null>(null);
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
@@ -305,8 +306,26 @@ function LoginPage() {
         <div className="grid gap-4">
           <Input label="Email" placeholder="name@lawim.com" value={email} onChange={(event) => setEmail(event.target.value)} />
           <Input label="Password" placeholder="••••••••" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-          <Button onClick={() => void (async () => { await login({ email, password }); setMessage('Signed in successfully'); })()}>Continue</Button>
-          {message ? <p className="text-sm text-emerald-300">{message}</p> : null}
+          <Button
+            type="button"
+            disabled={isLoading}
+            onClick={() =>
+              void (async () => {
+                try {
+                  await login({ email, password });
+                  setMessage({ tone: 'success', text: 'Signed in successfully' });
+                } catch (error) {
+                  setMessage({
+                    tone: 'error',
+                    text: error instanceof Error ? error.message : 'Unable to sign in'
+                  });
+                }
+              })()
+            }
+          >
+            Sign in
+          </Button>
+          {message ? <p className={`text-sm ${message.tone === 'error' ? 'text-rose-300' : 'text-emerald-300'}`}>{message.text}</p> : null}
         </div>
       </Card>
     </PageShell>

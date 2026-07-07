@@ -32,11 +32,23 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoading: false,
   login: async (credentials) => {
     set({ isLoading: true });
-    const response = await apiSdk.login(credentials);
-    if (response.data?.token) {
-      window.localStorage.setItem('lawim_token', response.data.token);
-      set({ user: response.data.user as AuthUser, token: response.data.token, roles: response.data.roles, isAuthenticated: true, isLoading: false });
-    } else {
+    try {
+      const response = await apiSdk.login(credentials);
+      const token = response.data?.token;
+      if (!token) {
+        throw new Error(response.message && response.message !== 'ok' && response.message !== 'mock' ? response.message : 'Authentication failed');
+      }
+      if (response.message !== 'ok' && response.message !== 'mock') {
+        throw new Error(response.message || 'Authentication failed');
+      }
+      window.localStorage.setItem('lawim_token', token);
+      set({
+        user: response.data.user as AuthUser,
+        token,
+        roles: response.data.roles,
+        isAuthenticated: true
+      });
+    } finally {
       set({ isLoading: false });
     }
   },
@@ -70,4 +82,3 @@ export function useAuthUser() {
 export function useAuthRoles() {
   return useAuthStore((state) => state.roles);
 }
-

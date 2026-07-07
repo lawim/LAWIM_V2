@@ -126,6 +126,9 @@ class BetaUiRegressionTest(LawimTestHarness):
             "media-preview",
             "formatApiError",
             "notification-unread-count",
+            "function journeyForRole",
+            "applyJourney(journeyForRole(payload.user.role));",
+            'applyJourney(journeyForRole(form.get("role")));',
         ):
             self.assertIn(marker, app_js)
 
