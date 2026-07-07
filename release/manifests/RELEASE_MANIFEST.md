@@ -2,11 +2,11 @@
 
 ## Snapshot
 
-- Release family: LAWIM_V2 Gate 1
-- Snapshot id: `release-program-aae-bootstrap-2-bc46a686`
-- Source commit: `bc46a686`
-- Git tag: `pre-ovh-final`
-- Purpose: reproducible release projection before Gate 2 migration
+- Release family: LAWIM Experience 1.0
+- Snapshot id: `release-program-j-lawim-experience-1.0-778ab779`
+- Source commit: `778ab779bcd69a585a29e0ac42b74f331df7538e`
+- Git tag: `release-program-j-lawim-experience-1.0`
+- Purpose: reproducible release projection before OVH promotion
 
 ## Runtime baseline
 
@@ -62,6 +62,35 @@
 - `ops/ovh/`
 - `OPS/`
 - `tests/`
+- `frontend/tests/`
+- `frontend/docs/`
+- `frontend/reports/`
+- `frontend/node_modules/`
+- `frontend/dist/`
+- `frontend/**/*.test.ts`
+- `frontend/**/*.test.tsx`
+- `frontend/**/*.spec.ts`
+- `frontend/**/*.spec.tsx`
+- `scripts/benchmark_runtime.py`
+- `scripts/bench_hot_paths.py`
+- `scripts/generate_program_l_tests.py`
+- `scripts/smoke_runtime.py`
+- `scripts/smoke_postgres.py`
+- `scripts/run-compose-dev.sh`
+- `scripts/run-compose-staging.sh`
+- `scripts/run-compose-postgres.sh`
+- `scripts/run-local.sh`
+- `deployment/runbook/`
+- `deployment/checklists/`
+- `deployment/tests/`
+- `deployment/validator/`
+- `deployment/acceptance/`
+- `deployment/orchestrator/`
+- `deployment/release-z/`
+- `deployment/backup/backup-policy.md`
+- `deployment/environments/production/*.md`
+- `compose/README.md`
+- `code/lawim_v2/migration.py`
 - caches, logs, temp files, backups, archives, and generated build outputs
 - local-only migration scaffold files
 - real secrets and runtime secret material
