@@ -15,6 +15,7 @@ import {
   Select,
   Textarea,
   LAWIM_BRAND_SLOGAN,
+  LAWIM_OFFICIAL_CONTACT,
   translate,
   useLanguage
 } from '@ui';
@@ -156,6 +157,77 @@ function EmptyState({ label }: { label: string }) {
   return <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/40 p-6 text-sm text-slate-400">{label}</div>;
 }
 
+function OfficialContactGrid({ tone = 'light', className = '' }: { tone?: 'light' | 'dark'; className?: string }) {
+  const { t } = useTranslator();
+  const phoneDigits = LAWIM_OFFICIAL_CONTACT.phoneInternational.replace(/[^0-9]/g, '');
+  const items = [
+    {
+      icon: '🌐',
+      label: t('auth.contact.website'),
+      value: LAWIM_OFFICIAL_CONTACT.websiteUrl.replace(/^https?:\/\//, ''),
+      href: LAWIM_OFFICIAL_CONTACT.websiteUrl,
+      external: true
+    },
+    {
+      icon: '✉️',
+      label: t('auth.contact.email'),
+      value: LAWIM_OFFICIAL_CONTACT.supportEmail,
+      href: `mailto:${LAWIM_OFFICIAL_CONTACT.supportEmail}`,
+      external: false
+    },
+    {
+      icon: '📞',
+      label: t('auth.contact.phone'),
+      value: LAWIM_OFFICIAL_CONTACT.phoneInternational,
+      href: `tel:+${phoneDigits}`,
+      external: false
+    },
+    {
+      icon: '💬',
+      label: t('auth.contact.whatsapp'),
+      value: LAWIM_OFFICIAL_CONTACT.whatsappUsername,
+      href: `https://wa.me/${phoneDigits}`,
+      external: true
+    },
+    {
+      icon: 'f',
+      label: t('auth.contact.facebook'),
+      value: LAWIM_OFFICIAL_CONTACT.facebookUsername,
+      href: `https://facebook.com/${LAWIM_OFFICIAL_CONTACT.facebookUsername.replace(/^@/, '')}`,
+      external: true
+    }
+  ];
+
+  const itemClasses =
+    tone === 'light'
+      ? 'border-slate-200/80 bg-white/80 text-slate-800 shadow-sm hover:border-brand-500/30'
+      : 'border-white/10 bg-white/5 text-slate-100 hover:border-brand-500/30';
+  const labelClasses = tone === 'light' ? 'text-slate-500' : 'text-slate-400';
+
+  return (
+    <div className={`grid gap-3 sm:grid-cols-2 lg:grid-cols-3 ${className}`.trim()}>
+      {items.map((item) => (
+        <a
+          key={item.label}
+          className={`flex items-start gap-3 rounded-2xl border px-3 py-3 transition hover:-translate-y-0.5 hover:no-underline ${itemClasses}`}
+          href={item.href}
+          target={item.external ? '_blank' : undefined}
+          rel={item.external ? 'noreferrer' : undefined}
+          aria-label={`${item.label} ${item.value}`}
+        >
+          <span className="mt-0.5 text-base" aria-hidden="true">
+            {item.icon}
+          </span>
+          <span className="grid gap-0.5">
+            <span className={`text-[0.68rem] uppercase tracking-[0.22em] ${labelClasses}`}>{item.label}</span>
+            <strong className="text-sm font-semibold">{item.value}</strong>
+          </span>
+        </a>
+      ))}
+    </div>
+  );
+}
+
 function HomePage() {
   const user = useAuthStore((state) => state.user);
   const roles = useAuthStore((state) => state.roles);
@@ -169,7 +241,7 @@ function HomePage() {
     <PageShell
       eyebrow={t('app.name')}
       title={t('dashboard.title')}
-      description={t('auth.login.banner.note')}
+      description={t('dashboard.subtitle')}
       actions={
         <>
           <Button type="button" onClick={() => navigate('/login')}>
@@ -206,7 +278,7 @@ function HomePage() {
             </Button>
           </div>
         </Card>
-        <Card title={t('dashboard.whats_next')} description={t('auth.login.banner.restore')}>
+        <Card title={t('dashboard.whats_next')} description={t('dashboard.subtitle')}>
           <div className="space-y-3 text-sm text-slate-300">
             <p>• {t('auth.login.email')} + {t('auth.login.password')}.</p>
             <p>• {t('dashboard.return_dashboard')}.</p>
@@ -216,7 +288,7 @@ function HomePage() {
         <div className="mt-5 rounded-2xl border border-brand-500/20 bg-brand-500/10 p-4 text-sm text-brand-100">
           {isAuthenticated
             ? t('dashboard.greeting', { name: user?.name || user?.email || t('shared.user') })
-            : t('auth.login.banner.note')}
+            : t('dashboard.subtitle')}
         </div>
       </Card>
       </div>
@@ -421,14 +493,27 @@ function ContactPage() {
   const { t } = useTranslator();
   return (
     <PageShell eyebrow={t('module.contact.title')} title={t('contact.title')} description={t('contact.description')}>
-      <Card title={t('contact.title')} description={t('contact.description')}>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Input label={t('contact.name')} placeholder="Your name" />
-          <Input label={t('contact.email')} placeholder="you@company.com" />
-          <Textarea label={t('contact.message')} placeholder={t('contact.placeholder')} className="md:col-span-2" />
-          <Button className="md:col-span-2">{t('contact.send')}</Button>
-        </div>
-      </Card>
+      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <Card title={t('contact.title')} description={t('contact.description')}>
+          <OfficialContactGrid tone="dark" />
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button type="button" onClick={() => window.location.assign(`mailto:${LAWIM_OFFICIAL_CONTACT.supportEmail}`)}>
+              {t('nav.contact')}
+            </Button>
+            <Button type="button" variant="secondary" onClick={() => window.location.assign(LAWIM_OFFICIAL_CONTACT.websiteUrl)}>
+              {LAWIM_OFFICIAL_CONTACT.websiteUrl.replace(/^https?:\/\//, '')}
+            </Button>
+          </div>
+        </Card>
+        <Card title={t('contact.title')} description={t('contact.description')}>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Input label={t('contact.name')} placeholder="Your name" />
+            <Input label={t('contact.email')} placeholder="you@company.com" />
+            <Textarea label={t('contact.message')} placeholder={t('contact.placeholder')} className="md:col-span-2" />
+            <Button className="md:col-span-2">{t('contact.send')}</Button>
+          </div>
+        </Card>
+      </div>
     </PageShell>
   );
 }
@@ -623,7 +708,6 @@ function DashboardHomePage() {
                 <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">{t('dashboard.greeting', { name: userName })}</h1>
                 <Badge variant="info">{roleLabel}</Badge>
               </div>
-              <p className="max-w-3xl text-sm leading-7 text-slate-300">{t('dashboard.identity', { role: roleLabel })}</p>
               <div className="flex flex-wrap gap-3 text-xs uppercase tracking-[0.28em] text-slate-400">
                 <span>{t('dashboard.activity_today')}</span>
                 <span>•</span>
@@ -954,7 +1038,7 @@ function RoleDashboardPage({ role }: { role: AccessRole }) {
     <PageShell
       eyebrow={config.eyebrow}
       title={config.title}
-      description={`${config.description} Connecté en tant que ${user?.name || user?.email || 'utilisateur'}.`}
+      description={config.description}
       actions={
         <>
           <Button type="button" onClick={() => navigate('/search')}>
@@ -1038,155 +1122,118 @@ function LoginPage() {
       ? t('auth.login.banner.server_unavailable')
       : reason === 'session_expired'
         ? t('auth.login.banner.session_expired')
-        : reason === 'unauthorized'
-          ? t('auth.login.banner.unauthorized')
-          : null;
+      : reason === 'unauthorized'
+        ? t('auth.login.banner.unauthorized')
+        : null;
+  const statusMessage = message ?? (loginBanner ? { tone: 'info' as const, text: loginBanner } : null);
+  const isRestoring = (!hasHydrated || isLoading) && !email && !password && !message;
+  const openSupportRequest = (subject: string) => {
+    window.location.href = `mailto:${LAWIM_OFFICIAL_CONTACT.supportEmail}?subject=${encodeURIComponent(subject)}`;
+  };
 
   if (isAuthenticated) {
     return <Navigate to={resolveDashboardPath(role)} replace />;
   }
 
-  if ((!hasHydrated || isLoading) && !email && !password && !message) {
-    return (
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(216,180,106,0.2),_rgba(255,250,240,0.96)_36%,_rgba(243,238,230,0.94)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
-        <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col justify-between gap-10">
-          <div className="flex items-center justify-between">
-            <BrandMark tone="light" slogan={LAWIM_BRAND_SLOGAN} />
-            <div className="flex items-center gap-3">
-              <LanguageSwitcher compact />
-              <Badge variant="info">{t('auth.session.restoring')}</Badge>
-            </div>
-          </div>
-          <div className="flex flex-1 items-center justify-center">
-            <div className="rounded-[2rem] border border-white/70 bg-white/90 px-8 py-10 text-center shadow-[0_24px_90px_rgba(15,23,42,0.14)] backdrop-blur">
-              <p className="text-sm uppercase tracking-[0.32em] text-slate-500">LAWIM</p>
-              <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">{t('auth.session.restoring')}</h1>
-              <p className="mt-2 text-sm leading-7 text-slate-600">{t('auth.login.banner.restore')}</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(216,180,106,0.2),_rgba(255,250,240,0.96)_36%,_rgba(243,238,230,0.94)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
-      <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col justify-between gap-10">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <BrandMark tone="light" slogan={LAWIM_BRAND_SLOGAN} />
-          <div className="flex items-center gap-3">
-            <LanguageSwitcher compact />
-            <Badge variant="info">{t('auth.login.banner.note')}</Badge>
-          </div>
+      <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-2xl flex-col">
+        <div className="flex justify-end">
+          <LanguageSwitcher compact />
         </div>
 
-        <div className="grid flex-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <section className="space-y-8">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-brand-700">{t('nav.login')}</p>
-              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">{t('auth.login.title')}</h1>
-              <p className="mt-4 max-w-xl text-base leading-8 text-slate-600">{t('auth.login.subtitle')}</p>
+        <div className="flex flex-1 items-center justify-center py-6">
+          <section className="w-full rounded-[2rem] border border-white/80 bg-white/95 p-6 shadow-[0_24px_90px_rgba(15,23,42,0.14)] backdrop-blur sm:p-8">
+            <h1 className="sr-only">{t('auth.login.title')}</h1>
+
+            <div className="flex flex-col items-center gap-4 text-center">
+              <BrandMark tone="light" showWordmark={false} slogan={LAWIM_BRAND_SLOGAN} sloganClassName="text-lg font-serif italic tracking-normal text-slate-600" />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-                <Badge variant="info">{t('role.admin')}</Badge>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{t('role.admin')}</p>
-              </div>
-              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-                <Badge variant="success">{t('role.manager')}</Badge>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{t('dashboard.priorities')}</p>
-              </div>
-              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-                <Badge variant="warning">{t('role.operator')}</Badge>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{t('dashboard.activity_today')}</p>
-              </div>
-              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-                <Badge variant="info">{t('role.partner')}</Badge>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{t('module.partners.description')}</p>
-              </div>
-              <div className="rounded-[1.5rem] border border-white/80 bg-white/80 p-4 shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-                <Badge variant="warning">{t('role.user')}</Badge>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{t('module.documents.description')}</p>
-              </div>
-            </div>
+            <OfficialContactGrid tone="light" className="mt-6" />
 
-            <div className="rounded-[1.75rem] border border-brand-500/20 bg-brand-500/10 p-5 text-sm leading-7 text-slate-700">
-              {loginBanner ? loginBanner : t('auth.login.banner.note')}
-            </div>
-          </section>
-
-          <section className="rounded-[2rem] border border-white/80 bg-white/95 p-8 shadow-[0_24px_90px_rgba(15,23,42,0.14)] backdrop-blur">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-500">{t('auth.login.title')}</p>
-                <h2 className="mt-2 text-2xl font-semibold text-slate-950">{t('auth.login.title')}</h2>
+            {statusMessage ? (
+              <div
+                className={`mt-6 rounded-2xl border px-4 py-3 text-sm ${
+                  statusMessage.tone === 'error'
+                    ? 'border-rose-200 bg-rose-50 text-rose-700'
+                    : statusMessage.tone === 'success'
+                      ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                      : 'border-brand-500/20 bg-brand-500/10 text-slate-700'
+                }`}
+              >
+                {statusMessage.text}
               </div>
-              <Badge variant="success">{t('auth.login.button')}</Badge>
-            </div>
+            ) : null}
 
-            <form
-              className="mt-7 space-y-4"
-              onSubmit={(event) =>
-                void (async () => {
-                  event.preventDefault();
-                  try {
-                    const session = await login({ email, password });
-                    traceAuth('LOGIN_OK', { email: session.email, role: session.role });
-                    traceAuth('ROLE_RESOLVED', { role: session.role, source: 'payload.user.role or payload.roles' });
-                    const path = resolveDashboardPath(session.role);
-                    traceAuth('DASHBOARD_SELECTED', { role: session.role, path });
-                    traceAuth('APPLY_JOURNEY', { role: session.role, path });
-                    navigate(path, { replace: true });
-                  } catch (error) {
-                    setMessage({
-                      tone: 'error',
-                      text: error instanceof Error ? error.message : t('errors.generic')
-                    });
+            {isRestoring ? (
+              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600">
+                {t('auth.session.restoring')}
+              </div>
+            ) : (
+              <>
+                <form
+                  className="mt-6 space-y-4"
+                  onSubmit={(event) =>
+                    void (async () => {
+                      event.preventDefault();
+                      try {
+                        const session = await login({ email, password });
+                        traceAuth('LOGIN_OK', { email: session.email, role: session.role });
+                        traceAuth('ROLE_RESOLVED', { role: session.role, source: 'payload.user.role or payload.roles' });
+                        const path = resolveDashboardPath(session.role);
+                        traceAuth('DASHBOARD_SELECTED', { role: session.role, path });
+                        traceAuth('APPLY_JOURNEY', { role: session.role, path });
+                        navigate(path, { replace: true });
+                      } catch (error) {
+                        setMessage({
+                          tone: 'error',
+                          text: error instanceof Error ? error.message : t('errors.generic')
+                        });
+                      }
+                    })()
                   }
-                })()
-              }
-            >
-              <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
-                <span>{t('auth.login.email')}</span>
-                <input
-                  className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
-                  placeholder="name@lawim.app"
-                  autoComplete="username"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  required
-                  type="email"
-                />
-              </label>
-              <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
-                <span>{t('auth.login.password')}</span>
-                <input
-                  className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  required
-                  type="password"
-                />
-              </label>
+                >
+                  <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                    <span>{t('auth.login.email')}</span>
+                    <input
+                      className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                      placeholder="name@lawim.app"
+                      autoComplete="username"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      required
+                      type="email"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                    <span>{t('auth.login.password')}</span>
+                    <input
+                      className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                      placeholder="••••••••"
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      required
+                      type="password"
+                    />
+                  </label>
 
-              {message ? (
-                <div className={`rounded-2xl border px-4 py-3 text-sm ${message.tone === 'error' ? 'border-rose-200 bg-rose-50 text-rose-700' : 'border-emerald-200 bg-emerald-50 text-emerald-700'}`}>
-                  {message.text}
+                  <Button className="w-full justify-center py-3 text-base" disabled={isLoading} type="submit">
+                    {isLoading ? t('auth.login.connecting') : t('auth.login.button')}
+                  </Button>
+                </form>
+
+                <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                  <Button className="justify-center" type="button" variant="secondary" onClick={() => openSupportRequest('LAWIM - Mot de passe oublié')}>
+                    {t('auth.login.forgot')}
+                  </Button>
+                  <Button className="justify-center" type="button" variant="secondary" onClick={() => openSupportRequest('LAWIM - Création de compte')}>
+                    {t('auth.login.create')}
+                  </Button>
                 </div>
-              ) : null}
-
-              <Button className="w-full justify-center py-3 text-base" disabled={isLoading} type="submit">
-                {isLoading ? t('auth.login.connecting') : t('auth.login.button')}
-              </Button>
-            </form>
-
-            <div className="mt-6 flex items-center justify-between text-xs uppercase tracking-[0.28em] text-slate-400">
-              <span>LAWIM</span>
-              <span>LAWIM</span>
-            </div>
+              </>
+            )}
           </section>
         </div>
       </div>
@@ -1286,10 +1333,8 @@ function WebAppContent() {
       {!isLoginRoute ? (
         isAuthenticated ? (
           <header className="sticky top-0 z-20 border-b border-slate-800/80 bg-slate-950/90 px-4 py-4 text-slate-300 backdrop-blur sm:px-6">
-            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
-              <BrandMark slogan={LAWIM_BRAND_SLOGAN} />
+            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-end gap-4">
               <div className="flex flex-wrap items-center gap-3">
-                <LanguageSwitcher compact />
                 <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-2">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-semibold text-white">{initials}</div>
                   <div className="leading-tight">

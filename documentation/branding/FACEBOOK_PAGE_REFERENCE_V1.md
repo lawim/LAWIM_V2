@@ -18,9 +18,7 @@ La marque est toujours désignée par son nom officiel :
 LAWIM
 
 Signature officielle
-L'immobilier, autrement.
-Lorsque l'espace le permet :
-L'immobilier, autrement. En toute confiance.
+L’immobilier autrement.
 
 2. Positionnement
 LAWIM est une plateforme d'accompagnement immobilier pensée pour les réalités du Cameroun.
@@ -42,14 +40,14 @@ Catégorie secondaire
 Spécialiste en immobilier
 
 5. Bio
-🏠 L'immobilier, autrement. Nous comprenons votre projet avant de vous orienter.
+🏠 L’immobilier autrement. Nous comprenons votre projet avant de vous orienter.
 
 6. Description courte
 🏠 Achat • Vente • Location • Terrains • Investissement
 🤝 Accompagnement immobilier personnalisé
 📍 Cameroun
 📲 WhatsApp : +237 686 822 667
-L'immobilier, autrement.
+L’immobilier autrement.
 
 7. Description complète
 Bienvenue chez LAWIM.
@@ -88,8 +86,7 @@ Telegram Bot
 E-mail
 contact@lawim.app
 Site web
-https://lawim.cm
-(À renseigner dès la mise en ligne du site.)
+https://lawim.app
 
 9. Zone de service
 🇨🇲 Cameroun
@@ -200,11 +197,11 @@ Les références seront ajoutées progressivement avec les premiers partenaires,
 17. Mentions légales
 Texte officiel validé.
 Une page dédiée sera publiée sur :
-https://lawim.cm/legal
+https://lawim.app/legal
 
 18. Politique de confidentialité
 Une page dédiée sera publiée sur :
-https://lawim.cm/privacy
+https://lawim.app/privacy
 
 19. Photo de profil
 Logo officiel LAWIM.
@@ -217,7 +214,7 @@ Résolution minimale : 1024 × 1024 px.
     • Logo LAWIM.
     • Architecture moderne.
     • Environnement camerounais.
-    • Slogan : L'immobilier, autrement.
+    • Slogan : L’immobilier autrement.
     • Message : Votre projet mérite plus qu'une annonce. Il mérite un accompagnement.
 
 21. Bouton principal
@@ -253,4 +250,4 @@ Nous comprenons votre projet avant de vous orienter.
 
 25. Signature finale
 LAWIM
-L'immobilier, autrement.
+L’immobilier autrement.

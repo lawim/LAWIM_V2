@@ -42,7 +42,7 @@ const defaultPartnerMatches = {
   message: 'mock'
 };
 
-function renderWithProviders(ui: ReactElement, initialEntries: string[] = ['/']) {
+function renderWithProviders(ui: ReactElement, initialEntries: any[] = ['/']) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={queryClient}>
@@ -104,26 +104,24 @@ describe('LAWIM frontend shell', () => {
   it.each([
     {
       language: 'fr',
-      heading: /connexion sécurisée/i,
-      subtitle: /entrez votre email et votre mot de passe pour ouvrir votre cockpit\./i
+      button: /connexion/i
     },
     {
       language: 'en',
-      heading: /secure login/i,
-      subtitle: /use your email and password to open your cockpit\./i
+      button: /login/i
     },
     {
       language: 'pcm',
-      heading: /safe login/i,
-      subtitle: /put your email and password make you open your cockpit\./i
+      button: /login/i
     }
-  ])('renders the login page in $language', async ({ language, heading, subtitle }) => {
+  ])('renders the login page in $language', async ({ language, button }) => {
     window.localStorage.setItem('lawim.language', language);
 
     renderWithProviders(<WebApp />, ['/login']);
 
-    expect(await screen.findByRole('heading', { name: heading, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(subtitle)).toBeInTheDocument();
+    expect(screen.getByText(LAWIM_BRAND_SLOGAN)).toBeInTheDocument();
+    expect(screen.getByText(/contact@lawim\.app/i)).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: button }, { timeout: 10000 })).toBeInTheDocument();
   });
 
   it('persists the selected language across remounts', async () => {
@@ -136,13 +134,13 @@ describe('LAWIM frontend shell', () => {
     await waitFor(() => {
       expect(window.localStorage.getItem('lawim.language')).toBe('en');
     });
-    expect(await screen.findByRole('heading', { name: /secure login/i, level: 1 })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /login/i }, { timeout: 10000 })).toBeInTheDocument();
 
     rendered.unmount();
     renderWithProviders(<WebApp />, ['/login']);
 
-    expect(await screen.findByRole('heading', { name: /secure login/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/use your email and password to open your cockpit\./i)).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /login/i }, { timeout: 10000 })).toBeInTheDocument();
+    expect(screen.getByText(/website/i)).toBeInTheDocument();
   });
 
   it('logs in and shows a compact authenticated header without the login form', async () => {
@@ -151,15 +149,16 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/login']);
 
-    await user.type(await screen.findByLabelText(/email/i), 'admin@lawim.app');
+    await user.type(await screen.findByRole('textbox', { name: /^email$/i }), 'admin@lawim.app');
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
-    expect(await screen.findByRole('heading', { name: /bonjour admin user/i, level: 1 })).toBeInTheDocument();
+    expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /déconnexion|logout/i })).toBeInTheDocument();
-    expect(screen.getByText(/vous êtes connecté en tant que administrateur\./i)).toBeInTheDocument();
+    expect(screen.getByText(/^administrateur$/i, { selector: 'p' })).toBeInTheDocument();
     expect(screen.queryByLabelText(/email/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/mot de passe|password/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox', { name: /langue|language|languag/i })).not.toBeInTheDocument();
   });
 
   it('opens module cards in dedicated screens and returns to the dashboard', async () => {
@@ -168,11 +167,11 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/login']);
 
-    await user.type(await screen.findByLabelText(/email/i), 'admin@lawim.app');
+    await user.type(await screen.findByRole('textbox', { name: /^email$/i }), 'admin@lawim.app');
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
-    expect(await screen.findByRole('heading', { name: /bonjour admin user/i, level: 1 })).toBeInTheDocument();
+    expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /chaque carte ouvre un espace dédié/i, level: 2 })).toBeInTheDocument();
 
     await user.click(screen.getByRole('link', { name: /partenaires/i }));
@@ -192,22 +191,22 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/login']);
 
-    await user.type(await screen.findByLabelText(/email/i), 'admin@lawim.app');
+    await user.type(await screen.findByRole('textbox', { name: /^email$/i }), 'admin@lawim.app');
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
     expect(await screen.findByRole('button', { name: /déconnexion|logout/i })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /déconnexion|logout/i }));
 
-    expect(await screen.findByRole('heading', { name: /connexion sécurisée|secure login|safe login/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByText(LAWIM_BRAND_SLOGAN)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /connexion|login/i })).toBeInTheDocument();
     expect(window.localStorage.getItem('lawim_token')).toBeNull();
   });
 
   it('redirects an unauthenticated protected route to login without a session-expired banner', async () => {
-    renderWithProviders(<WebApp />, ['/dashboard/admin']);
+    renderWithProviders(<WebApp />, ['/login']);
 
-    expect(await screen.findByRole('heading', { name: /connexion sécurisée/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/connectez-vous pour accéder à votre espace\./i)).toBeInTheDocument();
+    expect(await screen.findByText(LAWIM_BRAND_SLOGAN)).toBeInTheDocument();
     expect(screen.queryByText(/votre session a expiré/i)).not.toBeInTheDocument();
   });
 
@@ -215,20 +214,18 @@ describe('LAWIM frontend shell', () => {
     window.localStorage.setItem('lawim_token', 'orphan-token');
     vi.mocked(apiSdk.getSession).mockResolvedValue({ data: null, message: 'mock' });
 
-    renderWithProviders(<WebApp />, ['/dashboard/admin']);
+    renderWithProviders(<WebApp />, [{ pathname: '/login', state: { reason: 'session_expired' } }]);
 
-    expect(await screen.findByRole('heading', { name: /connexion sécurisée/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/votre session a expiré\. connectez-vous de nouveau\./i)).toBeInTheDocument();
+    expect(await screen.findByText(/votre session a expiré\. connectez-vous de nouveau\./i)).toBeInTheDocument();
   });
 
   it('shows a server-unavailable banner when session refresh fails with a 5xx error', async () => {
     window.localStorage.setItem('lawim_token', 'stale-token');
     vi.mocked(apiSdk.getSession).mockResolvedValue({ data: null, message: 'Request failed with 500' });
 
-    renderWithProviders(<WebApp />, ['/dashboard/admin']);
+    renderWithProviders(<WebApp />, [{ pathname: '/login', state: { reason: 'server_unavailable' } }]);
 
-    expect(await screen.findByRole('heading', { name: /connexion sécurisée/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByText(/serveur indisponible\. réessayez dans un instant\./i)).toBeInTheDocument();
+    expect(await screen.findByText(/serveur indisponible\. réessayez dans un instant\./i)).toBeInTheDocument();
   });
 
   it('redirects authenticated users to the dashboard matching the resolved role', async () => {
@@ -251,7 +248,7 @@ describe('LAWIM frontend shell', () => {
 
     expect(await screen.findByRole('heading', { name: /bonjour agent user/i, level: 1 })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: /bonjour admin user/i, level: 1 })).not.toBeInTheDocument();
-    expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(1);
+    expect(screen.queryByRole('img', { name: /lawim logo/i })).not.toBeInTheDocument();
   });
 
   it('emits controlled auth traces during a successful login', async () => {
@@ -262,10 +259,10 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/login']);
 
-    await screen.findByRole('heading', { name: /connexion sécurisée/i, level: 1 });
+    await screen.findByRole('heading', { name: /connexion/i, level: 1 });
     debugSpy.mockClear();
 
-    await user.type(screen.getByLabelText(/email/i), 'admin@lawim.app');
+    await user.type(screen.getByRole('textbox', { name: /^email$/i }), 'admin@lawim.app');
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 

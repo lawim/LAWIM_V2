@@ -307,7 +307,19 @@ Critères de qualité :
 
 ---
 
-# 22. Objectif final
+# 22. Sobriété des interfaces
+
+Une interface LAWIM ne doit jamais expliquer ce qui est évident.
+
+Les textes d'aide ne doivent être conservés que lorsqu'ils apportent une valeur réelle à l'utilisateur.
+
+L'organisation, les intitulés, les boutons et la navigation doivent guider naturellement l'utilisateur.
+
+Les doubles formulations, les paraphrases et les explications redondantes doivent être supprimées.
+
+---
+
+# 23. Objectif final
 
 Cette base de connaissances constitue le socle de savoir opérationnel et intelligent de LAWIM.
 

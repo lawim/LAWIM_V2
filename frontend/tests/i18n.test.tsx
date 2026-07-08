@@ -16,11 +16,15 @@ afterEach(() => {
 
 describe('frontend i18n', () => {
   it('translates core actions in French, English, and Pidgin', () => {
-    expect(translate('auth.login.title', 'fr')).toBe('Connexion sécurisée');
-    expect(translate('auth.login.title', 'en')).toBe('Secure login');
-    expect(translate('auth.login.title', 'pcm')).toBe('Safe login');
+    expect(translate('auth.login.title', 'fr')).toBe('Connexion');
+    expect(translate('auth.login.title', 'en')).toBe('Login');
+    expect(translate('auth.login.title', 'pcm')).toBe('Login');
+    expect(translate('auth.login.forgot', 'fr')).toBe('Mot de passe oublié');
+    expect(translate('auth.login.create', 'en')).toBe('Create account');
+    expect(translate('auth.contact.website', 'pcm')).toBe('Website');
     expect(translate('dashboard.whats_next', 'pcm')).toBe('Wetin next?');
     expect(translate('shared.logout', 'pcm')).toBe('Comot');
+    expect(translate('auth.login.banner.note', 'fr')).toBe('');
   });
 
   it('persists the selected language and restores it on remount', async () => {

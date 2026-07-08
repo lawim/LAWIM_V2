@@ -124,3 +124,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-29 | DEC-005 | Sprint 024 closure proposal and no Sprint 025 opening | Directeur General | Sprint 024 closure / no Sprint 025 | Proposed | reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md |
 | 2026-07-08 | DEC-006 | Mission 08 dashboard cockpit, multilingual UI and transversal matching engine confirmed | Product | Dashboard / i18n / matching | Active | reports/program/MISSION-08-DASHBOARD-I18N-MATCHING.md |
 | 2026-07-08 | DEC-007 | Mission 08.1 visual recipe, UX validation and harmonisation confirmed | Product | Product review / UX / documentation | Active | reports/product_reviews/Release_08_1/RAPPORT-RECETTE-VISUELLE-LAWIM.md |
+| 2026-07-08 | DEC-008 | Mission 08.2 access page simplification, contact harmonisation and interface sobriety confirmed | Product | Login / dashboard sobriety / documentation | Active | reports/program/MISSION-08-2-CORRECTIONS-PAGE-ACCES-UX.md |

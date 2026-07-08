@@ -354,6 +354,18 @@ Cette evolution renforce la lisibilite, la velocite de lecture et la confiance p
 
 ---
 
+# CHAPITRE 17 — RÈGLE DE SOBRIÉTÉ DES INTERFACES
+
+Le Dashboard ne doit jamais expliquer ce qui est évident.
+
+Les textes d'aide doivent être conservés uniquement lorsqu'ils ajoutent une valeur concrète à l'utilisateur.
+
+Le cockpit doit guider par sa structure, ses intitulés, ses cartes et ses boutons, pas par des explications redondantes.
+
+Les formulations telles que les doublons d'identité, les rappels inutiles de navigation ou les explications de fonctionnement évidentes doivent être supprimées.
+
+---
+
 # CHAPITRE 18 — OBJECTIF FINAL
 
 Le présent **07-DASHBOARD-REFERENCE.md** constitue le référentiel officiel du Dashboard de LAWIM.

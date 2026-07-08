@@ -51,6 +51,30 @@ describe('static runtime login flow', () => {
   });
 
   it('renders the admin dashboard after login without exposing demo credentials', async () => {
+    const officialContact = {
+      company_name: 'LAWIM',
+      brand_slogan: 'L’immobilier autrement',
+      brand_subslogan: '',
+      institutional_tagline: 'Intelligent Real Estate Relationships',
+      brand_message: 'Plateforme officielle LAWIM',
+      brand_positioning: 'Connecting people, properties and opportunities.',
+      phone_number: '686 822 667',
+      phone_e164: '+237686822667',
+      phone_international: '+237 686 822 667',
+      whatsapp_number: '686 822 667',
+      green_api_number: '686 822 667',
+      facebook_username: '@lawimofficial',
+      whatsapp_username: '@lawimofficial',
+      telegram_bot: '@lawim_assistant_bot',
+      support_contact: 'LAWIM',
+      support_email: 'contact@lawim.app',
+      default_country: 'Cameroon',
+      website_url: 'https://lawim.app',
+      whatsapp_link: 'https://wa.me/237686822667',
+      telegram_link: 'https://t.me/lawim_assistant_bot',
+      facebook_link: 'https://facebook.com/lawimofficial',
+    };
+
     const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = new URL(String(input), window.location.origin);
       const path = `${url.pathname}${url.search}`;
@@ -111,6 +135,7 @@ describe('static runtime login flow', () => {
                   role: 'admin',
                   roles: ['admin'],
                 },
+                official_contact: officialContact,
                 summary: {},
                 organizations: [],
                 properties: [],
@@ -122,6 +147,7 @@ describe('static runtime login flow', () => {
               }
             : {
                 current_user: null,
+                official_contact: officialContact,
                 summary: {},
                 organizations: [],
                 properties: [],
@@ -181,7 +207,9 @@ describe('static runtime login flow', () => {
     expect(document.body).not.toHaveTextContent(/lawim-demo/i);
     expect(document.getElementById('login-form')).toBeInTheDocument();
     expect(document.querySelector('.brand-mark')).toBeInTheDocument();
-    expect(document.querySelector('.brand-lockup__copy .lede')).toHaveTextContent(/L’IMMOBILIER, AUTREMENT\. EN TOUTE CONFIANCE\./i);
+    expect(document.querySelector('.auth-slogan')).toHaveTextContent(/L’immobilier autrement/i);
+    expect(document.querySelector('.auth-contact')).toHaveTextContent(/contact@lawim\.app/i);
+    expect(document.querySelector('.auth-contact')).toHaveTextContent(/lawim\.app/i);
     expect(document.getElementById('login-form')?.querySelector('[name="role"]')).toBeNull();
 
     debugSpy.mockClear();
@@ -199,6 +227,11 @@ describe('static runtime login flow', () => {
       expect(document.getElementById('admin-dashboard')).toHaveTextContent(/Runtime metrics/i);
       expect(document.getElementById('current-user')).toHaveTextContent(/Admin User/);
     });
+
+    expect(document.getElementById('login-form')).toBeNull();
+    expect(document.querySelector('.auth-panel')).toBeNull();
+    expect(document.getElementById('logout-button')).not.toHaveAttribute('hidden');
+    expect(document.getElementById('runtime-chip')).toHaveAttribute('hidden');
 
     const labels = debugSpy.mock.calls.map(([label]) => label);
     expect(labels).toEqual([

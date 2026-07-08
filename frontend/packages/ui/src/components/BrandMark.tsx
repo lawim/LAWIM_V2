@@ -4,9 +4,18 @@ import { LAWIM_BRAND_SLOGAN } from '../brand';
 export interface BrandMarkProps extends HTMLAttributes<HTMLDivElement> {
   tone?: 'dark' | 'light';
   slogan?: string;
+  showWordmark?: boolean;
+  sloganClassName?: string;
 }
 
-export function BrandMark({ tone = 'dark', slogan = LAWIM_BRAND_SLOGAN, className = '', ...props }: BrandMarkProps) {
+export function BrandMark({
+  tone = 'dark',
+  slogan = LAWIM_BRAND_SLOGAN,
+  showWordmark = true,
+  sloganClassName = '',
+  className = '',
+  ...props
+}: BrandMarkProps) {
   const isLight = tone === 'light';
 
   return (
@@ -15,8 +24,14 @@ export function BrandMark({ tone = 'dark', slogan = LAWIM_BRAND_SLOGAN, classNam
         <img src="/logo.svg" alt="LAWIM logo" className="h-full w-full object-cover" />
       </div>
       <div className="leading-tight">
-        <div className={`text-sm font-semibold uppercase tracking-[0.34em] ${isLight ? 'text-slate-900' : 'text-white'}`}>LAWIM</div>
-        <div className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>{slogan}</div>
+        {showWordmark ? (
+          <div className={`text-sm font-semibold uppercase tracking-[0.34em] ${isLight ? 'text-slate-900' : 'text-white'}`}>LAWIM</div>
+        ) : null}
+        <div
+          className={`text-sm ${isLight ? 'text-slate-600' : 'text-slate-400'} ${sloganClassName}`.trim()}
+        >
+          {slogan}
+        </div>
       </div>
     </div>
   );

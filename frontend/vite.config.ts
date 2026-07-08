@@ -12,7 +12,7 @@ export default defineConfig({
       manifest: {
         name: 'LAWIM',
         short_name: 'LAWIM',
-        description: 'LAWIM · L’IMMOBILIER, AUTREMENT. EN TOUTE CONFIANCE.',
+        description: 'LAWIM · L’immobilier autrement.',
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
         lang: 'fr',

@@ -122,7 +122,7 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
         self.assertEqual(SUPPORT_EMAIL, "contact@lawim.app")
 
     def test_website_url_constant(self) -> None:
-        self.assertEqual(WEBSITE_URL, "https://lawim.cm")
+        self.assertEqual(WEBSITE_URL, "https://lawim.app")
 
     def test_whatsapp_number_matches_phone(self) -> None:
         self.assertEqual(contact.WHATSAPP_NUMBER, PHONE_NUMBER)
@@ -135,6 +135,9 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
 
     def test_to_public_dict_telegram(self) -> None:
         self.assertEqual(to_public_dict()["telegram_bot"], "@lawim_assistant_bot")
+
+    def test_to_public_dict_brand_subslogan_is_removed(self) -> None:
+        self.assertEqual(to_public_dict()["brand_subslogan"], "")
 
     def test_whatsapp_link_format(self) -> None:
         self.assertTrue(whatsapp_link().startswith("https://wa.me/237686822667"))
@@ -150,6 +153,9 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
 
     def test_official_signature_contains_telegram(self) -> None:
         self.assertIn("@lawim_assistant_bot", official_signature_block())
+
+    def test_official_signature_omits_old_slogan(self) -> None:
+        self.assertNotIn("EN TOUTE CONFIANCE", official_signature_block())
 
     def test_import_lawim_v2_contact_module(self) -> None:
         self.assertTrue(hasattr(contact, "PHONE_NUMBER"))

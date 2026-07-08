@@ -122,3 +122,23 @@ La multilingue est effective sur les parcours visibles.
 Le matching transversal est exploitable et argumente.
 Le dossier `Release_08_1` constitue une base de recette visuelle reutilisable pour les prochaines releases.
 
+## Addendum Mission 08.2
+
+La finition UX de la page d acces a ete alignee apres la recette initiale:
+
+- suppression du contenu de connexion visible apres authentification;
+- page d acces reduite a une carte centrale unique;
+- affichage du logo sans re-epellation inutile;
+- slogan officiel stabilise sur `LAWIM` / `L’immobilier autrement`;
+- suppression de `En toute confiance`;
+- ajout des coordonnees officielles compactes;
+- documentation de la regle de sobriete des interfaces.
+
+Cette finition renforce la lecture immediate de l ecran d entree et la coherence globale du produit sans introduire de nouvelle fonctionnalite.
+
+### References de livraison de la finition
+
+- Commit Git: `fix(product): streamline dashboards translations and matching engine`
+- Tag officiel: `mission-08-dashboard-i18n-matching`
+- Artefact de release: `/tmp/lawim_v2_release_mission-08-dashboard-i18n-matching.tar.gz`
+- SHA256 artefact: `f39c20229f7d3948906b8f731f78b3d011a487f5c271cb26bd82f6b1b3e59f97`

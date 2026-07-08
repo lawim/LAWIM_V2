@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAWIM | Connexion</title>
-  <meta name="description" content="LAWIM · L’IMMOBILIER, AUTREMENT. EN TOUTE CONFIANCE. Saisissez votre e-mail et votre mot de passe pour ouvrir automatiquement le bon cockpit.">
+  <meta name="description" content="LAWIM · L’immobilier autrement.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
 </head>
@@ -13,14 +13,9 @@
   <div class="backdrop backdrop-b"></div>
 
   <div class="app-shell">
-    <header class="masthead panel">
+    <header class="masthead">
       <div class="brand-lockup">
         <img class="brand-mark" src="/logo.svg" alt="LAWIM logo" width="56" height="56">
-        <div class="brand-lockup__copy">
-          <p class="eyebrow">LAWIM</p>
-          <h1>Connexion</h1>
-          <p class="lede">LAWIM · L’IMMOBILIER, AUTREMENT. EN TOUTE CONFIANCE.</p>
-        </div>
       </div>
       <div class="masthead__status">
           <span id="runtime-chip" class="chip" hidden>Démarrage</span>
@@ -33,35 +28,36 @@
           </select>
         </label>
         <span id="current-user" class="muted" hidden>Session invitée</span>
+        <button type="button" id="logout-button" class="button ghost" hidden>Déconnexion</button>
       </div>
     </header>
 
     <main class="layout">
       <aside class="sidebar">
         <section class="panel form-panel auth-panel">
-          <div class="section-heading">
-            <p class="eyebrow">Accès sécurisé</p>
-            <h2>Connexion</h2>
-            <p class="muted">E-mail et mot de passe uniquement. Aucun choix de rôle.</p>
-          </div>
-          <form id="login-form" class="stacked-form">
+          <div class="auth-shell">
+            <div class="auth-brand">
+              <img class="brand-mark auth-brand__mark" src="/logo.svg" alt="LAWIM logo" width="72" height="72">
+              <p class="auth-slogan">L’immobilier autrement</p>
+            </div>
+            <div id="auth-contact" class="auth-contact" aria-label="Coordonnées officielles"></div>
+            <form id="login-form" class="stacked-form auth-form">
             <label>
-              <span>E-mail</span>
+              <span id="login-email-label">Email</span>
               <input id="login-email" name="email" type="email" autocomplete="username" required>
             </label>
             <label>
-              <span>Mot de passe</span>
+              <span id="login-password-label">Mot de passe</span>
               <input id="login-password" name="password" type="password" autocomplete="current-password" required>
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Connexion</button>
-              <button type="button" class="button ghost" disabled>Mot de passe oublié</button>
-              <button type="button" class="button secondary" disabled>Créer un compte</button>
+              <button id="login-submit" type="submit" class="button primary">Connexion</button>
             </div>
-          </form>
-          <p class="muted auth-note">Le tableau de bord correspondant s'ouvre automatiquement après identification.</p>
-          <div class="actions single">
-            <button type="button" id="logout-button" class="button ghost" hidden>Déconnexion</button>
+            </form>
+            <div class="auth-actions actions">
+              <button id="login-forgot" type="button" class="button ghost">Mot de passe oublié</button>
+              <button id="login-create" type="button" class="button secondary">Créer un compte</button>
+            </div>
           </div>
         </section>
 

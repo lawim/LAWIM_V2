@@ -90,19 +90,27 @@ const UI_COPY = {
   fr: {
     welcome: "Bonjour",
     loginTitle: "Connexion",
-    loginLead: "E-mail et mot de passe uniquement. Aucun choix de rôle.",
-    brandTagline: "LAWIM · L’IMMOBILIER, AUTREMENT. EN TOUTE CONFIANCE.",
-    authNote: "Le tableau de bord correspondant s'ouvre automatiquement après identification.",
+    loginLead: "",
+    brandTagline: "L’immobilier autrement",
+    authNote: "",
     secureAccess: "Accès sécurisé",
     authenticated: "Déconnexion",
+    languageLabel: "Langue",
     modules: "Modules",
     dashboard: "Tableau de bord",
     moduleDeck: "Espaces dédiés",
     moduleDeckLead: "Choisissez un espace dédié pour ouvrir le bon module.",
     backToDashboard: "Retour au dashboard",
     openModule: "Ouvrir",
+    loginEmail: "Email",
+    loginPassword: "Mot de passe",
     loginForgot: "Mot de passe oublié",
     loginCreate: "Créer un compte",
+    contactWebsite: "Site",
+    contactEmail: "Email",
+    contactPhone: "Téléphone",
+    contactWhatsApp: "WhatsApp",
+    contactFacebook: "Facebook",
     activity: "Activité du jour",
     priorities: "Mes priorités",
     quickActions: "Mes actions rapides",
@@ -126,20 +134,28 @@ const UI_COPY = {
   },
   en: {
     welcome: "Hello",
-    loginTitle: "Sign in",
-    loginLead: "Email and password only. No role picker.",
-    brandTagline: "LAWIM · REAL ESTATE, DIFFERENTLY. WITH CONFIDENCE.",
-    authNote: "The corresponding dashboard opens automatically after sign-in.",
+    loginTitle: "Login",
+    loginLead: "",
+    brandTagline: "L’immobilier autrement",
+    authNote: "",
     secureAccess: "Secure access",
     authenticated: "Sign out",
+    languageLabel: "Language",
     modules: "Modules",
     dashboard: "Dashboard",
     moduleDeck: "Dedicated spaces",
     moduleDeckLead: "Choose a dedicated space to open the right module.",
     backToDashboard: "Back to dashboard",
     openModule: "Open",
+    loginEmail: "Email",
+    loginPassword: "Password",
     loginForgot: "Forgot password",
     loginCreate: "Create account",
+    contactWebsite: "Website",
+    contactEmail: "Email",
+    contactPhone: "Phone",
+    contactWhatsApp: "WhatsApp",
+    contactFacebook: "Facebook",
     activity: "Today's activity",
     priorities: "My priorities",
     quickActions: "Quick actions",
@@ -163,20 +179,28 @@ const UI_COPY = {
   },
   pidgin: {
     welcome: "Hallo",
-    loginTitle: "Enter",
-    loginLead: "Email na password only. No role choice.",
-    brandTagline: "LAWIM · REAL ESTATE, DIFFERENTLY. WITH CONFIDENCE.",
-    authNote: "The dashboard go open by itself after login.",
+    loginTitle: "Login",
+    loginLead: "",
+    brandTagline: "L’immobilier autrement",
+    authNote: "",
     secureAccess: "Secure access",
     authenticated: "Comot",
+    languageLabel: "Languag",
     modules: "Modules",
     dashboard: "Dashboard",
     moduleDeck: "Dedicated spaces",
     moduleDeckLead: "Choose one dedicated space to open the right module.",
     backToDashboard: "Go back dashboard",
     openModule: "Open",
-    loginForgot: "Forget password",
+    loginEmail: "Email",
+    loginPassword: "Password",
+    loginForgot: "Reset password",
     loginCreate: "Create account",
+    contactWebsite: "Website",
+    contactEmail: "Email",
+    contactPhone: "Phone",
+    contactWhatsApp: "WhatsApp",
+    contactFacebook: "Facebook",
     activity: "Today activity",
     priorities: "My priorities",
     quickActions: "Quick actions",
@@ -1147,59 +1171,42 @@ function translateModulePanels() {
 
 function translateStaticShell() {
   const copy = uiCopy();
-  const authenticated = document.body.dataset.authenticated === "true";
-  const brandTitle = document.querySelector(".brand-lockup__copy h1");
-  const brandLead = document.querySelector(".brand-lockup__copy .lede");
-  const authEyebrow = document.querySelector(".auth-panel .section-heading .eyebrow");
-  const authTitle = document.querySelector(".auth-panel .section-heading h2");
-  const authLead = document.querySelector(".auth-panel .section-heading .muted");
-  const authNote = document.querySelector(".auth-note");
-  const loginButton = document.querySelector("#login-form button[type='submit']");
-  const loginForgot = document.querySelector(".auth-panel .button.ghost");
-  const loginCreate = document.querySelector(".auth-panel .button.secondary");
   const logoutButton = document.querySelector("#logout-button");
   const moduleDeckTitle = document.querySelector(".sidebar > .form-panel:nth-of-type(2) .section-heading h2");
   const moduleDeckLead = document.querySelector(".sidebar > .form-panel:nth-of-type(2) .section-heading p.muted");
   const cockpitLeads = copy.cockpitLeads || [];
 
-  if (brandLead) {
-    brandLead.textContent = copy.brandTagline || brandLead.textContent;
-  }
-  if (brandTitle && !authenticated) {
-    brandTitle.textContent = copy.loginTitle;
-  }
   if (moduleDeckTitle) {
     moduleDeckTitle.textContent = copy.modules;
   }
   if (moduleDeckLead) {
     moduleDeckLead.textContent = copy.moduleDeckLead || moduleDeckLead.textContent;
   }
-  if (!authenticated) {
-    if (authEyebrow) {
-      authEyebrow.textContent = copy.secureAccess || copy.welcome;
-    }
-    if (authTitle) {
-      authTitle.textContent = copy.loginTitle;
-    }
-    if (authLead) {
-      authLead.textContent = copy.loginLead;
-    }
-    if (authNote) {
-      authNote.textContent = copy.authNote || authNote.textContent;
-    }
-    if (loginButton) {
-      loginButton.textContent = copy.loginTitle;
-    }
-    if (loginForgot) {
-      loginForgot.textContent = copy.loginForgot;
-    }
-    if (loginCreate) {
-      loginCreate.textContent = copy.loginCreate;
-    }
+  if (refs.authLanguageLabel) {
+    refs.authLanguageLabel.textContent = copy.languageLabel || refs.authLanguageLabel.textContent;
+  }
+  if (refs.authSlogan) {
+    refs.authSlogan.textContent = copy.brandTagline || refs.authSlogan.textContent;
+  }
+  if (refs.loginEmailLabel) {
+    refs.loginEmailLabel.textContent = copy.loginEmail || refs.loginEmailLabel.textContent;
+  }
+  if (refs.loginPasswordLabel) {
+    refs.loginPasswordLabel.textContent = copy.loginPassword || refs.loginPasswordLabel.textContent;
+  }
+  if (refs.loginButton) {
+    refs.loginButton.textContent = copy.loginTitle;
+  }
+  if (refs.loginForgot) {
+    refs.loginForgot.textContent = copy.loginForgot;
+  }
+  if (refs.loginCreate) {
+    refs.loginCreate.textContent = copy.loginCreate;
   }
   if (logoutButton) {
     logoutButton.textContent = copy.authenticated;
   }
+  renderOfficialContactBlock();
   document.querySelectorAll("#role-cockpit .cockpit-grid .cockpit-card .section-heading p.muted").forEach((paragraph, index) => {
     if (cockpitLeads[index]) {
       paragraph.textContent = cockpitLeads[index];
@@ -1288,13 +1295,16 @@ function updateAuthShell(isAuthenticated) {
     refs.workspace.hidden = !isAuthenticated;
   }
   if (refs.runtimeChip) {
-    refs.runtimeChip.hidden = !isAuthenticated;
+    refs.runtimeChip.hidden = isAuthenticated;
   }
   if (refs.currentUser) {
     refs.currentUser.hidden = !isAuthenticated;
   }
   if (refs.logoutButton) {
     refs.logoutButton.hidden = !isAuthenticated;
+  }
+  if (refs.authContact) {
+    refs.authContact.hidden = isAuthenticated;
   }
   if (refs.loginForm) {
     refs.loginForm.hidden = isAuthenticated;
@@ -1442,10 +1452,19 @@ function cacheRefs() {
   Object.assign(refs, {
     runtimeChip: byId("runtime-chip"),
     languageSelect: byId("language-select"),
+    authLanguageLabel: document.querySelector(".language-switcher .sr-only"),
     currentUser: byId("current-user"),
     workspace: byId("workspace"),
     notice: byId("notice"),
     bootstrapSummary: byId("bootstrap-summary"),
+    authPanel: document.querySelector(".auth-panel"),
+    authContact: document.getElementById("auth-contact"),
+    authSlogan: document.querySelector(".auth-slogan"),
+    loginButton: document.getElementById("login-submit"),
+    loginForgot: document.getElementById("login-forgot"),
+    loginCreate: document.getElementById("login-create"),
+    loginEmailLabel: document.getElementById("login-email-label"),
+    loginPasswordLabel: document.getElementById("login-password-label"),
     statusStrip: byId("status-strip"),
     roleCockpit: byId("role-cockpit"),
     cardsGrid: document.querySelector(".cards-grid"),
@@ -1595,6 +1614,49 @@ function statusChipClass(status) {
 function setRuntimeChip(message, tone = "neutral") {
   refs.runtimeChip.dataset.tone = tone;
   refs.runtimeChip.textContent = message;
+}
+
+function openSupportRequest(subject) {
+  const official = state.bootstrap?.official_contact || {};
+  const supportEmail = official.support_email || "contact@lawim.app";
+  window.location.href = `mailto:${supportEmail}?subject=${encodeURIComponent(subject)}`;
+}
+
+function renderOfficialContactBlock() {
+  if (!refs.authContact) {
+    return;
+  }
+  const copy = uiCopy();
+  const official = state.bootstrap?.official_contact || {};
+  const website = official.website_url || "https://lawim.app";
+  const websiteLabel = String(website).replace(/^https?:\/\//, "");
+  const email = official.support_email || "contact@lawim.app";
+  const phone = official.phone_international || official.phone_number || "";
+  const phoneDigits = String(official.phone_e164 || phone).replace(/[^0-9]/g, "");
+  const whatsappLink = official.whatsapp_link || (phoneDigits ? `https://wa.me/${phoneDigits}` : website);
+  const facebookLink = official.facebook_link || "https://facebook.com/lawimofficial";
+  const items = [
+    { icon: "🌐", label: copy.contactWebsite, value: websiteLabel, href: website, external: true },
+    { icon: "✉️", label: copy.contactEmail, value: email, href: `mailto:${email}`, external: false },
+    { icon: "📞", label: copy.contactPhone, value: phone, href: phoneDigits ? `tel:+${phoneDigits}` : website, external: false },
+    { icon: "💬", label: copy.contactWhatsApp, value: official.whatsapp_username || "@lawimofficial", href: whatsappLink, external: true },
+    { icon: "f", label: copy.contactFacebook, value: official.facebook_username || "@lawimofficial", href: facebookLink, external: true },
+  ];
+
+  refs.authContact.hidden = false;
+  refs.authContact.innerHTML = items
+    .map(
+      (item) => `
+        <a class="auth-contact__item" href="${escapeHtml(item.href)}"${item.external ? ' target="_blank" rel="noreferrer"' : ""} aria-label="${escapeHtml(`${item.label} ${item.value}`)}">
+          <span class="auth-contact__icon" aria-hidden="true">${escapeHtml(item.icon)}</span>
+          <span class="auth-contact__copy">
+            <span class="auth-contact__label">${escapeHtml(item.label)}</span>
+            <strong>${escapeHtml(item.value)}</strong>
+          </span>
+        </a>
+      `,
+    )
+    .join("");
 }
 
 function money(value, currency = "XAF") {
@@ -4076,6 +4138,12 @@ async function handleAdminUserCreate(event) {
 
 function bindEvents() {
   refs.loginForm.addEventListener("submit", handleLogin);
+  refs.loginForgot?.addEventListener("click", () => {
+    openSupportRequest("LAWIM - Mot de passe oublié");
+  });
+  refs.loginCreate?.addEventListener("click", () => {
+    openSupportRequest("LAWIM - Création de compte");
+  });
   refs.logoutButton.addEventListener("click", handleLogout);
   refs.registerForm?.addEventListener("submit", handleRegister);
   refs.projectForm?.addEventListener("submit", handleProjectCreate);

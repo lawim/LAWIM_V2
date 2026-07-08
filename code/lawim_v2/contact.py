@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-BRAND_SLOGAN = "L’IMMOBILIER, AUTREMENT."
-BRAND_SUBSLOGAN = "EN TOUTE CONFIANCE."
+BRAND_SLOGAN = "L’immobilier autrement"
+BRAND_SUBSLOGAN = ""
 INSTITUTIONAL_TAGLINE = "Intelligent Real Estate Relationships"
 BRAND_MESSAGE = (
     "Plateforme d'intelligence immobilière qui connecte les bonnes personnes, "
@@ -22,12 +22,11 @@ WHATSAPP_USERNAME = "@lawimofficial"
 TELEGRAM_BOT = "@lawim_assistant_bot"
 DEFAULT_COUNTRY = "Cameroon"
 SUPPORT_EMAIL = "contact@lawim.app"
-WEBSITE_URL = "https://lawim.cm"
+WEBSITE_URL = "https://lawim.app"
 
 SUPPORT_CONTACT = (
     f"{COMPANY_NAME}\n"
-    f"{BRAND_SLOGAN} {BRAND_SUBSLOGAN}\n"
-    f"{INSTITUTIONAL_TAGLINE}\n"
+    f"{BRAND_SLOGAN}\n"
     f"📞 WhatsApp/Appel : {PHONE_NUMBER}\n"
     f"✉️ Email : {SUPPORT_EMAIL}\n"
     f"Facebook : {FACEBOOK_USERNAME}\n"

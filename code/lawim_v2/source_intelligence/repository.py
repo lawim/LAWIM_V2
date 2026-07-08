@@ -61,7 +61,7 @@ class SourceIntelligenceRepositoryMixin:
                 "name": "Site web LAWIM",
                 "channel": "web",
                 "target": "organic",
-                "publication_url": "https://lawim.cm",
+                "publication_url": "https://lawim.app",
                 "publication_title": "LAWIM Website",
                 "publication_author": "LAWIM",
                 "campaign": "organic",

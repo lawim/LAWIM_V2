@@ -498,7 +498,19 @@ Règles :
 
 ---
 
-# 38. Objectif final
+# 38. Sobriété des interfaces
+
+Une interface LAWIM ne doit jamais expliquer ce qui est évident.
+
+Les textes explicatifs ne doivent être conservés que s'ils apportent une vraie valeur d'usage.
+
+Les écrans doivent guider naturellement par la hiérarchie visuelle, les libellés, les boutons et la navigation.
+
+Les explications redondantes doivent être supprimées progressivement sur toute la plateforme.
+
+---
+
+# 39. Objectif final
 
 Le Brand Book garantit une expression uniforme, crédible et cohérente de LAWIM sur tous les canaux.
 

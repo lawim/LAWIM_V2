@@ -131,8 +131,7 @@ button {
   justify-content: space-between;
   gap: 1.5rem;
   align-items: center;
-  padding: 1.35rem 1.5rem;
-  border-radius: var(--radius-xl);
+  padding: 0.35rem 0.15rem 1rem;
 }
 
 .brand-lockup {
@@ -151,9 +150,7 @@ button {
 }
 
 .brand-lockup__copy {
-  display: grid;
-  gap: 0.15rem;
-  min-width: 0;
+  display: none;
 }
 
 .masthead h1,
@@ -258,7 +255,7 @@ body[data-authenticated="false"] .panel {
 }
 
 body[data-authenticated="false"] .app-shell {
-  width: min(100vw - 2rem, 560px);
+  width: min(100vw - 2rem, 640px);
   margin-top: 2rem;
 }
 
@@ -322,6 +319,26 @@ body[data-authenticated="true"] .auth-panel .button.ghost:not(#logout-button) {
   display: none;
 }
 
+body[data-authenticated="true"] .auth-panel {
+  display: none;
+}
+
+body[data-authenticated="true"] .masthead {
+  justify-content: flex-end;
+}
+
+body[data-authenticated="true"] .masthead .brand-lockup,
+body[data-authenticated="true"] .masthead .language-switcher {
+  display: none;
+}
+
+body[data-authenticated="true"] .masthead__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 body[data-authenticated="true"] .auth-panel .section-heading .muted {
   display: none;
 }
@@ -338,6 +355,95 @@ body[data-authenticated="true"]:not([data-module="dashboard"]) #role-cockpit {
 
 .section-heading p {
   margin: 0;
+}
+
+.auth-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.auth-brand {
+  display: grid;
+  gap: 0.85rem;
+  justify-items: start;
+}
+
+.auth-brand__mark {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.auth-slogan {
+  margin: 0;
+  font-family: "Snell Roundhand", "Apple Chancery", "Segoe Script", cursive;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  line-height: 1.2;
+  color: #8f6c32;
+  letter-spacing: 0.02em;
+  font-style: italic;
+}
+
+.auth-contact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+  gap: 0.55rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 250, 240, 0.96));
+}
+
+.auth-contact__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: var(--text);
+  text-decoration: none;
+  line-height: 1.35;
+  min-height: 3.1rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.64);
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.auth-contact__item:hover {
+  transform: translateY(-1px);
+  text-decoration: none;
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.auth-contact__icon {
+  flex: 0 0 auto;
+  width: 1.2rem;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.auth-contact__copy {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.auth-contact__label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+}
+
+.auth-form {
+  margin-top: 0.35rem;
+}
+
+.auth-actions {
+  margin-top: -0.1rem;
+}
+
+.auth-actions .button {
+  flex: 1 1 11rem;
 }
 
 .muted {

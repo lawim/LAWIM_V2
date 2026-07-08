@@ -48,7 +48,7 @@ des services ;
 des solutions d'accompagnement.
 5. Signature
 
-LAWIM — L'immobilier, autrement.
+LAWIM — L’immobilier autrement.
 
 6. Positionnement Facebook
 
