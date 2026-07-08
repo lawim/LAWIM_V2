@@ -22,6 +22,7 @@
 - [ ] Database password (32+ characters, random)
 - [ ] Redis password (32+ characters, random)
 - [ ] JWT secret (32+ characters, random)
+- [ ] `LAWIM_ADMIN_PASSWORD` injected into the app container so bootstrap can sync the production demo accounts
 - [ ] External API keys configured
 - [ ] SMTP credentials configured
 - [ ] Backup storage configured
@@ -100,6 +101,12 @@ docker-compose -f deployment/compose/docker-compose.prod.yml ps
 # Check health
 docker-compose exec backend python deployment/health/health_checker.py
 ```
+
+### Production Credential Sync
+
+- Ensure the app runtime receives `LAWIM_ADMIN_PASSWORD` at container start.
+- The bootstrap uses this secret to keep the production demo accounts (`admin`, `agent`, `owner`) aligned with the live environment.
+- If the secret changes, recreate the app container so the bootstrap can resync credentials.
 
 ### Step 6: Initialize Database
 
