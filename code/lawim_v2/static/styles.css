@@ -48,23 +48,23 @@ body {
 
 body[data-authenticated="false"] {
   color-scheme: light;
-  --bg: #f5f7fb;
-  --bg-soft: #e7eef9;
+  --bg: #fdf8ef;
+  --bg-soft: #f3e6cc;
   --panel: rgba(255, 255, 255, 0.9);
-  --panel-border: rgba(15, 23, 42, 0.08);
-  --text: #0f172a;
-  --muted: #526072;
-  --accent: #2157f3;
-  --accent-2: #14b8a6;
-  --accent-3: #7c3aed;
+  --panel-border: rgba(10, 10, 10, 0.08);
+  --text: #111111;
+  --muted: #5c564b;
+  --accent: #d8b46a;
+  --accent-2: #7d5a24;
+  --accent-3: #111111;
   --success: #0f9d58;
-  --warn: #b45309;
-  --error: #dc2626;
+  --warn: #9a6a1f;
+  --error: #c2410c;
   --shadow: 0 28px 80px rgba(15, 23, 42, 0.12);
   background:
-    radial-gradient(circle at top left, rgba(33, 87, 243, 0.14), transparent 28%),
-    radial-gradient(circle at top right, rgba(20, 184, 166, 0.1), transparent 24%),
-    linear-gradient(180deg, #f7faff 0%, #eef4ff 42%, #e8f0fb 100%);
+    radial-gradient(circle at top left, rgba(216, 180, 106, 0.22), transparent 28%),
+    radial-gradient(circle at top right, rgba(10, 10, 10, 0.08), transparent 24%),
+    linear-gradient(180deg, #fffaf0 0%, #f4eadb 42%, #ebe0cf 100%);
 }
 
 button,
@@ -91,13 +91,13 @@ button {
 .backdrop-a {
   top: -10rem;
   right: -8rem;
-  background: radial-gradient(circle, rgba(73, 197, 182, 0.26), transparent 68%);
+  background: radial-gradient(circle, rgba(216, 180, 106, 0.26), transparent 68%);
 }
 
 .backdrop-b {
   bottom: -12rem;
   left: -10rem;
-  background: radial-gradient(circle, rgba(240, 179, 109, 0.22), transparent 68%);
+  background: radial-gradient(circle, rgba(10, 10, 10, 0.12), transparent 68%);
 }
 
 .app-shell {

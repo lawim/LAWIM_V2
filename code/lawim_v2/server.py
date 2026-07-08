@@ -143,6 +143,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/styles.css":
             self._send_static("styles.css", "text/css; charset=utf-8")
             return
+        if path in {"/logo.svg", "/favicon.svg", "/robots.txt"}:
+            content_type = "image/svg+xml" if path.endswith(".svg") else "text/plain; charset=utf-8"
+            self._send_static(path.lstrip("/"), content_type)
+            return
         if path.startswith("/media/"):
             self._send_media_asset(path)
             return

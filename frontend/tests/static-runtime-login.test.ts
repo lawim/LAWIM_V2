@@ -181,7 +181,7 @@ describe('static runtime login flow', () => {
     expect(document.body).not.toHaveTextContent(/lawim-demo/i);
     expect(document.getElementById('login-form')).toBeInTheDocument();
     expect(document.querySelector('.brand-mark')).toBeInTheDocument();
-    expect(document.querySelector('.brand-lockup__copy .lede')).toHaveTextContent(/accompagnement immobilier intelligent/i);
+    expect(document.querySelector('.brand-lockup__copy .lede')).toHaveTextContent(/L’IMMOBILIER, AUTREMENT\. EN TOUTE CONFIANCE\./i);
     expect(document.getElementById('login-form')?.querySelector('[name="role"]')).toBeNull();
 
     debugSpy.mockClear();

@@ -7,3 +7,4 @@ export * from './components/Textarea';
 export * from './components/Checkbox';
 export * from './components/BrandMark';
 export * from './components/PageShell';
+export * from './brand';

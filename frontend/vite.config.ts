@@ -12,9 +12,10 @@ export default defineConfig({
       manifest: {
         name: 'LAWIM',
         short_name: 'LAWIM',
-        description: 'LAWIM V2 Frontend Platform',
-        theme_color: '#0f172a',
-        background_color: '#0f172a',
+        description: 'LAWIM · L’IMMOBILIER, AUTREMENT. EN TOUTE CONFIANCE.',
+        theme_color: '#0a0a0a',
+        background_color: '#0a0a0a',
+        lang: 'fr',
         display: 'standalone',
         start_url: '/',
         icons: [

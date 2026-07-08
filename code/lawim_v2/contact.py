@@ -2,6 +2,15 @@
 
 from __future__ import annotations
 
+BRAND_SLOGAN = "L’IMMOBILIER, AUTREMENT."
+BRAND_SUBSLOGAN = "EN TOUTE CONFIANCE."
+INSTITUTIONAL_TAGLINE = "Intelligent Real Estate Relationships"
+BRAND_MESSAGE = (
+    "Plateforme d'intelligence immobilière qui connecte les bonnes personnes, "
+    "aux bons biens, au bon moment grâce à l'intelligence artificielle."
+)
+BRAND_POSITIONING = "Connecting people, properties and opportunities."
+
 COMPANY_NAME = "LAWIM"
 PHONE_NUMBER = "686 822 667"
 PHONE_E164 = "+237686822667"
@@ -17,10 +26,14 @@ WEBSITE_URL = "https://lawim.cm"
 
 SUPPORT_CONTACT = (
     f"{COMPANY_NAME}\n"
+    f"{BRAND_SLOGAN} {BRAND_SUBSLOGAN}\n"
+    f"{INSTITUTIONAL_TAGLINE}\n"
     f"📞 WhatsApp/Appel : {PHONE_NUMBER}\n"
+    f"✉️ Email : {SUPPORT_EMAIL}\n"
     f"Facebook : {FACEBOOK_USERNAME}\n"
     f"WhatsApp : {WHATSAPP_USERNAME}\n"
-    f"Telegram Bot : {TELEGRAM_BOT}"
+    f"Telegram Bot : {TELEGRAM_BOT}\n"
+    f"Site : {WEBSITE_URL}"
 )
 
 
@@ -46,6 +59,11 @@ def facebook_link() -> str:
 def to_public_dict() -> dict[str, str]:
     return {
         "company_name": COMPANY_NAME,
+        "brand_slogan": BRAND_SLOGAN,
+        "brand_subslogan": BRAND_SUBSLOGAN,
+        "institutional_tagline": INSTITUTIONAL_TAGLINE,
+        "brand_message": BRAND_MESSAGE,
+        "brand_positioning": BRAND_POSITIONING,
         "phone_number": PHONE_NUMBER,
         "phone_e164": PHONE_E164,
         "phone_international": PHONE_INTERNATIONAL,

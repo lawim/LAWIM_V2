@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { NavLink, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { apiSdk, type PropertySummary } from '@api-sdk';
-import { Badge, BrandMark, Button, Card, Checkbox, Input, PageShell, Select, Textarea } from '@ui';
+import { Badge, BrandMark, Button, Card, Checkbox, Input, PageShell, Select, Textarea, LAWIM_BRAND_SLOGAN } from '@ui';
 import { ProtectedRoute, resolveDashboardPath, resolvePrimaryRole, type AccessRole, useAuthStore } from '@auth';
 import { WorkflowOrchestratorPage } from './WorkflowOrchestratorPage';
 import { ObservabilityConsolePage } from './ObservabilityConsolePage';
@@ -103,10 +103,10 @@ function HomePage() {
             <p>• Messages clairs pour les identifiants incorrects, les sessions expirées et les serveurs indisponibles.</p>
             <p>• Une marque LAWIM cohérente sur toutes les pages.</p>
           </div>
-          <div className="mt-5 rounded-2xl border border-brand-500/20 bg-brand-500/10 p-4 text-sm text-brand-100">
-            {isAuthenticated ? `Bienvenue ${user?.name || user?.email || 'utilisateur'}. Votre rôle actif est ${role}.` : 'Les nouveaux utilisateurs voient la même porte d’entrée que les utilisateurs déjà connectés.'}
-          </div>
-        </Card>
+        <div className="mt-5 rounded-2xl border border-brand-500/20 bg-brand-500/10 p-4 text-sm text-brand-100">
+          {isAuthenticated ? `Bienvenue ${user?.name || user?.email || 'utilisateur'}. Votre rôle actif est ${role}.` : 'Les nouveaux utilisateurs voient la même porte d’entrée que les utilisateurs déjà connectés.'}
+        </div>
+      </Card>
       </div>
     </PageShell>
   );
@@ -619,10 +619,10 @@ function LoginPage() {
 
   if ((!hasHydrated || isLoading) && !email && !password && !message) {
     return (
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.96),_rgba(219,234,254,0.75)_36%,_rgba(148,163,184,0.35)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
+      <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(216,180,106,0.2),_rgba(255,250,240,0.96)_36%,_rgba(243,238,230,0.94)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
         <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col justify-between gap-10">
           <div className="flex items-center justify-between">
-            <BrandMark tone="light" slogan="LAWIM · accompagnement immobilier intelligent" />
+            <BrandMark tone="light" slogan={LAWIM_BRAND_SLOGAN} />
             <Badge variant="info">Vérification de session</Badge>
           </div>
           <div className="flex flex-1 items-center justify-center">
@@ -638,10 +638,10 @@ function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.96),_rgba(219,234,254,0.75)_36%,_rgba(148,163,184,0.35)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(216,180,106,0.2),_rgba(255,250,240,0.96)_36%,_rgba(243,238,230,0.94)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col justify-between gap-10">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <BrandMark tone="light" slogan="LAWIM · accompagnement immobilier intelligent" />
+          <BrandMark tone="light" slogan={LAWIM_BRAND_SLOGAN} />
           <Badge variant="info">Email + mot de passe uniquement</Badge>
         </div>
 
@@ -846,7 +846,7 @@ export function WebApp() {
       {!location.pathname.startsWith('/login') ? (
         <nav aria-label="Primary" className="sticky top-0 z-20 border-b border-slate-800/80 bg-slate-950/90 px-4 py-4 text-slate-300 backdrop-blur sm:px-6">
           <div className="mx-auto flex max-w-6xl flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <BrandMark slogan="LAWIM · accompagnement immobilier intelligent" />
+            <BrandMark slogan={LAWIM_BRAND_SLOGAN} />
             <div className="flex flex-wrap gap-2 text-sm">
               {navItems.map((item) => (
                 <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'rounded-full bg-slate-800 px-3 py-2 text-white' : 'rounded-full px-3 py-2 text-slate-400 hover:bg-slate-900 hover:text-white')}>

@@ -249,6 +249,7 @@ class LawimServices:
         return {
             "summary": payload["summary"],
             "current_user": current_user,
+            "official_contact": payload["official_contact"],
             "features": {
                 "demo_credentials": self.config.seed_demo_data,
             },

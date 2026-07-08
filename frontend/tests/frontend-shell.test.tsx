@@ -6,6 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { apiSdk } from '@api-sdk';
 import { useAuthStore } from '@auth';
+import { LAWIM_BRAND_SLOGAN } from '@ui';
 import type { ReactElement } from 'react';
 import { WebApp } from '../apps/web/src/App';
 import { AdminApp } from '../apps/admin/src/App';
@@ -77,7 +78,7 @@ describe('LAWIM frontend shell', () => {
     expect(screen.getByRole('heading', { name: /un seul espace\. cinq rôles officiels\. aucun sélecteur de rôle\./i })).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: /primary/i })).toBeInTheDocument();
     expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(2);
-    expect(screen.getAllByText(/lawim · accompagnement immobilier intelligent/i)).toHaveLength(2);
+    expect(screen.getAllByText(LAWIM_BRAND_SLOGAN)).toHaveLength(2);
   });
 
   it('renders the login page without a role selector and with the LAWIM logo', async () => {
@@ -85,7 +86,7 @@ describe('LAWIM frontend shell', () => {
 
     expect(await screen.findByRole('heading', { name: /connectez-vous une fois\. le bon tableau de bord s'ouvre automatiquement\./i })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: /lawim logo/i })).toBeInTheDocument();
-    expect(screen.getAllByText(/lawim · accompagnement immobilier intelligent/i)).toHaveLength(1);
+    expect(screen.getAllByText(LAWIM_BRAND_SLOGAN)).toHaveLength(1);
     expect(screen.queryByLabelText(/role/i)).not.toBeInTheDocument();
   });
 
@@ -120,7 +121,7 @@ describe('LAWIM frontend shell', () => {
 
     expect(await screen.findByRole('heading', { name: heading })).toBeInTheDocument();
     expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(2);
-    expect(screen.getAllByText(/lawim · accompagnement immobilier intelligent/i)).toHaveLength(2);
+    expect(screen.getAllByText(LAWIM_BRAND_SLOGAN)).toHaveLength(2);
     expect(window.localStorage.getItem('lawim_token')).toBe('live-token');
     expect(loginSpy).toHaveBeenCalledWith({ email, password: 'lawim-demo' });
   });
@@ -216,7 +217,7 @@ describe('LAWIM frontend shell', () => {
     expect(await screen.findByRole('heading', { name: /cockpit opérateur/i })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: /cockpit administrateur/i })).not.toBeInTheDocument();
     expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(2);
-    expect(screen.getAllByText(/lawim · accompagnement immobilier intelligent/i)).toHaveLength(2);
+    expect(screen.getAllByText(LAWIM_BRAND_SLOGAN)).toHaveLength(2);
   });
 
   it('emits controlled auth traces during a successful login', async () => {

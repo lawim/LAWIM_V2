@@ -27,13 +27,23 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         bootstrap_payload = bootstrap.body_json()
         self.assertEqual(bootstrap_payload["summary"]["published_properties"], 50)
         self.assertEqual(len(bootstrap_payload["properties"]), 10)
+        self.assertEqual(bootstrap_payload["official_contact"]["brand_slogan"], "L’IMMOBILIER, AUTREMENT.")
+        self.assertEqual(bootstrap_payload["official_contact"]["brand_subslogan"], "EN TOUTE CONFIANCE.")
 
         html = self.invoke("/")
         self.assertEqual(html.status, HTTPStatus.OK)
-        self.assertIn("accompagnement immobilier intelligent", html.body_text())
+        self.assertIn("L’IMMOBILIER, AUTREMENT. EN TOUTE CONFIANCE.", html.body_text())
         self.assertIn("Connexion", html.body_text())
         self.assertIn("Content-Security-Policy", html.response_headers)
         self.assertIn("default-src 'self'", html.response_headers["Content-Security-Policy"])
+
+        logo = self.invoke("/logo.svg")
+        self.assertEqual(logo.status, HTTPStatus.OK)
+        self.assertEqual(logo.response_headers["Content-Type"], "image/svg+xml")
+
+        favicon = self.invoke("/favicon.svg")
+        self.assertEqual(favicon.status, HTTPStatus.OK)
+        self.assertEqual(favicon.response_headers["Content-Type"], "image/svg+xml")
 
         js = self.invoke("/app.js")
         self.assertEqual(js.status, HTTPStatus.OK)
