@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import tempfile
 from http import HTTPStatus
 from pathlib import Path
@@ -139,6 +140,53 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
                 self.assertEqual(second_seed["summary"]["organizations"], 3)
             finally:
                 repository.close()
+
+    def test_sync_demo_credentials_updates_app_accounts(self) -> None:
+        with tempfile.TemporaryDirectory() as tempdir:
+            db_path = Path(tempdir) / "runtime.sqlite3"
+            repository = LawimRepository(db_path)
+            repository.initialize(seed_demo_data=False)
+            try:
+                repository.create_user(
+                    email="admin@lawim.app",
+                    full_name="Admin LAWIM",
+                    role="admin",
+                    password="old-secret",
+                )
+                self.assertIsNotNone(repository.authenticate(email="admin@lawim.app", password="old-secret"))
+
+                updated = repository.sync_demo_credentials("new-secret")
+                self.assertIn("admin@lawim.app", updated)
+                self.assertIsNone(repository.authenticate(email="admin@lawim.app", password="old-secret"))
+                self.assertIsNotNone(repository.authenticate(email="admin@lawim.app", password="new-secret"))
+            finally:
+                repository.close()
+
+    def test_build_runtime_syncs_credentials_from_environment(self) -> None:
+        from lawim_v2.bootstrap import build_runtime
+        from lawim_v2.config import AppConfig
+
+        previous = os.environ.get("LAWIM_ADMIN_PASSWORD")
+        os.environ["LAWIM_ADMIN_PASSWORD"] = "runtime-secret"
+        try:
+            with tempfile.TemporaryDirectory() as tempdir:
+                db_path = Path(tempdir) / "runtime.sqlite3"
+                media_path = Path(tempdir) / "media"
+                runtime = build_runtime(AppConfig.for_test(db_path=db_path, media_storage_path=media_path))
+                try:
+                    self.assertIsNone(
+                        runtime.repository.authenticate(email="admin@lawim.local", password="lawim-demo")
+                    )
+                    self.assertIsNotNone(
+                        runtime.repository.authenticate(email="admin@lawim.local", password="runtime-secret")
+                    )
+                finally:
+                    runtime.close()
+        finally:
+            if previous is None:
+                os.environ.pop("LAWIM_ADMIN_PASSWORD", None)
+            else:
+                os.environ["LAWIM_ADMIN_PASSWORD"] = previous
 
     def test_referential_integrity_blocks_orphaned_deletes(self) -> None:
         seeded_conversations = self.repository.list_conversations(limit=10)

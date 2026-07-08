@@ -555,6 +555,34 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         )
         return updated
 
+    def sync_demo_credentials(
+        self,
+        password: str,
+        *,
+        emails: tuple[str, ...] = (
+            "admin@lawim.app",
+            "agent@lawim.app",
+            "owner@lawim.app",
+            "admin@lawim.local",
+            "agent@lawim.local",
+            "owner@lawim.local",
+        ),
+    ) -> list[str]:
+        password = _require_text(password, "password")
+        password_record = hash_password(password)
+        normalized_emails = tuple(_normalize_email(email) for email in emails)
+        updated: list[str] = []
+        with self._transaction() as conn:
+            for email in normalized_emails:
+                if conn.execute("SELECT 1 FROM users WHERE email = ?", (email,)).fetchone() is None:
+                    continue
+                conn.execute(
+                    "UPDATE users SET password_salt = ?, password_hash = ? WHERE email = ?",
+                    (password_record.salt, password_record.hash, email),
+                )
+                updated.append(email)
+        return updated
+
     def delete_user(self, user_id: int) -> None:
         user = self.get_user_by_id(user_id)
         if self.scalar("SELECT COUNT(*) FROM conversations WHERE user_id = ?", (user_id,)) > 0:
