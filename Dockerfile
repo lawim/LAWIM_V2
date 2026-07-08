@@ -17,8 +17,11 @@ RUN useradd --system --create-home --home-dir /home/lawim --shell /usr/sbin/nolo
     && mkdir -p /app/code /app/data/runtime \
     && chown -R lawim:lawim /app /home/lawim
 
+COPY requirements.txt requirements-postgresql.txt /app/
 COPY --chown=lawim:lawim sitecustomize.py /app/sitecustomize.py
 COPY --chown=lawim:lawim code /app/code
+
+RUN pip install --no-cache-dir -r /app/requirements.txt -r /app/requirements-postgresql.txt
 
 USER lawim
 
