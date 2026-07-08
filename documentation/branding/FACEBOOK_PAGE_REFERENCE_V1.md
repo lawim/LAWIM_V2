@@ -71,7 +71,7 @@ Parce qu'un projet immobilier est avant tout un projet de vie.
 
 Restons en contact
 📲 WhatsApp : +237 686 822 667
-📧 bonjour.lawim@gmail.com
+📧 contact@lawim.app
 🤖 Telegram : @lawim_assistant_bot
 
 8. Coordonnées
@@ -86,7 +86,7 @@ WhatsApp (username)
 Telegram Bot
 @lawim_assistant_bot
 E-mail
-bonjour.lawim@gmail.com
+contact@lawim.app
 Site web
 https://lawim.cm
 (À renseigner dès la mise en ligne du site.)
@@ -254,4 +254,3 @@ Nous comprenons votre projet avant de vous orienter.
 25. Signature finale
 LAWIM
 L'immobilier, autrement.
-

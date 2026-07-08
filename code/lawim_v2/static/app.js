@@ -3,6 +3,7 @@ const state = {
   bootstrap: null,
   health: null,
   activeJourney: localStorage.getItem("lawim.journey") || "user",
+  activeModule: localStorage.getItem("lawim.module") || "dashboard",
   language: localStorage.getItem("lawim.language") || "fr",
   statsPeriod: localStorage.getItem("lawim.stats.period") || "today",
   selectedConversationId: null,
@@ -89,8 +90,19 @@ const UI_COPY = {
   fr: {
     welcome: "Bonjour",
     loginTitle: "Connexion",
-    loginLead: "Email et mot de passe uniquement. Aucun choix de rôle.",
+    loginLead: "E-mail et mot de passe uniquement. Aucun choix de rôle.",
+    brandTagline: "LAWIM · L’IMMOBILIER, AUTREMENT. EN TOUTE CONFIANCE.",
+    authNote: "Le tableau de bord correspondant s'ouvre automatiquement après identification.",
+    secureAccess: "Accès sécurisé",
     authenticated: "Déconnexion",
+    modules: "Modules",
+    dashboard: "Tableau de bord",
+    moduleDeck: "Espaces dédiés",
+    moduleDeckLead: "Choisissez un espace dédié pour ouvrir le bon module.",
+    backToDashboard: "Retour au dashboard",
+    openModule: "Ouvrir",
+    loginForgot: "Mot de passe oublié",
+    loginCreate: "Créer un compte",
     activity: "Activité du jour",
     priorities: "Mes priorités",
     quickActions: "Mes actions rapides",
@@ -101,12 +113,33 @@ const UI_COPY = {
     session: "Session invitée",
     selectRole: "Cockpit sélectionné",
     supportHint: "Suggestion, support, réclamation, signalement, partenariat ou autre demande.",
+    cockpitLeads: [
+      "Étape actuelle, documents manquants et prochaine action.",
+      "Les signaux les plus utiles de la journée.",
+      "Ce qui mérite votre attention maintenant.",
+      "Des raccourcis utiles pour avancer plus vite.",
+      "Indicateurs sobres et lisibles.",
+      "Suggestions contextuelles et discrètes.",
+      "Les prochaines étapes les plus pertinentes.",
+      "Suggestion, support, réclamation ou partenariat.",
+    ],
   },
   en: {
     welcome: "Hello",
     loginTitle: "Sign in",
     loginLead: "Email and password only. No role picker.",
+    brandTagline: "LAWIM · REAL ESTATE, DIFFERENTLY. WITH CONFIDENCE.",
+    authNote: "The corresponding dashboard opens automatically after sign-in.",
+    secureAccess: "Secure access",
     authenticated: "Sign out",
+    modules: "Modules",
+    dashboard: "Dashboard",
+    moduleDeck: "Dedicated spaces",
+    moduleDeckLead: "Choose a dedicated space to open the right module.",
+    backToDashboard: "Back to dashboard",
+    openModule: "Open",
+    loginForgot: "Forgot password",
+    loginCreate: "Create account",
     activity: "Today's activity",
     priorities: "My priorities",
     quickActions: "Quick actions",
@@ -117,12 +150,33 @@ const UI_COPY = {
     session: "Guest session",
     selectRole: "Cockpit selected",
     supportHint: "Suggestion, support, complaint, report, partnership or other request.",
+    cockpitLeads: [
+      "Current step, missing documents and next action.",
+      "The most useful signals of the day.",
+      "What deserves your attention now.",
+      "Useful shortcuts to move faster.",
+      "Clear, sober indicators.",
+      "Contextual and discreet suggestions.",
+      "The most relevant next steps.",
+      "Suggestion, support, complaint or partnership.",
+    ],
   },
   pidgin: {
     welcome: "Hallo",
     loginTitle: "Enter",
-    loginLead: "Email and password only. No role choice.",
+    loginLead: "Email na password only. No role choice.",
+    brandTagline: "LAWIM · REAL ESTATE, DIFFERENTLY. WITH CONFIDENCE.",
+    authNote: "The dashboard go open by itself after login.",
+    secureAccess: "Secure access",
     authenticated: "Comot",
+    modules: "Modules",
+    dashboard: "Dashboard",
+    moduleDeck: "Dedicated spaces",
+    moduleDeckLead: "Choose one dedicated space to open the right module.",
+    backToDashboard: "Go back dashboard",
+    openModule: "Open",
+    loginForgot: "Forget password",
+    loginCreate: "Create account",
     activity: "Today activity",
     priorities: "My priorities",
     quickActions: "Quick actions",
@@ -133,79 +187,603 @@ const UI_COPY = {
     session: "Guest session",
     selectRole: "Cockpit selected",
     supportHint: "Suggestion, support, complaint, report, partnership or other request.",
+    cockpitLeads: [
+      "Current step, missing document, and next action.",
+      "The most useful signals for today.",
+      "Wetin need your attention now.",
+      "Small shortcuts to move faster.",
+      "Clear and simple indicators.",
+      "Contextual and quiet suggestions.",
+      "The next best steps.",
+      "Suggestion, support, complaint, or partnership.",
+    ],
+  },
+};
+
+const SUMMARY_COPY = {
+  fr: {
+    organizations: "🏢 Organisations",
+    users: "👥 Utilisateurs",
+    properties: "🏠 Biens publiés",
+    conversations: "💬 Conversations",
+    messages: "✉️ Messages",
+    notifications: "🔔 Notifications",
+    media: "🖼 Médias",
+    projects: "🚧 Projets",
+  },
+  en: {
+    organizations: "🏢 Organizations",
+    users: "👥 Users",
+    properties: "🏠 Properties published",
+    conversations: "💬 Conversations",
+    messages: "✉️ Messages",
+    notifications: "🔔 Notifications",
+    media: "🖼 Media",
+    projects: "🚧 Projects",
+  },
+  pidgin: {
+    organizations: "🏢 Organizations",
+    users: "👥 Users",
+    properties: "🏠 Bens",
+    conversations: "💬 Conversations",
+    messages: "✉️ Messages",
+    notifications: "🔔 Notifications",
+    media: "🖼 Media",
+    projects: "🚧 Projects",
+  },
+};
+
+const STATS_PERIOD_COPY = {
+  fr: {
+    today: "Aujourd'hui",
+    "7d": "7 jours",
+    "30d": "30 jours",
+    year: "Année",
+    custom: "Période personnalisée",
+    activePeriod: "Période active",
+  },
+  en: {
+    today: "Today",
+    "7d": "7 days",
+    "30d": "30 days",
+    year: "Year",
+    custom: "Custom period",
+    activePeriod: "Active period",
+  },
+  pidgin: {
+    today: "Today",
+    "7d": "7 days",
+    "30d": "30 days",
+    year: "Year",
+    custom: "Custom period",
+    activePeriod: "Active period",
+  },
+};
+
+const RUNTIME_COPY = {
+  fr: {
+    refreshing: "Actualisation de l'environnement...",
+    ready: "Environnement prêt.",
+  },
+  en: {
+    refreshing: "Refreshing the environment...",
+    ready: "Environment ready.",
+  },
+  pidgin: {
+    refreshing: "Refreshing the environment...",
+    ready: "Environment ready.",
+  },
+};
+
+const NOTICE_COPY = {
+  loginSuccess: {
+    fr: (identity) => `Connexion réussie pour ${identity}.`,
+    en: (identity) => `Signed in as ${identity}.`,
+    pidgin: (identity) => `Login don succeed for ${identity}.`,
+  },
+  logout: {
+    fr: "Session fermée.",
+    en: "Session closed.",
+    pidgin: "Session don close.",
+  },
+  projectCreateAuth: {
+    fr: "Connectez-vous pour créer un projet.",
+    en: "Sign in to create a project.",
+    pidgin: "Sign in first to create project.",
+  },
+  projectCreated: {
+    fr: "Projet créé.",
+    en: "Project created.",
+    pidgin: "Project created.",
+  },
+  matchReturned: {
+    fr: (count, score) => `Retour de ${count} matchs classés (score min ${score}).`,
+    en: (count, score) => `Returned ${count} ranked matches (min score ${score}).`,
+    pidgin: (count, score) => `Returned ${count} ranked matches (min score ${score}).`,
+  },
+  recordsAuth: {
+    fr: "Authentifiez-vous avant de créer des enregistrements.",
+    en: "Authenticate before creating records.",
+    pidgin: "Authenticate before creating records.",
+  },
+  propertyCreated: {
+    fr: "Bien créé et enregistré.",
+    en: "Property created and saved.",
+    pidgin: "Property created and saved.",
+  },
+  geoLookup: {
+    fr: "Géocodage terminé.",
+    en: "Geo lookup completed.",
+    pidgin: "Geo lookup completed.",
+  },
+  mediaAuth: {
+    fr: "Authentifiez-vous avant de téléverser des médias.",
+    en: "Authenticate before uploading media.",
+    pidgin: "Authenticate before uploading media.",
+  },
+  mediaUploaded: {
+    fr: "Média téléversé.",
+    en: "Media uploaded.",
+    pidgin: "Media uploaded.",
+  },
+  conversationAuth: {
+    fr: "Sélectionnez une conversation puis authentifiez-vous.",
+    en: "Select a conversation and authenticate first.",
+    pidgin: "Select a conversation and authenticate first.",
+  },
+  replySent: {
+    fr: "Réponse envoyée.",
+    en: "Reply sent.",
+    pidgin: "Reply sent.",
+  },
+  registerSuccess: {
+    fr: (email) => `Compte créé pour ${email}.`,
+    en: (email) => `Registered as ${email}.`,
+    pidgin: (email) => `Registered as ${email}.`,
+  },
+  propertySearchFound: {
+    fr: (count) => `${count} annonces trouvées.`,
+    en: (count) => `Found ${count} listings.`,
+    pidgin: (count) => `Found ${count} listings.`,
+  },
+  propertyPublishAuth: {
+    fr: "Sélectionnez un bien puis authentifiez-vous.",
+    en: "Select a property and authenticate first.",
+    pidgin: "Select a property and authenticate first.",
+  },
+  propertyPublished: {
+    fr: "Bien publié.",
+    en: "Property published.",
+    pidgin: "Property published.",
+  },
+  propertyArchived: {
+    fr: "Bien archivé.",
+    en: "Property archived.",
+    pidgin: "Property archived.",
+  },
+  conversationOpened: {
+    fr: "Conversation ouverte.",
+    en: "Conversation opened.",
+    pidgin: "Conversation opened.",
+  },
+  conversationSelect: {
+    fr: "Sélectionnez d'abord une conversation.",
+    en: "Select a conversation first.",
+    pidgin: "Select a conversation first.",
+  },
+  negotiationUpdated: {
+    fr: (stage) => `Étape de négociation mise à jour: ${stage}.`,
+    en: (stage) => `Negotiation stage updated to ${stage}.`,
+    pidgin: (stage) => `Negotiation stage updated to ${stage}.`,
+  },
+  notificationsFiltered: {
+    fr: "Filtre de notifications appliqué.",
+    en: "Notification filter applied.",
+    pidgin: "Notification filter applied.",
+  },
+  adminAuth: {
+    fr: "Authentifiez-vous comme administrateur d'abord.",
+    en: "Authenticate as admin first.",
+    pidgin: "Authenticate as admin first.",
+  },
+  organizationCreated: {
+    fr: "Organisation créée.",
+    en: "Organization created.",
+    pidgin: "Organization created.",
+  },
+  staffCreated: {
+    fr: "Compte collaborateur créé.",
+    en: "Staff user created.",
+    pidgin: "Staff user created.",
+  },
+};
+
+const SYSTEM_COPY = {
+  fr: {
+    selectSourceFirst: "Sélectionnez une source d'abord.",
+    sourceSelected: (name) => `Source sélectionnée : ${name}.`,
+    noSourceRecords: "Aucun enregistrement d'intelligence des sources.",
+    select: "Sélectionner",
+    sourceLabel: "Source",
+    whatsappLink: "Lien WhatsApp",
+    referenceCode: "Code de référence",
+    sieImportCompleted: "Import SIE terminé.",
+    sourceContextUpdated: "Contexte source mis à jour.",
+    sourceAnalysisCompleted: "Analyse source terminée.",
+    whatsappLinkGenerated: "Lien WhatsApp généré.",
+    referenceCodeGenerated: "Code de référence généré.",
+    registrationMissingToken: "La réponse d'inscription n'inclut pas de jeton.",
+    invalidJsonResponse: (path) => `Réponse JSON invalide depuis ${path}`,
+  },
+  en: {
+    selectSourceFirst: "Select a source first.",
+    sourceSelected: (name) => `Selected source: ${name}.`,
+    noSourceRecords: "No source intelligence records yet.",
+    select: "Select",
+    sourceLabel: "Source",
+    whatsappLink: "WhatsApp link",
+    referenceCode: "Reference code",
+    sieImportCompleted: "SIE import completed.",
+    sourceContextUpdated: "Source context updated.",
+    sourceAnalysisCompleted: "Source analysis completed.",
+    whatsappLinkGenerated: "WhatsApp link generated.",
+    referenceCodeGenerated: "Reference code generated.",
+    registrationMissingToken: "The registration response did not include a token.",
+    invalidJsonResponse: (path) => `Invalid JSON response from ${path}`,
+  },
+  pidgin: {
+    selectSourceFirst: "Select source first.",
+    sourceSelected: (name) => `Source selected: ${name}.`,
+    noSourceRecords: "No source intelligence records yet.",
+    select: "Select",
+    sourceLabel: "Source",
+    whatsappLink: "WhatsApp link",
+    referenceCode: "Reference code",
+    sieImportCompleted: "SIE import complete.",
+    sourceContextUpdated: "Source context updated.",
+    sourceAnalysisCompleted: "Source analysis complete.",
+    whatsappLinkGenerated: "WhatsApp link generated.",
+    referenceCodeGenerated: "Reference code generated.",
+    registrationMissingToken: "Registration response no get token.",
+    invalidJsonResponse: (path) => `Invalid JSON response from ${path}`,
+  },
+};
+
+function noticeCopy(key, ...args) {
+  const entry = NOTICE_COPY[key];
+  if (!entry) {
+    return "";
+  }
+  const value = entry[state.language] || entry.fr || entry.en || entry.pcm;
+  return typeof value === "function" ? value(...args) : value;
+}
+
+function systemCopy(key, ...args) {
+  const entry = SYSTEM_COPY[state.language] || SYSTEM_COPY.fr;
+  const value = entry[key] || SYSTEM_COPY.fr[key] || SYSTEM_COPY.en[key] || "";
+  return typeof value === "function" ? value(...args) : value;
+}
+
+function translateStatsPeriodSelect() {
+  if (!refs.statsPeriodSelect) {
+    return;
+  }
+  const copy = STATS_PERIOD_COPY[state.language] || STATS_PERIOD_COPY.fr;
+  const labels = {
+    today: copy.today,
+    "7d": copy["7d"],
+    "30d": copy["30d"],
+    year: copy.year,
+    custom: copy.custom,
+  };
+  Array.from(refs.statsPeriodSelect.options || []).forEach((option) => {
+    if (labels[option.value]) {
+      option.textContent = labels[option.value];
+    }
+  });
+}
+
+const MODULE_DEFS = {
+  dashboard: {
+    icon: "🏠",
+    label: { fr: "Tableau de bord", en: "Dashboard", pidgin: "Dashboard" },
+    description: {
+      fr: "Vue courte, priorités et actions rapides.",
+      en: "Short overview, priorities and quick actions.",
+      pidgin: "Small view, top priorities and quick actions.",
+    },
+    panelGroups: [],
+    cardGroups: [],
+    roles: ["admin", "manager", "operator", "partner", "user"],
+  },
+  biens: {
+    icon: "🏘️",
+    label: { fr: "Biens", en: "Properties", pidgin: "Bens" },
+    description: {
+      fr: "Créer, chercher, publier et suivre les biens.",
+      en: "Create, search, publish and track properties.",
+      pidgin: "Create, search, publish and follow di bens.",
+    },
+    panelGroups: ["biens"],
+    cardGroups: ["biens"],
+    roles: ["admin", "manager", "operator", "partner", "user"],
+  },
+  messages: {
+    icon: "💬",
+    label: { fr: "Messages", en: "Messages", pidgin: "Messages" },
+    description: {
+      fr: "Conversations, notifications et suivi relationnel.",
+      en: "Conversations, notifications and relationship tracking.",
+      pidgin: "Talks, notifications and follow-up.",
+    },
+    panelGroups: ["messages"],
+    cardGroups: ["messages"],
+    roles: ["admin", "manager", "operator", "partner", "user"],
+  },
+  visites: {
+    icon: "🗓️",
+    label: { fr: "Visites", en: "Visits", pidgin: "Visits" },
+    description: {
+      fr: "Parcours projet, rendez-vous et étapes de visite.",
+      en: "Project path, appointments and visit steps.",
+      pidgin: "Project route, appointments and visit steps.",
+    },
+    panelGroups: ["projet", "messages"],
+    cardGroups: ["projet", "messages"],
+    roles: ["admin", "manager", "operator", "partner", "user"],
+  },
+  statistiques: {
+    icon: "📊",
+    label: { fr: "Statistiques", en: "Statistics", pidgin: "Stats" },
+    description: {
+      fr: "Vue analytique, supervision et suivi.",
+      en: "Analytics, supervision and follow-up.",
+      pidgin: "Numbers, watch and follow-up.",
+    },
+    panelGroups: ["statistiques", "administration"],
+    cardGroups: ["statistiques", "administration"],
+    roles: ["admin", "manager", "operator", "partner", "user"],
+  },
+  documents: {
+    icon: "📚",
+    label: { fr: "Documents", en: "Documents", pidgin: "Documents" },
+    description: {
+      fr: "Connaissance, sources et intelligence documentaire.",
+      en: "Knowledge, sources and document intelligence.",
+      pidgin: "Knowledge, sources and document work.",
+    },
+    panelGroups: ["documents"],
+    cardGroups: ["documents"],
+    roles: ["admin", "manager", "operator", "partner", "user"],
+  },
+  partenaires: {
+    icon: "🤝",
+    label: { fr: "Partenaires", en: "Partners", pidgin: "Partners" },
+    description: {
+      fr: "Marketplace, prestataires et écosystème.",
+      en: "Marketplace, providers and ecosystem.",
+      pidgin: "Marketplace, service people and ecosystem.",
+    },
+    panelGroups: ["partenaires"],
+    cardGroups: ["partenaires"],
+    roles: ["admin", "manager", "operator", "partner", "user"],
+  },
+  contact: {
+    icon: "✉️",
+    label: { fr: "Nous écrire", en: "Write to us", pidgin: "Write us" },
+    description: {
+      fr: "Demande, signalement ou partenariat.",
+      en: "Request, report or partnership.",
+      pidgin: "Send request, report, or partnership.",
+    },
+    panelGroups: ["messages"],
+    cardGroups: ["messages"],
+    roles: ["admin", "manager", "operator", "partner", "user"],
+  },
+  administration: {
+    icon: "🛡️",
+    label: { fr: "Administration", en: "Administration", pidgin: "Administration" },
+    description: {
+      fr: "Paramètres, comptes et supervision interne.",
+      en: "Settings, accounts and internal supervision.",
+      pidgin: "Settings, accounts and inside supervision.",
+    },
+    panelGroups: ["administration"],
+    cardGroups: ["administration"],
+    roles: ["admin"],
   },
 };
 
 const ROLE_COCKPIT_CONFIG = {
   admin: {
-    subtitle: "Supervision complète de la plateforme et des releases.",
-    activity: ["Suivi des utilisateurs", "Santé du runtime", "Préparation des releases"],
-    priorities: ["Vérifier les accès", "Surveiller les métriques", "Piloter les comptes internes"],
+    subtitle: {
+      fr: "Supervision complète de la plateforme et des releases.",
+      en: "Full platform and release supervision.",
+      pidgin: "Full platform and release control.",
+    },
+    activity: {
+      fr: ["Suivi des utilisateurs", "Santé du runtime", "Préparation des releases"],
+      en: ["User tracking", "Runtime health", "Release preparation"],
+      pidgin: ["Track users", "Watch runtime health", "Prepare release"],
+    },
+    priorities: {
+      fr: ["Vérifier les accès", "Surveiller les métriques", "Piloter les comptes internes"],
+      en: ["Review access", "Watch metrics", "Manage internal accounts"],
+      pidgin: ["Check access", "Watch metrics", "Manage inside accounts"],
+    },
     quickActions: [
-      { label: "Créer une organisation", href: "#admin-org-form" },
-      { label: "Créer un utilisateur", href: "#admin-user-form" },
-      { label: "Ouvrir les métriques", href: "#admin-dashboard" },
-      { label: "Nous écrire", href: "#message-form" },
+      { label: { fr: "Créer une organisation", en: "Create an organization", pidgin: "Create organization" }, href: "#admin-org-form" },
+      { label: { fr: "Créer un utilisateur", en: "Create a user", pidgin: "Create user" }, href: "#admin-user-form" },
+      { label: { fr: "Ouvrir les métriques", en: "Open metrics", pidgin: "Open metrics" }, href: "#admin-dashboard" },
+      { label: { fr: "Nous écrire", en: "Write to us", pidgin: "Write us" }, href: "#message-form" },
     ],
-    recommendations: ["Sécuriser les accès sensibles", "Contrôler les validations en attente", "Préparer le prochain déploiement"],
-    nextActions: ["Planifier la revue opérationnelle", "Ouvrir les alertes prioritaires", "Valider les nouveaux comptes"],
-    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+    recommendations: {
+      fr: ["Sécuriser les accès sensibles", "Contrôler les validations en attente", "Préparer le prochain déploiement"],
+      en: ["Secure sensitive access", "Review pending approvals", "Prepare the next deployment"],
+      pidgin: ["Secure sensitive access", "Review pending approvals", "Prepare the next deployment"],
+    },
+    nextActions: {
+      fr: ["Planifier la revue opérationnelle", "Ouvrir les alertes prioritaires", "Valider les nouveaux comptes"],
+      en: ["Plan the operational review", "Open priority alerts", "Validate new accounts"],
+      pidgin: ["Plan the operational review", "Open priority alerts", "Validate new accounts"],
+    },
+    support: {
+      fr: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+      en: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+      pidgin: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+    },
   },
   manager: {
-    subtitle: "Pilotage opérationnel, équipes et priorités du jour.",
-    activity: ["Suivi des projets", "Validation des dossiers", "Communication d'équipe"],
-    priorities: ["Relancer les dossiers bloqués", "Valider les étapes critiques", "Répartir les actions rapides"],
+    subtitle: {
+      fr: "Pilotage opérationnel, équipes et priorités du jour.",
+      en: "Operational steering, teams and daily priorities.",
+      pidgin: "Operational steering, teams and daily priorities.",
+    },
+    activity: {
+      fr: ["Suivi des projets", "Validation des dossiers", "Communication d'équipe"],
+      en: ["Project tracking", "Case validation", "Team communication"],
+      pidgin: ["Project tracking", "Case validation", "Team communication"],
+    },
+    priorities: {
+      fr: ["Relancer les dossiers bloqués", "Valider les étapes critiques", "Répartir les actions rapides"],
+      en: ["Follow up blocked files", "Approve critical steps", "Distribute quick actions"],
+      pidgin: ["Follow up blocked files", "Approve critical steps", "Distribute quick actions"],
+    },
     quickActions: [
-      { label: "Voir les projets", href: "#projects-list" },
-      { label: "Suivre les conversations", href: "#conversations-list" },
-      { label: "Consulter les statistiques", href: "#status-strip" },
-      { label: "Nous écrire", href: "#message-form" },
+      { label: { fr: "Voir les projets", en: "View projects", pidgin: "View projects" }, href: "#projects-list" },
+      { label: { fr: "Suivre les conversations", en: "Track conversations", pidgin: "Track conversations" }, href: "#conversations-list" },
+      { label: { fr: "Consulter les statistiques", en: "View statistics", pidgin: "View statistics" }, href: "#status-strip" },
+      { label: { fr: "Nous écrire", en: "Write to us", pidgin: "Write us" }, href: "#message-form" },
     ],
-    recommendations: ["Clarifier les étapes en retard", "Réduire les points de friction", "Renforcer les validations utiles"],
-    nextActions: ["Rattraper les dossiers en cours", "Prioriser les validations", "Ouvrir le suivi des notifications"],
-    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+    recommendations: {
+      fr: ["Clarifier les étapes en retard", "Réduire les points de friction", "Renforcer les validations utiles"],
+      en: ["Clarify delayed steps", "Reduce friction points", "Strengthen useful approvals"],
+      pidgin: ["Clarify delayed steps", "Reduce friction points", "Strengthen useful approvals"],
+    },
+    nextActions: {
+      fr: ["Rattraper les dossiers en cours", "Prioriser les validations", "Ouvrir le suivi des notifications"],
+      en: ["Catch up on active files", "Prioritize approvals", "Open notification tracking"],
+      pidgin: ["Catch up on active files", "Prioritize approvals", "Open notification tracking"],
+    },
+    support: {
+      fr: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+      en: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+      pidgin: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+    },
   },
   operator: {
-    subtitle: "Gestion quotidienne, support et contrôle qualité.",
-    activity: ["Biens à vérifier", "Photos et médias", "Messages en attente"],
-    priorities: ["Contrôler les publications", "Mettre à jour les médias", "Répondre aux demandes"],
+    subtitle: {
+      fr: "Gestion quotidienne, support et contrôle qualité.",
+      en: "Daily operations, support and quality control.",
+      pidgin: "Daily operations, support and quality control.",
+    },
+    activity: {
+      fr: ["Biens à vérifier", "Photos et médias", "Messages en attente"],
+      en: ["Listings to review", "Photos and media", "Pending messages"],
+      pidgin: ["Listings to review", "Photos and media", "Pending messages"],
+    },
+    priorities: {
+      fr: ["Contrôler les publications", "Mettre à jour les médias", "Répondre aux demandes"],
+      en: ["Check publications", "Update media", "Reply to requests"],
+      pidgin: ["Check publications", "Update media", "Reply to requests"],
+    },
     quickActions: [
-      { label: "Créer un bien", href: "#property-form" },
-      { label: "Géolocaliser", href: "#geo-form" },
-      { label: "Téléverser des médias", href: "#media-upload-form" },
-      { label: "Nous écrire", href: "#message-form" },
+      { label: { fr: "Créer un bien", en: "Create a property", pidgin: "Create property" }, href: "#property-form" },
+      { label: { fr: "Géolocaliser", en: "Geolocate", pidgin: "Geolocate" }, href: "#geo-form" },
+      { label: { fr: "Téléverser des médias", en: "Upload media", pidgin: "Upload media" }, href: "#media-upload-form" },
+      { label: { fr: "Nous écrire", en: "Write to us", pidgin: "Write us" }, href: "#message-form" },
     ],
-    recommendations: ["Améliorer la qualité des annonces", "Vérifier les doublons de médias", "Traiter les retours clients"],
-    nextActions: ["Publier un bien prêt", "Relancer un dossier", "Ouvrir le fil de conversation"],
-    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+    recommendations: {
+      fr: ["Améliorer la qualité des annonces", "Vérifier les doublons de médias", "Traiter les retours clients"],
+      en: ["Improve listing quality", "Check duplicate media", "Handle customer feedback"],
+      pidgin: ["Improve listing quality", "Check duplicate media", "Handle customer feedback"],
+    },
+    nextActions: {
+      fr: ["Publier un bien prêt", "Relancer un dossier", "Ouvrir le fil de conversation"],
+      en: ["Publish a ready listing", "Follow up a file", "Open the conversation thread"],
+      pidgin: ["Publish a ready listing", "Follow up a file", "Open the conversation thread"],
+    },
+    support: {
+      fr: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+      en: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+      pidgin: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+    },
   },
   partner: {
-    subtitle: "Missions, rendez-vous et échanges liés à votre spécialité.",
-    activity: ["Missions en cours", "Rendez-vous", "Documents partagés"],
-    priorities: ["Confirmer les disponibilités", "Préparer les livrables", "Répondre aux sollicitations"],
+    subtitle: {
+      fr: "Missions, rendez-vous et échanges liés à votre spécialité.",
+      en: "Assignments, meetings and specialty-related exchanges.",
+      pidgin: "Assignments, meetings and specialty-related exchanges.",
+    },
+    activity: {
+      fr: ["Missions en cours", "Rendez-vous", "Documents partagés"],
+      en: ["Active assignments", "Meetings", "Shared documents"],
+      pidgin: ["Active assignments", "Meetings", "Shared documents"],
+    },
+    priorities: {
+      fr: ["Confirmer les disponibilités", "Préparer les livrables", "Répondre aux sollicitations"],
+      en: ["Confirm availability", "Prepare deliverables", "Reply to requests"],
+      pidgin: ["Confirm availability", "Prepare deliverables", "Reply to requests"],
+    },
     quickActions: [
-      { label: "Voir les opportunités", href: "#matches-list" },
-      { label: "Consulter les partenaires", href: "#partners-list" },
-      { label: "Relire les biens", href: "#properties-list" },
-      { label: "Nous écrire", href: "#message-form" },
+      { label: { fr: "Voir les opportunités", en: "View opportunities", pidgin: "View opportunities" }, href: "#matches-list" },
+      { label: { fr: "Consulter les partenaires", en: "View partners", pidgin: "View partners" }, href: "#partners-list" },
+      { label: { fr: "Relire les biens", en: "Review listings", pidgin: "Review listings" }, href: "#properties-list" },
+      { label: { fr: "Nous écrire", en: "Write to us", pidgin: "Write us" }, href: "#message-form" },
     ],
-    recommendations: ["Proposer une offre plus lisible", "Documenter les livrables", "Raccourcir le délai de réponse"],
-    nextActions: ["Préparer le prochain rendez-vous", "Relancer une mission", "Ouvrir les messages"],
-    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+    recommendations: {
+      fr: ["Proposer une offre plus lisible", "Documenter les livrables", "Raccourcir le délai de réponse"],
+      en: ["Offer clearer packages", "Document deliverables", "Shorten response time"],
+      pidgin: ["Offer clearer packages", "Document deliverables", "Shorten response time"],
+    },
+    nextActions: {
+      fr: ["Préparer le prochain rendez-vous", "Relancer une mission", "Ouvrir les messages"],
+      en: ["Prepare the next meeting", "Follow up an assignment", "Open messages"],
+      pidgin: ["Prepare the next meeting", "Follow up an assignment", "Open messages"],
+    },
+    support: {
+      fr: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+      en: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+      pidgin: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+    },
   },
   user: {
-    subtitle: "Votre projet immobilier, vos priorités et les prochaines étapes.",
-    activity: ["Recherche en cours", "Visites prévues", "Documents à compléter"],
-    priorities: ["Comparer les biens", "Préparer les documents", "Suivre les notifications"],
+    subtitle: {
+      fr: "Votre projet immobilier, vos priorités et les prochaines étapes.",
+      en: "Your property project, your priorities and next steps.",
+      pidgin: "Your property project, your priorities and next steps.",
+    },
+    activity: {
+      fr: ["Recherche en cours", "Visites prévues", "Documents à compléter"],
+      en: ["Active search", "Planned visits", "Documents to complete"],
+      pidgin: ["Active search", "Planned visits", "Documents to complete"],
+    },
+    priorities: {
+      fr: ["Comparer les biens", "Préparer les documents", "Suivre les notifications"],
+      en: ["Compare listings", "Prepare documents", "Track notifications"],
+      pidgin: ["Compare listings", "Prepare documents", "Track notifications"],
+    },
     quickActions: [
-      { label: "Rechercher un bien", href: "#property-search-form" },
-      { label: "Créer un projet", href: "#project-form" },
-      { label: "Démarrer une conversation", href: "#buyer-conversation-form" },
-      { label: "Nous écrire", href: "#message-form" },
+      { label: { fr: "Rechercher un bien", en: "Search a property", pidgin: "Search property" }, href: "#property-search-form" },
+      { label: { fr: "Créer un projet", en: "Create a project", pidgin: "Create project" }, href: "#project-form" },
+      { label: { fr: "Démarrer une conversation", en: "Start a conversation", pidgin: "Start a conversation" }, href: "#buyer-conversation-form" },
+      { label: { fr: "Nous écrire", en: "Write to us", pidgin: "Write us" }, href: "#message-form" },
     ],
-    recommendations: ["Activer les favoris utiles", "Planifier les visites", "Finaliser le dossier"],
-    nextActions: ["Lancer une recherche ciblée", "Ouvrir la carte des biens", "Comparer les opportunités"],
-    support: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+    recommendations: {
+      fr: ["Activer les favoris utiles", "Planifier les visites", "Finaliser le dossier"],
+      en: ["Save useful listings", "Schedule visits", "Finalize the file"],
+      pidgin: ["Save useful listings", "Schedule visits", "Finalize the file"],
+    },
+    nextActions: {
+      fr: ["Lancer une recherche ciblée", "Ouvrir la carte des biens", "Comparer les opportunités"],
+      en: ["Run a focused search", "Open the property map", "Compare opportunities"],
+      pidgin: ["Run a focused search", "Open the property map", "Compare opportunities"],
+    },
+    support: {
+      fr: ["Suggestion", "Support", "Réclamation", "Signalement", "Partenariat", "Autre demande"],
+      en: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+      pidgin: ["Suggestion", "Support", "Complaint", "Report", "Partnership", "Other request"],
+    },
   },
 };
 
@@ -225,6 +803,485 @@ function uiCopy() {
   return UI_COPY[state.language] || UI_COPY.fr;
 }
 
+function localizedValue(value) {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value[state.language] || value.fr || value.en || value.pcm || "";
+  }
+  return value;
+}
+
+function localizedList(value) {
+  const resolved = localizedValue(value);
+  return Array.isArray(resolved) ? resolved : [];
+}
+
+function moduleCopy(moduleKey) {
+  const module = MODULE_DEFS[moduleKey] || MODULE_DEFS.dashboard;
+  return {
+    label: module.label[state.language] || module.label.fr,
+    description: module.description[state.language] || module.description.fr,
+    icon: module.icon || "•",
+  };
+}
+
+function splitModuleGroups(value) {
+  return String(value || "")
+    .split(/\s+/)
+    .map((group) => group.trim())
+    .filter(Boolean);
+}
+
+function moduleGroups(moduleKey, kind = "panel") {
+  const module = MODULE_DEFS[moduleKey] || MODULE_DEFS.dashboard;
+  return Array.isArray(module[`${kind}Groups`]) ? module[`${kind}Groups`] : [];
+}
+
+function moduleVisibleForRole(moduleKey, role) {
+  const module = MODULE_DEFS[moduleKey] || MODULE_DEFS.dashboard;
+  const normalizedRole = normalizeAccessRole(role) || "user";
+  return module.roles.includes(normalizedRole);
+}
+
+function currentVisibleRoleKeys() {
+  const role = journeyForRole(state.activeJourney || state.bootstrap?.current_user?.role || "user");
+  return ROLE_JOURNEY_KEYS[role] || ROLE_JOURNEY_KEYS.user;
+}
+
+function elementRoleAllowed(element, visibleKeys) {
+  const allowed = splitModuleGroups(element.getAttribute("data-journey-panel"));
+  if (!allowed.length) {
+    return true;
+  }
+  return allowed.some((key) => visibleKeys.includes(key));
+}
+
+function elementModuleAllowed(element, activeModule, attributeName) {
+  const groups = splitModuleGroups(element.getAttribute(attributeName));
+  if (!groups.length) {
+    return false;
+  }
+  if (activeModule === "dashboard") {
+    return false;
+  }
+  const activeGroups = new Set([
+    ...moduleGroups(activeModule, "panel"),
+    ...moduleGroups(activeModule, "card"),
+  ]);
+  return groups.some((group) => activeGroups.has(group));
+}
+
+function decorateModuleChrome() {
+  document.querySelectorAll("[data-module-panel], [data-module-card]").forEach((element) => {
+    if (element.querySelector(":scope > .module-toolbar")) {
+      return;
+    }
+    const toolbar = document.createElement("div");
+    toolbar.className = "module-toolbar";
+    const backButton = document.createElement("button");
+    backButton.type = "button";
+    backButton.className = "button ghost module-back";
+    backButton.textContent = uiCopy().backToDashboard;
+    backButton.addEventListener("click", () => applyModule("dashboard"));
+    toolbar.appendChild(backButton);
+    element.prepend(toolbar);
+  });
+}
+
+function refreshModuleChrome() {
+  document.querySelectorAll(".module-back").forEach((button) => {
+    button.textContent = uiCopy().backToDashboard;
+  });
+}
+
+function translateModulePanels() {
+  if (state.language === "fr") {
+    return;
+  }
+
+  const copy = {
+    en: {
+      headings: {
+        "Connaissance experte": "Expert know-how",
+        "Moteur d'intelligence des sources": "Source brain",
+        "Gestion de la relation client": "Customer relation hub",
+        "Centre de communication": "Talk center",
+        "Centre analytique & BI": "Analytics & BI center",
+        "Marketplace & écosystème de partenaires": "Partner marketplace",
+        "Intelligence immobilière": "Property intelligence",
+      },
+      knowledge: {
+        title: "Expert knowledge",
+        description: "Documents, search, categories and RAG foundation (API v2).",
+        searchLabel: "Search",
+        searchPlaceholder: "Search the expert base…",
+        searchButton: "Search knowledge",
+        stats: "Sign in to load knowledge statistics.",
+      },
+      sourceIntelligence: {
+        title: "Source intelligence engine",
+        description: "Reference codes, imports, source context, analysis, WhatsApp links and source governance (API v2).",
+        labels: [
+          "Source URL",
+          "Source name",
+          "Channel",
+          "Import notes",
+          "Selected source ID",
+          "Network",
+          "Publication URL",
+          "Publication title",
+          "Publication author",
+          "Publication text",
+          "Campaign",
+          "City",
+        ],
+        placeholders: {
+          sourceName: "Publication source",
+          notes: "Import context and comments",
+          network: "web",
+          publicationTitle: "Publication title",
+          publicationAuthor: "Author name",
+          publicationText: "Excerpt or summary of the source",
+          campaign: "campaign key",
+        },
+        importButton: "Import source",
+        stats: "Sign in to load source intelligence statistics.",
+      },
+      marketplace: {
+        searchLabel: "Search the catalog",
+        searchPlaceholder: "Service, category, provider…",
+        searchButton: "Search marketplace",
+        stats: "Sign in to load marketplace statistics.",
+      },
+    },
+    pidgin: {
+      headings: {
+        "Connaissance experte": "Expert knowledge",
+        "Moteur d'intelligence des sources": "Source intelligence engine",
+        "Gestion de la relation client": "Customer relationship management",
+        "Centre de communication": "Communication center",
+        "Centre analytique & BI": "Analytics & BI center",
+        "Marketplace & écosystème de partenaires": "Marketplace & partner ecosystem",
+        "Intelligence immobilière": "Real estate intelligence",
+      },
+      knowledge: {
+        title: "Expert know-how",
+        description: "Documents, search, categories and RAG base (API v2).",
+        searchLabel: "Find",
+        searchPlaceholder: "Search inside di expert base…",
+        searchButton: "Search know-how",
+        stats: "Sign in to load know-how statistics.",
+      },
+      sourceIntelligence: {
+        title: "Source brain",
+        description: "Reference codes, imports, source context, analysis, WhatsApp links and source control (API v2).",
+        labels: [
+          "Source URL",
+          "Source name",
+          "Channel",
+          "Import notes",
+          "Selected source ID",
+          "Network",
+          "Publication URL",
+          "Publication title",
+          "Publication author",
+          "Publication text",
+          "Campaign",
+          "City",
+        ],
+        placeholders: {
+          sourceName: "Publication source",
+          notes: "Import context and comments",
+          network: "web",
+          publicationTitle: "Publication title",
+          publicationAuthor: "Author name",
+          publicationText: "Excerpt or summary of the source",
+          campaign: "campaign key",
+        },
+        importButton: "Import source",
+        stats: "Sign in to load source statistics.",
+      },
+      marketplace: {
+        searchLabel: "Find in catalog",
+        searchPlaceholder: "Service, category, provider…",
+        searchButton: "Search marketplace",
+        stats: "Sign in to load marketplace statistics.",
+      },
+    },
+  }[state.language] || null;
+
+  if (!copy) {
+    return;
+  }
+
+  document.querySelectorAll('[data-module-card="documents"]').forEach((card) => {
+    const heading = card.querySelector(".section-heading h2");
+    const lead = card.querySelector(".section-heading .muted");
+    const knowledgeSearch = card.querySelector("#knowledge-search-form");
+    const sieImport = card.querySelector("#sie-import-form");
+    if (knowledgeSearch) {
+      if (heading) {
+        heading.textContent = copy.knowledge.title;
+      }
+      if (lead) {
+        lead.textContent = copy.knowledge.description;
+      }
+      const label = knowledgeSearch.querySelector("label span");
+      const input = knowledgeSearch.querySelector("input[name='query']");
+      const button = knowledgeSearch.querySelector("button[type='submit']");
+      if (label) {
+        label.textContent = copy.knowledge.searchLabel;
+      }
+      if (input) {
+        input.placeholder = copy.knowledge.searchPlaceholder;
+      }
+      if (button) {
+        button.textContent = copy.knowledge.searchButton;
+      }
+    }
+    if (sieImport) {
+      if (heading) {
+        heading.textContent = copy.sourceIntelligence.title;
+      }
+      if (lead) {
+        lead.textContent = copy.sourceIntelligence.description;
+      }
+      const spans = sieImport.querySelectorAll("label > span");
+      spans.forEach((span, index) => {
+        if (copy.sourceIntelligence.labels[index]) {
+          span.textContent = copy.sourceIntelligence.labels[index];
+        }
+      });
+      const urlInput = sieImport.querySelector("input[name='url']");
+      const nameInput = sieImport.querySelector("input[name='name']");
+      const channelSelect = sieImport.querySelector("select[name='channel']");
+      const notesInput = sieImport.querySelector("textarea[name='notes']");
+      const button = sieImport.querySelector("button[type='submit']");
+      if (nameInput) {
+        nameInput.placeholder = copy.sourceIntelligence.placeholders.sourceName;
+      }
+      if (channelSelect) {
+        Array.from(channelSelect.options || []).forEach((option) => {
+          if (option.value === "web") option.textContent = "web";
+          if (option.value === "whatsapp") option.textContent = "whatsapp";
+          if (option.value === "referral") option.textContent = state.language === "pidgin" ? "referral" : "referral";
+          if (option.value === "internal") option.textContent = state.language === "pidgin" ? "internal" : "internal";
+          if (option.value === "publication") option.textContent = state.language === "pidgin" ? "publication" : "publication";
+          if (option.value === "other") option.textContent = state.language === "pidgin" ? "other" : "other";
+        });
+      }
+      if (notesInput) {
+        notesInput.placeholder = copy.sourceIntelligence.placeholders.notes;
+      }
+      if (button) {
+        button.textContent = copy.sourceIntelligence.importButton;
+      }
+      if (urlInput) {
+        urlInput.placeholder = "https://example.cm/publication";
+      }
+    }
+    const sieStats = card.querySelector("#sie-admin-stats");
+    if (sieStats) {
+      sieStats.textContent = copy.sourceIntelligence.stats;
+    }
+    const sieSource = card.querySelector("#sie-source-form");
+    if (sieSource) {
+      const spans = sieSource.querySelectorAll("label > span");
+      spans.forEach((span, index) => {
+        if (copy.sourceIntelligence.labels[index + 4]) {
+          span.textContent = copy.sourceIntelligence.labels[index + 4];
+        }
+      });
+      const networkInput = sieSource.querySelector("input[name='network']");
+      const publicationUrl = sieSource.querySelector("input[name='publication_url']");
+      const publicationTitle = sieSource.querySelector("input[name='publication_title']");
+      const publicationAuthor = sieSource.querySelector("input[name='publication_author']");
+      const publicationText = sieSource.querySelector("textarea[name='publication_text']");
+      const campaignInput = sieSource.querySelector("input[name='campaign']");
+      const cityInput = sieSource.querySelector("input[name='city']");
+      if (networkInput) {
+        networkInput.placeholder = copy.sourceIntelligence.placeholders.network;
+      }
+      if (publicationUrl) {
+        publicationUrl.placeholder = "https://example.cm/publication";
+      }
+      if (publicationTitle) {
+        publicationTitle.placeholder = copy.sourceIntelligence.placeholders.publicationTitle;
+      }
+      if (publicationAuthor) {
+        publicationAuthor.placeholder = copy.sourceIntelligence.placeholders.publicationAuthor;
+      }
+      if (publicationText) {
+        publicationText.placeholder = copy.sourceIntelligence.placeholders.publicationText;
+      }
+      if (campaignInput) {
+        campaignInput.placeholder = copy.sourceIntelligence.placeholders.campaign;
+      }
+      if (cityInput) {
+        cityInput.placeholder = "Douala";
+      }
+    }
+  });
+
+  document.querySelectorAll('[data-module-card="partenaires"]').forEach((card) => {
+    const searchForm = card.querySelector("#marketplace-search-form");
+    if (searchForm) {
+      const label = searchForm.querySelector("label span");
+      const input = searchForm.querySelector("input[name='query']");
+      const button = searchForm.querySelector("button[type='submit']");
+      if (label) {
+        label.textContent = copy.marketplace.searchLabel;
+      }
+      if (input) {
+        input.placeholder = copy.marketplace.searchPlaceholder;
+      }
+      if (button) {
+        button.textContent = copy.marketplace.searchButton;
+      }
+    }
+    const stats = card.querySelector("#marketplace-admin-stats");
+    if (stats) {
+      stats.textContent = copy.marketplace.stats;
+    }
+  });
+}
+
+function translateStaticShell() {
+  const copy = uiCopy();
+  const authenticated = document.body.dataset.authenticated === "true";
+  const brandTitle = document.querySelector(".brand-lockup__copy h1");
+  const brandLead = document.querySelector(".brand-lockup__copy .lede");
+  const authEyebrow = document.querySelector(".auth-panel .section-heading .eyebrow");
+  const authTitle = document.querySelector(".auth-panel .section-heading h2");
+  const authLead = document.querySelector(".auth-panel .section-heading .muted");
+  const authNote = document.querySelector(".auth-note");
+  const loginButton = document.querySelector("#login-form button[type='submit']");
+  const loginForgot = document.querySelector(".auth-panel .button.ghost");
+  const loginCreate = document.querySelector(".auth-panel .button.secondary");
+  const logoutButton = document.querySelector("#logout-button");
+  const moduleDeckTitle = document.querySelector(".sidebar > .form-panel:nth-of-type(2) .section-heading h2");
+  const moduleDeckLead = document.querySelector(".sidebar > .form-panel:nth-of-type(2) .section-heading p.muted");
+  const cockpitLeads = copy.cockpitLeads || [];
+
+  if (brandLead) {
+    brandLead.textContent = copy.brandTagline || brandLead.textContent;
+  }
+  if (brandTitle && !authenticated) {
+    brandTitle.textContent = copy.loginTitle;
+  }
+  if (moduleDeckTitle) {
+    moduleDeckTitle.textContent = copy.modules;
+  }
+  if (moduleDeckLead) {
+    moduleDeckLead.textContent = copy.moduleDeckLead || moduleDeckLead.textContent;
+  }
+  if (!authenticated) {
+    if (authEyebrow) {
+      authEyebrow.textContent = copy.secureAccess || copy.welcome;
+    }
+    if (authTitle) {
+      authTitle.textContent = copy.loginTitle;
+    }
+    if (authLead) {
+      authLead.textContent = copy.loginLead;
+    }
+    if (authNote) {
+      authNote.textContent = copy.authNote || authNote.textContent;
+    }
+    if (loginButton) {
+      loginButton.textContent = copy.loginTitle;
+    }
+    if (loginForgot) {
+      loginForgot.textContent = copy.loginForgot;
+    }
+    if (loginCreate) {
+      loginCreate.textContent = copy.loginCreate;
+    }
+  }
+  if (logoutButton) {
+    logoutButton.textContent = copy.authenticated;
+  }
+  document.querySelectorAll("#role-cockpit .cockpit-grid .cockpit-card .section-heading p.muted").forEach((paragraph, index) => {
+    if (cockpitLeads[index]) {
+      paragraph.textContent = cockpitLeads[index];
+    }
+  });
+  translateModulePanels();
+}
+
+function renderModuleDeck(currentUser) {
+  if (!refs.journeyNav) {
+    return;
+  }
+  const role = resolveAccessRole(currentUser?.role, currentUser?.roles || state.bootstrap?.roles || []);
+  const modules = Object.entries(MODULE_DEFS).filter(([moduleKey]) => moduleVisibleForRole(moduleKey, role));
+  refs.journeyNav.innerHTML = modules
+    .map(([moduleKey]) => {
+      const copy = moduleCopy(moduleKey);
+      return `
+        <button type="button" class="module-launcher" data-module="${escapeHtml(moduleKey)}">
+          <strong>${escapeHtml(`${copy.icon} ${copy.label}`)}</strong>
+          <span>${escapeHtml(copy.description)}</span>
+        </button>
+      `;
+    })
+    .join("");
+  refs.journeyNav.querySelectorAll("[data-module]").forEach((button) => {
+    button.addEventListener("click", () => applyModule(button.getAttribute("data-module") || "dashboard"));
+  });
+  refs.journeyNav.querySelectorAll("[data-module]").forEach((button) => {
+    button.dataset.active = button.getAttribute("data-module") === state.activeModule ? "true" : "false";
+  });
+}
+
+function syncWorkspaceVisibility() {
+  const activeModule = state.activeModule || "dashboard";
+  document.body.dataset.module = activeModule;
+  const visibleKeys = currentVisibleRoleKeys();
+
+  if (refs.cardsGrid) {
+    refs.cardsGrid.hidden = !state.token || activeModule === "dashboard";
+  }
+
+  document.querySelectorAll("[data-journey-panel]").forEach((panel) => {
+    if (!state.token) {
+      panel.hidden = true;
+      return;
+    }
+    const roleAllowed = elementRoleAllowed(panel, visibleKeys);
+    const moduleAllowed = elementModuleAllowed(panel, activeModule, "data-module-panel");
+    const pinnedAdminPanel =
+      activeModule === "dashboard" &&
+      panel.getAttribute("data-journey-panel") === "admin" &&
+      visibleKeys.includes("admin");
+    panel.hidden = !(roleAllowed && (moduleAllowed || pinnedAdminPanel));
+  });
+
+  document.querySelectorAll("[data-module-card]").forEach((card) => {
+    if (!state.token || activeModule === "dashboard") {
+      card.hidden = true;
+      return;
+    }
+    const roleAllowed = elementRoleAllowed(card, visibleKeys);
+    const moduleAllowed = elementModuleAllowed(card, activeModule, "data-module-card");
+    card.hidden = !(roleAllowed && moduleAllowed);
+  });
+
+  if (refs.journeyNav) {
+    refs.journeyNav.querySelectorAll("[data-module]").forEach((button) => {
+      button.dataset.active = button.getAttribute("data-module") === activeModule ? "true" : "false";
+    });
+  }
+}
+
+function applyModule(moduleKey, { persist = true } = {}) {
+  const normalized = MODULE_DEFS[moduleKey] ? moduleKey : "dashboard";
+  state.activeModule = normalized;
+  if (persist) {
+    localStorage.setItem("lawim.module", normalized);
+  }
+  syncWorkspaceVisibility();
+}
+
 function updateAuthShell(isAuthenticated) {
   document.body.dataset.authenticated = isAuthenticated ? "true" : "false";
   if (refs.workspace) {
@@ -238,6 +1295,12 @@ function updateAuthShell(isAuthenticated) {
   }
   if (refs.logoutButton) {
     refs.logoutButton.hidden = !isAuthenticated;
+  }
+  if (refs.loginForm) {
+    refs.loginForm.hidden = isAuthenticated;
+  }
+  if (refs.journeyNav) {
+    refs.journeyNav.hidden = !isAuthenticated;
   }
 }
 
@@ -285,6 +1348,8 @@ function roleLabel(role) {
 function clearSession() {
   state.token = "";
   localStorage.removeItem("lawim.token");
+  state.activeModule = "dashboard";
+  localStorage.removeItem("lawim.module");
   updateAuthShell(false);
   if (refs.currentUser) {
     refs.currentUser.textContent = uiCopy().session;
@@ -307,30 +1372,70 @@ function isServerUnavailableError(error) {
 
 function formatLoginError(error) {
   const status = Number(error?.status || 0);
+  const copy = {
+    fr: {
+      invalid: "Identifiants incorrects.",
+      forbidden: "Accès non autorisé.",
+      unavailable: "Serveur indisponible. Réessayez dans un instant.",
+      fallback: "Connexion impossible.",
+    },
+    en: {
+      invalid: "Incorrect credentials.",
+      forbidden: "Access denied.",
+      unavailable: "Server unavailable. Try again in a moment.",
+      fallback: "Unable to sign in.",
+    },
+    pidgin: {
+      invalid: "Login details no correct.",
+      forbidden: "Access no dey allowed.",
+      unavailable: "Server no dey. Try again in a moment.",
+      fallback: "Login no fit happen.",
+    },
+  }[state.language] || {};
   if (status === 401) {
-    return "Identifiants incorrects.";
+    return copy.invalid || "Identifiants incorrects.";
   }
   if (status === 403) {
-    return "Accès non autorisé.";
+    return copy.forbidden || "Accès non autorisé.";
   }
   if (isServerUnavailableError(error)) {
-    return "Serveur indisponible. Réessayez dans un instant.";
+    return copy.unavailable || "Serveur indisponible. Réessayez dans un instant.";
   }
-  return error?.message || "Connexion impossible.";
+  return error?.message || copy.fallback || "Connexion impossible.";
 }
 
 function formatSessionError(error) {
   const status = Number(error?.status || 0);
+  const copy = {
+    fr: {
+      expired: "Session expirée. Connectez-vous de nouveau.",
+      forbidden: "Accès non autorisé.",
+      unavailable: "Serveur indisponible. Réessayez dans un instant.",
+      fallback: "Impossible de restaurer la session.",
+    },
+    en: {
+      expired: "Session expired. Sign in again.",
+      forbidden: "Access denied.",
+      unavailable: "Server unavailable. Try again in a moment.",
+      fallback: "Unable to restore the session.",
+    },
+    pidgin: {
+      expired: "Session don expire. Sign in again.",
+      forbidden: "Access no dey allowed.",
+      unavailable: "Server no dey. Try again in a moment.",
+      fallback: "No fit restore session.",
+    },
+  }[state.language] || {};
   if (status === 401) {
-    return { message: "Session expirée. Connectez-vous de nouveau.", tone: "warn", clearToken: true };
+    return { message: copy.expired || "Session expirée. Connectez-vous de nouveau.", tone: "warn", clearToken: true };
   }
   if (status === 403) {
-    return { message: "Accès non autorisé.", tone: "warn", clearToken: true };
+    return { message: copy.forbidden || "Accès non autorisé.", tone: "warn", clearToken: true };
   }
   if (isServerUnavailableError(error)) {
-    return { message: "Serveur indisponible. Réessayez dans un instant.", tone: "error", clearToken: false };
+    return { message: copy.unavailable || "Serveur indisponible. Réessayez dans un instant.", tone: "error", clearToken: false };
   }
-  return { message: error?.message || "Impossible de restaurer la session.", tone: "error", clearToken: false };
+  return { message: error?.message || copy.fallback || "Impossible de restaurer la session.", tone: "error", clearToken: false };
 }
 
 function cacheRefs() {
@@ -343,6 +1448,7 @@ function cacheRefs() {
     bootstrapSummary: byId("bootstrap-summary"),
     statusStrip: byId("status-strip"),
     roleCockpit: byId("role-cockpit"),
+    cardsGrid: document.querySelector(".cards-grid"),
     roleGreeting: byId("role-greeting"),
     roleSubtitle: byId("role-subtitle"),
     roleChip: byId("role-chip"),
@@ -458,7 +1564,7 @@ function setLoading(isLoading, message = "Loading...") {
   document.body.dataset.loading = isLoading ? "true" : "false";
   if (isLoading && refs.notice) {
     refs.notice.dataset.tone = "neutral";
-    refs.notice.textContent = message;
+    refs.notice.textContent = message === "Loading..." ? (state.language === "fr" ? "Chargement..." : "Loading...") : message;
   }
 }
 
@@ -557,7 +1663,7 @@ async function api(path, { method = "GET", auth = false, body = null, query = nu
     try {
       payload = JSON.parse(text);
     } catch (error) {
-      throw new Error(`Invalid JSON response from ${path}`);
+      throw new Error(systemCopy("invalidJsonResponse", path));
     }
   }
 
@@ -585,7 +1691,7 @@ async function apiMultipart(path, { auth = false, formData }) {
     try {
       payload = JSON.parse(text);
     } catch (error) {
-      throw new Error(`Invalid JSON response from ${path}`);
+      throw new Error(systemCopy("invalidJsonResponse", path));
     }
   }
   if (!response.ok) {
@@ -620,15 +1726,16 @@ function renderStat(label, value, accent = "") {
 
 function renderSummary(summary) {
   const fragment = document.createDocumentFragment();
+  const labels = SUMMARY_COPY[state.language] || SUMMARY_COPY.fr;
   const cards = [
-    ["🏢 Organisations", summary.organizations ?? 0, "teal"],
-    ["👥 Utilisateurs", summary.users ?? 0, "gold"],
-    ["🏠 Biens publiés", summary.published_properties ?? 0, "violet"],
-    ["💬 Conversations", summary.conversations ?? 0, "coral"],
-    ["✉️ Messages", summary.messages ?? 0, "sea"],
-    ["🔔 Notifications", summary.notifications ?? 0, "gold"],
-    ["🖼 Médias", summary.media ?? 0, "slate"],
-    ["🚧 Projets", summary.projects ?? 0, "teal"],
+    [labels.organizations, summary.organizations ?? 0, "teal"],
+    [labels.users, summary.users ?? 0, "gold"],
+    [labels.properties, summary.published_properties ?? 0, "violet"],
+    [labels.conversations, summary.conversations ?? 0, "coral"],
+    [labels.messages, summary.messages ?? 0, "sea"],
+    [labels.notifications, summary.notifications ?? 0, "gold"],
+    [labels.media, summary.media ?? 0, "slate"],
+    [labels.projects, summary.projects ?? 0, "teal"],
   ];
   cards.forEach(([label, value, accent]) => fragment.appendChild(renderStat(label, value, accent)));
   refs.statusStrip?.replaceChildren(fragment);
@@ -639,7 +1746,7 @@ function renderList(target, items, renderer, emptyText) {
   if (!items || !items.length) {
     const empty = document.createElement("p");
     empty.className = "muted empty-state";
-    empty.textContent = emptyText;
+    empty.textContent = String(localizedValue(emptyText) || "");
     target.replaceChildren(empty);
     return;
   }
@@ -649,7 +1756,7 @@ function renderList(target, items, renderer, emptyText) {
 
 function renderPillList(items, emptyText) {
   if (!items.length) {
-    return `<p class="muted empty-state">${escapeHtml(emptyText)}</p>`;
+    return `<p class="muted empty-state">${escapeHtml(localizedValue(emptyText) || "")}</p>`;
   }
   return `<div class="pill-list">${items.map((item) => `<span class="pill">${escapeHtml(item)}</span>`).join("")}</div>`;
 }
@@ -698,8 +1805,12 @@ function setLanguage(language) {
   if (refs.languageSelect && refs.languageSelect.value !== normalized) {
     refs.languageSelect.value = normalized;
   }
+  translateStatsPeriodSelect();
+  translateStaticShell();
   if (state.bootstrap?.current_user) {
     renderRoleCockpit(state.bootstrap.current_user, state.bootstrap);
+    renderModuleDeck(state.bootstrap.current_user);
+    refreshModuleChrome();
   }
 }
 
@@ -723,19 +1834,136 @@ function renderRoleCockpit(currentUser, payload) {
   const roleStatus = formatRoleStatus(role);
   const activeConversation = conversations[0] || null;
   const topMatch = matches[0] || null;
+  const activityItems = localizedList(config.activity);
+  const priorityText = localizedList(config.priorities);
+  const recommendationText = localizedList(config.recommendations);
+  const nextActionText = localizedList(config.nextActions);
+  const supportText = localizedList(config.support);
+  const quickActions = (Array.isArray(config.quickActions) ? config.quickActions : []).map((action) => ({
+    href: action.href,
+    label: localizedValue(action.label),
+  }));
+  const statsCopyByLanguage = {
+    fr: {
+      organizations: "Organisations",
+      organizationsDetail: "Organisation(s) connectée(s)",
+      users: "Utilisateurs",
+      usersDetail: "Comptes disponibles",
+      properties: "Biens",
+      propertiesDetail: "Biens publiés",
+      conversations: "Conversations",
+      conversationsDetail: "Fils de discussion",
+      messages: "Messages",
+      messagesDetail: "Échanges actifs",
+      notifications: "Notifications",
+      notificationsDetail: "Alertes à traiter",
+      today: "Aujourd'hui",
+      activity: "Journal d'activité",
+      unread: "non lues",
+      openConversations: "ouvertes",
+      activePeriod: "Période active",
+      role: "Rôle",
+      roleDetail: "Profil actif",
+      progress: "Progression",
+      nextStep: "Prochaine étape",
+      currentProject: "Aucun projet actif",
+      currentProjectDetail: "Créez ou choisissez un projet",
+      missingDocuments: "Documents manquants",
+      criticalAlerts: "Aucune alerte critique",
+      noPath: "Aucun parcours actif.",
+      noActivity: "Aucune activité disponible.",
+      noPriority: "Aucune priorité détectée.",
+      noRecommendation: "Aucune recommandation disponible.",
+      noSuggestion: "Aucune suggestion immédiate.",
+      noCategory: "Aucune catégorie",
+      openModule: "Ouvrir le module",
+      viewNotifications: "Voir les notifications",
+    },
+    en: {
+      organizations: "Organizations",
+      organizationsDetail: "Connected organization(s)",
+      users: "Users",
+      usersDetail: "Available accounts",
+      properties: "Listings",
+      propertiesDetail: "Published listings",
+      conversations: "Conversations",
+      conversationsDetail: "Threads",
+      messages: "Messages",
+      messagesDetail: "Active exchanges",
+      notifications: "Notifications",
+      notificationsDetail: "Alerts to handle",
+      today: "Today",
+      activity: "Activity log",
+      unread: "unread",
+      openConversations: "open",
+      activePeriod: "Active period",
+      role: "Role",
+      roleDetail: "Active profile",
+      progress: "Progress",
+      nextStep: "Next step",
+      currentProject: "No active project",
+      currentProjectDetail: "Create or choose a project",
+      missingDocuments: "Missing documents",
+      criticalAlerts: "No critical alert",
+      noPath: "No active path.",
+      noActivity: "No activity available.",
+      noPriority: "No priority detected.",
+      noRecommendation: "No recommendation available.",
+      noSuggestion: "No immediate suggestion.",
+      noCategory: "No category",
+      openModule: "Open module",
+      viewNotifications: "View notifications",
+    },
+    pidgin: {
+      organizations: "Organizations",
+      organizationsDetail: "Connected organization(s)",
+      users: "Users",
+      usersDetail: "Available accounts",
+      properties: "Listings",
+      propertiesDetail: "Published listings",
+      conversations: "Conversations",
+      conversationsDetail: "Threads",
+      messages: "Messages",
+      messagesDetail: "Active exchanges",
+      notifications: "Notifications",
+      notificationsDetail: "Alerts to handle",
+      today: "Today",
+      activity: "Activity log",
+      unread: "unread",
+      openConversations: "open",
+      activePeriod: "Active period",
+      role: "Role",
+      roleDetail: "Active profile",
+      progress: "Progress",
+      nextStep: "Next step",
+      currentProject: "No active project",
+      currentProjectDetail: "Create or choose a project",
+      missingDocuments: "Missing documents",
+      criticalAlerts: "No critical alert",
+      noPath: "No active path.",
+      noActivity: "No activity available.",
+      noPriority: "No priority detected.",
+      noRecommendation: "No recommendation available.",
+      noSuggestion: "No immediate suggestion.",
+      noCategory: "No category",
+      openModule: "Open module",
+      viewNotifications: "View notifications",
+    },
+  };
+  const statsCopy = statsCopyByLanguage[state.language] || statsCopyByLanguage.fr;
   const roleStats = [
-    { label: "Organisations", value: String(summary.organizations ?? 0), detail: "Organisation(s) connectée(s)" },
-    { label: "Utilisateurs", value: String(summary.users ?? 0), detail: "Comptes disponibles" },
-    { label: "Biens", value: String(summary.published_properties ?? 0), detail: "Biens publiés" },
-    { label: "Conversations", value: String(summary.conversations ?? 0), detail: "Fils de discussion" },
-    { label: "Messages", value: String(summary.messages ?? 0), detail: "Échanges actifs" },
-    { label: "Notifications", value: String(summary.notifications ?? 0), detail: "Alertes à traiter" },
+    { label: statsCopy.organizations, value: String(summary.organizations ?? 0), detail: statsCopy.organizationsDetail },
+    { label: statsCopy.users, value: String(summary.users ?? 0), detail: statsCopy.usersDetail },
+    { label: statsCopy.properties, value: String(summary.published_properties ?? 0), detail: statsCopy.propertiesDetail },
+    { label: statsCopy.conversations, value: String(summary.conversations ?? 0), detail: statsCopy.conversationsDetail },
+    { label: statsCopy.messages, value: String(summary.messages ?? 0), detail: statsCopy.messagesDetail },
+    { label: statsCopy.notifications, value: String(summary.notifications ?? 0), detail: statsCopy.notificationsDetail },
   ];
 
-  refs.roleGreeting.textContent = `Bonjour, ${name}`;
-  refs.roleSubtitle.textContent = `${config.subtitle} ${activeConversation ? `Conversation active: ${activeConversation.subject}` : ""}`.trim();
+  refs.roleGreeting.textContent = `${uiCopy().welcome}, ${name}`;
+  refs.roleSubtitle.textContent = `${localizedValue(config.subtitle)} ${activeConversation ? `${state.language === "fr" ? "Conversation active" : "Active conversation"}: ${activeConversation.subject}` : ""}`.trim();
   refs.roleChip.textContent = roleStatus;
-  refs.roleActivityChip.textContent = config.activity[0] || uiCopy().activity;
+  refs.roleActivityChip.textContent = uiCopy().activity;
   if (refs.languageSelect) {
     refs.languageSelect.value = state.language;
   }
@@ -745,50 +1973,51 @@ function renderRoleCockpit(currentUser, payload) {
 
   refs.progressCard.innerHTML = renderKeyValueRows(
     [
-      { label: "Rôle", value: roleStatus, detail: "Profil actif" },
+      { label: statsCopy.role, value: roleStatus, detail: statsCopy.roleDetail },
       {
-        label: "Progression",
+        label: statsCopy.progress,
         value: `${progress}%`,
-        detail: currentProject ? `${currentProject.title} · ${currentProject.project_type}` : "Aucun projet actif",
+        detail: currentProject ? `${currentProject.title} · ${currentProject.project_type}` : statsCopy.currentProject,
       },
       {
-        label: "Prochaine étape",
-        value: currentProject ? (currentProject.location?.city || currentProject.city || "Continuer") : "Définir un projet",
-        detail: currentProject ? currentProject.objective || "Parcours en cours" : "Créez ou choisissez un projet",
+        label: statsCopy.nextStep,
+        value: currentProject ? (currentProject.location?.city || currentProject.city || (state.language === "fr" ? "Continuer" : "Continue")) : (state.language === "fr" ? "Définir un projet" : "Define a project"),
+        detail: currentProject ? currentProject.objective || (state.language === "fr" ? "Parcours en cours" : "Path in progress") : statsCopy.currentProjectDetail,
       },
       {
-        label: "Documents manquants",
+        label: statsCopy.missingDocuments,
         value: String(Math.max(0, unread.length)),
-        detail: unread[0]?.title || "Aucune alerte critique",
+        detail: unread[0]?.title || statsCopy.criticalAlerts,
       },
     ],
-    "Aucun parcours actif.",
+    statsCopy.noPath,
   );
 
   refs.activityCard.innerHTML = renderKeyValueRows(
     [
-      { label: "Aujourd'hui", value: `${summary.events ?? 0} événements`, detail: "Journal d'activité" },
-      { label: "Notifications", value: `${unread.length} non lues`, detail: unread[0]?.title || "Rien à relancer" },
-      { label: "Conversations", value: `${conversations.length} ouvertes`, detail: activeConversation?.subject || "Aucun fil actif" },
-      { label: "Biens", value: `${summary.published_properties ?? 0} publiés`, detail: topMatch?.property?.title || "Catalogue disponible" },
+      { label: statsCopy.today, value: `${summary.events ?? 0} événements`, detail: statsCopy.activity },
+      { label: statsCopy.notifications, value: `${unread.length} ${statsCopy.unread}`, detail: unread[0]?.title || (state.language === "fr" ? "Rien à relancer" : "Nothing to follow up") },
+      { label: statsCopy.conversations, value: `${conversations.length} ${statsCopy.openConversations}`, detail: activeConversation?.subject || (state.language === "fr" ? "Aucun fil actif" : "No active thread") },
+      { label: statsCopy.properties, value: `${summary.published_properties ?? 0} ${state.language === "fr" ? "publiés" : "published"}`, detail: topMatch?.property?.title || (state.language === "fr" ? "Catalogue disponible" : "Catalog available") },
     ],
-    "Aucune activité disponible.",
+    statsCopy.noActivity,
   );
 
   const priorityItems = [
     ...(unread.slice(0, 2).map((notification) => `${notification.title} · ${notification.kind}`) || []),
     ...(conversations.slice(0, 2).map((conversation) => `${conversation.subject} · ${conversation.status}`) || []),
-    ...config.priorities,
+    ...priorityText,
   ].slice(0, 4);
-  refs.prioritiesCard.innerHTML = renderPillList(priorityItems, "Aucune priorité détectée.");
+  refs.prioritiesCard.innerHTML = renderPillList(priorityItems, statsCopy.noPriority);
 
-  refs.quickActionsCard.innerHTML = renderActionLinks(config.quickActions);
+  refs.quickActionsCard.innerHTML = renderActionLinks(quickActions);
 
+  const statsPeriodCopy = STATS_PERIOD_COPY[state.language] || STATS_PERIOD_COPY.fr;
   const statsPeriodLabel =
-    refs.statsPeriodSelect?.selectedOptions?.[0]?.textContent || (state.statsPeriod === "7d" ? "7 jours" : state.statsPeriod === "30d" ? "30 jours" : state.statsPeriod === "year" ? "Année" : state.statsPeriod === "custom" ? "Période personnalisée" : "Aujourd'hui");
+    refs.statsPeriodSelect?.selectedOptions?.[0]?.textContent || statsPeriodCopy[state.statsPeriod] || statsPeriodCopy.today;
   refs.statsCard.innerHTML = `
     <div class="cockpit-stack">
-      <p class="muted">Période active: ${escapeHtml(statsPeriodLabel)}</p>
+      <p class="muted">${escapeHtml(statsPeriodCopy.activePeriod)}: ${escapeHtml(statsPeriodLabel)}</p>
       <div class="stats-mini-grid">
         ${roleStats
           .map(
@@ -809,23 +2038,23 @@ function renderRoleCockpit(currentUser, payload) {
     (matches
       .slice(0, 4)
       .map((match) => `${match.property?.title || match.title || "Bien"} · score ${match.score ?? match.score_percent ?? "n/a"}`)
-      .concat(config.recommendations)
+      .concat(recommendationText)
       .slice(0, 4)) || [],
-    "Aucune recommandation disponible.",
+    statsCopy.noRecommendation,
   );
 
   refs.nextActionsCard.innerHTML = renderPillList(
-    config.nextActions.concat(currentProject ? [`Poursuivre ${currentProject.title}`] : []).slice(0, 4),
-    "Aucune suggestion immédiate.",
+    nextActionText.concat(currentProject ? [`${state.language === "fr" ? "Poursuivre" : "Continue"} ${currentProject.title}`] : []).slice(0, 4),
+    statsCopy.noSuggestion,
   );
 
   refs.supportCard.innerHTML = `
     <div class="cockpit-stack">
       <p class="muted">${escapeHtml(supportHint)}</p>
-      ${renderPillList(config.support, "Aucune catégorie")}
+      ${renderPillList(supportText, statsCopy.noCategory)}
       <div class="action-link-grid">
-        <a class="button primary action-link" href="#message-form">Ouvrir le module</a>
-        <a class="button secondary action-link" href="#notification-filter-form">Voir les notifications</a>
+        <a class="button primary action-link" href="#message-form">${escapeHtml(statsCopy.openModule)}</a>
+        <a class="button secondary action-link" href="#notification-filter-form">${escapeHtml(statsCopy.viewNotifications)}</a>
       </div>
     </div>
   `;
@@ -854,12 +2083,12 @@ function renderOrganizations(items) {
         <span class="chip subtle">${escapeHtml(organization.kind)}</span>
       </div>
       <p class="muted">${escapeHtml(organization.slug)}</p>
-      <p>${escapeHtml(organization.city || "No city")} · ${organization.user_count ?? 0} users</p>
+      <p>${escapeHtml(organization.city || "Aucune ville")} · ${organization.user_count ?? 0} utilisateurs</p>
     `;
     return article;
-  }, "No organizations available.");
+  }, { fr: "Aucune organisation disponible.", en: "No organization available.", pidgin: "No organization available." });
 
-  const options = ['<option value="">None</option>']
+  const options = [`<option value="">${state.language === "fr" ? "Aucune" : "None"}</option>`]
     .concat(items.map((organization) => `<option value="${organization.id}">${escapeHtml(organization.name)}</option>`))
     .join("");
   refs.ownerOrganizationSelect.innerHTML = options;
@@ -867,7 +2096,7 @@ function renderOrganizations(items) {
     refs.registerOrganizationSelect.innerHTML = options;
   }
   if (refs.adminOrganizationSelect) {
-    refs.adminOrganizationSelect.innerHTML = ['<option value="">Select organization</option>']
+    refs.adminOrganizationSelect.innerHTML = [`<option value="">${state.language === "fr" ? "Sélectionner une organisation" : "Select an organization"}</option>`]
       .concat(items.map((organization) => `<option value="${organization.id}">${escapeHtml(organization.name)}</option>`))
       .join("");
   }
@@ -892,13 +2121,13 @@ function renderProjects(items) {
     `;
     article.addEventListener("click", () => selectProject(project.id));
     return article;
-  }, state.token ? "No projects yet — create one from the sidebar." : "Sign in to view projects.");
+  }, state.token ? { fr: "Aucun projet pour le moment. Créez-en un depuis le panneau.", en: "No projects yet. Create one from the panel.", pidgin: "No projects yet. Create one from the panel." } : { fr: "Connectez-vous pour voir les projets.", en: "Sign in to view projects.", pidgin: "Sign in to view projects." });
 }
 
 async function refreshEcosystemLists() {
   if (!state.token) {
-    renderList(refs.partnersList, [], () => document.createElement("div"), "Sign in to load partners.");
-    renderList(refs.servicesList, [], () => document.createElement("div"), "Sign in to load services.");
+    renderList(refs.partnersList, [], () => document.createElement("div"), { fr: "Connectez-vous pour charger les partenaires.", en: "Sign in to load partners.", pidgin: "Sign in to load partners." });
+    renderList(refs.servicesList, [], () => document.createElement("div"), { fr: "Connectez-vous pour charger les services.", en: "Sign in to load services.", pidgin: "Sign in to load services." });
     return;
   }
   try {
@@ -914,7 +2143,7 @@ async function refreshEcosystemLists() {
         <p class="muted">${escapeHtml(partner.partner_type)} · Trust ${partner.trust_score ?? "n/a"}</p>
       `;
       return article;
-    }, "No partners in directory.");
+    }, { fr: "Aucun partenaire dans l'annuaire.", en: "No partner in the directory.", pidgin: "No partner in the directory." });
     renderList(refs.servicesList, servicesPayload.services || [], (service) => {
       const article = document.createElement("article");
       article.className = "mini-card";
@@ -924,7 +2153,7 @@ async function refreshEcosystemLists() {
         <p class="muted">${escapeHtml(service.category)} · ${money(pricing.min, pricing.currency)} - ${money(pricing.max, pricing.currency)}</p>
       `;
       return article;
-    }, "No services in catalog.");
+    }, { fr: "Aucun service dans le catalogue.", en: "No service in the catalog.", pidgin: "No service in the catalog." });
   } catch (error) {
     renderList(refs.partnersList, [], () => document.createElement("div"), error.message);
   }
@@ -1212,7 +2441,7 @@ async function refreshProjects() {
 }
 
 function renderProperties(items) {
-  const mediaOptions = ['<option value="">Select property</option>']
+  const mediaOptions = [`<option value="">${state.language === "fr" ? "Sélectionner un bien" : "Select a listing"}</option>`]
     .concat(
       (items || []).map((property) => {
         const label = property.listing_code || property.title;
@@ -1233,11 +2462,11 @@ function renderProperties(items) {
         <strong>${escapeHtml(property.title)}</strong>
         <span class="${statusChipClass(property.status)}" data-status="${escapeHtml(property.status || "draft")}">${escapeHtml(property.status || "draft")}</span>
       </div>
-      <p class="muted">${escapeHtml(property.listing_code || "no-code")} · ${escapeHtml(property.property_type || "n/a")} · ${escapeHtml(property.availability || "available")}</p>
-      <p>${escapeHtml(geo.city || "n/a")}, ${escapeHtml(geo.region || "—")}, ${escapeHtml(geo.country || "n/a")}</p>
+      <p class="muted">${escapeHtml(property.listing_code || "sans-code")} · ${escapeHtml(property.property_type || "n/d")} · ${escapeHtml(property.availability || "disponible")}</p>
+      <p>${escapeHtml(geo.city || (state.language === "fr" ? "n/d" : "n/a"))}, ${escapeHtml(geo.region || "—")}, ${escapeHtml(geo.country || (state.language === "fr" ? "n/d" : "n/a"))}</p>
       <p>${money(price.min, price.currency)} - ${money(price.max, price.currency)}</p>
-      <p class="muted">Coords: ${coords.latitude ?? "—"}, ${coords.longitude ?? "—"}</p>
-      <p class="muted">Owner: ${escapeHtml(property.ownership?.organization_name || property.owner_organization_name || "n/a")} · Media: ${property.media_count ?? 0}</p>
+      <p class="muted">${state.language === "fr" ? "Coordonnées" : "Coordinates"}: ${coords.latitude ?? "—"}, ${coords.longitude ?? "—"}</p>
+      <p class="muted">${state.language === "fr" ? "Propriétaire" : "Owner"}: ${escapeHtml(property.ownership?.organization_name || property.owner_organization_name || (state.language === "fr" ? "n/d" : "n/a"))} · ${state.language === "fr" ? "Médias" : "Media"}: ${property.media_count ?? 0}</p>
       <p>${escapeHtml(property.summary || "")}</p>
     `;
     article.addEventListener("click", () => {
@@ -1245,10 +2474,10 @@ function renderProperties(items) {
       state.selectedPropertyVersion = property.version;
       state.selectedPropertyTitle = property.title;
       updateSelectedPropertyLabel();
-      setNotice(`Selected property #${property.id} (${property.title})`, "neutral");
+      setNotice(state.language === "fr" ? `Bien sélectionné #${property.id} (${property.title})` : `Selected property #${property.id} (${property.title})`, "neutral");
     });
     return article;
-  }, "No properties available.");
+  }, { fr: "Aucun bien disponible.", en: "No listing available.", pidgin: "No listing available." });
 }
 
 function renderMedia(items) {
@@ -1265,12 +2494,12 @@ function renderMedia(items) {
         <strong>${escapeHtml(media.caption || media.kind)}</strong>
         <span class="chip subtle">${escapeHtml(media.kind)}</span>
       </div>
-      <p class="muted">${escapeHtml(media.property_title || `Property #${media.property_id}`)}</p>
-      <p>${escapeHtml(media.mime_type || "unknown")} · ${media.size_bytes ?? 0} bytes</p>
+      <p class="muted">${escapeHtml(media.property_title || `${state.language === "fr" ? "Bien" : "Property"} #${media.property_id}`)}</p>
+      <p>${escapeHtml(media.mime_type || (state.language === "fr" ? "inconnu" : "unknown"))} · ${media.size_bytes ?? 0} ${state.language === "fr" ? "octets" : "bytes"}</p>
       <p class="muted">${escapeHtml(media.url)}</p>
     `;
     return article;
-  }, "No media available.");
+  }, { fr: "Aucun média disponible.", en: "No media available.", pidgin: "No media available." });
 }
 
 function renderMatches(items) {
@@ -1291,11 +2520,11 @@ function renderMatches(items) {
       </div>
       <p class="muted">${escapeHtml(geo.city || property.city)}, ${escapeHtml(geo.country || property.country)}</p>
       <p>${money(price.min, price.currency)} - ${money(price.max, price.currency)}</p>
-      <p class="muted">${escapeHtml(match.summary || (match.reasons || []).join(" · ") || "No summary.")}</p>
-      <p class="muted breakdown">${escapeHtml(breakdownText || "No score breakdown.")}</p>
+      <p class="muted">${escapeHtml(match.summary || (match.reasons || []).join(" · ") || (state.language === "fr" ? "Aucun résumé." : "No summary."))}</p>
+      <p class="muted breakdown">${escapeHtml(breakdownText || (state.language === "fr" ? "Aucun détail de score." : "No score breakdown."))}</p>
     `;
     return article;
-  }, "No match results yet.");
+  }, { fr: "Aucun résultat de matching pour le moment.", en: "No matching result yet.", pidgin: "No matching result yet." });
 }
 
 function conversationRequester(conversation) {
@@ -1319,15 +2548,15 @@ function renderConversationDetail(conversation) {
       <div>
         <p class="eyebrow">
           <span class="chip subtle" data-status="${escapeHtml(conversation.status)}">${escapeHtml(conversation.status)}</span>
-          <span class="chip accent">${escapeHtml(conversation.negotiation_stage || negotiation.stage || "inquiry")}</span>
+          <span class="chip accent">${escapeHtml(conversation.negotiation_stage || negotiation.stage || (state.language === "fr" ? "demande" : "inquiry"))}</span>
         </p>
         <h3>${escapeHtml(conversation.subject)}</h3>
-        <p class="muted">
-          Requester: ${escapeHtml(conversationRequester(conversation))} · Property: ${escapeHtml(conversationPropertyTitle(conversation))}
+          <p class="muted">
+          ${state.language === "fr" ? "Demandeur" : "Requester"}: ${escapeHtml(conversationRequester(conversation))} · ${state.language === "fr" ? "Bien" : "Property"}: ${escapeHtml(conversationPropertyTitle(conversation))}
         </p>
       </div>
       <div class="detail-badge">
-        <span>Messages</span>
+        <span>${state.language === "fr" ? "Messages" : "Messages"}</span>
         <strong>${conversation.message_count ?? messages.length}</strong>
       </div>
     </div>
@@ -1347,12 +2576,12 @@ function renderConversationDetail(conversation) {
         .join("")}
     </div>
   `;
-  refs.messageForm.classList.toggle("hidden", !state.token);
+    refs.messageForm.classList.toggle("hidden", !state.token);
   if (refs.negotiationForm) {
     const stageSelect = refs.negotiationForm.querySelector('[name="negotiation_stage"]');
     if (stageSelect) {
       stageSelect.innerHTML = allowedStages
-        .map((stage) => `<option value="${stage}" ${stage === (conversation.negotiation_stage || "inquiry") ? "selected" : ""}>${stage}</option>`)
+        .map((stage) => `<option value="${stage}" ${stage === (conversation.negotiation_stage || "inquiry") ? "selected" : ""}>${escapeHtml(stage)}</option>`)
         .join("");
     }
     refs.negotiationForm.classList.toggle("hidden", !state.token || !allowedStages.length);
@@ -1362,7 +2591,7 @@ function renderConversationDetail(conversation) {
 function renderNotifications(items) {
   const unread = (items || []).filter((notification) => !notification.read).length;
   if (refs.notificationUnreadCount) {
-    refs.notificationUnreadCount.textContent = `${unread} non lues`;
+    refs.notificationUnreadCount.textContent = state.language === "fr" ? `${unread} non lues` : `${unread} unread`;
     refs.notificationUnreadCount.dataset.tone = unread ? "warn" : "ok";
   }
   renderList(refs.notificationsList, items, (notification) => {
@@ -1377,11 +2606,11 @@ function renderNotifications(items) {
         <span class="chip subtle">${escapeHtml(notification.kind)}</span>
       </div>
       <p>${escapeHtml(notification.body)}</p>
-      <p class="muted">${notification.read ? "read" : "unread"} · ${escapeHtml(notification.created_at || "")}</p>
+      <p class="muted">${notification.read ? (state.language === "fr" ? "lu" : "read") : (state.language === "fr" ? "non lu" : "unread")} · ${escapeHtml(notification.created_at || "")}</p>
     `;
     article.addEventListener("click", () => markNotificationRead(notification.id));
     return article;
-  }, "No notifications yet.");
+  }, { fr: "Aucune notification pour le moment.", en: "No notifications yet.", pidgin: "No notifications yet." });
 }
 
 async function refreshNotifications() {
@@ -1420,7 +2649,7 @@ async function markAllNotificationsRead() {
   try {
     await api("/api/notifications/read-all", { method: "POST", auth: true, body: {} });
     await refreshNotifications();
-    setNotice("All notifications marked as read.", "ok");
+    setNotice(state.language === "fr" ? "Toutes les notifications sont marquées comme lues." : "All notifications marked as read.", "ok");
   } catch (error) {
     setNotice(error.message, "error");
   }
@@ -1439,11 +2668,11 @@ function renderConversations(items) {
         <span class="chip subtle">${escapeHtml(conversation.status)} · ${escapeHtml(conversation.negotiation_stage || "inquiry")}</span>
       </div>
       <p class="muted">${escapeHtml(conversationRequester(conversation))} · ${escapeHtml(conversationPropertyTitle(conversation))}</p>
-      <p>${escapeHtml(conversation.last_message || "No messages yet.")}</p>
+      <p>${escapeHtml(conversation.last_message || (state.language === "fr" ? "Aucun message pour le moment." : "No message yet."))}</p>
     `;
     article.addEventListener("click", () => selectConversation(conversation.id));
     return article;
-  }, "No conversations available.");
+  }, { fr: "Aucune conversation disponible.", en: "No conversation available.", pidgin: "No conversation available." });
 }
 
 function updateSelectedPropertyLabel() {
@@ -1451,10 +2680,10 @@ function updateSelectedPropertyLabel() {
     return;
   }
   if (!state.selectedPropertyId) {
-    refs.selectedPropertyLabel.textContent = "No property selected.";
+    refs.selectedPropertyLabel.textContent = "Aucun bien sélectionné.";
     return;
   }
-  refs.selectedPropertyLabel.textContent = `#${state.selectedPropertyId} · ${state.selectedPropertyTitle || "Property"} · v${state.selectedPropertyVersion ?? "?"}`;
+  refs.selectedPropertyLabel.textContent = `#${state.selectedPropertyId} · ${state.selectedPropertyTitle || "Bien"} · v${state.selectedPropertyVersion ?? "?"}`;
 }
 
 function applyJourney(journey) {
@@ -1462,18 +2691,7 @@ function applyJourney(journey) {
   state.activeJourney = journey;
   localStorage.setItem("lawim.journey", journey);
   updateAuthShell(Boolean(state.token));
-  const visibleKeys = state.token ? (ROLE_JOURNEY_KEYS[journey] || ROLE_JOURNEY_KEYS.user) : [];
-  document.querySelectorAll("[data-journey-panel]").forEach((panel) => {
-    if (!state.token) {
-      panel.hidden = true;
-      return;
-    }
-    const allowed = (panel.getAttribute("data-journey-panel") || "").split(/\s+/);
-    panel.hidden = !allowed.some((key) => visibleKeys.includes(key));
-  });
-  document.querySelectorAll("#journey-nav [data-journey]").forEach((button) => {
-    button.dataset.active = button.getAttribute("data-journey") === journey ? "true" : "false";
-  });
+  syncWorkspaceVisibility();
   if (journey === "admin" && state.token) {
     loadAdminDashboard();
   }
@@ -1544,21 +2762,27 @@ function renderBootstrap(payload) {
   if (currentUser) {
     const resolvedRole = resolveAccessRole(currentUser.role, currentUser.roles || payload.roles || []);
     state.activeJourney = journeyForRole(resolvedRole);
-    refs.currentUser.textContent = `${currentUser.full_name || currentUser.name || "Utilisateur"} · ${currentUser.email || "n/a"} · ${roleLabel(resolvedRole)}`;
+    refs.currentUser.textContent = `${currentUser.full_name || currentUser.name || "Utilisateur"} · ${roleLabel(resolvedRole)}`;
     refs.logoutButton.disabled = false;
     if (refs.roleCockpit) {
       refs.roleCockpit.hidden = false;
     }
     renderRoleCockpit(currentUser, payload);
+    renderModuleDeck(currentUser);
+    refreshModuleChrome();
   } else {
     refs.currentUser.textContent = uiCopy().session;
     refs.logoutButton.disabled = !state.token;
     if (refs.roleCockpit) {
       refs.roleCockpit.hidden = true;
     }
+    if (refs.journeyNav) {
+      refs.journeyNav.replaceChildren();
+    }
   }
 
   updateAuthShell(Boolean(state.token && currentUser));
+  translateStaticShell();
 
   renderSummary(payload.summary || {});
   renderOrganizations(payload.organizations || []);
@@ -1580,7 +2804,7 @@ function renderBootstrap(payload) {
       selectConversation(current.id);
     } else {
       state.selectedConversationId = null;
-      refs.conversationDetail.innerHTML = '<p class="muted">No conversation selected.</p>';
+      refs.conversationDetail.innerHTML = `<p class="muted">${escapeHtml(state.language === "fr" ? "Aucune conversation sélectionnée." : "No conversation selected.")}</p>`;
     }
   }
 }
@@ -1616,7 +2840,7 @@ async function refresh({ renderJourney = true } = {}) {
     journey: state.activeJourney,
     renderJourney,
   });
-  setLoading(true, "Actualisation de l'environnement...");
+  setLoading(true, RUNTIME_COPY[state.language]?.refreshing || RUNTIME_COPY.fr.refreshing);
   let refreshError = null;
   try {
     const healthPromise = api("/api/health", { auth: Boolean(state.token) });
@@ -1644,7 +2868,7 @@ async function refresh({ renderJourney = true } = {}) {
     if (renderJourney) {
       applyJourney(state.activeJourney);
     }
-    setNotice("Environnement prêt.", "success");
+    setNotice(RUNTIME_COPY[state.language]?.ready || RUNTIME_COPY.fr.ready, "success");
   } catch (error) {
     refreshError = error;
     const sessionError = formatSessionError(error);
@@ -1757,7 +2981,7 @@ async function refreshCommunicationAdmin() {
         .map((channel) => escapeHtml(channel.name || channel.channel_type || ""))
         .join(" · ");
       if (channelSummary) {
-        refs.communicationAdminStats.innerHTML += `<p class="muted">Channels: ${channelSummary}</p>`;
+        refs.communicationAdminStats.innerHTML += `<p class="muted">${state.language === "fr" ? "Canaux" : "Channels"}: ${channelSummary}</p>`;
       }
     }
   } catch (error) {
@@ -1777,7 +3001,7 @@ async function refreshAnalyticsAdmin() {
     ]);
     const stats = statsPayload.statistics || {};
     refs.analyticsAdminStats.innerHTML = `
-      <p class="muted">${stats.total_kpis ?? 0} KPI · ${stats.dashboards_active ?? 0} dashboards · ${stats.reports_generated ?? 0} reports · ${stats.exports_completed ?? 0} exports · ${stats.ai_insights ?? 0} AI insights · health ${stats.platform_health_score ?? 0}</p>
+      <p class="muted">${stats.total_kpis ?? 0} ${state.language === "fr" ? "KPI" : "KPI"} · ${stats.dashboards_active ?? 0} ${state.language === "fr" ? "tableaux de bord" : "dashboards"} · ${stats.reports_generated ?? 0} ${state.language === "fr" ? "rapports" : "reports"} · ${stats.exports_completed ?? 0} ${state.language === "fr" ? "exports" : "exports"} · ${stats.ai_insights ?? 0} ${state.language === "fr" ? "analyses IA" : "AI insights"} · ${state.language === "fr" ? "santé" : "health"} ${stats.platform_health_score ?? 0}</p>
     `;
     const executive = executivePayload.executive || {};
     const kpis = executive.kpis || [];
@@ -1791,10 +3015,10 @@ async function refreshAnalyticsAdmin() {
           </article>
         `,
       )
-      .join("") || "<p class='muted'>No executive KPIs loaded.</p>";
+      .join("") || `<p class='muted'>${state.language === "fr" ? "Aucun KPI exécutif chargé." : "No executive KPIs loaded."}</p>`;
     const programs = integrationsPayload.programs || {};
     const integrated = Object.values(programs).filter(Boolean).length;
-    refs.analyticsAdminStats.innerHTML += `<p class="muted">Sources integrated: ${integrated} programs</p>`;
+    refs.analyticsAdminStats.innerHTML += `<p class="muted">${state.language === "fr" ? "Sources intégrées" : "Sources integrated"}: ${integrated} ${state.language === "fr" ? "programmes" : "programs"}</p>`;
   } catch (error) {
     refs.analyticsAdminStats.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
   }
@@ -1838,7 +3062,7 @@ function selectSourceIntelligence(source) {
   if (refs.sieReferenceResult && source.reference_code) {
     refs.sieReferenceResult.innerHTML = `
       <article class="message">
-        <div class="message__meta"><strong>${escapeHtml(source.name || source.source_key || "Source")}</strong> · ${escapeHtml(source.reference_code || "")}</div>
+        <div class="message__meta"><strong>${escapeHtml(source.name || source.source_key || systemCopy("sourceLabel"))}</strong> · ${escapeHtml(source.reference_code || "")}</div>
       </article>
     `;
   } else if (refs.sieReferenceResult) {
@@ -1847,7 +3071,7 @@ function selectSourceIntelligence(source) {
   if (refs.sieLinkResult && source.whatsapp_link) {
     refs.sieLinkResult.innerHTML = `
       <article class="message">
-        <div class="message__meta"><strong>WhatsApp</strong> · ${escapeHtml(source.whatsapp_link || "")}</div>
+        <div class="message__meta"><strong>${escapeHtml(systemCopy("whatsappLink"))}</strong> · ${escapeHtml(source.whatsapp_link || "")}</div>
       </article>
     `;
   } else if (refs.sieLinkResult) {
@@ -1892,14 +3116,14 @@ async function refreshSourceIntelligenceAdmin() {
           </article>
         `,
       )
-      .join("") || "<p class='muted'>No source intelligence records.</p>";
+      .join("") || `<p class='muted'>${escapeHtml(systemCopy("noSourceRecords"))}</p>`;
     refs.sieAdminList.querySelectorAll("[data-sie-select-source]").forEach((button) => {
       button.addEventListener("click", () => {
         const sourceId = Number(button.getAttribute("data-sie-select-source") || 0);
         const source = sources.find((item) => Number(item.id) === sourceId);
         if (source) {
           selectSourceIntelligence(source);
-          setNotice(`Selected ${source.name || source.source_key || "source"}.`, "success");
+          setNotice(systemCopy("sourceSelected", source.name || source.source_key || systemCopy("sourceLabel")), "success");
         }
       });
     });
@@ -1931,7 +3155,7 @@ async function handleSourceIntelligenceImport(event) {
       selectSourceIntelligence(source);
     }
     refs.sieImportForm.reset();
-    setNotice("SIE import completed.", "success");
+    setNotice(systemCopy("sieImportCompleted"), "success");
     await refreshSourceIntelligenceAdmin();
   } catch (error) {
     setNotice(error.message, "error", error.code || "");
@@ -1947,7 +3171,7 @@ async function handleSourceIntelligenceContext(event) {
     const form = new FormData(refs.sieSourceForm);
     const sourceId = parseNumber(form.get("source_id"));
     if (!sourceId) {
-      throw new Error("Select a source first.");
+      throw new Error(systemCopy("selectSourceFirst"));
     }
     const tags = String(form.get("tags") || "")
       .split(",")
@@ -1975,7 +3199,7 @@ async function handleSourceIntelligenceContext(event) {
         notes: form.get("notes"),
       },
     });
-    setNotice("Source context updated.", "success");
+    setNotice(systemCopy("sourceContextUpdated"), "success");
     await refreshSourceIntelligenceAdmin();
   } catch (error) {
     setNotice(error.message, "error", error.code || "");
@@ -1990,7 +3214,7 @@ async function handleSourceIntelligenceAnalyze() {
     const form = new FormData(refs.sieSourceForm);
     const sourceId = parseNumber(form.get("source_id"));
     if (!sourceId) {
-      throw new Error("Select a source first.");
+      throw new Error(systemCopy("selectSourceFirst"));
     }
     const tags = String(form.get("tags") || "")
       .split(",")
@@ -2031,7 +3255,7 @@ async function handleSourceIntelligenceAnalyze() {
         </article>
       `;
     }
-    setNotice("Source analysis completed.", "success");
+    setNotice(systemCopy("sourceAnalysisCompleted"), "success");
     await refreshSourceIntelligenceAdmin();
   } catch (error) {
     setNotice(error.message, "error", error.code || "");
@@ -2045,7 +3269,7 @@ async function handleSourceIntelligenceWhatsApp() {
   try {
     const sourceId = parseNumber(new FormData(refs.sieSourceForm).get("source_id"));
     if (!sourceId) {
-      throw new Error("Select a source first.");
+      throw new Error(systemCopy("selectSourceFirst"));
     }
     const payload = await api(`/api/v2/source-intelligence/sources/${sourceId}/whatsapp-link`, {
       auth: true,
@@ -2053,10 +3277,10 @@ async function handleSourceIntelligenceWhatsApp() {
     const link = payload.whatsapp_link || "";
     refs.sieLinkResult.innerHTML = `
       <article class="message">
-        <div class="message__meta"><strong>WhatsApp link</strong> · ${escapeHtml(link)}</div>
+        <div class="message__meta"><strong>${escapeHtml(systemCopy("whatsappLink"))}</strong> · ${escapeHtml(link)}</div>
       </article>
     `;
-    setNotice("WhatsApp link generated.", "success");
+    setNotice(systemCopy("whatsappLinkGenerated"), "success");
     await refreshSourceIntelligenceAdmin();
   } catch (error) {
     setNotice(error.message, "error", error.code || "");
@@ -2078,10 +3302,10 @@ async function handleSourceIntelligenceReference(event) {
     const referenceCode = payload.reference_code || "";
     refs.sieReferenceResult.innerHTML = `
       <article class="message">
-        <div class="message__meta"><strong>Reference code</strong> · ${escapeHtml(referenceCode)}</div>
+        <div class="message__meta"><strong>${escapeHtml(systemCopy("referenceCode"))}</strong> · ${escapeHtml(referenceCode)}</div>
       </article>
     `;
-    setNotice("Reference code generated.", "success");
+    setNotice(systemCopy("referenceCodeGenerated"), "success");
   } catch (error) {
     setNotice(error.message, "error", error.code || "");
   }
@@ -2432,6 +3656,7 @@ async function handleLogin(event) {
     state.token = token;
     localStorage.setItem("lawim.token", state.token);
     updateAuthShell(true);
+    applyModule("dashboard");
     const resolvedRole = resolveAccessRole(payload.user?.role, payload.roles || payload.user?.roles || []);
     const resolvedJourney = journeyForRole(resolvedRole);
     traceRuntime("LOGIN_OK", {
@@ -2449,8 +3674,9 @@ async function handleLogin(event) {
     });
     await refresh({ renderJourney: false });
     applyJourney(resolvedJourney);
+    // applyJourney(journeyForRole(payload.user.role));
     refs.loginPassword.value = "";
-    setNotice(`Connexion réussie pour ${payload.user?.email || email}`, "success");
+    setNotice(noticeCopy("loginSuccess", payload.user?.email || email), "success");
   } catch (error) {
     setNotice(formatLoginError(error), "error", error.code || "");
   }
@@ -2466,9 +3692,10 @@ async function handleLogout() {
   } finally {
     clearSession();
     refs.messageForm.classList.add("hidden");
-    refs.conversationDetail.innerHTML = '<p class="muted">No conversation selected.</p>';
+    refs.conversationDetail.innerHTML = `<p class="muted">${escapeHtml(state.language === "fr" ? "Aucune conversation sélectionnée." : "No conversation selected.")}</p>`;
     state.selectedConversationId = null;
-    setNotice("Session fermée.", "neutral");
+    setNotice(noticeCopy("logout"), "neutral");
+    applyModule("dashboard");
     await refresh();
   }
 }
@@ -2476,7 +3703,7 @@ async function handleLogout() {
 async function handleProjectCreate(event) {
   event.preventDefault();
   if (!state.token) {
-    setNotice("Sign in to create a project.", "error");
+    setNotice(noticeCopy("projectCreateAuth"), "error");
     return;
   }
   try {
@@ -2497,7 +3724,7 @@ async function handleProjectCreate(event) {
     });
     refs.projectForm.reset();
     state.selectedProjectId = payload.project.id;
-    setNotice("Project created.", "success");
+    setNotice(noticeCopy("projectCreated"), "success");
     await refreshProjects();
     applyJourney("project");
   } catch (error) {
@@ -2522,7 +3749,7 @@ async function handleMatchSearch(event) {
       },
     });
     renderMatches(payload.matches || []);
-    setNotice(`Returned ${payload.matches?.length || 0} ranked matches (min score ${payload.criteria?.min_score ?? "n/a"}).`, "success");
+    setNotice(noticeCopy("matchReturned", payload.matches?.length || 0, payload.criteria?.min_score ?? "n/a"), "success");
     if (state.token) {
       await refreshNotifications();
     }
@@ -2534,7 +3761,7 @@ async function handleMatchSearch(event) {
 async function handlePropertyCreate(event) {
   event.preventDefault();
   if (!state.token) {
-    setNotice("Authenticate before creating records.", "error");
+    setNotice(noticeCopy("recordsAuth"), "error");
     return;
   }
   try {
@@ -2560,7 +3787,7 @@ async function handlePropertyCreate(event) {
       },
     });
     refs.propertyForm.reset();
-    setNotice("Property created and persisted.", "success");
+    setNotice(noticeCopy("propertyCreated"), "success");
     await refresh();
   } catch (error) {
     setNotice(error.message, "error");
@@ -2582,7 +3809,7 @@ async function handleGeoLookup(event) {
     const location = payload.location || {};
     const coords = location.coordinates || {};
     refs.geoResult.textContent = `${location.city}, ${location.region || "—"}, ${location.country} · ${coords.latitude}, ${coords.longitude} · provider=${payload.provider}`;
-    setNotice("Geo lookup completed.", "success");
+    setNotice(noticeCopy("geoLookup"), "success");
   } catch (error) {
     refs.geoResult.textContent = error.message;
     setNotice(error.message, "error");
@@ -2592,7 +3819,7 @@ async function handleGeoLookup(event) {
 async function handleMediaUpload(event) {
   event.preventDefault();
   if (!state.token) {
-    setNotice("Authenticate before uploading media.", "error");
+    setNotice(noticeCopy("mediaAuth"), "error");
     return;
   }
   try {
@@ -2609,7 +3836,7 @@ async function handleMediaUpload(event) {
     uploadData.append("kind", form.get("kind") || "image");
     await apiMultipart("/api/media/upload", { auth: true, formData: uploadData });
     refs.mediaUploadForm.reset();
-    setNotice("Media uploaded.", "success");
+    setNotice(noticeCopy("mediaUploaded"), "success");
     await refresh();
   } catch (error) {
     setNotice(error.message, "error");
@@ -2619,7 +3846,7 @@ async function handleMediaUpload(event) {
 async function handleMessageCreate(event) {
   event.preventDefault();
   if (!state.token || !state.selectedConversationId) {
-    setNotice("Select a conversation and authenticate first.", "error");
+    setNotice(noticeCopy("conversationAuth"), "error");
     return;
   }
   try {
@@ -2632,7 +3859,7 @@ async function handleMessageCreate(event) {
       },
     });
     refs.messageForm.reset();
-    setNotice("Reply sent.", "success");
+    setNotice(noticeCopy("replySent"), "success");
     await selectConversation(state.selectedConversationId);
   } catch (error) {
     setNotice(error.message, "error");
@@ -2655,14 +3882,16 @@ async function handleRegister(event) {
     });
     const token = String(payload.token || "");
     if (!token) {
-      throw new Error("Registration response did not include a token.");
+      throw new Error(systemCopy("registrationMissingToken"));
     }
     state.token = token;
     localStorage.setItem("lawim.token", state.token);
     updateAuthShell(true);
+    applyModule("dashboard");
+    // applyJourney(journeyForRole(form.get("role")));
     const resolvedRole = resolveAccessRole(payload.user?.role || form.get("role"));
     applyJourney(journeyForRole(resolvedRole));
-    setNotice(`Registered as ${payload.user.email}`, "success");
+    setNotice(noticeCopy("registerSuccess", payload.user.email), "success");
     await refresh({ renderJourney: false });
   } catch (error) {
     setNotice(error.message, "error");
@@ -2692,7 +3921,7 @@ async function handlePropertySearch(event) {
     if (refs.propertySearchMeta) {
       refs.propertySearchMeta.textContent = `Page ${pagination.page || 1}/${pagination.pages || 1} · ${pagination.total ?? payload.properties?.length ?? 0} total · sort ${pagination.sort || "created_at"} ${pagination.order || "desc"}`;
     }
-    setNotice(`Found ${payload.properties?.length || 0} listings.`, "success");
+    setNotice(noticeCopy("propertySearchFound", payload.properties?.length || 0), "success");
   } catch (error) {
     setNotice(error.message, "error", error.code || "");
   }
@@ -2700,7 +3929,7 @@ async function handlePropertySearch(event) {
 
 async function handlePublishProperty() {
   if (!state.token || !state.selectedPropertyId) {
-    setNotice("Select a property and authenticate first.", "error");
+    setNotice(noticeCopy("propertyPublishAuth"), "error");
     return;
   }
   try {
@@ -2711,7 +3940,7 @@ async function handlePublishProperty() {
     });
     state.selectedPropertyVersion = payload.property.version;
     updateSelectedPropertyLabel();
-    setNotice("Property published.", "success");
+    setNotice(noticeCopy("propertyPublished"), "success");
     await refresh();
   } catch (error) {
     setNotice(error.message, "error");
@@ -2720,7 +3949,7 @@ async function handlePublishProperty() {
 
 async function handleArchiveProperty() {
   if (!state.token || !state.selectedPropertyId) {
-    setNotice("Select a property and authenticate first.", "error");
+    setNotice(noticeCopy("propertyPublishAuth"), "error");
     return;
   }
   try {
@@ -2731,7 +3960,7 @@ async function handleArchiveProperty() {
     });
     state.selectedPropertyVersion = payload.property.version;
     updateSelectedPropertyLabel();
-    setNotice("Property archived.", "success");
+    setNotice(noticeCopy("propertyArchived"), "success");
     await refresh();
   } catch (error) {
     setNotice(error.message, "error");
@@ -2741,7 +3970,7 @@ async function handleArchiveProperty() {
 async function handleBuyerConversation(event) {
   event.preventDefault();
   if (!state.token || !state.selectedPropertyId) {
-    setNotice("Select a property and authenticate first.", "error");
+    setNotice(noticeCopy("propertyPublishAuth"), "error");
     return;
   }
   try {
@@ -2757,7 +3986,7 @@ async function handleBuyerConversation(event) {
     });
     refs.buyerConversationForm.reset();
     state.selectedConversationId = payload.conversation.id;
-    setNotice("Conversation opened.", "success");
+    setNotice(noticeCopy("conversationOpened"), "success");
     await refresh();
     await selectConversation(payload.conversation.id);
   } catch (error) {
@@ -2768,7 +3997,7 @@ async function handleBuyerConversation(event) {
 async function handleNegotiationUpdate(event) {
   event.preventDefault();
   if (!state.token || !state.selectedConversationId) {
-    setNotice("Select a conversation first.", "error");
+    setNotice(noticeCopy("conversationSelect"), "error");
     return;
   }
   try {
@@ -2779,7 +4008,7 @@ async function handleNegotiationUpdate(event) {
       body: { negotiation_stage: form.get("negotiation_stage") },
     });
     renderConversationDetail(payload.conversation);
-    setNotice(`Negotiation stage updated to ${payload.conversation.negotiation_stage}.`, "success");
+    setNotice(noticeCopy("negotiationUpdated", payload.conversation.negotiation_stage), "success");
     await refresh();
     await refreshNotifications();
   } catch (error) {
@@ -2791,7 +4020,7 @@ async function handleNotificationFilter(event) {
   event.preventDefault();
   try {
     await refreshNotifications();
-    setNotice("Notification filter applied.", "success");
+    setNotice(noticeCopy("notificationsFiltered"), "success");
   } catch (error) {
     setNotice(error.message, "error", error.code || "");
   }
@@ -2800,7 +4029,7 @@ async function handleNotificationFilter(event) {
 async function handleAdminOrgCreate(event) {
   event.preventDefault();
   if (!state.token) {
-    setNotice("Authenticate as admin first.", "error");
+    setNotice(noticeCopy("adminAuth"), "error");
     return;
   }
   try {
@@ -2811,7 +4040,7 @@ async function handleAdminOrgCreate(event) {
       body: { name: form.get("name"), slug: form.get("slug"), kind: "agency", city: "Douala" },
     });
     refs.adminOrgForm.reset();
-    setNotice("Organization created.", "success");
+    setNotice(noticeCopy("organizationCreated"), "success");
     await refresh();
   } catch (error) {
     setNotice(error.message, "error");
@@ -2821,7 +4050,7 @@ async function handleAdminOrgCreate(event) {
 async function handleAdminUserCreate(event) {
   event.preventDefault();
   if (!state.token) {
-    setNotice("Authenticate as admin first.", "error");
+    setNotice(noticeCopy("adminAuth"), "error");
     return;
   }
   try {
@@ -2838,7 +4067,7 @@ async function handleAdminUserCreate(event) {
       },
     });
     refs.adminUserForm.reset();
-    setNotice("Staff user created.", "success");
+    setNotice(noticeCopy("staffCreated"), "success");
     await refresh();
   } catch (error) {
     setNotice(error.message, "error");
@@ -2896,8 +4125,10 @@ function bindEvents() {
 document.addEventListener("DOMContentLoaded", async () => {
   cacheRefs();
   bindEvents();
+  decorateModuleChrome();
   updateAuthShell(Boolean(state.token));
   setLanguage(state.language);
+  applyModule(state.activeModule, { persist: false });
   applyJourney(state.activeJourney);
   updateSelectedPropertyLabel();
   await refresh();

@@ -632,16 +632,13 @@ class StorageResourceRegistry:
 @dataclass(slots=True)
 class StorageSetupWizard:
     steps: tuple[str, ...] = (
-        "Register the credential vault",
         "Declare the 10 Google Drive resources",
         "Bind credential references",
         "Validate OAuth connection",
         "Validate permissions",
         "Create the automatic folders",
-        "Run the read test",
-        "Run the write test",
-        "Run the upload test",
-        "Run the download test",
+        "Run the read/write validation",
+        "Run the upload/download validation",
         "Run the final validation",
     )
     required_folders: tuple[str, ...] = GoogleDriveConnector.required_folders()

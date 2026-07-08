@@ -311,6 +311,37 @@ Les réponses doivent donc exposer :
 
 ---
 
+# CHAPITRE 18 — EXTENSION TRANSVERSALE RELEASE 08.1
+
+La Release 08.1 a étendu le moteur de matching au-dela des biens immobiliers.
+
+Le moteur peut maintenant servir de premiere couche de mise en relation pour:
+
+* photographe;
+* architecte;
+* notaire;
+* banque / financement;
+* artisan;
+* diagnostiqueur;
+* demenageur;
+* autre partenaire de projet.
+
+Les criteres utilises pour ce matching transversal sont:
+
+* localisation;
+* disponibilite;
+* specialite;
+* type de besoin;
+* langue;
+* budget;
+* notation;
+* delai;
+* compatibilite avec le projet.
+
+Chaque proposition reste argumentee, utile et non bloquante.
+
+---
+
 # CHAPITRE 18 — FIN DU DOCUMENT
 
 Le présent **04-MATCHING-REFERENCE.md** constitue le référentiel officiel du matching de LAWIM.

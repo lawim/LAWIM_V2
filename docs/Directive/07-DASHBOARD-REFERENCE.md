@@ -340,6 +340,20 @@ Le dashboard ne doit jamais afficher tous les modules en pleine page dès l'accu
 
 ---
 
+# CHAPITRE 16 — RELEASE 08.1
+
+La Release 08.1 a confirme le passage a un cockpit plus court:
+
+* suppression des traces de login apres authentification;
+* affichage limite aux informations utiles;
+* navigation par cartes vers les modules specialises;
+* bouton de retour explicite vers le dashboard dans chaque espace specialise;
+* harmonisation visuelle avec FR / EN / Pidgin sur les vues de validation.
+
+Cette evolution renforce la lisibilite, la velocite de lecture et la confiance produit sans changer la logique metier.
+
+---
+
 # CHAPITRE 18 — OBJECTIF FINAL
 
 Le présent **07-DASHBOARD-REFERENCE.md** constitue le référentiel officiel du Dashboard de LAWIM.

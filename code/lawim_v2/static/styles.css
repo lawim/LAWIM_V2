@@ -78,6 +78,18 @@ button {
   cursor: pointer;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .backdrop {
   position: fixed;
   inset: auto;
@@ -303,6 +315,21 @@ body[data-authenticated="false"] .masthead {
   justify-content: space-between;
 }
 
+body[data-authenticated="true"] .auth-panel .stacked-form,
+body[data-authenticated="true"] .auth-panel .auth-note,
+body[data-authenticated="true"] .auth-panel .button.secondary,
+body[data-authenticated="true"] .auth-panel .button.ghost:not(#logout-button) {
+  display: none;
+}
+
+body[data-authenticated="true"] .auth-panel .section-heading .muted {
+  display: none;
+}
+
+body[data-authenticated="true"]:not([data-module="dashboard"]) #role-cockpit {
+  display: none;
+}
+
 .section-heading {
   display: grid;
   gap: 0.2rem;
@@ -489,6 +516,166 @@ body[data-loading="true"] .workspace {
   background: rgba(255, 124, 124, 0.08);
 }
 
+.cockpit-panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.cockpit-panel__hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.cockpit-panel__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.cockpit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.cockpit-card {
+  min-height: auto;
+  padding: 1rem;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.cockpit-card--support {
+  grid-column: 1 / -1;
+}
+
+.cockpit-card__body {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.cockpit-card__header-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.mini-select {
+  min-width: 11rem;
+  align-self: flex-start;
+}
+
+.cockpit-stack {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.cockpit-row {
+  display: grid;
+  gap: 0.3rem;
+  padding: 0.95rem 1rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cockpit-row strong {
+  font-size: 1.02rem;
+}
+
+.cockpit-row__label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.78rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  line-height: 1.35;
+}
+
+.action-link-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.stats-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.mini-stat {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mini-stat strong {
+  font-size: 1.15rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.detail-grid > section {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.95rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.detail-grid > section h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.detail-grid > section ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.detail-grid > section p {
+  margin: 0;
+  line-height: 1.5;
+}
+
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -601,6 +788,52 @@ body[data-loading="true"] .workspace {
   padding-block: 0.85rem;
 }
 
+.module-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.65rem;
+}
+
+.module-back {
+  padding-inline: 0.8rem;
+  padding-block: 0.55rem;
+  font-size: 0.84rem;
+}
+
+.journey-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.65rem;
+}
+
+.journey-nav button {
+  display: grid;
+  gap: 0.35rem;
+  min-height: 6rem;
+  text-align: left;
+  border-radius: var(--radius-md);
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)),
+    rgba(255, 255, 255, 0.04);
+}
+
+.journey-nav button strong {
+  font-size: 0.98rem;
+}
+
+.journey-nav button span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.journey-nav [data-active="true"] {
+  border-color: rgba(240, 179, 109, 0.65);
+  background: rgba(240, 179, 109, 0.12);
+}
+
 @media (max-width: 1180px) {
   .layout {
     grid-template-columns: 1fr;
@@ -608,6 +841,15 @@ body[data-loading="true"] .workspace {
 
   .sidebar {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cockpit-grid,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-mini-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cards-grid {
@@ -638,6 +880,24 @@ body[data-loading="true"] .workspace {
   .two-up {
     grid-template-columns: 1fr;
   }
+
+  .cockpit-panel__hero,
+  .cockpit-card__header-row,
+  .detail-summary,
+  .message__meta {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .cockpit-panel__meta {
+    justify-content: start;
+  }
+
+  .cockpit-grid,
+  .stats-mini-grid,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
@@ -659,15 +919,13 @@ body[data-loading="true"] .workspace {
     grid-template-columns: 1fr;
   }
 
-.journey-nav {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
-}
+  .journey-nav {
+    grid-template-columns: 1fr;
+  }
 
-.journey-nav [data-active="true"] {
-  border-color: rgba(240, 179, 109, 0.65);
-  background: rgba(240, 179, 109, 0.12);
+  .cockpit-panel {
+    padding: 0.85rem;
+  }
 }
 
 [hidden] {

@@ -128,3 +128,15 @@ Pour étendre le module plus tard:
 Le module langues est intégré, minimal, non invasif et prêt avant la phase Migration.
 
 Il ne modifie ni le schéma, ni les migrations, ni les règles métier.
+
+## Note Release 08.1
+
+La Release 08.1 a valide:
+
+- FR comme langue par defaut;
+- EN comme second jeu de libelles;
+- Pidgin `pcm` comme variante officielle;
+- la persistence du choix de langue;
+- l application des traductions au login, au dashboard, aux cartes de modules, aux boutons et aux messages de status.
+
+Les ecrans de recette visuelle sont publies dans `reports/product_reviews/Release_08_1/`.

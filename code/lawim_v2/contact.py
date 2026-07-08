@@ -21,7 +21,7 @@ FACEBOOK_USERNAME = "@lawimofficial"
 WHATSAPP_USERNAME = "@lawimofficial"
 TELEGRAM_BOT = "@lawim_assistant_bot"
 DEFAULT_COUNTRY = "Cameroon"
-SUPPORT_EMAIL = "bonjour.lawim@gmail.com"
+SUPPORT_EMAIL = "contact@lawim.app"
 WEBSITE_URL = "https://lawim.cm"
 
 SUPPORT_CONTACT = (

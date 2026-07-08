@@ -84,3 +84,21 @@ LAWIM AI ne publie jamais une traduction sans validation humaine si le texte est
 
 Le référentiel des traductions garantit une présentation cohérente, versionnée et contrôlée des contenus LAWIM dans toutes les langues officielles.
 
+---
+
+# CHAPITRE 7 — LANGUES OFFICIELLES ET PERSISTANCE
+
+Les langues officielles de l'interface sont:
+
+* Français, langue par défaut;
+* English;
+* Pidgin English.
+
+Le choix utilisateur doit être:
+
+* mémorisé localement ou par le mécanisme officiel déjà validé;
+* réappliqué à toute l'interface après reconnexion;
+* propagé aux pages d'accès, dashboards, cartes, boutons, menus, messages d'erreur et messages de succès;
+* appliqué aux libellés principaux, à `Nous écrire`, à `Et maintenant ?`, aux statistiques et à `Logout` / `Déconnexion` / `Comot`.
+
+Une interface correctement traduite ne doit pas mélanger les langues au sein d'un même écran, sauf pour les éléments de marque ou les références officielles déjà validées.

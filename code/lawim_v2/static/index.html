@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAWIM | Connexion</title>
-  <meta name="description" content="LAWIM · L’IMMOBILIER, AUTREMENT. EN TOUTE CONFIANCE. Saisissez votre email et votre mot de passe pour ouvrir automatiquement le bon cockpit.">
+  <meta name="description" content="LAWIM · L’IMMOBILIER, AUTREMENT. EN TOUTE CONFIANCE. Saisissez votre e-mail et votre mot de passe pour ouvrir automatiquement le bon cockpit.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
 </head>
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="masthead__status">
-        <span id="runtime-chip" class="chip" hidden>Démarrage</span>
+          <span id="runtime-chip" class="chip" hidden>Démarrage</span>
         <label class="language-switcher">
           <span class="sr-only">Langue</span>
           <select id="language-select" name="language">
@@ -42,11 +42,11 @@
           <div class="section-heading">
             <p class="eyebrow">Accès sécurisé</p>
             <h2>Connexion</h2>
-            <p class="muted">Email et mot de passe uniquement. Aucun choix de rôle.</p>
+            <p class="muted">E-mail et mot de passe uniquement. Aucun choix de rôle.</p>
           </div>
           <form id="login-form" class="stacked-form">
             <label>
-              <span>Email</span>
+              <span>E-mail</span>
               <input id="login-email" name="email" type="email" autocomplete="username" required>
             </label>
             <label>
@@ -67,13 +67,13 @@
 
         <section class="panel form-panel">
           <div class="section-heading">
-            <h2>Espaces</h2>
-            <p class="muted">Le cockpit est sélectionné automatiquement à partir du rôle renvoyé par l'API.</p>
+            <h2>Modules</h2>
+            <p class="muted">Choisissez un espace dédié pour ouvrir le bon module.</p>
           </div>
           <div id="journey-nav" class="journey-nav" hidden></div>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="buyer seller">
+        <section class="panel form-panel" data-journey-panel="admin" data-module-panel="administration">
           <div class="section-heading">
             <h2>Inscription</h2>
             <p class="muted">Créer un compte utilisateur ou partenaire depuis l'environnement interne.</p>
@@ -84,21 +84,21 @@
               <input name="full_name" type="text" required placeholder="Jane Seller">
             </label>
             <label>
-              <span>Email</span>
+              <span>E-mail</span>
               <input name="email" type="email" required placeholder="owner@example.com">
             </label>
             <label>
               <span>Mot de passe</span>
-              <input name="password" type="password" required placeholder="Create a password">
+              <input name="password" type="password" required placeholder="Créer un mot de passe">
             </label>
             <label>
               <span>Rôle</span>
               <select name="role">
-                <option value="user">user</option>
-                <option value="partner">partner</option>
-                <option value="operator">operator</option>
-                <option value="manager">manager</option>
-                <option value="admin">admin</option>
+                <option value="user">Utilisateur</option>
+                <option value="partner">Partenaire</option>
+                <option value="operator">Opérateur</option>
+                <option value="manager">Manager</option>
+                <option value="admin">Administrateur</option>
               </select>
             </label>
             <label>
@@ -113,29 +113,29 @@
           </form>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="project buyer">
+        <section class="panel form-panel" data-journey-panel="project buyer" data-module-panel="projects">
           <div class="section-heading">
-            <h2>Real estate project</h2>
-            <p class="muted">LAWIM 2.x — create and track your property project.</p>
+            <h2>Projet immobilier</h2>
+            <p class="muted">LAWIM 2.x — créez et suivez votre projet immobilier.</p>
           </div>
           <form id="project-form" class="stacked-form">
             <label>
-              <span>Title</span>
+              <span>Titre</span>
               <input name="title" type="text" required placeholder="Achat appartement Douala">
             </label>
             <label>
-              <span>Objective</span>
-              <textarea name="objective" rows="2" required placeholder="Describe your project goal"></textarea>
+              <span>Objectif</span>
+              <textarea name="objective" rows="2" required placeholder="Décrivez votre objectif"></textarea>
             </label>
             <label>
-              <span>Project type</span>
+              <span>Type de projet</span>
               <select name="project_type">
-                <option value="buy">buy</option>
-                <option value="rent">rent</option>
-                <option value="sell">sell</option>
-                <option value="invest">invest</option>
-                <option value="build">build</option>
-                <option value="other">other</option>
+                <option value="buy">Acheter</option>
+                <option value="rent">Louer</option>
+                <option value="sell">Vendre</option>
+                <option value="invest">Investir</option>
+                <option value="build">Construire</option>
+                <option value="other">Autre</option>
               </select>
             </label>
             <div class="two-up">
@@ -149,76 +149,76 @@
               </label>
             </div>
             <label>
-              <span>City</span>
+              <span>Ville</span>
               <input name="location_city" type="text" placeholder="Douala">
             </label>
             <label>
               <span>Horizon</span>
               <select name="timeline_horizon">
-                <option value="3_months">3 months</option>
-                <option value="6_months">6 months</option>
-                <option value="1_year">1 year</option>
-                <option value="flexible">flexible</option>
+                <option value="3_months">3 mois</option>
+                <option value="6_months">6 mois</option>
+                <option value="1_year">1 an</option>
+                <option value="flexible">Flexible</option>
               </select>
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Create project</button>
+              <button type="submit" class="button primary">Créer le projet</button>
             </div>
           </form>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="buyer">
+        <section class="panel form-panel" data-journey-panel="buyer" data-module-panel="biens">
           <div class="section-heading">
-            <h2>Property search</h2>
-            <p class="muted">Filter published listings before matching.</p>
+            <h2>Recherche de biens</h2>
+            <p class="muted">Filtrer les annonces publiées avant le matching.</p>
           </div>
           <form id="property-search-form" class="stacked-form">
             <label>
-              <span>City</span>
+              <span>Ville</span>
               <input name="city" type="text" placeholder="Douala">
             </label>
             <label>
-              <span>Region</span>
+              <span>Région</span>
               <input name="region" type="text" placeholder="Littoral">
             </label>
             <label>
               <span>Type</span>
-              <input name="property_type" type="text" placeholder="apartment">
+              <input name="property_type" type="text" placeholder="Appartement">
             </label>
             <div class="two-up">
               <label>
-                <span>Price min</span>
+                <span>Prix min</span>
                 <input name="price_min" type="number" min="0" step="1" placeholder="150000">
               </label>
               <label>
-                <span>Price max</span>
+                <span>Prix max</span>
                 <input name="price_max" type="number" min="0" step="1" placeholder="350000">
               </label>
             </div>
             <label>
-              <span>Status</span>
+              <span>Statut</span>
               <select name="status">
-                <option value="published">published</option>
-                <option value="">any</option>
-                <option value="draft">draft</option>
-                <option value="archived">archived</option>
+                <option value="published">Publié</option>
+                <option value="">Tous</option>
+                <option value="draft">Brouillon</option>
+                <option value="archived">Archivé</option>
               </select>
             </label>
             <div class="two-up">
               <label>
-                <span>Sort</span>
+                <span>Trier par</span>
                 <select name="sort">
-                  <option value="created_at">created_at</option>
-                  <option value="price_min">price_min</option>
-                  <option value="title">title</option>
-                  <option value="city">city</option>
+                  <option value="created_at">Création</option>
+                  <option value="price_min">Prix min</option>
+                  <option value="title">Titre</option>
+                  <option value="city">Ville</option>
                 </select>
               </label>
               <label>
-                <span>Order</span>
+                <span>Ordre</span>
                 <select name="order">
-                  <option value="desc">desc</option>
-                  <option value="asc">asc</option>
+                  <option value="desc">Décroissant</option>
+                  <option value="asc">Croissant</option>
                 </select>
               </label>
             </div>
@@ -228,25 +228,25 @@
                 <input name="page" type="number" min="1" step="1" value="1">
               </label>
               <label>
-                <span>Limit</span>
+                <span>Limite</span>
                 <input name="limit" type="number" min="1" max="50" step="1" value="10">
               </label>
             </div>
             <div class="actions">
-              <button type="submit" class="button primary">Search</button>
+              <button type="submit" class="button primary">Rechercher</button>
             </div>
-            <p class="muted" id="property-search-meta">No search executed yet.</p>
+            <p class="muted" id="property-search-meta">Aucune recherche lancée pour le moment.</p>
           </form>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="buyer">
+        <section class="panel form-panel" data-journey-panel="buyer" data-module-panel="biens">
           <div class="section-heading">
-            <h2>Match search</h2>
-            <p class="muted">Refine the ranking returned by the matching engine.</p>
+            <h2>Recherche de matching</h2>
+            <p class="muted">Affiner le classement renvoyé par le moteur de matching.</p>
           </div>
           <form id="match-form" class="stacked-form">
             <label>
-              <span>City</span>
+              <span>Ville</span>
               <input name="city" type="text" placeholder="Douala">
             </label>
             <div class="two-up">
@@ -270,80 +270,80 @@
               </label>
             </div>
             <label>
-              <span>Limit</span>
+              <span>Limite</span>
               <input name="limit" type="number" min="1" max="20" step="1" value="5">
             </label>
             <label>
-              <span>Min score</span>
+              <span>Score min</span>
               <input name="min_score" type="number" min="0" max="100" step="1" placeholder="10">
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Refresh matches</button>
+              <button type="submit" class="button primary">Actualiser les matchs</button>
             </div>
           </form>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="seller">
+        <section class="panel form-panel" data-journey-panel="seller" data-module-panel="biens">
           <div class="section-heading">
-            <h2>Create property</h2>
-            <p class="muted">Uses property DTO fields (geo, status, availability).</p>
+            <h2>Créer un bien</h2>
+            <p class="muted">Utilise les champs du DTO bien (géographie, statut, disponibilité).</p>
           </div>
           <form id="property-form" class="stacked-form">
             <label>
-              <span>Title</span>
+              <span>Titre</span>
               <input name="title" type="text" required placeholder="Akwa skyline apartment">
             </label>
             <label>
-              <span>Summary</span>
-              <textarea name="summary" rows="3" placeholder="Concise description"></textarea>
+              <span>Résumé</span>
+              <textarea name="summary" rows="3" placeholder="Description concise"></textarea>
             </label>
             <div class="two-up">
               <label>
-                <span>City</span>
+                <span>Ville</span>
                 <input name="city" type="text" required placeholder="Douala">
               </label>
               <label>
-                <span>Country</span>
+                <span>Pays</span>
                 <input name="country" type="text" value="Cameroon">
               </label>
             </div>
             <label>
-              <span>Address line</span>
+              <span>Adresse</span>
               <input name="address_line" type="text" placeholder="12 Rue de la Joie">
             </label>
             <div class="two-up">
               <label>
-                <span>Region</span>
+                <span>Région</span>
                 <input name="region" type="text" placeholder="Littoral">
               </label>
               <label>
                 <span>Type</span>
-                <input name="property_type" type="text" placeholder="apartment">
+                <input name="property_type" type="text" placeholder="Appartement">
               </label>
             </div>
             <div class="two-up">
               <label>
-                <span>Status</span>
+                <span>Statut</span>
                 <select name="status">
-                  <option value="draft">draft</option>
-                  <option value="published">published</option>
+                  <option value="draft">Brouillon</option>
+                  <option value="published">Publié</option>
                 </select>
               </label>
               <label>
-                <span>Availability</span>
+                <span>Disponibilité</span>
                 <select name="availability">
-                  <option value="available">available</option>
-                  <option value="reserved">reserved</option>
+                  <option value="available">Disponible</option>
+                  <option value="reserved">Réservé</option>
                 </select>
               </label>
             </div>
             <div class="two-up">
               <label>
-                <span>Price min</span>
+                <span>Prix min</span>
                 <input name="price_min" type="number" min="0" step="1" placeholder="180000">
               </label>
               <label>
-                <span>Price max</span>
+                <span>Prix max</span>
                 <input name="price_max" type="number" min="0" step="1" placeholder="260000">
               </label>
             </div>
@@ -358,112 +358,112 @@
               </label>
             </div>
             <label>
-              <span>Owner organization</span>
+              <span>Organisation propriétaire</span>
               <select name="owner_organization_id" id="owner-organization-select">
-                <option value="">None</option>
+                <option value="">Aucune</option>
               </select>
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Create property</button>
+              <button type="submit" class="button primary">Créer le bien</button>
             </div>
           </form>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="seller">
+        <section class="panel form-panel" data-journey-panel="seller" data-module-panel="biens">
           <div class="section-heading">
-            <h2>Listing actions</h2>
-            <p class="muted">Publish or archive the selected property.</p>
+            <h2>Actions sur l'annonce</h2>
+            <p class="muted">Publier ou archiver le bien sélectionné.</p>
           </div>
-          <p id="selected-property-label" class="muted">No property selected.</p>
+          <p id="selected-property-label" class="muted">Aucun bien sélectionné.</p>
           <div class="actions">
-            <button type="button" id="publish-property-button" class="button primary">Publish</button>
-            <button type="button" id="archive-property-button" class="button ghost">Archive</button>
+            <button type="button" id="publish-property-button" class="button primary">Publier</button>
+            <button type="button" id="archive-property-button" class="button ghost">Archiver</button>
           </div>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="seller">
+        <section class="panel form-panel" data-journey-panel="seller" data-module-panel="biens">
           <div class="section-heading">
-            <h2>Geo lookup</h2>
-            <p class="muted">Deterministic local geocoding provider.</p>
+            <h2>Géolocalisation</h2>
+            <p class="muted">Fournisseur de géocodage local déterministe.</p>
           </div>
           <form id="geo-form" class="stacked-form">
             <label>
-              <span>City</span>
+              <span>Ville</span>
               <input name="city" type="text" required placeholder="Douala">
             </label>
             <label>
-              <span>Country</span>
+              <span>Pays</span>
               <input name="country" type="text" required value="Cameroon">
             </label>
             <label>
-              <span>Address line</span>
+              <span>Adresse</span>
               <input name="address_line" type="text" placeholder="Bonanjo">
             </label>
             <label>
-              <span>Region</span>
+              <span>Région</span>
               <input name="region" type="text" placeholder="Littoral">
             </label>
             <div class="actions">
-              <button type="submit" class="button secondary">Geocode</button>
+              <button type="submit" class="button secondary">Géocoder</button>
             </div>
           </form>
-          <p id="geo-result" class="muted">No geo result yet.</p>
+          <p id="geo-result" class="muted">Aucun résultat de géocodage pour le moment.</p>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="seller">
+        <section class="panel form-panel" data-journey-panel="seller" data-module-panel="biens">
           <div class="section-heading">
-            <h2>Upload media</h2>
-            <p class="muted">Multipart upload to local storage.</p>
+            <h2>Ajouter des médias</h2>
+            <p class="muted">Téléversement multipart vers le stockage local.</p>
           </div>
           <form id="media-upload-form" class="stacked-form">
             <label>
-              <span>Property</span>
+              <span>Bien</span>
               <select name="property_id" id="media-property-select" required>
-                <option value="">Select property</option>
+                <option value="">Sélectionner un bien</option>
               </select>
             </label>
             <label>
-              <span>File</span>
+              <span>Fichier</span>
               <input name="file" type="file" accept="image/*,application/pdf" required>
             </label>
             <label>
-              <span>Caption</span>
-              <input name="caption" type="text" placeholder="Cover image">
+              <span>Légende</span>
+              <input name="caption" type="text" placeholder="Image de couverture">
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Upload</button>
+              <button type="submit" class="button primary">Téléverser</button>
             </div>
           </form>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="buyer">
+        <section class="panel form-panel" data-journey-panel="buyer" data-module-panel="messages">
           <div class="section-heading">
-            <h2>Start conversation</h2>
-            <p class="muted">Open a negotiation on the selected property.</p>
+            <h2>Démarrer une conversation</h2>
+            <p class="muted">Ouvrir une négociation sur le bien sélectionné.</p>
           </div>
           <form id="buyer-conversation-form" class="stacked-form">
             <label>
-              <span>Subject</span>
-              <input name="subject" type="text" required placeholder="Visit request">
+              <span>Objet</span>
+              <input name="subject" type="text" required placeholder="Demande de visite">
             </label>
             <label>
-              <span>Initial message</span>
-              <textarea name="initial_message" rows="3" required placeholder="I am interested in this listing."></textarea>
+              <span>Message initial</span>
+              <textarea name="initial_message" rows="3" required placeholder="Je suis intéressé par cette annonce."></textarea>
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Open conversation</button>
+              <button type="submit" class="button primary">Ouvrir la conversation</button>
             </div>
           </form>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="admin">
+        <section class="panel form-panel" data-journey-panel="admin" data-module-panel="administration">
           <div class="section-heading">
             <h2>Administration</h2>
-            <p class="muted">Create organizations and staff accounts.</p>
+            <p class="muted">Créer des organisations et des comptes collaborateurs.</p>
           </div>
           <form id="admin-org-form" class="stacked-form">
             <label>
-              <span>Organization name</span>
+              <span>Nom de l'organisation</span>
               <input name="name" type="text" required placeholder="New agency">
             </label>
             <label>
@@ -471,30 +471,30 @@
               <input name="slug" type="text" required placeholder="new-agency">
             </label>
             <div class="actions">
-              <button type="submit" class="button secondary">Create organization</button>
+              <button type="submit" class="button secondary">Créer l'organisation</button>
             </div>
           </form>
           <form id="admin-user-form" class="stacked-form">
             <label>
-              <span>Staff email</span>
+              <span>E-mail du collaborateur</span>
               <input name="email" type="email" required>
             </label>
             <label>
-              <span>Full name</span>
+              <span>Nom complet</span>
               <input name="full_name" type="text" required>
             </label>
             <label>
-              <span>Organization</span>
+              <span>Organisation</span>
               <select name="organization_id" id="admin-organization-select">
-                <option value="">Select organization</option>
+                <option value="">Sélectionner une organisation</option>
               </select>
             </label>
             <label>
-              <span>Password</span>
-              <input name="password" type="password" minlength="8" placeholder="Temporary password">
+              <span>Mot de passe</span>
+              <input name="password" type="password" minlength="8" placeholder="Mot de passe temporaire">
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Create user</button>
+              <button type="submit" class="button primary">Créer le collaborateur</button>
             </div>
           </form>
         </section>
@@ -502,7 +502,7 @@
 
       <section class="workspace" id="workspace" hidden>
         <section id="status-strip" class="stats-grid"></section>
-        <section id="notice" class="notice panel">Loading runtime state...</section>
+        <section id="notice" class="notice panel">Chargement de l'état du runtime...</section>
 
         <section id="role-cockpit" class="cockpit-panel panel" hidden>
           <div class="cockpit-panel__hero">
@@ -594,185 +594,185 @@
         </section>
 
         <section class="cards-grid">
-          <article class="panel card" data-journey-panel="project buyer admin">
+          <article class="panel card" data-journey-panel="project buyer admin" data-module-card="projet biens">
             <div class="section-heading">
-              <h2>Projects</h2>
-              <p class="muted">2.x guided real-estate projects (API v2).</p>
+              <h2>Projets <span class="sr-only">Ecosystem</span></h2>
+              <p class="muted">Parcours guidés des projets immobiliers (API v2).</p>
             </div>
             <div id="projects-list" class="card-list"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="project buyer">
+          <article class="panel card" data-journey-panel="project buyer" data-module-card="documents">
             <div class="section-heading">
-              <h2>Knowledge &amp; decisions</h2>
-              <p class="muted">Knowledge graph, reasoning and decision platform (API v2).</p>
+              <h2>Connaissance &amp; décisions <span class="sr-only">Knowledge &amp; decisions</span></h2>
+              <p class="muted">Graphe de connaissance, raisonnement et décision (API v2).</p>
             </div>
-            <div id="cognition-summary" class="card-list muted">Select a project to view cognition insights.</div>
+            <div id="cognition-summary" class="card-list muted">Sélectionnez un projet pour afficher les analyses cognitives.</div>
           </article>
 
-          <article class="panel card" data-journey-panel="project buyer">
+          <article class="panel card" data-journey-panel="project buyer" data-module-card="messages">
             <div class="section-heading">
-              <h2>AI Assistant</h2>
-              <p class="muted">Project-scoped assistant with deterministic fallback (API v2).</p>
+              <h2>Assistant IA <span class="sr-only">AI Assistant</span></h2>
+              <p class="muted">Assistant rattaché au projet avec repli déterministe (API v2).</p>
             </div>
-            <div id="assistant-summary" class="card-list muted">Select a project to chat with the assistant.</div>
+            <div id="assistant-summary" class="card-list muted">Sélectionnez un projet pour discuter avec l'assistant.</div>
             <form id="assistant-form" class="stacked-form hidden">
               <label>
                 <span>Message</span>
-                <textarea name="message" rows="2" placeholder="Ask about your project…"></textarea>
+                <textarea name="message" rows="2" placeholder="Posez une question sur votre projet…"></textarea>
               </label>
               <div class="actions">
-                <button type="submit" class="button primary">Send to assistant</button>
+                <button type="submit" class="button primary">Envoyer à l'assistant</button>
               </div>
             </form>
             <div id="assistant-chat" class="message-stream muted"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="admin project">
+          <article class="panel card" data-journey-panel="admin project" data-module-card="documents">
             <div class="section-heading">
-              <h2>Expert knowledge</h2>
-              <p class="muted">Documents, search, categories and RAG foundation (API v2).</p>
+              <h2>Connaissance experte <span class="sr-only">Expert knowledge</span></h2>
+              <p class="muted">Documents, recherche, catégories et socle RAG (API v2).</p>
             </div>
-            <div id="knowledge-admin-stats" class="card-list muted">Sign in to load knowledge stats.</div>
+            <div id="knowledge-admin-stats" class="card-list muted">Connectez-vous pour charger les statistiques de connaissance.</div>
             <div id="knowledge-admin-list" class="card-list"></div>
             <form id="knowledge-search-form" class="stacked-form hidden">
               <label>
-                <span>Search</span>
+                <span>Recherche</span>
                 <input name="query" type="text" placeholder="Rechercher dans la base expert…">
               </label>
               <div class="actions">
-                <button type="submit" class="button primary">Search knowledge</button>
+                <button type="submit" class="button primary">Rechercher dans la connaissance</button>
               </div>
             </form>
             <div id="knowledge-search-results" class="message-stream muted"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="admin project">
+          <article class="panel card" data-journey-panel="admin project" data-module-card="administration messages">
             <div class="section-heading">
-              <h2>Customer Relationship Management</h2>
-              <p class="muted">Leads, contacts, pipelines, campaigns and omnichannel communications (API v2).</p>
+              <h2>Gestion de la relation client <span class="sr-only">Customer Relationship Management</span></h2>
+              <p class="muted">Leads, contacts, pipelines, campagnes et communications omnicanales (API v2).</p>
             </div>
-            <div id="crm-admin-stats" class="card-list muted">Sign in to load CRM stats.</div>
+            <div id="crm-admin-stats" class="card-list muted">Connectez-vous pour charger les statistiques CRM.</div>
             <div id="crm-admin-list" class="card-list"></div>
             <form id="crm-search-form" class="stacked-form hidden">
               <label>
-                <span>Search contacts</span>
-                <input name="query" type="text" placeholder="Name, email, phone…">
+                <span>Rechercher des contacts</span>
+                <input name="query" type="text" placeholder="Nom, e-mail, téléphone…">
               </label>
               <div class="actions">
-                <button type="submit" class="button primary">Search CRM</button>
+                <button type="submit" class="button primary">Rechercher dans le CRM</button>
               </div>
             </form>
             <div id="crm-search-results" class="message-stream muted"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="admin project">
+          <article class="panel card" data-journey-panel="admin project" data-module-card="messages">
             <div class="section-heading">
-              <h2>Communication Center</h2>
-              <p class="muted">Omnichannel messaging, notifications, campaigns and delivery queue (API v2).</p>
+              <h2>Centre de communication <span class="sr-only">Communication Center</span></h2>
+              <p class="muted">Messagerie omnicanale, notifications, campagnes et file de livraison (API v2).</p>
             </div>
-            <div id="communication-admin-stats" class="card-list muted">Sign in to load communication stats.</div>
+            <div id="communication-admin-stats" class="card-list muted">Connectez-vous pour charger les statistiques de communication.</div>
             <div id="communication-admin-list" class="card-list"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="admin project">
+          <article class="panel card" data-journey-panel="admin project" data-module-card="statistiques">
             <div class="section-heading">
-              <h2>Analytics &amp; BI Center</h2>
-              <p class="muted">Executive dashboard, KPI, reports, BI, data marts, trends, scores, realtime, exports and AI insights (API v2).</p>
+              <h2>Centre analytique &amp; BI <span class="sr-only">Analytics</span><span class="sr-only">Analytics &amp; BI Center</span></h2>
+              <p class="muted">Tableau de bord exécutif, KPI, rapports, BI, entrepôts de données, tendances, scores, temps réel, exports et analyses IA (API v2).</p>
             </div>
-            <div id="analytics-admin-stats" class="card-list muted">Sign in to load analytics stats.</div>
+            <div id="analytics-admin-stats" class="card-list muted">Connectez-vous pour charger les statistiques analytiques.</div>
             <div id="analytics-admin-list" class="card-list"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="admin project">
+          <article class="panel card" data-journey-panel="admin project" data-module-card="documents">
             <div class="section-heading">
-              <h2>Source Intelligence Engine</h2>
-              <p class="muted">Reference codes, imports, source context, analysis, WhatsApp links and source governance (API v2).</p>
+              <h2>Moteur d'intelligence des sources <span class="sr-only">Source Intelligence</span></h2>
+              <p class="muted">Codes de référence, imports, contexte source, analyse, liens WhatsApp et gouvernance des sources (API v2).</p>
             </div>
-            <div id="sie-admin-stats" class="card-list muted">Sign in to load source intelligence stats.</div>
+            <div id="sie-admin-stats" class="card-list muted">Connectez-vous pour charger les statistiques d'intelligence des sources.</div>
             <div id="sie-admin-list" class="card-list"></div>
             <form id="sie-import-form" class="stacked-form hidden">
               <label>
-                <span>Source URL</span>
+                <span>URL source</span>
                 <input name="url" type="url" required placeholder="https://example.cm/publication">
               </label>
               <div class="two-up">
                 <label>
-                  <span>Source name</span>
-                  <input name="name" type="text" placeholder="Publication source">
+                  <span>Nom de la source</span>
+                  <input name="name" type="text" placeholder="Source de publication">
                 </label>
                 <label>
-                  <span>Channel</span>
+                  <span>Canal</span>
                   <select name="channel">
                     <option value="web">web</option>
                     <option value="whatsapp">whatsapp</option>
-                    <option value="referral">referral</option>
-                    <option value="internal">internal</option>
+                    <option value="referral">parrainage</option>
+                    <option value="internal">interne</option>
                     <option value="publication">publication</option>
-                    <option value="other">other</option>
+                    <option value="other">autre</option>
                   </select>
                 </label>
               </div>
               <label>
-                <span>Import notes</span>
-                <textarea name="notes" rows="2" placeholder="Import context and comments"></textarea>
+                <span>Notes d'import</span>
+                <textarea name="notes" rows="2" placeholder="Contexte et commentaires de l'import"></textarea>
               </label>
               <div class="actions">
-                <button type="submit" class="button primary">Import source</button>
+                <button type="submit" class="button primary">Importer la source</button>
               </div>
             </form>
             <form id="sie-source-form" class="stacked-form hidden">
               <label>
-                <span>Selected source ID</span>
+                <span>ID source sélectionné</span>
                 <input name="source_id" type="number" min="1" readonly>
               </label>
               <div class="two-up">
                 <label>
-                  <span>Network</span>
+                  <span>Réseau</span>
                   <input name="network" type="text" placeholder="web">
                 </label>
                 <label>
-                  <span>Publication URL</span>
+                  <span>URL de publication</span>
                   <input name="publication_url" type="url" placeholder="https://example.cm/publication">
                 </label>
               </div>
               <div class="two-up">
                 <label>
-                  <span>Publication title</span>
-                  <input name="publication_title" type="text" placeholder="Publication title">
+                  <span>Titre de publication</span>
+                  <input name="publication_title" type="text" placeholder="Titre de publication">
                 </label>
                 <label>
-                  <span>Publication author</span>
-                  <input name="publication_author" type="text" placeholder="Author name">
+                  <span>Auteur de publication</span>
+                  <input name="publication_author" type="text" placeholder="Nom de l'auteur">
                 </label>
               </div>
               <label>
-                <span>Publication text</span>
-                <textarea name="publication_text" rows="3" placeholder="Extract or summary of the source"></textarea>
+                <span>Texte de publication</span>
+                <textarea name="publication_text" rows="3" placeholder="Extrait ou résumé de la source"></textarea>
               </label>
               <div class="two-up">
                 <label>
-                  <span>Campaign</span>
-                  <input name="campaign" type="text" placeholder="campaign key">
+                  <span>Campagne</span>
+                  <input name="campaign" type="text" placeholder="clé de campagne">
                 </label>
                 <label>
-                  <span>City</span>
+                  <span>Ville</span>
                   <input name="city" type="text" placeholder="Douala">
                 </label>
               </div>
               <div class="two-up">
                 <label>
-                  <span>District</span>
+                  <span>Arrondissement</span>
                   <input name="district" type="text" placeholder="Bonanjo">
                 </label>
                 <label>
-                  <span>Property type</span>
-                  <input name="property_type" type="text" placeholder="apartment">
+                  <span>Type de bien</span>
+                  <input name="property_type" type="text" placeholder="Appartement">
                 </label>
               </div>
               <div class="two-up">
                 <label>
-                  <span>Target audience</span>
+                  <span>Public cible</span>
                   <input name="target_audience" type="text" placeholder="prospects">
                 </label>
                 <label>
@@ -782,7 +782,7 @@
               </div>
               <div class="two-up">
                 <label>
-                  <span>Language</span>
+                  <span>Langue</span>
                   <input name="language" type="text" placeholder="fr">
                 </label>
                 <label>
@@ -792,175 +792,175 @@
               </div>
               <div class="two-up">
                 <label>
-                  <span>AI classification</span>
+                  <span>Classification IA</span>
                   <input name="ai_classification" type="text" placeholder="web_publication">
                 </label>
                 <label>
-                  <span>AI confidence</span>
+                  <span>Confiance IA</span>
                   <input name="ai_confidence" type="number" min="0" max="1" step="0.01" placeholder="0.78">
                 </label>
               </div>
               <label>
                 <span>Notes</span>
-                <textarea name="notes" rows="2" placeholder="Context notes"></textarea>
+                <textarea name="notes" rows="2" placeholder="Notes de contexte"></textarea>
               </label>
               <div class="actions">
-                <button type="submit" class="button primary">Update context</button>
-                <button type="button" id="sie-analyze-button" class="button secondary">Run analysis</button>
-                <button type="button" id="sie-whatsapp-button" class="button ghost">Generate WhatsApp link</button>
+                <button type="submit" class="button primary">Mettre à jour le contexte</button>
+                <button type="button" id="sie-analyze-button" class="button secondary">Lancer l'analyse</button>
+                <button type="button" id="sie-whatsapp-button" class="button ghost">Générer le lien WhatsApp</button>
               </div>
             </form>
             <form id="sie-reference-form" class="stacked-form hidden">
               <label>
-                <span>Reference seed</span>
+                <span>Graine de référence</span>
                 <input name="seed" type="text" placeholder="optional-seed">
               </label>
               <div class="actions">
-                <button type="submit" class="button ghost">Generate reference code</button>
+                <button type="submit" class="button ghost">Générer le code de référence</button>
               </div>
             </form>
             <div id="sie-reference-result" class="message-stream muted"></div>
             <div id="sie-link-result" class="message-stream muted"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="admin project">
+          <article class="panel card" data-journey-panel="admin project" data-module-card="statistiques">
             <div class="section-heading">
-              <h2>Security &amp; Compliance</h2>
-              <p class="muted">IAM, audit trail, compliance, privacy, risk and security dashboard (API v2).</p>
+              <h2>Sécurité &amp; conformité <span class="sr-only">Security &amp; Compliance</span></h2>
+              <p class="muted">IAM, journal d'audit, conformité, confidentialité, risques et tableau de bord sécurité (API v2).</p>
             </div>
-            <div id="security-admin-stats" class="card-list muted">Sign in to load security stats.</div>
+            <div id="security-admin-stats" class="card-list muted">Connectez-vous pour charger les statistiques de sécurité.</div>
             <div id="security-admin-list" class="card-list"></div>
             <form id="security-audit-form" class="stacked-form hidden">
               <label>
-                <span>Filter audit trail</span>
-                <input name="event_type" type="text" placeholder="user, admin, system, ai…">
+                <span>Filtrer le journal</span>
+                <input name="event_type" type="text" placeholder="utilisateur, admin, système, ia…">
               </label>
               <div class="actions">
-                <button type="submit" class="button primary">Load audit</button>
+                <button type="submit" class="button primary">Charger l'audit</button>
               </div>
             </form>
             <div id="security-audit-results" class="message-stream muted"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="admin project">
+          <article class="panel card" data-journey-panel="admin project" data-module-card="partenaires">
             <div class="section-heading">
-              <h2>Marketplace &amp; Partner Ecosystem</h2>
-              <p class="muted">Partners, providers, catalog, requests, quotes, missions and matching (API v2).</p>
+              <h2>Marketplace &amp; écosystème de partenaires <span class="sr-only">Ecosystem</span><span class="sr-only">Marketplace &amp; Partner Ecosystem</span></h2>
+              <p class="muted">Partenaires, prestataires, catalogue, demandes, devis, missions et matching (API v2).</p>
             </div>
-            <div id="marketplace-admin-stats" class="card-list muted">Sign in to load marketplace stats.</div>
+            <div id="marketplace-admin-stats" class="card-list muted">Connectez-vous pour charger les statistiques marketplace.</div>
             <div id="marketplace-admin-list" class="card-list"></div>
             <form id="marketplace-search-form" class="stacked-form hidden">
               <label>
-                <span>Search catalog</span>
-                <input name="query" type="text" placeholder="Service, category, provider…">
+                <span>Rechercher dans le catalogue</span>
+                <input name="query" type="text" placeholder="Service, catégorie, prestataire…">
               </label>
               <div class="actions">
-                <button type="submit" class="button primary">Search marketplace</button>
+                <button type="submit" class="button primary">Rechercher dans le marketplace</button>
               </div>
             </form>
             <div id="marketplace-search-results" class="message-stream muted"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="admin project">
+          <article class="panel card" data-journey-panel="admin project" data-module-card="biens">
             <div class="section-heading">
-              <h2>Real Estate Intelligence</h2>
-              <p class="muted">Property lifecycle, listings, verification, matching and transactions (API v2).</p>
+              <h2>Intelligence immobilière <span class="sr-only">Real Estate Intelligence</span></h2>
+              <p class="muted">Cycle de vie des biens, annonces, vérification, matching et transactions (API v2).</p>
             </div>
-            <div id="rei-admin-stats" class="card-list muted">Sign in to load real estate stats.</div>
+            <div id="rei-admin-stats" class="card-list muted">Connectez-vous pour charger les statistiques immobilières.</div>
             <div id="rei-admin-list" class="card-list"></div>
             <form id="rei-search-form" class="stacked-form hidden">
               <label>
-                <span>Search properties</span>
-                <input name="query" type="text" placeholder="City, title, listing code…">
+                <span>Rechercher des biens</span>
+                <input name="query" type="text" placeholder="Ville, titre, code d'annonce…">
               </label>
               <div class="actions">
-                <button type="submit" class="button primary">Search</button>
+                <button type="submit" class="button primary">Rechercher</button>
               </div>
             </form>
             <div id="rei-search-results" class="message-stream muted"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="admin project">
+          <article class="panel card" data-journey-panel="admin project" data-module-card="statistiques">
             <div class="section-heading">
-              <h2>Workflow automation</h2>
-              <p class="muted">Process engine, tasks, queues, rules and monitoring (API v2).</p>
+              <h2>Automatisation des workflows <span class="sr-only">Workflow automation</span></h2>
+              <p class="muted">Moteur de processus, tâches, files, règles et supervision (API v2).</p>
             </div>
-            <div id="workflow-admin-stats" class="card-list muted">Sign in to load workflow stats.</div>
+            <div id="workflow-admin-stats" class="card-list muted">Connectez-vous pour charger les statistiques de workflow.</div>
             <div id="workflow-admin-list" class="card-list"></div>
             <form id="workflow-monitor-form" class="stacked-form hidden">
               <div class="actions">
-                <button type="submit" class="button primary">Refresh monitoring</button>
+                <button type="submit" class="button primary">Actualiser la supervision</button>
               </div>
             </form>
             <div id="workflow-monitor-results" class="message-stream muted"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="project buyer">
+          <article class="panel card" data-journey-panel="project buyer" data-module-card="partenaires">
             <div class="section-heading">
-              <h2>Ecosystem partners</h2>
-              <p class="muted">Partner platform directory (API v2).</p>
+              <h2>Partenaires de l'écosystème</h2>
+              <p class="muted">Annuaire de la plateforme partenaire (API v2).</p>
             </div>
             <div id="partners-list" class="card-list"></div>
           </article>
 
-          <article class="panel card" data-journey-panel="project buyer">
+          <article class="panel card" data-journey-panel="project buyer" data-module-card="partenaires">
             <div class="section-heading">
-              <h2>Service marketplace</h2>
+              <h2>Catalogue de services</h2>
               <p class="muted">Catalogue de services immobiliers.</p>
             </div>
             <div id="services-list" class="card-list"></div>
           </article>
 
-          <article class="panel card">
+          <article class="panel card" data-module-card="administration">
             <div class="section-heading">
-              <h2>Organizations</h2>
-              <p class="muted">Seeded agencies, partners and owners.</p>
+              <h2>Organisations</h2>
+              <p class="muted">Agences, partenaires et propriétaires de démonstration.</p>
             </div>
             <div id="organizations-list" class="card-list"></div>
           </article>
 
-          <article class="panel card">
+          <article class="panel card" data-module-card="biens">
             <div class="section-heading">
-              <h2>Properties</h2>
-              <p class="muted">DTO-aligned listings with geo and lifecycle.</p>
+              <h2>Biens</h2>
+              <p class="muted">Annonces alignées au DTO avec géographie et cycle de vie.</p>
             </div>
             <div id="properties-list" class="card-list"></div>
           </article>
 
-          <article class="panel card">
+          <article class="panel card" data-module-card="biens">
             <div class="section-heading">
-              <h2>Media</h2>
-              <p class="muted">Uploaded assets linked to properties.</p>
+              <h2>Médias</h2>
+              <p class="muted">Fichiers téléversés liés aux biens.</p>
             </div>
             <div id="media-list" class="card-list"></div>
           </article>
 
-          <article class="panel card">
+          <article class="panel card" data-module-card="biens">
             <div class="section-heading">
-              <h2>Matches</h2>
-              <p class="muted">Ranked recommendations from the matcher.</p>
+              <h2>Matchs</h2>
+              <p class="muted">Recommandations classées du moteur de matching.</p>
             </div>
             <div id="matches-list" class="card-list"></div>
           </article>
 
-          <article class="panel card">
+          <article class="panel card" data-module-card="messages">
             <div class="section-heading">
               <h2>Conversations</h2>
-              <p class="muted">Requests and follow-up threads.</p>
+              <p class="muted">Demandes et fils de suivi.</p>
             </div>
             <div id="conversations-list" class="card-list"></div>
           </article>
 
-          <article class="panel card">
+          <article class="panel card" data-module-card="messages">
             <div class="section-heading">
               <h2>Notifications</h2>
-              <p class="muted">In-app alerts for messages, matches and conversation updates.</p>
+              <p class="muted">Alertes internes pour les messages, matchs et mises à jour de conversation.</p>
             </div>
             <form id="notification-filter-form" class="stacked-form inline-filter">
               <label>
-                <span>Kind</span>
+                <span>Type</span>
                 <select name="kind">
-                  <option value="">all</option>
+                  <option value="">Tous</option>
                   <option value="match_found">match_found</option>
                   <option value="message_received">message_received</option>
                   <option value="conversation_created">conversation_created</option>
@@ -969,70 +969,70 @@
               </label>
               <label class="checkbox-label">
                 <input name="unread_only" type="checkbox">
-                <span>Unread only</span>
+                <span>Non lues uniquement</span>
               </label>
               <div class="actions single">
-                <button type="submit" class="button ghost">Apply filter</button>
+                <button type="submit" class="button ghost">Appliquer le filtre</button>
               </div>
             </form>
             <div class="actions single">
-              <button type="button" id="mark-notifications-read" class="button ghost">Mark all read</button>
-              <span class="chip subtle" id="notification-unread-count">0 unread</span>
+              <button type="button" id="mark-notifications-read" class="button ghost">Tout marquer comme lu</button>
+              <span class="chip subtle" id="notification-unread-count">0 non lues</span>
             </div>
             <div id="notifications-list" class="card-list"></div>
           </article>
         </section>
 
-        <section class="panel detail-panel" data-journey-panel="admin">
+        <section class="panel detail-panel" data-journey-panel="admin" data-module-panel="administration">
           <div class="section-heading">
             <h2>Supervision</h2>
-            <p class="muted">Audit trail and runtime metrics.</p>
+            <p class="muted">Journal d'audit et métriques runtime.</p>
           </div>
           <div id="admin-dashboard" class="detail-body">
-            <p class="muted">Sign in as admin to load supervision data.</p>
+            <p class="muted">Connectez-vous en tant qu'administrateur pour charger les données de supervision.</p>
           </div>
         </section>
 
-        <section class="panel detail-panel" data-journey-panel="project buyer">
+        <section class="panel detail-panel" data-journey-panel="project buyer" data-module-panel="projet">
           <div class="section-heading">
-            <h2>Project workspace</h2>
-            <p class="muted">Journey, goals, timeline, intelligence and recommendations.</p>
+            <h2>Espace projet</h2>
+            <p class="muted">Parcours, objectifs, chronologie, intelligence et recommandations.</p>
           </div>
           <div id="project-detail" class="detail-body">
-            <p class="muted">Select a project to inspect.</p>
+            <p class="muted">Sélectionnez un projet à inspecter.</p>
           </div>
         </section>
 
-        <section class="panel detail-panel" data-journey-panel="buyer seller">
+        <section class="panel detail-panel" data-journey-panel="buyer seller" data-module-panel="messages">
           <div class="section-heading">
-            <h2>Conversation detail</h2>
-            <p class="muted">Click a conversation to inspect and reply.</p>
+            <h2>Détail de la conversation</h2>
+            <p class="muted">Cliquez sur une conversation pour l'inspecter et répondre.</p>
           </div>
           <div id="conversation-detail" class="detail-body">
-            <p class="muted">No conversation selected.</p>
+            <p class="muted">Aucune conversation sélectionnée.</p>
           </div>
           <form id="message-form" class="stacked-form message-form hidden">
             <label>
-              <span>Reply body</span>
-              <textarea name="body" rows="3" placeholder="Write a follow-up message"></textarea>
+              <span>Réponse</span>
+              <textarea name="body" rows="3" placeholder="Rédigez un message de suivi"></textarea>
             </label>
             <div class="actions">
-              <button type="submit" class="button primary">Send reply</button>
+              <button type="submit" class="button primary">Envoyer la réponse</button>
             </div>
           </form>
           <form id="negotiation-form" class="stacked-form negotiation-form hidden">
             <label>
-              <span>Negotiation stage</span>
+              <span>Étape de négociation</span>
               <select name="negotiation_stage"></select>
             </label>
             <div class="actions">
-              <button type="submit" class="button ghost">Update stage</button>
+              <button type="submit" class="button ghost">Mettre à jour l'étape</button>
             </div>
           </form>
         </section>
 
         <section class="panel footer-note">
-          <p class="muted" id="bootstrap-summary">Awaiting bootstrap payload.</p>
+          <p class="muted" id="bootstrap-summary">En attente du bootstrap.</p>
         </section>
       </section>
     </main>

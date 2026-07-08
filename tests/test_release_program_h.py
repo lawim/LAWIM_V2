@@ -119,7 +119,7 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
         self.assertEqual(COMPANY_NAME, "LAWIM")
 
     def test_support_email_constant(self) -> None:
-        self.assertEqual(SUPPORT_EMAIL, "bonjour.lawim@gmail.com")
+        self.assertEqual(SUPPORT_EMAIL, "contact@lawim.app")
 
     def test_website_url_constant(self) -> None:
         self.assertEqual(WEBSITE_URL, "https://lawim.cm")

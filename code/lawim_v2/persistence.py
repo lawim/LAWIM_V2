@@ -1263,6 +1263,22 @@ def build_demo_seed_blueprint() -> dict[str, object]:
             "priority": "normal",
             "activate_first_step": True,
         },
+        {
+            "user_email": "agent@lawim.local",
+            "title": "Suivi commercial Douala",
+            "project_type": "buy",
+            "objective": "Suivre un dossier actif pour une recherche rapide de bien.",
+            "budget_min": 180000,
+            "budget_max": 280000,
+            "currency": "XAF",
+            "location_city": "Douala",
+            "location_region": "Littoral",
+            "location_country": "Cameroon",
+            "timeline_horizon": "3_months",
+            "status": "active",
+            "priority": "high",
+            "activate_first_step": True,
+        },
     ]
 
     return {

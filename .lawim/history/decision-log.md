@@ -123,3 +123,4 @@ Ce journal est append-only. Toute nouvelle decision cree une nouvelle entree.
 | 2026-06-29 | DEC-004 | Release candidate and go-live, checklist et rollback contract confirmed | DevOps | T24.03 / Release candidate and go-live | Active | reports/sprint-024/T24.03-release-candidate-and-go-live-report.md |
 | 2026-06-29 | DEC-005 | Sprint 024 closure proposal and no Sprint 025 opening | Directeur General | Sprint 024 closure / no Sprint 025 | Proposed | reports/sprint-024/SPRINT-024-CLOSURE-REPORT.md |
 | 2026-07-08 | DEC-006 | Mission 08 dashboard cockpit, multilingual UI and transversal matching engine confirmed | Product | Dashboard / i18n / matching | Active | reports/program/MISSION-08-DASHBOARD-I18N-MATCHING.md |
+| 2026-07-08 | DEC-007 | Mission 08.1 visual recipe, UX validation and harmonisation confirmed | Product | Product review / UX / documentation | Active | reports/product_reviews/Release_08_1/RAPPORT-RECETTE-VISUELLE-LAWIM.md |
