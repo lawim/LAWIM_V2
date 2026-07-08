@@ -1,5 +1,15 @@
 # Deployment History
 
+## 2026-07-08 - Mission 08.1 validation and PostgreSQL runtime fix
+
+- commit: `29eb91c16e88c23e04cc992a82a9001892bd7dc0`
+- tag: `mission-08-dashboard-i18n-matching`
+- bundle: `lawim-v2-postgresql-compat.tar.gz`
+- checksum: `05aed8ab224f70026bfabf333b68545dad463db1118f2d6569e1eafbf4b4adb9`
+- operator: `Codex`
+- result: runtime deployed, app/postgres/redis healthy, login validation passed for admin/agent/owner, dashboard and multilingue checks passed
+- rollback: available through `/opt/lawim/releases/` and the pre-start backup
+
 ## 2026-07-05 - Gate 2B controlled OVH deployment
 
 - commit: `bc46a68664f166d7f079f8dcd48f4e954581fcea`

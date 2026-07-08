@@ -1,5 +1,12 @@
 # Release History
 
+## mission-08-dashboard-i18n-matching
+
+- commit: `29eb91c16e88c23e04cc992a82a9001892bd7dc0`
+- bundle: `lawim-v2-postgresql-compat.tar.gz`
+- checksum: `05aed8ab224f70026bfabf333b68545dad463db1118f2d6569e1eafbf4b4adb9`
+- status: validated runtime release ready for OVH deployment
+
 ## pre-ovh-final
 
 - commit: `bc46a68664f166d7f079f8dcd48f4e954581fcea`
