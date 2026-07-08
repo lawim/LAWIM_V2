@@ -138,6 +138,8 @@ Principe ajoute au LAWIM MASTER BOOK:
 ## References de livraison
 
 - Commit Git: `fix(product): streamline dashboards translations and matching engine`
+- Commit de code principal: `01991c86f525b4ab8cf095853891b01a95ebf724`
+- Commit final de release: `88c1e67b36480619f0cb0275df69ef0532ac1eb2`
 - Tag officiel: `mission-08-dashboard-i18n-matching`
 - Artefact de release: `/tmp/lawim_v2_release_mission-08-dashboard-i18n-matching.tar.gz`
 - SHA256 artefact: `08486f27a40c34a333232a66036eaccd1c53d75e0c1fd4dd999b088b436eb6f2`
@@ -157,9 +159,19 @@ Principe ajoute au LAWIM MASTER BOOK:
 
 ## Validation production
 
-Cette validation sera consignee dans le rapport de production apres la promotion finale OVH et la verification des services.
+- Release active OVH: `/opt/lawim/releases/88c1e67b`
+- Symlink actif: `/opt/lawim/current -> /opt/lawim/releases/88c1e67b`
+- Docker: `lawim-app`, `lawim-postgres` et `lawim-redis` sont tous `healthy`
+- `/api/health` retourne `status=ok`
+- Authentification:
+  - `admin@lawim.app` -> `201`, role `admin`
+  - `agent@lawim.app` -> `201`, role `agent`
+  - `owner@lawim.app` -> `201`, role `owner`
+- Rollback preservé: release precedente `/opt/lawim/releases/29eb91c1`
+- Anomalie de promotion corrigee: les conteneurs heredites `lawim-redis`, `compose-app-1` et `compose-postgres-1` ont ete retires avant la promotion finale pour liberer les noms fixes de la nouvelle pile.
 
 ## Conclusion
 
 La mission 08.2 atteint son objectif de finition UX.
 LAWIM est plus sobre, plus lisible et plus coherent sur l ecran d acces comme sur les zones de dashboard.
+La validation de production confirme que la correction est saine sur OVH.

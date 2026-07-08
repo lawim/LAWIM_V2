@@ -2,6 +2,43 @@
 
 ## Release Record
 
+- Date: 2026-07-09
+- Time: 00:16:20 WAT
+- Deployed SHA: `88c1e67b36480619f0cb0275df69ef0532ac1eb2`
+- Short release: `88c1e67b`
+- New release directory: `/opt/lawim/releases/88c1e67b`
+- Active symlink: `/opt/lawim/current -> /opt/lawim/releases/88c1e67b`
+- Previous release: `/opt/lawim/releases/29eb91c1`
+- Rollback state: preserved; the previous release directory remains available for immediate rollback
+
+## Production State
+
+- Docker: `lawim-app` healthy, `lawim-postgres` healthy, `lawim-redis` healthy
+- PostgreSQL: healthy and serving the production database
+- Redis: healthy and serving the production cache
+- Nginx: active, configuration validated with `nginx -t`
+- HTTPS: valid on all required public domains
+- `/api/health`: `status=ok`
+- `admin@lawim.app`: `201`, role `admin`
+- `agent@lawim.app`: `201`, role `agent`
+- `owner@lawim.app`: `201`, role `owner`
+
+## Tests Executed
+
+- `curl` checks against:
+  - `http://127.0.0.1:3000/api/health`
+  - `http://127.0.0.1:3000/api/auth/login`
+- `docker ps`
+- `docker logs --tail 20 lawim-app`
+
+## Anomalies Corrected
+
+- The initial deployment attempt hit a fixed-name collision on `lawim-redis`.
+- Legacy containers `lawim-redis`, `compose-app-1` and `compose-postgres-1` were removed before the final promotion so the new stack could bind its canonical names.
+- The release was then promoted successfully from `/opt/lawim/releases/88c1e67b`.
+
+## Release Record
+
 - Date: 2026-07-05
 - Time: 15:08:51 WAT
 - Deployed SHA: `4c078fd8139f98d6cc34c6e6ff452165bee10bdd`
