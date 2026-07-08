@@ -41,6 +41,48 @@ export interface DashboardSummary {
   pendingTasks: number;
 }
 
+export interface MatchResult {
+  score: number;
+  score_percent: number;
+  grade: string;
+  summary: string;
+  eligible: boolean;
+  breakdown: Record<string, number>;
+  reasons: string[];
+  distance_km: number | null;
+  weights: Record<string, number>;
+  target_type?: string;
+  property?: PropertySummary | null;
+  partner?: Record<string, unknown> | null;
+}
+
+export interface MatchQuery {
+  target_type?: 'property' | 'partner';
+  city?: string;
+  region?: string;
+  country?: string;
+  budget_min?: number;
+  budget_max?: number;
+  budget?: number;
+  latitude?: number;
+  longitude?: number;
+  property_type?: string;
+  bedrooms_min?: number;
+  availability?: string;
+  need?: string;
+  need_type?: string;
+  partner_type?: string;
+  project_type?: string;
+  specialty?: string;
+  language?: string;
+  rating_min?: number;
+  deadline_days?: number;
+  subject_type?: string;
+  status?: string;
+  limit?: number;
+  min_score?: number;
+}
+
 export interface FavoriteItem {
   id: string;
   title: string;
@@ -134,6 +176,7 @@ const normalizePayload = <T>(payload: unknown, fallback: T): T => {
     if (Array.isArray(record.users)) return record.users as T;
     if (Array.isArray(record.roles)) return record.roles as T;
     if (Array.isArray(record.messages)) return record.messages as T;
+    if (Array.isArray(record.matches)) return record.matches as T;
     if (Array.isArray(record.workflows)) return record.workflows as T;
     if (Array.isArray(record.analytics)) return record.analytics as T;
     if (Array.isArray(record.security)) return record.security as T;
@@ -275,6 +318,63 @@ export const apiSdk = {
       return { data: { properties: 12, opportunities: 6, communications: 18, pendingTasks: 4 }, message: 'mock' };
     }
     return requestJson<DashboardSummary>('/v2/dashboard', { method: 'GET' }, { properties: 0, opportunities: 0, communications: 0, pendingTasks: 0 });
+  },
+
+  async getMatches(params?: MatchQuery): Promise<ApiResponse<MatchResult[]>> {
+    if (useMocks) {
+      await mockDelay();
+      const targetType = params?.target_type ?? (params?.partner_type || params?.need ? 'partner' : 'property');
+      if (targetType === 'partner') {
+        return {
+          data: [
+            {
+              score: 84,
+              score_percent: 84,
+              grade: 'excellent',
+              summary: 'need +25; location +20; rating +10',
+              eligible: true,
+              breakdown: { need: 25, location: 20, rating: 10 },
+              reasons: ['partner_type:photographer', 'city:Douala'],
+              distance_km: null,
+              weights: {},
+              target_type: 'partner',
+              partner: {
+                id: 'partner-1',
+                partner_type: 'photographer',
+                display_name: 'LAWIM Studio Photo',
+                description: 'Photographe immobilier et événementiel'
+              }
+            }
+          ],
+          message: 'mock'
+        };
+      }
+      return {
+        data: [
+          {
+            score: 76,
+            score_percent: 76,
+            grade: 'excellent',
+            summary: 'city +20; budget +20; available +5',
+            eligible: true,
+            breakdown: { city: 20, budget: 20, availability: 5 },
+            reasons: ['city match', 'budget ceiling compatible'],
+            distance_km: 0,
+            weights: {},
+            target_type: 'property',
+            property: mockProperties[0]
+          }
+        ],
+        message: 'mock'
+      };
+    }
+
+    const query = new URLSearchParams();
+    for (const [key, value] of Object.entries(params ?? {})) {
+      if (value === undefined || value === null || value === '') continue;
+      query.set(key, String(value));
+    }
+    return requestJson<MatchResult[]>(`/matches${query.toString() ? `?${query.toString()}` : ''}`, { method: 'GET' }, []);
   },
 
   async getFavorites(): Promise<ApiResponse<FavoriteItem[]>> {

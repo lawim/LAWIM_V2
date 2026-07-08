@@ -25,6 +25,7 @@ class I18NLanguagesTest(TestCase):
             "fr-FR": "fr",
             "en_US": "en",
             "pcm-CM": "pcm",
+            "pidgin": "pcm",
             "FR-fr": "fr",
             "EN-gb": "en",
         }
@@ -44,6 +45,7 @@ class I18NLanguagesTest(TestCase):
         self.assertEqual(i18n.translate("language.fr", "fr"), "Français")
         self.assertEqual(i18n.translate("language.en", "en"), "English")
         self.assertEqual(i18n.translate("language.pcm", "pcm"), "Cameroon Pidgin")
+        self.assertEqual(i18n.translate("language.pcm", "pidgin"), "Cameroon Pidgin")
         self.assertEqual(i18n.translate("auth.login.success", "en"), "Login successful.")
         self.assertEqual(i18n.translate("auth.login.success", "pcm"), "Login don succeed.")
         self.assertEqual(i18n.translate("validation.required", "fr"), "Ce champ est obligatoire.")

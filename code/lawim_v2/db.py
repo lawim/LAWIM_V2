@@ -4,7 +4,7 @@ import json
 import sqlite3
 import threading
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from pathlib import Path
@@ -30,7 +30,7 @@ from .property_domain import (
     validate_status_transition,
 )
 from .conversation_domain import validate_stage_transition, validate_status_transition as validate_conversation_status
-from .matching import MatchCriteria, rank_properties
+from .matching import MatchCriteria, rank_partners, rank_properties
 from .notification_domain import build_notification_payload, normalize_kind as normalize_notification_kind
 from .security import create_session_token, hash_password, verify_password
 from .schema_ddl import SQLITE_INIT_SCRIPT
@@ -281,8 +281,10 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
                     str(message_row["body"]),
                 )
 
+        project_rows = blueprint.get("projects") or ()
         if "project" in blueprint:
-            project_row = blueprint["project"]
+            project_rows = (*project_rows, blueprint["project"])
+        for project_row in project_rows:
             user_id = user_ids[str(project_row["user_email"])]
             user = self.get_user_by_id(user_id)
             project = self.create_project(
@@ -1778,6 +1780,18 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
 
     def matched_properties(self, criteria: MatchCriteria) -> list[dict[str, object]]:
         return self.recommendations(criteria)
+
+    def matched_partners(self, criteria: MatchCriteria) -> list[dict[str, object]]:
+        status = criteria.status if criteria.status and criteria.status.lower() != "published" else "active"
+        partner_criteria = replace(criteria, status=status)
+        partners = self.list_partner_profiles(status=status, limit=100)["partners"]
+        return rank_partners(partners, partner_criteria)
+
+    def matched_entities(self, criteria: MatchCriteria) -> list[dict[str, object]]:
+        target_type = str(criteria.target_type or "property").strip().lower()
+        if target_type == "partner":
+            return self.matched_partners(criteria)
+        return self.matched_properties(criteria)
 
     def _public_user(self, user: dict[str, object] | None) -> dict[str, object] | None:
         from .dto import user_dto

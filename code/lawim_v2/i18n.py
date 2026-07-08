@@ -14,6 +14,12 @@ MESSAGE_KEYS: tuple[str, ...] = (
 )
 
 _SUPPORTED_LANGUAGE_SET: frozenset[str] = frozenset(SUPPORTED_LANGUAGES)
+_LANGUAGE_ALIASES: dict[str, str] = {
+    "pidgin": "pcm",
+    "pidgin english": "pcm",
+    "cameroon pidgin": "pcm",
+    "cameroonian pidgin": "pcm",
+}
 _TRANSLATIONS: dict[str, dict[str, str]] = {
     "fr": {
         "app.name": "LAWIM_V2",
@@ -61,9 +67,13 @@ def _canonical_language(language: str | None) -> str | None:
     normalized = str(language or "").strip().lower().replace("_", "-")
     if not normalized:
         return None
+    if normalized in _LANGUAGE_ALIASES:
+        return _LANGUAGE_ALIASES[normalized]
     base_language = normalized.split("-", 1)[0]
     if base_language in _SUPPORTED_LANGUAGE_SET:
         return base_language
+    if base_language in _LANGUAGE_ALIASES:
+        return _LANGUAGE_ALIASES[base_language]
     return None
 
 

@@ -54,6 +54,10 @@ class ReleaseProgramBPersistenceTests(LawimTestHarness):
 class ReleaseProgramBEngineTests(LawimTestHarness):
     def test_normalize_partner_type_alias(self) -> None:
         self.assertEqual(normalize_partner_type("agent"), "real_estate_agency")
+        self.assertEqual(normalize_partner_type("photographe"), "photographer")
+        self.assertEqual(normalize_partner_type("notaire"), "notary")
+        self.assertEqual(normalize_partner_type("banque"), "bank")
+        self.assertEqual(normalize_partner_type("diagnostiqueur"), "diagnostician")
 
     def test_matching_engine_returns_partners_and_services(self) -> None:
         engine = MatchingEngine2()
@@ -427,6 +431,12 @@ class ReleaseProgramBPartnerTypeTests(LawimTestHarness):
     def test_partner_type_bank(self) -> None:
         self.assertIn("bank", PARTNER_TYPES)
 
+    def test_partner_type_photographer(self) -> None:
+        self.assertIn("photographer", PARTNER_TYPES)
+
+    def test_partner_type_diagnostiqueur(self) -> None:
+        self.assertIn("diagnostician", PARTNER_TYPES)
+
     def test_partner_type_microfinance(self) -> None:
         self.assertIn("microfinance", PARTNER_TYPES)
 
@@ -441,6 +451,9 @@ class ReleaseProgramBPartnerTypeTests(LawimTestHarness):
 
     def test_partner_type_mover(self) -> None:
         self.assertIn("mover", PARTNER_TYPES)
+
+    def test_partner_type_diagnostician(self) -> None:
+        self.assertIn("diagnostician", PARTNER_TYPES)
 
     def test_partner_type_insurer(self) -> None:
         self.assertIn("insurer", PARTNER_TYPES)

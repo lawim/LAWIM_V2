@@ -36,6 +36,52 @@ describe('apiSdk', () => {
     expect(response.data[0]).toHaveProperty('title');
   });
 
+  it('normalizes partner matches returned by /api/matches', async () => {
+    testEnv.VITE_LAWIM_USE_MOCKS = 'false';
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith('/api/matches?target_type=partner&need=photographe&city=Douala&limit=5')) {
+        return createJsonResponse({
+          matches: [
+            {
+              score: 94,
+              score_percent: 94,
+              grade: 'excellent',
+              summary: 'need +25; location +20; language +10',
+              eligible: true,
+              breakdown: { need: 25, location: 20, language: 10 },
+              reasons: ['partner_type:photographer', 'city:Douala'],
+              distance_km: null,
+              weights: {},
+              target_type: 'partner',
+              partner: {
+                id: 'partner-1',
+                partner_type: 'photographer',
+                display_name: 'LAWIM Studio Photo',
+                description: 'Photographe immobilier et événementiel'
+              }
+            }
+          ]
+        });
+      }
+
+      throw new Error(`Unexpected request: ${url}`);
+    });
+
+    const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
+    setApiBaseForTesting('https://api.lawim.app');
+
+    const response = await apiSdk.getMatches({ target_type: 'partner', need: 'photographe', city: 'Douala', limit: 5 });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toBe('https://api.lawim.app/api/matches?target_type=partner&need=photographe&city=Douala&limit=5');
+    expect(response.data).toHaveLength(1);
+    expect(response.data[0].target_type).toBe('partner');
+    expect(response.data[0].reasons).toContain('partner_type:photographer');
+    setApiBaseForTesting(null);
+  });
+
   it('targets /api/auth/login and /api/v2/dashboard when the API base is an origin', async () => {
     testEnv.VITE_LAWIM_USE_MOCKS = 'false';
 
@@ -86,6 +132,59 @@ describe('apiSdk', () => {
       communications: 2,
       pendingTasks: 1
     });
+    setApiBaseForTesting(null);
+  });
+
+  it('targets /api/matches for partner recommendations when the API base is an origin', async () => {
+    testEnv.VITE_LAWIM_USE_MOCKS = 'false';
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith('/api/matches?target_type=partner&need=architecte&city=Yaounde&project_type=build&limit=3')) {
+        return createJsonResponse({
+          matches: [
+            {
+              score: 91,
+              score_percent: 91,
+              grade: 'excellent',
+              summary: 'need +25; location +20; compatibility +10',
+              eligible: true,
+              breakdown: { need: 25, location: 20, compatibility: 10 },
+              reasons: ['partner_type:architect', 'city:Yaounde'],
+              distance_km: null,
+              weights: {},
+              target_type: 'partner',
+              partner: {
+                id: 'partner-2',
+                partner_type: 'architect',
+                display_name: 'LAWIM Architecture'
+              }
+            }
+          ],
+          criteria: {
+            target_type: 'partner',
+            partner_type: 'architect'
+          },
+          explanation: {
+            target_type: 'partner',
+            need: 'architecte',
+            partner_type: 'architect'
+          }
+        });
+      }
+
+      throw new Error(`Unexpected request: ${url}`);
+    });
+
+    const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
+    setApiBaseForTesting('https://api.lawim.app');
+
+    const response = await apiSdk.getMatches({ target_type: 'partner', need: 'architecte', city: 'Yaounde', project_type: 'build', limit: 3 });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toBe('https://api.lawim.app/api/matches?target_type=partner&need=architecte&city=Yaounde&project_type=build&limit=3');
+    expect(response.data[0].target_type).toBe('partner');
+    expect(response.data[0].reasons).toContain('partner_type:architect');
     setApiBaseForTesting(null);
   });
 });

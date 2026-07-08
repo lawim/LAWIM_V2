@@ -717,6 +717,32 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         self.assertIn("score", first)
         self.assertIn("property", first)
 
+    def test_partner_matching_api_explains_recommendations(self) -> None:
+        cases = (
+            ("photographe", "photographer", "Douala", None),
+            ("architecte", "architect", "Yaounde", "build"),
+            ("notaire", "notary", "Douala", "buy"),
+            ("banque", "bank", "Douala", "buy"),
+        )
+        for need, expected_partner_type, city, project_type in cases:
+            with self.subTest(need=need, expected_partner_type=expected_partner_type):
+                query = f"/api/matches?target_type=partner&need={need}&city={city}&limit=5"
+                if project_type:
+                    query += f"&project_type={project_type}"
+                response = self.invoke(query)
+                self.assertEqual(response.status, HTTPStatus.OK, msg=response.body_text())
+                payload = response.body_json()
+                self.assertEqual(payload["criteria"]["target_type"], "partner")
+                self.assertEqual(payload["criteria"]["partner_type"], expected_partner_type)
+                self.assertEqual(payload["explanation"]["target_type"], "partner")
+                self.assertEqual(payload["explanation"]["need"], need)
+                self.assertGreaterEqual(len(payload["matches"]), 1)
+                top = payload["matches"][0]
+                self.assertEqual(top["target_type"], "partner")
+                self.assertEqual(top["partner"]["partner_type"], expected_partner_type)
+                self.assertTrue(top["summary"])
+                self.assertTrue(top["reasons"])
+
     def test_notifications_created_on_conversation_and_message(self) -> None:
         owner_login = self.invoke(
             "/api/auth/login",

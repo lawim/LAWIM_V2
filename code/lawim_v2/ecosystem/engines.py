@@ -350,6 +350,8 @@ def normalize_partner_type(value: str) -> str:
         return normalized
     if normalized in PARTNER_TYPE_ALIASES:
         return PARTNER_TYPE_ALIASES[normalized]
+    if normalized == "notaire":
+        return "notary"
     raise ValueError(f"unsupported partner_type: {value}")
 
 

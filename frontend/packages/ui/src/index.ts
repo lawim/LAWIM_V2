@@ -8,3 +8,4 @@ export * from './components/Checkbox';
 export * from './components/BrandMark';
 export * from './components/PageShell';
 export * from './brand';
+export * from './i18n';

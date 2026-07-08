@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { apiSdk, type AuthCredentials, type UserProfile } from '@api-sdk';
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
+import { getStoredLanguage, translate } from '@ui';
 
 export type AccessRole = 'admin' | 'manager' | 'operator' | 'partner' | 'user';
 
@@ -102,40 +103,41 @@ export function resolvePrimaryRole(role: unknown, roles: unknown[] = []): Access
 }
 
 export function resolveDashboardPath(role: AccessRole | string) {
-  return `/dashboard/${resolvePrimaryRole(role)}`;
+  return '/dashboard';
 }
 
 function formatAuthError(message: string, context: 'login' | 'session') {
   const lower = String(message || '').toLowerCase();
   const statusMatch = lower.match(/\b(\d{3})\b/);
   const status = statusMatch ? Number(statusMatch[1]) : null;
+  const language = getStoredLanguage();
 
   if (context === 'login') {
     if (status === 401 || status === 403 || lower.includes('unauthorized') || lower.includes('forbidden')) {
-      return 'Identifiants incorrects.';
+      return translate('auth.login.banner.invalid', language);
     }
     if (status === 429) {
-      return 'Trop de tentatives. Réessayez plus tard.';
+      return translate('auth.login.banner.rate_limited', language);
     }
     if (status && status >= 500) {
-      return 'Serveur indisponible. Réessayez dans un instant.';
+      return translate('auth.login.banner.server_unavailable', language);
     }
     if (lower.includes('fetch') || lower.includes('network')) {
-      return 'Serveur indisponible. Réessayez dans un instant.';
+      return translate('auth.login.banner.server_unavailable', language);
     }
-    return 'Identifiants incorrects.';
+    return translate('auth.login.banner.invalid', language);
   }
 
   if (status === 401 || status === 403 || lower.includes('unauthorized') || lower.includes('forbidden')) {
-    return 'Session expirée. Veuillez vous reconnecter.';
+    return translate('auth.login.banner.session_expired', language);
   }
   if (status && status >= 500) {
-    return 'Serveur indisponible. Réessayez dans un instant.';
+    return translate('auth.login.banner.server_unavailable', language);
   }
   if (lower.includes('fetch') || lower.includes('network')) {
-    return 'Serveur indisponible. Réessayez dans un instant.';
+    return translate('auth.login.banner.server_unavailable', language);
   }
-  return 'Session expirée. Veuillez vous reconnecter.';
+  return translate('auth.login.banner.session_expired', language);
 }
 
 function isServerUnavailable(message: string) {
@@ -205,9 +207,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   logout: async () => {
-    await apiSdk.logout();
-    clearToken();
-    set({ user: null, token: null, roles: [], isAuthenticated: false, isLoading: false, hasHydrated: true, sessionExpired: false, sessionUnavailable: false });
+    try {
+      await apiSdk.logout();
+    } finally {
+      clearToken();
+      set({ user: null, token: null, roles: [], isAuthenticated: false, isLoading: false, hasHydrated: true, sessionExpired: false, sessionUnavailable: false });
+    }
   },
   hydrate: async () => {
     set({ isLoading: true });

@@ -1,6 +1,22 @@
 from __future__ import annotations
 
+import json
 from typing import Callable
+
+
+def _metadata_payload(row: dict[str, object]) -> dict[str, object]:
+    metadata = row.get("metadata")
+    if isinstance(metadata, dict):
+        return metadata
+    raw = row.get("metadata_json")
+    if isinstance(raw, str) and raw.strip():
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError:
+            return {}
+        if isinstance(parsed, dict):
+            return parsed
+    return {}
 
 
 def partner_profile_dto(row: dict[str, object]) -> dict[str, object]:
@@ -20,6 +36,7 @@ def partner_profile_dto(row: dict[str, object]) -> dict[str, object]:
         "satisfaction_score": row.get("satisfaction_score"),
         "incident_count": row.get("incident_count"),
         "specialties": row.get("specialties") or [],
+        "metadata": _metadata_payload(row),
         "zones": row.get("zones") or [],
         "skills": row.get("skills") or [],
         "certifications": row.get("certifications") or [],

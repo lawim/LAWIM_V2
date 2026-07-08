@@ -180,12 +180,7 @@ def error_dto(code: str, message: str) -> dict[str, object]:
     return {"error": {"code": code, "message": message}}
 
 
-def match_dto(match_row: dict[str, object]) -> dict[str, object]:
-    property_row = match_row.get("property")
-    if isinstance(property_row, dict):
-        property_payload = property_dto(property_row)
-    else:
-        property_payload = property_row
+def _match_common_dto(match_row: dict[str, object]) -> dict[str, object]:
     score = match_row.get("score", 0)
     return {
         "score": score,
@@ -197,8 +192,33 @@ def match_dto(match_row: dict[str, object]) -> dict[str, object]:
         "reasons": match_row.get("reasons", []),
         "distance_km": match_row.get("distance_km"),
         "weights": match_row.get("weights", {}),
-        "property": property_payload,
     }
+
+
+def match_dto(match_row: dict[str, object]) -> dict[str, object]:
+    property_row = match_row.get("property")
+    if isinstance(property_row, dict):
+        property_payload = property_dto(property_row)
+    else:
+        property_payload = property_row
+    payload = _match_common_dto(match_row)
+    payload["property"] = property_payload
+    payload["target_type"] = "property"
+    return payload
+
+
+def partner_match_dto(match_row: dict[str, object]) -> dict[str, object]:
+    from .ecosystem.dto import partner_profile_dto
+
+    partner_row = match_row.get("partner")
+    if isinstance(partner_row, dict):
+        partner_payload = partner_profile_dto(partner_row)
+    else:
+        partner_payload = partner_row
+    payload = _match_common_dto(match_row)
+    payload["partner"] = partner_payload
+    payload["target_type"] = "partner"
+    return payload
 
 
 def message_dto(message_row: dict[str, object]) -> dict[str, object]:

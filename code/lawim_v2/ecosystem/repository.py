@@ -27,6 +27,16 @@ def _json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True)
 
 
+def _parse_json_object(value: str | None) -> dict[str, object]:
+    if not value:
+        return {}
+    try:
+        parsed = json.loads(value)
+    except json.JSONDecodeError:
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
+
+
 class EcosystemRepositoryMixin:
     def ecosystem_tables_present(self) -> bool:
         return table_exists(self, "partner_profiles")
@@ -94,19 +104,158 @@ class EcosystemRepositoryMixin:
                     )
 
     def seed_demo_partners(self) -> None:
-        if self.one("SELECT id FROM partner_profiles LIMIT 1") is not None:
+        partner_group = self.one("SELECT * FROM organizations WHERE slug = 'lawim-partner-group'")
+        demo_agency = self.one("SELECT * FROM organizations WHERE slug = 'lawim-demo-agency'")
+        if partner_group is None and demo_agency is None:
             return
-        org = self.one("SELECT * FROM organizations WHERE slug = 'lawim-partner-group'")
-        agency = self.one("SELECT * FROM organizations WHERE slug = 'lawim-demo-agency'")
-        if org is None:
-            return
+        default_org_id = int(partner_group["id"]) if partner_group is not None else int(demo_agency["id"])
+        agency_org_id = int(demo_agency["id"]) if demo_agency is not None else default_org_id
         now = _utcnow()
-        profiles = [
-            (int(org["id"]), "real_estate_agency", "LAWIM Partner Agency", "Agence partenaire démo"),
-            (int(agency["id"]) if agency else int(org["id"]), "notary", "LAWIM Notaire Associé", "Notaire partenaire"),
-            (int(org["id"]), "bank", "LAWIM Finance Desk", "Banque partenaire"),
+        profiles: list[dict[str, object]] = [
+            {
+                "organization_id": default_org_id,
+                "partner_type": "real_estate_agency",
+                "display_name": "LAWIM Partner Agency",
+                "description": "Agence partenaire démo",
+                "specialties": ["buy", "sell", "rent"],
+                "metadata": {
+                    "languages": ["fr", "en", "pcm"],
+                    "budget_min": 50000,
+                    "budget_max": 750000,
+                    "currency": "XAF",
+                    "project_types": ["buy", "sell", "rent"],
+                    "service_modes": ["onsite", "remote"],
+                    "response_hours": 12,
+                    "completion_days": 14,
+                },
+            },
+            {
+                "organization_id": default_org_id,
+                "partner_type": "photographer",
+                "display_name": "LAWIM Studio Photo",
+                "description": "Photographe immobilier et événementiel",
+                "specialties": ["photography", "listing", "marketing"],
+                "metadata": {
+                    "languages": ["fr", "en"],
+                    "budget_min": 30000,
+                    "budget_max": 250000,
+                    "currency": "XAF",
+                    "project_types": ["buy", "sell", "rent", "build"],
+                    "service_modes": ["onsite"],
+                    "response_hours": 8,
+                    "completion_days": 3,
+                },
+            },
+            {
+                "organization_id": default_org_id,
+                "partner_type": "architect",
+                "display_name": "LAWIM Architecture",
+                "description": "Architecte partenaire pour conception et permis",
+                "specialties": ["design", "build", "permit"],
+                "metadata": {
+                    "languages": ["fr", "en"],
+                    "budget_min": 100000,
+                    "budget_max": 900000,
+                    "currency": "XAF",
+                    "project_types": ["build"],
+                    "service_modes": ["onsite", "remote"],
+                    "response_hours": 24,
+                    "completion_days": 21,
+                },
+            },
+            {
+                "organization_id": agency_org_id,
+                "partner_type": "notary",
+                "display_name": "LAWIM Notaire Associé",
+                "description": "Notaire partenaire",
+                "specialties": ["legal", "documents", "transfer"],
+                "metadata": {
+                    "languages": ["fr", "en", "pcm"],
+                    "budget_min": 75000,
+                    "budget_max": 400000,
+                    "currency": "XAF",
+                    "project_types": ["buy", "sell"],
+                    "service_modes": ["onsite", "remote"],
+                    "response_hours": 24,
+                    "completion_days": 7,
+                },
+            },
+            {
+                "organization_id": agency_org_id,
+                "partner_type": "bank",
+                "display_name": "LAWIM Finance Desk",
+                "description": "Banque et financement",
+                "specialties": ["financing", "loan", "investment"],
+                "metadata": {
+                    "languages": ["fr", "en"],
+                    "budget_min": 250000,
+                    "budget_max": 50000000,
+                    "currency": "XAF",
+                    "project_types": ["buy", "build"],
+                    "service_modes": ["onsite", "remote"],
+                    "response_hours": 48,
+                    "completion_days": 30,
+                },
+            },
+            {
+                "organization_id": default_org_id,
+                "partner_type": "artisan",
+                "display_name": "LAWIM Artisan Hub",
+                "description": "Artisan qualifié pour finition et rénovation",
+                "specialties": ["renovation", "finish", "repair"],
+                "metadata": {
+                    "languages": ["fr", "pcm"],
+                    "budget_min": 50000,
+                    "budget_max": 1500000,
+                    "currency": "XAF",
+                    "project_types": ["build", "sell", "rent"],
+                    "service_modes": ["onsite"],
+                    "response_hours": 18,
+                    "completion_days": 14,
+                },
+            },
+            {
+                "organization_id": default_org_id,
+                "partner_type": "diagnostician",
+                "display_name": "LAWIM Diagnostics",
+                "description": "Diagnostiqueur partenaire",
+                "specialties": ["inspection", "compliance", "reporting"],
+                "metadata": {
+                    "languages": ["fr", "en", "pcm"],
+                    "budget_min": 40000,
+                    "budget_max": 250000,
+                    "currency": "XAF",
+                    "project_types": ["buy", "sell", "rent", "build"],
+                    "service_modes": ["onsite"],
+                    "response_hours": 12,
+                    "completion_days": 5,
+                },
+            },
+            {
+                "organization_id": default_org_id,
+                "partner_type": "mover",
+                "display_name": "LAWIM Move Partner",
+                "description": "Déménageur partenaire",
+                "specialties": ["relocation", "moving", "logistics"],
+                "metadata": {
+                    "languages": ["fr", "en", "pcm"],
+                    "budget_min": 60000,
+                    "budget_max": 800000,
+                    "currency": "XAF",
+                    "project_types": ["buy", "sell", "rent", "build"],
+                    "service_modes": ["onsite"],
+                    "response_hours": 16,
+                    "completion_days": 2,
+                },
+            },
         ]
-        for organization_id, partner_type, display_name, description in profiles:
+        for profile in profiles:
+            organization_id = int(profile["organization_id"])
+            partner_type = str(profile["partner_type"])
+            display_name = str(profile["display_name"])
+            description = str(profile["description"])
+            specialties = profile.get("specialties") or []
+            metadata = profile.get("metadata") or {}
             if self.one(
                 "SELECT id FROM partner_profiles WHERE organization_id = ? AND partner_type = ?",
                 (organization_id, partner_type),
@@ -120,9 +269,18 @@ class EcosystemRepositoryMixin:
                         quality_score, trust_score, completion_rate, reliability_score,
                         response_time_hours, satisfaction_score, incident_count,
                         specialties_json, metadata_json, created_at, updated_at
-                    ) VALUES (?, ?, ?, ?, 'active', 82, 78, 0.9, 80, 12, 85, 0, '[]', '{}', ?, ?)
+                    ) VALUES (?, ?, ?, ?, 'active', 82, 78, 0.9, 80, 12, 85, 0, ?, ?, ?, ?)
                     """,
-                    (organization_id, partner_type, display_name, description, now, now),
+                    (
+                        organization_id,
+                        partner_type,
+                        display_name,
+                        description,
+                        _json(specialties),
+                        _json(metadata),
+                        now,
+                        now,
+                    ),
                 )
                 profile_id = int(cursor.lastrowid)
                 conn.execute(
@@ -223,6 +381,7 @@ class EcosystemRepositoryMixin:
         payload["sla"] = sla
         payload["services"] = services
         payload["specialties"] = parse_json_list(str(row.get("specialties_json")))
+        payload["metadata"] = _parse_json_object(str(row.get("metadata_json")))
         return payload
 
     def create_partner_profile(

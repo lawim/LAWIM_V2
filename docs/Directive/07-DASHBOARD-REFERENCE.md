@@ -299,7 +299,48 @@ Le Dashboard Administration peut également afficher les tableaux SIE :
 
 ---
 
-# CHAPITRE 17 — OBJECTIF FINAL
+# CHAPITRE 17 — COCKPIT D'ACCUEIL COURT ET CARTES MODULES
+
+La page d'accueil du dashboard doit rester courte, claire et orientée action.
+
+Une fois l'utilisateur authentifié, la page d'accueil ne doit plus afficher le formulaire de connexion ni les informations d'accès.
+
+Le bandeau authentifié doit rester limité à :
+
+* le nom de l'utilisateur connecté ;
+* son rôle ;
+* le bouton `Logout` / `Déconnexion` / `Comot` selon la langue ;
+* un avatar ou des initiales si disponibles.
+
+La première vue du cockpit doit afficher uniquement les informations essentielles :
+
+* Bonjour + nom utilisateur ;
+* activité du jour ;
+* priorités ;
+* statistiques rapides ;
+* progression ;
+* `Et maintenant ?` ;
+* actions rapides ;
+* cartes de modules.
+
+Les modules accessibles via carte sont :
+
+* biens ;
+* messages ;
+* visites ;
+* statistiques ;
+* documents ;
+* partenaires ;
+* nous écrire ;
+* administration si le rôle le permet.
+
+Chaque carte ouvre un espace dédié. Chaque espace dédié doit proposer un bouton clair de retour au dashboard.
+
+Le dashboard ne doit jamais afficher tous les modules en pleine page dès l'accueil.
+
+---
+
+# CHAPITRE 18 — OBJECTIF FINAL
 
 Le présent **07-DASHBOARD-REFERENCE.md** constitue le référentiel officiel du Dashboard de LAWIM.
 

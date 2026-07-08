@@ -4,6 +4,7 @@ import argparse
 import json
 import logging
 import mimetypes
+import re
 import sqlite3
 import time
 from dataclasses import replace
@@ -19,6 +20,7 @@ from .api_query import build_property_query
 from .errors import RepositoryError, ValidationError
 from .db import LawimRepository
 from .bootstrap import build_runtime
+from .ecosystem.engines import normalize_partner_type
 from .dto import error_dto
 from .matching import MatchCriteria, MatchWeights
 from .media_domain import THUMBNAIL_CONTRACT
@@ -1245,6 +1247,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
     def _build_match_criteria(self, query: dict[str, list[str]]) -> MatchCriteria:
         budget_min = self._first_int(query, "budget_min", minimum=0)
         budget_max = self._first_int(query, "budget_max", minimum=0)
+        budget = self._first_int(query, "budget", minimum=0)
+        if budget_max is None and budget is not None:
+            budget_max = budget
+        if budget_min is None and budget is not None and budget_max is not None:
+            budget_min = 0
         if budget_min is not None and budget_max is not None and budget_min > budget_max:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'budget_min' cannot exceed 'budget_max'")
         query_min_score = self._first_float(query, "min_score")
@@ -1257,6 +1264,31 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         property_type = self._first(query, "property_type")
         availability = self._first(query, "availability")
         status = self._first(query, "status")
+        target_type = self._first(query, "target_type") or self._first(query, "match_type") or self._first(query, "target")
+        need = self._first(query, "need")
+        need_type = self._first(query, "need_type")
+        partner_type = self._first(query, "partner_type")
+        project_type = self._first(query, "project_type")
+        specialty = self._first(query, "specialty")
+        language = self._first(query, "language")
+        subject_type = self._first(query, "subject_type")
+        rating_min = self._first_float(query, "rating_min")
+        deadline_days = self._first_int(query, "deadline_days", minimum=0)
+        if target_type is None:
+            if any(value for value in (need, need_type, partner_type, project_type, specialty, language, rating_min, deadline_days)):
+                target_type = "partner"
+            else:
+                target_type = "property"
+        target_type = str(target_type).strip().lower()
+        if target_type not in {"property", "partner"}:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'target_type' must be 'property' or 'partner'")
+        if target_type == "partner":
+            inferred_partner_type = self._infer_partner_type(partner_type, need, need_type, specialty, project_type)
+            partner_type = inferred_partner_type or partner_type
+            if status is None:
+                status = "active"
+        elif status is None:
+            status = "published"
         default_weights = MatchWeights()
         weights = MatchWeights(
             status=self._first_float(query, "weight_status") or default_weights.status,
@@ -1268,6 +1300,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             availability=self._first_float(query, "weight_availability") or default_weights.availability,
         )
         return MatchCriteria(
+            target_type=target_type,
             city=city.lower() if city else None,
             region=region.lower() if region else None,
             country=country.lower() if country else None,
@@ -1278,11 +1311,38 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             property_type=property_type.lower() if property_type else None,
             bedrooms_min=self._first_int(query, "bedrooms_min", minimum=0),
             availability=availability.lower() if availability else None,
-            status=(status.lower() if status else "published"),
+            need=need.lower() if need else None,
+            need_type=need_type.lower() if need_type else None,
+            partner_type=partner_type.lower() if partner_type else None,
+            project_type=project_type.lower() if project_type else None,
+            specialty=specialty.lower() if specialty else None,
+            language=language.lower() if language else None,
+            rating_min=rating_min,
+            deadline_days=deadline_days,
+            subject_type=subject_type.lower() if subject_type else None,
+            status=(status.lower() if status else ("active" if target_type == "partner" else "published")),
             limit=self._query_limit(query),
             min_score=min_score,
             weights=weights.normalized(),
         )
+
+    def _infer_partner_type(self, *values: str | None) -> str | None:
+        for value in values:
+            raw = str(value or "").strip().lower()
+            if not raw:
+                continue
+            try:
+                return normalize_partner_type(raw)
+            except ValueError:
+                pass
+            for token in re.split(r"[^a-z0-9_]+", raw):
+                if not token:
+                    continue
+                try:
+                    return normalize_partner_type(token)
+                except ValueError:
+                    continue
+        return None
 
     def _first_float(self, query: dict[str, list[str]], key: str) -> float | None:
         raw = self._first(query, key)

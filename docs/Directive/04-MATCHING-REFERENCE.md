@@ -257,6 +257,60 @@ Le sens métier prime sur la langue de saisie.
 
 ---
 
-# FIN DU DOCUMENT
+# CHAPITRE 17 — MATCHING TRANSVERSAL LIME
+
+Le moteur est désormais transversal et doit pouvoir servir plusieurs types de besoins, pas uniquement les biens immobiliers.
+
+L'acronyme interne `LIME` désigne le **LAWIM Intelligent Matching Engine**.
+
+Il doit pouvoir matcher notamment :
+
+* utilisateur ↔ bien ;
+* utilisateur ↔ photographe ;
+* utilisateur ↔ architecte ;
+* utilisateur ↔ notaire ;
+* utilisateur ↔ banque / financement ;
+* utilisateur ↔ artisan ;
+* utilisateur ↔ diagnostiqueur ;
+* utilisateur ↔ déménageur ;
+* utilisateur ↔ autre partenaire.
+
+Les critères de score minimaux sont :
+
+* localisation ;
+* disponibilité ;
+* spécialité ;
+* type de besoin ;
+* langue ;
+* prix ou budget ;
+* notation ;
+* délai ;
+* compatibilité avec le projet.
+
+Le moteur doit être exploitable via une API claire qui permet :
+
+* d'exprimer un besoin ;
+* de récupérer les meilleurs matchs ;
+* d'expliquer pourquoi un match est proposé.
+
+La recommandation doit rester explicite et non prescriptive :
+
+* LAWIM accompagne et met en relation ;
+* LAWIM ne décide jamais à la place de l'utilisateur ;
+* LAWIM propose lorsqu'il y a une vraie pertinence ;
+* si l'utilisateur exprime un besoin, LAWIM répond ;
+* aucune action ne doit mener à une impasse.
+
+Les réponses doivent donc exposer :
+
+* le type de cible (`property` ou `partner`) ;
+* les critères résolus ;
+* les raisons lisibles ;
+* un ordre de classement ;
+* une explication métier lisible.
+
+---
+
+# CHAPITRE 18 — FIN DU DOCUMENT
 
 Le présent **04-MATCHING-REFERENCE.md** constitue le référentiel officiel du matching de LAWIM.

@@ -10,6 +10,7 @@ from .dto import (
     conversation_dto,
     geo_location_dto,
     match_dto,
+    partner_match_dto,
     media_dto,
     message_dto,
     notification_dto,
@@ -992,10 +993,14 @@ class LawimServices:
         return message_dto(message)
 
     def list_matches(self, criteria: MatchCriteria, *, actor: dict[str, object] | None = None) -> dict[str, object]:
-        ranked = self.repository.matched_properties(criteria)
+        target_type = str(criteria.target_type or "property").strip().lower()
+        ranked = self.repository.matched_entities(criteria)
         METRICS.increment("matches")
-        matches = [match_dto(item) for item in ranked]
-        if actor is not None and matches:
+        if target_type == "partner":
+            matches = [partner_match_dto(item) for item in ranked]
+        else:
+            matches = [match_dto(item) for item in ranked]
+        if actor is not None and matches and target_type == "property":
             top = matches[0]
             if top.get("eligible", True):
                 property_payload = top.get("property")
@@ -1019,6 +1024,7 @@ class LawimServices:
         return {
             "matches": matches,
             "criteria": {
+                "target_type": target_type,
                 "city": criteria.city,
                 "region": criteria.region,
                 "country": criteria.country,
@@ -1029,10 +1035,28 @@ class LawimServices:
                 "property_type": criteria.property_type,
                 "bedrooms_min": criteria.bedrooms_min,
                 "availability": criteria.availability,
+                "need": criteria.need,
+                "need_type": criteria.need_type,
+                "partner_type": criteria.partner_type,
+                "project_type": criteria.project_type,
+                "specialty": criteria.specialty,
+                "language": criteria.language,
+                "rating_min": criteria.rating_min,
+                "deadline_days": criteria.deadline_days,
+                "subject_type": criteria.subject_type,
                 "status": criteria.status,
                 "limit": criteria.limit,
                 "min_score": criteria.min_score,
                 "weights": asdict(criteria.weights.normalized()),
+            },
+            "explanation": {
+                "target_type": target_type,
+                "need": criteria.need,
+                "partner_type": criteria.partner_type,
+                "project_type": criteria.project_type,
+                "language": criteria.language,
+                "limit": criteria.limit,
+                "min_score": criteria.min_score,
             },
         }
 

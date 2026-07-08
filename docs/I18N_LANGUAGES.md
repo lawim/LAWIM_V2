@@ -4,7 +4,9 @@
 
 Ce document décrit le scaffold minimal de gestion des langues LAWIM_V2.
 
-Le module vit dans [`code/lawim_v2/i18n.py`](../code/lawim_v2/i18n.py) et expose une API sans dépendance externe pour normaliser, valider et traduire des clés.
+Le socle est partagé entre [`code/lawim_v2/i18n.py`](../code/lawim_v2/i18n.py) côté backend et [`frontend/packages/ui/src/i18n.tsx`](../frontend/packages/ui/src/i18n.tsx) côté interface.
+
+Il expose une API sans dépendance externe pour normaliser, valider, traduire et persister le choix de langue.
 
 ## Langues supportées
 
@@ -18,6 +20,19 @@ Le module vit dans [`code/lawim_v2/i18n.py`](../code/lawim_v2/i18n.py) et expose
 
 - Langue par défaut: `fr`
 - Un appel sans langue explicite doit toujours résoudre le français.
+- Le choix par défaut de l'interface est aussi `fr` quand aucun stockage local n'existe.
+
+## Persistance frontale
+
+Le frontend mémorise la langue choisie dans `localStorage` via la clé `lawim.language`.
+
+Le sélecteur de langue actuel expose trois options:
+
+- `fr`
+- `en`
+- `pcm`
+
+Le contexte React relit cette valeur au démarrage de l'application et réapplique la langue sur le dashboard, le login et les modules dédiés.
 
 ## Normalisation
 
@@ -30,6 +45,13 @@ Exemples:
 - `pcm-CM` -> `pcm`
 
 Les variantes non reconnues reviennent au français.
+
+Alias connus côté backend:
+
+- `pidgin`
+- `pidgin english`
+- `cameroon pidgin`
+- `cameroonian pidgin`
 
 ## Validation
 
@@ -46,6 +68,17 @@ Fonctions exposées:
 - `validate_language(language)`
 - `translate(key, language=None)`
 
+Côté frontend, les mêmes clés sont utilisées pour:
+
+- la page d'accès;
+- le dashboard cockpit;
+- les cartes de module;
+- les boutons et messages de statut;
+- les erreurs et succès;
+- `Nous écrire`;
+- `Et maintenant ?`;
+- `Déconnexion` / `Logout` / `Comot`.
+
 Clés minimales gérées par le scaffold:
 
 - `app.name`
@@ -56,6 +89,9 @@ Clés minimales gérées par le scaffold:
 - `auth.login.failed`
 - `validation.required`
 - `error.generic`
+- `dashboard.*`
+- `module.*`
+- `shared.*`
 
 ## Comportement de fallback
 
