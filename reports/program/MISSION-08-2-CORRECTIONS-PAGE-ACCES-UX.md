@@ -140,7 +140,7 @@ Principe ajoute au LAWIM MASTER BOOK:
 - Commit Git: `fix(product): streamline dashboards translations and matching engine`
 - Tag officiel: `mission-08-dashboard-i18n-matching`
 - Artefact de release: `/tmp/lawim_v2_release_mission-08-dashboard-i18n-matching.tar.gz`
-- SHA256 artefact: `f39c20229f7d3948906b8f731f78b3d011a487f5c271cb26bd82f6b1b3e59f97`
+- SHA256 artefact: `08486f27a40c34a333232a66036eaccd1c53d75e0c1fd4dd999b088b436eb6f2`
 
 ## Validation UX
 
