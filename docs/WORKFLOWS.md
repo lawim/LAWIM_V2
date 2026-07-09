@@ -126,6 +126,7 @@ Users view detailed information about a specific property.
 
 **Layer: Conversation**
 - Dialog: Offer related properties
+- Dialog: Refine the need when more precision is useful
 - Upsell: Suggest similar properties
 - CTA: "Would you like to see similar properties?"
 
@@ -224,6 +225,8 @@ New users create an account.
 - Fields: Full name, Email, Username, WhatsApp number, Password, Confirmation, Preferred language, Conditions checkbox
 - Validation: Real-time feedback
 
+The registration flow requires a unique email, a unique username and a WhatsApp number. The phone number is mandatory.
+
 **Layer: Brain**
 - Decision: Account creation approval
 - Classification: Public user account by default
@@ -277,6 +280,8 @@ The runtime keeps these five standard accounts synchronized at startup so they r
 - Identifier accepted as email, phone number or username
 - Endpoint: `POST /api/auth/login`
 - Payload: `{ identifier, password }`
+
+The access page stays minimal: one central card, a discreet language selector, and a compact contact band in the footer.
 
 ### Technical Flow
 
@@ -445,9 +450,10 @@ Users interact with AI assistant for guidance.
 
 ### User Steps
 1. User opens assistant
-2. User types message
-3. Assistant responds
-4. Conversation continues
+2. User states an intent in natural language
+3. Assistant asks the useful clarifying questions
+4. Answers are reused to enrich the search and matching context
+5. Assistant responds with next actions or compatible results
 
 ### Technical Flow
 
@@ -460,7 +466,7 @@ Users interact with AI assistant for guidance.
 - Path: Appropriate assistant module
 
 **Layer: Conversation**
-- Dialog: Multi-turn conversation
+- Dialog: Multi-turn conversation with progressive qualification
 - Context: Maintain state
 
 **Layer: Knowledge**
@@ -517,9 +523,9 @@ Authenticated users view their dashboard.
 
 ### User Steps
 1. User authenticates
-2. Dashboard loads
-3. User sees stats and widgets
-4. User can navigate to sub-sections
+2. Dashboard loads as a short cockpit
+3. User sees the essentials first: greeting, activity, priorities, quick stats and module cards
+4. User opens a dedicated module when needed and can always return to the dashboard
 
 ### Technical Flow
 

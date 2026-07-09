@@ -38,6 +38,8 @@ Il peut :
 * assister la qualification ;
 * aider à la priorisation.
 
+Quand l'utilisateur exprime une intention, LAWIM AI qualifie le besoin de manière progressive: il pose seulement les questions utiles, réutilise les réponses pour préparer la recherche ou le matching, puis propose la prochaine action logique.
+
 ---
 
 # CHAPITRE 3 — CAS D'USAGE AUTORISÉS
@@ -47,6 +49,7 @@ LAWIM AI peut être utilisé pour :
 * l'aide à la recherche ;
 * l'extraction d'informations ;
 * l'assistance au matching ;
+* la qualification conversationnelle progressive des besoins ;
 * l'analyse de documents ;
 * l'OCR éventuel ;
 * la lecture d'images ou de vidéos si la fonctionnalité existe ;

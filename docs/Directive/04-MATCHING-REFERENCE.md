@@ -218,6 +218,16 @@ Exemple de justification :
 
 Cette explicabilité est obligatoire pour les utilisateurs, les équipes internes et les audits.
 
+LAWIM présente les résultats comme des propositions lisibles, jamais comme une machine technique exposée à l'utilisateur. Les libellés visibles restent par exemple :
+
+* Correspondances trouvées ;
+* Biens compatibles ;
+* Personnes à contacter ;
+* Partenaires adaptés ;
+* Opportunités pour vous.
+
+Lorsque la demande est explicite, LAWIM répond de manière exhaustive et peut citer des alternatives pertinentes au lieu d'imposer un choix.
+
 ---
 
 # CHAPITRE 14 — RÈGLES ABSOLUES

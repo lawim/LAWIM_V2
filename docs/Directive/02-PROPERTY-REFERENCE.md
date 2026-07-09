@@ -54,6 +54,36 @@ Les référentiels transversaux associés sont :
 * [02H-ATTRIBUTE-CATALOG.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02H-ATTRIBUTE-CATALOG.md)
 * [02I-PRICING-REFERENCE.md](/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/docs/Directive/02I-PRICING-REFERENCE.md)
 
+## Couche de saisie utilisateur
+
+L'interface de saisie ne montre pas immédiatement tout le modèle métier. Elle commence par une grande catégorie simple :
+
+* Terrain ;
+* Logement ;
+* Immeuble ;
+* Local commercial ;
+* Bureau ;
+* Autre.
+
+Lorsque la catégorie `Logement` est choisie, l'interface affine ensuite vers la typologie LAWIM :
+
+* studio ;
+* appartement ;
+* maison ;
+* villa ;
+* duplex ;
+* chambre ;
+* résidence meublée ;
+* autre.
+
+La localisation recommandée reste progressive :
+
+* d'abord une liste des dix principales villes ;
+* puis `Autre` si la ville n'est pas listée ;
+* puis la région ;
+* puis le département ;
+* puis la ville ou le quartier saisis manuellement si nécessaire.
+
 ---
 
 # CHAPITRE 4 — FAMILLES D'OBJETS
@@ -132,6 +162,8 @@ Tout bien suit un cycle commun :
 
 Les sous-référentiels peuvent ajouter des étapes spécifiques, mais ne doivent pas casser ce socle.
 
+La saisie opérationnelle reste progressive et ne montre que les champs pertinents pour le type sélectionné afin de limiter les erreurs et d'accélérer la qualification.
+
 ---
 
 # CHAPITRE 8 — RÈGLES DE PUBLICATION
@@ -159,6 +191,8 @@ La validation vérifie notamment :
 * l'absence d'attribut interdit ;
 * la conformité documentaire ;
 * la qualité minimale des médias et des données.
+
+La validation doit aussi vérifier que la catégorie choisie, la sous-typologie et les champs affichés correspondent bien au scénario utilisateur courant.
 
 La validation peut être humaine, assistée ou automatique selon le contexte.
 
