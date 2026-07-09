@@ -19,6 +19,7 @@ from .persistence import (
     build_persistence_profile,
     build_schema_fingerprint,
     build_seed_profile,
+    build_standard_demo_accounts,
 )
 from .api_query import ListQuery, build_media_query, build_notification_query, build_property_query, pagination_meta
 from .geo_domain import build_geo_dto
@@ -88,6 +89,7 @@ def _normalize_phone_e164(value: str) -> str:
     if not digits:
         raise ValidationError("phone_e164 is required")
     return f"+{digits}"
+
 
 @dataclass(frozen=True, slots=True)
 class DemoSeed:
@@ -651,6 +653,91 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
                 )
                 updated.append(email)
         return updated
+
+    def sync_standard_demo_accounts(self) -> list[str]:
+        standard_organizations = (
+            {"name": "LAWIM Demo Agency", "slug": "lawim-demo-agency", "kind": "agency", "city": "Douala"},
+            {"name": "LAWIM Owner Desk", "slug": "lawim-owner-desk", "kind": "owner", "city": "Kribi"},
+        )
+        organization_ids: dict[str, int] = {}
+        for organization in standard_organizations:
+            slug = str(organization["slug"])
+            try:
+                current = self.get_organization_by_slug(slug)
+            except NotFoundError:
+                current = self.create_organization(
+                    name=str(organization["name"]),
+                    slug=slug,
+                    kind=str(organization["kind"]),
+                    city=str(organization.get("city")) if organization.get("city") is not None else None,
+                )
+            organization_ids[slug] = int(current["id"])
+
+        synced: list[str] = []
+        with self._transaction() as conn:
+            for account in build_standard_demo_accounts():
+                email = _normalize_email(str(account["email"]))
+                full_name = _require_text(account["full_name"], "full_name")
+                username = _normalize_username(str(account["username"]))
+                phone_e164 = _normalize_phone_e164(str(account["phone_e164"]))
+                role = accept_user_role(str(account["role"]))
+                if not role:
+                    raise ValidationError(f"unsupported user role: {account['role']}")
+                preferred_language = _require_text(account.get("preferred_language") or "fr", "preferred_language").lower()
+                if preferred_language not in {"fr", "en", "pcm"}:
+                    raise ValidationError(f"unsupported preferred language: {preferred_language}")
+                organization_slug = str(account["organization_slug"])
+                organization_id = organization_ids[organization_slug]
+                password_record = hash_password(_require_text(account["password"], "password"))
+                existing = conn.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
+                if existing is None:
+                    conn.execute(
+                        """
+                        INSERT INTO users
+                            (email, username, full_name, phone_e164, preferred_language, role, organization_id, password_salt, password_hash, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            email,
+                            username,
+                            full_name,
+                            phone_e164,
+                            preferred_language,
+                            role,
+                            organization_id,
+                            password_record.salt,
+                            password_record.hash,
+                            utcnow(),
+                        ),
+                    )
+                else:
+                    conn.execute(
+                        """
+                        UPDATE users
+                        SET username = ?,
+                            full_name = ?,
+                            phone_e164 = ?,
+                            preferred_language = ?,
+                            role = ?,
+                            organization_id = ?,
+                            password_salt = ?,
+                            password_hash = ?
+                        WHERE email = ?
+                        """,
+                        (
+                            username,
+                            full_name,
+                            phone_e164,
+                            preferred_language,
+                            role,
+                            organization_id,
+                            password_record.salt,
+                            password_record.hash,
+                            email,
+                        ),
+                    )
+                synced.append(email)
+        return synced
 
     def delete_user(self, user_id: int) -> None:
         user = self.get_user_by_id(user_id)

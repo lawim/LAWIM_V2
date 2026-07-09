@@ -418,6 +418,7 @@ class PostgreSQLLawimRepository(LawimRepository):
                         "ALTER TABLE crm_lead_sources ADD COLUMN IF NOT EXISTS updated_at TEXT NOT NULL DEFAULT ''"
                     )
                 conn.execute(statement)
+            self._apply_migrations(conn)
             metadata = {
                 "schema_version": str(SCHEMA_VERSION),
                 "schema_manifest": json.dumps(build_application_schema_manifest(), ensure_ascii=False, sort_keys=True),

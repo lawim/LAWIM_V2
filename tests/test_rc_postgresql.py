@@ -58,6 +58,15 @@ class PostgreSQLReleaseCandidateTest(unittest.TestCase):
         self.assertIsNotNone(user)
         self.assertEqual(user["role"], "admin")  # type: ignore[index]
 
+    def test_postgresql_syncs_standard_demo_accounts_without_seed(self) -> None:
+        repository = self._open_repository()
+        repository.initialize(seed_demo_data=False)
+        synced = repository.sync_standard_demo_accounts()
+        self.assertEqual(len(synced), 5)
+        self.assertIsNotNone(repository.authenticate(identifier="admin", password="LAWIM@Demo2026µ"))
+        self.assertIsNotNone(repository.authenticate(identifier="+237686822668", password="LAWIM@Demo2026µ"))
+        self.assertIsNotNone(repository.authenticate(identifier="investor@lawim.app", password="LAWIM@Demo2026µ"))
+
     def test_postgresql_lists_properties_with_pagination(self) -> None:
         repository = self._open_repository()
         repository.initialize(seed_demo_data=True)

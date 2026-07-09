@@ -802,6 +802,61 @@ def build_postgresql_profile(dsn: str, schema_version: int) -> dict[str, object]
     }
 
 
+def build_standard_demo_accounts() -> tuple[dict[str, object], ...]:
+    return (
+        {
+            "email": "admin@lawim.app",
+            "full_name": "LAWIM Admin",
+            "username": "admin",
+            "phone_e164": "+237686822667",
+            "role": "admin",
+            "organization_slug": "lawim-demo-agency",
+            "password": "LAWIM@Demo2026µ",
+            "preferred_language": "fr",
+        },
+        {
+            "email": "manager@lawim.app",
+            "full_name": "LAWIM Manager",
+            "username": "manager",
+            "phone_e164": "+237686822668",
+            "role": "manager",
+            "organization_slug": "lawim-demo-agency",
+            "password": "LAWIM@Demo2026µ",
+            "preferred_language": "fr",
+        },
+        {
+            "email": "agent@lawim.app",
+            "full_name": "LAWIM Agent",
+            "username": "agent",
+            "phone_e164": "+237686822669",
+            "role": "agent",
+            "organization_slug": "lawim-demo-agency",
+            "password": "LAWIM@Demo2026",
+            "preferred_language": "fr",
+        },
+        {
+            "email": "owner@lawim.app",
+            "full_name": "LAWIM Owner",
+            "username": "owner",
+            "phone_e164": "+237686822670",
+            "role": "owner",
+            "organization_slug": "lawim-owner-desk",
+            "password": "LAWIM@Demo2026µ",
+            "preferred_language": "fr",
+        },
+        {
+            "email": "investor@lawim.app",
+            "full_name": "LAWIM Investor",
+            "username": "investor",
+            "phone_e164": "+237686822671",
+            "role": "investor",
+            "organization_slug": "lawim-owner-desk",
+            "password": "LAWIM@Demo2026µ",
+            "preferred_language": "fr",
+        },
+    )
+
+
 def build_demo_seed_blueprint() -> dict[str, object]:
     def svg_data_url(title: str, fill: str) -> str:
         safe_title = (
@@ -915,56 +970,7 @@ def build_demo_seed_blueprint() -> dict[str, object]:
             "password": "lawim-demo",
             "preferred_language": "fr",
         },
-        {
-            "email": "admin@lawim.app",
-            "full_name": "LAWIM Admin",
-            "username": "admin",
-            "phone_e164": "+237686822667",
-            "role": "admin",
-            "organization_slug": "lawim-demo-agency",
-            "password": "LAWIM@Demo2026µ",
-            "preferred_language": "fr",
-        },
-        {
-            "email": "manager@lawim.app",
-            "full_name": "LAWIM Manager",
-            "username": "manager",
-            "phone_e164": "+237686822668",
-            "role": "manager",
-            "organization_slug": "lawim-demo-agency",
-            "password": "LAWIM@Demo2026µ",
-            "preferred_language": "fr",
-        },
-        {
-            "email": "agent@lawim.app",
-            "full_name": "LAWIM Agent",
-            "username": "agent",
-            "phone_e164": "+237686822669",
-            "role": "agent",
-            "organization_slug": "lawim-demo-agency",
-            "password": "LAWIM@Demo2026",
-            "preferred_language": "fr",
-        },
-        {
-            "email": "owner@lawim.app",
-            "full_name": "LAWIM Owner",
-            "username": "owner",
-            "phone_e164": "+237686822670",
-            "role": "owner",
-            "organization_slug": "lawim-owner-desk",
-            "password": "LAWIM@Demo2026µ",
-            "preferred_language": "fr",
-        },
-        {
-            "email": "investor@lawim.app",
-            "full_name": "LAWIM Investor",
-            "username": "investor",
-            "phone_e164": "+237686822671",
-            "role": "investor",
-            "organization_slug": "lawim-owner-desk",
-            "password": "LAWIM@Demo2026µ",
-            "preferred_language": "fr",
-        },
+        *build_standard_demo_accounts(),
     ]
 
     base_properties = [

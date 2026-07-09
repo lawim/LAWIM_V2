@@ -22,7 +22,7 @@
 - [ ] Database password (32+ characters, random)
 - [ ] Redis password (32+ characters, random)
 - [ ] JWT secret (32+ characters, random)
-- [ ] `LAWIM_ADMIN_PASSWORD` injected into the app container so bootstrap can sync the production demo accounts
+- [ ] `LAWIM_ADMIN_PASSWORD` documented if a primary admin password override is required
 - [ ] Standard demo identities documented and validated: `admin`, `manager`, `agent`, `owner`, `investor`
 - [ ] External API keys configured
 - [ ] SMTP credentials configured
@@ -105,10 +105,11 @@ docker-compose exec backend python deployment/health/health_checker.py
 
 ### Production Credential Sync
 
-- Ensure the app runtime receives `LAWIM_ADMIN_PASSWORD` at container start.
-- The bootstrap uses this secret to keep the primary production demo account (`admin`) aligned with the live environment.
-- The standard demo identities remain `admin`, `manager`, `agent`, `owner` and `investor` in seeded/demo environments, with login accepted through email, username or phone.
-- If the secret changes, recreate the app container so the bootstrap can resync credentials.
+- The app runtime applies the compatibility migration that adds `username`, `phone_e164` and `preferred_language` to older PostgreSQL schemas before syncing accounts.
+- The app runtime always synchronizes the five standard demo identities on startup: `admin`, `manager`, `agent`, `owner` and `investor`.
+- Login is accepted through email, username or phone for those identities.
+- `LAWIM_ADMIN_PASSWORD` is optional and only overrides the primary admin password when the operator wants a different live secret.
+- If the override secret changes, recreate the app container so the bootstrap can resync credentials.
 
 ### Step 6: Initialize Database
 

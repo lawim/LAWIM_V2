@@ -35,6 +35,9 @@ def build_runtime(config: AppConfig) -> ApplicationRuntime:
     repository = cast(LawimRepository, adapter.create_repository())
     try:
         repository.initialize(seed_demo_data=config.seed_demo_data)
+        synced_accounts = repository.sync_standard_demo_accounts()
+        if synced_accounts:
+            LOGGER.info("Synced standard demo accounts for %s account(s)", len(synced_accounts))
         admin_password = os.getenv("LAWIM_ADMIN_PASSWORD", "").strip()
         if admin_password:
             updated_users = repository.sync_demo_credentials(

@@ -285,6 +285,46 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
             else:
                 os.environ["LAWIM_ADMIN_PASSWORD"] = previous
 
+    def test_build_runtime_syncs_standard_demo_accounts_without_seed(self) -> None:
+        from lawim_v2.bootstrap import build_runtime
+        from lawim_v2.config import AppConfig
+
+        previous = os.environ.pop("LAWIM_ADMIN_PASSWORD", None)
+        try:
+            with tempfile.TemporaryDirectory() as tempdir:
+                db_path = Path(tempdir) / "runtime.sqlite3"
+                media_path = Path(tempdir) / "media"
+                runtime = build_runtime(
+                    AppConfig.for_test(
+                        db_path=db_path,
+                        media_storage_path=media_path,
+                        seed_demo_data=False,
+                    )
+                )
+                try:
+                    summary = runtime.repository.summary()
+                    self.assertGreaterEqual(summary["users"], 5)
+                    self.assertIsNotNone(
+                        runtime.repository.authenticate(identifier="admin@lawim.app", password="LAWIM@Demo2026µ")
+                    )
+                    self.assertIsNotNone(
+                        runtime.repository.authenticate(identifier="admin", password="LAWIM@Demo2026µ")
+                    )
+                    self.assertIsNotNone(
+                        runtime.repository.authenticate(identifier="+237686822667", password="LAWIM@Demo2026µ")
+                    )
+                    self.assertIsNotNone(
+                        runtime.repository.authenticate(identifier="manager", password="LAWIM@Demo2026µ")
+                    )
+                    self.assertIsNotNone(
+                        runtime.repository.authenticate(identifier="+237686822671", password="LAWIM@Demo2026µ")
+                    )
+                finally:
+                    runtime.close()
+        finally:
+            if previous is not None:
+                os.environ["LAWIM_ADMIN_PASSWORD"] = previous
+
     def test_referential_integrity_blocks_orphaned_deletes(self) -> None:
         seeded_conversations = self.repository.list_conversations(limit=10)
         self.assertTrue(seeded_conversations)

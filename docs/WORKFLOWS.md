@@ -271,6 +271,8 @@ Users log in to access protected features.
 | Utilisateur propriétaire | `owner@lawim.app` | `owner` | `+237686822670` | `LAWIM@Demo2026µ` |
 | Investisseur / Banque | `investor@lawim.app` | `investor` | `+237686822671` | `LAWIM@Demo2026µ` |
 
+The runtime keeps these five standard accounts synchronized at startup so they remain usable across environments.
+
 ### Login Rule
 - Identifier accepted as email, phone number or username
 - Endpoint: `POST /api/auth/login`
