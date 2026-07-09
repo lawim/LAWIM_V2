@@ -325,6 +325,46 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
             if previous is not None:
                 os.environ["LAWIM_ADMIN_PASSWORD"] = previous
 
+    def test_build_runtime_ignores_admin_override_in_production(self) -> None:
+        from dataclasses import replace
+
+        from lawim_v2.bootstrap import build_runtime
+        from lawim_v2.config import AppConfig
+
+        previous = os.environ.get("LAWIM_ADMIN_PASSWORD")
+        os.environ["LAWIM_ADMIN_PASSWORD"] = "runtime-secret"
+        try:
+            with tempfile.TemporaryDirectory() as tempdir:
+                db_path = Path(tempdir) / "runtime.sqlite3"
+                media_path = Path(tempdir) / "media"
+                config = replace(
+                    AppConfig.for_test(
+                        db_path=db_path,
+                        media_storage_path=media_path,
+                        seed_demo_data=False,
+                    ),
+                    app_env="production",
+                    stack_profile="production",
+                    public_base_url="https://lawim.app",
+                    db_fallback=False,
+                    public_media=False,
+                )
+                runtime = build_runtime(config)
+                try:
+                    self.assertIsNotNone(
+                        runtime.repository.authenticate(identifier="admin@lawim.app", password="LAWIM@Demo2026µ")
+                    )
+                    self.assertIsNone(
+                        runtime.repository.authenticate(identifier="admin@lawim.app", password="runtime-secret")
+                    )
+                finally:
+                    runtime.close()
+        finally:
+            if previous is None:
+                os.environ.pop("LAWIM_ADMIN_PASSWORD", None)
+            else:
+                os.environ["LAWIM_ADMIN_PASSWORD"] = previous
+
     def test_referential_integrity_blocks_orphaned_deletes(self) -> None:
         seeded_conversations = self.repository.list_conversations(limit=10)
         self.assertTrue(seeded_conversations)

@@ -108,8 +108,8 @@ docker-compose exec backend python deployment/health/health_checker.py
 - The app runtime applies the compatibility migration that adds `username`, `phone_e164` and `preferred_language` to older PostgreSQL schemas before syncing accounts.
 - The app runtime always synchronizes the five standard demo identities on startup: `admin`, `manager`, `agent`, `owner` and `investor`.
 - Login is accepted through email, username or phone for those identities.
-- `LAWIM_ADMIN_PASSWORD` is optional and only overrides the primary admin password when the operator wants a different live secret.
-- If the override secret changes, recreate the app container so the bootstrap can resync credentials.
+- `LAWIM_ADMIN_PASSWORD` is only honored outside production; production keeps the standard demo credentials to avoid breaking the official demo accounts.
+- If the override secret changes in non-production environments, recreate the app container so the bootstrap can resync credentials.
 
 ### Step 6: Initialize Database
 

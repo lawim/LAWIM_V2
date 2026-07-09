@@ -39,13 +39,15 @@ def build_runtime(config: AppConfig) -> ApplicationRuntime:
         if synced_accounts:
             LOGGER.info("Synced standard demo accounts for %s account(s)", len(synced_accounts))
         admin_password = os.getenv("LAWIM_ADMIN_PASSWORD", "").strip()
-        if admin_password:
+        if admin_password and config.app_env != "production":
             updated_users = repository.sync_demo_credentials(
                 admin_password,
                 emails=("admin@lawim.app", "admin@lawim.local"),
             )
             if updated_users:
                 LOGGER.info("Synced bootstrap credentials for %s demo account(s)", len(updated_users))
+        elif admin_password:
+            LOGGER.info("Ignored LAWIM_ADMIN_PASSWORD in production to preserve the standard demo credentials")
         services = LawimServices(repository, config)
     except Exception:
         try:
