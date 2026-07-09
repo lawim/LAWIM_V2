@@ -831,7 +831,7 @@ def build_standard_demo_accounts() -> tuple[dict[str, object], ...]:
             "phone_e164": "+237686822669",
             "role": "agent",
             "organization_slug": "lawim-demo-agency",
-            "password": "LAWIM@Demo2026",
+            "password": "LAWIM@Demo2026µ",
             "preferred_language": "fr",
         },
         {

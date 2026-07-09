@@ -2775,7 +2775,7 @@ Comptes officiels :
 | --- | --- | --- | --- | --- |
 | Administrateur | `admin@lawim.app` | `admin` | `+237686822667` | `LAWIM@Demo2026µ` |
 | Manager | `manager@lawim.app` | `manager` | `+237686822668` | `LAWIM@Demo2026µ` |
-| Agent LAWIM | `agent@lawim.app` | `agent` | `+237686822669` | `LAWIM@Demo2026` |
+| Agent LAWIM | `agent@lawim.app` | `agent` | `+237686822669` | `LAWIM@Demo2026µ` |
 | Utilisateur propriétaire | `owner@lawim.app` | `owner` | `+237686822670` | `LAWIM@Demo2026µ` |
 | Investisseur / Banque | `investor@lawim.app` | `investor` | `+237686822671` | `LAWIM@Demo2026µ` |
 
@@ -2786,5 +2786,4 @@ Comptes officiels :
 Le présent **08-ROLE-REFERENCE.md** constitue la référence officielle pour la gestion des identités, des rôles, des organisations, des permissions, des badges et du Trust Framework de LAWIM.
 
 Toute évolution future devra respecter les principes définis dans ce document et rester compatible avec les autres référentiels de la plateforme.
-
 

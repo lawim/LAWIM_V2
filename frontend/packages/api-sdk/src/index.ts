@@ -19,6 +19,17 @@ export interface PropertyDetail extends PropertySummary {
   bathrooms: number;
 }
 
+export interface ProjectSummary {
+  id: number;
+  title: string;
+  status: string;
+  project_type: string;
+  objective: string;
+  location_city?: string;
+  budget_min?: number | null;
+  budget_max?: number | null;
+}
+
 export interface MarketListing {
   id: string;
   title: string;
@@ -157,20 +168,62 @@ export interface EstimationResult {
 
 export interface AssistantMessagePayload {
   message: string;
+  project_id?: number;
+  session_id?: number;
+  agent_key?: string;
+}
+
+export interface AssistantChatPayload extends AssistantMessagePayload {
+  project_id: number;
 }
 
 export interface AssistantReply {
   reply: string;
   suggestions: string[];
+  session_id?: number;
+  agent_key?: string;
+  mode?: string;
+  provider?: string;
+  context_snapshot_key?: string;
+  project_id?: number;
+  raw?: Record<string, unknown>;
+}
+
+export interface CreatePropertyPayload {
+  title: string;
+  summary: string;
+  city: string;
+  country: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  price_min?: number | null;
+  price_max?: number | null;
+  currency?: string;
+  status?: string;
+  availability?: string;
+  property_type?: string;
+  owner_organization_id?: number | null;
+  address_line?: string | null;
+  region?: string | null;
+  postal_code?: string | null;
+  metadata?: Record<string, unknown> | string | null;
+  bedrooms?: number;
+  bathrooms?: number;
+  area_sqm?: number;
+  listing_code?: string | null;
 }
 
 const mockDelay = () => Promise.resolve();
 const env = (import.meta as ImportMeta & { env?: Record<string, string | boolean | undefined> }).env ?? {};
-const useMocks = env.VITE_LAWIM_USE_MOCKS === 'true';
+let useMocks = env.VITE_LAWIM_USE_MOCKS === 'true';
 let apiBaseOverride: string | null = null;
 
 export function setApiBaseForTesting(value: string | null) {
   apiBaseOverride = value ? value.replace(/\/$/, '') || '/api' : null;
+}
+
+export function setMockModeForTesting(value: boolean | null) {
+  useMocks = value ?? env.VITE_LAWIM_USE_MOCKS === 'true';
 }
 
 const getApiBase = () => apiBaseOverride ?? (String(env.VITE_LAWIM_API_URL ?? '').replace(/\/$/, '') || '/api');
@@ -192,6 +245,9 @@ const normalizePayload = <T>(payload: unknown, fallback: T): T => {
     if (Array.isArray(record.items)) return record.items as T;
     if (Array.isArray(record.results)) return record.results as T;
     if (Array.isArray(record.properties)) return record.properties as T;
+    if (Array.isArray(record.projects)) return record.projects as T;
+    if (Array.isArray(record.agents)) return record.agents as T;
+    if (Array.isArray(record.prompts)) return record.prompts as T;
     if (Array.isArray(record.contacts)) return record.contacts as T;
     if (Array.isArray(record.marketplace)) return record.marketplace as T;
     if (Array.isArray(record.notifications)) return record.notifications as T;
@@ -207,6 +263,79 @@ const normalizePayload = <T>(payload: unknown, fallback: T): T => {
     if (Array.isArray(record.security)) return record.security as T;
   }
   return payload as T;
+};
+
+const toRecord = (value: unknown): Record<string, unknown> => (value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {});
+
+const toText = (value: unknown, fallback = '') => {
+  if (value === null || value === undefined) return fallback;
+  const text = String(value).trim();
+  return text || fallback;
+};
+
+const toNumber = (value: unknown, fallback = 0) => {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const joinLocation = (...parts: Array<unknown>) => parts.map((part) => toText(part)).filter(Boolean).join(' • ');
+
+const mapPropertySummary = (value: unknown): PropertySummary => {
+  const record = toRecord(value);
+  const property = toRecord(record.property ?? record);
+  const geo = toRecord(property.geo);
+  const price = toRecord(property.price);
+  const listing = toRecord(record.listing);
+  const profile = toRecord(record.profile);
+  const location = joinLocation(geo.city ?? property.city ?? property.location ?? record.city ?? record.location, geo.region ?? property.region ?? record.region);
+  const priceValue = toNumber(price.min ?? price.max ?? property.price_min ?? property.price_max ?? record.price_min ?? record.price_max);
+  const type = toText(property.property_type ?? profile.property_type ?? property.type ?? listing.title ?? record.property_type ?? record.type, 'Bien');
+  const status = toText(property.status ?? listing.status ?? record.status ?? 'draft', 'draft');
+
+  return {
+    id: toText(property.id ?? record.id ?? record.property_id ?? ''),
+    title: toText(property.title ?? listing.title ?? record.title ?? 'Property'),
+    location: location || toText(geo.country ?? property.country ?? record.country ?? 'Cameroon'),
+    price: priceValue,
+    type,
+    status
+  };
+};
+
+const mapPropertyDetail = (value: unknown): PropertyDetail | null => {
+  const record = toRecord(value);
+  const property = toRecord(record.property ?? record);
+  if (Object.keys(property).length === 0) {
+    return null;
+  }
+  const summary = mapPropertySummary(value);
+  const metrics = toRecord(property.metrics);
+  const surfaceValue = property.surface ?? metrics.area_sqm ?? property.area_sqm ?? record.surface ?? null;
+  const bedroomsValue = metrics.bedrooms ?? property.bedrooms ?? record.bedrooms ?? 0;
+  const bathroomsValue = metrics.bathrooms ?? property.bathrooms ?? record.bathrooms ?? 0;
+
+  return {
+    ...summary,
+    description: toText(property.summary ?? record.summary ?? toRecord(record.listing).title ?? summary.title, summary.title),
+    surface: surfaceValue == null || surfaceValue === '' ? 'N/A' : `${toText(surfaceValue)}${String(surfaceValue).includes('m²') ? '' : ' m²'}`,
+    bedrooms: Math.max(0, Math.round(toNumber(bedroomsValue))),
+    bathrooms: Math.max(0, Math.round(toNumber(bathroomsValue)))
+  };
+};
+
+const mapProjectSummary = (value: unknown): ProjectSummary => {
+  const record = toRecord(value);
+  return {
+    id: Math.round(toNumber(record.id ?? 0)),
+    title: toText(record.title ?? record.name ?? 'Project'),
+    status: toText(record.status ?? 'draft'),
+    project_type: toText(record.project_type ?? record.type ?? 'project'),
+    objective: toText(record.objective ?? record.description ?? ''),
+    location_city: record.location_city ? toText(record.location_city) : undefined,
+    budget_min: record.budget_min === undefined || record.budget_min === null ? null : toNumber(record.budget_min),
+    budget_max: record.budget_max === undefined || record.budget_max === null ? null : toNumber(record.budget_max)
+  };
 };
 
 const resolveUrl = (path: string) => {
@@ -335,6 +464,32 @@ export const apiSdk = {
     return requestJson<UserProfile>('/v2/users/me', { method: 'GET' }, mockProfile);
   },
 
+  async getProjects(): Promise<ApiResponse<ProjectSummary[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: [
+          {
+            id: 1,
+            title: 'LAWIM Demo Project',
+            status: 'active',
+            project_type: 'purchase',
+            objective: 'Acquire a property in Yaounde',
+            location_city: 'Yaounde',
+            budget_min: 25000000,
+            budget_max: 50000000
+          }
+        ],
+        message: 'mock'
+      };
+    }
+    const response = await requestJson<unknown[]>('/v2/projects', { method: 'GET' }, []);
+    return {
+      ...response,
+      data: Array.isArray(response.data) ? response.data.map((item) => mapProjectSummary(item)) : []
+    };
+  },
+
   async getUsers(): Promise<ApiResponse<UserProfile[]>> {
     if (useMocks) {
       await mockDelay();
@@ -353,8 +508,13 @@ export const apiSdk = {
     const query = new URLSearchParams();
     if (params?.search) query.set('q', params.search);
     if (params?.page) query.set('page', String(params.page));
-    if (params?.pageSize) query.set('page_size', String(params.pageSize));
-    return requestJson<PropertySummary[]>(`/v2/properties${query.toString() ? `?${query.toString()}` : ''}`, { method: 'GET' }, mockProperties);
+    if (params?.pageSize) query.set('limit', String(params.pageSize));
+    const path = params?.search ? `/v2/properties/search${query.toString() ? `?${query.toString()}` : ''}` : `/v2/properties${query.toString() ? `?${query.toString()}` : ''}`;
+    const response = await requestJson<unknown[]>(path, { method: 'GET' }, []);
+    return {
+      ...response,
+      data: Array.isArray(response.data) ? response.data.map((item) => mapPropertySummary(item)) : []
+    };
   },
 
   async getProperty(id: string): Promise<ApiResponse<PropertyDetail | null>> {
@@ -363,7 +523,11 @@ export const apiSdk = {
       const property = mockProperties.find((item) => item.id === id);
       return { data: property ? { ...property, description: 'Beautiful property with strong yield.', surface: '120 m²', bedrooms: 3, bathrooms: 2 } : null, message: 'mock' };
     }
-    return requestJson<PropertyDetail | null>(`/v2/properties/${id}`, { method: 'GET' }, null);
+    const response = await requestJson<unknown>(`/v2/properties/${id}`, { method: 'GET' }, null);
+    return {
+      ...response,
+      data: response.data ? mapPropertyDetail(response.data) : null
+    };
   },
 
   async getDashboardSummary(): Promise<ApiResponse<DashboardSummary>> {
@@ -423,12 +587,25 @@ export const apiSdk = {
       };
     }
 
-    const query = new URLSearchParams();
+      const query = new URLSearchParams();
     for (const [key, value] of Object.entries(params ?? {})) {
       if (value === undefined || value === null || value === '') continue;
       query.set(key, String(value));
     }
-    return requestJson<MatchResult[]>(`/matches${query.toString() ? `?${query.toString()}` : ''}`, { method: 'GET' }, []);
+    const response = await requestJson<unknown[]>(`/matches${query.toString() ? `?${query.toString()}` : ''}`, { method: 'GET' }, []);
+    return {
+      ...response,
+      data: Array.isArray(response.data)
+        ? response.data.map((item) => {
+            const record = toRecord(item);
+            return {
+              ...(record as Record<string, unknown>),
+              property: record.property ? mapPropertySummary(record.property) : undefined,
+              partner: record.partner ? toRecord(record.partner) : undefined
+            } as MatchResult;
+          })
+        : []
+    };
   },
 
   async getFavorites(): Promise<ApiResponse<FavoriteItem[]>> {
@@ -548,7 +725,19 @@ export const apiSdk = {
       await mockDelay();
       return { data: [{ title: 'Summarize pipeline', description: 'Review last updates' }], message: 'mock' };
     }
-    return requestJson<Array<{ title: string; description: string }>>('/v2/assistant/agents', { method: 'GET' }, []);
+    const response = await requestJson<unknown[]>('/v2/assistant/agents', { method: 'GET' }, []);
+    return {
+      ...response,
+      data: Array.isArray(response.data)
+        ? response.data.map((item) => {
+            const record = toRecord(item);
+            return {
+              title: toText(record.title ?? record.agent_key ?? 'Assistant'),
+              description: toText(record.description ?? record.prompt_key ?? '')
+            };
+          })
+        : []
+    };
   },
 
   async askAssistant(payload: AssistantMessagePayload): Promise<ApiResponse<AssistantReply>> {
@@ -556,7 +745,70 @@ export const apiSdk = {
       await mockDelay();
       return { data: { reply: `I can help with: ${payload.message}`, suggestions: ['Review pipeline', 'Send follow-up'] }, message: 'mock' };
     }
-    return requestJson<AssistantReply>('/v2/assistant/ask', { method: 'POST', body: JSON.stringify(payload) }, { reply: 'Connected to assistant service', suggestions: [] });
+    const projectId = Number(payload.project_id ?? 1);
+    const response = await requestJson<{ chat?: Record<string, unknown> }>(
+      '/v2/assistant/chat',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          message: payload.message,
+          project_id: projectId,
+          session_id: payload.session_id,
+          agent_key: payload.agent_key
+        })
+      },
+      { chat: {} }
+    );
+    const chat = toRecord(response.data.chat);
+    const assistantMessage = toRecord(chat.assistant_message);
+    const userMessage = toRecord(chat.user_message);
+    const ragChunks = Array.isArray(chat.rag_chunks) ? chat.rag_chunks : [];
+    const suggestions = [
+      toText(ragChunks[0] ? toRecord(ragChunks[0]).content : ''),
+      toText(ragChunks[1] ? toRecord(ragChunks[1]).content : ''),
+      'Ouvrir le cockpit',
+      'Relancer une question'
+    ].filter((item, index, values) => Boolean(item) && values.indexOf(item) === index).slice(0, 4);
+    return {
+      ...response,
+      data: {
+        reply: toText(assistantMessage.content, 'Connected to assistant service'),
+        suggestions,
+        session_id: Number(chat.session_id ?? toRecord(chat.session).id ?? 0) || undefined,
+        agent_key: toText(chat.agent_key ?? ''),
+        mode: toText(chat.mode ?? ''),
+        provider: toText(chat.provider ?? ''),
+        context_snapshot_key: toText(chat.context_snapshot_key ?? ''),
+        project_id: projectId,
+        raw: {
+          chat,
+          user_message: userMessage,
+          assistant_message: assistantMessage
+        }
+      }
+    };
+  },
+
+  async createProperty(payload: CreatePropertyPayload): Promise<ApiResponse<PropertySummary>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          id: `local-${Date.now()}`,
+          title: payload.title,
+          location: joinLocation(payload.city, payload.region),
+          price: toNumber(payload.price_max ?? payload.price_min ?? 0),
+          type: toText(payload.property_type ?? 'Property'),
+          status: toText(payload.status ?? 'draft')
+        },
+        message: 'mock'
+      };
+    }
+    const response = await requestJson<unknown>('/properties', { method: 'POST', body: JSON.stringify(payload) }, {});
+    return {
+      ...response,
+      data: mapPropertySummary(response.data)
+    };
   },
 
   async createEstimation(payload: EstimationPayload): Promise<ApiResponse<EstimationResult>> {

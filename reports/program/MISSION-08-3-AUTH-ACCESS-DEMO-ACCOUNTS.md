@@ -68,7 +68,7 @@ Les comptes standards validés en production sont :
 | --- | --- | --- | --- | --- |
 | Administrateur | `admin@lawim.app` | `admin` | `+237686822667` | `LAWIM@Demo2026µ` |
 | Manager | `manager@lawim.app` | `manager` | `+237686822668` | `LAWIM@Demo2026µ` |
-| Agent LAWIM | `agent@lawim.app` | `agent` | `+237686822669` | `LAWIM@Demo2026` |
+| Agent LAWIM | `agent@lawim.app` | `agent` | `+237686822669` | `LAWIM@Demo2026µ` |
 | Utilisateur propriétaire | `owner@lawim.app` | `owner` | `+237686822670` | `LAWIM@Demo2026µ` |
 | Investisseur / Banque | `investor@lawim.app` | `investor` | `+237686822671` | `LAWIM@Demo2026µ` |
 

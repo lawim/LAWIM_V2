@@ -28,12 +28,14 @@ describe('apiSdk', () => {
 
   it('returns mock properties when mock mode is enabled', async () => {
     testEnv.VITE_LAWIM_USE_MOCKS = 'true';
-    const { apiSdk } = await loadApiSdkModule();
+    const { apiSdk, setMockModeForTesting } = await loadApiSdkModule();
+    setMockModeForTesting(true);
 
     const response = await apiSdk.getProperties();
 
     expect(response.data.length).toBeGreaterThan(0);
     expect(response.data[0]).toHaveProperty('title');
+    setMockModeForTesting(null);
   });
 
   it('normalizes partner matches returned by /api/matches', async () => {
@@ -118,7 +120,7 @@ describe('apiSdk', () => {
     const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
     setApiBaseForTesting('https://api.lawim.app');
 
-    const loginResponse = await apiSdk.login({ identifier: 'admin@lawim.local', password: 'lawim-demo' });
+    const loginResponse = await apiSdk.login({ identifier: 'admin@lawim.local', password: 'LAWIM@Demo2026µ' });
     const summaryResponse = await apiSdk.getDashboardSummary();
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
@@ -171,8 +173,8 @@ describe('apiSdk', () => {
       email: 'owner@example.local',
       username: 'owner_demo',
       phone_e164: '+237690000004',
-      password: 'lawim-demo',
-      password_confirmation: 'lawim-demo',
+      password: 'LAWIM@Demo2026µ',
+      password_confirmation: 'LAWIM@Demo2026µ',
       preferred_language: 'fr',
       accept_terms: true
     });
@@ -235,6 +237,90 @@ describe('apiSdk', () => {
     expect(fetchMock.mock.calls[0][0]).toBe('https://api.lawim.app/api/matches?target_type=partner&need=architecte&city=Yaounde&project_type=build&limit=3');
     expect(response.data[0].target_type).toBe('partner');
     expect(response.data[0].reasons).toContain('partner_type:architect');
+    setApiBaseForTesting(null);
+  });
+
+  it('loads projects and posts property creations through the sdk', async () => {
+    testEnv.VITE_LAWIM_USE_MOCKS = 'false';
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith('/api/v2/projects')) {
+        return createJsonResponse([
+          {
+            id: '7',
+            title: 'Yaounde Build',
+            status: 'active',
+            project_type: 'build',
+            objective: 'Construct a duplex in Yaounde',
+            location_city: 'Yaounde',
+            budget_min: '12000000',
+            budget_max: '18000000'
+          }
+        ]);
+      }
+
+      if (url.endsWith('/api/properties') && init?.method === 'POST') {
+        expect(JSON.parse(String(init.body))).toMatchObject({
+          title: 'Terrain Bonaberi',
+          summary: 'Terrain with easy access',
+          city: 'Douala',
+          country: 'Cameroon',
+          property_type: 'terrain'
+        });
+        return createJsonResponse(
+          {
+            id: 'prop-1',
+            title: 'Terrain Bonaberi',
+            city: 'Douala',
+            region: 'Littoral',
+            country: 'Cameroon',
+            price_max: 12000000,
+            property_type: 'terrain',
+            status: 'draft'
+          },
+          201
+        );
+      }
+
+      throw new Error(`Unexpected request: ${url}`);
+    });
+
+    const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
+    setApiBaseForTesting('https://api.lawim.app');
+
+    const projects = await apiSdk.getProjects();
+    const created = await apiSdk.createProperty({
+      title: 'Terrain Bonaberi',
+      summary: 'Terrain with easy access',
+      city: 'Douala',
+      country: 'Cameroon',
+      price_max: 12000000,
+      property_type: 'terrain',
+      status: 'draft'
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls[0][0]).toBe('https://api.lawim.app/api/v2/projects');
+    expect(fetchMock.mock.calls[1][0]).toBe('https://api.lawim.app/api/properties');
+    expect(projects.data[0]).toMatchObject({
+      id: 7,
+      title: 'Yaounde Build',
+      status: 'active',
+      project_type: 'build',
+      objective: 'Construct a duplex in Yaounde',
+      location_city: 'Yaounde',
+      budget_min: 12000000,
+      budget_max: 18000000
+    });
+    expect(created.data).toMatchObject({
+      id: 'prop-1',
+      title: 'Terrain Bonaberi',
+      location: 'Douala • Littoral',
+      price: 12000000,
+      type: 'terrain',
+      status: 'draft'
+    });
     setApiBaseForTesting(null);
   });
 });

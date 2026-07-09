@@ -120,7 +120,10 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />, ['/login']);
 
     expect(screen.getByText(LAWIM_BRAND_SLOGAN)).toBeInTheDocument();
+    expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(1);
     expect(screen.getByText(/contact@lawim\.app/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^lawim\.app$/i })).toHaveAttribute('href', 'https://lawim.app');
+    expect(screen.getByRole('combobox', { name: /langue|language|languag/i })).toBeInTheDocument();
     expect(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }, { timeout: 10000 })).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: button }, { timeout: 10000 })).toBeInTheDocument();
   });
@@ -166,7 +169,7 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />, ['/login']);
 
     await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
-    await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
+    await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
     expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
@@ -179,16 +182,16 @@ describe('LAWIM frontend shell', () => {
 
   it('shows a loading state on the login button while the request is pending', async () => {
     const user = userEvent.setup();
-    let resolveLogin: ((value: ReturnType<typeof loginResponse>) => void) | null = null;
-    const pendingLogin = new Promise<ReturnType<typeof loginResponse>>((resolve) => {
+    let resolveLogin: (value: any) => void = () => undefined;
+    const pendingLogin = new Promise<any>((resolve) => {
       resolveLogin = resolve;
     });
-    vi.spyOn(apiSdk, 'login').mockImplementation(() => pendingLogin as Promise<ReturnType<typeof loginResponse>>);
+    vi.spyOn(apiSdk, 'login').mockImplementation(() => pendingLogin);
 
     renderWithProviders(<WebApp />, ['/login']);
 
     await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
-    await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
+    await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
     const button = screen.getByRole('button', { name: /connexion|login/i });
@@ -197,7 +200,7 @@ describe('LAWIM frontend shell', () => {
       expect(button).toHaveAttribute('aria-busy', 'true');
     });
 
-    resolveLogin?.(loginResponse('admin', ['admin'], 'admin@lawim.app', 'Admin User'));
+    resolveLogin(loginResponse('admin', ['admin'], 'admin@lawim.app', 'Admin User'));
 
     expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
   });
@@ -209,7 +212,7 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />, ['/login']);
 
     await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
-    await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
+    await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
     expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
@@ -219,7 +222,8 @@ describe('LAWIM frontend shell', () => {
 
     expect(await screen.findByRole('heading', { name: /partenaires/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /retour au tableau de bord|back to dashboard/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /ouvrir|open/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /trouver|find/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /photographe/i })).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /retour au tableau de bord|back to dashboard/i }));
 
@@ -233,7 +237,7 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />, ['/login']);
 
     await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
-    await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
+    await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
     expect(await screen.findByRole('button', { name: /déconnexion|logout/i })).toBeInTheDocument();
@@ -304,7 +308,7 @@ describe('LAWIM frontend shell', () => {
     debugSpy.mockClear();
 
     await user.type(screen.getByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
-    await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
+    await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
     expect(await screen.findByRole('heading', { name: /bonjour admin user/i, level: 1 })).toBeInTheDocument();
