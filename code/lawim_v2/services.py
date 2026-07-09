@@ -34,7 +34,7 @@ from .project_service import ProjectPermissionDenied, ProjectService
 from .intelligent.service import IntelligentCoreService
 from .ecosystem.service import EcosystemService
 from .security import AADAuthenticator, resolve_aad_config, validate_email, validate_password
-from .user_roles import accept_user_role, resolve_official_user_role
+from .user_roles import resolve_official_user_role
 from .program_m_support import ProgramMServiceBase
 
 
@@ -263,18 +263,25 @@ class LawimServices:
             "notifications": notifications,
         }
 
-    def _authenticate_with_optional_aad(self, *, email: str, password: str) -> dict[str, object] | None:
-        user = self.repository.authenticate(email=email, password=password)
+    def _authenticate_with_optional_aad(
+        self,
+        *,
+        identifier: str | None = None,
+        email: str | None = None,
+        password: str,
+    ) -> dict[str, object] | None:
+        lookup = identifier if identifier is not None else email
+        user = self.repository.authenticate(identifier=lookup, email=email, password=password)
         if user is not None:
             return user
-        if self.aad_authenticator.is_enabled():
-            self.aad_authenticator.authenticate(email=email, password=password)
+        if self.aad_authenticator.is_enabled() and lookup is not None and "@" in lookup:
+            self.aad_authenticator.authenticate(email=lookup, password=password)
         return None
 
-    def login(self, *, email: str, password: str) -> dict[str, object]:
-        user = self._authenticate_with_optional_aad(email=email, password=password)
+    def login(self, *, password: str, identifier: str | None = None, email: str | None = None) -> dict[str, object]:
+        user = self._authenticate_with_optional_aad(identifier=identifier, email=email, password=password)
         if user is None:
-            raise AuthenticationError("Invalid email or password")
+            raise AuthenticationError("Invalid identifier or password")
         session = self.repository.create_session(user_id=user["id"], ttl_seconds=self.config.session_ttl_seconds)
         return {
             "token": session["token"],
@@ -289,7 +296,10 @@ class LawimServices:
         email: str,
         password: str,
         full_name: str,
-        role: str,
+        username: str,
+        phone_e164: str,
+        preferred_language: str = "fr",
+        accept_terms: bool = True,
         organization_id: int | None = None,
     ) -> dict[str, object]:
         try:
@@ -297,17 +307,26 @@ class LawimServices:
             validate_password(password)
         except ValueError as exc:
             raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", str(exc)) from exc
-        normalized_role = accept_user_role(role)
-        if not normalized_role:
-            raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Invalid user role")
-        if actor is None and normalized_role == "admin":
-            raise PermissionDenied("Public registration cannot create administrator accounts")
+        normalized_username = str(username or "").strip()
+        normalized_phone = str(phone_e164 or "").strip()
+        normalized_language = str(preferred_language or "fr").strip().lower() or "fr"
+        if not normalized_username:
+            raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Username is required")
+        if not normalized_phone:
+            raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", "WhatsApp phone is required")
+        if normalized_language not in {"fr", "en", "pcm"}:
+            raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Unsupported preferred language")
+        if not accept_terms:
+            raise ServiceError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Conditions acceptance is required")
         if actor is not None and not self.policy.is_admin(actor):
             raise PermissionDenied("Only administrators can create staff accounts")
         user = self.repository.create_user(
             email=normalized_email,
             full_name=full_name,
-            role=normalized_role,
+            username=normalized_username,
+            phone_e164=normalized_phone,
+            preferred_language=normalized_language,
+            role="user",
             password=password,
             organization_id=organization_id,
         )
@@ -361,6 +380,9 @@ class LawimServices:
         full_name: str,
         role: str,
         password: str,
+        username: str | None = None,
+        phone_e164: str | None = None,
+        preferred_language: str | None = None,
         organization_id: int | None = None,
     ) -> dict[str, object]:
         self._require_admin(actor, "Only administrators can create users")
@@ -372,6 +394,9 @@ class LawimServices:
         return self.repository.create_user(
             email=normalized_email,
             full_name=full_name,
+            username=username,
+            phone_e164=phone_e164,
+            preferred_language=preferred_language,
             role=role,
             password=password,
             organization_id=organization_id,

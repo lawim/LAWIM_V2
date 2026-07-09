@@ -106,8 +106,12 @@ docker compose -f compose/docker-compose.base.yml -f compose/docker-compose.dev.
 
 ## Comptes démo
 
-Mot de passe par défaut : `lawim-demo`
+Comptes de démonstration standardises :
 
-- `admin@lawim.local`
-- `agent@lawim.local`
-- `owner@lawim.local`
+| Usage | Email | Username | Telephone | Mot de passe |
+| --- | --- | --- | --- | --- |
+| Administrateur | `admin@lawim.app` | `admin` | `+237686822667` | `LAWIM@Demo2026µ` |
+| Manager | `manager@lawim.app` | `manager` | `+237686822668` | `LAWIM@Demo2026µ` |
+| Agent LAWIM | `agent@lawim.app` | `agent` | `+237686822669` | `LAWIM@Demo2026` |
+| Utilisateur propriétaire | `owner@lawim.app` | `owner` | `+237686822670` | `LAWIM@Demo2026µ` |
+| Investisseur / Banque | `investor@lawim.app` | `investor` | `+237686822671` | `LAWIM@Demo2026µ` |

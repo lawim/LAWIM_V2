@@ -317,6 +317,8 @@ L'organisation, les intitulés, les boutons et la navigation doivent guider natu
 
 Les doubles formulations, les paraphrases et les explications redondantes doivent être supprimées.
 
+Cette règle s'applique en priorité aux pages d'accès, aux dashboards et aux écrans d'onboarding.
+
 ---
 
 # 23. Objectif final

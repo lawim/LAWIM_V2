@@ -60,10 +60,10 @@ SAMPLE_PROPERTY: dict[str, object] = {
 
 class ReleaseProgramGPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v13(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_application_schema_version_constant(self) -> None:
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 18)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 19)
 
     def test_rei_tables_present(self) -> None:
         self.assertTrue(self.repository.rei_tables_present())

@@ -18,7 +18,7 @@ from tests.lawim_harness import LawimTestHarness
 
 class ReleaseProgramBPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v10(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_ecosystem_tables_present(self) -> None:
         self.assertTrue(self.repository.ecosystem_tables_present())

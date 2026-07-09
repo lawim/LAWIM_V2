@@ -68,10 +68,10 @@ from tests.lawim_harness import LawimTestHarness
 
 class ReleaseProgramKPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v17(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_application_schema_version_constant(self) -> None:
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 18)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 19)
 
     def test_communication_tables_present(self) -> None:
         self.assertTrue(self.repository.communication_tables_present())
@@ -1192,7 +1192,7 @@ class ReleaseProgramKHealthTests(LawimTestHarness):
     def test_bootstrap_schema_v17(self) -> None:
         bootstrap = self.invoke('/api/bootstrap')
         self.assertEqual(bootstrap.status, HTTPStatus.OK)
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_metrics_include_communication_counters(self) -> None:
         token = self.login(email='admin@lawim.local')

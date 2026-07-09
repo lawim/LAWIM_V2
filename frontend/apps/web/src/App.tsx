@@ -228,6 +228,28 @@ function OfficialContactGrid({ tone = 'light', className = '' }: { tone?: 'light
   );
 }
 
+function AccessFooterBand() {
+  const { t } = useTranslator();
+  const phoneDigits = LAWIM_OFFICIAL_CONTACT.phoneInternational.replace(/[^0-9]/g, '');
+
+  return (
+    <footer className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 rounded-full border border-slate-200/70 bg-white/75 px-4 py-2 text-[0.68rem] font-medium uppercase tracking-[0.22em] text-slate-500 shadow-sm backdrop-blur">
+      <a className="transition hover:text-slate-800" href={LAWIM_OFFICIAL_CONTACT.websiteUrl} target="_blank" rel="noreferrer">
+        lawim.app
+      </a>
+      <a className="transition hover:text-slate-800" href={`mailto:${LAWIM_OFFICIAL_CONTACT.supportEmail}`}>
+        {LAWIM_OFFICIAL_CONTACT.supportEmail}
+      </a>
+      <a className="transition hover:text-slate-800" href={`https://wa.me/${phoneDigits}`} target="_blank" rel="noreferrer">
+        {t('auth.contact.whatsapp')}
+      </a>
+      <a className="transition hover:text-slate-800" href={`https://facebook.com/${LAWIM_OFFICIAL_CONTACT.facebookUsername.replace(/^@/, '')}`} target="_blank" rel="noreferrer">
+        {LAWIM_OFFICIAL_CONTACT.facebookUsername}
+      </a>
+    </footer>
+  );
+}
+
 function HomePage() {
   const user = useAuthStore((state) => state.user);
   const roles = useAuthStore((state) => state.roles);
@@ -1104,6 +1126,7 @@ function RoleDashboardPage({ role }: { role: AccessRole }) {
 
 function LoginPage() {
   const login = useAuthStore((state) => state.login);
+  const registerAccount = useAuthStore((state) => state.register);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const hasHydrated = useAuthStore((state) => state.hasHydrated);
@@ -1113,20 +1136,32 @@ function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslator();
-  const [email, setEmail] = useState('');
+  const { language, setLanguage } = useLanguage();
+  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState<{ tone: 'success' | 'error'; text: string } | null>(null);
+  const [registerForm, setRegisterForm] = useState(() => ({
+    fullName: '',
+    email: '',
+    username: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+    preferredLanguage: language,
+    acceptTerms: false
+  }));
+  const [message, setMessage] = useState<{ tone: 'success' | 'error' | 'info'; text: string } | null>(null);
   const reason = (location.state as { reason?: string } | null)?.reason ?? null;
   const loginBanner =
     reason === 'server_unavailable'
       ? t('auth.login.banner.server_unavailable')
       : reason === 'session_expired'
         ? t('auth.login.banner.session_expired')
-      : reason === 'unauthorized'
-        ? t('auth.login.banner.unauthorized')
-        : null;
+        : reason === 'unauthorized'
+          ? t('auth.login.banner.unauthorized')
+          : null;
   const statusMessage = message ?? (loginBanner ? { tone: 'info' as const, text: loginBanner } : null);
-  const isRestoring = (!hasHydrated || isLoading) && !email && !password && !message;
+  const isRestoring = !hasHydrated;
   const openSupportRequest = (subject: string) => {
     window.location.href = `mailto:${LAWIM_OFFICIAL_CONTACT.supportEmail}?subject=${encodeURIComponent(subject)}`;
   };
@@ -1134,6 +1169,20 @@ function LoginPage() {
   if (isAuthenticated) {
     return <Navigate to={resolveDashboardPath(role)} replace />;
   }
+
+  const setRegisterMode = () => {
+    setMessage(null);
+    setMode('register');
+    setRegisterForm((current) => ({
+      ...current,
+      preferredLanguage: language
+    }));
+  };
+
+  const setLoginMode = () => {
+    setMessage(null);
+    setMode('login');
+  };
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(216,180,106,0.2),_rgba(255,250,240,0.96)_36%,_rgba(243,238,230,0.94)_100%)] px-4 py-6 text-slate-900 sm:px-6 lg:px-8">
@@ -1149,8 +1198,6 @@ function LoginPage() {
             <div className="flex flex-col items-center gap-4 text-center">
               <BrandMark tone="light" showWordmark={false} slogan={LAWIM_BRAND_SLOGAN} sloganClassName="text-lg font-serif italic tracking-normal text-slate-600" />
             </div>
-
-            <OfficialContactGrid tone="light" className="mt-6" />
 
             {statusMessage ? (
               <div
@@ -1172,70 +1219,227 @@ function LoginPage() {
               </div>
             ) : (
               <>
-                <form
-                  className="mt-6 space-y-4"
-                  onSubmit={(event) =>
-                    void (async () => {
-                      event.preventDefault();
-                      try {
-                        const session = await login({ email, password });
-                        traceAuth('LOGIN_OK', { email: session.email, role: session.role });
-                        traceAuth('ROLE_RESOLVED', { role: session.role, source: 'payload.user.role or payload.roles' });
-                        const path = resolveDashboardPath(session.role);
-                        traceAuth('DASHBOARD_SELECTED', { role: session.role, path });
-                        traceAuth('APPLY_JOURNEY', { role: session.role, path });
-                        navigate(path, { replace: true });
-                      } catch (error) {
-                        setMessage({
-                          tone: 'error',
-                          text: error instanceof Error ? error.message : t('errors.generic')
-                        });
-                      }
-                    })()
-                  }
-                >
-                  <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
-                    <span>{t('auth.login.email')}</span>
-                    <input
-                      className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
-                      placeholder="name@lawim.app"
-                      autoComplete="username"
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                      required
-                      type="email"
-                    />
-                  </label>
-                  <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
-                    <span>{t('auth.login.password')}</span>
-                    <input
-                      className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
-                      placeholder="••••••••"
-                      autoComplete="current-password"
-                      value={password}
-                      onChange={(event) => setPassword(event.target.value)}
-                      required
-                      type="password"
-                    />
-                  </label>
+                {mode === 'login' ? (
+                  <>
+                    <form
+                      className="mt-6 space-y-4"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        void (async () => {
+                          try {
+                            const session = await login({ identifier, password });
+                            traceAuth('LOGIN_OK', { email: session.email, role: session.role });
+                            traceAuth('ROLE_RESOLVED', { role: session.role, source: 'payload.user.role or payload.roles' });
+                            const path = resolveDashboardPath(session.role);
+                            traceAuth('DASHBOARD_SELECTED', { role: session.role, path });
+                            traceAuth('APPLY_JOURNEY', { role: session.role, path });
+                            navigate(path, { replace: true });
+                          } catch (error) {
+                            setMessage({
+                              tone: 'error',
+                              text: error instanceof Error ? error.message : t('errors.generic')
+                            });
+                          }
+                        })();
+                      }}
+                    >
+                      <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                        <span>{t('auth.login.identifier')}</span>
+                        <span className="text-xs font-normal text-slate-500">{t('auth.login.identifier_help')}</span>
+                        <input
+                          className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                          placeholder={t('auth.login.identifier_help')}
+                          autoComplete="username"
+                          value={identifier}
+                          onChange={(event) => setIdentifier(event.target.value)}
+                          required
+                          type="text"
+                        />
+                      </label>
+                      <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                        <span>{t('auth.login.password')}</span>
+                        <input
+                          className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                          placeholder="••••••••"
+                          autoComplete="current-password"
+                          value={password}
+                          onChange={(event) => setPassword(event.target.value)}
+                          required
+                          type="password"
+                        />
+                      </label>
 
-                  <Button className="w-full justify-center py-3 text-base" disabled={isLoading} type="submit">
-                    {isLoading ? t('auth.login.connecting') : t('auth.login.button')}
-                  </Button>
-                </form>
+                      <Button className="w-full justify-center py-3 text-base" loading={isLoading} type="submit">
+                        {isLoading ? t('auth.login.loading') : t('auth.login.button')}
+                      </Button>
+                    </form>
 
-                <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                  <Button className="justify-center" type="button" variant="secondary" onClick={() => openSupportRequest('LAWIM - Mot de passe oublié')}>
-                    {t('auth.login.forgot')}
-                  </Button>
-                  <Button className="justify-center" type="button" variant="secondary" onClick={() => openSupportRequest('LAWIM - Création de compte')}>
-                    {t('auth.login.create')}
-                  </Button>
-                </div>
+                    <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                      <Button className="justify-center" type="button" variant="secondary" onClick={() => openSupportRequest('LAWIM - Mot de passe oublié')}>
+                        {t('auth.login.forgot')}
+                      </Button>
+                      <Button className="justify-center" type="button" variant="secondary" onClick={setRegisterMode}>
+                        {t('auth.login.create')}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <form
+                      className="mt-6 space-y-4"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        void (async () => {
+                          try {
+                            const session = await registerAccount({
+                              full_name: registerForm.fullName,
+                              email: registerForm.email,
+                              username: registerForm.username,
+                              phone_e164: registerForm.phone,
+                              password: registerForm.password,
+                              password_confirmation: registerForm.confirmPassword,
+                              preferred_language: registerForm.preferredLanguage,
+                              accept_terms: registerForm.acceptTerms
+                            });
+                            traceAuth('REGISTER_OK', {
+                              email: session.email,
+                              role: session.role,
+                              preferred_language: registerForm.preferredLanguage
+                            });
+                            setLanguage(registerForm.preferredLanguage);
+                            const path = resolveDashboardPath(session.role);
+                            navigate(path, { replace: true });
+                          } catch (error) {
+                            setMessage({
+                              tone: 'error',
+                              text: error instanceof Error ? error.message : t('errors.generic')
+                            });
+                          }
+                        })();
+                      }}
+                    >
+                      <div className="grid gap-4">
+                        <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                          <span>{t('auth.login.register_full_name')}</span>
+                          <input
+                            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                            placeholder="Jane Seller"
+                            autoComplete="name"
+                            value={registerForm.fullName}
+                            onChange={(event) => setRegisterForm((current) => ({ ...current, fullName: event.target.value }))}
+                            required
+                            type="text"
+                          />
+                        </label>
+                        <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                          <span>{t('auth.login.register_email')}</span>
+                          <input
+                            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                            placeholder="name@lawim.app"
+                            autoComplete="email"
+                            value={registerForm.email}
+                            onChange={(event) => setRegisterForm((current) => ({ ...current, email: event.target.value }))}
+                            required
+                            type="email"
+                          />
+                        </label>
+                        <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                          <span>{t('auth.login.register_username')}</span>
+                          <input
+                            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                            placeholder="lawim_user"
+                            autoComplete="username"
+                            value={registerForm.username}
+                            onChange={(event) => setRegisterForm((current) => ({ ...current, username: event.target.value }))}
+                            required
+                            type="text"
+                          />
+                        </label>
+                        <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                          <span>{t('auth.login.register_whatsapp')}</span>
+                          <input
+                            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                            placeholder="+237686822667"
+                            autoComplete="tel"
+                            value={registerForm.phone}
+                            onChange={(event) => setRegisterForm((current) => ({ ...current, phone: event.target.value }))}
+                            required
+                            type="tel"
+                          />
+                        </label>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                            <span>{t('auth.login.register_password')}</span>
+                            <input
+                              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                              placeholder="••••••••"
+                              autoComplete="new-password"
+                              value={registerForm.password}
+                              onChange={(event) => setRegisterForm((current) => ({ ...current, password: event.target.value }))}
+                              required
+                              type="password"
+                            />
+                          </label>
+                          <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                            <span>{t('auth.login.register_password_confirmation')}</span>
+                            <input
+                              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                              placeholder="••••••••"
+                              autoComplete="new-password"
+                              value={registerForm.confirmPassword}
+                              onChange={(event) => setRegisterForm((current) => ({ ...current, confirmPassword: event.target.value }))}
+                              required
+                              type="password"
+                            />
+                          </label>
+                        </div>
+                        <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
+                          <span>{t('auth.login.register_language')}</span>
+                          <select
+                            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-base text-slate-900 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
+                            value={registerForm.preferredLanguage}
+                            onChange={(event) =>
+                              setRegisterForm((current) => ({
+                                ...current,
+                                preferredLanguage: event.target.value
+                              }))
+                            }
+                            required
+                          >
+                            <option value="fr">{t('language.fr')}</option>
+                            <option value="en">{t('language.en')}</option>
+                            <option value="pcm">{t('language.pcm')}</option>
+                          </select>
+                        </label>
+                        <label className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+                          <input
+                            className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                            checked={registerForm.acceptTerms}
+                            onChange={(event) => setRegisterForm((current) => ({ ...current, acceptTerms: event.target.checked }))}
+                            required
+                            type="checkbox"
+                          />
+                          <span>{t('auth.login.register_terms')}</span>
+                        </label>
+                      </div>
+
+                      <div className="flex flex-col gap-3 pt-1 sm:flex-row">
+                        <Button className="w-full justify-center py-3 text-base sm:w-auto" loading={isLoading} type="submit">
+                          {isLoading ? t('auth.login.register_loading') : t('auth.login.register_submit')}
+                        </Button>
+                        <Button className="w-full justify-center py-3 text-base sm:w-auto" type="button" variant="secondary" onClick={setLoginMode}>
+                          {t('auth.login.register_back')}
+                        </Button>
+                      </div>
+                    </form>
+                  </>
+                )}
               </>
             )}
           </section>
         </div>
+
+        <AccessFooterBand />
       </div>
     </main>
   );

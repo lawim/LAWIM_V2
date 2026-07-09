@@ -8,7 +8,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
 </head>
-<body>
+<body data-auth-mode="login">
   <div class="backdrop backdrop-a"></div>
   <div class="backdrop backdrop-b"></div>
 
@@ -40,11 +40,11 @@
               <img class="brand-mark auth-brand__mark" src="/logo.svg" alt="LAWIM logo" width="72" height="72">
               <p class="auth-slogan">L’immobilier autrement</p>
             </div>
-            <div id="auth-contact" class="auth-contact" aria-label="Coordonnées officielles"></div>
             <form id="login-form" class="stacked-form auth-form">
             <label>
-              <span id="login-email-label">Email</span>
-              <input id="login-email" name="email" type="email" autocomplete="username" required>
+              <span id="login-identifier-label">Identifiant</span>
+              <small id="login-identifier-help" class="muted">Email, téléphone ou nom d’utilisateur</small>
+              <input id="login-identifier" name="identifier" type="text" autocomplete="username" required>
             </label>
             <label>
               <span id="login-password-label">Mot de passe</span>
@@ -69,45 +69,60 @@
           <div id="journey-nav" class="journey-nav" hidden></div>
         </section>
 
-        <section class="panel form-panel" data-journey-panel="admin" data-module-panel="administration">
-          <div class="section-heading">
-            <h2>Inscription</h2>
-            <p class="muted">Créer un compte utilisateur ou partenaire depuis l'environnement interne.</p>
-          </div>
-          <form id="register-form" class="stacked-form">
-            <label>
-              <span>Nom complet</span>
-              <input name="full_name" type="text" required placeholder="Jane Seller">
-            </label>
-            <label>
-              <span>E-mail</span>
-              <input name="email" type="email" required placeholder="owner@example.com">
-            </label>
-            <label>
-              <span>Mot de passe</span>
-              <input name="password" type="password" required placeholder="Créer un mot de passe">
-            </label>
-            <label>
-              <span>Rôle</span>
-              <select name="role">
-                <option value="user">Utilisateur</option>
-                <option value="partner">Partenaire</option>
-                <option value="operator">Opérateur</option>
-                <option value="manager">Manager</option>
-                <option value="admin">Administrateur</option>
-              </select>
-            </label>
-            <label>
-              <span>Organisation</span>
-              <select name="organization_id" id="register-organization-select">
-                <option value="">Aucune</option>
-              </select>
-            </label>
-            <div class="actions">
-              <button type="submit" class="button primary">Créer</button>
+        <section id="register-panel" class="panel form-panel" hidden>
+          <div class="auth-shell">
+            <div class="section-heading">
+              <h2>Créer un compte</h2>
+              <p class="muted">Email, téléphone WhatsApp, username et mot de passe.</p>
             </div>
-          </form>
+            <form id="register-form" class="stacked-form">
+              <label>
+                <span id="register-full-name-label">Nom complet</span>
+                <input id="register-full-name" name="full_name" type="text" required placeholder="Jane Seller">
+              </label>
+              <label>
+                <span id="register-email-label">E-mail</span>
+                <input id="register-email" name="email" type="email" required placeholder="owner@example.com">
+              </label>
+              <label>
+                <span id="register-username-label">Username</span>
+                <input id="register-username" name="username" type="text" required placeholder="jane_seller">
+              </label>
+              <label>
+                <span id="register-phone-label">Numéro WhatsApp</span>
+                <input id="register-phone" name="phone_e164" type="tel" required placeholder="+237686822667">
+              </label>
+              <div class="two-up">
+                <label>
+                  <span id="register-password-label">Mot de passe</span>
+                  <input id="register-password" name="password" type="password" required placeholder="Créer un mot de passe">
+                </label>
+                <label>
+                  <span id="register-confirm-label">Confirmer le mot de passe</span>
+                  <input id="register-password-confirmation" name="password_confirmation" type="password" required placeholder="Confirmer">
+                </label>
+              </div>
+              <label>
+                <span id="register-language-label">Langue préférée</span>
+                <select id="register-language" name="preferred_language">
+                  <option value="fr">Français</option>
+                  <option value="en">English</option>
+                  <option value="pcm">Pidgin English</option>
+                </select>
+              </label>
+              <label class="checkbox-label">
+                <input id="register-terms" name="accept_terms" type="checkbox" required>
+                <span id="register-terms-label">J’accepte les conditions</span>
+              </label>
+              <div class="actions">
+                <button id="register-submit" type="submit" class="button primary">Créer le compte</button>
+                <button id="register-back" type="button" class="button secondary">Retour à la connexion</button>
+              </div>
+            </form>
+          </div>
         </section>
+
+        <div id="auth-contact" class="auth-contact auth-contact--footer" aria-label="Coordonnées officielles"></div>
 
         <section class="panel form-panel" data-journey-panel="project buyer" data-module-panel="projects">
           <div class="section-heading">

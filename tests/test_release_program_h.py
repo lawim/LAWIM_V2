@@ -166,10 +166,10 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
 
 class ReleaseProgramHPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v14(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_application_schema_version_constant(self) -> None:
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 18)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 19)
 
     def test_crm_tables_present(self) -> None:
         self.assertTrue(self.repository.crm_tables_present())

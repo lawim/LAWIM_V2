@@ -32,6 +32,10 @@ export interface UserProfile {
   name: string;
   role: string;
   email: string;
+  full_name?: string;
+  username?: string;
+  phone_e164?: string;
+  preferred_language?: string;
 }
 
 export interface DashboardSummary {
@@ -110,8 +114,26 @@ export interface DocumentItem {
 }
 
 export interface AuthCredentials {
-  email: string;
+  identifier?: string;
+  email?: string;
   password: string;
+}
+
+export interface RegisterPayload {
+  full_name: string;
+  email: string;
+  username: string;
+  phone_e164: string;
+  password: string;
+  password_confirmation: string;
+  preferred_language: string;
+  accept_terms: boolean;
+}
+
+export interface RegisterResponse {
+  user: UserProfile;
+  token: string;
+  roles: string[];
 }
 
 export interface AuthSession {
@@ -164,6 +186,9 @@ const normalizePayload = <T>(payload: unknown, fallback: T): T => {
   if (typeof payload === 'object') {
     const record = payload as Record<string, unknown>;
     if (Array.isArray(record.data)) return record.data as T;
+    if (Object.prototype.hasOwnProperty.call(record, 'user') || Object.prototype.hasOwnProperty.call(record, 'token') || Object.prototype.hasOwnProperty.call(record, 'session')) {
+      return payload as T;
+    }
     if (Array.isArray(record.items)) return record.items as T;
     if (Array.isArray(record.results)) return record.results as T;
     if (Array.isArray(record.properties)) return record.properties as T;
@@ -212,12 +237,13 @@ const requestJson = async <T>(path: string, init: RequestInit = {}, fallback: T)
       }
     });
 
-    if (!response.ok) {
-      throw new Error(`Request failed with ${response.status}`);
-    }
-
     const text = await response.text();
     const payload = text ? JSON.parse(text) : null;
+    if (!response.ok) {
+      const errorPayload = payload as { error?: { message?: string; code?: string }; message?: string } | null;
+      const message = errorPayload?.error?.message || errorPayload?.message || `Request failed with ${response.status}`;
+      return { data: fallback, message };
+    }
     return { data: normalizePayload<T>(payload, fallback), message: 'ok' };
   } catch (error) {
     return { data: fallback, message: error instanceof Error ? error.message : 'Unknown error' };
@@ -246,6 +272,34 @@ export const apiSdk = {
       user: mockProfile,
       token: 'mock-token',
       roles: ['admin']
+    });
+  },
+
+  async register(payload: RegisterPayload): Promise<ApiResponse<RegisterResponse>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          user: {
+            id: 'u2',
+            name: payload.full_name,
+            full_name: payload.full_name,
+            role: 'user',
+            email: payload.email,
+            username: payload.username,
+            phone_e164: payload.phone_e164,
+            preferred_language: payload.preferred_language
+          },
+          token: 'mock-token',
+          roles: ['user']
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<RegisterResponse>('/auth/register', { method: 'POST', body: JSON.stringify(payload) }, {
+      user: mockProfile,
+      token: 'mock-token',
+      roles: ['user']
     });
   },
 

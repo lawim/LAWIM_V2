@@ -1,4 +1,4 @@
--- LAWIM_V2 schema v18 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
+-- LAWIM_V2 schema v19 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
 
 CREATE TABLE IF NOT EXISTS organizations (
         id SERIAL PRIMARY KEY,
@@ -12,7 +12,10 @@ CREATE TABLE IF NOT EXISTS organizations (
 CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email TEXT NOT NULL UNIQUE,
+        username TEXT UNIQUE,
         full_name TEXT NOT NULL,
+        phone_e164 TEXT UNIQUE,
+        preferred_language TEXT NOT NULL DEFAULT 'fr',
         role TEXT NOT NULL CHECK (role IN ('admin', 'manager', 'operator', 'partner', 'user', 'administrator', 'superadmin', 'director', 'root', 'supervisor', 'lead', 'coordinator', 'agent', 'operateur', 'opérateur', 'staff', 'support', 'moderator', 'photographer', 'photographe', 'notary', 'notaire', 'bank', 'banque', 'artisan', 'architect', 'architecte', 'diagnostician', 'diagnostiqueur', 'decorator', 'decorateur', 'demenageur', 'mover', 'broker', 'owner', 'buyer', 'seller', 'vendeur', 'acheteur', 'tenant', 'locataire', 'landlord', 'proprietaire', 'investor', 'investisseur', 'promoter', 'promoteur', 'customer', 'viewer', 'company', 'enterprise', 'entreprise', 'business', 'particulier', 'private', 'requester')),
         organization_id INTEGER REFERENCES organizations(id),
         password_salt TEXT NOT NULL,

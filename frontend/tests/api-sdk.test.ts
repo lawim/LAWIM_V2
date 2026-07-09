@@ -118,7 +118,7 @@ describe('apiSdk', () => {
     const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
     setApiBaseForTesting('https://api.lawim.app');
 
-    const loginResponse = await apiSdk.login({ email: 'admin@lawim.local', password: 'lawim-demo' });
+    const loginResponse = await apiSdk.login({ identifier: 'admin@lawim.local', password: 'lawim-demo' });
     const summaryResponse = await apiSdk.getDashboardSummary();
 
     expect(fetchMock).toHaveBeenCalledTimes(2);
@@ -132,6 +132,56 @@ describe('apiSdk', () => {
       communications: 2,
       pendingTasks: 1
     });
+    setApiBaseForTesting(null);
+  });
+
+  it('targets /api/auth/register with the public account payload', async () => {
+    testEnv.VITE_LAWIM_USE_MOCKS = 'false';
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith('/api/auth/register')) {
+        return createJsonResponse(
+          {
+            user: {
+              id: 'u-3',
+              name: 'Owner Demo',
+              full_name: 'Owner Demo',
+              role: 'user',
+              email: 'owner@example.local',
+              username: 'owner_demo',
+              phone_e164: '+237690000004',
+              preferred_language: 'fr'
+            },
+            token: 'registered-token',
+            roles: ['user']
+          },
+          201
+        );
+      }
+
+      throw new Error(`Unexpected request: ${url}`);
+    });
+
+    const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
+    setApiBaseForTesting('https://api.lawim.app');
+
+    const response = await apiSdk.register({
+      full_name: 'Owner Demo',
+      email: 'owner@example.local',
+      username: 'owner_demo',
+      phone_e164: '+237690000004',
+      password: 'lawim-demo',
+      password_confirmation: 'lawim-demo',
+      preferred_language: 'fr',
+      accept_terms: true
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toBe('https://api.lawim.app/api/auth/register');
+    expect(fetchMock.mock.calls[0][1]?.method).toBe('POST');
+    expect(response.data.user.role).toBe('user');
+    expect(response.data.token).toBe('registered-token');
     setApiBaseForTesting(null);
   });
 

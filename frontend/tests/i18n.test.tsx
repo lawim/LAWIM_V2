@@ -19,8 +19,12 @@ describe('frontend i18n', () => {
     expect(translate('auth.login.title', 'fr')).toBe('Connexion');
     expect(translate('auth.login.title', 'en')).toBe('Login');
     expect(translate('auth.login.title', 'pcm')).toBe('Login');
+    expect(translate('auth.login.identifier', 'fr')).toBe('Identifiant');
+    expect(translate('auth.login.identifier_help', 'en')).toBe('Email, phone or username');
     expect(translate('auth.login.forgot', 'fr')).toBe('Mot de passe oublié');
     expect(translate('auth.login.create', 'en')).toBe('Create account');
+    expect(translate('auth.login.register_back', 'pcm')).toBe('Back to login');
+    expect(translate('auth.login.register_loading', 'fr')).toBe('Création en cours...');
     expect(translate('auth.contact.website', 'pcm')).toBe('Website');
     expect(translate('dashboard.whats_next', 'pcm')).toBe('Wetin next?');
     expect(translate('shared.logout', 'pcm')).toBe('Comot');

@@ -272,8 +272,20 @@ body[data-authenticated="false"] .workspace {
   display: none;
 }
 
-body[data-authenticated="false"] .sidebar > .form-panel:not(:first-of-type) {
+body[data-authenticated="false"] .sidebar > .form-panel:not(.auth-panel):not(#register-panel) {
   display: none;
+}
+
+body[data-authenticated="false"] #register-panel {
+  display: none;
+}
+
+body[data-authenticated="false"][data-auth-mode="register"] .auth-panel {
+  display: none;
+}
+
+body[data-authenticated="false"][data-auth-mode="register"] #register-panel {
+  display: block;
 }
 
 body[data-authenticated="false"] .stacked-form input,
@@ -284,7 +296,7 @@ body[data-authenticated="false"] .stacked-form textarea {
   color: var(--text);
 }
 
-body[data-authenticated="false"] .button {
+body[data-authenticated="false"] .button:not(.primary) {
   color: var(--text);
   background: rgba(255, 255, 255, 0.88);
 }
@@ -359,7 +371,7 @@ body[data-authenticated="true"]:not([data-module="dashboard"]) #role-cockpit {
 
 .auth-shell {
   display: grid;
-  gap: 1rem;
+  gap: 0.9rem;
 }
 
 .auth-brand {
@@ -384,26 +396,27 @@ body[data-authenticated="true"]:not([data-module="dashboard"]) #role-cockpit {
 }
 
 .auth-contact {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
-  gap: 0.55rem;
-  padding: 1rem 1.05rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 0.95rem;
   border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 250, 240, 0.96));
 }
 
 .auth-contact__item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   color: var(--text);
   text-decoration: none;
-  line-height: 1.35;
-  min-height: 3.1rem;
-  padding: 0.75rem 0.85rem;
+  line-height: 1.25;
+  min-height: 2.15rem;
+  padding: 0.45rem 0.7rem;
   border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 1rem;
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.64);
   transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
 }
@@ -423,15 +436,21 @@ body[data-authenticated="true"]:not([data-module="dashboard"]) #role-cockpit {
 }
 
 .auth-contact__copy {
-  display: grid;
-  gap: 0.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .auth-contact__label {
-  font-size: 0.68rem;
+  font-size: 0.62rem;
   text-transform: uppercase;
   letter-spacing: 0.22em;
   color: var(--muted);
+}
+
+.auth-contact__copy strong {
+  font-size: 0.84rem;
+  font-weight: 600;
 }
 
 .auth-form {
@@ -509,10 +528,30 @@ body[data-authenticated="true"]:not([data-module="dashboard"]) #role-cockpit {
   transform: translateY(-1px);
 }
 
+.button:active {
+  transform: translateY(0.5px);
+}
+
 .button.primary {
   color: #0b1220;
   background: linear-gradient(135deg, var(--accent), #f7d28a);
   font-weight: 700;
+  box-shadow: 0 12px 24px rgba(216, 180, 106, 0.25);
+}
+
+.button.primary:hover {
+  background: linear-gradient(135deg, #f2c67a, #f8d890);
+}
+
+.button.primary:active {
+  background: linear-gradient(135deg, #d9ac54, #efc971);
+}
+
+.button.primary:disabled,
+.button.primary[data-loading="true"] {
+  background: linear-gradient(135deg, #e4c38b, #f0d7ad);
+  color: rgba(11, 18, 32, 0.72);
+  box-shadow: none;
 }
 
 .button.secondary {
@@ -520,9 +559,17 @@ body[data-authenticated="true"]:not([data-module="dashboard"]) #role-cockpit {
   background: rgba(73, 197, 182, 0.08);
 }
 
+.button.secondary:active {
+  background: rgba(73, 197, 182, 0.14);
+}
+
 .button.ghost {
   border-color: rgba(255, 255, 255, 0.12);
   background: transparent;
+}
+
+.button.ghost:active {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .stats-grid {

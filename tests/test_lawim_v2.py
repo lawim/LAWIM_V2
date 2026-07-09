@@ -17,11 +17,11 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         health_payload = health.body_json()
         self.assertEqual(health_payload["status"], "ok")
         self.assertEqual(health_payload["database"]["driver"], "sqlite")
-        self.assertEqual(health_payload["database"]["schema_version"], 18)
+        self.assertEqual(health_payload["database"]["schema_version"], 19)
         self.assertNotIn("audit", health_payload)
         self.assertIn("app_env", health_payload["environment"])
         self.assertEqual(health_payload["summary"]["organizations"], 3)
-        self.assertEqual(health_payload["summary"]["users"], 10)
+        self.assertEqual(health_payload["summary"]["users"], 15)
 
         bootstrap = self.invoke("/api/bootstrap")
         self.assertEqual(bootstrap.status, HTTPStatus.OK)
@@ -82,6 +82,102 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         invalid_match_range = self.invoke("/api/matches?budget_min=10&budget_max=5")
         self.assertEqual(invalid_match_range.status, HTTPStatus.BAD_REQUEST)
 
+    def test_login_accepts_email_username_and_phone(self) -> None:
+        credentials = {
+            "email": "admin@lawim.app",
+            "username": "admin",
+            "phone": "+237686822667",
+            "password": "LAWIM@Demo2026µ",
+        }
+        for identifier in (credentials["email"], credentials["username"], credentials["phone"]):
+            response = self.invoke(
+                "/api/auth/login",
+                method="POST",
+                body={"identifier": identifier, "password": credentials["password"]},
+            )
+            self.assertEqual(response.status, HTTPStatus.CREATED, msg=response.body_text())
+            payload = response.body_json()
+            self.assertEqual(payload["user"]["email"], credentials["email"])
+            self.assertEqual(payload["user"]["username"], credentials["username"])
+            self.assertEqual(payload["user"]["role"], "admin")
+
+    def test_login_rejects_wrong_password(self) -> None:
+        response = self.invoke(
+            "/api/auth/login",
+            method="POST",
+            body={"identifier": "admin@lawim.app", "password": "wrong-password"},
+        )
+        self.assertEqual(response.status, HTTPStatus.UNAUTHORIZED)
+        self.assertEqual(response.body_json()["error"]["code"], "invalid_credentials")
+
+    def test_public_register_requires_whatsapp_and_unique_identifier(self) -> None:
+        missing_phone = self.invoke(
+            "/api/auth/register",
+            method="POST",
+            body={
+                "full_name": "New Owner",
+                "email": "new-owner@example.local",
+                "username": "new_owner",
+                "password": "lawim-demo",
+                "password_confirmation": "lawim-demo",
+                "preferred_language": "fr",
+                "accept_terms": True,
+            },
+        )
+        self.assertEqual(missing_phone.status, HTTPStatus.BAD_REQUEST)
+        self.assertEqual(missing_phone.body_json()["error"]["code"], "invalid_payload")
+
+        register = self.invoke(
+            "/api/auth/register",
+            method="POST",
+            body={
+                "full_name": "New Owner",
+                "email": "new-owner@example.local",
+                "username": "new_owner",
+                "phone_e164": "+237690000001",
+                "password": "lawim-demo",
+                "password_confirmation": "lawim-demo",
+                "preferred_language": "en",
+                "accept_terms": True,
+            },
+        )
+        self.assertEqual(register.status, HTTPStatus.CREATED, msg=register.body_text())
+        self.assertIn("token", register.body_json())
+
+        duplicate_email = self.invoke(
+            "/api/auth/register",
+            method="POST",
+            body={
+                "full_name": "Duplicate Email",
+                "email": "new-owner@example.local",
+                "username": "new_owner_2",
+                "phone_e164": "+237690000002",
+                "password": "lawim-demo",
+                "password_confirmation": "lawim-demo",
+                "preferred_language": "fr",
+                "accept_terms": True,
+            },
+        )
+        self.assertEqual(duplicate_email.status, HTTPStatus.CONFLICT)
+        self.assertEqual(duplicate_email.body_json()["error"]["code"], "conflict")
+
+        duplicate_username = self.invoke(
+            "/api/auth/register",
+            method="POST",
+            body={
+                "full_name": "Duplicate Username",
+                "email": "unique@example.local",
+                "username": "new_owner",
+                "phone_e164": "+237690000003",
+                "password": "lawim-demo",
+                "password_confirmation": "lawim-demo",
+                "preferred_language": "fr",
+                "accept_terms": True,
+            },
+        )
+        self.assertEqual(duplicate_username.status, HTTPStatus.CONFLICT)
+        self.assertEqual(duplicate_username.body_json()["error"]["code"], "conflict")
+
     def test_property_validation_rejects_inverted_price_ranges(self) -> None:
         login = self.invoke(
             "/api/auth/login",
@@ -116,7 +212,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
                 profile = repository.backend_profile()
                 self.assertEqual(profile["driver"], "sqlite")
                 self.assertEqual(profile["adapter"], "sqlite-repository")
-                self.assertEqual(profile["schema_version"], 18)
+                self.assertEqual(profile["schema_version"], 19)
                 self.assertEqual(profile["migration"]["orm"], "prisma")
                 self.assertEqual(profile["migration"]["target_engine"], "postgresql")
                 self.assertEqual(profile["seed"]["name"], "demo")
@@ -133,7 +229,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
 
                 first_seed = repository.seed_demo_data()
                 self.assertTrue(first_seed["seeded"])
-                self.assertEqual(first_seed["schema_version"], 18)
+                self.assertEqual(first_seed["schema_version"], 19)
                 self.assertEqual(repository.summary()["organizations"], 3)
 
                 second_seed = repository.seed_demo_data()
@@ -702,7 +798,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         self.assertEqual(first["provider"], "local")
 
     def test_schema_version_is_five(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_advanced_matching_breakdown_and_weights(self) -> None:
         matches = self.invoke(

@@ -66,7 +66,7 @@ Fonctions : `compute_progress()`, `derive_next_actions()`, `_seed_project_journe
 
 Fingerprint manifest : `8d8330e1…ee2e3`
 
-Seed demo : projet « Achat appartement Douala » pour `agent@lawim.local`.
+Seed demo : projet « Achat appartement Douala » pour `agent@lawim.app`.
 
 ---
 

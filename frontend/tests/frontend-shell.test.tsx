@@ -121,7 +121,23 @@ describe('LAWIM frontend shell', () => {
 
     expect(screen.getByText(LAWIM_BRAND_SLOGAN)).toBeInTheDocument();
     expect(screen.getByText(/contact@lawim\.app/i)).toBeInTheDocument();
+    expect(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }, { timeout: 10000 })).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: button }, { timeout: 10000 })).toBeInTheDocument();
+  });
+
+  it('switches the access card to the register form and back', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(<WebApp />, ['/login']);
+
+    await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i });
+    await user.click(screen.getByRole('button', { name: /créer un compte|create account/i }));
+
+    expect(await screen.findByLabelText(/numéro whatsapp|whatsapp number/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /retour à la connexion|back to login/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /retour à la connexion|back to login/i }));
+
+    expect(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i })).toBeInTheDocument();
   });
 
   it('persists the selected language across remounts', async () => {
@@ -140,7 +156,7 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<WebApp />, ['/login']);
 
     expect(await screen.findByRole('button', { name: /login/i }, { timeout: 10000 })).toBeInTheDocument();
-    expect(screen.getByText(/website/i)).toBeInTheDocument();
+    expect(screen.getByText(/contact@lawim\.app/i)).toBeInTheDocument();
   });
 
   it('logs in and shows a compact authenticated header without the login form', async () => {
@@ -149,16 +165,41 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/login']);
 
-    await user.type(await screen.findByRole('textbox', { name: /^email$/i }), 'admin@lawim.app');
+    await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
     expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /déconnexion|logout/i })).toBeInTheDocument();
     expect(screen.getByText(/^administrateur$/i, { selector: 'p' })).toBeInTheDocument();
-    expect(screen.queryByLabelText(/email/i)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/identifiant|identifier|identifia/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/mot de passe|password/i)).not.toBeInTheDocument();
     expect(screen.queryByRole('combobox', { name: /langue|language|languag/i })).not.toBeInTheDocument();
+  });
+
+  it('shows a loading state on the login button while the request is pending', async () => {
+    const user = userEvent.setup();
+    let resolveLogin: ((value: ReturnType<typeof loginResponse>) => void) | null = null;
+    const pendingLogin = new Promise<ReturnType<typeof loginResponse>>((resolve) => {
+      resolveLogin = resolve;
+    });
+    vi.spyOn(apiSdk, 'login').mockImplementation(() => pendingLogin as Promise<ReturnType<typeof loginResponse>>);
+
+    renderWithProviders(<WebApp />, ['/login']);
+
+    await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
+    await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
+    await user.click(screen.getByRole('button', { name: /connexion|login/i }));
+
+    const button = screen.getByRole('button', { name: /connexion|login/i });
+    await waitFor(() => {
+      expect(button).toBeDisabled();
+      expect(button).toHaveAttribute('aria-busy', 'true');
+    });
+
+    resolveLogin?.(loginResponse('admin', ['admin'], 'admin@lawim.app', 'Admin User'));
+
+    expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
   });
 
   it('opens module cards in dedicated screens and returns to the dashboard', async () => {
@@ -167,7 +208,7 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/login']);
 
-    await user.type(await screen.findByRole('textbox', { name: /^email$/i }), 'admin@lawim.app');
+    await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
@@ -191,7 +232,7 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/login']);
 
-    await user.type(await screen.findByRole('textbox', { name: /^email$/i }), 'admin@lawim.app');
+    await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
@@ -262,7 +303,7 @@ describe('LAWIM frontend shell', () => {
     await screen.findByRole('heading', { name: /connexion/i, level: 1 });
     debugSpy.mockClear();
 
-    await user.type(screen.getByRole('textbox', { name: /^email$/i }), 'admin@lawim.app');
+    await user.type(screen.getByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'lawim-demo');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 

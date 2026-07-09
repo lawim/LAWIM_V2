@@ -110,7 +110,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json_error(exc.status, exc.code, exc.message)
         except RepositoryError as exc:
             failed = True
-            self._send_json_error(exc.status, exc.code, str(exc))
+            self._send_json_error(getattr(exc, "status", HTTPStatus.INTERNAL_SERVER_ERROR), getattr(exc, "code", "repository_error"), str(exc))
         except Exception as exc:  # pragma: no cover - unexpected runtime failure
             failed = True
             LOGGER.exception("Unhandled %s error: %s", self.command, exc)
@@ -537,9 +537,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path == "/api/auth/login":
             self._enforce_auth_rate_limit(path)
-            email = self._require_text(body, "email")
+            identifier = self._optional_text(body.get("identifier")) or self._optional_text(body.get("email"))
+            if identifier is None:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'identifier' is required")
             password = self._require_text(body, "password")
-            payload = self.services.login(email=email, password=password)
+            payload = self.services.login(identifier=identifier, password=password)
             self._send_json(payload, status=HTTPStatus.CREATED)
             return
 
@@ -547,16 +549,30 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._enforce_auth_rate_limit(path)
             email = self._require_text(body, "email")
             password = self._require_text(body, "password")
+            password_confirmation = self._require_text(body, "password_confirmation")
             full_name = self._require_text(body, "full_name")
-            role = self._coerce_role(body.get("role"))
-            organization_id = self._optional_int(body.get("organization_id"), minimum=1)
+            username = self._require_text(body, "username")
+            phone_e164 = (
+                self._optional_text(body.get("phone_e164"))
+                or self._optional_text(body.get("whatsapp_number"))
+                or self._optional_text(body.get("phone"))
+                or self._optional_text(body.get("whatsapp"))
+            )
+            if phone_e164 is None:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'phone_e164' is required")
+            preferred_language = self._optional_text(body.get("preferred_language")) or "fr"
+            accept_terms = self._coerce_bool(body.get("accept_terms"))
+            if password != password_confirmation:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Passwords do not match")
             payload = self.services.register(
                 actor=None,
                 email=email,
                 password=password,
                 full_name=full_name,
-                role=role,
-                organization_id=organization_id,
+                username=username,
+                phone_e164=phone_e164,
+                preferred_language=preferred_language,
+                accept_terms=accept_terms,
             )
             self._send_json(payload, status=HTTPStatus.CREATED)
             return
@@ -586,6 +602,9 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 full_name=self._require_text(body, "full_name"),
                 role=self._coerce_role(body.get("role")),
                 password=self._require_text(body, "password"),
+                username=self._optional_text(body.get("username")),
+                phone_e164=self._optional_text(body.get("phone_e164")) or self._optional_text(body.get("whatsapp_number")),
+                preferred_language=self._optional_text(body.get("preferred_language")),
                 organization_id=self._optional_int(body.get("organization_id"), minimum=1),
             )
             self._send_json({"user": self.repository.public_user(user_row)}, status=HTTPStatus.CREATED)
@@ -1156,6 +1175,19 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if not float("-inf") < parsed < float("inf"):
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Expected a finite number")
         return parsed
+
+    def _coerce_bool(self, value: object | None) -> bool:
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            if normalized in {"true", "1", "yes", "on"}:
+                return True
+            if normalized in {"false", "0", "no", "off", ""}:
+                return False
+        if value is None:
+            return False
+        raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field must be a boolean")
 
     def _coerce_role(self, value: object | None) -> str:
         if value is None:

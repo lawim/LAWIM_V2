@@ -279,54 +279,64 @@ L'inscription peut être réalisée :
 
 Toutes les inscriptions utilisent le même processus.
 
+Le formulaire public de creation de compte demande au minimum :
+
+* nom complet ;
+* email unique ;
+* username unique ;
+* numero WhatsApp obligatoire ;
+* mot de passe ;
+* confirmation du mot de passe ;
+* langue preferee ;
+* acceptation des conditions.
+
+Le backend refuse toute creation sans numero WhatsApp.
+
 ---
 
 # CHAPITRE 18 — IDENTIFIANT PRINCIPAL
 
-Le numéro de téléphone constitue l'identifiant principal du compte.
+La connexion utilise un champ unique `Identifiant`.
 
-Chaque numéro ne peut être associé qu'à un seul compte actif.
+Cet identifiant peut être :
 
-Le téléphone est vérifié par OTP.
+* email ;
+* numéro de téléphone WhatsApp au format international ;
+* username.
 
-Sans validation du téléphone, le compte reste inactif.
+Le backend résout correctement l'utilisateur sur ces trois formes d'identification.
+
+Chaque email, chaque username et chaque numéro WhatsApp doivent rester uniques pour les comptes actifs.
 
 ---
 
 # CHAPITRE 19 — VÉRIFICATION INITIALE
 
-Après validation du numéro de téléphone.
+Avant creation, LAWIM verifie :
 
-LAWIM demande :
+* la presence du nom complet ;
+* la presence de l'email ;
+* la presence du username ;
+* la presence du numero WhatsApp ;
+* la cohérence du mot de passe et de sa confirmation ;
+* la langue preferee ;
+* l'acceptation des conditions.
 
-* prénom ;
-* nom ;
-* langue préférée ;
-* mot de passe.
-
-L'utilisateur peut ensuite ajouter :
-
-* adresse e-mail ;
-* compte Google ;
-* compte Facebook.
-
-Ces informations facilitent la récupération du compte et la connexion multi-supports.
+Le choix de langue est memorise des la creation du compte.
 
 ---
 
 # CHAPITRE 20 — ACTIVATION DU COMPTE
 
-Le compte devient actif après :
+Le compte public devient actif lorsque les validations de creation sont passees.
 
-✓ validation de l'OTP ;
+Le role initial de l'inscription publique est :
 
-✓ acceptation des conditions d'utilisation.
+**user**
 
-Le rôle initial est toujours :
+Le dashboard correspondant est alors genere automatiquement selon le role resolu.
 
-**Demandeur**
-
-Le Dashboard Demandeur est alors généré automatiquement.
+Les comptes publics peuvent ensuite evoluer selon les regles de gouvernance.
 
 ---
 
@@ -2749,12 +2759,32 @@ Le présent référentiel doit permettre à LAWIM de croître sans remettre en c
 
 ---
 
+# CHAPITRE 129 — COMPTES DE DÉMONSTRATION STANDARDISÉS
+
+Les comptes de démonstration officiels suivent désormais une convention unique.
+
+Ils peuvent se connecter avec :
+
+* email ;
+* username ;
+* numéro WhatsApp.
+
+Comptes officiels :
+
+| Usage | Email | Username | Téléphone | Mot de passe |
+| --- | --- | --- | --- | --- |
+| Administrateur | `admin@lawim.app` | `admin` | `+237686822667` | `LAWIM@Demo2026µ` |
+| Manager | `manager@lawim.app` | `manager` | `+237686822668` | `LAWIM@Demo2026µ` |
+| Agent LAWIM | `agent@lawim.app` | `agent` | `+237686822669` | `LAWIM@Demo2026` |
+| Utilisateur propriétaire | `owner@lawim.app` | `owner` | `+237686822670` | `LAWIM@Demo2026µ` |
+| Investisseur / Banque | `investor@lawim.app` | `investor` | `+237686822671` | `LAWIM@Demo2026µ` |
+
+---
+
 # FIN DU DOCUMENT
 
 Le présent **08-ROLE-REFERENCE.md** constitue la référence officielle pour la gestion des identités, des rôles, des organisations, des permissions, des badges et du Trust Framework de LAWIM.
 
 Toute évolution future devra respecter les principes définis dans ce document et rester compatible avec les autres référentiels de la plateforme.
-
-
 
 

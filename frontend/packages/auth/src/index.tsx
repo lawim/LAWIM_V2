@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { apiSdk, type AuthCredentials, type UserProfile } from '@api-sdk';
+import { apiSdk, type AuthCredentials, type RegisterPayload, type UserProfile } from '@api-sdk';
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { getStoredLanguage, translate } from '@ui';
@@ -23,6 +23,7 @@ export interface AuthState {
   sessionExpired: boolean;
   sessionUnavailable: boolean;
   login: (credentials: AuthCredentials) => Promise<AuthUser>;
+  register: (payload: RegisterPayload) => Promise<AuthUser>;
   logout: () => Promise<void>;
   hydrate: () => Promise<AuthUser | null>;
 }
@@ -148,10 +149,11 @@ function isServerUnavailable(message: string) {
 }
 
 function normalizeSessionUser(user: UserProfile | undefined, role: AccessRole): AuthUser {
+  const displayName = user?.full_name || user?.name || user?.email?.split('@')[0] || 'User';
   return {
     id: String(user?.id ?? user?.email ?? 'user'),
     email: String(user?.email ?? ''),
-    name: String(user?.name ?? user?.email?.split('@')[0] ?? 'User'),
+    name: String(displayName),
     role
   };
 }
@@ -185,6 +187,41 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
       if (response.message !== 'ok' && response.message !== 'mock') {
         throw new Error(formatAuthError(response.message ?? 'Authentication failed', 'login'));
+      }
+      persistToken(token);
+      const user = normalizeSessionUser(response.data.user, resolvedRole);
+      set({
+        user,
+        token,
+        roles: normalizedRoles,
+        isAuthenticated: true,
+        hasHydrated: true,
+        sessionExpired: false,
+        sessionUnavailable: false
+      });
+      return user;
+    } catch (error) {
+      clearToken();
+      set({ user: null, token: null, roles: [], isAuthenticated: false, hasHydrated: true, sessionExpired: false, sessionUnavailable: false });
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  register: async (payload) => {
+    set({ isLoading: true });
+    try {
+      const response = await apiSdk.register(payload);
+      const token = response.data?.token;
+      const resolvedRole = resolvePrimaryRole(response.data?.user?.role, response.data?.roles);
+      const normalizedRoles = Array.from(
+        new Set([resolvedRole, ...(response.data?.roles ?? []).map(normalizeRoleCandidate).filter((candidate): candidate is AccessRole => Boolean(candidate))])
+      );
+      if (!token) {
+        throw new Error(response.message ?? 'Registration failed');
+      }
+      if (response.message !== 'ok' && response.message !== 'mock') {
+        throw new Error(response.message ?? 'Registration failed');
       }
       persistToken(token);
       const user = normalizeSessionUser(response.data.user, resolvedRole);

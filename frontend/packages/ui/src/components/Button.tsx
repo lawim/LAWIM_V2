@@ -6,8 +6,8 @@ const buttonStyles = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-brand-600 text-white shadow-lg shadow-brand-600/20 hover:bg-brand-700',
-        secondary: 'bg-slate-800 text-white hover:bg-slate-700'
+        primary: 'bg-brand-600 text-white shadow-lg shadow-brand-600/20 hover:bg-brand-700 active:translate-y-px active:bg-brand-800 disabled:bg-brand-300 disabled:text-white/80',
+        secondary: 'bg-slate-800 text-white hover:bg-slate-700 active:translate-y-px active:bg-slate-900 disabled:bg-slate-600'
       }
     },
     defaultVariants: {
@@ -16,8 +16,27 @@ const buttonStyles = cva(
   }
 );
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonStyles> {}
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonStyles> {
+  loading?: boolean;
+}
 
-export function Button({ className, variant, ...props }: ButtonProps) {
-  return <button className={buttonStyles({ variant, className })} {...props} />;
+export function Button({ className, variant, loading = false, disabled, children, ...props }: ButtonProps) {
+  const isDisabled = Boolean(disabled || loading);
+  return (
+    <button
+      aria-busy={loading || undefined}
+      className={buttonStyles({ variant, className })}
+      disabled={isDisabled}
+      {...props}
+    >
+      {loading ? (
+        <span className="inline-flex items-center gap-2">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-r-transparent" aria-hidden="true" />
+          <span>{children}</span>
+        </span>
+      ) : (
+        children
+      )}
+    </button>
+  );
 }

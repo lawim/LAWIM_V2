@@ -50,7 +50,7 @@ class ReleaseProgramAEngineTests(LawimTestHarness):
 
 class ReleaseProgramAPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v10(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_intelligent_tables_exist(self) -> None:
         self.assertTrue(self.repository.intelligent_tables_present())

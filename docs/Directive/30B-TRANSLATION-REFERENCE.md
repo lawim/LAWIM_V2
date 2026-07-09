@@ -102,3 +102,33 @@ Le choix utilisateur doit être:
 * appliqué aux libellés principaux, à `Nous écrire`, à `Et maintenant ?`, aux statistiques et à `Logout` / `Déconnexion` / `Comot`.
 
 Une interface correctement traduite ne doit pas mélanger les langues au sein d'un même écran, sauf pour les éléments de marque ou les références officielles déjà validées.
+
+---
+
+# CHAPITRE 8 — ACCÈS ET CRÉATION DE COMPTE
+
+Les écrans d'accès et de création de compte doivent être traduits de manière complète.
+
+Les libellés clés à couvrir incluent notamment :
+
+* `Identifiant` ;
+* `Email, téléphone ou nom d'utilisateur` ;
+* `Mot de passe` ;
+* `Connexion` ;
+* `Mot de passe oublié` ;
+* `Créer un compte` ;
+* `Nom complet` ;
+* `Nom d'utilisateur` ;
+* `Numéro WhatsApp` ;
+* `Confirmation du mot de passe` ;
+* `Langue préférée` ;
+* `J'accepte les conditions`.
+
+Les coordonnées compactes de pied de page doivent aussi être couvertes :
+
+* `lawim.app` ;
+* `contact@lawim.app` ;
+* WhatsApp ;
+* Facebook `@lawimofficial`.
+
+Le choix de langue doit être conservé sur toute l'interface après reconnexion.

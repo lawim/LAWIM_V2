@@ -140,3 +140,28 @@ La Release 08.1 a valide:
 - l application des traductions au login, au dashboard, aux cartes de modules, aux boutons et aux messages de status.
 
 Les ecrans de recette visuelle sont publies dans `reports/product_reviews/Release_08_1/`.
+
+## Note Release 08.3
+
+La Release 08.3 a precise les textes de la page d'acces et du formulaire de creation de compte:
+
+- `auth.login.identifier`
+- `auth.login.identifier_help`
+- `auth.login.password`
+- `auth.login.submit`
+- `auth.login.forgot_password`
+- `auth.login.create_account`
+- `auth.register.full_name`
+- `auth.register.email`
+- `auth.register.username`
+- `auth.register.phone_e164`
+- `auth.register.password`
+- `auth.register.password_confirmation`
+- `auth.register.preferred_language`
+- `auth.register.accept_terms`
+- `auth.contact.website`
+- `auth.contact.email`
+- `auth.contact.whatsapp`
+- `auth.contact.facebook`
+
+Le choix de langue reste memorise via `lawim.language` et reapplique au login, au register et au dashboard apres reconnexion.

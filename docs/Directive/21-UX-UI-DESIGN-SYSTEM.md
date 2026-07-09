@@ -195,4 +195,16 @@ Le design system doit permettre d'ajouter ces blocs dans les dashboards existant
 
 Le système de design doit permettre à LAWIM d'offrir une expérience élégante, compréhensible et cohérente sur tous les supports.
 
+---
+
+# CHAPITRE 14 — SOBRIÉTÉ DES INTERFACES
+
+Une interface LAWIM ne doit jamais expliquer ce qui est évident.
+
+Les textes d'aide ne doivent être conservés que lorsqu'ils apportent une valeur concrète à l'utilisateur.
+
+L'organisation, les intitulés, les boutons et la navigation doivent suffire à guider l'action.
+
+Les explications redondantes, les paraphrases et les doublons de guidance doivent être supprimés.
+
 # FIN DU DOCUMENT

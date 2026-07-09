@@ -82,6 +82,8 @@ describe('static runtime login flow', () => {
       const hasAuth = headers.has('Authorization');
 
       if (path === '/api/auth/login') {
+        const requestBody = typeof init?.body === 'string' ? JSON.parse(init.body) : {};
+        expect(requestBody.identifier).toBe('admin');
         return createJsonResponse(
           {
             user: {
@@ -206,19 +208,21 @@ describe('static runtime login flow', () => {
     expect(document.body).not.toHaveTextContent(/admin@lawim\.local/i);
     expect(document.body).not.toHaveTextContent(/lawim-demo/i);
     expect(document.getElementById('login-form')).toBeInTheDocument();
+    expect(document.getElementById('login-identifier')).toBeInTheDocument();
     expect(document.querySelector('.brand-mark')).toBeInTheDocument();
     expect(document.querySelector('.auth-slogan')).toHaveTextContent(/L’immobilier autrement/i);
-    expect(document.querySelector('.auth-contact')).toHaveTextContent(/contact@lawim\.app/i);
-    expect(document.querySelector('.auth-contact')).toHaveTextContent(/lawim\.app/i);
-    expect(document.getElementById('login-form')?.querySelector('[name="role"]')).toBeNull();
+    expect(document.querySelector('.auth-panel #auth-contact')).toBeNull();
+    expect(document.getElementById('auth-contact')).toHaveTextContent(/contact@lawim\.app/i);
+    expect(document.getElementById('auth-contact')).toHaveTextContent(/lawim\.app/i);
+    expect(document.getElementById('register-panel')).toHaveAttribute('hidden');
 
     debugSpy.mockClear();
 
-    const emailInput = document.getElementById('login-email') as HTMLInputElement;
+    const identifierInput = document.getElementById('login-identifier') as HTMLInputElement;
     const passwordInput = document.getElementById('login-password') as HTMLInputElement;
     const loginForm = document.getElementById('login-form') as HTMLFormElement;
 
-    emailInput.value = 'admin@lawim.app';
+    identifierInput.value = 'admin';
     passwordInput.value = 'secure-password';
     loginForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
@@ -228,8 +232,9 @@ describe('static runtime login flow', () => {
       expect(document.getElementById('current-user')).toHaveTextContent(/Admin User/);
     });
 
-    expect(document.getElementById('login-form')).toBeNull();
-    expect(document.querySelector('.auth-panel')).toBeNull();
+    expect(document.getElementById('login-form')).toBeInTheDocument();
+    expect(document.querySelector('.auth-panel')).toHaveAttribute('hidden');
+    expect(document.getElementById('register-panel')).toHaveAttribute('hidden');
     expect(document.getElementById('logout-button')).not.toHaveAttribute('hidden');
     expect(document.getElementById('runtime-chip')).toHaveAttribute('hidden');
 
@@ -259,6 +264,76 @@ describe('static runtime login flow', () => {
     expect(debugSpy.mock.calls[2]?.[1]).toMatchObject({
       role: 'admin',
       journey: 'admin',
+    });
+  });
+
+  it('switches between login and register panels without showing the contact band above the form', async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = new URL(String(input), window.location.origin);
+      const path = `${url.pathname}${url.search}`;
+
+      if (path === '/api/health') {
+        return createJsonResponse({
+          status: 'ok',
+          environment: { app_env: 'test' },
+          database: { driver: 'sqlite', schema_version: 19 },
+          summary: { events: 0 },
+        });
+      }
+
+      if (path === '/api/bootstrap') {
+        return createJsonResponse({
+          current_user: null,
+          official_contact: {
+            company_name: 'LAWIM',
+            brand_slogan: 'L’immobilier autrement',
+            support_email: 'contact@lawim.app',
+            website_url: 'https://lawim.app',
+            phone_e164: '+237686822667',
+            phone_international: '+237 686 822 667',
+            whatsapp_username: '@lawimofficial',
+            facebook_username: '@lawimofficial',
+            whatsapp_link: 'https://wa.me/237686822667',
+            facebook_link: 'https://facebook.com/lawimofficial',
+          },
+          summary: {},
+          organizations: [],
+          properties: [],
+          media: [],
+          matches: [],
+          conversations: [],
+          notifications: [],
+          features: {},
+        });
+      }
+
+      return createJsonResponse({});
+    });
+
+    installStaticRuntime(fetchMock);
+
+    await waitFor(() => {
+      expect(document.getElementById('login-form')).toBeInTheDocument();
+    });
+
+    expect(document.getElementById('register-panel')).toHaveAttribute('hidden');
+    expect(document.querySelector('.auth-panel #auth-contact')).toBeNull();
+
+    (document.getElementById('login-create') as HTMLButtonElement).click();
+
+    await waitFor(() => {
+      expect(document.querySelector('.auth-panel')).toHaveAttribute('hidden');
+      expect(document.getElementById('register-panel')).not.toHaveAttribute('hidden');
+    });
+
+    expect(document.getElementById('register-form')).toBeInTheDocument();
+    expect(document.getElementById('register-terms')).toBeInTheDocument();
+
+    (document.getElementById('register-back') as HTMLButtonElement).click();
+
+    await waitFor(() => {
+      expect(document.getElementById('register-panel')).toHaveAttribute('hidden');
+      expect(document.querySelector('.auth-panel')).not.toHaveAttribute('hidden');
     });
   });
 });

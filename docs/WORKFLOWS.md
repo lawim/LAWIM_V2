@@ -212,8 +212,8 @@ New users create an account.
 - Direct link: `/register` (planned)
 
 ### User Steps
-1. User fills registration form
-2. User verifies email (mock: automatic)
+1. User fills the registration form
+2. System validates required fields and uniqueness
 3. Account created
 4. User redirected to dashboard
 
@@ -221,12 +221,12 @@ New users create an account.
 
 **Layer: UI**
 - Component: Registration form
-- Fields: Name, Email, Password, Confirmation
+- Fields: Full name, Email, Username, WhatsApp number, Password, Confirmation, Preferred language, Conditions checkbox
 - Validation: Real-time feedback
 
 **Layer: Brain**
 - Decision: Account creation approval
-- Classification: Account type (user, operator)
+- Classification: Public user account by default
 - Path: Welcome flow
 
 **Layer: Conversation**
@@ -234,12 +234,15 @@ New users create an account.
 - Onboarding: Introduction to platform
 
 **Layer: API SDK**
-- Endpoint: `POST /auth/register` (if available)
+- Endpoint: `POST /api/auth/register`
+- Payload: `{ full_name, email, username, phone_e164, password, password_confirmation, preferred_language, accept_terms }`
 - Mock: Returns success with sample user
 
 ### States
 - Validation errors
 - Email exists
+- Username exists
+- WhatsApp number exists
 - Success creation
 
 ---
@@ -254,15 +257,24 @@ Users log in to access protected features.
 - Protected route redirect
 
 ### User Steps
-1. User enters credentials
-2. System validates
+1. User enters identifier and password
+2. System validates credentials
 3. Token stored
 4. Redirect to dashboard
 
 ### Mock Credentials
-- Email: `admin@lawim.local` | Password: `lawim-demo` | Role: admin
-- Email: `agent@lawim.local` | Password: `lawim-demo` | Role: operator
-- Email: `viewer@lawim.local` | Password: `lawim-demo` | Role: viewer
+| Usage | Email | Username | Phone | Password |
+| --- | --- | --- | --- | --- |
+| Admin | `admin@lawim.app` | `admin` | `+237686822667` | `LAWIM@Demo2026µ` |
+| Manager | `manager@lawim.app` | `manager` | `+237686822668` | `LAWIM@Demo2026µ` |
+| Agent LAWIM | `agent@lawim.app` | `agent` | `+237686822669` | `LAWIM@Demo2026` |
+| Utilisateur propriétaire | `owner@lawim.app` | `owner` | `+237686822670` | `LAWIM@Demo2026µ` |
+| Investisseur / Banque | `investor@lawim.app` | `investor` | `+237686822671` | `LAWIM@Demo2026µ` |
+
+### Login Rule
+- Identifier accepted as email, phone number or username
+- Endpoint: `POST /api/auth/login`
+- Payload: `{ identifier, password }`
 
 ### Technical Flow
 
@@ -272,7 +284,7 @@ Users log in to access protected features.
 - Auto-hydration on load
 
 **Layer: API SDK**
-- Endpoint: `POST /auth/login`
+- Endpoint: `POST /api/auth/login`
 - Response: `{ user, token, roles }`
 
 ### Protected Routes

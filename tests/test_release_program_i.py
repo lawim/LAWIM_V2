@@ -80,10 +80,10 @@ SAMPLE_REQUEST: dict[str, object] = {
 
 class ReleaseProgramIPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v15(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_application_schema_version_constant(self) -> None:
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 18)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 19)
 
     def test_marketplace_tables_present(self) -> None:
         self.assertTrue(self.repository.marketplace_tables_present())

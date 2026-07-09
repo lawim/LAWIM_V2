@@ -39,7 +39,10 @@ POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         email TEXT NOT NULL UNIQUE,
+        username TEXT UNIQUE,
         full_name TEXT NOT NULL,
+        phone_e164 TEXT UNIQUE,
+        preferred_language TEXT NOT NULL DEFAULT 'fr',
         role TEXT NOT NULL CHECK (role IN (__USER_ROLE_VALUES__)),
         organization_id INTEGER REFERENCES organizations(id),
         password_salt TEXT NOT NULL,
@@ -271,7 +274,10 @@ CREATE TABLE IF NOT EXISTS organizations (
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT NOT NULL UNIQUE,
+    username TEXT UNIQUE,
     full_name TEXT NOT NULL,
+    phone_e164 TEXT UNIQUE,
+    preferred_language TEXT NOT NULL DEFAULT 'fr',
     role TEXT NOT NULL CHECK (role IN (__USER_ROLE_VALUES__)),
     organization_id INTEGER,
     password_salt TEXT NOT NULL,

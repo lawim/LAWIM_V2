@@ -33,8 +33,8 @@ from tests.lawim_harness import LawimTestHarness
 
 class ReleaseProgramEPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v11(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 18)
+        self.assertEqual(self.repository.schema_version(), 19)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 19)
 
     def test_expert_knowledge_tables_present(self) -> None:
         self.assertTrue(self.repository.expert_knowledge_tables_present())

@@ -20,7 +20,7 @@ from tests.lawim_harness import LawimTestHarness
 
 class ReleaseProgramDPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v10(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_assistant_tables_present(self) -> None:
         self.assertTrue(self.repository.assistant_tables_present())

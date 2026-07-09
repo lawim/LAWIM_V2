@@ -157,9 +157,13 @@ LAWIM V2 Release Program U represents the first complete functional validation o
 
 ### Demo Credentials
 
-- Admin: `admin@lawim.local` / `lawim-demo`
-- Operator: `agent@lawim.local` / `lawim-demo`
-- Viewer: `viewer@lawim.local` / `lawim-demo`
+| Usage | Email | Username | Phone | Password |
+| --- | --- | --- | --- | --- |
+| Admin | `admin@lawim.app` | `admin` | `+237686822667` | `LAWIM@Demo2026µ` |
+| Manager | `manager@lawim.app` | `manager` | `+237686822668` | `LAWIM@Demo2026µ` |
+| Agent LAWIM | `agent@lawim.app` | `agent` | `+237686822669` | `LAWIM@Demo2026` |
+| Utilisateur propriétaire | `owner@lawim.app` | `owner` | `+237686822670` | `LAWIM@Demo2026µ` |
+| Investisseur / Banque | `investor@lawim.app` | `investor` | `+237686822671` | `LAWIM@Demo2026µ` |
 
 ### Security
 
@@ -565,4 +569,3 @@ git tag -l
 **Release Date**: July 4, 2026  
 **Version**: 1.0  
 **Status**: COMPLETE AND READY  
-

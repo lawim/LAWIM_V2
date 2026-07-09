@@ -4,6 +4,7 @@ const state = {
   health: null,
   activeJourney: localStorage.getItem("lawim.journey") || "user",
   activeModule: localStorage.getItem("lawim.module") || "dashboard",
+  authMode: localStorage.getItem("lawim.auth.mode") || "login",
   language: localStorage.getItem("lawim.language") || "fr",
   statsPeriod: localStorage.getItem("lawim.stats.period") || "today",
   selectedConversationId: null,
@@ -102,10 +103,25 @@ const UI_COPY = {
     moduleDeckLead: "Choisissez un espace dédié pour ouvrir le bon module.",
     backToDashboard: "Retour au dashboard",
     openModule: "Ouvrir",
-    loginEmail: "Email",
+    loginIdentifier: "Identifiant",
+    loginIdentifierHelp: "Email, téléphone ou nom d’utilisateur",
     loginPassword: "Mot de passe",
     loginForgot: "Mot de passe oublié",
     loginCreate: "Créer un compte",
+    loginLoading: "Connexion en cours...",
+    registerTitle: "Créer un compte",
+    registerIntro: "Email, téléphone WhatsApp, username et mot de passe.",
+    registerFullName: "Nom complet",
+    registerEmail: "E-mail",
+    registerUsername: "Username",
+    registerPhone: "Numéro WhatsApp",
+    registerPassword: "Mot de passe",
+    registerConfirm: "Confirmer le mot de passe",
+    registerLanguage: "Langue préférée",
+    registerTerms: "J’accepte les conditions",
+    registerButton: "Créer le compte",
+    registerLoading: "Création en cours...",
+    registerBack: "Retour à la connexion",
     contactWebsite: "Site",
     contactEmail: "Email",
     contactPhone: "Téléphone",
@@ -147,10 +163,25 @@ const UI_COPY = {
     moduleDeckLead: "Choose a dedicated space to open the right module.",
     backToDashboard: "Back to dashboard",
     openModule: "Open",
-    loginEmail: "Email",
+    loginIdentifier: "Identifier",
+    loginIdentifierHelp: "Email, phone or username",
     loginPassword: "Password",
     loginForgot: "Forgot password",
     loginCreate: "Create account",
+    loginLoading: "Logging in...",
+    registerTitle: "Create account",
+    registerIntro: "Email, WhatsApp phone, username and password.",
+    registerFullName: "Full name",
+    registerEmail: "Email",
+    registerUsername: "Username",
+    registerPhone: "WhatsApp number",
+    registerPassword: "Password",
+    registerConfirm: "Confirm password",
+    registerLanguage: "Preferred language",
+    registerTerms: "I accept the terms",
+    registerButton: "Create account",
+    registerLoading: "Creating account...",
+    registerBack: "Back to login",
     contactWebsite: "Website",
     contactEmail: "Email",
     contactPhone: "Phone",
@@ -192,10 +223,25 @@ const UI_COPY = {
     moduleDeckLead: "Choose one dedicated space to open the right module.",
     backToDashboard: "Go back dashboard",
     openModule: "Open",
-    loginEmail: "Email",
+    loginIdentifier: "Identifia",
+    loginIdentifierHelp: "Email, phone or username",
     loginPassword: "Password",
     loginForgot: "Reset password",
     loginCreate: "Create account",
+    loginLoading: "Dey login...",
+    registerTitle: "Create account",
+    registerIntro: "Email, WhatsApp number, username and password.",
+    registerFullName: "Full name",
+    registerEmail: "Email",
+    registerUsername: "Username",
+    registerPhone: "WhatsApp number",
+    registerPassword: "Password",
+    registerConfirm: "Confirm password",
+    registerLanguage: "Preferred language",
+    registerTerms: "I accept the terms",
+    registerButton: "Create account",
+    registerLoading: "Dey create account...",
+    registerBack: "Back to login",
     contactWebsite: "Website",
     contactEmail: "Email",
     contactPhone: "Phone",
@@ -1188,25 +1234,12 @@ function translateStaticShell() {
   if (refs.authSlogan) {
     refs.authSlogan.textContent = copy.brandTagline || refs.authSlogan.textContent;
   }
-  if (refs.loginEmailLabel) {
-    refs.loginEmailLabel.textContent = copy.loginEmail || refs.loginEmailLabel.textContent;
-  }
-  if (refs.loginPasswordLabel) {
-    refs.loginPasswordLabel.textContent = copy.loginPassword || refs.loginPasswordLabel.textContent;
-  }
-  if (refs.loginButton) {
-    refs.loginButton.textContent = copy.loginTitle;
-  }
-  if (refs.loginForgot) {
-    refs.loginForgot.textContent = copy.loginForgot;
-  }
-  if (refs.loginCreate) {
-    refs.loginCreate.textContent = copy.loginCreate;
-  }
   if (logoutButton) {
     logoutButton.textContent = copy.authenticated;
   }
+  syncAuthLabels();
   renderOfficialContactBlock();
+  syncAuthShellMode();
   document.querySelectorAll("#role-cockpit .cockpit-grid .cockpit-card .section-heading p.muted").forEach((paragraph, index) => {
     if (cockpitLeads[index]) {
       paragraph.textContent = cockpitLeads[index];
@@ -1306,8 +1339,21 @@ function updateAuthShell(isAuthenticated) {
   if (refs.authContact) {
     refs.authContact.hidden = isAuthenticated;
   }
-  if (refs.loginForm) {
-    refs.loginForm.hidden = isAuthenticated;
+  if (isAuthenticated) {
+    if (refs.authPanel) {
+      refs.authPanel.hidden = true;
+    }
+    if (refs.registerPanel) {
+      refs.registerPanel.hidden = true;
+    }
+    if (refs.loginForm) {
+      refs.loginForm.hidden = true;
+    }
+  } else {
+    syncAuthShellMode();
+    if (refs.loginForm) {
+      refs.loginForm.hidden = state.authMode !== "login";
+    }
   }
   if (refs.journeyNav) {
     refs.journeyNav.hidden = !isAuthenticated;
@@ -1463,8 +1509,11 @@ function cacheRefs() {
     loginButton: document.getElementById("login-submit"),
     loginForgot: document.getElementById("login-forgot"),
     loginCreate: document.getElementById("login-create"),
-    loginEmailLabel: document.getElementById("login-email-label"),
+    loginIdentifierLabel: document.getElementById("login-identifier-label"),
+    loginIdentifierHelp: document.getElementById("login-identifier-help"),
     loginPasswordLabel: document.getElementById("login-password-label"),
+    registerPanel: byId("register-panel"),
+    registerBackButton: byId("register-back"),
     statusStrip: byId("status-strip"),
     roleCockpit: byId("role-cockpit"),
     cardsGrid: document.querySelector(".cards-grid"),
@@ -1491,7 +1540,7 @@ function cacheRefs() {
     conversationDetail: byId("conversation-detail"),
     messageForm: byId("message-form"),
     loginForm: byId("login-form"),
-    loginEmail: byId("login-email"),
+    loginIdentifier: byId("login-identifier"),
     loginPassword: byId("login-password"),
     logoutButton: byId("logout-button"),
     matchForm: byId("match-form"),
@@ -1501,10 +1550,18 @@ function cacheRefs() {
     mediaUploadForm: byId("media-upload-form"),
     mediaPropertySelect: byId("media-property-select"),
     ownerOrganizationSelect: byId("owner-organization-select"),
-    registerOrganizationSelect: byId("register-organization-select"),
     adminOrganizationSelect: byId("admin-organization-select"),
     journeyNav: byId("journey-nav"),
     registerForm: byId("register-form"),
+    registerFullName: byId("register-full-name"),
+    registerEmail: byId("register-email"),
+    registerUsername: byId("register-username"),
+    registerPhone: byId("register-phone"),
+    registerPassword: byId("register-password"),
+    registerPasswordConfirmation: byId("register-password-confirmation"),
+    registerLanguage: byId("register-language"),
+    registerTerms: byId("register-terms"),
+    registerSubmit: byId("register-submit"),
     propertySearchForm: byId("property-search-form"),
     propertySearchMeta: byId("property-search-meta"),
     notificationFilterForm: byId("notification-filter-form"),
@@ -1585,6 +1642,17 @@ function setLoading(isLoading, message = "Loading...") {
     refs.notice.dataset.tone = "neutral";
     refs.notice.textContent = message === "Loading..." ? (state.language === "fr" ? "Chargement..." : "Loading...") : message;
   }
+  const copy = uiCopy();
+  const button = state.authMode === "register" ? refs.registerSubmit : refs.loginButton;
+  if (button) {
+    button.disabled = isLoading;
+    button.dataset.loading = isLoading ? "true" : "false";
+    if (state.authMode === "register") {
+      button.textContent = isLoading ? copy.registerLoading : copy.registerButton;
+    } else {
+      button.textContent = isLoading ? copy.loginLoading : copy.loginTitle;
+    }
+  }
 }
 
 function traceRuntime(step, details = {}) {
@@ -1657,6 +1725,107 @@ function renderOfficialContactBlock() {
       `,
     )
     .join("");
+}
+
+function syncAuthShellMode() {
+  const loginPanel = refs.authPanel;
+  const registerPanel = refs.registerPanel;
+  const isAuthenticated = document.body.dataset.authenticated === "true";
+  const mode = state.authMode === "register" ? "register" : "login";
+  document.body.dataset.authMode = mode;
+  if (isAuthenticated) {
+    if (loginPanel) {
+      loginPanel.hidden = true;
+    }
+    if (registerPanel) {
+      registerPanel.hidden = true;
+    }
+    return;
+  }
+  if (loginPanel) {
+    loginPanel.hidden = mode !== "login";
+  }
+  if (registerPanel) {
+    registerPanel.hidden = mode !== "register";
+  }
+}
+
+function updateAuthMode(mode, { persist = true } = {}) {
+  state.authMode = mode === "register" ? "register" : "login";
+  if (persist) {
+    localStorage.setItem("lawim.auth.mode", state.authMode);
+  }
+  syncAuthShellMode();
+}
+
+function syncAuthLabels() {
+  const copy = uiCopy();
+  if (refs.loginIdentifierLabel) {
+    refs.loginIdentifierLabel.textContent = copy.loginIdentifier || refs.loginIdentifierLabel.textContent;
+  }
+  if (refs.loginIdentifierHelp) {
+    refs.loginIdentifierHelp.textContent = copy.loginIdentifierHelp || refs.loginIdentifierHelp.textContent;
+  }
+  if (refs.loginPasswordLabel) {
+    refs.loginPasswordLabel.textContent = copy.loginPassword || refs.loginPasswordLabel.textContent;
+  }
+  if (refs.loginButton) {
+    refs.loginButton.textContent = copy.loginTitle;
+  }
+  if (refs.loginForgot) {
+    refs.loginForgot.textContent = copy.loginForgot;
+  }
+  if (refs.loginCreate) {
+    refs.loginCreate.textContent = copy.loginCreate;
+  }
+  if (refs.registerBackButton) {
+    refs.registerBackButton.textContent = copy.registerBack;
+  }
+  if (refs.registerSubmit) {
+    refs.registerSubmit.textContent = copy.registerButton;
+  }
+  if (refs.registerPanel) {
+    const heading = refs.registerPanel.querySelector(".section-heading h2");
+    const intro = refs.registerPanel.querySelector(".section-heading p.muted");
+    const fullNameLabel = refs.registerPanel.querySelector("#register-full-name-label");
+    const emailLabel = refs.registerPanel.querySelector("#register-email-label");
+    const usernameLabel = refs.registerPanel.querySelector("#register-username-label");
+    const phoneLabel = refs.registerPanel.querySelector("#register-phone-label");
+    const passwordLabel = refs.registerPanel.querySelector("#register-password-label");
+    const confirmLabel = refs.registerPanel.querySelector("#register-confirm-label");
+    const languageLabel = refs.registerPanel.querySelector("#register-language-label");
+    const termsLabel = refs.registerPanel.querySelector("#register-terms-label");
+    if (heading) {
+      heading.textContent = copy.registerTitle;
+    }
+    if (intro) {
+      intro.textContent = copy.registerIntro;
+    }
+    if (fullNameLabel) {
+      fullNameLabel.textContent = copy.registerFullName;
+    }
+    if (emailLabel) {
+      emailLabel.textContent = copy.registerEmail;
+    }
+    if (usernameLabel) {
+      usernameLabel.textContent = copy.registerUsername;
+    }
+    if (phoneLabel) {
+      phoneLabel.textContent = copy.registerPhone;
+    }
+    if (passwordLabel) {
+      passwordLabel.textContent = copy.registerPassword;
+    }
+    if (confirmLabel) {
+      confirmLabel.textContent = copy.registerConfirm;
+    }
+    if (languageLabel) {
+      languageLabel.textContent = copy.registerLanguage;
+    }
+    if (termsLabel) {
+      termsLabel.textContent = copy.registerTerms;
+    }
+  }
 }
 
 function money(value, currency = "XAF") {
@@ -3705,11 +3874,12 @@ async function handleWorkflowMonitor(event) {
 async function handleLogin(event) {
   event.preventDefault();
   try {
-    const email = refs.loginEmail.value.trim();
+    const identifier = refs.loginIdentifier.value.trim();
     const password = refs.loginPassword.value;
+    setLoading(true, uiCopy().loginLoading);
     const payload = await api("/api/auth/login", {
       method: "POST",
-      body: { email, password },
+      body: { identifier, password },
     });
     const token = String(payload.token || "");
     if (!token) {
@@ -3717,12 +3887,13 @@ async function handleLogin(event) {
     }
     state.token = token;
     localStorage.setItem("lawim.token", state.token);
+    updateAuthMode("login");
     updateAuthShell(true);
     applyModule("dashboard");
     const resolvedRole = resolveAccessRole(payload.user?.role, payload.roles || payload.user?.roles || []);
     const resolvedJourney = journeyForRole(resolvedRole);
     traceRuntime("LOGIN_OK", {
-      email: payload.user?.email || email,
+      email: payload.user?.email || identifier,
       role: resolvedRole,
       journey: resolvedJourney,
     });
@@ -3738,9 +3909,12 @@ async function handleLogin(event) {
     applyJourney(resolvedJourney);
     // applyJourney(journeyForRole(payload.user.role));
     refs.loginPassword.value = "";
-    setNotice(noticeCopy("loginSuccess", payload.user?.email || email), "success");
+    refs.loginIdentifier.value = "";
+    setNotice(noticeCopy("loginSuccess", payload.user?.email || identifier), "success");
   } catch (error) {
     setNotice(formatLoginError(error), "error", error.code || "");
+  } finally {
+    setLoading(false);
   }
 }
 
@@ -3932,14 +4106,18 @@ async function handleRegister(event) {
   event.preventDefault();
   try {
     const form = new FormData(refs.registerForm);
+    setLoading(true, uiCopy().registerLoading);
     const payload = await api("/api/auth/register", {
       method: "POST",
       body: {
         full_name: form.get("full_name"),
         email: form.get("email"),
+        username: form.get("username"),
+        phone_e164: form.get("phone_e164"),
         password: form.get("password"),
-        role: form.get("role"),
-        organization_id: parseNumber(form.get("organization_id")),
+        password_confirmation: form.get("password_confirmation"),
+        preferred_language: form.get("preferred_language") || state.language,
+        accept_terms: form.get("accept_terms") === "on",
       },
     });
     const token = String(payload.token || "");
@@ -3948,15 +4126,20 @@ async function handleRegister(event) {
     }
     state.token = token;
     localStorage.setItem("lawim.token", state.token);
+    updateAuthMode("login");
     updateAuthShell(true);
     applyModule("dashboard");
-    // applyJourney(journeyForRole(form.get("role")));
-    const resolvedRole = resolveAccessRole(payload.user?.role || form.get("role"));
+    const resolvedRole = resolveAccessRole(payload.user?.role || "user");
     applyJourney(journeyForRole(resolvedRole));
-    setNotice(noticeCopy("registerSuccess", payload.user.email), "success");
+    setNotice(noticeCopy("registerSuccess", payload.user?.email || String(form.get("email") || "")), "success");
+    if (refs.registerForm) {
+      refs.registerForm.reset();
+    }
     await refresh({ renderJourney: false });
   } catch (error) {
     setNotice(error.message, "error");
+  } finally {
+    setLoading(false);
   }
 }
 
@@ -4142,7 +4325,12 @@ function bindEvents() {
     openSupportRequest("LAWIM - Mot de passe oublié");
   });
   refs.loginCreate?.addEventListener("click", () => {
-    openSupportRequest("LAWIM - Création de compte");
+    updateAuthMode("register");
+    refs.registerFullName?.focus();
+  });
+  refs.registerBackButton?.addEventListener("click", () => {
+    updateAuthMode("login");
+    refs.loginIdentifier?.focus();
   });
   refs.logoutButton.addEventListener("click", handleLogout);
   refs.registerForm?.addEventListener("submit", handleRegister);

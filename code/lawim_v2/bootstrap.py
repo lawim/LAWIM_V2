@@ -37,7 +37,10 @@ def build_runtime(config: AppConfig) -> ApplicationRuntime:
         repository.initialize(seed_demo_data=config.seed_demo_data)
         admin_password = os.getenv("LAWIM_ADMIN_PASSWORD", "").strip()
         if admin_password:
-            updated_users = repository.sync_demo_credentials(admin_password)
+            updated_users = repository.sync_demo_credentials(
+                admin_password,
+                emails=("admin@lawim.app", "admin@lawim.local"),
+            )
             if updated_users:
                 LOGGER.info("Synced bootstrap credentials for %s demo account(s)", len(updated_users))
         services = LawimServices(repository, config)

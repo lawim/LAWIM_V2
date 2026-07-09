@@ -37,6 +37,31 @@ def _ensure_column(conn: sqlite3.Connection, table: str, column: str, definition
 
 def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
     """Idempotent upgrades for databases created before schema v5."""
+    user_columns = {
+        "username": "TEXT",
+        "phone_e164": "TEXT",
+        "preferred_language": "TEXT NOT NULL DEFAULT 'fr'",
+    }
+    for column, definition in user_columns.items():
+        _ensure_column(conn, "users", column, definition)
+    conn.execute(
+        """
+        UPDATE users
+        SET preferred_language = COALESCE(NULLIF(preferred_language, ''), 'fr')
+        """
+    )
+    conn.execute(
+        """
+        UPDATE users
+        SET username = NULLIF(LOWER(TRIM(username)), '')
+        WHERE username IS NOT NULL
+        """
+    )
+    conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users(username)")
+    conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone_e164 ON users(phone_e164)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_users_organization ON users(organization_id, id)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at, id)")
+
     property_columns = {
         "listing_code": "TEXT",
         "address_line": "TEXT",

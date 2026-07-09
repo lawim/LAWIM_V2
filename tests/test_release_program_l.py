@@ -61,10 +61,10 @@ from tests.lawim_harness import LawimTestHarness
 
 class ReleaseProgramLPersistenceTests(LawimTestHarness):
     def test_schema_version_is_v18(self) -> None:
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
     def test_application_schema_version_constant(self) -> None:
-        self.assertEqual(APPLICATION_SCHEMA_VERSION, 18)
+        self.assertEqual(APPLICATION_SCHEMA_VERSION, 19)
 
     def test_analytics_tables_present(self) -> None:
         self.assertTrue(self.repository.analytics_tables_present())
@@ -1064,7 +1064,7 @@ class ReleaseProgramLHealthTests(LawimTestHarness):
     def test_bootstrap_schema_v18(self) -> None:
         bootstrap = self.invoke('/api/bootstrap')
         self.assertEqual(bootstrap.status, HTTPStatus.OK)
-        self.assertEqual(self.repository.schema_version(), 18)
+        self.assertEqual(self.repository.schema_version(), 19)
 
 
 class ReleaseProgramLV18TableTests(LawimTestHarness):

@@ -184,4 +184,43 @@ Checklist minimale :
 * `docs/Directive/30B-TRANSLATION-REFERENCE.md`
 * `docs/strategy/LAWIM_2X_PROGRAM_ROADMAP.md`
 
+---
+
+# CHAPITRE 10 — PAGE D'ACCÈS
+
+La page d'accès LAWIM doit rester courte et immédiatement compréhensible.
+
+Elle doit afficher uniquement :
+
+* le logo officiel LAWIM ;
+* le slogan `L'immobilier autrement` ;
+* une seule carte centrale ;
+* le champ `Identifiant` ;
+* le champ `Mot de passe` ;
+* les actions `Connexion`, `Mot de passe oublié` et `Créer un compte` ;
+* un selecteur de langue discret ;
+* une bande de coordonnées compacte en pied de page.
+
+La bande de coordonnées doit rester discrète et contenir :
+
+* `lawim.app` ;
+* `contact@lawim.app` ;
+* WhatsApp ;
+* Facebook `@lawimofficial`.
+
+La page ne doit pas expliquer ce qui est évident.
+Elle ne doit pas afficher de double panneau, de texte de role ou de redondance de marque au-dessus du formulaire.
+
+---
+
+# CHAPITRE 11 — SOBRIÉTÉ DES INTERFACES
+
+Une interface LAWIM ne doit jamais expliquer ce qui est évident.
+
+Les textes d'aide doivent être conservés uniquement lorsqu'ils apportent une valeur réelle à l'utilisateur.
+
+L'organisation, les intitulés, les boutons et la navigation doivent guider naturellement l'utilisateur.
+
+Les doubles formulations, les paraphrases et les explications redondantes doivent être supprimées.
+
 # FIN DU DOCUMENT

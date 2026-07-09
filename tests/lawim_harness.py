@@ -198,11 +198,14 @@ class LawimTestHarness(TestCase):
             raise AssertionError(f"Unsupported method: {method}")
         return handler
 
-    def login(self, *, email: str, password: str = "lawim-demo") -> str:
+    def login(self, *, email: str | None = None, identifier: str | None = None, password: str = "lawim-demo") -> str:
+        lookup = identifier or email
+        if not lookup:
+            raise AssertionError("identifier or email is required")
         response = self.invoke(
             "/api/auth/login",
             method="POST",
-            body={"email": email, "password": password},
+            body={"identifier": lookup, "password": password},
         )
         self.assertEqual(response.status, HTTPStatus.CREATED, msg=response.body_text())
         return str(response.body_json()["token"])
@@ -212,17 +215,30 @@ class LawimTestHarness(TestCase):
         *,
         email: str,
         full_name: str,
-        role: str = "owner",
+        role: str | None = None,
+        username: str | None = None,
+        phone_e164: str | None = None,
         password: str = "lawim-demo",
+        password_confirmation: str | None = None,
+        preferred_language: str = "fr",
+        accept_terms: bool = True,
         organization_id: int | None = None,
         token: str | None = None,
     ) -> str:
+        derived_username = username or email.split("@", 1)[0].replace(".", "_")
+        derived_phone = phone_e164 or f"+23769{sum(ord(char) for char in email) % 10_000_000:07d}"
         body: dict[str, object] = {
             "email": email,
             "full_name": full_name,
-            "role": role,
+            "username": derived_username,
+            "phone_e164": derived_phone,
             "password": password,
+            "password_confirmation": password_confirmation or password,
+            "preferred_language": preferred_language,
+            "accept_terms": accept_terms,
         }
+        if role is not None:
+            body["role"] = role
         if organization_id is not None:
             body["organization_id"] = organization_id
         response = self.invoke("/api/auth/register", method="POST", body=body, token=token)

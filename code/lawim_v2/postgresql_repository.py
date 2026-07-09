@@ -461,4 +461,11 @@ class PostgreSQLLawimRepository(LawimRepository):
         return {str(row["column_name"]) for row in rows}
 
     def _apply_migrations(self, conn: Any) -> None:
-        return
+        conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS username TEXT")
+        conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS phone_e164 TEXT")
+        conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_language TEXT NOT NULL DEFAULT 'fr'")
+        conn.execute("UPDATE users SET preferred_language = COALESCE(NULLIF(preferred_language, ''), 'fr')")
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users(username)")
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone_e164 ON users(phone_e164)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_users_organization ON users(organization_id, id)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at, id)")

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 import threading
 from contextlib import contextmanager
@@ -72,6 +73,21 @@ def _require_text(value: object, field: str) -> str:
 
 def _normalize_email(value: str) -> str:
     return _require_text(value, "email").lower()
+
+
+def _normalize_username(value: str) -> str:
+    normalized = _require_text(value, "username").lower()
+    if " " in normalized:
+        raise ValidationError("username cannot contain spaces")
+    return normalized
+
+
+def _normalize_phone_e164(value: str) -> str:
+    raw = _require_text(value, "phone_e164")
+    digits = re.sub(r"\D", "", raw)
+    if not digits:
+        raise ValidationError("phone_e164 is required")
+    return f"+{digits}"
 
 @dataclass(frozen=True, slots=True)
 class DemoSeed:
@@ -220,8 +236,11 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
             seeded_user = self.create_user(
                 email=str(user["email"]),
                 full_name=str(user["full_name"]),
+                username=user.get("username"),
+                phone_e164=user.get("phone_e164"),
+                preferred_language=str(user.get("preferred_language") or "fr"),
                 role=str(user["role"]),
-                password=self.seed.admin_password,
+                password=str(user.get("password") or self.seed.admin_password),
                 organization_id=organization_ids[str(user["organization_slug"])],
             )
             user_ids[str(seeded_user["email"])] = int(seeded_user["id"])
@@ -464,12 +483,18 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         *,
         email: str,
         full_name: str,
+        username: str | None = None,
+        phone_e164: str | None = None,
+        preferred_language: str | None = None,
         role: str,
         password: str,
         organization_id: int | None = None,
     ) -> dict[str, object]:
         email = _require_text(email, "email").lower()
         full_name = _require_text(full_name, "full_name")
+        normalized_username = _normalize_username(username) if username is not None else None
+        normalized_phone = _normalize_phone_e164(phone_e164) if phone_e164 is not None else None
+        normalized_language = _require_text(preferred_language, "preferred_language").lower() if preferred_language is not None else "fr"
         password = _require_text(password, "password")
         role = accept_user_role(role)
         if not role:
@@ -482,12 +507,15 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
                 cursor = conn.execute(
                     """
                     INSERT INTO users
-                        (email, full_name, role, organization_id, password_salt, password_hash, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                        (email, username, full_name, phone_e164, preferred_language, role, organization_id, password_salt, password_hash, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         email,
+                        normalized_username,
                         full_name,
+                        normalized_phone,
+                        normalized_language,
                         role,
                         organization_id,
                         password_record.salt,
@@ -509,6 +537,49 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         assert user is not None
         self.record_event("user_created", {"email": email, "role": role, "organization_id": organization_id})
         return user
+
+    def get_user_by_username(self, username: str) -> dict[str, object] | None:
+        normalized_username = _normalize_username(username)
+        return self.one(
+            """
+            SELECT u.*, o.name AS organization_name, o.slug AS organization_slug
+            FROM users u
+            LEFT JOIN organizations o ON o.id = u.organization_id
+            WHERE lower(u.username) = ?
+            """,
+            (normalized_username,),
+        )
+
+    def get_user_by_phone(self, phone_e164: str) -> dict[str, object] | None:
+        normalized_phone = _normalize_phone_e164(phone_e164)
+        return self.one(
+            """
+            SELECT u.*, o.name AS organization_name, o.slug AS organization_slug
+            FROM users u
+            LEFT JOIN organizations o ON o.id = u.organization_id
+            WHERE REPLACE(REPLACE(REPLACE(COALESCE(u.phone_e164, ''), ' ', ''), '-', ''), '+', '') = ?
+            """,
+            (normalized_phone.lstrip("+"),),
+        )
+
+    def get_user_by_identifier(self, identifier: str) -> dict[str, object] | None:
+        normalized_identifier = _require_text(identifier, "identifier")
+        if "@" in normalized_identifier:
+            try:
+                user = self.get_user_by_email(normalized_identifier)
+            except NotFoundError:
+                user = None
+            if user is not None:
+                return user
+        user = self.get_user_by_username(normalized_identifier)
+        if user is not None:
+            return user
+        digits = re.sub(r"\D", "", normalized_identifier)
+        if digits:
+            user = self.get_user_by_phone(normalized_identifier)
+            if user is not None:
+                return user
+        return None
 
     def update_user(
         self,
@@ -563,11 +634,7 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         *,
         emails: tuple[str, ...] = (
             "admin@lawim.app",
-            "agent@lawim.app",
-            "owner@lawim.app",
             "admin@lawim.local",
-            "agent@lawim.local",
-            "owner@lawim.local",
         ),
     ) -> list[str]:
         password = _require_text(password, "password")
@@ -621,17 +688,17 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
         )
         return [int(row["id"]) for row in rows]
 
-    def authenticate(self, *, email: str, password: str) -> dict[str, object] | None:
-        normalized_email = _normalize_email(email)
-        user = self.one(
-            """
-            SELECT u.*, o.name AS organization_name, o.slug AS organization_slug
-            FROM users u
-            LEFT JOIN organizations o ON o.id = u.organization_id
-            WHERE u.email = ?
-            """,
-            (normalized_email,),
-        )
+    def authenticate(
+        self,
+        *,
+        identifier: str | None = None,
+        email: str | None = None,
+        password: str,
+    ) -> dict[str, object] | None:
+        lookup_identifier = identifier if identifier is not None else email
+        if lookup_identifier is None:
+            raise ValidationError("identifier is required")
+        user = self.get_user_by_identifier(lookup_identifier)
         if user is None:
             return None
         if not verify_password(password, str(user["password_salt"]), str(user["password_hash"])):
