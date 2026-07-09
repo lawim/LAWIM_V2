@@ -136,7 +136,7 @@ Date de validation: `2026-07-09`
 ## Artefact Et SHA256
 
 - Artefact: `/tmp/lawim_v2_release_mission-08-3-auth-access-demo-accounts.tar.gz`
-- SHA256: `666d8750cb92c5127fd9963a995433c08424df141a7ba5f072b810b2608ae61c`
+- SHA256: `7bae16e317eb19e73574fbdc812fbf890a9a64edec204f35a7f984ceee16581e`
 
 ## Déploiement OVH
 
@@ -160,4 +160,3 @@ Le build Docker distant n’a pas pu reconstruire l’image à cause de l’abse
 - Aucune réserve fonctionnelle bloquante après validation finale.
 - `LAWIM_ADMIN_PASSWORD` est désormais ignoré en production pour préserver les identifiants de démonstration standards.
 - Le cache d’image Docker OVH doit être surveillé car la reconstruction distante dépend d’une image base qui n’était pas présente localement sur le serveur au moment du déploiement.
-
