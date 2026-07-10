@@ -751,8 +751,40 @@ function WebAppContent() {
       <Route path="/observability" element={<ObservabilityConsolePage />} />
       <Route path="/readiness" element={<ProductReadinessDashboardPage />} />
       <Route path="/admin/features" element={<ProtectedRoute><AdminFeaturesPage /></ProtectedRoute>} />
+      <Route path="/comparison" element={<ProtectedRoute><ComparisonPage /></ProtectedRoute>} />
       <Route path="*" element={<PublicLandingPage />} />
     </Routes>
+  );
+}
+
+function ComparisonPage() {
+  const { t } = useTranslator();
+  const { data, isPending } = useQuery({ queryKey: ['comparison'], queryFn: () => apiSdk.getProperties({ page: 1, pageSize: 4 }) });
+  const items = (data?.data ?? []) as unknown as Array<Record<string, unknown>>;
+
+  return (
+    <PageShell eyebrow={t('module.detail.compare')} title="📊 Comparer des biens" description="Comparez plusieurs biens côte à côte.">
+      <Card title="Biens à comparer" description="Sélectionnez jusqu'à 4 biens.">
+        {isPending ? <LoadingState label="Chargement..." /> : items.length === 0 ? <EmptyState label="Aucun bien à comparer." /> : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {items.slice(0, 4).map((item, idx: number) => {
+              const it = item as unknown as Record<string, unknown>;
+              return (
+              <div key={String(it.id ?? idx)} className="rounded-2xl border border-slate-200 bg-white p-4">
+                <p className="text-sm font-semibold text-slate-900">{String(it.title ?? '')}</p>
+                <p className="text-xs text-slate-500">{String(it.location ?? '')}</p>
+                <p className="mt-2 text-lg font-bold text-slate-900">{it.price != null ? `${Number(it.price).toLocaleString()} FCFA` : '—'}</p>
+                <div className="mt-2 flex flex-wrap gap-1">
+                  <Badge variant="info">{String(it.type ?? '')}</Badge>
+                  {it.surface ? <Badge variant="info">{String(it.surface)} m²</Badge> : null}
+                </div>
+              </div>
+              );
+            })}
+          </div>
+        )}
+      </Card>
+    </PageShell>
   );
 }
 

@@ -334,6 +334,29 @@ export function PublicLandingPage() {
   );
 }
 
+function smartSearch(query: string): string {
+  const q = query.toLowerCase().trim();
+  if (/terrain|land/.test(q)) return '/biens?type=terrain';
+  if (/maison|house|villa/.test(q)) return '/biens?type=maison';
+  if (/appartement|apartment/.test(q)) return '/biens?type=appartement';
+  if (/invest|investir|rendement/.test(q)) return '/biens?type=investir';
+  if (/construction|construire|builder/.test(q)) return '/biens?type=construire';
+  if (/location|louer|rent/.test(q)) return '/biens?type=louer';
+  if (/architecte|architect/.test(q)) return '/partners?need=architecte';
+  if (/notaire|notary/.test(q)) return '/partners?need=notaire';
+  if (/banque|bank|finance|crédit/.test(q)) return '/partners?need=banque';
+  if (/photographe|photographer/.test(q)) return '/partners?need=photographe';
+  if (/partenaire|partner|professionnel/.test(q)) return '/partners';
+  if (/dossier|projet|project/.test(q)) return '/dossier';
+  if (/message|conversation|chat|discussion/.test(q)) return '/conversation';
+  if (/document|fichier|file/.test(q)) return '/documents';
+  if (/favori|favorite|sauvegarde|save/.test(q)) return '/favorites';
+  if (/notification|alerte|alert/.test(q)) return '/notifications';
+  if (/rendez-vous|rdv|meeting|calendar/.test(q)) return '/history';
+  if (/profil|profile|compte|account/.test(q)) return '/profile';
+  return `/search?q=${encodeURIComponent(query)}`;
+}
+
 function CockpitFrame({ title, children }: FrameProps) {
   const { t } = useTranslator();
   const navigate = useNavigate();
@@ -345,6 +368,13 @@ function CockpitFrame({ title, children }: FrameProps) {
   const initials = getInitials(displayName);
   const [search, setSearch] = useState('');
 
+  const handleSearch = (event: FormEvent) => {
+    event.preventDefault();
+    const trimmed = search.trim();
+    if (!trimmed) { navigate('/search'); return; }
+    navigate(smartSearch(trimmed));
+  };
+
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 to-white text-slate-900">
       <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur">
@@ -353,7 +383,7 @@ function CockpitFrame({ title, children }: FrameProps) {
             <BrandMark slogan={LAWIM_BRAND_SLOGAN} tone="light" />
           </div>
           <div className="hidden min-w-0 flex-1 items-center gap-2 sm:flex">
-            <form onSubmit={(event) => { event.preventDefault(); navigate(search.trim() ? `/search?q=${encodeURIComponent(search.trim())}` : '/search'); }} className="flex flex-1">
+            <form onSubmit={handleSearch} className="flex flex-1" data-tooltip={t('assistant.chat_hint')}>
               <input
                 aria-label={t('cockpit.search')}
                 placeholder="🔎"
@@ -605,17 +635,20 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
             <p className="text-sm text-slate-500">{activeProject ? `${activeProject.title} · ${activeProject.status}` : t('assistant.no_project')}</p>
           </div>
         </div>
-        <div className="hidden sm:block">
+        <div className="hidden items-center gap-3 sm:flex">
+          <NotificationsSummary />
           <StatLine items={roleConfig.statItems} />
         </div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
         <div className="space-y-4">
+          <ConseillerMessage firstName={firstName} projectTheme={projectTheme} pendingTasks={summary.pendingTasks} />
+
           <div className="flex flex-wrap items-center gap-3">
-            <PrimaryAction {...roleConfig.primaryAction} />
+            <PrimaryAction {...roleConfig.primaryAction} tooltip={roleConfig.primaryAction.label} />
             {roleConfig.secondActions.map((action) => (
-              <button key={action.label} type="button" onClick={() => navigate(action.to)}
+              <button key={action.label} type="button" data-tooltip={action.label} onClick={() => navigate(action.to)}
                 className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:shadow-md"
               >
                 <span className="text-lg">{action.icon}</span>
@@ -627,39 +660,46 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
           <Surface className="p-4">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">💬 {t('assistant.title')}</p>
             <div className="mt-3 flex flex-wrap gap-2">
-              {suggestions.length > 0 ? suggestions.map((s) => (
-                <button key={s.label} type="button" onClick={() => navigate(s.to)}
+              <input
+                className="min-w-0 flex-1 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none focus:border-slate-300"
+                placeholder={`💬 ${t('assistant.chat_hint')}`}
+                onKeyDown={(e) => { if (e.key === 'Enter' && (e.target as HTMLInputElement).value.trim()) navigate(smartSearch((e.target as HTMLInputElement).value)); }}
+              />
+              {suggestions.length > 0 ? suggestions.slice(0, 4).map((s) => (
+                <button key={s.label} type="button" data-tooltip={s.label} onClick={() => navigate(s.to)}
                   className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-600 transition hover:border-slate-300"
                 >
                   <span>{s.icon}</span>
                   <span>{s.label}</span>
                 </button>
-              )) : (
-                <input
-                  className="min-w-0 flex-1 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none focus:border-slate-300"
-                  placeholder={t('assistant.chat_hint')}
-                />
-              )}
+              )) : null}
             </div>
           </Surface>
 
           {matches.length > 0 ? (
             <Surface className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">✨ {t('dashboard.stats.opportunities')}</p>
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">✨ {t('dashboard.stats.opportunities')}</p>
+                <button type="button" onClick={() => navigate('/search')} className="text-xs text-slate-400 hover:text-slate-700">{t('match.why_title')} →</button>
+              </div>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 {matches.slice(0, 2).map((match, index) => {
                   const title = match.property?.title || (match.partner && typeof match.partner === 'object' ? String((match.partner as Record<string, unknown>).display_name ?? '') : '') || `✨ ${index + 1}`;
+                  const reasons = match.reasons.length > 0 ? match.reasons.map((r: string) => {
+                    const parts = r.split(':');
+                    if (parts.length === 2) return `${parts[0] === 'city' ? '📍' : parts[0] === 'budget' ? '💰' : parts[0] === 'property_type' ? '🏠' : '✓'} ${parts[1]}`;
+                    return r;
+                  }).join(' · ') : null;
                   return (
-                    <button key={index} type="button" onClick={() => navigate('/search')}
+                    <button key={index} type="button" data-tooltip={reasons || ''} onClick={() => navigate('/search')}
                       className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 text-left transition hover:border-slate-300"
                     >
-                      <span className="text-xl">{role === 'investor' ? '💰' : '🏠'}</span>
+                      <span className="text-xl">{match.target_type === 'partner' ? '🤝' : role === 'investor' ? '💰' : '🏠'}</span>
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-slate-900">{title}</p>
-                        {match.reasons.length > 0 ? (
-                          <p className="truncate text-xs text-slate-500">{match.reasons.join(' · ')}</p>
-                        ) : null}
+                        {reasons ? <p className="truncate text-xs text-slate-500">{reasons}</p> : null}
                       </div>
+                      <Badge variant={match.eligible ? 'success' : 'info'}>{match.eligible ? '✓' : '?'}</Badge>
                     </button>
                   );
                 })}
@@ -697,15 +737,23 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
                   <p className="font-semibold text-slate-900">{activeProject.title}</p>
                   <p className="text-xs text-slate-500">{activeProject.status} · {activeProject.location_city || ''}</p>
                 </div>
-                <button type="button" onClick={() => navigate(`/dossier/${activeProject.id}`)}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 transition hover:border-slate-300"
-                >
-                  📁 {t('dashboard.project')}
-                </button>
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => navigate(`/dossier/${activeProject.id}`)}
+                    className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 transition hover:border-slate-300"
+                  >
+                    📁 {t('dashboard.project')}
+                  </button>
+                  <button type="button" onClick={() => navigate(`/conversation?project=${activeProject.id}`)}
+                    className="flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600 transition hover:border-slate-300"
+                  >
+                    💬 {t('assistant.title')}
+                  </button>
+                </div>
               </div>
             </Surface>
           ) : null}
 
+          <NotificationsSummary />
           <SecondaryActionsBlock role={role} />
         </div>
       </div>
@@ -718,6 +766,78 @@ export function CockpitEntryPage() {
   const roles = useAuthStore((state) => state.roles);
   const resolvedRole = resolvePrimaryRole(user?.role, roles);
   return <Navigate to={resolveDashboardPath(resolvedRole)} replace />;
+}
+
+function NotificationsSummary() {
+  const { t } = useTranslator();
+  const { data } = useQuery({
+    queryKey: ['notifications-summary'],
+    queryFn: () => apiSdk.getNotifications()
+  });
+  const items = (data?.data ?? []) as unknown as Array<Record<string, unknown>>;
+  const unread = items.filter((n) => !n.read).length;
+  const today = items.filter((n) => {
+    const d = new Date(String(n.created_at ?? ''));
+    const now = new Date();
+    return d.toDateString() === now.toDateString();
+  });
+
+  if (items.length === 0) return null;
+
+  return (
+    <Surface className="p-3" data-tooltip={unread > 0 ? `${unread} non lu${unread > 1 ? 's' : ''}` : t('nav.notifications')}>
+      <div className="flex items-center gap-3 text-sm">
+        <span className="text-lg">{unread > 0 ? '🔔' : '🔕'}</span>
+        <span className="text-slate-600">{t('nav.notifications')}</span>
+        {unread > 0 ? <span className="ml-auto rounded-full bg-rose-500 px-2 py-0.5 text-xs font-bold text-white">{unread}</span> : null}
+        {today.length > 0 ? <span className="ml-2 text-xs text-slate-400">📅 {today.length} aujourd'hui</span> : null}
+      </div>
+    </Surface>
+  );
+}
+
+function ConseillerMessage({ firstName, projectTheme, pendingTasks }: { firstName: string; projectTheme: string; pendingTasks: number }) {
+  const { t } = useTranslator();
+
+  const messages: Record<string, string[]> = {
+    construction: [
+      `🏗️ ${firstName}, votre projet de construction avance bien.`,
+      `📐 Pensez à contacter un architecte pour les plans.`,
+    ],
+    terrain: [
+      `🌍 ${firstName}, la recherche de terrain progresse.`,
+      `📋 Vérifions le titre foncier ensemble.`,
+    ],
+    location: [
+      `🔑 ${firstName}, trouvons le bon logement à louer.`,
+      `🏠 J'ai des suggestions adaptées à votre budget.`,
+    ],
+    investissement: [
+      `💰 ${firstName}, les opportunités d'investissement sont prometteuses.`,
+      `📈 Étudions ensemble les meilleurs rendements.`,
+    ],
+    achat: [
+      `🏠 ${firstName}, votre projet d'achat est bien engagé.`,
+      `🤝 Un notaire pourra vous accompagner.`,
+    ],
+  };
+
+  const themeMessages = messages[projectTheme] ?? [`👋 ${firstName}, votre projet avance.`];
+  const msg = pendingTasks > 0
+    ? `${themeMessages[0]} ⚠️ ${pendingTasks} point${pendingTasks > 1 ? 's' : ''} mérite${pendingTasks > 1 ? 'nt' : ''} votre attention.`
+    : themeMessages[0];
+
+  return (
+    <Surface className="p-4">
+      <div className="flex items-start gap-3">
+        <span className="text-2xl">🤖</span>
+        <div>
+          <p className="text-sm font-semibold text-slate-900">{t('cockpit.iai')}</p>
+          <p className="mt-1 text-sm text-slate-600">{msg}</p>
+        </div>
+      </div>
+    </Surface>
+  );
 }
 
 export function RoleCockpitPage() {
