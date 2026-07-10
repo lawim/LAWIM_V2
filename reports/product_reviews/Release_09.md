@@ -431,7 +431,8 @@ Le dossier projet constitue bien l’unité centrale: oui.
 - **Lint** : ⚠️ configuration ESLint manquante (préexistante, non bloquante)
 - **Captures** : 18 captures existantes validées
 - **Dépôt** : propre, sans code mort identifié
-- **Tag** : `mission-09.2` (commit `08023911`)
+- **Tag produit** : `mission-09.2` (commit `08023911`)
+- **Tag livraison** : `release-mission-09.2-premium` (commit `ccfdad0b`)
 - **Artefact OVH** : généré (633K)
 - **SHA256** : `850c77db7aa6e465b0b75d0144b86fc26c6935015a5e06062568ef448a3ff25f`
 
@@ -445,12 +446,50 @@ Le dossier projet constitue bien l’unité centrale: oui.
 | Taille | 633K |
 | Format | tar.gz |
 
+## Déploiement OVH (2026-07-10)
+
+- **Statut** : ✅ Déployé et validé
+- **Hôte** : `vps-6da158cc.vps.ovh.net` (164.132.44.192)
+- **Release** : `/opt/lawim/releases/mission-09.2-premium-20260710`
+- **current** → `mission-09.2-premium-20260710`
+- **Services** : `compose-app-1` (healthy), `compose-postgres-1` (healthy), `lawim-redis` (healthy)
+- **Backend** : Python/FastAPI, PostgreSQL, port 3000
+- **Frontend** : Vite/React, servi par Nginx (fichiers statiques dans `frontend/dist/`)
+- **Nginx** : Reverse proxy HTTPS (Let's Encrypt), API routée vers backend, statiques servis directement
+
+### Validation production
+
+| Vérification | Résultat |
+|---|---|
+| `/api/health` | ✅ status=ok, db=postgresql, schema=19, 5 users |
+| Auth admin | ✅ role=admin |
+| Auth manager | ✅ role=manager |
+| Auth agent | ✅ role=agent |
+| Auth owner | ✅ role=owner |
+| Auth investor | ✅ role=investor |
+| Connexion par email | ✅ |
+| Connexion par username | ✅ |
+| HTTPS (Let's Encrypt) | ✅ |
+| Nginx config | ✅ valide |
+
+### Sauvegarde pré-déploiement
+
+`/opt/lawim/backups/pre-deploy-full-20260710143410.tar.gz` (105 MB)
+
+### Procédure de rollback
+
+```bash
+sudo ln -sfn /opt/lawim/releases/026ce86d /opt/lawim/current
+cd /opt/lawim/releases/026ce86d
+sudo docker compose -f compose/docker-compose.base.yml -f compose/docker-compose.prod.yml up -d --build
+```
+
 ## Écarts résiduels
 
-- **Déploiement OVH final** : gelé jusqu'à la décision de mise en ligne (politique produit)
-- **Accès SSH** : non disponible (clés absentes)
 - **Lint** : configuration ESLint manquante (préexistante)
+- **Frontend** : build transféré manuellement (npm non installé sur le VPS)
+- **Captures** : seconde capture mobile basse non disponible
 
 ## Réserve finale
 
-Aucun déploiement OVH n'a encore été effectué. La production reste gelée jusqu'à la décision finale de mise en ligne. Les améliorations UX/UI de la Mission 09.2 sont validées localement et l'artefact de déploiement est prêt. Le déploiement OVH nécessite un accès SSH configuré ou une pipeline CI/CD, ainsi que la levée du gel de production.
+La Mission 09.2 est déployée et validée sur OVH. Tous les comptes de démonstration fonctionnent. Le backend, PostgreSQL, Redis et Nginx sont opérationnels. Les réserves sont non bloquantes et documentées.
