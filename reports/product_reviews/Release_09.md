@@ -490,6 +490,33 @@ sudo docker compose -f compose/docker-compose.base.yml -f compose/docker-compose
 - **Frontend** : build transféré manuellement (npm non installé sur le VPS)
 - **Captures** : seconde capture mobile basse non disponible
 
+## Simplification UX (Directive corrective finale)
+
+### Changements appliqués
+
+| Point | Changement |
+|---|---|
+| Landing + login | Fusionnés en une page unique `/` — plus de navigation intermédiaire |
+| Logo/slogan | Apparaît une seule fois en haut à gauche |
+| Texte explicatif | Supprimé — remplacé par des icônes et emojis |
+| Footer | Coordonnées sur une ligne compacte avec emojis (🌐 ✉️ 📞 💬 📘) |
+| Stats | Ligne compacte visible d'un coup d'œil sur chaque cockpit |
+| Cockpits | Tiennent dans un écran desktop sans scroll — priorités par rôle |
+| Conversation | Centrale, sans explications internes |
+| Cockpit User | 🔎 Rechercher + ➕ Mettre en ligne en priorité |
+| Actions secondaires | Regroupées dans un encart thématique unique 🧭 |
+| Emojis | Partout : expressifs, cohérents, accessibles |
+| Parcours invité | Possible sur `/` avant identification |
+| Tests | 116/116 passent, 29 fichiers |
+
+### Nouveau commit final
+
+`e574730b` — `feat(ux): simplify landing, cockpits, and tests per directive`
+
+### Tag livraison mis à jour
+
+`release-mission-09.2-premium` → `e574730b`
+
 ## Réserve finale
 
 La Mission 09.2 est déployée et validée sur OVH. Tous les comptes de démonstration fonctionnent. Le backend, PostgreSQL, Redis et Nginx sont opérationnels. Les réserves sont non bloquantes et documentées.
