@@ -18,6 +18,7 @@ import {
 import { resolveDashboardPath, resolvePrimaryRole, type AccessRole, useAuthStore } from '@auth';
 
 type MissionRole = 'admin' | 'manager' | 'agent' | 'partner' | 'user' | 'investor';
+type Lang = 'fr' | 'en' | 'pcm';
 
 type RoleDefinition = {
   title: string;
@@ -176,14 +177,14 @@ const ROLE_DEFINITIONS: Record<MissionRole, RoleDefinition> = {
   },
   user: {
     title: 'Cockpit utilisateur',
-    intro: 'Nous poursuivons votre projet, sans perdre le contexte.',
+    intro: 'Votre projet avance. LAWIM garde tout le contexte pour vous.',
     emptyConversation: 'Vous n’avez aucun projet actif pour le moment.',
     projectLabel: 'Projets actifs',
     projectEmpty: 'Aucun dossier projet n’est ouvert.',
     summaryLabels: ['Projets actifs', 'Conversations', 'Opportunités'],
     actions: ['Continuer le projet', 'Ajouter un document', 'Découvrir un bien', 'Voir les partenaires proposés'],
-    relationTitle: 'Nous avons identifié 2 biens susceptibles de vous intéresser.',
-    relationDescription: 'Ils correspondent à votre intention, à votre budget et à votre localisation.',
+    relationTitle: '2 biens correspondent à votre projet.',
+    relationDescription: 'Ils sont dans votre budget, dans la zone recherchée et compatibles avec votre intention.',
     relationCta: 'Découvrir',
     secondaryNav: [
       { label: 'Conversation', to: '/conversation' },
@@ -265,6 +266,77 @@ function getFirstName(value: string | undefined | null) {
     .split(/\s+/)
     .filter(Boolean);
   return parts[0] ?? 'Abel';
+}
+
+function humanReadableReason(reason: string, language: Lang): string {
+  const idx = reason.indexOf(':');
+  if (idx === -1) return reason;
+  const key = reason.slice(0, idx);
+  const value = reason.slice(idx + 1);
+  const t = (k: string) => translate(k, language);
+  switch (key) {
+    case 'city':
+      return `${t('match.reason.city')}: ${value}`;
+    case 'property_type':
+      return `${t('match.reason.type')}: ${value === 'house' ? t('module.properties.lodging.house') : value === 'apartment' ? t('module.properties.lodging.apartment') : value === 'land' ? t('module.properties.category.terrain') : value}`;
+    case 'budget':
+      return `${t('match.reason.budget')}: ${formatMoney(Number(value))}`;
+    case 'partner_type':
+      return `${t('match.reason.partner_type')}: ${value}`;
+    case 'location':
+      return `${t('match.reason.location')}: +${value}`;
+    case 'language':
+      return `${t('match.reason.language')}: +${value}`;
+    case 'type':
+      return `${t('match.reason.type')}: +${value}`;
+    case 'need':
+      return `${t('match.reason.need')}: +${value}`;
+    default:
+      return reason;
+  }
+}
+
+function formatPropertyPrice(price?: number | null): string {
+  if (price == null) return '';
+  return `${formatMoney(price)} FCFA`;
+}
+
+function getPropertyTypeIcon(asset: string): string {
+  const icons: Record<string, string> = {
+    terrain: '🏞️',
+    maison: '🏠',
+    appartement: '🏢',
+    immeuble: '🏗️',
+    local: '🏪',
+    land: '🏞️',
+    house: '🏠',
+    apartment: '🏢',
+    residence: '🏗️'
+  };
+  return icons[asset] ?? '🏠';
+}
+
+function getPartnerTypeIcon(partnerType: string): string {
+  const icons: Record<string, string> = {
+    architecte: '📐',
+    banque: '🏦',
+    notaire: '📜',
+    géomètre: '📏',
+    photographe: '📷',
+    artisan: '🔨',
+    'expert foncier': '📋',
+    entrepreneur: '🏗️',
+    décorateur: '🎨',
+    promoteur: '🏘️',
+    architect: '📐',
+    bank: '🏦',
+    notary: '📜',
+    photographer: '📷',
+    craftsman: '🔨',
+    mover: '🚚',
+    diagnostician: '🔍'
+  };
+  return icons[partnerType] ?? '🤝';
 }
 
 function describeProjectTheme(objective?: string | null) {
@@ -367,13 +439,15 @@ function buildCockpitNarrative(
       };
     default:
       return {
-        title: `Bonjour ${firstName}. Votre projet ${themePhrase ? `${themePhrase} ` : ''}avance.`.replace(/\s+\./, '.'),
+        title: `Bonjour ${firstName} 👋\nVotre projet ${themePhrase ? `${themePhrase} ` : ''}avance.`.replace(/\s+\./, '.'),
         lead:
           summary.pendingTasks > 0
             ? `${pendingText} LAWIM garde le contexte, le budget et les prochaines propositions dans le même dossier.`
-            : 'LAWIM garde le contexte, le budget et les prochaines propositions dans le même dossier.',
+            : 'LAWIM garde le contexte, le budget et les prochaines propositions dans le même dossier. Vous pouvez reprendre où vous vous êtes arrêté.',
         signal: summary.communications > 1 ? `${summary.communications} conversations en cours` : summary.communications === 1 ? '1 conversation en cours' : 'Projet actif',
-        note: themePhrase ? `Nous restons concentrés sur ${themePhrase}.` : `Nous restons concentrés sur ${projectTitle}.`
+        note: themePhrase
+          ? `Nous restons concentrés sur votre projet ${themePhrase}.`
+          : `Nous restons concentrés sur votre dossier.`
       };
   }
 }
@@ -632,9 +706,9 @@ function Frame({ title, subtitle, children, backTo }: FrameProps) {
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(226,232,240,0.88),_rgba(248,250,252,0.98)_30%,_rgba(241,245,249,1)_100%)] text-slate-900">
       <header className="sticky top-0 z-30 border-b border-slate-200/90 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-[90rem] items-center gap-3 px-3 py-3 sm:px-6 lg:px-8">
           <BrandMark slogan={LAWIM_BRAND_SLOGAN} tone="light" className="shrink-0" />
-          <div className="flex min-w-0 flex-1 items-center gap-3">
+          <div className="hidden min-w-0 flex-1 items-center gap-3 sm:flex">
             <form onSubmit={submitSearch} className="min-w-0 flex-1">
               <Input
                 tone="light"
@@ -642,25 +716,35 @@ function Frame({ title, subtitle, children, backTo }: FrameProps) {
                 placeholder={t('cockpit.search_placeholder')}
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                className="w-full rounded-full border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm"
+                className="w-full rounded-full border-slate-200 bg-white px-4 py-2 text-sm shadow-sm"
               />
             </form>
           </div>
-          <LanguageSwitcher compact />
-          <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-3 py-2 shadow-sm">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-xs font-semibold text-white">{initials}</div>
-            <div className="leading-tight">
-              <div className="text-sm font-semibold text-slate-900">{displayName}</div>
-              <div className="text-[11px] uppercase tracking-[0.24em] text-slate-500">{translate(ROLE_LABEL_BY_MISSION_ROLE[role], language)}</div>
+          <button
+            type="button"
+            className="flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-500 shadow-sm sm:hidden"
+            aria-label={t('cockpit.search')}
+            onClick={() => navigate('/search')}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </button>
+          <div className="ml-auto flex items-center gap-2">
+            <LanguageSwitcher compact />
+            <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-2 py-1.5 shadow-sm sm:px-3 sm:py-2">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-[10px] font-semibold text-white sm:h-9 sm:w-9 sm:text-xs">{initials}</div>
+              <div className="hidden leading-tight sm:block">
+                <div className="text-sm font-semibold text-slate-900">{displayName}</div>
+                <div className="text-[10px] uppercase tracking-[0.24em] text-slate-500 sm:text-[11px]">{translate(ROLE_LABEL_BY_MISSION_ROLE[role], language)}</div>
+              </div>
             </div>
+            <Button type="button" variant="secondary" onClick={() => void logout()} className="text-xs sm:text-sm">
+              {t('auth.logout')}
+            </Button>
           </div>
-          <Button type="button" variant="secondary" onClick={() => void logout()}>
-            {t('auth.logout')}
-          </Button>
         </div>
       </header>
 
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="mx-auto flex max-w-[90rem] flex-col gap-4 px-3 py-4 sm:gap-6 sm:px-6 lg:px-8 lg:py-8">
         {backTo ? (
           <div className="flex items-center justify-between gap-4">
             <button
@@ -670,29 +754,36 @@ function Frame({ title, subtitle, children, backTo }: FrameProps) {
             >
               ← {backTo.label}
             </button>
-            <div className="text-xs uppercase tracking-[0.28em] text-slate-400">{LAWIM_BRAND_SLOGAN}</div>
+            <div className="hidden text-xs uppercase tracking-[0.28em] text-slate-400 sm:block">{LAWIM_BRAND_SLOGAN}</div>
           </div>
         ) : null}
-        <section className="grid gap-6 xl:grid-cols-[1.18fr_0.82fr]">
-          <div className="space-y-6">
-            <Surface className="p-6 sm:p-7">
+        <section className="grid gap-4 sm:gap-8 xl:grid-cols-[1.25fr_0.75fr]">
+          <div className="space-y-4 sm:space-y-6">
+            <Surface className="p-5 sm:p-7">
               <div className="flex flex-wrap items-center gap-3">
                 <Badge variant="info">{title}</Badge>
                 <Badge variant="success">{subtitle}</Badge>
               </div>
-              <h1 className="mt-5 max-w-3xl text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">{title}</h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">{subtitle}</p>
+              <h1 className="mt-4 max-w-3xl text-2xl font-semibold tracking-tight text-slate-950 sm:text-4xl">{title}</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base sm:leading-7">{subtitle}</p>
             </Surface>
             {children}
           </div>
-          <aside className="space-y-6">
-            <Surface className="p-6 sm:p-7">
+          <aside className="space-y-4 sm:space-y-6">
+            <div className="block xl:hidden">
+              <div className="flex flex-wrap gap-2">
+                <ActionChip label={t('cockpit.resume')} tone="primary" to="/conversation" />
+                <ActionChip label={t('cockpit.new_project')} to="/biens" />
+                <ActionChip label={t('cockpit.history')} to="/history" />
+              </div>
+            </div>
+            <Surface className="p-5 sm:p-7">
               <div className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{t('cockpit.topbar')}</div>
               <p className="mt-3 text-sm leading-6 text-slate-600">{LAWIM_OFFICIAL_CONTACT.supportEmail}</p>
               <p className="mt-2 text-sm text-slate-500">{LAWIM_OFFICIAL_CONTACT.websiteUrl.replace(/^https?:\/\//, '')}</p>
             </Surface>
             {backTo ? null : (
-            <Surface className="p-6 sm:p-7">
+            <Surface className="hidden p-6 sm:p-7 xl:block">
               <div className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{t('cockpit.navigation')}</div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <ActionChip label={t('cockpit.resume')} tone="primary" to="/conversation" />
@@ -866,7 +957,10 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
               ? String((match.partner as Record<string, unknown>).display_name ?? '')
               : '';
           const label = match.property?.title ?? partnerName ?? `Opportunité ${index + 1}`;
-          const description = match.summary || (match.reasons.length > 0 ? match.reasons.join(' · ') : roleCopy.relationDescription);
+          const humanReasons = match.reasons.length > 0
+            ? match.reasons.map((r) => humanReadableReason(r, language)).join(' · ')
+            : roleCopy.relationDescription;
+          const description = match.summary && !match.summary.includes('+') ? match.summary : humanReasons;
           const to = role === 'user' || role === 'investor' ? '/search' : role === 'agent' || role === 'partner' ? '/partners' : '/conversation';
           return { title: label, description, cta: 'Découvrir', to };
         })
@@ -896,7 +990,7 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
             case 'investor':
               return `Bonjour ${userName}. Vos opportunités restent suivies.`;
             default:
-              return `Bonjour ${userName}. Nous poursuivons votre projet.`;
+              return `Bonjour ${userName} 👋. Votre projet reste au cœur des échanges.`;
           }
         })()
       : roleCopy.emptyConversation;
@@ -924,7 +1018,7 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
 
   return (
     <Frame title={headline} subtitle={subline}>
-      <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      <section className="grid gap-8 xl:grid-cols-[1.2fr_0.8fr]">
         <div className="space-y-6">
           <Surface className="overflow-hidden p-6 sm:p-7">
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -934,10 +1028,10 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
               </div>
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
                 <span className="lawim-pulse-soft h-2 w-2 rounded-full bg-emerald-500" />
-                LAWIM en veille
+                {t('lawim.guardian')}
               </div>
             </div>
-            <div className="mt-5 grid gap-5 lg:grid-cols-[1.18fr_0.82fr]">
+            <div className="mt-5 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
               <div>
                 <p className="text-sm uppercase tracking-[0.28em] text-slate-400">Conversation principale</p>
                 <h2 className="mt-2 max-w-3xl text-3xl font-semibold tracking-tight text-slate-950">{narrative.title}</h2>
@@ -979,12 +1073,14 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
           </Surface>
 
           <section className="grid gap-3 sm:grid-cols-3">
-            {stats.map((item) => (
-              <StatPill key={item.label} {...item} />
+            {stats.map((item, index) => (
+              <div key={item.label} className={`lawim-reveal lawim-stagger-${index + 1}`}>
+                <StatPill {...item} />
+              </div>
             ))}
           </section>
 
-          <div className="grid gap-6 xl:grid-cols-[1.03fr_0.97fr]">
+          <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
             <Surface className="p-6 sm:p-7">
               <div className="flex items-center justify-between gap-3">
                 <div>
@@ -995,11 +1091,11 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
               </div>
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 {projectCards.length > 0 ? (
-                  projectCards.map((project) => (
+                  projectCards.map((project, index) => (
                     <NavLink
                       key={project.title}
                       to={project.to}
-                      className="rounded-[28px] border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white"
+                      className={`lawim-reveal lawim-card-hover lawim-stagger-${index + 1} rounded-[28px] border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-5`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
@@ -1053,8 +1149,8 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
               </div>
               <div className="mt-5 grid gap-4 md:grid-cols-2">
                 {relations.length > 0 ? (
-                  relations.map((relation) => (
-                    <div key={relation.title} className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)]">
+                  relations.map((relation, index) => (
+                    <div key={relation.title} className={`lawim-reveal lawim-stagger-${index + 1} rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)]`}>
                       <p className="text-lg font-semibold text-slate-950">{relation.title}</p>
                       <p className="mt-2 text-sm leading-6 text-slate-600">{relation.description}</p>
                       <div className="mt-4">
@@ -1072,7 +1168,7 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
           ) : null}
         </div>
 
-        <aside className="space-y-6 xl:sticky xl:top-28">
+        <aside className="space-y-4 sm:space-y-6 xl:sticky xl:top-28">
           <Surface className="p-6 sm:p-7">
             <div className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Résumé du dossier</div>
             <div className="mt-4 grid gap-3">
@@ -1136,21 +1232,9 @@ function useProjectsSummary() {
   };
 }
 
-function roleFromRouteOrUser(routeRole: string | undefined, userRole: AccessRole | null | undefined) {
-  if (routeRole) {
-    const normalized = routeRole.toLowerCase();
-    if (normalized === 'agent' || normalized === 'operator') return 'agent';
-    if (normalized === 'admin') return 'admin';
-    if (normalized === 'manager') return 'manager';
-    if (normalized === 'partner') return 'partner';
-    if (normalized === 'investor') return 'investor';
-    if (normalized === 'user' || normalized === 'owner') return 'user';
-  }
-  return missionRoleFromAccessRole(userRole ?? 'user');
-}
-
 export function PublicLandingPage() {
   const { t } = useTranslator();
+  const { language } = useLanguage();
   const navigate = useNavigate();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const roles = useAuthStore((state) => state.roles);
@@ -1163,7 +1247,7 @@ export function PublicLandingPage() {
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(226,232,240,0.92),_rgba(248,250,252,1)_35%,_rgba(241,245,249,1)_100%)] text-slate-900">
-      <header className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-6 sm:px-6 lg:px-8">
+      <header className="mx-auto flex max-w-[90rem] items-center justify-between gap-4 px-4 py-6 sm:px-6 lg:px-8">
         <BrandMark slogan={LAWIM_BRAND_SLOGAN} tone="light" />
         <div className="flex items-center gap-3">
           <LanguageSwitcher compact />
@@ -1172,14 +1256,14 @@ export function PublicLandingPage() {
           </Button>
         </div>
       </header>
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-16">
+      <div className="mx-auto grid max-w-[90rem] gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-20">
         <section className="space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 shadow-sm">
-            LAWIM
+            {translate('cockpit.iai', language)} — {LAWIM_BRAND_SLOGAN}
           </div>
-          <h1 className="max-w-3xl text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl">L’immobilier autrement.</h1>
+          <h1 className="max-w-3xl text-5xl font-semibold tracking-tight text-slate-950 sm:text-6xl lg:text-7xl">{LAWIM_BRAND_SLOGAN}</h1>
           <p className="max-w-2xl text-lg leading-8 text-slate-600">
-            Un conseiller immobilier intelligent accompagne votre projet, garde le contexte et rend la prochaine étape évidente.
+            Un conseiller immobilier intelligent vous accompagne de bout en bout. LAWIM garde votre contexte, vos documents et vos décisions au même endroit.
           </p>
           <div className="flex flex-wrap gap-3">
             <Button type="button" onClick={() => navigate('/login')}>
@@ -1189,29 +1273,50 @@ export function PublicLandingPage() {
               {t('cockpit.new_project')}
             </Button>
           </div>
+          <div className="flex flex-wrap gap-6 pt-4">
+            <div className="flex items-center gap-2 text-sm text-slate-500">
+              <span className="text-lg">💬</span> {t('assistant.title')}
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-500">
+              <span className="text-lg">📁</span> {t('dashboard.project')}
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-500">
+              <span className="text-lg">🤝</span> {t('module.partners.title')}
+            </div>
+          </div>
         </section>
         <section className="space-y-4">
-          <Surface className="p-6 sm:p-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Conversation</p>
-            <h2 className="mt-3 text-2xl font-semibold text-slate-950">Bonjour. Nous pouvons reprendre un dossier ou en ouvrir un nouveau.</h2>
+          <Surface className="p-6 sm:p-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-900 text-xl text-white">🤖</div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{translate('cockpit.iai', language)}</p>
+                <p className="text-sm text-slate-500">Conseiller immobilier</p>
+              </div>
+            </div>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-950">Bonjour 👋 Je suis LAWIM, votre conseiller immobilier.</h2>
             <p className="mt-3 text-sm leading-6 text-slate-600">
-              LAWIM garde la conversation, les documents et les décisions au même endroit.
+              Je garde votre projet en mémoire, vous aide à trouver le bon bien et les bons partenaires. Vos décisions restent les vôtres.
             </p>
           </Surface>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Surface className="p-5">
-              <p className="text-xs uppercase tracking-[0.26em] text-slate-400">Projets</p>
-              <p className="mt-3 text-3xl font-semibold text-slate-950">1</p>
-            </Surface>
-            <Surface className="p-5">
-              <p className="text-xs uppercase tracking-[0.26em] text-slate-400">Conversations</p>
-              <p className="mt-3 text-3xl font-semibold text-slate-950">1</p>
-            </Surface>
-            <Surface className="p-5">
-              <p className="text-xs uppercase tracking-[0.26em] text-slate-400">Opportunités</p>
-              <p className="mt-3 text-3xl font-semibold text-slate-950">2</p>
-            </Surface>
-          </div>
+          <Surface className="p-6 sm:p-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{t('dashboard.project')}</p>
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-sm text-emerald-700">✓</div>
+                <span className="text-sm text-slate-700">{t('assistant.context')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-sm text-emerald-700">✓</div>
+                <span className="text-sm text-slate-700">{t('module.properties.budget')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm text-amber-700">⋯</div>
+                <span className="text-sm text-slate-700">{t('dossier.next_action')}</span>
+              </div>
+            </div>
+            <p className="mt-3 text-sm text-slate-500">{translate('lawim.pulse', language)}</p>
+          </Surface>
         </section>
       </div>
     </main>
@@ -1270,7 +1375,7 @@ function ConversationThreadCard({ role, projects }: { role: MissionRole; project
       case 'investor':
         return 'Bonjour. Vos opportunités sont prêtes.';
       default:
-        return 'Bonjour. Décrivons ensemble votre nouveau projet.';
+        return 'Bonjour 👋 Racontez-moi votre projet, je vous guide pas à pas.';
     }
   })();
   const [messages, setMessages] = useState<Array<{ id: string; role: 'user' | 'assistant'; text: string; details?: string[] }>>([
@@ -1339,7 +1444,7 @@ function ConversationThreadCard({ role, projects }: { role: MissionRole; project
             ? ['Voir les missions', 'Partager une disponibilité', 'Ouvrir un échange', 'Mettre à jour mes horaires']
             : role === 'investor'
               ? ['Voir les opportunités', 'Comparer les biens', 'Ouvrir les échanges', 'Revoir le dossier']
-              : ['Continuer le projet', 'Ajouter un document', 'Prendre rendez-vous', 'Découvrir un bien'];
+              : ['Continuons le projet', 'Ajouter un document', 'Trouvons un bien', 'Voir les partenaires'];
 
   return (
     <Surface className="p-6 sm:p-7">
@@ -1355,7 +1460,7 @@ function ConversationThreadCard({ role, projects }: { role: MissionRole; project
           <ActionChip label="Telegram" tone={channel === 'telegram' ? 'primary' : 'secondary'} onClick={() => setChannel('telegram')} />
         </div>
       </div>
-      <div className="mt-5 grid gap-4 xl:grid-cols-[0.78fr_1.22fr]">
+      <div className="mt-5 grid gap-6 xl:grid-cols-[0.72fr_1.28fr]">
         <div className="space-y-4">
           <Select
             tone="light"
@@ -1446,7 +1551,7 @@ export function ConversationStudioPage() {
       subtitle="Le point d’entrée principal de LAWIM. Chaque échange garde le contexte, le dossier et la décision."
       backTo={{ label: t('cockpit.back_to_cockpit'), to: resolveDashboardPath(role) }}
     >
-      <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
+      <div className="grid gap-8 xl:grid-cols-[0.85fr_1.15fr]">
         <Surface className="p-6 sm:p-7">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Dossiers</p>
           <div className="mt-4 space-y-3">
@@ -1490,23 +1595,53 @@ export function ProjectDossierPage() {
 
   return (
     <Frame title="Dossier projet" subtitle="Les décisions, les documents, les partenaires et les échéances restent regroupés." backTo={{ label: t('cockpit.back_to_cockpit'), to: resolveDashboardPath(role) }}>
-      <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+      <div className="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
         <Surface className="p-6 sm:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Résumé</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{t('dossier.summary')}</p>
           <h2 className="mt-3 text-2xl font-semibold text-slate-950">{currentProject?.title ?? 'Aucun dossier ouvert'}</h2>
-          <p className="mt-3 text-sm leading-7 text-slate-600">{currentProject?.objective ?? 'Le dossier projet centralise la conversation et les décisions.'}</p>
+          <p className="mt-3 text-sm leading-7 text-slate-600">{currentProject?.objective ?? t('dossier.evolving')}</p>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            <StatPill label="État" value={currentProject?.status ?? 'En attente'} />
-            <StatPill label="Budget" value={currentProject?.budget_max != null ? formatMoney(currentProject.budget_max) : 'À préciser'} />
-            <StatPill label="Ville" value={currentProject?.location_city ?? '—'} />
+            <StatPill label={t('module.properties.status')} value={currentProject?.status ?? t('assistant.no_project')} />
+            <StatPill label={t('module.properties.budget')} value={currentProject?.budget_max != null ? formatPropertyPrice(currentProject.budget_max) : t('module.properties.guidance')} />
+            <StatPill label={t('module.properties.city')} value={currentProject?.location_city ?? '\u2014'} />
+          </div>
+          <div className="mt-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{t('dossier.timeline')}</p>
+            <div className="mt-4 space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm text-emerald-700">\u2713</div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-950">{t('dossier.last_conversation')}</p>
+                  <p className="text-sm text-slate-500">Reprise du dossier sans perte de contexte</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm text-emerald-700">\u2713</div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-950">{t('dossier.last_decision')}</p>
+                  <p className="text-sm text-slate-500">Projet conserv\u00e9 dans le m\u00eame dossier</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-100 text-sm text-amber-700">\u2192</div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-950">{t('dossier.next_action')}</p>
+                  <p className="text-sm text-slate-500">{currentProject?.objective ?? t('dossier.evolving')}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </Surface>
         <Surface className="p-6 sm:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Décisions récentes</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{t('dossier.recent_decisions')}</p>
           <div className="mt-4 space-y-3">
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">Projet conservé dans le même dossier.</div>
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">Projet conserv\u00e9 dans le m\u00eame dossier.</div>
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">Conversation suspendue puis reprise sans perte de contexte.</div>
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">Documents et recommandations liés au même objectif.</div>
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">Documents et recommandations li\u00e9s au m\u00eame objectif.</div>
+          </div>
+          <div className="mt-6 rounded-3xl border border-amber-100 bg-amber-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">{t('dossier.next_deadline')}</p>
+            <p className="mt-2 text-sm text-amber-800">Aucune \u00e9ch\u00e9ance imm\u00e9diate</p>
           </div>
         </Surface>
       </div>
@@ -1515,7 +1650,7 @@ export function ProjectDossierPage() {
 }
 
 export function PropertyJourneyPage() {
-  const { t } = useTranslator();
+  const { t, language } = useTranslator();
   const [intent, setIntent] = useState('acheter');
   const [asset, setAsset] = useState('terrain');
   const [cityMode, setCityMode] = useState<'major' | 'other'>('major');
@@ -1596,7 +1731,7 @@ export function PropertyJourneyPage() {
 
   return (
     <Frame title="Biens" subtitle="Le point de départ est conversationnel. Les champs apparaissent seulement quand ils deviennent utiles." backTo={{ label: t('cockpit.back_to_cockpit'), to: resolveDashboardPath('user') }}>
-      <div className="grid gap-6 xl:grid-cols-[1.02fr_0.98fr]">
+      <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface className="p-6 sm:p-7">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Conversation guidée</p>
           <h2 className="mt-3 text-2xl font-semibold text-slate-950">Bonjour. Quel est votre projet aujourd’hui ?</h2>
@@ -1707,31 +1842,55 @@ export function PropertyJourneyPage() {
         </Surface>
         <div className="space-y-6">
           <Surface className="p-6 sm:p-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Recommandations</p>
-            <h2 className="mt-3 text-2xl font-semibold text-slate-950">2 biens susceptibles de vous intéresser</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{t('match.reason.type')}</p>
+            <h2 className="mt-3 text-2xl font-semibold text-slate-950">{translate('cockpit.iai', language)} {matches.length > 0 ? `a trouvé ${matches.length} bien${matches.length > 1 ? 's' : ''}` : 'prépare vos recommandations'}</h2>
             <div className="mt-5 space-y-3">
               {matches.length > 0 ? (
-                matches.map((match, index) => (
-                  <div key={index} className="rounded-3xl border border-slate-200 bg-white p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-base font-semibold text-slate-950">{match.property?.title ?? `Bien ${index + 1}`}</p>
-                      <Badge variant="info">{match.eligible ? 'Pertinent' : 'À vérifier'}</Badge>
+                matches.map((match, index) => {
+                  const property = match.property;
+                  const propertyTitle = property?.title ?? `Bien ${index + 1}`;
+                  const propertyType = String(property?.type ?? 'maison');
+                  const propertyPrice = property?.price != null ? formatPropertyPrice(property.price) : '';
+                  const propertyLocation = property?.location ?? '';
+                  const tone = getPropertyTone(propertyType, index);
+                  return (
+                    <div key={index} className={`rounded-3xl border ${tone.frame} bg-white p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)]`}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3">
+                          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${tone.orb} text-xl`}>{getPropertyTypeIcon(propertyType)}</div>
+                          <div>
+                            <p className="text-base font-semibold text-slate-950">{propertyTitle}</p>
+                            <p className="text-sm text-slate-500">
+                              {tone.label}{propertyLocation ? ` · ${propertyLocation}` : ''}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge variant={match.eligible ? 'success' : 'info'}>{match.eligible ? t('match.eligible') : t('match.to_verify')}</Badge>
+                      </div>
+                      {propertyPrice ? (
+                        <div className="mt-3 flex items-center gap-3">
+                          <span className="text-lg font-bold text-slate-900">{propertyPrice}</span>
+                        </div>
+                      ) : null}
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {match.reasons.map((reason, i) => (
+                          <Badge key={i} variant="info">{humanReadableReason(reason, language)}</Badge>
+                        ))}
+                      </div>
                     </div>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{match.summary}</p>
-                    <p className="mt-2 text-xs uppercase tracking-[0.24em] text-slate-400">{match.reasons.join(' · ')}</p>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
-                  Les propositions apparaîtront lorsque la localisation et le budget seront suffisants.
+                  {t('match.empty')}
                 </div>
               )}
             </div>
           </Surface>
           <Surface className="p-6 sm:p-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">IA</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{translate('cockpit.iai', language)}</p>
             <p className="mt-3 text-sm leading-7 text-slate-600">
-              LAWIM commence par comprendre votre projet, puis révèle seulement les champs utiles et les propositions pertinentes.
+              {translate('lawim.pulse', language)}
             </p>
           </Surface>
         </div>
@@ -1741,7 +1900,7 @@ export function PropertyJourneyPage() {
 }
 
 export function PartnerJourneyPage() {
-  const { t } = useTranslator();
+  const { t, language } = useTranslator();
   const [need, setNeed] = useState('architecte');
   const [projectType, setProjectType] = useState('construction');
   const [city, setCity] = useState('Douala');
@@ -1770,7 +1929,7 @@ export function PartnerJourneyPage() {
 
   return (
     <Frame title="Partenaires" subtitle="La mise en relation apparaît seulement quand elle apporte de la valeur au projet." backTo={{ label: t('cockpit.back_to_cockpit'), to: resolveDashboardPath('agent') }}>
-      <div className="grid gap-6 xl:grid-cols-[1.02fr_0.98fr]">
+      <div className="grid gap-8 xl:grid-cols-[1.1fr_0.9fr]">
         <Surface className="p-6 sm:p-7">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Conversation guidée</p>
           <div className="mt-6 grid gap-4">
@@ -1795,30 +1954,50 @@ export function PartnerJourneyPage() {
         </Surface>
         <div className="space-y-6">
           <Surface className="p-6 sm:p-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Propositions</p>
-            <h2 className="mt-3 text-2xl font-semibold text-slate-950">Un partenaire pourrait vous accompagner</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{t('module.partners.results_title')}</p>
+            <h2 className="mt-3 text-2xl font-semibold text-slate-950">{matches.length > 0 ? `${matches.length} partenaire${matches.length > 1 ? 's' : ''} ${matches.length > 1 ? 'peuvent' : 'peut'} vous accompagner` : t('cockpit.iai') + ' cherche le bon profil'}</h2>
             <div className="mt-5 space-y-3">
               {matches.length > 0 ? (
-                matches.map((match, index) => (
-                  <div key={index} className="rounded-3xl border border-slate-200 bg-white p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="font-semibold text-slate-950">
-                        {match.partner != null && typeof match.partner === 'object' && 'display_name' in match.partner
-                          ? String((match.partner as Record<string, unknown>).display_name ?? `Partenaire ${index + 1}`)
-                          : `Partenaire ${index + 1}`}
-                      </p>
-                      <Badge variant="info">{match.eligible ? 'Pertinent' : 'À vérifier'}</Badge>
+                matches.map((match, index) => {
+                  const partner = match.partner && typeof match.partner === 'object' ? (match.partner as Record<string, unknown>) : null;
+                  const partnerName = partner?.display_name ? String(partner.display_name) : `Partenaire ${index + 1}`;
+                  const partnerType = partner?.partner_type ? String(partner.partner_type) : need;
+                  const tone = getPartnerTone(partnerType, index);
+                  return (
+                    <div key={index} className={`rounded-3xl border ${tone.frame} bg-white p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(15,23,42,0.08)]`}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3">
+                          <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${tone.orb} text-xl`}>{getPartnerTypeIcon(partnerType)}</div>
+                          <div>
+                            <p className="text-base font-semibold text-slate-950">{partnerName}</p>
+                            <p className="text-sm text-slate-500">{tone.label} · {city}</p>
+                          </div>
+                        </div>
+                        <Badge variant={match.eligible ? 'success' : 'info'}>{match.eligible ? t('match.eligible') : t('match.to_verify')}</Badge>
+                      </div>
+                      {partner?.description ? (
+                        <p className="mt-2 text-sm leading-6 text-slate-600">{String(partner.description)}</p>
+                      ) : null}
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {match.reasons.map((reason, i) => (
+                          <Badge key={i} variant="info">{humanReadableReason(reason, language)}</Badge>
+                        ))}
+                      </div>
                     </div>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{match.summary}</p>
-                    <p className="mt-2 text-xs uppercase tracking-[0.24em] text-slate-400">{match.reasons.join(' · ')}</p>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
-                  Les partenaires pertinents s’affichent quand le besoin est assez précis.
+                  {t('match.empty_partner')}
                 </div>
               )}
             </div>
+          </Surface>
+          <Surface className="p-6 sm:p-7">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">{t('match.why_partner_title')}</p>
+            <p className="mt-3 text-sm leading-7 text-slate-600">
+              {t('module.partners.form_description')}
+            </p>
           </Surface>
           <Surface className="p-6 sm:p-7">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">Pourquoi maintenant ?</p>

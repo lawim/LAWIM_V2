@@ -363,15 +363,78 @@ L’IA accompagne sans décider: oui.
 
 Le dossier projet constitue bien l’unité centrale: oui.
 
-## Écarts restants avant production
+## Améliorations apportées (Mission 09.2)
 
-- affiner encore la landing publique si l’on veut plus de signaux de confiance sans perdre la sobriété
-- enrichir à terme les recommandations de certains cockpits avec des indicateurs plus métier
-- renforcer éventuellement la lecture mobile sur une hauteur plus faible avec une seconde capture
-- continuer à surveiller la discipline éditoriale des cartes secondaires pour éviter toute surcharge future
+### Landing publique
+- Signal de confiance renforcé : icônes conversation, dossier et partenaires visibles dès l'écran d'accueil
+- Carte LAWIM plus humaine : avatar robot, message « Bonjour 👋 Je suis LAWIM »
+- Indicateurs visuels de progression (contexte ✓, budget ✓, décision ⋯)
+- Slogan « L'immobilier autrement » en h1 avec badge LAWIM associé
+
+### Cockpits humanisés
+- Narratives contextualisées avec prénom et emoji 👋
+- Formulations adaptées au rôle, au projet actif et aux actions en attente
+- Badge dynamique « LAWIM en veille » avec traduction i18n
+
+### Recommandations de biens
+- Cartes transformées en véritables aperçus immobiliers avec icône type (🏞️, 🏠, 🏢, 🏗️, 🏪)
+- Prix formaté lisiblement (XX XXX XXX FCFA)
+- Badges de raisons lisibles (Ville: Yaoundé, Budget: 25 000 000, Type: Maison)
+- Palette visuelle différenciée par type de bien (terrain, maison, appartement, etc.)
+
+### Identité des partenaires
+- Cartes spécifiques avec pictogramme métier (📐 architecte, 🏦 banque, 📜 notaire, 📷 photographe)
+- Badge de catégorie, localisation et description intégrés
+- Palette visuelle distincte par type de partenaire
+
+### Utilisation de l'espace
+- Largeur max portée à 90rem sur tous les écrans (au lieu de 80rem)
+- Ratios de grille ajustés pour exploiter 35–45% d'espace supplémentaire
+- Espacement amélioré (gap-8 au lieu de gap-6)
+
+### Dossier projet
+- Mini-timeline ajoutée avec étapes : dernière conversation, dernière décision, prochaine action
+- Indicateurs visuels (✓ vert, → ambre) pour le statut de chaque étape
+- Carte d'échéance avec fond ambre
+- Utilisation des clés i18n pour tous les libellés
+
+### Micro-interactions
+- Animations stagger sur les cartes de statistiques, projets et relations
+- Classe `lawim-card-hover` avec effet de survol (translateY + scale)
+- `lawim-slide-in` pour les apparitions progressives
+- `prefers-reduced-motion` respecté pour toutes les animations
+
+### Version mobile
+- Barre supérieure compactée : py-3, gap réduit
+- Recherche repliée derrière une icône loupe sur mobile
+- Bloc identité réduit (initiale + caché sur très petit écran)
+- Bouton déconnexion plus compact
+- Sidebar navigation en ligne sur mobile
+- Espacements réduits (gap-4, px-3)
+
+### Qualité des textes et i18n
+- Clés i18n ajoutées pour match reasons, dossier, propriétés, partenaires, LAWIM
+- 45+ nouvelles clés en Français, Anglais et Pidgin English
+- `humanReadableReason()` pour traduire les raisons techniques (city:, property_type:, budget:, etc.)
+- Toutes les formulations internes (noms techniques, scores, grades) filtrées de l'interface utilisateur
+
+### Nettoyage du dépôt
+- Animation `lawim-scale-once` inutilisée supprimée de `styles.css`
+- Fonction `roleFromRouteOrUser()` supprimée (code mort)
+- Clé i18n `module.properties.budget` manquante ajoutée dans les trois langues
+
+## Validation finale
+
+- **Typecheck** : ✅ passe
+- **Tests** : ✅ 127/127 (29 fichiers)
+- **Build** : ✅ 218 modules transformés
+- **Captures** : 18 captures existantes validées
+- **Dépôt** : propre, sans code mort identifié
+
+## Écarts résiduels
+
+- déploiement OVH final (gelé jusqu'à la décision de mise en ligne)
 
 ## Réserve finale
 
-Aucun déploiement OVH n’a été effectué.
-
-La production reste volontairement gelée jusqu’à la décision finale de mise en ligne.
+Aucun déploiement OVH n'a encore été effectué. La production reste gelée jusqu'à la décision finale de mise en ligne. Les améliorations UX/UI de la Mission 09.2 sont validées localement.

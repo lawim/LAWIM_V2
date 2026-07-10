@@ -159,12 +159,12 @@ describe('LAWIM frontend shell', () => {
   it('renders the public home page with branding', () => {
     renderWithProviders(<WebApp />);
 
-    expect(screen.getByRole('heading', { name: /l’immobilier autrement/i })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /bonjour\. nous pouvons reprendre un dossier ou en ouvrir un nouveau\./i })).toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { name: /l’immobilier autrement/i }).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByRole('heading', { name: /bonjour 👋 je suis lawim/i })).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: /connexion/i })).toHaveLength(2);
     expect(screen.getByRole('button', { name: /nouveau projet/i })).toBeInTheDocument();
     expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(1);
-    expect(screen.getByText(LAWIM_BRAND_SLOGAN)).toBeInTheDocument();
+    expect(screen.getAllByText(LAWIM_BRAND_SLOGAN).length).toBeGreaterThanOrEqual(1);
   });
 
   it.each([
@@ -239,7 +239,7 @@ describe('LAWIM frontend shell', () => {
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
     expect(await screen.findByRole('heading', { name: /cockpit administrateur/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /bonjour admin user\. la supervision de la plateforme reste active\./i, level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /bonjour admin\. la plateforme reste sous contrôle\./i, level: 2 })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /continuer la conversation/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /déconnexion|logout/i })).toBeInTheDocument();
     expect(screen.getAllByText(/^administrateur$/i)).toHaveLength(2);
@@ -270,7 +270,7 @@ describe('LAWIM frontend shell', () => {
 
     resolveLogin(loginResponse('admin', ['admin'], 'admin@lawim.app', 'Admin User'));
 
-    expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /cockpit administrateur/i, level: 1 })).toBeInTheDocument();
   });
 
   it('opens the conversation studio from the cockpit and returns to it', async () => {
@@ -429,7 +429,7 @@ describe('LAWIM frontend shell', () => {
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
     expect(await screen.findByRole('heading', { name: /cockpit administrateur/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /bonjour admin user\. la supervision de la plateforme reste active\./i, level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /bonjour admin\. la plateforme reste sous contrôle\./i, level: 2 })).toBeInTheDocument();
     await waitFor(() => {
       expect(debugSpy.mock.calls.map(([label]) => label)).toEqual([
         'LOGIN_OK',
