@@ -13,6 +13,9 @@ import {
   Select,
   Textarea,
   translate,
+  useFeatures,
+  useFeature,
+  type FeatureKey,
   useLanguage
 } from '@ui';
 import { resolveDashboardPath, resolvePrimaryRole, useAuthStore } from '@auth';
@@ -383,64 +386,57 @@ function CockpitFrame({ title, children }: FrameProps) {
   );
 }
 
-function SecondaryActionsBlock() {
+function SecondaryActionsBlock({ role }: { role?: MissionRole }) {
   const { t } = useTranslator();
   const navigate = useNavigate();
+  const { features } = useFeatures();
 
-  const groups = [
-    {
-      title: '🏠 ' + t('module.properties.title'),
-      items: [
-        { icon: '🔎', label: t('cockpit.resume'), to: '/biens' },
-        { icon: '➕', label: t('module.properties.title'), to: '/biens' },
-        { icon: '📄', label: t('module.documents.title'), to: '/documents' }
-      ]
-    },
-    {
-      title: '💬 ' + t('assistant.title'),
-      items: [
-        { icon: '💬', label: t('assistant.title'), to: '/conversation' },
-        { icon: '📁', label: t('dashboard.project'), to: '/dossier' },
-        { icon: '📅', label: t('assistant.project_hint'), to: '/history' }
-      ]
-    },
-    {
-      title: '🤝 ' + t('module.partners.title'),
-      items: [
-        { icon: '🤝', label: t('module.partners.title'), to: '/partners' },
-        { icon: '✉️', label: t('module.contact.title'), to: '/contact' }
-      ]
-    }
+  const allItems: { icon: string; label: string; to: string; feature: FeatureKey }[] = [
+    { icon: '🔎', label: t('cockpit.resume'), to: '/biens', feature: 'property_search' },
+    { icon: '➕', label: t('module.properties.title'), to: '/biens', feature: 'property_add' },
+    { icon: '💬', label: t('assistant.title'), to: '/conversation', feature: 'conversation' },
+    { icon: '📁', label: t('dashboard.project'), to: '/dossier', feature: 'dossiers' },
+    { icon: '🤝', label: t('module.partners.title'), to: '/partners', feature: 'partners' },
+    { icon: '📄', label: t('module.documents.title'), to: '/documents', feature: 'documents' },
+    { icon: '⭐', label: t('favorites.title'), to: '/favorites', feature: 'favorites' },
+    { icon: '📊', label: t('module.detail.compare'), to: '/comparison', feature: 'comparison' },
+    { icon: '🗺️', label: t('nav.map'), to: '/map', feature: 'map' },
+    { icon: '🔔', label: t('nav.notifications'), to: '/notifications', feature: 'notifications' },
+    { icon: '📅', label: t('assistant.project_hint'), to: '/history', feature: 'history' },
+    { icon: '👤', label: t('nav.profile'), to: '/profile', feature: 'profile' },
+    { icon: '💰', label: t('nav.estimation'), to: '/estimation', feature: 'estimations' },
+    { icon: '✉️', label: t('module.contact.title'), to: '/contact', feature: 'profile' },
   ];
+
+  if (role === 'admin') {
+    allItems.push({ icon: '⚙️', label: t('module.admin.description'), to: '/admin/features', feature: 'admin_features' });
+  }
+
+  const visible = allItems.filter((item) => features[item.feature]);
+
+  if (visible.length === 0) return null;
 
   return (
     <Surface className="p-4">
       <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">🧭 {t('assistant.quick_prompts')}</p>
-      <div className="mt-3 grid gap-4 sm:grid-cols-3">
-        {groups.map((group) => (
-          <div key={group.title}>
-            <p className="mb-2 text-xs font-semibold text-slate-600">{group.title}</p>
-            <div className="flex flex-col gap-1.5">
-              {group.items.map((item) => (
-                <button key={item.label} type="button" onClick={() => navigate(item.to)}
-                  className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-                >
-                  <span>{item.icon}</span>
-                  <span>{item.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {visible.map((item) => (
+          <button key={item.label} type="button" data-tooltip={item.label} onClick={() => navigate(item.to)}
+            className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+          >
+            <span>{item.icon}</span>
+            <span>{item.label}</span>
+          </button>
         ))}
       </div>
     </Surface>
   );
 }
 
-function PrimaryAction({ icon, label, to }: { icon: string; label: string; to: string }) {
+function PrimaryAction({ icon, label, to, tooltip }: { icon: string; label: string; to: string; tooltip?: string }) {
   const navigate = useNavigate();
   return (
-    <button type="button" onClick={() => navigate(to)}
+    <button type="button" data-tooltip={tooltip} onClick={() => navigate(to)}
       className="flex items-center gap-3 rounded-2xl border border-slate-900 bg-slate-900 px-6 py-4 text-lg font-semibold text-white shadow-lg transition hover:bg-slate-800 hover:shadow-xl"
     >
       <span className="text-2xl">{icon}</span>
@@ -476,6 +472,7 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const firstName = getFirstName(user?.name || user?.email) || '👋';
+  const { features } = useFeatures();
   const activeProject = projects[0] ?? null;
   const projectTheme = describeProjectTheme(activeProject?.objective);
 
@@ -709,7 +706,7 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
             </Surface>
           ) : null}
 
-          <SecondaryActionsBlock />
+          <SecondaryActionsBlock role={role} />
         </div>
       </div>
     </CockpitFrame>

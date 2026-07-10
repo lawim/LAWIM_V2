@@ -356,6 +356,9 @@ const TRANSLATIONS = {
     'shared.role': 'Rôle',
     'shared.user': 'Utilisateur connecté',
     'shared.language': 'Langue',
+    'favorites.title': 'Favoris',
+    'nav.notifications': 'Notifications',
+    'module.detail.compare': 'Comparer',
   },
   en: {
     'app.name': 'LAWIM_V2',
@@ -706,6 +709,9 @@ const TRANSLATIONS = {
     'shared.role': 'Role',
     'shared.user': 'Signed-in user',
     'shared.language': 'Language',
+    'favorites.title': 'Favorites',
+    'nav.notifications': 'Notifications',
+    'module.detail.compare': 'Compare',
   },
   pcm: {
     'app.name': 'LAWIM_V2',
@@ -1056,6 +1062,9 @@ const TRANSLATIONS = {
     'shared.role': 'Role',
     'shared.user': 'Signed-in user',
     'shared.language': 'Language',
+    'favorites.title': 'Favorites',
+    'nav.notifications': 'Notifications',
+    'module.detail.compare': 'Compare',
   }
 } as const;
 

@@ -112,6 +112,47 @@ body {
   box-shadow: 0 20px 60px rgba(15, 23, 42, 0.1);
 }
 
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #f1f5f9;
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: nowrap;
+  max-width: 260px;
+  white-space: normal;
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(15,23,42,0.15);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+[data-tooltip]:hover::before,
+[data-tooltip]:focus-visible::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #0f172a;
+  z-index: 100;
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lawim-reveal,
   .lawim-pulse-soft,

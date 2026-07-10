@@ -8,16 +8,20 @@ import {
   Button,
   Card,
   Checkbox,
+  FeatureProvider,
   Input,
   LanguageProvider,
   LanguageSwitcher,
   PageShell,
   Select,
   Textarea,
+  useFeatures,
+  FEATURE_LABELS,
   LAWIM_BRAND_SLOGAN,
   LAWIM_OFFICIAL_CONTACT,
   translate,
-  useLanguage
+  useLanguage,
+  type FeatureKey
 } from '@ui';
 import { ProtectedRoute, resolveDashboardPath as resolveCockpitPath, resolvePrimaryRole, useAuthStore } from '@auth';
 import { WorkflowOrchestratorPage } from './WorkflowOrchestratorPage';
@@ -746,15 +750,48 @@ function WebAppContent() {
       <Route path="/workflow" element={<WorkflowOrchestratorPage />} />
       <Route path="/observability" element={<ObservabilityConsolePage />} />
       <Route path="/readiness" element={<ProductReadinessDashboardPage />} />
+      <Route path="/admin/features" element={<ProtectedRoute><AdminFeaturesPage /></ProtectedRoute>} />
       <Route path="*" element={<PublicLandingPage />} />
     </Routes>
+  );
+}
+
+function AdminFeaturesPage() {
+  const { t } = useTranslator();
+  const { features, setFeature, resetFeatures } = useFeatures();
+
+  return (
+    <PageShell eyebrow="Admin" title="⚙️ Gestion des fonctionnalités" description="Activez ou désactivez les fonctionnalités visibles dans les Cockpits.">
+      <Card title="Fonctionnalités" description="Cochez pour activer, décochez pour masquer complètement.">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {(Object.keys(FEATURE_LABELS) as FeatureKey[]).map((key) => (
+            <label key={key} className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 transition hover:border-slate-300">
+              <input
+                className="h-5 w-5 rounded border-slate-300 text-slate-900 focus:ring-slate-900"
+                checked={features[key]}
+                onChange={() => setFeature(key, !features[key])}
+                type="checkbox"
+              />
+              <span>{FEATURE_LABELS[key]}</span>
+            </label>
+          ))}
+        </div>
+        <div className="mt-6 flex gap-3">
+          <Button type="button" onClick={resetFeatures}>
+            Réinitialiser
+          </Button>
+        </div>
+      </Card>
+    </PageShell>
   );
 }
 
 export function WebApp() {
   return (
     <LanguageProvider>
-      <WebAppContent />
+      <FeatureProvider>
+        <WebAppContent />
+      </FeatureProvider>
     </LanguageProvider>
   );
 }
