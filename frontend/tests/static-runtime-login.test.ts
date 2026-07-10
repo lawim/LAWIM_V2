@@ -242,12 +242,12 @@ describe('static runtime login flow', () => {
     expect(labels).toEqual([
       'LOGIN_OK',
       'ROLE_RESOLVED',
-      'DASHBOARD_SELECTED',
+      'COCKPIT_SELECTED',
       'REFRESH_START',
       'DASHBOARD_RENDERED',
       'ROLE_DASHBOARD_RENDERED',
       'REFRESH_DONE',
-      'APPLY_JOURNEY',
+      'APPLY_COCKPIT',
       'RENDER_DONE',
       'DASHBOARD_RENDERED'
     ]);

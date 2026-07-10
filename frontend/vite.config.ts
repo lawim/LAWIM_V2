@@ -1,9 +1,13 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
+import os from 'os';
+
+const sharedCacheDir = process.env.LAWIM_VITE_CACHE_DIR ?? path.join(os.tmpdir(), 'lawim-v2-vite-cache');
 
 export default defineConfig({
+  cacheDir: sharedCacheDir,
   plugins: [
     react(),
     VitePWA({
@@ -78,7 +82,12 @@ export default defineConfig({
       '@workflows': path.resolve(__dirname, './packages/workflows/src/index.ts')
     }
   },
-  build: {
+  test: {
+    cache: {
+      dir: path.join(sharedCacheDir, 'vitest')
+    }
+  },
+    build: {
     target: 'es2020',
     sourcemap: false,
     cssCodeSplit: true,
@@ -91,6 +100,7 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            if (id.includes('zustand') || id.includes('use-sync-external-store')) return 'vendor-react';
             if (id.includes('react-router')) return 'vendor-router';
             if (id.includes('react') || id.includes('react-dom')) return 'vendor-react';
             if (id.includes('@tanstack')) return 'vendor-query';

@@ -223,4 +223,56 @@ L'organisation, les intitulés, les boutons et la navigation doivent guider natu
 
 Les doubles formulations, les paraphrases et les explications redondantes doivent être supprimées.
 
+---
+
+# CHAPITRE 12 — COCKPITS ET PANNEAUX SPÉCIALISÉS
+
+Les dashboards LAWIM doivent fonctionner comme des cockpits.
+
+La première vue doit rester courte et immédiatement lisible.
+
+Elle doit présenter uniquement :
+
+* les informations essentielles du rôle ;
+* les statistiques prioritaires ;
+* les actions prioritaires ;
+* la conversation ou le projet actif lorsqu'ils sont pertinents ;
+* des cartes courtes ouvrant des espaces dédiés.
+
+Les longues pages verticales ne doivent pas redevenir la norme.
+
+Chaque carte importante doit ouvrir un panneau ou un espace spécialisé.
+
+Chaque espace spécialisé doit proposer un retour simple vers le cockpit.
+
+Chaque rôle doit disposer d'un cockpit spécifique et non générique.
+
+---
+
+# CHAPITRE 13 — CONVERSATION, INTENTIONS ET DOSSIER PROJET
+
+La conversation est le point d'entrée principal de LAWIM.
+
+Les intentions passent avant les formulaires.
+
+Le dossier projet est l'unité de travail centrale.
+
+Le profil utilisateur s'enrichit progressivement sans redemander ce qui est déjà connu.
+
+Les formulaires ne doivent apparaître que lorsqu'ils sont plus efficaces que la conversation.
+
+L'IA doit guider, reformuler, expliquer et proposer la prochaine étape sans jamais décider à la place de l'utilisateur.
+
+---
+
+# CHAPITRE 14 — LIENS PRODUIT ET MISE EN RELATION
+
+LAWIM doit rester centré sur la mise en relation utile.
+
+Les recommandations doivent être justifiées.
+
+Les propositions doivent rester pertinentes et pouvoir être refusées.
+
+Les partenaires, biens, projets et intentions doivent rester visibles comme des objets de travail de même importance métier.
+
 # FIN DU DOCUMENT

@@ -27,6 +27,12 @@ describe('frontend i18n', () => {
     expect(translate('auth.login.register_loading', 'fr')).toBe('Création en cours...');
     expect(translate('auth.contact.website', 'pcm')).toBe('Website');
     expect(translate('dashboard.whats_next', 'pcm')).toBe('Wetin next?');
+    expect(translate('dashboard.project', 'fr')).toBe('Dossier actif');
+    expect(translate('dashboard.active_project', 'fr')).toBe('Projet actif');
+    expect(translate('dashboard.continue_project', 'en')).toBe('Continue project');
+    expect(translate('assistant.intent_title', 'en')).toBe('Quick intents');
+    expect(translate('module.properties.step_location', 'fr')).toBe('Localisation');
+    expect(translate('module.properties.status.published', 'en')).toBe('Published');
     expect(translate('shared.logout', 'pcm')).toBe('Comot');
     expect(translate('auth.login.banner.note', 'fr')).toBe('');
   });

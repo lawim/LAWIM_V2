@@ -2918,7 +2918,7 @@ function updateSelectedPropertyLabel() {
 }
 
 function applyJourney(journey) {
-  traceRuntime("APPLY_JOURNEY", { journey });
+  traceRuntime("APPLY_COCKPIT", { journey });
   state.activeJourney = journey;
   localStorage.setItem("lawim.journey", journey);
   updateAuthShell(Boolean(state.token));
@@ -3901,7 +3901,7 @@ async function handleLogin(event) {
       role: resolvedRole,
       journey: resolvedJourney,
     });
-    traceRuntime("DASHBOARD_SELECTED", {
+    traceRuntime("COCKPIT_SELECTED", {
       role: resolvedRole,
       journey: resolvedJourney,
     });

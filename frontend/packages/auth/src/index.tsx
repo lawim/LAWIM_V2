@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { getStoredLanguage, translate } from '@ui';
 
-export type AccessRole = 'admin' | 'manager' | 'operator' | 'partner' | 'user';
+export type AccessRole = 'admin' | 'manager' | 'operator' | 'partner' | 'investor' | 'user';
 
 export interface AuthUser {
   id: string;
@@ -32,7 +32,7 @@ export function getUserDisplayName(user: AuthUser) {
   return user.name || user.email.split('@')[0];
 }
 
-const rolePriority: AccessRole[] = ['admin', 'manager', 'operator', 'partner', 'user'];
+const rolePriority: AccessRole[] = ['admin', 'manager', 'operator', 'partner', 'investor', 'user'];
 
 const roleAliases: Record<string, AccessRole> = {
   admin: 'admin',
@@ -77,8 +77,8 @@ const roleAliases: Record<string, AccessRole> = {
   locataire: 'user',
   landlord: 'user',
   proprietaire: 'user',
-  investor: 'user',
-  investisseur: 'user',
+  investor: 'investor',
+  investisseur: 'investor',
   promoter: 'user',
   promoteur: 'user',
   company: 'user',
@@ -104,7 +104,20 @@ export function resolvePrimaryRole(role: unknown, roles: unknown[] = []): Access
 }
 
 export function resolveDashboardPath(role: AccessRole | string) {
-  return '/dashboard';
+  switch (resolvePrimaryRole(role)) {
+    case 'admin':
+      return '/cockpit/admin';
+    case 'manager':
+      return '/cockpit/manager';
+    case 'operator':
+      return '/cockpit/agent';
+    case 'partner':
+      return '/cockpit/partner';
+    case 'investor':
+      return '/cockpit/investor';
+    default:
+      return '/cockpit/user';
+  }
 }
 
 function formatAuthError(message: string, context: 'login' | 'session') {

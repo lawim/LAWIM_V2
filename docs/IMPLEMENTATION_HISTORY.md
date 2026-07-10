@@ -35,6 +35,13 @@ L’historique de code et de tags reste intact. Seule la classification document
 - CRM: score de lead enrichi par des signaux d'urgence, de localisation, de diaspora, de budget et d'intention.
 - Tests et traçabilité mis à jour sans modifier le schema de base de donnees.
 
+## Mission 09 - Reconciliation produit et cockpit
+
+- Dashboards reconstruits comme des cockpits role-specific avec une vue courte, des cartes d'accès et un retour simple vers le tableau de bord.
+- Conversation et intentions repositionnées comme point d'entrée produit, avec un dossier projet actif et des raccourcis contextuels.
+- Formulaire bien/projet converti en parcours progressif centré sur localisation, identité métier et détails utiles.
+- Cache Vitest déplacé hors du `node_modules` partagé pour fiabiliser les validations locales sans impact backend.
+
 ## Integrations selectives geo
 
 - Ajout d'un referentiel geo Cameroon v1 dans `code/lawim_v2/data/cameroon_locations.json`.

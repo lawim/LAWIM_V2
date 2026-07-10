@@ -1,0 +1,24 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^\\. \\.venv-platform/bin/activate && python -m pytest tests/test_admin_reset_password\\.py$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^\\. \\.venv-platform/bin/activate && python -m pip install pytest$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^cd /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2 && \\. \\.venv-platform/bin/activate && python - <<'PY'\nimport os, subprocess, sys, tempfile, sqlite3\nfrom pathlib import Path\n\nwith tempfile\\.TemporaryDirectory\\(\\) as tmp:\n    db_path = Path\\(tmp\\) / 'lawim\\.sqlite3'\n    from lawim_v2\\.db import LawimRepository\n    repo = LawimRepository\\(db_path\\)\n    repo\\.initialize\\(seed_demo_data=False\\)\n    repo\\.create_user\\(email='reset@example\\.com', full_name='Reset User', role='owner', password='old-password', organization_id=None\\)\n    env = dict\\(os\\.environ\\)\n    env\\.update\\(\\{'LAWIM_DB_DRIVER': 'sqlite','LAWIM_DB_PATH': str\\(db_path\\),'APP_ENV': 'test','LAWIM_DATABASE_URL': ''\\}\\)\n    script = Path\\('scripts'\\) / 'admin_reset_password\\.py'\n    result = subprocess\\.run\\(\\[sys\\.executable, str\\(script\\), '--email', 'reset@example\\.com','--password', 'new-password'\\], env=env, capture_output=True, text=True\\)\n    print\\('returncode', result\\.returncode\\)\n    print\\('stdout', result\\.stdout\\)\n    print\\('stderr', result\\.stderr\\)\n    conn = sqlite3\\.connect\\(str\\(db_path\\)\\)\n    conn\\.row_factory = sqlite3\\.Row\n    row = conn\\.execute\\('SELECT password_salt, password_hash FROM users WHERE email=\\?', \\('reset@example\\.com',\\)\\)\\.fetchone\\(\\)\n    print\\('row', dict\\(row\\) if row else None\\)\n    conn\\.close\\(\\)\nPY$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^\\. \\.venv-platform/bin/activate && git status --short && git diff -- scripts/admin_reset_password\\.py tests/test_admin_reset_password\\.py scripts/README\\.md \\| sed -n '1,180p'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^\\. \\.venv-platform/bin/activate && git diff -- scripts/admin_reset_password\\.py tests/test_admin_reset_password\\.py scripts/README\\.md \\| sed -n '1,220p' && echo '---' && git status --short \\| sed -n '1,20p'$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

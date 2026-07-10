@@ -18,6 +18,56 @@ const defaultDashboardSummary = {
   pendingTasks: 1
 };
 
+const defaultProjects = {
+  data: [
+    {
+      id: 1,
+      title: 'LAWIM Demo Project',
+      status: 'active',
+      project_type: 'purchase',
+      objective: 'Acquire a property in Yaounde',
+      location_city: 'Yaounde',
+      budget_min: 25000000,
+      budget_max: 50000000
+    }
+  ],
+  message: 'mock'
+};
+
+const defaultAssistantSuggestions = {
+  data: [
+    { title: 'Explore a project', description: 'Review the active dossier' },
+    { title: 'Search by intent', description: 'Ask LAWIM to guide the next step' }
+  ],
+  message: 'mock'
+};
+
+const defaultPropertyMatches = {
+  data: [
+    {
+      score: 89,
+      score_percent: 89,
+      grade: 'excellent',
+      summary: 'location +20; budget +15; type +10',
+      eligible: true,
+      breakdown: { location: 20, budget: 15, type: 10 },
+      reasons: ['city:Yaounde', 'property_type:house', 'budget:25000000'],
+      distance_km: null,
+      weights: {},
+      target_type: 'property',
+      property: {
+        id: 'property-1',
+        title: 'Yaounde House',
+        location: 'Yaounde',
+        price: 32000000,
+        type: 'house',
+        status: 'available'
+      }
+    }
+  ],
+  message: 'mock'
+};
+
 const defaultPartnerMatches = {
   data: [
     {
@@ -82,7 +132,21 @@ beforeEach(() => {
   });
   vi.spyOn(apiSdk, 'getSession').mockResolvedValue({ data: null, message: 'mock' });
   vi.spyOn(apiSdk, 'getDashboardSummary').mockResolvedValue({ data: defaultDashboardSummary, message: 'mock' });
-  vi.spyOn(apiSdk, 'getMatches').mockResolvedValue(defaultPartnerMatches as never);
+  vi.spyOn(apiSdk, 'getProjects').mockResolvedValue(defaultProjects as never);
+  vi.spyOn(apiSdk, 'getAssistantSuggestions').mockResolvedValue(defaultAssistantSuggestions as never);
+  vi.spyOn(apiSdk, 'askAssistant').mockImplementation(async (payload) => ({
+    data: {
+      reply: `I can help with: ${payload.message}`,
+      suggestions: ['Review project dossier', 'Open a related module']
+    },
+    message: 'mock'
+  }));
+  vi.spyOn(apiSdk, 'getMatches').mockImplementation(async (query) => {
+    if (query?.target_type === 'property') {
+      return defaultPropertyMatches as never;
+    }
+    return defaultPartnerMatches as never;
+  });
   vi.spyOn(apiSdk, 'logout').mockResolvedValue({ data: { success: true }, message: 'mock' });
 });
 
@@ -95,10 +159,12 @@ describe('LAWIM frontend shell', () => {
   it('renders the public home page with branding', () => {
     renderWithProviders(<WebApp />);
 
-    expect(screen.getByRole('heading', { name: /cockpit moderne/i })).toBeInTheDocument();
-    expect(screen.getByRole('navigation', { name: /primary/i })).toBeInTheDocument();
-    expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(2);
-    expect(screen.getAllByText(LAWIM_BRAND_SLOGAN)).toHaveLength(2);
+    expect(screen.getByRole('heading', { name: /l’immobilier autrement/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /bonjour\. nous pouvons reprendre un dossier ou en ouvrir un nouveau\./i })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /connexion/i })).toHaveLength(2);
+    expect(screen.getByRole('button', { name: /nouveau projet/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('img', { name: /lawim logo/i })).toHaveLength(1);
+    expect(screen.getByText(LAWIM_BRAND_SLOGAN)).toBeInTheDocument();
   });
 
   it.each([
@@ -162,7 +228,7 @@ describe('LAWIM frontend shell', () => {
     expect(screen.getByText(/contact@lawim\.app/i)).toBeInTheDocument();
   });
 
-  it('logs in and shows a compact authenticated header without the login form', async () => {
+  it('logs in and lands on the cockpit without the login form', async () => {
     const user = userEvent.setup();
     vi.spyOn(apiSdk, 'login').mockResolvedValue(loginResponse('admin', ['admin'], 'admin@lawim.app', 'Admin User'));
 
@@ -172,12 +238,14 @@ describe('LAWIM frontend shell', () => {
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
-    expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /cockpit administrateur/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /bonjour admin user\. la supervision de la plateforme reste active\./i, level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /continuer la conversation/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /déconnexion|logout/i })).toBeInTheDocument();
-    expect(screen.getByText(/^administrateur$/i, { selector: 'p' })).toBeInTheDocument();
+    expect(screen.getAllByText(/^administrateur$/i)).toHaveLength(2);
     expect(screen.queryByLabelText(/identifiant|identifier|identifia/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/mot de passe|password/i)).not.toBeInTheDocument();
-    expect(screen.queryByRole('combobox', { name: /langue|language|languag/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /langue|language|languag/i })).toBeInTheDocument();
   });
 
   it('shows a loading state on the login button while the request is pending', async () => {
@@ -205,7 +273,7 @@ describe('LAWIM frontend shell', () => {
     expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
   });
 
-  it('opens module cards in dedicated screens and returns to the dashboard', async () => {
+  it('opens the conversation studio from the cockpit and returns to it', async () => {
     const user = userEvent.setup();
     vi.spyOn(apiSdk, 'login').mockResolvedValue(loginResponse('admin', ['admin'], 'admin@lawim.app', 'Admin User'));
 
@@ -215,19 +283,69 @@ describe('LAWIM frontend shell', () => {
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
-    expect(await screen.findByText(/bonjour admin user/i)).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /chaque carte ouvre un espace dédié/i, level: 2 })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /cockpit administrateur/i, level: 1 })).toBeInTheDocument();
 
-    await user.click(screen.getByRole('link', { name: /partenaires/i }));
+    await user.click(screen.getByRole('link', { name: /continuer la conversation/i }));
 
-    expect(await screen.findByRole('heading', { name: /partenaires/i, level: 1 })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /retour au tableau de bord|back to dashboard/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /trouver|find/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /photographe/i })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /conversation/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /retour au cockpit/i })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /message/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /web/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /whatsapp/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /telegram/i })).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: /retour au tableau de bord|back to dashboard/i }));
+    await user.click(screen.getByRole('button', { name: /retour au cockpit/i }));
 
-    expect(await screen.findByRole('heading', { name: /bonjour admin user/i, level: 1 })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /cockpit administrateur/i, level: 1 })).toBeInTheDocument();
+  });
+
+  it('exposes the conversation studio controls from the cockpit', async () => {
+    const user = userEvent.setup();
+    vi.spyOn(apiSdk, 'login').mockResolvedValue(loginResponse('admin', ['admin'], 'admin@lawim.app', 'Admin User'));
+
+    renderWithProviders(<WebApp />, ['/login']);
+
+    await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'admin@lawim.app');
+    await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
+    await user.click(screen.getByRole('button', { name: /connexion|login/i }));
+
+    expect(await screen.findByRole('heading', { name: /cockpit administrateur/i, level: 1 })).toBeInTheDocument();
+    await user.click(screen.getByRole('link', { name: /continuer la conversation/i }));
+
+    expect(await screen.findByRole('heading', { name: /conversation/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /projet/i })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /message/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^continuer$/i })).toBeInTheDocument();
+  });
+
+  it('guides the property workflow through progressive steps', async () => {
+    const user = userEvent.setup();
+    vi.spyOn(apiSdk, 'login').mockResolvedValue(loginResponse('user', ['user'], 'user@lawim.app', 'User Demo'));
+
+    renderWithProviders(<WebApp />, ['/login']);
+
+    await user.type(await screen.findByRole('textbox', { name: /identifiant|identifier|identifia/i }), 'user@lawim.app');
+    await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
+    await user.click(screen.getByRole('button', { name: /connexion|login/i }));
+
+    expect(await screen.findByRole('heading', { name: /cockpit utilisateur/i, level: 1 })).toBeInTheDocument();
+    await user.click(screen.getByRole('link', { name: /découvrir un bien/i }));
+
+    expect(await screen.findByRole('heading', { name: /biens/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /quel est votre projet/i, level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /intention/i })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /type de bien/i })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /mode de localisation/i })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /budget max/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /titre foncier/i })).toBeInTheDocument();
+
+    await user.selectOptions(screen.getByRole('combobox', { name: /type de bien/i }), 'maison');
+
+    expect(screen.getByRole('textbox', { name: /chambres/i })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /salles de bain/i })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /standing/i })).toBeInTheDocument();
+
+    expect(screen.getByRole('button', { name: /continuer/i })).toBeInTheDocument();
   });
 
   it('clears the session on logout', async () => {
@@ -291,9 +409,8 @@ describe('LAWIM frontend shell', () => {
 
     renderWithProviders(<WebApp />, ['/dashboard/admin']);
 
-    expect(await screen.findByRole('heading', { name: /bonjour agent user/i, level: 1 })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: /bonjour admin user/i, level: 1 })).not.toBeInTheDocument();
-    expect(screen.queryByRole('img', { name: /lawim logo/i })).not.toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /cockpit agent lawim/i, level: 1 })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /cockpit administrateur/i, level: 1 })).not.toBeInTheDocument();
   });
 
   it('emits controlled auth traces during a successful login', async () => {
@@ -311,14 +428,15 @@ describe('LAWIM frontend shell', () => {
     await user.type(screen.getByLabelText(/mot de passe|password/i), 'LAWIM@Demo2026µ');
     await user.click(screen.getByRole('button', { name: /connexion|login/i }));
 
-    expect(await screen.findByRole('heading', { name: /bonjour admin user/i, level: 1 })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: /cockpit administrateur/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /bonjour admin user\. la supervision de la plateforme reste active\./i, level: 2 })).toBeInTheDocument();
     await waitFor(() => {
       expect(debugSpy.mock.calls.map(([label]) => label)).toEqual([
         'LOGIN_OK',
         'ROLE_RESOLVED',
-        'DASHBOARD_SELECTED',
-        'APPLY_JOURNEY',
-        'DASHBOARD_RENDERED'
+        'COCKPIT_SELECTED',
+        'APPLY_COCKPIT',
+        'COCKPIT_RENDERED'
       ]);
     });
   });

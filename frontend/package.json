@@ -9,8 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest run --cache=false --config vitest.config.mjs",
+    "test:watch": "vitest --cache=false --config vitest.config.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

@@ -238,6 +238,9 @@ const normalizePayload = <T>(payload: unknown, fallback: T): T => {
   if (Array.isArray(payload)) return payload as T;
   if (typeof payload === 'object') {
     const record = payload as Record<string, unknown>;
+    if (Object.prototype.hasOwnProperty.call(record, 'data') && record.data !== undefined) {
+      return record.data as T;
+    }
     if (Array.isArray(record.data)) return record.data as T;
     if (Object.prototype.hasOwnProperty.call(record, 'user') || Object.prototype.hasOwnProperty.call(record, 'token') || Object.prototype.hasOwnProperty.call(record, 'session')) {
       return payload as T;
