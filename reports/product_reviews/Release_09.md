@@ -423,18 +423,34 @@ Le dossier projet constitue bien l’unité centrale: oui.
 - Fonction `roleFromRouteOrUser()` supprimée (code mort)
 - Clé i18n `module.properties.budget` manquante ajoutée dans les trois langues
 
-## Validation finale
+## Validation finale locale
 
 - **Typecheck** : ✅ passe
 - **Tests** : ✅ 127/127 (29 fichiers)
 - **Build** : ✅ 218 modules transformés
+- **Lint** : ⚠️ configuration ESLint manquante (préexistante, non bloquante)
 - **Captures** : 18 captures existantes validées
 - **Dépôt** : propre, sans code mort identifié
+- **Tag** : `mission-09.2` (commit `08023911`)
+- **Artefact OVH** : généré (633K)
+- **SHA256** : `850c77db7aa6e465b0b75d0144b86fc26c6935015a5e06062568ef448a3ff25f`
+
+## Artefact OVH
+
+| Propriété | Valeur |
+|-----------|--------|
+| Chemin | `release/ovh/artefacts/lawim-v2-mission-09.2-20260710-134311.tar.gz` |
+| SHA256 | `850c77db7aa6e465b0b75d0144b86fc26c6935015a5e06062568ef448a3ff25f` |
+| Fichiers | 500+ (manifeste DEPLOYMENT_MANIFEST.md) |
+| Taille | 633K |
+| Format | tar.gz |
 
 ## Écarts résiduels
 
-- déploiement OVH final (gelé jusqu'à la décision de mise en ligne)
+- **Déploiement OVH final** : gelé jusqu'à la décision de mise en ligne (politique produit)
+- **Accès SSH** : non disponible (clés absentes)
+- **Lint** : configuration ESLint manquante (préexistante)
 
 ## Réserve finale
 
-Aucun déploiement OVH n'a encore été effectué. La production reste gelée jusqu'à la décision finale de mise en ligne. Les améliorations UX/UI de la Mission 09.2 sont validées localement.
+Aucun déploiement OVH n'a encore été effectué. La production reste gelée jusqu'à la décision finale de mise en ligne. Les améliorations UX/UI de la Mission 09.2 sont validées localement et l'artefact de déploiement est prêt. Le déploiement OVH nécessite un accès SSH configuré ou une pipeline CI/CD, ainsi que la levée du gel de production.
