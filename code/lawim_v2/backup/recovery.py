@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import platform
+import socket
 import shutil
 import subprocess
 import sys
@@ -250,9 +251,9 @@ def _hardware_inventory() -> dict[str, Any]:
         )
     interfaces = []
     try:
-        for index, name in os.if_nameindex():
+        for index, name in socket.if_nameindex():
             interfaces.append({"index": index, "name": name})
-    except OSError:
+    except (AttributeError, OSError):
         interfaces = []
     disks = []
     lsblk = _safe_run(["lsblk", "-J", "-o", "NAME,SIZE,TYPE,UUID,MOUNTPOINT"], timeout=10)
@@ -291,6 +292,38 @@ def _software_inventory() -> dict[str, Any]:
         "git": _safe_run(["git", "--version"]),
         "systemd": _safe_run(["systemctl", "--version"]),
         "kernel": platform.release(),
+    }
+
+
+def _docker_lines(command: list[str]) -> list[dict[str, Any]]:
+    output = _safe_run(command, timeout=20)
+    if output in {"", "unavailable"}:
+        return []
+    rows: list[dict[str, Any]] = []
+    for raw_line in output.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        try:
+            payload = json.loads(line)
+        except json.JSONDecodeError:
+            rows.append({"value": line})
+            continue
+        if isinstance(payload, dict):
+            rows.append(payload)
+        else:
+            rows.append({"value": payload})
+    return rows
+
+
+def _docker_inventory() -> dict[str, Any]:
+    return {
+        "version": _safe_run(["docker", "--version"]),
+        "compose_version": _safe_run(["docker", "compose", "version", "--short"]),
+        "images": _docker_lines(["docker", "image", "ls", "--format", "{{json .}}"]),
+        "volumes": _docker_lines(["docker", "volume", "ls", "--format", "{{json .}}"]),
+        "networks": _docker_lines(["docker", "network", "ls", "--format", "{{json .}}"]),
+        "containers": _docker_lines(["docker", "ps", "-a", "--format", "{{json .}}"]),
     }
 
 
@@ -355,6 +388,19 @@ def _secret_inventory(config: AppConfig, repo_root: Path) -> list[dict[str, Any]
             }
         )
     return entries
+
+
+def _write_json_artifact(bundle_dir: Path, relative_path: str, payload: Any, *, kind: str) -> dict[str, Any]:
+    target = bundle_dir / relative_path
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(_jsonable(payload), ensure_ascii=False, sort_keys=True, indent=2), encoding="utf-8")
+    return {
+        "relative_path": str(target.relative_to(bundle_dir)),
+        "source_path": "generated",
+        "size_bytes": target.stat().st_size,
+        "sha256": _sha256(target),
+        "kind": kind,
+    }
 
 
 def _checklist_markdown(bundle_id: str, bundle_dir: Path) -> str:
@@ -528,6 +574,40 @@ class DisasterRecoveryService:
             return []
         return _copy_tree(media_root, target_root, bundle_dir=bundle_dir)
 
+    def _write_inventories(self, bundle_dir: Path) -> list[dict[str, Any]]:
+        records: list[dict[str, Any]] = []
+        backup_status = self.backup.status()
+        backup_configuration = self.backup.configuration()
+        policy = backup_configuration.get("policy") if isinstance(backup_configuration, dict) else {}
+        retention = policy.get("retention") if isinstance(policy, dict) else {}
+        records.append(_write_json_artifact(bundle_dir, "inventories/software-inventory.json", _software_inventory(), kind="inventory"))
+        records.append(_write_json_artifact(bundle_dir, "inventories/hardware-inventory.json", _hardware_inventory(), kind="inventory"))
+        records.append(_write_json_artifact(bundle_dir, "inventories/docker-inventory.json", _docker_inventory(), kind="inventory"))
+        records.append(_write_json_artifact(bundle_dir, "inventories/git-state.json", _git_state(self.repo_root), kind="inventory"))
+        records.append(_write_json_artifact(bundle_dir, "inventories/secret-inventory.json", _secret_inventory(self.config, self.repo_root), kind="inventory"))
+
+        backup_config_payload = {
+            "identifier": _as_str(backup_configuration.get("identifier"), "current"),
+            "enabled": bool(backup_configuration.get("enabled", True)),
+            "timezone": _as_str(backup_configuration.get("timezone"), "Africa/Douala"),
+            "backup_root": _as_str(backup_configuration.get("backup_root")),
+            "state_root": _as_str(backup_configuration.get("state_root")),
+            "logs_root": _as_str(backup_configuration.get("logs_root")),
+            "temp_root": _as_str(backup_configuration.get("temp_root")),
+            "retention": _jsonable(retention),
+            "schedules": backup_configuration.get("schedules", []),
+            "destinations": backup_status.get("destinations", []),
+            "providers": backup_status.get("providers", []),
+            "alerts_enabled": bool(backup_configuration.get("alerts_enabled", True)),
+            "verify_after_upload": bool(backup_configuration.get("verify_after_upload", True)),
+            "automated_restore_tests": bool(backup_configuration.get("automated_restore_tests", True)),
+            "restore_isolation_required": bool(backup_configuration.get("restore_isolation_required", True)),
+            "systemd": backup_configuration.get("systemd", {}),
+            "version": backup_configuration.get("version", {}),
+        }
+        records.append(_write_json_artifact(bundle_dir, "inventories/backup-config.json", backup_config_payload, kind="inventory"))
+        return records
+
     def _write_database_dump(self, bundle_dir: Path) -> dict[str, Any]:
         target = bundle_dir / "database" / "postgresql.dump.sql"
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -635,6 +715,7 @@ class DisasterRecoveryService:
         file_records.append(self._write_database_dump(bundle_dir))
         file_records.extend(self._copy_media(bundle_dir))
         file_records.extend(self._copy_config_sources(bundle_dir))
+        file_records.extend(self._write_inventories(bundle_dir))
         file_records.extend(self._write_documents(bundle_dir, resolved_id))
 
         if not file_records:

@@ -33,10 +33,22 @@ class DisasterRecoveryBundleTests(LawimTestHarness):
         self.assertIn("database/postgresql.dump.sql", file_paths)
         self.assertIn("documents/RECOVERY_CHECKLIST.md", file_paths)
         self.assertIn("documents/BACKUP_STATUS.json", file_paths)
+        self.assertIn("inventories/software-inventory.json", file_paths)
+        self.assertIn("inventories/hardware-inventory.json", file_paths)
+        self.assertIn("inventories/docker-inventory.json", file_paths)
+        self.assertIn("inventories/git-state.json", file_paths)
+        self.assertIn("inventories/secret-inventory.json", file_paths)
+        self.assertIn("inventories/backup-config.json", file_paths)
         self.assertIn("config/Dockerfile", file_paths)
         self.assertTrue((bundle_path / "database" / "postgresql.dump.sql").is_file())
         self.assertTrue((bundle_path / "documents" / "RECOVERY_CHECKLIST.md").is_file())
         self.assertTrue((bundle_path / "documents" / "BACKUP_STATUS.json").is_file())
+        self.assertTrue((bundle_path / "inventories" / "software-inventory.json").is_file())
+        self.assertTrue((bundle_path / "inventories" / "hardware-inventory.json").is_file())
+        self.assertTrue((bundle_path / "inventories" / "docker-inventory.json").is_file())
+        self.assertTrue((bundle_path / "inventories" / "git-state.json").is_file())
+        self.assertTrue((bundle_path / "inventories" / "secret-inventory.json").is_file())
+        self.assertTrue((bundle_path / "inventories" / "backup-config.json").is_file())
 
     def test_bundle_status_and_validation_expose_latest_bundle(self) -> None:
         services = LawimServices(self.repository, self.config)
@@ -52,3 +64,10 @@ class DisasterRecoveryBundleTests(LawimTestHarness):
         self.assertTrue(validation["compatible"])
         self.assertTrue(validation["restore_ready"])
         self.assertEqual(Path(str(result["bundle_path"])).name, "LAWIM-DRF-VALIDATION")
+
+        secret_inventory = json.loads(
+            (Path(str(result["bundle_path"])) / "inventories" / "secret-inventory.json").read_text(encoding="utf-8")
+        )
+        self.assertGreater(len(secret_inventory), 0)
+        for entry in secret_inventory:
+            self.assertSetEqual(set(entry.keys()), {"name", "type", "location", "required", "present"})
