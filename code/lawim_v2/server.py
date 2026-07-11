@@ -35,6 +35,19 @@ from .project_service import ProjectPermissionDenied
 LOGGER = logging.getLogger("lawim_v2")
 MAX_JSON_BODY_BYTES = 1_048_576
 _STATIC_TEXT_CACHE: dict[str, str] = {}
+_DIST_TEXT_CACHE: dict[str, str] = {}
+mimetypes.add_type("application/manifest+json", ".webmanifest")
+
+
+def _resolve_dist_root() -> Path:
+    for base in Path(__file__).resolve().parents:
+        candidate = base / "frontend" / "dist"
+        if candidate.is_dir():
+            return candidate
+    return Path(__file__).resolve().parents[1] / "frontend" / "dist"
+
+
+_DIST_ROOT = _resolve_dist_root()
 
 
 class ApiError(Exception):
@@ -145,9 +158,20 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/styles.css":
             self._send_static("styles.css", "text/css; charset=utf-8")
             return
-        if path in {"/logo.svg", "/favicon.svg", "/robots.txt"}:
-            content_type = "image/svg+xml" if path.endswith(".svg") else "text/plain; charset=utf-8"
-            self._send_static(path.lstrip("/"), content_type)
+        if path in {"/logo.svg", "/favicon.svg"}:
+            self._send_static(path.lstrip("/"), "image/svg+xml")
+            return
+        if path == "/robots.txt":
+            self._send_dist_static("robots.txt", "text/plain; charset=utf-8")
+            return
+        if path in {"/admin", "/admin/"} or (path.startswith("/admin/") and "." not in path.rsplit("/", 1)[-1]):
+            self._send_dist_static("apps/admin/index.html", "text/html; charset=utf-8")
+            return
+        if path == "/apps/admin" or path == "/apps/admin/":
+            self._send_dist_static("apps/admin/index.html", "text/html; charset=utf-8")
+            return
+        if path.startswith("/assets/") or path in {"/manifest.webmanifest", "/registerSW.js", "/sw.js"} or path.startswith("/apps/admin/"):
+            self._send_dist_static(path.lstrip("/"))
             return
         if path.startswith("/media/"):
             self._send_media_asset(path)
@@ -1125,6 +1149,26 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         except FileNotFoundError as exc:
             raise ApiError(HTTPStatus.NOT_FOUND, "asset_not_found", f"Static asset not found: {name}") from exc
         self._send_text(content, content_type=content_type)
+
+    def _send_dist_static(self, name: str, content_type: str | None = None) -> None:
+        relative = Path(name)
+        if relative.is_absolute() or any(part == ".." for part in relative.parts):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_asset_path", "Invalid static asset path")
+        dist_root = _DIST_ROOT.resolve()
+        target = (dist_root / relative).resolve()
+        try:
+            target.relative_to(dist_root)
+        except ValueError as exc:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_asset_path", "Invalid static asset path") from exc
+        if not target.is_file():
+            raise ApiError(HTTPStatus.NOT_FOUND, "asset_not_found", f"Static asset not found: {name}")
+        cache_key = str(relative)
+        content = _DIST_TEXT_CACHE.get(cache_key)
+        if content is None:
+            content = target.read_text(encoding="utf-8")
+            _DIST_TEXT_CACHE[cache_key] = content
+        resolved_content_type = content_type or mimetypes.guess_type(target.name)[0] or "application/octet-stream"
+        self._send_text(content, content_type=resolved_content_type)
 
     def _send_media_asset(self, path: str) -> None:
         if not self.config.public_media:

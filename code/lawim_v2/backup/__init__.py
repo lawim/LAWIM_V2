@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+from importlib import import_module
+from typing import Any
+
 from .models import (
     AlertLevel,
     BackupAlert,
@@ -19,18 +24,32 @@ from .models import (
     build_backup_id,
     utc_now,
 )
-from .orchestrator import (
-    BackupAlertService,
-    BackupEventBus,
-    BackupHealthService,
-    BackupJobRunner,
-    BackupMetricsService,
-    BackupOrchestrator,
-    BackupRestoreService,
-    BackupScheduler,
-    BackupService,
-)
 from .providers import ExternalDiskProvider, GoogleDriveProvider, LocalDiskProvider, StorageProvider
+
+_ORCHESTRATOR_EXPORTS = {
+    "BackupAlertService",
+    "BackupEventBus",
+    "BackupHealthService",
+    "BackupJobRunner",
+    "BackupMetricsService",
+    "BackupOrchestrator",
+    "BackupRestoreService",
+    "BackupScheduler",
+    "BackupService",
+}
+
+
+def __getattr__(name: str) -> Any:
+    if name not in _ORCHESTRATOR_EXPORTS:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    module = import_module(".orchestrator", __name__)
+    value = getattr(module, name)
+    globals()[name] = value
+    return value
+
+
+def __dir__() -> list[str]:
+    return sorted(set(globals()) | _ORCHESTRATOR_EXPORTS)
 
 __all__ = [
     "AlertLevel",

@@ -64,6 +64,14 @@ const providerVariant = (provider: Record<string, unknown>) => {
   return 'default';
 };
 
+const providerLabel = (provider: Record<string, unknown>) => {
+  const identifier = toText(provider.identifier, '').toLowerCase();
+  if (identifier === 'local') return 'Disque local';
+  if (identifier === 'external-disk') return 'Disque externe';
+  if (identifier === 'google-drive') return 'Google Drive';
+  return toText(provider.name, 'Provider');
+};
+
 const initialConfigDraft = (): ConfigDraft => ({
   timezone: 'Africa/Douala',
   backupRoot: '/var/backups/lawim',
@@ -361,7 +369,7 @@ export function BackupCockpitPage() {
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <div className="text-xs uppercase tracking-[0.28em] text-slate-500">{toText(record.identifier)}</div>
-                      <div className="mt-1 text-lg font-semibold text-white">{toText(record.name, 'Provider')}</div>
+                      <div className="mt-1 text-lg font-semibold text-white">{providerLabel(record)}</div>
                     </div>
                     <Badge variant={providerVariant(record)}>{toText(record.state, 'unknown')}</Badge>
                   </div>

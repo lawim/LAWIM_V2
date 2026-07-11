@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt -r requirements-postgresql.tx
 
 # Copy application (frozen - no modifications)
 COPY code/lawim_v2 ./lawim_v2
+COPY frontend/dist ./frontend/dist
 COPY pyproject.toml sitecustomize.py ./
 
 # Environment
