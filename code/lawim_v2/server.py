@@ -1479,6 +1479,18 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/v2/backup":
             self._send_json({"data": self.services.backup.list(limit=limit)})
             return
+        if path == "/api/v2/backup/recovery":
+            self._send_json({"data": self.services.disaster_recovery.status()})
+            return
+        if path == "/api/v2/backup/recovery/bundles":
+            self._send_json({"data": self.services.disaster_recovery.list_bundles(limit=limit)})
+            return
+        if path == "/api/v2/backup/recovery/latest":
+            self._send_json({"data": self.services.disaster_recovery.latest_bundle()})
+            return
+        if path == "/api/v2/backup/recovery/validation":
+            self._send_json({"data": self.services.disaster_recovery.validate_bundle()})
+            return
         if path in {"/api/v2/backup/status"}:
             self._send_json({"data": self.services.backup.status()})
             return
@@ -1520,6 +1532,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
             )
             self._send_json({"data": payload}, status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/backup/recovery/validate":
+            payload = self.services.disaster_recovery.validate_bundle(bundle_id=self._optional_text(body.get("bundle_id")))
+            self._send_json({"data": payload}, status=HTTPStatus.OK)
             return
         if path == "/api/v2/backup/retry":
             payload = self.services.backup.retry(identifier=self._optional_text(body.get("identifier")))

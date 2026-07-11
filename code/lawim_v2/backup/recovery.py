@@ -403,6 +403,15 @@ def _write_json_artifact(bundle_dir: Path, relative_path: str, payload: Any, *, 
     }
 
 
+def _validation_check(name: str, passed: bool, detail: str) -> dict[str, Any]:
+    return {
+        "name": name,
+        "passed": passed,
+        "status": "pass" if passed else "fail",
+        "detail": detail,
+    }
+
+
 def _checklist_markdown(bundle_id: str, bundle_dir: Path) -> str:
     return (
         "# Recovery Checklist\n\n"
@@ -485,6 +494,7 @@ class RecoveryValidationResult:
     restore_ready: bool
     missing_files: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
+    checks: list[dict[str, Any]] = field(default_factory=list)
     duration_seconds: float = 0.0
     validated_at: str = field(default_factory=utc_now)
 
@@ -835,6 +845,7 @@ class DisasterRecoveryService:
                 postgresql_ok=False,
                 restore_ready=False,
                 warnings=["no recovery bundle available"],
+                checks=[_validation_check("manifest-present", False, "No recovery bundle is available")],
             ).as_dict()
 
         started = time.perf_counter()
@@ -851,6 +862,11 @@ class DisasterRecoveryService:
                 restore_ready=False,
                 missing_files=["manifest.json"],
                 warnings=["manifest is missing or unreadable"],
+                checks=[
+                    _validation_check("manifest-present", False, "manifest.json is missing or unreadable"),
+                    _validation_check("checksum-valid", False, "Bundle manifest could not be loaded"),
+                    _validation_check("restore-ready", False, "Bundle cannot be restored without a manifest"),
+                ],
                 duration_seconds=round(time.perf_counter() - started, 3),
             ).as_dict()
 
@@ -872,6 +888,44 @@ class DisasterRecoveryService:
         docker_ok = "unavailable" not in {manifest.docker_version, manifest.docker_compose_version}
         postgresql_ok = manifest.postgresql_version != "unavailable"
         restore_ready = checksum_valid and not missing_files and compatibility
+        checks = [
+            _validation_check("manifest-present", True, "manifest.json was loaded successfully"),
+            _validation_check(
+                "bundle-integrity",
+                not missing_files,
+                "All bundle files are present" if not missing_files else f"Missing files: {', '.join(sorted(missing_files))}",
+            ),
+            _validation_check(
+                "checksum-valid",
+                checksum_valid,
+                "All file checksums match the manifest" if checksum_valid else "At least one bundle file checksum drifted",
+            ),
+            _validation_check(
+                "lawim-version-compatible",
+                compatibility,
+                f"Bundle LAWIM version {manifest.lawim_version or 'unknown'} vs runtime {LAWIM_VERSION}",
+            ),
+            _validation_check(
+                "git-synced",
+                manifest.git_sha not in {"", "unavailable"} and manifest.git_sha == current_sha,
+                f"Bundle SHA {manifest.git_sha or 'unknown'} vs current SHA {current_sha or 'unknown'}",
+            ),
+            _validation_check(
+                "docker-available",
+                docker_ok,
+                f"Docker {manifest.docker_version or 'unavailable'} / Compose {manifest.docker_compose_version or 'unavailable'}",
+            ),
+            _validation_check(
+                "postgresql-available",
+                postgresql_ok,
+                f"PostgreSQL {manifest.postgresql_version or 'unavailable'}",
+            ),
+            _validation_check(
+                "restore-ready",
+                restore_ready,
+                "Recovery bundle is ready to restore" if restore_ready else "Bundle validation failed",
+            ),
+        ]
         return RecoveryValidationResult(
             bundle_id=target_id,
             manifest_present=True,
@@ -883,6 +937,7 @@ class DisasterRecoveryService:
             restore_ready=restore_ready,
             missing_files=missing_files,
             warnings=manifest.warnings,
+            checks=checks,
             duration_seconds=round(time.perf_counter() - started, 3),
         ).as_dict()
 
