@@ -1,3 +1,4 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
@@ -8,12 +9,46 @@ __pycache__/
 .packaging-venv/
 .venv/
 .venv-platform/
+
+# Environment files (keep examples)
+.env
 .env.local
+.env.development
+.env.production
+.env.staging
 .env.platform
+!.env.example
+!.env.*.example
+
+# Secrets and credentials
+rclone.conf
+credentials.json
+oauth-token.json
+*.pem
+*.key
+
+# Database dumps and backups
+*.sql
+*.sql.gz
+*.dump
+*.tar
+*.tar.gz
+*.tgz
+*.zst
+*.enc
+*.sha256
+backups/
+backup/
+
+# Logs
+*.log
+logs/
+
+# Data runtime (generated)
 data/runtime/
 data/*.sqlite3
 data/*.db
-*.log
 
-# Local developer platform virtualenv
-.venv-platform/
+# OS
+.DS_Store
+Thumbs.db

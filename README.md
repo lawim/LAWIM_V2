@@ -1,104 +1,100 @@
 # LAWIM_V2
 
-Monolithe Python 3.12 pour la gestion immobilière : listings, matching, conversations et notifications.
+Plateforme immobilière camerounaise : conversation intelligente, matching biens/partenaires, consentement et mise en relation.
+
+**État actuel** : Mission 12 clôturée — Sauvegardes, reprise après sinistre, environnements local/préproduction.
+**Mission suivante** : Mission 13 — Paiements CamPay, facturation, activation des services.
+
+## Architecture active
+
+```
+Frontend React (Vite/TS)  ←→  API SDK  ←→  Backend Python 3.12  ←→  PostgreSQL 16 + Redis 7
+                                   ↑                                    ↑
+                            Docker Compose                        Serveur OVH
+```
 
 ## Prérequis
 
-- Python **3.12+**
-- `docker compose` (optionnel)
-- Node.js (optionnel — vérification syntaxe `app.js`)
+- Python 3.12+, Docker Compose, Node.js 20+
+- **Production** : serveur OVH, PostgreSQL 16, Redis 7, Let's Encrypt, Nginx
 
-## Installation (machine vierge)
-
-```bash
-git clone <repo-url> lawim_v2 && cd lawim_v2
-./scripts/install.sh
-./scripts/validate-install.sh
-```
-
-Installation en paquet Python (optionnel) :
+## Démarrage local rapide
 
 ```bash
-LAWIM_INSTALL_PACKAGE=1 ./scripts/install.sh
-# ou
-pip install -e ".[postgresql]"
-python -m lawim_v2 --help
+./scripts/dev/start-local.sh      # Build + démarre Docker (postgres + backend)
+./scripts/dev/stop-local.sh       # Arrête
+./scripts/dev/reset-local.sh      # Arrête + reset volumes
+./scripts/dev/run-tests.sh        # Tests backend + frontend
+./scripts/dev/restore-backup.sh   # Restaure une sauvegarde depuis Drive
 ```
 
-Variables utiles à l'installation :
+Démarrage alternatif (sans Docker) :
+```bash
+./scripts/run-local.sh            # SQLite direct
+```
 
-| Variable | Effet |
-|----------|--------|
-| `LAWIM_INSTALL_POSTGRES_DRIVER=1` | installe `pg8000` via pip |
-| `LAWIM_INSTALL_PACKAGE=1` | installe le paquet editable (`pip install -e .`) |
-
-Un fichier `.env.local` est créé depuis `env/development/.env.example` s'il n'existe pas.
-
-## Démarrage rapide
+## Tests
 
 ```bash
-./scripts/run-local.sh          # SQLite, http://127.0.0.1:3000
-./scripts/run-tests.sh          # tests + validate_prisma + smoke
-./scripts/run-compose-dev.sh    # Docker (SQLite)
-./scripts/run-compose-postgres.sh  # Docker + PostgreSQL optionnel
+./scripts/dev/run-tests.sh                  # Tout
+cd frontend && npm test -- --run            # Frontend seulement (138 tests)
+PYTHONPATH=code python3 -m pytest code/lawim_v2/brain/tests.py -v  # Backend (67 tests)
 ```
 
-Comptes démo (mot de passe `lawim-demo`) : `admin@lawim.local`, `agent@lawim.local`, `owner@lawim.local`.
+## Production OVH
 
-## Documentation
+| Composant | Statut |
+|-----------|--------|
+| Backend | Docker, port 3000, Python 3.12 |
+| Frontend | Servi par Nginx, build Vite |
+| PostgreSQL | 16 alpine, 420 tables |
+| Redis | 7 alpine |
+| SSL | Let's Encrypt, HTTP/2 |
+| Nginx | Reverse proxy + static files |
+| Stockage média | Volume Docker `/app/data/runtime/media` |
+
+## Sauvegardes automatisées
+
+- **Fréquence** : 03:00 et 15:00 (fuseau WAT, basse activité)
+- **Contenu** : PostgreSQL dump, fichiers médias, configuration
+- **Chiffrement** : AES-256-CBC + PBKDF2
+- **Checksums** : SHA-256 vérifiés
+- **Destination** : Google Drive via rclone (OAuth 2.0)
+- **Rétention** : 48h complet → 7j → 4 sem → 3 mois
+- **Service** : `lawim-backup.service` (systemd oneshot)
+- **Scripts** : `scripts/ops/backup-production.sh`, `scripts/ops/restore-production.sh`
+
+**Restauration** :
+```bash
+sudo /opt/lawim/current/scripts/ops/restore-production.sh <BACKUP_ID> --decrypt-key "votre-cle"
+```
+
+## Santé
+
+```bash
+curl https://lawim.app/healthz     # → "ok"
+curl https://lawim.app/readyz      # → {"status":"ready","database":true,"storage":true}
+```
+
+## Missions clôturées
+
+| Mission | Description | Rapport |
+|---------|-------------|---------|
+| 10 | Brain conversationnel | `reports/product_reviews/Mission_10_Report.md` |
+| 11 | Moteur relationnel | `reports/product_reviews/Mission_11_Report.md` |
+| 12 | Sauvegardes, DR, local, préproduction | `reports/product_reviews/Mission_12_Report.md` |
+
+## Documentation active
 
 | Document | Contenu |
 |----------|---------|
-| [docs/OPERATIONS-RC.md](docs/OPERATIONS-RC.md) | Guide d'exploitation release candidate |
-| [docs/I18N_LANGUAGES.md](docs/I18N_LANGUAGES.md) | Module langues LAWIM_V2 |
-| [docs/MIGRATION_FRAMEWORK.md](docs/MIGRATION_FRAMEWORK.md) | Scaffold de préparation migration |
-| [docs/MIGRATION_GUIDE.md](docs/MIGRATION_GUIDE.md) | Guide de préparation à la migration |
-| [docs/OVH_DEPLOYMENT_MANIFEST.md](docs/OVH_DEPLOYMENT_MANIFEST.md) | Manifeste minimal de déploiement OVH |
-| [release/README_DEPLOY.md](release/README_DEPLOY.md) | Projection de release et paquet OVH |
-| [docs/TRACEABILITY_MATRIX.md](docs/TRACEABILITY_MATRIX.md) | Matrice de traçabilité globale |
-| [compose/README.md](compose/README.md) | Stacks Docker Compose (source de vérité) |
-| [tests/README.md](tests/README.md) | Suite de tests |
-| [reports/program/RELEASE-PROGRAM-W-PRODUCTION-MIGRATION-PREPARATION.md](reports/program/RELEASE-PROGRAM-W-PRODUCTION-MIGRATION-PREPARATION.md) | Programme W de préparation migration |
-| [reports/program/FULL-ENGINEERING-REVIEW-REPORT.md](reports/program/FULL-ENGINEERING-REVIEW-REPORT.md) | Revue engineering |
-| [reports/program/OVH_PRODUCTION_DEPLOYMENT_COMPLETION.md](reports/program/OVH_PRODUCTION_DEPLOYMENT_COMPLETION.md) | Cloture du deploiement OVH de production |
+| `docs/PRODUCT_BIBLE/` | Spécifications produit |
+| `docs/Directive/` | Références métier |
+| `OPS/OVH/` | Déploiement, sauvegardes, incidents |
+| `reports/handover/` | Document maître de passation |
+| `compose/` | Docker Compose canonique |
+| `scripts/ops/` | Sauvegarde et restauration |
 
-## Schéma & persistance
+## Branche officielle
 
-- Source de vérité logique : `code/lawim_v2/persistence.py` (manifest v6)
-- DDL unifié : `code/lawim_v2/schema_ddl.py` (SQLite + PostgreSQL)
-- Migrations legacy SQLite : `code/lawim_v2/schema_migrations.py`
-- Prisma : ancre production PostgreSQL (`prisma/schema.prisma` + migrations)
-- Docs : [docs/MIGRATIONS.md](docs/MIGRATIONS.md), [docs/PUBLISHING.md](docs/PUBLISHING.md)
-- Validation : `python3 scripts/validate_prisma_manifest.py`
-
-## Packaging
-
-- Métadonnées : `pyproject.toml` (paquet `lawim-v2`, entry point `lawim-v2`)
-- Validation : `./scripts/validate-packaging.sh`
-
-## Structure
-
-```
-code/lawim_v2/   # application runtime
-compose/         # Docker Compose canonique
-docker/compose/  # alias include → compose/
-scripts/         # install, tests, smoke, compose
-tests/           # unittest harness
-prisma/          # schéma Prisma aligné
-```
-
-## CI
-
-Workflow GitHub Actions : `.github/workflows/ci.yml` (tests, schema, smoke, compose).
-
-Test PostgreSQL optionnel en CI via service container ; localement :
-
-```bash
-export LAWIM_TEST_POSTGRES_URL=postgresql://lawim:lawim@localhost:5432/lawim_v2
-pip install -r requirements-postgresql.txt
-python3 -m unittest tests.test_productization.PostgreSQLIntegrationTest -v
-```
-
-## Licence & gouvernance
-
-Bootstrap, Constitution et Gouvernance du programme LAWIM ne sont pas modifiés par les missions produit.
+**`main`** — seule branche de production. Toute modification transite par : local → Git → préproduction → production.
