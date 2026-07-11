@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/google-drive.md`
+
 # Google Drive Setup
 
 The setup wizard prepares LAWIM_V2 for real Google Drive onboarding without modifying the code later.

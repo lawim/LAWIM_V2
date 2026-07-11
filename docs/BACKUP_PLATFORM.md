@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/architecture.md`
+
 # Backup & Restore Platform Documentation
 
 ## Backup Architecture

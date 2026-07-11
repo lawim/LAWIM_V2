@@ -38,6 +38,10 @@ Laptop (copie secondaire via synchronisation)
 Disque externe (copie froide hors ligne)
 ```
 
+> Note d'évolution :
+> les horaires décrits dans ce rapport correspondent a l'etat valide lors de la Mission 12.
+> La politique active actuelle est documentee dans `docs/backup-disaster-recovery/schedules.md`.
+
 ## 4. Sauvegarde PostgreSQL
 
 - Script : `scripts/ops/backup-production.sh`

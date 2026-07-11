@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/cockpit.md`
+
 # Backup Center Configuration
 
 The Backup Center is the operational layer that coordinates local backup, external disk backup, and the distributed Google Drive targets.

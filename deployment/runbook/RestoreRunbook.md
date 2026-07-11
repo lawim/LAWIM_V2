@@ -1,8 +1,14 @@
 # Restore Runbook
 
-## Restore flow
+STATUT : ARCHIVE HISTORIQUE
+NON APPLICABLE A LA VERSION ACTUELLE
 
-1. Identify the target archive or snapshot.
-2. Validate checksum and manifest.
-3. Restore files to the target host.
-4. Validate permissions and application health.
+This document is kept for traceability.
+The active documentation lives in `../../docs/backup-disaster-recovery/`.
+
+Use these canonical references instead:
+
+- `../../docs/backup-disaster-recovery/restore-database.md`
+- `../../docs/backup-disaster-recovery/restore-media.md`
+- `../../docs/backup-disaster-recovery/restore-complete.md`
+- `../../docs/backup-disaster-recovery/restore-tests.md`

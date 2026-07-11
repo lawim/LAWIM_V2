@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/google-drive.md`
+
 # Google Drive Quota Policy
 
 The storage registry uses a theoretical quota of `13 GB` per logical Google Drive.

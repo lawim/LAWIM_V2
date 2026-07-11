@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/cockpit.md`
+
 # Backup Center
 
 This document describes the activation-ready backup center architecture for LAWIM_V2. The implementation is additive and does not alter the existing media registry contract.

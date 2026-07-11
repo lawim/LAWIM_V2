@@ -53,21 +53,16 @@ PYTHONPATH=code python3 -m pytest code/lawim_v2/brain/tests.py -v  # Backend (67
 | Nginx | Reverse proxy + static files |
 | Stockage média | Volume Docker `/app/data/runtime/media` |
 
-## Sauvegardes automatisées
+## Sauvegarde et reprise après sinistre
 
-- **Fréquence** : 03:00 et 15:00 (fuseau WAT, basse activité)
-- **Contenu** : PostgreSQL dump, fichiers médias, configuration
-- **Chiffrement** : AES-256-CBC + PBKDF2
-- **Checksums** : SHA-256 vérifiés
-- **Destination** : Google Drive via rclone (OAuth 2.0)
-- **Rétention** : 48h complet → 7j → 4 sem → 3 mois
-- **Service** : `lawim-backup.service` (systemd oneshot)
-- **Scripts** : `scripts/ops/backup-production.sh`, `scripts/ops/restore-production.sh`
+- Google Drive cible: 02:00 et 14:30 WAT
+- Replication locale: continue ou quasi continue lorsque le disque est connecte
+- Disque externe: copie hebdomadaire hors serveur
+- Cockpit: pilotage, historique et alertes
+- Tests de restauration: hebdomadaires, mensuels et trimestriels selon le niveau
+- Documentation canonique: [docs/backup-disaster-recovery/README.md](docs/backup-disaster-recovery/README.md)
 
-**Restauration** :
-```bash
-sudo /opt/lawim/current/scripts/ops/restore-production.sh <BACKUP_ID> --decrypt-key "votre-cle"
-```
+Les details operatoires, les statuts `CIBLE / IMPLEMENTE / DEPLOYE / TESTE / VALIDE`, les chemins actifs et les notes historiques sont centralises dans la documentation BDR canonique.
 
 ## Santé
 
@@ -90,10 +85,11 @@ curl https://lawim.app/readyz      # → {"status":"ready","database":true,"stor
 |----------|---------|
 | `docs/PRODUCT_BIBLE/` | Spécifications produit |
 | `docs/Directive/` | Références métier |
+| `docs/backup-disaster-recovery/` | Canonical Backup & Disaster Recovery documentation |
 | `OPS/OVH/` | Déploiement, sauvegardes, incidents |
 | `reports/handover/` | Document maître de passation |
 | `compose/` | Docker Compose canonique |
-| `scripts/ops/` | Sauvegarde et restauration |
+| `scripts/ops/` | Historique des scripts de sauvegarde et restauration |
 
 ## Branche officielle
 

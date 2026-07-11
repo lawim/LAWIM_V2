@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/cockpit.md`
+
 # Google Drive Admin Center
 
 The Google Drive Admin Center is the operational dashboard for the 10 Drive model used by LAWIM_V2.

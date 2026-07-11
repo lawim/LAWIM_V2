@@ -1,3 +1,10 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/google-drive.md`
+# `backup-disaster-recovery/storage-providers.md`
+
 # Google Drive Connector
 
 The Google Drive connector is the operational contract used by LAWIM_V2 to activate distributed storage on Google Drive without storing secrets in the repository.

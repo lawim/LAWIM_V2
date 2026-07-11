@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/google-drive.md`
+
 # Google Drive Functional Configuration
 
 This document defines the placeholder configuration model used by the Storage Resource Registry.

@@ -1,3 +1,11 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/restore-database.md`
+# `backup-disaster-recovery/restore-media.md`
+# `backup-disaster-recovery/restore-complete.md`
+
 # Restore Operations Guide
 
 ## Overview

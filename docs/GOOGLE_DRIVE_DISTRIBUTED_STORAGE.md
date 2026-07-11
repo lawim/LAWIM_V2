@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/storage-providers.md`
+
 # Google Drive distributed storage
 
 The distribution model uses ten logical Google Drive placeholders to organize content by media type and operational role.

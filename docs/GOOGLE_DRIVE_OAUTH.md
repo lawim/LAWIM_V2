@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/google-drive.md`
+
 # Google Drive OAuth
 
 This document defines the OAuth contract for the Google Drive connector used by LAWIM_V2.

@@ -1,3 +1,9 @@
+# STATUT : ARCHIVE HISTORIQUE
+# NON APPLICABLE A LA VERSION ACTUELLE
+#
+# Documentation active :
+# `backup-disaster-recovery/monitoring-alerts.md`
+
 # Google Drive Monitoring
 
 The Google Drive monitoring view tracks the operational readiness of the distributed storage layer.
