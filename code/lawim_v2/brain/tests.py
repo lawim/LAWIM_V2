@@ -611,5 +611,38 @@ class TestRelationEngine(unittest.TestCase):
         self.assertTrue(has_relation, "Brain schema DDL should include relation tables")
 
 
+class TestReadinessCheck(unittest.TestCase):
+    def test_readiness_check_requires_storage(self):
+        """readyz must verify storage directory is writable"""
+        from ..services import build_services
+        from ..config import AppConfig
+        import tempfile, os
+        with tempfile.TemporaryDirectory() as tmp:
+            config = AppConfig.for_test(db_path=os.path.join(tmp, "test.db"))
+            config.media_storage_path = os.path.join(tmp, "media")
+            svc = build_services(config)
+            result = svc.readiness()
+            self.assertEqual(result["status"], "ready",
+                f"Expected ready with writable storage, got: {result}")
+            self.assertTrue(result["database"]["ready"])
+            self.assertTrue(result["storage"]["ready"])
+
+    def test_readiness_fails_on_unwritable_storage(self):
+        """readyz must return not_ready when storage is not writable"""
+        from ..services import build_services
+        from ..config import AppConfig
+        import tempfile, os
+        with tempfile.TemporaryDirectory() as tmp:
+            config = AppConfig.for_test(db_path=os.path.join(tmp, "test.db"))
+            media_path = os.path.join(tmp, "media")
+            os.makedirs(media_path, mode=0o444, exist_ok=True)
+            config.media_storage_path = media_path
+            svc = build_services(config)
+            result = svc.readiness()
+            self.assertEqual(result["status"], "not_ready",
+                f"Expected not_ready with unwritable storage, got: {result}")
+            self.assertFalse(result["storage"]["ready"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -41,7 +41,6 @@ services:
       LAWIM_MAX_JSON_BODY_BYTES: ${LAWIM_MAX_JSON_BODY_BYTES:-1048576}
       LAWIM_MATCH_MIN_SCORE: ${LAWIM_MATCH_MIN_SCORE:-10}
       LAWIM_METRICS_ENABLED: ${LAWIM_METRICS_ENABLED:-true}
-    command: ["python", "-m", "lawim_v2"]
     ports:
       - "${LAWIM_APP_PORT:-3000}:3000"
     volumes:
