@@ -87,3 +87,14 @@ This inventory covers the current documentation and operational procedures that 
 4. Keep the existing reports as evidence, but stop treating them as operational procedure sources.
 5. After the documentation tree is in place, update the top-level `README.md` and the relevant ops references.
 
+## Decisions de consolidation
+
+| Cluster | Canonical doc | Action performed | Archive | Final status | Commit associe |
+|---|---|---|---|---|---|
+| Entry points and policy summary | `docs/backup-disaster-recovery/README.md` and `docs/backup-disaster-recovery/schedules.md` | Root README shortened and linked to the canonical tree; schedule policy normalized to the target 02:00/14:30 WAT | No | Active | `38e9719d` |
+| Backup and restore runbooks | `docs/backup-disaster-recovery/operations.md`, `restore-database.md`, `restore-media.md`, `restore-complete.md`, `restore-tests.md` | Legacy runbooks converted to archive notes with links to canonical procedures | In place | Historical only | `38e9719d` |
+| Backup center documents | `docs/backup-disaster-recovery/cockpit.md`, `operations.md`, `retention.md` | Backup center summaries converted to archive notes | In place | Historical only | `38e9719d` |
+| Google Drive documents | `docs/backup-disaster-recovery/google-drive.md`, `storage-providers.md`, `cockpit.md`, `monitoring-alerts.md` | Google Drive connector, OAuth, admin, quota, monitoring, and functional docs consolidated into one canonical provider page | In place | Historical only | `38e9719d` |
+| Retention and restore overviews | `docs/backup-disaster-recovery/retention.md`, `restore-database.md`, `restore-media.md`, `restore-complete.md` | General retention and restore overviews archived in place | In place | Historical only | `38e9719d` |
+| Mission 12 historical report | `reports/product_reviews/Mission_12_Report.md` | Added an evolution note pointing to the active schedule policy | No | Historical, annotated | `38e9719d` |
+| Canonical archive space | `docs/backup-disaster-recovery/archive/README.md` | Added an explicit archive landing page for superseded documents | No | Active archive index | `38e9719d` |
