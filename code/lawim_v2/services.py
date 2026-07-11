@@ -36,7 +36,7 @@ from .ecosystem.service import EcosystemService
 from .security import AADAuthenticator, resolve_aad_config, validate_email, validate_password
 from .user_roles import resolve_official_user_role
 from .program_m_support import ProgramMServiceBase
-from .backup.service import BackupService
+from .backup import BackupService, DisasterRecoveryService
 
 
 class ServiceError(Exception):
@@ -136,6 +136,7 @@ class LawimServices:
         self.operations = self.program_m
         self.deployment = self.program_m
         self.backup = BackupService(repository, config)
+        self.disaster_recovery = DisasterRecoveryService(repository, config, self.backup)
         self.installer = self.program_m
         self.release_manager = self.program_m
         from .cognition.service import CognitionService

@@ -25,6 +25,13 @@ from .models import (
     utc_now,
 )
 from .providers import ExternalDiskProvider, GoogleDriveProvider, LocalDiskProvider, StorageProvider
+from .recovery import (
+    DisasterRecoveryService,
+    RecoveryBundleManifest,
+    RecoveryBundleSummary,
+    RecoveryValidationResult,
+    build_recovery_bundle_id,
+)
 
 _ORCHESTRATOR_EXPORTS = {
     "BackupAlertService",
@@ -74,14 +81,19 @@ __all__ = [
     "BackupScheduler",
     "BackupService",
     "BackupSettings",
+    "DisasterRecoveryService",
     "ExternalDiskProvider",
     "GoogleDriveProvider",
     "RestoreJob",
     "RestoreJobState",
     "RestoreResult",
     "RestoreResultBundle",
+    "RecoveryBundleManifest",
+    "RecoveryBundleSummary",
+    "RecoveryValidationResult",
     "LocalDiskProvider",
     "StorageProvider",
     "build_backup_id",
+    "build_recovery_bundle_id",
     "utc_now",
 ]
