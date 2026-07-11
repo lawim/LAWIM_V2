@@ -153,7 +153,7 @@ Monitor:
 
 ### Automated Backups
 
-Backups follow the active BDR policy documented in `docs/backup-disaster-recovery/schedules.md`:
+Backups follow the active DRF cadence documented in `docs/disaster-recovery/schedules.md`:
 02:00 and 14:30 WAT (Africa/Douala).
 
 ```bash

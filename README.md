@@ -60,7 +60,7 @@ PYTHONPATH=code python3 -m pytest code/lawim_v2/brain/tests.py -v  # Backend (67
 - Disque externe: copie hebdomadaire hors serveur
 - Cockpit: pilotage, historique et alertes
 - Tests de restauration: hebdomadaires, mensuels et trimestriels selon le niveau
-- Documentation canonique: [docs/backup-disaster-recovery/README.md](docs/backup-disaster-recovery/README.md)
+- Documentation canonique: [docs/disaster-recovery/README.md](docs/disaster-recovery/README.md)
 
 Les details operatoires, les statuts `CIBLE / IMPLEMENTE / DEPLOYE / TESTE / VALIDE` et les chemins actifs sont centralises dans la documentation BDR canonique.
 
@@ -85,7 +85,7 @@ curl https://lawim.app/readyz      # → {"status":"ready","database":true,"stor
 |----------|---------|
 | `docs/PRODUCT_BIBLE/` | Spécifications produit |
 | `docs/Directive/` | Références métier |
-| `docs/backup-disaster-recovery/` | Canonical Backup & Disaster Recovery documentation |
+| `docs/disaster-recovery/` | Canonical Disaster Recovery Framework documentation |
 | `OPS/OVH/` | Déploiement, sauvegardes, incidents |
 | `reports/handover/` | Document maître de passation |
 | `compose/` | Docker Compose canonique |

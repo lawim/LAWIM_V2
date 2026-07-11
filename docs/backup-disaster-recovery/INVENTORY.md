@@ -1,10 +1,16 @@
 # Mission 13.0 - Backup & Disaster Recovery Documentation Inventory
 
+STATUS: LEGACY INVENTORY
+
+The canonical DRF documentation now lives in
+[docs/disaster-recovery/README.md](../disaster-recovery/README.md).
+
 Date: 2026-07-11
 
 ## Scope
 
-This inventory records the final state of the BDR documentation after consolidation and deletion of superseded duplicates.
+This inventory records the final state of the historical BDR documentation
+after consolidation and deletion of superseded duplicates.
 
 ## Method
 

@@ -1,13 +1,14 @@
 # Backup & Disaster Recovery
 
-STATUT : CIBLE DOCUMENTAIRE ACTIVE
+STATUS: LEGACY TREE
 
-## Objectif
+The canonical DRF documentation now lives in
+[docs/disaster-recovery/README.md](../disaster-recovery/README.md).
 
-This tree is the single source of truth for LAWIM backup, restore, retention, disaster recovery, and operator control.
-It separates the target policy, the current runtime contract, and the validation criteria used before any operational change.
+This tree is retained for historical backup policy notes and cross-references.
+It should not be expanded with new canonical DRF content.
 
-## Active policy
+## Legacy policy snapshot
 
 - Google Drive: 02:00 and 14:30 WAT
 - Timezone: Africa/Douala
@@ -15,7 +16,7 @@ It separates the target policy, the current runtime contract, and the validation
 - External disk: weekly offline copy
 - Cockpit LAWIM: control, history, alerts, and operator actions
 
-## Current state
+## Historical state
 
 - Versioned helper files live in `deployment/backup/`.
 - Versioned systemd units live in `deployment/systemd/`.
@@ -23,7 +24,7 @@ It separates the target policy, the current runtime contract, and the validation
 - Live host validation is still pending because `systemctl` is not available in this workspace.
 - The dedicated backend backup module skeleton is present, but persistence and cockpit wiring still need to be completed.
 
-## Components status
+## Historical components status
 
 | Component | Target | Implemented | Deployed | Tested | Validated |
 |---|---|---|---|---|---|
@@ -40,7 +41,7 @@ It separates the target policy, the current runtime contract, and the validation
 | Retention | Yes | Partial | Not confirmed | Not confirmed | No |
 | Automated tests | Yes | Partial | Not confirmed | Not confirmed | No |
 
-## Canonical documents
+## Legacy documents
 
 - [Architecture](architecture.md)
 - [Operations](operations.md)
@@ -74,5 +75,5 @@ It separates the target policy, the current runtime contract, and the validation
 
 - The target schedule is documented and distinguishable from the deployed timer.
 - The canonical documents do not repeat removed paths.
-- The README root points here.
+- The README root points to the canonical DRF tree.
 - No secret or backup artifact is added to Git.
