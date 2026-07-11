@@ -8,10 +8,15 @@
 | Dossier local | `/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2` |
 | Dépôt GitHub | `lawim/LAWIM_V2` |
 | Branche active | `main` |
-| Commit actif | `15ec1f43e87f01d67dbeb4bb6b7e40b53cf6a85d` |
-| Tag actif | `release-mission-09.2-premium` |
-| Release OVH active | `release-mission-09.2-premium` |
-| Date de validation | 11 juillet 2026 |
+| Commit actif | `de4d60bc43074cf87a2edc8f0291a8c59b3585b6` |
+| Tag actif | `release-mission-10-11` |
+| Commit précédent | `15ec1f43e87f01d67dbeb4bb6b7e40b53cf6a85d` (release-mission-09.2-premium) |
+| Release OVH avant déploiement | `mission-09.2-premium-20260710` |
+| Release OVH après déploiement | `mission-10-11-20260711` |
+| Déploiement effectué le | 11 juillet 2026 07:12 UTC |
+| Recette de production validée le | 11 juillet 2026 06:22 UTC |
+| Artefact SHA256 | `de2ca2ae9b319554ee66199ec4d0b16941ebbdda128c0f204ac5bdf8f21f5ee3` |
+| Verdict | **VALIDÉ** |
 
 ## 2. État réel du produit
 
@@ -413,7 +418,44 @@ Créer un rapport de mission dans reports/product_reviews/
 Documenter la procédure de sauvegarde et restauration
 ```
 
-## Annexe : Procédure de déploiement OVH
+## Annexe A : Résultats de la recette de production
+
+### Tests effectués sur OVH (https://lawim.app)
+
+| Test | Résultat | Détail |
+|------|----------|--------|
+| Authentification - Register | ✅ 201 | Utilisateur créé avec session |
+| Authentification - Login | ✅ 200 | Token JWT obtenu |
+| Authentification - Me | ✅ 200 | Profil utilisateur retourné |
+| Health endpoint | ✅ 200 | `ok` |
+| Frontend landing page | ✅ 200 | HTTP/2 avec nginx |
+| Frontend admin page | ✅ 200 | |
+| Service Worker | ✅ 200 | |
+| HTTPS | ✅ HTTP/2 200 | Let's Encrypt SSL |
+| Nginx config | ✅ valid | Syntaxe OK |
+| PostgreSQL | ✅ 420 tables | 6 tables brain présentes |
+| Redis | ✅ Running | Authentifié |
+| Création projet | ✅ 201 | Project ID 1 |
+| Brain Chat | ✅ 200 | Intent `find_property`, entité `Douala` extraite |
+| Brain Resume | ✅ 200 | Reprise avec historique |
+| Brain Matching | ✅ 200 | **5 propositions** (partenaires) |
+| Brain Proposals list | ✅ 200 | Statuts corrects |
+| Brain Accept Proposal | ✅ 200 | Statut passé à `accepted` |
+| Brain Grant Consent | ✅ 200 | Statut passé à `relation_established` |
+| Brain Relations list | ✅ 200 | Relation établie retournée avec horodatage |
+| Persistance PostgreSQL | ✅ Vérifiée | Données en base `brain_relation_proposals` |
+| Backend logs | ✅ Aucune erreur critique | |
+| Nginx logs | ⚠️ favicon.ico manquant | Cosmétique, non bloquant |
+
+### Parcours complet validé
+
+```text
+Register → Login → Create Project → Brain Chat (intent detected)
+→ Find Matches (5 proposals) → Accept Proposal → Grant Consent
+→ Relation Established → Persisted in PostgreSQL
+```
+
+## Annexe B : Procédure de déploiement OVH (utilisée pour cette release)
 
 1. Construire le frontend :
 ```bash
