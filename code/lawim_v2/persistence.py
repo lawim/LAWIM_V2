@@ -379,6 +379,31 @@ def _knowledge_platform_table_specs() -> tuple[TableSpec, ...]:
     )
 
 
+def _brain_table_specs() -> tuple[TableSpec, ...]:
+    from .brain.schema_ddl import BRAIN_TABLE_NAMES
+    from .brain.relation_ddl import RELATION_TABLE_NAMES
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x brain/memory entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="cascade"),),
+        )
+        for name in BRAIN_TABLE_NAMES
+    ) + tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x brain/relation entity ({name}).",
+            primary_key="id",
+            columns=("id", "created_at"),
+            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="cascade"),),
+        )
+        for name in RELATION_TABLE_NAMES
+    )
+
+
 def _assistant_table_specs() -> tuple[TableSpec, ...]:
     from .assistant.schema_v10_ddl import V10_TABLE_NAMES
 
@@ -741,6 +766,7 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _ecosystem_table_specs()
     + _cognition_table_specs()
     + _assistant_table_specs()
+    + _brain_table_specs()
     + _knowledge_platform_table_specs()
     + _workflow_automation_table_specs()
     + _real_estate_intelligence_table_specs()

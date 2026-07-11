@@ -19,6 +19,8 @@ import {
   useLanguage
 } from '@ui';
 import { resolveDashboardPath, resolvePrimaryRole, useAuthStore } from '@auth';
+import { AdvisorPanel, AdvisorWidget } from './AdvisorPanel';
+import { MatchSummaryWidget } from './MatchResultsPanel';
 
 type MissionRole = 'admin' | 'manager' | 'agent' | 'partner' | 'user' | 'investor';
 type Lang = 'fr' | 'en' | 'pcm';
@@ -525,6 +527,15 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
   });
   const matches = matchData?.data ?? [];
 
+  const { data: brainProposalsData } = useQuery({
+    queryKey: ['cockpit-brain-proposals', activeProject?.id],
+    queryFn: () => apiSdk.brainProposals(activeProject!.id),
+    enabled: Boolean(activeProject?.id),
+    staleTime: 15_000,
+  });
+  const brainProposals = brainProposalsData?.data ?? [];
+  const hasBrainMatches = brainProposals.length > 0;
+
   const roleConfig = (() => {
     switch (role) {
       case 'admin':
@@ -643,7 +654,7 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
 
       <div className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
         <div className="space-y-4">
-          <ConseillerMessage firstName={firstName} projectTheme={projectTheme} pendingTasks={summary.pendingTasks} />
+          <AdvisorWidget onOpenConversation={() => navigate('/conversation')} />
 
           <div className="flex flex-wrap items-center gap-3">
             <PrimaryAction {...roleConfig.primaryAction} tooltip={roleConfig.primaryAction.label} />
@@ -711,6 +722,11 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
               <p className="mt-2 text-sm text-slate-500">{t('match.empty')}</p>
             </Surface>
           ) : null}
+
+          {/* Brain proposals in cockpit */}
+          {hasBrainMatches && activeProject && (
+            <MatchSummaryWidget projectId={activeProject.id} />
+          )}
         </div>
 
         <div className="space-y-4">
@@ -862,96 +878,18 @@ export function RoleCockpitPage() {
 
 export function ConversationStudioPage() {
   const { t } = useTranslator();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const initialProjectId = params.get('project') ?? '';
-  const { projects } = useProjectsSummary();
   const user = useAuthStore((state) => state.user);
   const roles = useAuthStore((state) => state.roles);
   const role = missionRoleFromAccessRole(resolvePrimaryRole(user?.role, roles));
-  const activeProject = projects.find((project) => String(project.id) === initialProjectId) ?? null;
-  const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; text: string }[]>([
-    { id: 'start', role: 'assistant', text: `💬 ${t('assistant.description')}` }
-  ]);
-  const [selectedProjectId, setSelectedProjectId] = useState(() => projects[0] ? String(projects[0].id) : '');
-
-  const sendMessage = async () => {
-    const trimmed = input.trim();
-    if (!trimmed) return;
-    setMessages((m) => [...m, { id: `u-${Date.now()}`, role: 'user', text: trimmed }]);
-    setInput('');
-    try {
-      const projectId = activeProject?.id ?? projects[0]?.id;
-      const resp = await apiSdk.askAssistant({ message: trimmed, project_id: projectId ? Number(projectId) : undefined });
-      setMessages((m) => [...m, { id: `a-${Date.now()}`, role: 'assistant', text: resp.data.reply || '👍' }]);
-    } catch {
-      setMessages((m) => [...m, { id: `a-${Date.now()}`, role: 'assistant', text: t('errors.generic') }]);
-    }
-  };
 
   return (
     <CockpitFrame title={`💬 ${t('assistant.title')}`}>
-      <div className="grid gap-4 lg:grid-cols-[0.6fr_1.4fr]">
-        <div className="space-y-3">
-          <Surface className="p-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">📁 {t('assistant.projects')}</p>
-            <div className="mt-3 space-y-2">
-              {projects.map((p) => (
-                <button key={p.id} type="button" onClick={() => setSelectedProjectId(String(p.id))}
-                  className={`w-full rounded-xl border px-3 py-2 text-left text-sm transition ${selectedProjectId === String(p.id) ? 'border-slate-900 bg-slate-900 text-white' : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'}`}
-                >
-                  <p className="font-semibold">{p.title}</p>
-                  <p className="text-xs opacity-70">{p.status}</p>
-                </button>
-              ))}
-            </div>
-          </Surface>
-          <Surface className="p-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">⚡ {t('assistant.quick_prompts')}</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {['🏠 ' + t('module.properties.category.logement'), '🌍 ' + t('module.properties.category.terrain'), '🤝 ' + t('module.partners.need.architect')].map((label) => (
-                <button key={label} type="button" onClick={() => setInput(label)}
-                  className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-600 transition hover:border-slate-300"
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </Surface>
-        </div>
-
-        <Surface className="flex flex-col p-4">
-          <div className="mb-3 flex items-center gap-2 border-b border-slate-100 pb-3">
-            <span className="text-lg">💬</span>
-            <span className="text-sm font-semibold text-slate-900">{activeProject?.title || t('assistant.title')}</span>
-          </div>
-          <div className="flex-1 space-y-3 overflow-y-auto" style={{ maxHeight: '60vh' }}>
-            {messages.map((msg) => (
-              <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                  msg.role === 'user' ? 'bg-slate-900 text-white' : 'border border-slate-200 bg-white text-slate-700'
-                }`}>
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-3 flex gap-2 border-t border-slate-100 pt-3">
-            <input
-              className="min-w-0 flex-1 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm outline-none focus:border-slate-300"
-              placeholder={t('assistant.chat_hint')}
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              onKeyDown={(event) => { if (event.key === 'Enter') void sendMessage(); }}
-            />
-            <button type="button" onClick={() => void sendMessage()}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-white transition hover:bg-slate-800"
-            >
-              ➤
-            </button>
-          </div>
+      <div className="mx-auto max-w-4xl">
+        <Surface className="overflow-hidden">
+          <AdvisorPanel
+            userName={(user as unknown as Record<string, string | undefined>)?.full_name || (user as unknown as Record<string, string | undefined>)?.username || user?.email || ''}
+            roleLabel={t(ROLE_LABEL_BY_MISSION_ROLE[role])}
+          />
         </Surface>
       </div>
     </CockpitFrame>

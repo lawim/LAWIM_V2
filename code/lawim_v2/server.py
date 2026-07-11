@@ -425,6 +425,9 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path.startswith("/api/v2/assistant"):
+            if "/brain/" in path:
+                self._handle_v2_brain_get(path, query)
+                return
             self._handle_v2_assistant_get(path, query)
             return
 
@@ -717,6 +720,9 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path.startswith("/api/v2/assistant"):
+            if "/brain/" in path:
+                self._handle_v2_brain_post(path, body, actor)
+                return
             self._handle_v2_assistant_post(path, body, actor)
             return
 
@@ -2702,6 +2708,138 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             )
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown cognition API route")
+
+    def _handle_v2_brain_get(self, path: str, query: dict[str, list[str]]) -> None:
+        actor = self._require_user()
+        brain = self.services.brain
+        if path == "/api/v2/assistant/brain/dossiers":
+            self._send_json(
+                brain.list_dossiers(
+                    actor=actor,
+                    status=self._first(query, "status"),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/resume"):
+            project_id = self._extract_path_id(
+                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/resume", resource="Project"
+            )
+            lang = self._first(query, "language") or "fr"
+            self._send_json(brain.get_resumption(actor=actor, project_id=project_id, language=lang))
+            return
+        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/memory"):
+            project_id = self._extract_path_id(
+                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/memory", resource="Project"
+            )
+            self._send_json(brain.get_memory_summary(actor=actor, project_id=project_id))
+            return
+        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/suggestions"):
+            project_id = self._extract_path_id(
+                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/suggestions", resource="Project"
+            )
+            self._send_json(
+                brain.get_suggestions(
+                    actor=actor,
+                    project_id=project_id,
+                    status=self._first(query, "status") or "active",
+                )
+            )
+            return
+        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/matches"):
+            project_id = self._extract_path_id(
+                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/matches", resource="Project"
+            )
+            status = self._first(query, "status")
+            self._send_json(brain.get_proposals(actor=actor, project_id=project_id, status=status))
+            return
+        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/relations"):
+            project_id = self._extract_path_id(
+                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/relations", resource="Project"
+            )
+            self._send_json({"relations": brain.list_established_relations(actor=actor, project_id=project_id)})
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown brain API route")
+
+    def _handle_v2_brain_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        brain = self.services.brain
+        if path == "/api/v2/assistant/brain/matching":
+            project_id = self._require_int(body, "project_id", minimum=1)
+            partner_type = self._optional_text(body.get("partner_type"))
+            result = brain.find_matches(
+                actor=actor,
+                project_id=project_id,
+                partner_type=partner_type,
+            )
+            self._send_json(result, status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/assistant/brain/proposals/accept":
+            proposal_id = self._require_int(body, "proposal_id", minimum=1)
+            self._send_json(brain.accept_proposal(actor=actor, proposal_id=proposal_id))
+            return
+        if path == "/api/v2/assistant/brain/proposals/reject":
+            proposal_id = self._require_int(body, "proposal_id", minimum=1)
+            self._send_json(brain.reject_proposal(actor=actor, proposal_id=proposal_id))
+            return
+        if path == "/api/v2/assistant/brain/consent/request":
+            proposal_id = self._require_int(body, "proposal_id", minimum=1)
+            self._send_json(brain.request_consent(actor=actor, proposal_id=proposal_id))
+            return
+        if path == "/api/v2/assistant/brain/consent/grant":
+            proposal_id = self._require_int(body, "proposal_id", minimum=1)
+            self._send_json(brain.grant_consent(actor=actor, proposal_id=proposal_id))
+            return
+        if path == "/api/v2/assistant/brain/chat":
+            project_id = self._assistant_project_id({}, body)
+            session_id = self._optional_int(body.get("session_id"), minimum=1)
+            message = self._require_text(body, "message")
+            language = self._optional_text(body.get("language")) or "fr"
+            channel = self._optional_text(body.get("channel")) or "web"
+            processing = brain.process_chat(
+                actor=actor,
+                project_id=project_id,
+                message=message,
+                session_id=session_id,
+                language=language,
+                channel=channel,
+            )
+            self._send_json({"brain": processing}, status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/assistant/brain/dossiers":
+            # Create a new project/dossier from the conversation
+            title = self._require_text(body, "title")
+            project_type = self._require_text(body, "project_type")
+            objective = self._require_text(body, "objective")
+            project = self.services.projects.create_project(
+                actor=actor,
+                title=title,
+                project_type=project_type,
+                objective=objective,
+                budget_min=self._optional_int(body.get("budget_min"), minimum=0),
+                budget_max=self._optional_int(body.get("budget_max"), minimum=0),
+                currency=self._optional_text(body.get("currency")) or "XAF",
+                location_city=self._optional_text(body.get("location_city")),
+                location_region=self._optional_text(body.get("location_region")),
+                location_country=self._optional_text(body.get("location_country")) or "Cameroon",
+                timeline_horizon=self._optional_text(body.get("timeline_horizon")),
+                status=self._optional_text(body.get("status")) or "draft",
+                priority=self._optional_text(body.get("priority")) or "normal",
+            )
+            self._send_json({"project": project}, status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/assistant/brain/confirm":
+            project_id = self._assistant_project_id({}, body)
+            message = self._require_text(body, "message")
+            language = self._optional_text(body.get("language")) or "fr"
+            result = brain.handle_confirmation(
+                actor=actor,
+                project_id=project_id,
+                message=message,
+                language=language,
+            )
+            self._send_json({"confirmation": result})
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown brain API route")
 
     def _assistant_project_id(self, query: dict[str, list[str]], body: dict[str, Any] | None = None) -> int:
         if body is not None and body.get("project_id") is not None:

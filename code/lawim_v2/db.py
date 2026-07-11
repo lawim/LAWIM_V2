@@ -50,6 +50,8 @@ from .communication.repository import CommunicationRepositoryMixin
 from .security.repository import SecurityRepositoryMixin
 from .real_estate_intelligence.repository import RealEstateIntelligenceRepositoryMixin
 from .assistant.repository import AssistantRepositoryMixin
+from .brain.repository import BrainRepositoryMixin
+from .brain.relation_repository import BrainRelationRepositoryMixin
 from .cognition.repository import CognitionRepositoryMixin
 from .ecosystem.repository import EcosystemRepositoryMixin
 from .program_m_support import ProgramMRepositoryMixinBase
@@ -106,7 +108,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase):
+class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase, BrainRepositoryMixin, BrainRelationRepositoryMixin):
     driver = "sqlite"
 
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:

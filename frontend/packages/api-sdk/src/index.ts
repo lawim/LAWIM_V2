@@ -189,6 +189,164 @@ export interface AssistantReply {
   raw?: Record<string, unknown>;
 }
 
+/* ── Brain / Advisor types ──────────────────────────────────── */
+
+export interface BrainIntent {
+  primary_intent: string;
+  primary_score: number;
+  is_multi_intent: boolean;
+  intents: Array<{ intent: string; score: number; confidence: number }>;
+  entities: {
+    cities?: Array<{ city: string; match: string; region: string | null }>;
+    budgets?: Array<{ raw: string; value: number; currency: string }>;
+    property_types?: string[];
+    surfaces_m2?: number[];
+    bedrooms?: number[];
+    lang?: string;
+    confirmation?: boolean | null;
+  };
+  language: string;
+  is_confirmation?: boolean | null;
+  is_rejection?: boolean | null;
+}
+
+export interface BrainProgression {
+  intent: string;
+  progress_pct: number;
+  total_steps: number;
+  known_fields: string[];
+  known_labels: string[];
+  missing_fields: string[];
+  next_question: string | null;
+  next_key: string | null;
+  complete: boolean;
+  next_actions: string[];
+}
+
+export interface BrainSuggestion {
+  type: string;
+  content: string;
+  action?: string;
+  partner?: string;
+  priority: string;
+  priority_order: number;
+  status?: string;
+}
+
+export interface BrainMemorySummary {
+  total: number;
+  by_kind: Record<string, number>;
+  confirmed_facts: Array<Record<string, unknown>>;
+  preferences: Array<Record<string, unknown>>;
+  constraints: Array<Record<string, unknown>>;
+  decisions: Array<Record<string, unknown>>;
+  hypotheses: Array<Record<string, unknown>>;
+  temporary: Array<Record<string, unknown>>;
+}
+
+export interface BrainResumption {
+  has_history: boolean;
+  short_summary: string;
+  summary: string;
+  objective?: string;
+  city?: string;
+  confirmed_count: number;
+  pending_count: number;
+  last_action?: string | null;
+  next_step?: string | null;
+  next_question?: string | null;
+  language: string;
+}
+
+export interface BrainChatPayload {
+  message: string;
+  project_id: number;
+  session_id?: number;
+  language?: string;
+  channel?: string;
+}
+
+export interface BrainChatResult {
+  analysis: BrainIntent;
+  detected_language: string;
+  progression: BrainProgression;
+  suggestions: BrainSuggestion[];
+  memory_summary: BrainMemorySummary | null;
+  intent_id?: number | null;
+}
+
+export interface BrainDossier {
+  project: ProjectSummary;
+  resume: BrainResumption;
+}
+
+export interface BrainConfirmResult {
+  handled: boolean;
+  reason?: string;
+  results?: Array<{ key: string; action: string; success: boolean }>;
+}
+
+/* ── Relation / Match types ───────────────────── */
+
+export interface BrainRelationMatch {
+  relation_type: string;
+  target_type: string;
+  target_id: number;
+  score: number;
+  justification: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface BrainFindMatchesPayload {
+  project_id: number;
+  partner_type?: string;
+}
+
+export interface BrainFindMatchesResult {
+  proposals_count: number;
+  properties_found: number;
+  partners_found: number;
+  proposals: BrainProposalResult[];
+}
+
+export interface BrainProposalResult {
+  id: number;
+  project_id: number;
+  relation_type: string;
+  target_type: string;
+  target_id: number;
+  score: number;
+  justification: string;
+  metadata_json?: string;
+  status: string;
+  proposed_at?: string | null;
+  accepted_at?: string | null;
+  rejected_at?: string | null;
+  consent_requested_at?: string | null;
+  consent_granted_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BrainProposalActionPayload {
+  proposal_id: number;
+}
+
+export interface BrainRelation {
+  id: number;
+  project_id: number;
+  relation_type: string;
+  source_type: string;
+  source_id?: number | null;
+  target_type: string;
+  target_id: number;
+  status: string;
+  metadata_json?: string;
+  established_at: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface CreatePropertyPayload {
   title: string;
   summary: string;
@@ -811,6 +969,414 @@ export const apiSdk = {
     return {
       ...response,
       data: mapPropertySummary(response.data)
+    };
+  },
+
+  /* ── Brain / Advisor methods ────────────────────────────── */
+
+  async brainChat(payload: BrainChatPayload): Promise<ApiResponse<BrainChatResult>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          analysis: {
+            primary_intent: 'buy',
+            primary_score: 80,
+            is_multi_intent: false,
+            intents: [{ intent: 'buy', score: 80, confidence: 1 }],
+            entities: {},
+            language: 'fr',
+            is_confirmation: null,
+            is_rejection: null
+          },
+          detected_language: 'fr',
+          progression: {
+            intent: 'buy',
+            progress_pct: 20,
+            total_steps: 6,
+            known_fields: [],
+            known_labels: [],
+            missing_fields: ['city', 'budget_max', 'property_type'],
+            next_question: 'Dans quelle ville souhaitez-vous acheter ?',
+            next_key: 'buy_city',
+            complete: false,
+            next_actions: ['Vérifier le titre foncier', 'Rechercher un financement']
+          },
+          suggestions: [],
+          memory_summary: null,
+          intent_id: null
+        },
+        message: 'mock'
+      };
+    }
+    const response = await requestJson<{ brain: Record<string, unknown> }>(
+      '/v2/assistant/brain/chat',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          message: payload.message,
+          project_id: payload.project_id,
+          session_id: payload.session_id,
+          language: payload.language,
+          channel: payload.channel
+        })
+      },
+      { brain: {} }
+    );
+    const brain = toRecord(response.data.brain);
+    const analysis = toRecord(brain.analysis);
+    const progression = toRecord(brain.progression);
+    const suggestions = Array.isArray(brain.suggestions) ? brain.suggestions : [];
+    return {
+      ...response,
+      data: {
+        analysis: {
+          primary_intent: toText(analysis.primary_intent, 'other'),
+          primary_score: toNumber(analysis.primary_score, 50),
+          is_multi_intent: Boolean(analysis.is_multi_intent),
+          intents: Array.isArray(analysis.intents) ? analysis.intents.map((i: Record<string, unknown>) => ({
+            intent: toText(i.intent),
+            score: toNumber(i.score),
+            confidence: toNumber(i.confidence)
+          })) : [],
+          entities: toRecord(analysis.entities) as BrainIntent['entities'],
+          language: toText(analysis.language, 'fr'),
+          is_confirmation: analysis.is_confirmation as boolean | null,
+          is_rejection: analysis.is_rejection as boolean | null
+        },
+        detected_language: toText(brain.detected_language, 'fr'),
+        progression: {
+          intent: toText(progression.intent),
+          progress_pct: toNumber(progression.progress_pct),
+          total_steps: toNumber(progression.total_steps),
+          known_fields: Array.isArray(progression.known_fields) ? progression.known_fields.map(String) : [],
+          known_labels: Array.isArray(progression.known_labels) ? progression.known_labels.map(String) : [],
+          missing_fields: Array.isArray(progression.missing_fields) ? progression.missing_fields.map(String) : [],
+          next_question: progression.next_question ? toText(progression.next_question) : null,
+          next_key: progression.next_key ? toText(progression.next_key) : null,
+          complete: Boolean(progression.complete),
+          next_actions: Array.isArray(progression.next_actions) ? progression.next_actions.map(String) : []
+        },
+        suggestions: Array.isArray(suggestions) ? suggestions.map((s: Record<string, unknown>) => ({
+          type: toText(s.type),
+          content: toText(s.content),
+          action: s.action ? toText(s.action) : undefined,
+          partner: s.partner ? toText(s.partner) : undefined,
+          priority: toText(s.priority, 'medium'),
+          priority_order: toNumber(s.priority_order),
+          status: s.status ? toText(s.status) : undefined
+        })) : [],
+        memory_summary: brain.memory_summary ? (toRecord(brain.memory_summary) as unknown as BrainMemorySummary) : null,
+        intent_id: brain.intent_id ? toNumber(brain.intent_id) : null
+      }
+    };
+  },
+
+  async brainDossiers(): Promise<ApiResponse<BrainDossier[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: [
+          {
+            project: {
+              id: 1, title: 'Terrain à Douala', status: 'active',
+              project_type: 'buy', objective: 'Acheter un terrain',
+              location_city: 'Douala', budget_min: 25000000, budget_max: 50000000
+            },
+            resume: {
+              has_history: true,
+              short_summary: 'Nous avions avancé sur votre recherche de terrain à Douala.',
+              summary: 'Nous avions avancé sur votre projet Terrain à Douala.',
+              objective: 'Acheter un terrain',
+              city: 'Douala',
+              confirmed_count: 1,
+              pending_count: 0,
+              next_question: 'Quel usage pour ce terrain ?',
+              language: 'fr'
+            }
+          }
+        ],
+        message: 'mock'
+      };
+    }
+    const response = await requestJson<{ dossiers: unknown[] }>(
+      '/v2/assistant/brain/dossiers',
+      { method: 'GET' },
+      { dossiers: [] }
+    );
+    const dossiers = Array.isArray(response.data.dossiers) ? response.data.dossiers : [];
+    return {
+      ...response,
+      data: (Array.isArray(response.data.dossiers) ? response.data.dossiers : []).map((item: unknown) => {
+        const record = toRecord(item);
+        return {
+          project: record.project ? (toRecord(record.project) as unknown as ProjectSummary) : ({
+            id: 0, title: 'Projet', status: 'draft', project_type: 'other', objective: ''
+          } as ProjectSummary),
+          resume: record.resume ? (toRecord(record.resume) as unknown as BrainResumption) : {
+            has_history: false,
+            short_summary: '',
+            summary: '',
+            confirmed_count: 0,
+            pending_count: 0,
+            language: 'fr'
+          }
+        };
+      })
+    };
+  },
+
+  async brainResume(projectId: number, language?: string): Promise<ApiResponse<BrainResumption>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          has_history: true,
+          short_summary: 'Reprise de votre projet.',
+          summary: 'Nous avions avancé sur votre projet.',
+          objective: 'Projet immobilier',
+          confirmed_count: 2,
+          pending_count: 1,
+          next_question: 'Quel est votre budget ?',
+          language: language || 'fr'
+        },
+        message: 'mock'
+      };
+    }
+    const query = language ? `?language=${language}` : '';
+    const response = await requestJson<{ resumption: Record<string, unknown> }>(
+      `/v2/assistant/brain/dossiers/${projectId}/resume${query}`,
+      { method: 'GET' },
+      { resumption: {} }
+    );
+    const r = toRecord(response.data.resumption);
+    return {
+      ...response,
+      data: {
+        has_history: Boolean(r.has_history),
+        short_summary: toText(r.short_summary),
+        summary: toText(r.summary),
+        objective: r.objective ? toText(r.objective) : undefined,
+        city: r.city ? toText(r.city) : undefined,
+        confirmed_count: toNumber(r.confirmed_count),
+        pending_count: toNumber(r.pending_count),
+        last_action: r.last_action ? toText(r.last_action) : null,
+        next_step: r.next_step ? toText(r.next_step) : null,
+        next_question: r.next_question ? toText(r.next_question) : null,
+        language: toText(r.language, 'fr')
+      }
+    };
+  },
+
+  async brainConfirm(projectId: number, message: string, language?: string): Promise<ApiResponse<BrainConfirmResult>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: { handled: true, results: [{ key: 'budget_max', action: 'confirmed', success: true }] },
+        message: 'mock'
+      };
+    }
+    const response = await requestJson<{ confirmation: Record<string, unknown> }>(
+      '/v2/assistant/brain/confirm',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          project_id: projectId,
+          message,
+          language: language || 'fr'
+        })
+      },
+      { confirmation: {} }
+    );
+    const c = toRecord(response.data.confirmation);
+    return {
+      ...response,
+      data: {
+        handled: Boolean(c.handled),
+        reason: c.reason ? toText(c.reason) : undefined,
+        results: Array.isArray(c.results) ? c.results.map((r: Record<string, unknown>) => ({
+          key: toText(r.key),
+          action: toText(r.action),
+          success: Boolean(r.success)
+        })) : undefined
+      }
+    };
+  },
+
+  async brainFindMatches(payload: BrainFindMatchesPayload): Promise<ApiResponse<BrainFindMatchesResult>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          proposals_count: 2,
+          properties_found: 1,
+          partners_found: 1,
+          proposals: [
+            { id: 1, project_id: payload.project_id, relation_type: 'person_to_property', target_type: 'property', target_id: 1, score: 85, justification: 'Correspond à votre recherche', status: 'detected', proposed_at: new Date().toISOString(), created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+            { id: 2, project_id: payload.project_id, relation_type: 'person_to_partner', target_type: 'partner', target_id: 1, score: 72, justification: 'Professionnel recommandé', status: 'detected', proposed_at: new Date().toISOString(), created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+          ]
+        },
+        message: 'mock'
+      };
+    }
+    const response = await requestJson<{ proposals_count: number; properties_found: number; partners_found: number; proposals: unknown[] }>(
+      '/v2/assistant/brain/matching',
+      { method: 'POST', body: JSON.stringify(payload) },
+      { proposals_count: 0, properties_found: 0, partners_found: 0, proposals: [] }
+    );
+    return {
+      ...response,
+      data: {
+        proposals_count: Number(response.data.proposals_count ?? 0),
+        properties_found: Number(response.data.properties_found ?? 0),
+        partners_found: Number(response.data.partners_found ?? 0),
+        proposals: Array.isArray(response.data.proposals) ? response.data.proposals.map((p: unknown) => toRecord(p) as unknown as BrainProposalResult) : []
+      }
+    };
+  },
+
+  async brainProposals(projectId: number, status?: string): Promise<ApiResponse<BrainProposalResult[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: [
+          { id: 1, project_id: projectId, relation_type: 'person_to_property', target_type: 'property', target_id: 1, score: 85, justification: 'Correspond à votre recherche', status: status || 'detected', proposed_at: new Date().toISOString(), created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+        ],
+        message: 'mock'
+      };
+    }
+    const query = status ? `?status=${status}` : '';
+    const response = await requestJson<{ proposals: unknown[] }>(
+      `/v2/assistant/brain/dossiers/${projectId}/matches${query}`,
+      { method: 'GET' },
+      { proposals: [] }
+    );
+    return {
+      ...response,
+      data: Array.isArray(response.data.proposals) ? response.data.proposals.map((p: unknown) => toRecord(p) as unknown as BrainProposalResult) : []
+    };
+  },
+
+  async brainAcceptProposal(payload: BrainProposalActionPayload): Promise<ApiResponse<BrainProposalResult>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: payload.proposal_id, project_id: 0, relation_type: '', target_type: '', target_id: 0, score: 0, justification: '', status: 'accepted', accepted_at: new Date().toISOString(), created_at: new Date().toISOString(), updated_at: new Date().toISOString() }, message: 'mock' };
+    }
+    return requestJson<BrainProposalResult>(
+      '/v2/assistant/brain/proposals/accept',
+      { method: 'POST', body: JSON.stringify({ proposal_id: payload.proposal_id }) },
+      { id: payload.proposal_id, project_id: 0, relation_type: '', target_type: '', target_id: 0, score: 0, justification: '', status: 'accepted', created_at: '', updated_at: '' }
+    );
+  },
+
+  async brainRejectProposal(payload: BrainProposalActionPayload): Promise<ApiResponse<BrainProposalResult>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: payload.proposal_id, project_id: 0, relation_type: '', target_type: '', target_id: 0, score: 0, justification: '', status: 'rejected', rejected_at: new Date().toISOString(), created_at: new Date().toISOString(), updated_at: new Date().toISOString() }, message: 'mock' };
+    }
+    return requestJson<BrainProposalResult>(
+      '/v2/assistant/brain/proposals/reject',
+      { method: 'POST', body: JSON.stringify({ proposal_id: payload.proposal_id }) },
+      { id: payload.proposal_id, project_id: 0, relation_type: '', target_type: '', target_id: 0, score: 0, justification: '', status: 'rejected', created_at: '', updated_at: '' }
+    );
+  },
+
+  async brainGrantConsent(payload: BrainProposalActionPayload): Promise<ApiResponse<BrainProposalResult>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: payload.proposal_id, project_id: 0, relation_type: '', target_type: '', target_id: 0, score: 0, justification: '', status: 'relation_established', consent_granted_at: new Date().toISOString(), created_at: new Date().toISOString(), updated_at: new Date().toISOString() }, message: 'mock' };
+    }
+    return requestJson<BrainProposalResult>(
+      '/v2/assistant/brain/consent/grant',
+      { method: 'POST', body: JSON.stringify({ proposal_id: payload.proposal_id }) },
+      { id: payload.proposal_id, project_id: 0, relation_type: '', target_type: '', target_id: 0, score: 0, justification: '', status: 'relation_established', created_at: '', updated_at: '' }
+    );
+  },
+
+  async brainRelations(projectId: number): Promise<ApiResponse<BrainRelation[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: [
+          { id: 1, project_id: projectId, relation_type: 'person_to_property', source_type: 'proposal', source_id: 1, target_type: 'property', target_id: 1, status: 'relation_established', established_at: new Date().toISOString(), created_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+        ],
+        message: 'mock'
+      };
+    }
+    const response = await requestJson<{ relations: unknown[] }>(
+      `/v2/assistant/brain/dossiers/${projectId}/relations`,
+      { method: 'GET' },
+      { relations: [] }
+    );
+    return {
+      ...response,
+      data: Array.isArray(response.data.relations) ? response.data.relations.map((r: unknown) => toRecord(r) as unknown as BrainRelation) : []
+    };
+  },
+
+  async brainCreateDossier(payload: Record<string, unknown>): Promise<ApiResponse<ProjectSummary>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          id: Date.now(),
+          title: toText(payload.title, 'Projet'),
+          status: 'draft',
+          project_type: toText(payload.project_type, 'other'),
+          objective: toText(payload.objective, ''),
+          location_city: payload.location_city ? toText(payload.location_city) : undefined,
+          budget_min: payload.budget_min ? toNumber(payload.budget_min) : null,
+          budget_max: payload.budget_max ? toNumber(payload.budget_max) : null
+        },
+        message: 'mock'
+      };
+    }
+    const response = await requestJson<{ project: Record<string, unknown> }>(
+      '/v2/assistant/brain/dossiers',
+      {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      },
+      { project: {} }
+    );
+    return {
+      ...response,
+      data: mapProjectSummary(toRecord(response.data.project))
+    };
+  },
+
+  async brainSuggestions(projectId: number, status?: string): Promise<ApiResponse<BrainSuggestion[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: [
+          { type: 'action', content: 'Vérifier le titre foncier', action: 'search_land', priority: 'high', priority_order: 3 },
+          { type: 'partner', content: 'Consulter un notaire', partner: 'notaire', priority: 'high', priority_order: 3 }
+        ],
+        message: 'mock'
+      };
+    }
+    const query = status ? `?status=${status}` : '';
+    const response = await requestJson<{ suggestions: unknown[] }>(
+      `/v2/assistant/brain/dossiers/${projectId}/suggestions${query}`,
+      { method: 'GET' },
+      { suggestions: [] }
+    );
+    const suggestions = Array.isArray(response.data.suggestions) ? response.data.suggestions : [];
+    return {
+      ...response,
+      data: suggestions.map((s: unknown) => {
+        const rec = toRecord(s);
+        return {
+          type: toText(rec.type || rec.suggestion_type),
+          content: toText(rec.content),
+          action: rec.action || rec.target_action ? toText(rec.action || rec.target_action) : undefined,
+          partner: rec.partner || rec.target_partner ? toText(rec.partner || rec.target_partner) : undefined,
+          priority: toText(rec.priority, 'medium'),
+          priority_order: toNumber(rec.priority_order),
+          status: rec.status ? toText(rec.status) : undefined
+        };
+      })
     };
   },
 
