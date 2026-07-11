@@ -1,0 +1,21 @@
+[Unit]
+Description=LAWIM Monthly Recovery Test
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+WorkingDirectory=/opt/lawim/current
+ExecStart=/bin/bash /opt/lawim/current/deployment/recovery/monthly-recovery-test.sh
+TimeoutStartSec=7200
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=6
+StateDirectory=lawim-recovery-test
+LogsDirectory=lawim-recovery-test
+RuntimeDirectory=lawim-recovery-test
+UMask=0077
+PrivateTmp=true
+NoNewPrivileges=true

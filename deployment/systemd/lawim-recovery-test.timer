@@ -1,0 +1,11 @@
+[Unit]
+Description=LAWIM Monthly Recovery Test Timer
+
+[Timer]
+OnCalendar=*-*-01 03:45:00 Africa/Douala
+Persistent=true
+RandomizedDelaySec=1h
+Unit=lawim-recovery-test.service
+
+[Install]
+WantedBy=timers.target
