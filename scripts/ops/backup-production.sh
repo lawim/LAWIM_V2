@@ -99,9 +99,8 @@ if [ "$DRIVE_UPLOAD" = "true" ] && command -v rclone &>/dev/null; then
     DRIVE_PATH="LAWIM_Backups/production/$(date +%Y)/$(date +%m)/${STAMP}"
     log "Uploading to Google Drive: ${DRIVE_PATH} ..."
     rclone --config "$RCLONE_CONFIG" mkdir "lawim-drive:${DRIVE_PATH}" 2>/dev/null || true
-    rclone --config "$RCLONE_CONFIG" copy "${BACKUP_DIR}" "lawim-drive:${DRIVE_PATH}" \
-        --progress --checksum \
-        2>&1 | tail -3 || log "WARNING: Drive upload failed"
+    timeout 300 rclone --config "$RCLONE_CONFIG" copy "${BACKUP_DIR}" "lawim-drive:${DRIVE_PATH}" \
+        --checksum 2>&1 || log "WARNING: Drive upload failed"
     log "Upload complete"
 fi
 
