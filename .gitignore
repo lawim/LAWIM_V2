@@ -39,6 +39,10 @@ oauth-token.json
 *.sha256
 backups/
 backup/
+!code/lawim_v2/backup/
+!code/lawim_v2/backup/**
+!deployment/backup/
+!deployment/backup/install-systemd.sh
 
 # Logs
 *.log
