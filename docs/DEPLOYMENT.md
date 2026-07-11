@@ -153,11 +153,12 @@ Monitor:
 
 ### Automated Backups
 
-Backups run on a schedule (default: daily at 02:30 UTC)
+Backups follow the active BDR policy documented in `docs/backup-disaster-recovery/schedules.md`:
+02:00 and 14:30 WAT (Africa/Douala).
 
 ```bash
 # Manual backup
-./deployment/scripts/backup.sh
+./deployment/backup/backup.sh
 
 # Backup includes:
 # - PostgreSQL database dump
@@ -181,14 +182,14 @@ Configure rclone for remote backup to Google Drive, S3, or other services:
 rclone config
 
 # Upload backups
-./deployment/scripts/backup.sh
+./deployment/backup/backup.sh
 ```
 
 ### Restore Operations
 
 ```bash
 # Restore from backup file
-./deployment/scripts/restore.sh /path/to/backup.tar.gz
+./deployment/backup/restore.sh /path/to/backup.tar.gz
 
 # Restore validates:
 # - Backup file integrity

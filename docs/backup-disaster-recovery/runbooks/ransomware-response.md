@@ -16,6 +16,5 @@ STATUT : A COMPLETER
 
 ## Recovery source
 
-- historical clean backup
+- older validated backup
 - external disk if its date is safe
-

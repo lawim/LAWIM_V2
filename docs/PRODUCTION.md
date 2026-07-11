@@ -282,7 +282,7 @@ If single server not sufficient:
 docker-compose down
 
 # 2. Restore from backup
-./deployment/scripts/restore.sh /path/to/backup.tar.gz
+./deployment/backup/restore.sh /path/to/backup.tar.gz
 
 # 3. Verify restoration
 docker-compose ps

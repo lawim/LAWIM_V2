@@ -18,7 +18,7 @@ Key material is never stored in Git and is never displayed by the Cockpit.
 
 | Aspect | Target | Implemented | Deployed | Tested | Validated |
 |---|---|---|---|---|---|
-| Encryption service | Yes | Partial legacy script support | No confirmed canonical service | No | No |
+| Encryption service | Yes | Partial compatibility with older wrapper scripts | No confirmed canonical service | No | No |
 | Key handling | Yes | Environment-only expectation | No confirmed runtime binding | No | No |
 | Rotation support | Yes | Not yet | No | No | No |
 
@@ -28,4 +28,3 @@ Key material is never stored in Git and is never displayed by the Cockpit.
 - Do not print keys.
 - Do not derive keys in the frontend.
 - Do not use an unverified path or command from the browser.
-

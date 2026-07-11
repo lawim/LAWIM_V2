@@ -11,9 +11,8 @@ STATUT : CIBLE DOCUMENTAIRE ACTIVE
 - schedule change
 - Google account change
 - retention change
-- archive cleanup
+- verified artifact cleanup
 
 ## Rule
 
 Any maintenance action must be followed by a backup test and a restore test.
-

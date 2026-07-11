@@ -8,7 +8,7 @@ Restore media and documents selectively or completely into an isolated directory
 
 ## Canonical steps
 
-1. select the archive
+1. select the verified backup artifact
 2. verify checksum and manifest
 3. decrypt if needed
 4. extract into a temporary directory
@@ -19,5 +19,4 @@ Restore media and documents selectively or completely into an isolated directory
 ## Safety rules
 
 - Do not extract directly into production without validation.
-- Do not delete the source archive immediately after a failed attempt.
-
+- Do not delete the source artifact immediately after a failed attempt.

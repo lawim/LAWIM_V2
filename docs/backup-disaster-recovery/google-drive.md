@@ -37,19 +37,6 @@ It is used only through the provider contract and through rclone-based transfer 
 ## Repository references
 
 - `deployment/backup/rclone.example.conf`
+- `deployment/backup/backup.sh`
 - `storage-providers.md`
 - `monitoring-alerts.md`
-
-## Legacy references
-
-The following historical documents were collapsed into this canonical page:
-
-- `docs/GOOGLE_DRIVE_CONNECTOR.md`
-- `docs/GOOGLE_DRIVE_SETUP.md`
-- `docs/GOOGLE_DRIVE_OAUTH.md`
-- `docs/GOOGLE_DRIVE_ADMIN_CENTER.md`
-- `docs/GOOGLE_DRIVE_DISTRIBUTED_STORAGE.md`
-- `docs/GOOGLE_DRIVE_MONITORING.md`
-- `docs/GOOGLE_DRIVE_QUOTA_POLICY.md`
-- `docs/GOOGLE_DRIVE_FUNCTIONAL_CONFIGURATION.md`
-

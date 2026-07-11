@@ -40,7 +40,6 @@ Le depot maitre conserve tout ce qui sert a la certification, a l'analyse et a l
 - [`prompts/`](../prompts/);
 - le prompt interne [`prompts/Storage_organisation_lawim.md`](../prompts/Storage_organisation_lawim.md);
 - [`implementation/`](../implementation/);
-- [`legacy/`](../legacy/);
 - [`tests/`](../tests/);
 - [`release/`](../release/), qui porte la projection et la documentation de release;
 - les scripts de validation, de benchmark et de generation de tests;
@@ -51,17 +50,17 @@ Le depot maitre conserve tout ce qui sert a la certification, a l'analyse et a l
 - The target server uses Docker for the application, PostgreSQL and Redis.
 - Nginx is installed natively on Ubuntu and proxies the runtime stack on the server.
 - The production root is `/opt/lawim` with persistent data under `/opt/lawim/data`, `/opt/lawim/shared`, `/opt/lawim/logs` and `/opt/lawim/backups`.
-- The local `OPS/` archive remains in the master repository only.
+- The local `OPS/` documentation remains in the master repository only.
 - The temporary validation host can use the IPv4 address until DNS and TLS are finalized.
 
-## Archived on external disk
+## External offline storage
 
-L'archivage externe conserve les elements qui ne doivent pas encombrer le serveur de production:
+Le stockage externe hors ligne conserve les elements qui ne doivent pas encombrer le serveur de production:
 
 - dumps de base de donnees;
 - sauvegardes froides;
 - exports historiques;
-- journaux archives;
+- journaux conserves hors production;
 - preuves de validation et rapports de certification;
 - artefacts volumineux generes pendant les repetitions de migration.
 

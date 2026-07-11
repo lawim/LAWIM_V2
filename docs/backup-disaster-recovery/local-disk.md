@@ -4,7 +4,7 @@ STATUT : CIBLE DOCUMENTAIRE ACTIVE
 
 ## Role
 
-The local backup disk provides near-real-time recovery for recent files without downloading an archive.
+The local backup disk provides near-real-time recovery for recent files without downloading a full backup package.
 
 ## Identification
 
@@ -37,4 +37,3 @@ The mere existence of a directory does not prove that the disk is mounted.
 
 - If the disk is absent, local backup operations continue on other destinations.
 - The absence is recorded as an alert, not as a fatal stop for the whole subsystem.
-

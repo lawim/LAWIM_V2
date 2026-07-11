@@ -16,7 +16,6 @@ This plan defines the operator response for major loss scenarios and the source 
 | Local disk loss | High | Continue with off-site sources | Google Drive or external disk | Alternate destination verified | Alert log | Ops notice | < 8h |
 | External disk loss | Medium | Keep Google Drive as primary off-site source | Google Drive | Remote copy verified | Rotation log | Ops notice | < 24h |
 | Key loss | Critical | Stop encrypted restores and escalate | Key escrow or approved backup key source | Key recovered and tested | Secret audit | Security notice | ASAP |
-| Ransomware | Critical | Disconnect external media and isolate host | Historical clean backup | Clean rebuild tested | Incident timeline | Leadership notice | < 8h |
+| Ransomware | Critical | Disconnect external media and isolate host | Clean validated backup | Clean rebuild tested | Incident timeline | Leadership notice | < 8h |
 | Human error | High | Stop destructive action and preserve state | Latest validated backup | Recovery validated | Change log | Ops notice | < 2h |
 | Prolonged network outage | High | Keep local and external copies alive | Local or external disk | Remote sync recovers later | Network evidence | Ops notice | scenario-based |
-

@@ -6,7 +6,7 @@ STATUT : A COMPLETER
 
 - checksum mismatch
 - manifest mismatch
-- unreadable archive
+- unreadable backup artifact
 
 ## First actions
 
@@ -18,4 +18,3 @@ STATUT : A COMPLETER
 ## Recovery source
 
 - latest validated copy on another destination
-

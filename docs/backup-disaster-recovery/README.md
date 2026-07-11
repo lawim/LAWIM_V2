@@ -4,54 +4,41 @@ STATUT : CIBLE DOCUMENTAIRE ACTIVE
 
 ## Objectif
 
-This tree is the canonical documentation for LAWIM backup, restore, retention, disaster recovery, and operator control.
-It separates:
+This tree is the single source of truth for LAWIM backup, restore, retention, disaster recovery, and operator control.
+It separates the target policy, the current runtime contract, and the validation criteria used before any operational change.
 
-- the target policy;
-- the current runtime reality;
-- the historical references kept for traceability;
-- the validation criteria used before any operational change.
+## Active policy
 
-## Politique officielle
-
-- Google Drive: 02:00 and 14:30
+- Google Drive: 02:00 and 14:30 WAT
 - Timezone: Africa/Douala
 - Local disk backup: continuous or near-continuous when the disk is connected
 - External disk: weekly offline copy
 - Cockpit LAWIM: control, history, alerts, and operator actions
 
-## Etat reel actuel
+## Current state
 
-The repository currently contains:
-
-- versioned rehearsal helpers under `deployment/backup/`;
-- a versioned systemd timer and service under `deployment/systemd/`;
-- legacy production-oriented scripts under `scripts/ops/` kept for historical traceability only;
-- historical reports describing Mission 12 and earlier backup states.
-
-Current gaps:
-
-- the versioned timer is still `daily`, not aligned with the target schedule;
-- the runtime path declared by the unit file is not validated on this host;
-- no full restore has been validated in this workspace;
-- the Cockpit BDR module is still to be implemented.
+- Versioned helper files live in `deployment/backup/`.
+- Versioned systemd units live in `deployment/systemd/`.
+- The declared deployed backup path is `/opt/lawim/current/deployment/backup/backup.sh`.
+- Live host validation is still pending because `systemctl` is not available in this workspace.
+- The dedicated backend backup module skeleton is present, but persistence and cockpit wiring still need to be completed.
 
 ## Components status
 
-| Composant | Cible | Implante | Deploie | Teste | Valide |
+| Component | Target | Implemented | Deployed | Tested | Validated |
 |---|---|---|---|---|---|
-| Sauvegarde PostgreSQL | Oui | Partiel | Non confirme | Dry-run only | Non |
-| Medias | Oui | Partiel | Non confirme | Dry-run only | Non |
-| Chiffrement | Oui | Partiel | Legacy script only | Non confirme | Non |
-| Checksums | Oui | Partiel | Non confirme | Dry-run only | Non |
-| Google Drive | Oui | Partiel | Non confirme | Non | Non |
-| Disque local | Oui | Non | Non | Non | Non |
-| Disque externe | Oui | Non | Non | Non | Non |
-| Cockpit | Oui | Non | Non | Non | Non |
-| Alertes | Oui | Partiel | Non confirme | Non | Non |
-| Restauration | Oui | Partiel | Non confirme | Dry-run only | Non |
-| Retention | Oui | Partiel | Non confirme | Non confirme | Non |
-| Tests automatiques | Oui | Partiel | Non confirme | Non confirme | Non |
+| PostgreSQL backup | Yes | Partial | Not confirmed | Rehearsal helper | No |
+| Media backup | Yes | Partial | Not confirmed | Rehearsal helper | No |
+| Encryption | Yes | Partial | Not confirmed | Script support only | No |
+| Checksums | Yes | Partial | Not confirmed | Rehearsal helper | No |
+| Google Drive | Yes | Partial | Not confirmed | No | No |
+| Local disk | Yes | Not yet | Not yet | No | No |
+| External disk | Yes | Not yet | Not yet | No | No |
+| Cockpit | Yes | Not yet | Not yet | No | No |
+| Alerts | Yes | Partial | Not confirmed | No | No |
+| Restore | Yes | Partial | Not confirmed | Rehearsal helper | No |
+| Retention | Yes | Partial | Not confirmed | Not confirmed | No |
+| Automated tests | Yes | Partial | Not confirmed | Not confirmed | No |
 
 ## Canonical documents
 
@@ -75,19 +62,17 @@ Current gaps:
 - [Maintenance](maintenance.md)
 - [Troubleshooting](troubleshooting.md)
 - [Audit checklist](audit-checklist.md)
-- [Consolidation matrix](CONSOLIDATION_MATRIX.md)
 
 ## Safety rules
 
-- No secret is documented here.
-- No path is asserted as deployed unless it is verified by the versioned runtime or by a validated server audit.
-- Historical documents remain traceable, but the active policy is documented only in this tree.
+- Do not document secrets here.
+- Do not assert a deployed path unless it is confirmed by a host audit.
 - Do not confuse target, implemented, deployed, tested, and validated.
+- Do not add backup artifacts to Git.
 
 ## Validation criteria
 
 - The target schedule is documented and distinguishable from the deployed timer.
-- The canonical documents do not repeat legacy text unnecessarily.
+- The canonical documents do not repeat removed paths.
 - The README root points here.
-- Historical documents point back here.
 - No secret or backup artifact is added to Git.

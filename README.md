@@ -56,13 +56,13 @@ PYTHONPATH=code python3 -m pytest code/lawim_v2/brain/tests.py -v  # Backend (67
 ## Sauvegarde et reprise après sinistre
 
 - Google Drive cible: 02:00 et 14:30 WAT
-- Replication locale: continue ou quasi continue lorsque le disque est connecte
+- Réplication locale: continue ou quasi continue lorsque le disque est connecté
 - Disque externe: copie hebdomadaire hors serveur
 - Cockpit: pilotage, historique et alertes
 - Tests de restauration: hebdomadaires, mensuels et trimestriels selon le niveau
 - Documentation canonique: [docs/backup-disaster-recovery/README.md](docs/backup-disaster-recovery/README.md)
 
-Les details operatoires, les statuts `CIBLE / IMPLEMENTE / DEPLOYE / TESTE / VALIDE`, les chemins actifs et les notes historiques sont centralises dans la documentation BDR canonique.
+Les details operatoires, les statuts `CIBLE / IMPLEMENTE / DEPLOYE / TESTE / VALIDE` et les chemins actifs sont centralises dans la documentation BDR canonique.
 
 ## Santé
 
@@ -89,7 +89,6 @@ curl https://lawim.app/readyz      # → {"status":"ready","database":true,"stor
 | `OPS/OVH/` | Déploiement, sauvegardes, incidents |
 | `reports/handover/` | Document maître de passation |
 | `compose/` | Docker Compose canonique |
-| `scripts/ops/` | Historique des scripts de sauvegarde et restauration |
 
 ## Branche officielle
 

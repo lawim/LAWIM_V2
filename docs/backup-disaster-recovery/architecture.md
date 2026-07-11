@@ -44,13 +44,12 @@ PostgreSQL + medias
 ## Runtime vs documentation
 
 - Repository path: `deployment/backup/`
-- Declared deployment path in the current service file: `/opt/lawim/deployment/backup/backup.sh`
+- Declared deployment path in the current service file: `/opt/lawim/current/deployment/backup/backup.sh`
 - Current local audit result: `systemctl` access is not available in this workspace, so the deployed state is not confirmed here
 - Therefore, this document treats the deployed path as declared but not validated
 
 ## Current state
 
 - The versioned backup helpers are simple rehearsal utilities.
-- The runtime timer is present, but not yet aligned to the target policy.
+- The versioned timer is aligned with the target policy in the repository, but the live deployment remains unconfirmed.
 - Provider abstraction is still documented conceptually and not yet delivered as a dedicated module.
-
