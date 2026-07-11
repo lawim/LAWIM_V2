@@ -187,6 +187,87 @@ describe('apiSdk', () => {
     setApiBaseForTesting(null);
   });
 
+  it('targets /api/v2/backup/status and exposes the backup summary cards', async () => {
+    testEnv.VITE_LAWIM_USE_MOCKS = 'false';
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith('/api/v2/backup/status')) {
+        return createJsonResponse({
+          global_status: 'PROTECTED',
+          policy: {
+            google_drive: { time: ['02:00', '14:30'], timezone: 'Africa/Douala' },
+            retention: { google_drive_days: 30 }
+          },
+          last_backup: {
+            backup_id: 'LAWIM-20260711-020000',
+            finished_at: '2026-07-11T02:00:00+00:00'
+          },
+          next_backup: {
+            next_run_at: '2026-07-11T14:30:00+00:00'
+          },
+          metrics: {
+            rpo_seconds: 3600,
+            rto_seconds: 180,
+            availability_percent: 99.9
+          }
+        });
+      }
+
+      throw new Error(`Unexpected request: ${url}`);
+    });
+
+    const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
+    setApiBaseForTesting('https://api.lawim.app');
+
+    const response = await apiSdk.getBackupStatus();
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toBe('https://api.lawim.app/api/v2/backup/status');
+    expect(response.data.map((item) => item.label)).toContain('Retention');
+    expect(response.data.map((item) => item.label)).toContain('Global status');
+    setApiBaseForTesting(null);
+  });
+
+  it('targets /api/v2/backup/run when orchestrating a backup job', async () => {
+    testEnv.VITE_LAWIM_USE_MOCKS = 'false';
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith('/api/v2/backup/run')) {
+        expect(init?.method).toBe('POST');
+        expect(JSON.parse(String(init?.body))).toMatchObject({
+          kind: 'postgresql',
+          destination: 'local',
+          provider_name: 'google-drive'
+        });
+        return createJsonResponse({
+          identifier: 'job-1',
+          backup_id: 'LAWIM-20260711-020000',
+          kind: 'postgresql',
+          state: 'RUNNING'
+        });
+      }
+
+      throw new Error(`Unexpected request: ${url}`);
+    });
+
+    const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
+    setApiBaseForTesting('https://api.lawim.app');
+
+    const response = await apiSdk.runBackup({
+      kind: 'postgresql',
+      destination: 'local',
+      provider_name: 'google-drive',
+      trigger: 'cockpit'
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][0]).toBe('https://api.lawim.app/api/v2/backup/run');
+    expect(response.data.backup_id).toBe('LAWIM-20260711-020000');
+    setApiBaseForTesting(null);
+  });
+
   it('targets /api/matches for partner recommendations when the API base is an origin', async () => {
     testEnv.VITE_LAWIM_USE_MOCKS = 'false';
 

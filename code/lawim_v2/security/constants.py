@@ -43,4 +43,8 @@ DEFAULT_PERMISSIONS: tuple[tuple[str, str, str, str], ...] = (
     ("perm-security-admin", "Security Admin", "security", "admin"),
     ("perm-api-keys-manage", "Manage API Keys", "api_keys", "write"),
     ("perm-privacy-export", "Privacy Export", "privacy", "execute"),
+    ("perm-backup-read", "Read Backup", "backup", "read"),
+    ("perm-backup-write", "Run Backup", "backup", "write"),
+    ("perm-backup-restore", "Restore Backup", "backup", "execute"),
+    ("perm-backup-admin", "Manage Backup", "backup", "admin"),
 )

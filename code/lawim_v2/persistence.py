@@ -256,6 +256,21 @@ def _security_table_specs() -> tuple[TableSpec, ...]:
     )
 
 
+def _backup_table_specs() -> tuple[TableSpec, ...]:
+    from .backup.schema_v19_ddl import BACKUP_TABLE_NAMES
+    from .program_m_support import COMMON_TABLE_COLUMNS
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x backup orchestration entity ({name}).",
+            primary_key="id",
+            columns=COMMON_TABLE_COLUMNS,
+            indexes=(f"idx_{name}_status", f"idx_{name}_record_key"),
+        )
+        for name in BACKUP_TABLE_NAMES
+    )
+
 
 
 
@@ -270,7 +285,7 @@ def _program_m_table_specs() -> tuple[TableSpec, ...]:
             columns=COMMON_TABLE_COLUMNS,
             indexes=("idx_%s_name" % name,),
         )
-        for name in ("operations", "deployment", "backup", "installer", "releases")
+        for name in ("operations", "deployment", "installer", "releases")
     )
 
 def _analytics_table_specs() -> tuple[TableSpec, ...]:
@@ -776,7 +791,8 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _security_table_specs()
     + _communication_table_specs()
     + _analytics_table_specs()
-    + _program_m_table_specs(),
+    + _program_m_table_specs()
+    + _backup_table_specs(),
 )
 
 

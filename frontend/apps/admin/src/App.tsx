@@ -46,6 +46,7 @@ import { StorageRoutingPage } from './StorageRoutingPage';
 import { CredentialVaultPage } from './CredentialVaultPage';
 import { GoogleDriveCredentialsPage } from './GoogleDriveCredentialsPage';
 import { GoogleDriveSecurityPage } from './GoogleDriveSecurityPage';
+import { BackupCockpitPage } from './BackupCockpitPage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -59,7 +60,7 @@ const navItems = [
   { to: '/analytics', label: 'Analytics' },
   { to: '/operations', label: 'Operations' },
   { to: '/deployment', label: 'Deployment' },
-  { to: '/backup', label: 'Backup' },
+  { to: '/admin/infrastructure/backups', label: 'Backup' },
   { to: '/admin/storage-resources', label: 'Storage Resources' },
   { to: '/admin/google-drive-admin-center', label: 'Drive Center' },
   { to: '/admin/credential-vault', label: 'Credential Vault' },
@@ -232,11 +233,7 @@ function DeploymentPage() {
 }
 
 function BackupPage() {
-  return (
-    <PageShell eyebrow="Backup" title="Backup and recovery" description="Review backup policies, retention, and restore readiness.">
-      <Card title="Recovery plan" description="A tested restore path is available." />
-    </PageShell>
-  );
+  return <BackupCockpitPage />;
 }
 
 function ReleasesPage() {
@@ -311,6 +308,7 @@ export function AdminApp() {
         <Route path="/operations" element={<OperationsPage />} />
         <Route path="/deployment" element={<DeploymentPage />} />
         <Route path="/backup" element={<BackupPage />} />
+        <Route path="/admin/infrastructure/backups" element={<BackupCockpitPage />} />
         <Route path="/admin/storage-resources" element={<StorageResourcesPage />} />
         <Route path="/admin/google-drive-admin-center" element={<GoogleDriveRegistryPage />} />
         <Route path="/admin/google-drive-registry" element={<GoogleDriveRegistryPage />} />

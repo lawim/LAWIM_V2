@@ -235,7 +235,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
 
         if path.startswith("/api/v2/backup"):
-            self._send_json({"data": self.services.backup.list(limit=self._query_limit(query))})
+            actor = self._require_user()
+            self._handle_v2_backup_get(path, query, actor)
             return
 
         if path.startswith("/api/v2/installer"):
@@ -738,6 +739,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_source_intelligence_post(path, body, actor)
             return
 
+        if path.startswith("/api/v2/backup"):
+            self._handle_v2_backup_post(path, body, actor)
+            return
+
         if path.startswith("/api/v2/communication"):
             self._handle_v2_communication_post(path, body, actor)
             return
@@ -931,6 +936,12 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/v2/source-intelligence") or path.startswith("/api/v2/sie"):
             self._handle_v2_source_intelligence_mutation(path, method, body, actor)
+            return
+
+        if path.startswith("/api/v2/backup"):
+            if method != "PATCH":
+                raise ApiError(HTTPStatus.METHOD_NOT_ALLOWED, "method_not_allowed", "Backup routes only support PATCH")
+            self._handle_v2_backup_patch(path, body, actor)
             return
 
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
@@ -1387,6 +1398,123 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if raw is None:
             return None
         return self._optional_float(raw)
+
+    def _backup_require_admin(self, actor: dict[str, object]) -> None:
+        if not self.services.policy.can_manage_backup(actor):
+            raise ApiError(HTTPStatus.FORBIDDEN, "forbidden", "Only administrators can manage backups")
+
+    def _backup_patch_fields(self, body: dict[str, Any]) -> dict[str, object]:
+        allowed = {
+            "identifier",
+            "enabled",
+            "timezone",
+            "backup_root",
+            "state_root",
+            "logs_root",
+            "temp_root",
+            "google_drive_schedule",
+            "local_replication_interval_minutes",
+            "external_backup_weekday",
+            "retention_local_days",
+            "retention_google_drive_days",
+            "retention_external_months",
+            "retry_count",
+            "timeout_seconds",
+            "verify_after_upload",
+            "automated_restore_tests",
+            "systemd_service",
+            "systemd_timer",
+            "alerts_enabled",
+            "restore_isolation_required",
+        }
+        return {key: value for key, value in body.items() if key in allowed and value is not None}
+
+    def _handle_v2_backup_get(self, path: str, query: dict[str, list[str]], actor: dict[str, object]) -> None:
+        self._backup_require_admin(actor)
+        limit = self._query_limit(query)
+        if path == "/api/v2/backup":
+            self._send_json({"data": self.services.backup.list(limit=limit)})
+            return
+        if path in {"/api/v2/backup/status"}:
+            self._send_json({"data": self.services.backup.status()})
+            return
+        if path in {"/api/v2/backup/history"}:
+            self._send_json({"data": self.services.backup.history(limit=limit)})
+            return
+        if path in {"/api/v2/backup/jobs"}:
+            self._send_json({"data": self.services.backup.jobs(limit=limit)})
+            return
+        if path in {"/api/v2/backup/providers"}:
+            self._send_json({"data": self.services.backup.provider_statuses()})
+            return
+        if path in {"/api/v2/backup/alerts"}:
+            self._send_json({"data": self.services.backup.alerts(limit=limit)})
+            return
+        if path in {"/api/v2/backup/metrics"}:
+            self._send_json({"data": self.services.backup.metrics()})
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown backup route")
+
+    def _handle_v2_backup_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        self._backup_require_admin(actor)
+        if path == "/api/v2/backup/run":
+            payload = self.services.backup.run(
+                kind=self._optional_text(body.get("kind")) or "full",
+                destination=self._optional_text(body.get("destination")) or "local",
+                provider_name=self._optional_text(body.get("provider_name")) or self._optional_text(body.get("provider")),
+                trigger=self._optional_text(body.get("trigger")) or "manual",
+                metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
+                backup_id=self._optional_text(body.get("backup_id")),
+                attempt=self._optional_int(body.get("attempt"), minimum=1) or 1,
+            )
+            self._send_json({"data": payload}, status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/backup/test":
+            payload = self.services.backup.test(
+                kind=self._optional_text(body.get("kind")) or "full",
+                destination=self._optional_text(body.get("destination")) or "local",
+                metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
+            )
+            self._send_json({"data": payload}, status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/backup/retry":
+            payload = self.services.backup.retry(identifier=self._optional_text(body.get("identifier")))
+            self._send_json({"data": payload}, status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/backup/restore":
+            payload = self.services.backup.restore(
+                backup_id=self._require_text(body, "backup_id"),
+                kind=self._require_text(body, "kind"),
+                target_environment=self._optional_text(body.get("target_environment")) or "isolated",
+                database_restored=self._coerce_bool(body.get("database_restored")),
+                media_restored=self._coerce_bool(body.get("media_restored")),
+                notes=self._optional_text(body.get("notes")) or "",
+                success=self._coerce_bool(body.get("success")) if body.get("success") is not None else True,
+            )
+            self._send_json({"data": payload}, status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/backup/provider/test":
+            provider_identifier = (
+                self._optional_text(body.get("provider_identifier"))
+                or self._optional_text(body.get("provider"))
+                or self._optional_text(body.get("identifier"))
+            )
+            if provider_identifier is None:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Field 'provider_identifier' is required")
+            payload = self.services.backup.provider_test(provider_identifier)
+            self._send_json({"data": payload})
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown backup route")
+
+    def _handle_v2_backup_patch(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        self._backup_require_admin(actor)
+        if path != "/api/v2/backup/config":
+            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown backup route")
+        changes = self._backup_patch_fields(body)
+        if not changes:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "No backup configuration changes provided")
+        payload = self.services.backup.patch_configuration(**changes)
+        self._send_json({"data": payload})
 
     def _extract_path_id(self, path: str, *, marker: str, suffix: str = "", resource: str) -> int:
         if not path.startswith(marker):

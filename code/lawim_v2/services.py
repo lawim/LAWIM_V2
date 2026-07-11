@@ -107,6 +107,9 @@ class AccessPolicy:
             return property_row.get("owner_organization_id") == organization_id
         return False
 
+    def can_manage_backup(self, actor: dict[str, object] | None) -> bool:
+        return self.is_admin(actor)
+
 
 class LawimServices:
     def __init__(self, repository: LawimRepository, config: AppConfig, policy: AccessPolicy | None = None) -> None:

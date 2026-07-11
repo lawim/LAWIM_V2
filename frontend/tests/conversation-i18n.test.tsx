@@ -6,12 +6,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { apiSdk } from '@api-sdk';
 import type { ReactElement } from 'react';
 import { WebApp } from '../apps/web/src/App';
-import { useAuthStore } from '@auth';
+import { useAuthStore, type AccessRole } from '@auth';
 
 const mockProjects = { data: [{ id: 1, title: 'Projet Test', status: 'active', project_type: 'purchase', objective: 'Test', location_city: 'Douala', budget_min: 10000000, budget_max: 50000000 }], message: 'mock' };
 const mockSummary = { properties: 5, opportunities: 2, communications: 1, pendingTasks: 0 };
 
-function authState(role: string | null) {
+function authState(role: AccessRole | null) {
   useAuthStore.setState({
     user: role ? { id: 'u-1', name: 'Test User', role, email: 'test@lawim.app' } : null,
     token: role ? 'test-token' : null,

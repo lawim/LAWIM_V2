@@ -7,6 +7,7 @@ from typing import Protocol
 
 from .persistence import APPLICATION_SCHEMA_VERSION
 from .source_intelligence.engines import ReferenceCodeEngine
+from .backup.schema_v19_ddl import SQLITE_BACKUP_TABLES_SCRIPT
 
 # Production PostgreSQL: apply prisma/migrations via `prisma migrate deploy`.
 # Development SQLite: runtime init (schema_ddl.SQLITE_INIT_SCRIPT) + legacy steps below.
@@ -80,6 +81,7 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
     from .crm.schema_v14_ddl import SQLITE_V14_TABLES_SCRIPT
 
     conn.executescript(SQLITE_V14_TABLES_SCRIPT)
+    conn.executescript(SQLITE_BACKUP_TABLES_SCRIPT)
 
     crm_source_columns = {
         "reference_code": "TEXT NOT NULL DEFAULT ''",

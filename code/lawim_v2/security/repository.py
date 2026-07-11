@@ -112,6 +112,55 @@ class SecurityRepositoryMixin:
                     '["role-admin", "role-security-admin"]',
                     '["perm-privacy-export"]',
                 ),
+                (
+                    "route-backup-read",
+                    "/api/v2/backup/*",
+                    '["GET"]',
+                    '["role-admin"]',
+                    '["perm-backup-read"]',
+                ),
+                (
+                    "route-backup-run",
+                    "/api/v2/backup/run",
+                    '["POST"]',
+                    '["role-admin"]',
+                    '["perm-backup-write"]',
+                ),
+                (
+                    "route-backup-test",
+                    "/api/v2/backup/test",
+                    '["POST"]',
+                    '["role-admin"]',
+                    '["perm-backup-write"]',
+                ),
+                (
+                    "route-backup-retry",
+                    "/api/v2/backup/retry",
+                    '["POST"]',
+                    '["role-admin"]',
+                    '["perm-backup-write"]',
+                ),
+                (
+                    "route-backup-restore",
+                    "/api/v2/backup/restore",
+                    '["POST"]',
+                    '["role-admin"]',
+                    '["perm-backup-restore"]',
+                ),
+                (
+                    "route-backup-provider-test",
+                    "/api/v2/backup/provider/test",
+                    '["POST"]',
+                    '["role-admin"]',
+                    '["perm-backup-write"]',
+                ),
+                (
+                    "route-backup-config",
+                    "/api/v2/backup/config",
+                    '["PATCH"]',
+                    '["role-admin"]',
+                    '["perm-backup-admin"]',
+                ),
             ]
             for route_key, path, methods, roles, perms in route_policies:
                 conn.execute(

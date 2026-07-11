@@ -55,6 +55,7 @@ from .brain.relation_repository import BrainRelationRepositoryMixin
 from .cognition.repository import CognitionRepositoryMixin
 from .ecosystem.repository import EcosystemRepositoryMixin
 from .program_m_support import ProgramMRepositoryMixinBase
+from .backup.repository import BackupRepositoryMixin
 
 
 SCHEMA = SQLITE_INIT_SCRIPT
@@ -108,7 +109,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase, BrainRepositoryMixin, BrainRelationRepositoryMixin):
+class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase, BackupRepositoryMixin, BrainRepositoryMixin, BrainRelationRepositoryMixin):
     driver = "sqlite"
 
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
@@ -193,6 +194,8 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
             self.seed_communication_catalog()
         if hasattr(self, "seed_analytics_catalog"):
             self.seed_analytics_catalog()
+        if hasattr(self, "seed_backup_catalog"):
+            self.seed_backup_catalog()
 
     def schema_version(self) -> int:
         row = self.one("SELECT value FROM schema_meta WHERE key = 'schema_version'")

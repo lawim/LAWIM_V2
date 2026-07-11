@@ -56,6 +56,61 @@ export interface DashboardSummary {
   pendingTasks: number;
 }
 
+export interface BackupStatusCard {
+  label: string;
+  value: string;
+}
+
+export interface BackupSnapshotRecord extends Record<string, unknown> {
+  identifier: string;
+}
+
+export interface BackupMetricsSnapshot extends Record<string, unknown> {
+  total_jobs: number;
+  successful_jobs: number;
+  failed_jobs: number;
+  mean_duration_seconds: number;
+  max_duration_seconds: number;
+  bytes_stored: number;
+  storage_usage_percent: number;
+  last_success_at?: string | null;
+  last_failed_at?: string | null;
+  average_size_bytes: number;
+  total_size_bytes: number;
+  transferred_bytes: number;
+  upload_time_seconds: number;
+  restore_time_seconds: number;
+  alert_count: number;
+  checksum_validations: number;
+  checksum_failures: number;
+  availability_percent: number;
+  rpo_seconds: number;
+  rto_seconds: number;
+  last_backup_age_seconds: number;
+  calculated_at: string;
+}
+
+export interface BackupStatusSnapshot extends Record<string, unknown> {
+  global_status: string;
+  policy: Record<string, unknown>;
+  configuration: Record<string, unknown>;
+  destinations: BackupSnapshotRecord[];
+  providers: BackupSnapshotRecord[];
+  alerts: BackupSnapshotRecord[];
+  events: BackupSnapshotRecord[];
+  history: BackupSnapshotRecord[];
+  jobs: BackupSnapshotRecord[];
+  restores: BackupSnapshotRecord[];
+  last_backup: BackupSnapshotRecord | null;
+  last_failed_backup: BackupSnapshotRecord | null;
+  next_backup: BackupSnapshotRecord | null;
+  last_restore: BackupSnapshotRecord | null;
+  metrics: BackupMetricsSnapshot;
+  systemd: Record<string, unknown>;
+  version: Record<string, unknown>;
+  counts: Record<string, number>;
+}
+
 export interface MatchResult {
   score: number;
   score_percent: number;
@@ -499,6 +554,199 @@ const mapProjectSummary = (value: unknown): ProjectSummary => {
   };
 };
 
+const mapBackupCards = (snapshot: BackupStatusSnapshot): BackupStatusCard[] => {
+  const lastBackup = toRecord(snapshot.last_backup);
+  const nextBackup = toRecord(snapshot.next_backup);
+  const policy = toRecord(snapshot.policy);
+  const retention = toRecord(policy.retention);
+  const metrics = snapshot.metrics ?? {
+    rpo_seconds: 0,
+    rto_seconds: 0,
+    availability_percent: 0
+  };
+  return [
+    { label: 'Global status', value: toText(snapshot.global_status, 'unknown') },
+    { label: 'Last backup', value: toText(lastBackup.finished_at ?? lastBackup.started_at ?? 'N/A') },
+    { label: 'Retention', value: `${Math.max(1, Math.round(toNumber(retention.google_drive_days ?? 30)))} days` },
+    { label: 'Next backup', value: toText(nextBackup.next_run_at ?? 'N/A') },
+    { label: 'RPO', value: `${Math.round(toNumber(metrics.rpo_seconds, 0))} s` },
+    { label: 'RTO', value: `${Math.round(toNumber(metrics.rto_seconds, 0))} s` },
+    { label: 'Availability', value: `${toNumber(metrics.availability_percent, 0).toFixed(2)}%` }
+  ];
+};
+
+const buildMockBackupSnapshot = (): BackupStatusSnapshot => ({
+  global_status: 'PROTECTED',
+  policy: {
+    google_drive: { time: ['02:00', '14:30'], timezone: 'Africa/Douala' },
+    local_replication_interval_minutes: 5,
+    external_backup_weekday: 'sunday',
+    retention: { local_days: 2, google_drive_days: 30, external_months: 12 },
+    retry_count: 3,
+    timeout_seconds: 3600,
+    verify_after_upload: true,
+    automated_restore_tests: true
+  },
+  configuration: {
+    enabled: true,
+    timezone: 'Africa/Douala',
+    backup_root: '/var/backups/lawim',
+    state_root: '/var/lib/lawim-backup',
+    logs_root: '/var/log/lawim-backup',
+    temp_root: '/var/tmp/lawim-backup'
+  },
+  destinations: [
+    { identifier: 'local', name: 'Local disk', kind: 'local_disk', state: 'AVAILABLE', available: true, free_space_bytes: 1024, last_checked_at: '2026-07-11T00:00:00+00:00' },
+    { identifier: 'google-drive', name: 'Google Drive', kind: 'google_drive', state: 'AVAILABLE', available: true, free_space_bytes: 2048, last_checked_at: '2026-07-11T00:00:00+00:00' },
+    { identifier: 'external-disk', name: 'External disk', kind: 'external_disk', state: 'UNKNOWN', available: false, free_space_bytes: 0, last_checked_at: '2026-07-11T00:00:00+00:00' }
+  ],
+  providers: [
+    { identifier: 'local', name: 'Local disk', kind: 'local_disk', state: 'AVAILABLE', available: true, free_space_bytes: 1024, last_checked_at: '2026-07-11T00:00:00+00:00' },
+    { identifier: 'google-drive', name: 'Google Drive', kind: 'google_drive', state: 'AVAILABLE', available: true, free_space_bytes: 2048, last_checked_at: '2026-07-11T00:00:00+00:00' },
+    { identifier: 'external-disk', name: 'External disk', kind: 'external_disk', state: 'UNKNOWN', available: false, free_space_bytes: 0, last_checked_at: '2026-07-11T00:00:00+00:00' }
+  ],
+  alerts: [],
+  events: [],
+  history: [
+    {
+      identifier: 'job-1',
+      backup_id: 'LAWIM-20260711-020000',
+      kind: 'full',
+      state: 'COMPLETED',
+      destination: 'local',
+      provider: 'local',
+      trigger: 'scheduler',
+      created_at: '2026-07-11T00:00:00+00:00',
+      started_at: '2026-07-11T00:00:00+00:00',
+      finished_at: '2026-07-11T00:05:00+00:00',
+      duration_seconds: 300,
+      checksum: 'mock',
+      encrypted: false,
+      validation_result: 'verified',
+      systemd_unit: 'lawim-backup.service',
+      attempt: 1,
+      notes: '',
+      source: 'backup',
+      artifact_count: 1,
+      alert_count: 0,
+      size_bytes: 1024
+    }
+  ],
+  jobs: [
+    {
+      identifier: 'job-1',
+      backup_id: 'LAWIM-20260711-020000',
+      kind: 'full',
+      state: 'COMPLETED',
+      destination: 'local',
+      provider: 'local',
+      trigger: 'scheduler',
+      created_at: '2026-07-11T00:00:00+00:00',
+      started_at: '2026-07-11T00:00:00+00:00',
+      finished_at: '2026-07-11T00:05:00+00:00',
+      duration_seconds: 300,
+      checksum: 'mock',
+      encrypted: false,
+      validation_result: 'verified',
+      systemd_unit: 'lawim-backup.service',
+      attempt: 1,
+      notes: '',
+      source: 'backup',
+      artifact_count: 1,
+      alert_count: 0,
+      size_bytes: 1024
+    }
+  ],
+  restores: [],
+  last_backup: {
+    identifier: 'job-1',
+    backup_id: 'LAWIM-20260711-020000',
+    kind: 'full',
+    state: 'COMPLETED',
+    destination: 'local',
+    provider: 'local',
+    trigger: 'scheduler',
+    created_at: '2026-07-11T00:00:00+00:00',
+    started_at: '2026-07-11T00:00:00+00:00',
+    finished_at: '2026-07-11T00:05:00+00:00',
+    duration_seconds: 300,
+    checksum: 'mock',
+    encrypted: false,
+    validation_result: 'verified',
+    systemd_unit: 'lawim-backup.service',
+    attempt: 1,
+    notes: '',
+    source: 'backup',
+    artifact_count: 1,
+    alert_count: 0,
+    size_bytes: 1024
+  },
+  last_failed_backup: null,
+  next_backup: {
+    identifier: 'schedule-1',
+    name: 'Google Drive backup',
+    calendar: 'TZ=Africa/Douala *-*-* 02:00:00',
+    timezone: 'Africa/Douala',
+    source: 'google-drive',
+    enabled: true,
+    status: 'TARGET',
+    next_run_at: '2026-07-11T02:00:00+00:00',
+    last_run_at: '2026-07-11T00:00:00+00:00',
+    provider: 'systemd',
+    description: '',
+    details: {}
+  },
+  last_restore: null,
+  metrics: {
+    total_jobs: 1,
+    successful_jobs: 1,
+    failed_jobs: 0,
+    mean_duration_seconds: 300,
+    max_duration_seconds: 300,
+    bytes_stored: 1024,
+    storage_usage_percent: 50,
+    last_success_at: '2026-07-11T00:05:00+00:00',
+    last_failed_at: null,
+    average_size_bytes: 1024,
+    total_size_bytes: 1024,
+    transferred_bytes: 1024,
+    upload_time_seconds: 300,
+    restore_time_seconds: 0,
+    alert_count: 0,
+    checksum_validations: 1,
+    checksum_failures: 0,
+    availability_percent: 100,
+    rpo_seconds: 3600,
+    rto_seconds: 0,
+    last_backup_age_seconds: 3600,
+    calculated_at: '2026-07-11T00:05:00+00:00'
+  },
+  systemd: {
+    unit: 'lawim-backup.service',
+    active_state: 'active',
+    sub_state: 'running',
+    result: 'success',
+    exec_main_status: '0',
+    exec_main_code: 'exited',
+    exec_main_pid: '1234',
+    last_launch_at: '2026-07-11T00:00:00+00:00',
+    last_exit_at: '2026-07-11T00:05:00+00:00',
+    next_execution_at: '2026-07-11T02:00:00+00:00',
+    last_trigger_at: '2026-07-11T00:00:00+00:00'
+  },
+  version: {
+    lawim: '0.0.0',
+    git_commit: 'mock'
+  },
+  counts: {
+    jobs: 1,
+    alerts: 0,
+    restores: 0,
+    providers: 3,
+    destinations: 3
+  }
+});
+
 const resolveUrl = (path: string) => {
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
   const apiBase = getApiBase();
@@ -857,12 +1105,152 @@ export const apiSdk = {
     return requestJson<Array<{ label: string; value: string }>>('/v2/deployment/status', { method: 'GET' }, []);
   },
 
-  async getBackupStatus(): Promise<ApiResponse<Array<{ label: string; value: string }>>> {
+  async getBackupSnapshot(): Promise<ApiResponse<BackupStatusSnapshot>> {
     if (useMocks) {
       await mockDelay();
-      return { data: [{ label: 'Last backup', value: '2h ago' }, { label: 'Retention', value: '30 days' }], message: 'mock' };
+      return { data: buildMockBackupSnapshot(), message: 'mock' };
     }
-    return requestJson<Array<{ label: string; value: string }>>('/v2/backup/status', { method: 'GET' }, []);
+    return requestJson<BackupStatusSnapshot>('/v2/backup/status', { method: 'GET' }, buildMockBackupSnapshot());
+  },
+
+  async getBackupStatus(): Promise<ApiResponse<BackupStatusCard[]>> {
+    const response = useMocks
+      ? { data: buildMockBackupSnapshot(), message: 'mock' }
+      : await requestJson<BackupStatusSnapshot>('/v2/backup/status', { method: 'GET' }, buildMockBackupSnapshot());
+    return {
+      ...response,
+      data: mapBackupCards(response.data)
+    };
+  },
+
+  async getBackupHistory(limit = 50): Promise<ApiResponse<BackupSnapshotRecord[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: buildMockBackupSnapshot().history, message: 'mock' };
+    }
+    return requestJson<BackupSnapshotRecord[]>(`/v2/backup/history?limit=${limit}`, { method: 'GET' }, buildMockBackupSnapshot().history);
+  },
+
+  async getBackupJobs(limit = 50): Promise<ApiResponse<BackupSnapshotRecord[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: buildMockBackupSnapshot().jobs, message: 'mock' };
+    }
+    return requestJson<BackupSnapshotRecord[]>(`/v2/backup/jobs?limit=${limit}`, { method: 'GET' }, buildMockBackupSnapshot().jobs);
+  },
+
+  async getBackupProviders(): Promise<ApiResponse<BackupSnapshotRecord[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: buildMockBackupSnapshot().providers, message: 'mock' };
+    }
+    return requestJson<BackupSnapshotRecord[]>('/v2/backup/providers', { method: 'GET' }, buildMockBackupSnapshot().providers);
+  },
+
+  async getBackupAlerts(limit = 50): Promise<ApiResponse<BackupSnapshotRecord[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: buildMockBackupSnapshot().alerts, message: 'mock' };
+    }
+    return requestJson<BackupSnapshotRecord[]>(`/v2/backup/alerts?limit=${limit}`, { method: 'GET' }, buildMockBackupSnapshot().alerts);
+  },
+
+  async getBackupMetrics(): Promise<ApiResponse<BackupMetricsSnapshot>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: buildMockBackupSnapshot().metrics, message: 'mock' };
+    }
+    return requestJson<BackupMetricsSnapshot>('/v2/backup/metrics', { method: 'GET' }, buildMockBackupSnapshot().metrics);
+  },
+
+  async runBackup(payload: {
+    kind?: string;
+    destination?: string;
+    provider_name?: string;
+    trigger?: string;
+    metadata?: Record<string, unknown>;
+    backup_id?: string;
+    attempt?: number;
+  } = {}): Promise<ApiResponse<BackupSnapshotRecord>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: buildMockBackupSnapshot().last_backup as BackupSnapshotRecord, message: 'mock' };
+    }
+    return requestJson<BackupSnapshotRecord>('/v2/backup/run', { method: 'POST', body: JSON.stringify(payload) }, buildMockBackupSnapshot().last_backup as BackupSnapshotRecord);
+  },
+
+  async testBackup(payload: {
+    kind?: string;
+    destination?: string;
+    metadata?: Record<string, unknown>;
+  } = {}): Promise<ApiResponse<BackupSnapshotRecord>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: buildMockBackupSnapshot().last_backup as BackupSnapshotRecord, message: 'mock' };
+    }
+    return requestJson<BackupSnapshotRecord>('/v2/backup/test', { method: 'POST', body: JSON.stringify(payload) }, buildMockBackupSnapshot().last_backup as BackupSnapshotRecord);
+  },
+
+  async retryBackup(identifier?: string): Promise<ApiResponse<BackupSnapshotRecord>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: buildMockBackupSnapshot().last_backup as BackupSnapshotRecord, message: 'mock' };
+    }
+    return requestJson<BackupSnapshotRecord>('/v2/backup/retry', { method: 'POST', body: JSON.stringify({ identifier }) }, buildMockBackupSnapshot().last_backup as BackupSnapshotRecord);
+  },
+
+  async restoreBackup(payload: {
+    backup_id: string;
+    kind: string;
+    target_environment?: string;
+    database_restored?: boolean;
+    media_restored?: boolean;
+    notes?: string;
+    success?: boolean;
+  }): Promise<ApiResponse<Record<string, unknown>>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          restore_job: buildMockBackupSnapshot().last_restore,
+          restore_result: {
+            identifier: 'restore-result-1',
+            restore_job_id: 'restore-job-1',
+            backup_id: payload.backup_id,
+            kind: payload.kind,
+            state: 'COMPLETED',
+            success: true,
+            created_at: '2026-07-11T00:10:00+00:00',
+            completed_at: '2026-07-11T00:12:00+00:00',
+            duration_seconds: 120,
+            checksum_verified: true,
+            media_restored: payload.media_restored ?? false,
+            database_restored: payload.database_restored ?? false,
+            report: {},
+            notes: payload.notes ?? ''
+          }
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<Record<string, unknown>>('/v2/backup/restore', { method: 'POST', body: JSON.stringify(payload) }, {});
+  },
+
+  async testBackupProvider(payload: { provider_identifier?: string; provider?: string; identifier?: string }): Promise<ApiResponse<Record<string, unknown>>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: buildMockBackupSnapshot().providers[0], message: 'mock' };
+    }
+    return requestJson<Record<string, unknown>>('/v2/backup/provider/test', { method: 'POST', body: JSON.stringify(payload) }, {});
+  },
+
+  async patchBackupConfig(payload: Record<string, unknown>): Promise<ApiResponse<Record<string, unknown>>> {
+    if (useMocks) {
+      await mockDelay();
+      const snapshot = buildMockBackupSnapshot();
+      return { data: { ...snapshot.configuration, ...payload }, message: 'mock' };
+    }
+    return requestJson<Record<string, unknown>>('/v2/backup/config', { method: 'PATCH', body: JSON.stringify(payload) }, {});
   },
 
   async getReleases(): Promise<ApiResponse<Array<{ id: string; title: string; status: string }>>> {
