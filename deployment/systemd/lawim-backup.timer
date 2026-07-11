@@ -1,9 +1,11 @@
 [Unit]
-Description=LAWIM backup timer
+Description=LAWIM twice-daily verified backup
 
 [Timer]
-OnCalendar=daily
+OnCalendar=*-*-* 02:00:00 Africa/Douala
+OnCalendar=*-*-* 14:30:00 Africa/Douala
 Persistent=true
+RandomizedDelaySec=5m
 Unit=lawim-backup.service
 
 [Install]

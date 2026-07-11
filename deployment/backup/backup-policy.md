@@ -2,9 +2,9 @@
 
 ## Targets
 
-- Local filesystem archive
+- Local staging under `/var/backups/lawim`
 - Optional rclone remote target (Google Drive)
-- Optional Gmail archive target documented for mailbox export only
+- Local replication and external disk copies are documented in the BDR tree
 
 ## Controls
 
