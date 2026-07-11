@@ -94,21 +94,15 @@ cat > "${BACKUP_DIR}/manifest.json" <<EOF
 }
 EOF
 
-if [ "$DRIVE_UPLOAD" = "true" ]; then
-    log "Uploading to Google Drive..."
-    PYTHONPATH=/opt/lawim/current/code python3 -c "
-import sys, os
-sys.path.insert(0, '/opt/lawim/current/code')
-from lawim_v2.google_drive_connector import GoogleDriveConnector, build_default_credential_vault
-vault = build_default_credential_vault()
-conn = GoogleDriveConnector(vault)
-try:
-    conn.upload_folder('${BACKUP_DIR}', 'LAWIM_Backups/production/$(date +%Y)/$(date +%m)/${STAMP}')
-    print('Upload OK')
-except Exception as e:
-    print(f'Upload failed: {e}')
-    sys.exit(1)
-" 2>&1 || log "WARNING: Drive upload failed"
+if [ "$DRIVE_UPLOAD" = "true" ] && command -v rclone &>/dev/null; then
+    RCLONE_CONFIG="${RCLONE_CONFIG:-/home/ubuntu/.config/rclone/rclone.conf}"
+    DRIVE_PATH="LAWIM_Backups/production/$(date +%Y)/$(date +%m)/${STAMP}"
+    log "Uploading to Google Drive: ${DRIVE_PATH} ..."
+    rclone --config "$RCLONE_CONFIG" mkdir "lawim-drive:${DRIVE_PATH}" 2>/dev/null || true
+    rclone --config "$RCLONE_CONFIG" copy "${BACKUP_DIR}" "lawim-drive:${DRIVE_PATH}" \
+        --progress --checksum \
+        2>&1 | tail -3 || log "WARNING: Drive upload failed"
+    log "Upload complete"
 fi
 
 log "Applying retention..."
