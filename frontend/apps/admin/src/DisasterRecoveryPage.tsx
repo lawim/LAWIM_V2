@@ -42,7 +42,7 @@ const formatDate = (value: unknown) => {
 const statusVariant = (value: string) => {
   const normalized = value.trim().toUpperCase();
   if (normalized === 'PASS' || normalized === 'READY' || normalized === 'PROTECTED') return 'success';
-  if (normalized === 'FAIL' || normalized === 'FAILED' || normalized === 'DEGRADED' || normalized === 'WATCH') return 'warning';
+  if (normalized === 'FAIL' || normalized === 'FAILED' || normalized === 'DEGRADED' || normalized === 'WATCH' || normalized === 'BLOCKED') return 'warning';
   if (normalized === 'UNKNOWN' || normalized === 'PENDING') return 'default';
   return 'info';
 };
@@ -123,7 +123,10 @@ export function DisasterRecoveryPage() {
   const bundles = bundlesQuery.data ?? [];
   const validation = status?.validation;
   const latestBundle = status?.latest_bundle;
-  const previewScore = computeRecoveryScore(status);
+  const readiness = status?.readiness;
+  const readinessSignals = readiness?.signals ?? [];
+  const previewScore = readiness?.score ?? computeRecoveryScore(status);
+  const readinessState = readiness?.state ?? (previewScore >= 90 ? 'READY' : previewScore >= 75 ? 'WATCH' : previewScore >= 50 ? 'DEGRADED' : 'BLOCKED');
   const backup = toRecord(status?.backup);
   const backupMetrics = toRecord(backup.metrics);
   const git = toRecord(status?.git);
@@ -162,6 +165,7 @@ export function DisasterRecoveryPage() {
           <div>
             <div className="flex flex-wrap gap-2">
               <Badge variant={statusVariant(validation?.restore_ready ? 'PASS' : 'FAIL')}>{validation?.restore_ready ? 'RESTORE READY' : 'NOT READY'}</Badge>
+              <Badge variant={statusVariant(readinessState)}>{readinessState}</Badge>
               <Badge variant={statusVariant(validation?.git_ok ? 'PASS' : 'FAIL')}>{git.is_clean === true ? 'Git clean' : toText(git.status, 'Git status')}</Badge>
               <Badge variant="info">{toText(status?.git?.branch, 'branch unknown')}</Badge>
               <Badge variant="default">{toText(status?.versions?.lawim, 'LAWIM')}</Badge>
@@ -171,7 +175,12 @@ export function DisasterRecoveryPage() {
               The dashboard surfaces the latest bundle, validation evidence, version inventory, Git state, and the current recovery checklist.
             </p>
             <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-              <Metric label="Recovery Score" value={`${previewScore}%`} hint="Preview based on bundle freshness and validation signals." />
+              <Metric
+                label="Recovery Score"
+                value={`${previewScore}%`}
+                hint={readiness ? `Backend readiness state: ${readinessState}.` : 'Preview based on bundle freshness and validation signals.'}
+              />
+              <Metric label="Readiness State" value={readinessState} hint="Derived from DRF bundle, validation, test, and destination signals." />
               <Metric label="Latest test" value={formatDate(validation?.validated_at)} hint="Last automated recovery validation run." />
               <Metric label="Last reconstruction" value={formatDate(lastRestore.completed_at ?? lastRestore.created_at)} hint="Most recent restoration evidence." />
               <Metric label="Bundles" value={`${bundles.length}`} hint={`Bundle root: ${bundleRoot}`} />
@@ -309,6 +318,25 @@ export function DisasterRecoveryPage() {
                 <Row label="npm" value={toText(versions.npm, 'unknown')} />
                 <Row label="systemd" value={toText(versions.systemd, 'unknown')} />
                 <Row label="Kernel" value={toText(versions.kernel, 'unknown')} />
+              </div>
+            </div>
+            <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+              <div className="text-xs uppercase tracking-[0.28em] text-slate-500">Readiness signals</div>
+              <div className="mt-3 space-y-3 text-sm text-slate-300">
+                {readinessSignals.length > 0 ? (
+                  readinessSignals.map((signal) => (
+                    <div key={signal.name} className="rounded-xl border border-slate-800 bg-slate-900/80 p-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="font-medium text-white">{signal.name}</div>
+                        <Badge variant={signal.passed ? 'success' : 'warning'}>{signal.passed ? 'PASS' : 'FAIL'}</Badge>
+                      </div>
+                      <div className="mt-2 text-xs uppercase tracking-[0.24em] text-slate-500">Weight {signal.weight}</div>
+                      <div className="mt-2 text-sm text-slate-300">{signal.detail}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="rounded-xl border border-slate-800 px-4 py-3 text-sm text-slate-400">No readiness signals are available yet.</div>
+                )}
               </div>
             </div>
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">

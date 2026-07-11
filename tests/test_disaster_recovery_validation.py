@@ -35,9 +35,13 @@ class DisasterRecoveryValidationTests(LawimTestHarness):
         self.assertEqual(validation.status, HTTPStatus.OK)
 
         status_payload = status.body_json()["data"]
+        readiness_payload = status_payload["readiness"]
         validation_payload = validation.body_json()["data"]
         self.assertEqual(status_payload["latest_bundle"]["bundle_id"], bundle_id)
         self.assertEqual(latest.body_json()["data"]["bundle_id"], bundle_id)
+        self.assertGreaterEqual(int(readiness_payload["score"]), 0)
+        self.assertLessEqual(int(readiness_payload["score"]), 100)
+        self.assertGreater(len(readiness_payload["signals"]), 0)
         self.assertTrue(validation_payload["restore_ready"])
         self.assertTrue(validation_payload["manifest_present"])
         self.assertTrue(validation_payload["checksum_valid"])

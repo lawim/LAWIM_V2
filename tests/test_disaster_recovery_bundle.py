@@ -58,6 +58,10 @@ class DisasterRecoveryBundleTests(LawimTestHarness):
         validation = services.disaster_recovery.validate_bundle("LAWIM-DRF-VALIDATION")
 
         self.assertEqual(status["latest_bundle"]["bundle_id"], "LAWIM-DRF-VALIDATION")
+        self.assertIn("readiness", status)
+        self.assertGreaterEqual(int(status["readiness"]["score"]), 0)
+        self.assertLessEqual(int(status["readiness"]["score"]), 100)
+        self.assertIn(status["readiness"]["state"], {"READY", "WATCH", "DEGRADED", "BLOCKED"})
         self.assertEqual(validation["bundle_id"], "LAWIM-DRF-VALIDATION")
         self.assertTrue(validation["manifest_present"])
         self.assertTrue(validation["checksum_valid"])

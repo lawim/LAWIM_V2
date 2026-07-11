@@ -53,6 +53,21 @@ def _as_str(value: object, default: str = "") -> str:
     return text if text else default
 
 
+def _parse_datetime(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    text = value.strip()
+    if not text:
+        return None
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed
+
+
 def _safe_run(command: list[str], *, cwd: Path | None = None, timeout: int = 10) -> str:
     try:
         result = subprocess.run(
@@ -415,6 +430,15 @@ def _validation_check(name: str, passed: bool, detail: str) -> dict[str, Any]:
     }
 
 
+def _score_signal(name: str, passed: bool, weight: int, detail: str) -> dict[str, Any]:
+    return {
+        "name": name,
+        "passed": passed,
+        "weight": max(0, int(weight)),
+        "detail": detail,
+    }
+
+
 def _checklist_markdown(bundle_id: str, bundle_dir: Path) -> str:
     return (
         "# Recovery Checklist\n\n"
@@ -500,6 +524,23 @@ class RecoveryValidationResult:
     checks: list[dict[str, Any]] = field(default_factory=list)
     duration_seconds: float = 0.0
     validated_at: str = field(default_factory=utc_now)
+
+    def as_dict(self) -> dict[str, object]:
+        return _jsonable(asdict(self))
+
+
+@dataclass(slots=True)
+class RecoveryReadinessScore:
+    score: int
+    maximum_score: int = 100
+    state: str = "UNKNOWN"
+    bundle_id: str = ""
+    bundle_age_days: float | None = None
+    rpo_seconds: float = 0.0
+    rto_seconds: float = 0.0
+    signals: list[dict[str, Any]] = field(default_factory=list)
+    reasons: list[str] = field(default_factory=list)
+    calculated_at: str = field(default_factory=utc_now)
 
     def as_dict(self) -> dict[str, object]:
         return _jsonable(asdict(self))
@@ -825,6 +866,187 @@ class DisasterRecoveryService:
             warnings=[str(item) for item in payload.get("warnings") or [] if item is not None],
         )
 
+    def _read_json_file(self, path: Path) -> Any | None:
+        if not path.is_file():
+            return None
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return payload
+
+    def _recovery_test_report_path(self) -> Path:
+        return self.bundle_root.parent / "recovery-tests" / "reports" / "latest-report.json"
+
+    def _read_recovery_test_report(self) -> dict[str, Any] | None:
+        payload = self._read_json_file(self._recovery_test_report_path())
+        return payload if isinstance(payload, dict) else None
+
+    def readiness_score(
+        self,
+        *,
+        latest_bundle: dict[str, object] | None = None,
+        validation: dict[str, object] | None = None,
+        backup_status: dict[str, object] | None = None,
+    ) -> dict[str, object]:
+        latest = latest_bundle if latest_bundle is not None else self.latest_bundle()
+        backup_snapshot = backup_status if backup_status is not None else self.backup.status()
+        validation_snapshot = validation
+        if validation_snapshot is None and latest is not None:
+            validation_snapshot = self.validate_bundle(_as_str(latest.get("bundle_id")))
+
+        score = 100
+        signals: list[dict[str, Any]] = []
+        reasons: list[str] = []
+
+        def apply_signal(name: str, passed: bool, penalty: int, detail: str) -> None:
+            nonlocal score
+            signal = _score_signal(name, passed, penalty, detail)
+            signals.append(signal)
+            if not passed:
+                score = max(0, score - max(0, int(penalty)))
+                reasons.append(detail)
+
+        bundle_id = _as_str((latest or {}).get("bundle_id"))
+        bundle_path = self.bundle_path(bundle_id) if bundle_id else None
+        bundle_age_days: float | None = None
+        if latest is None:
+            apply_signal("latest-bundle-present", False, 35, "No recovery bundle is available")
+        else:
+            apply_signal("latest-bundle-present", True, 0, f"Latest bundle {bundle_id} is available")
+            created_at = _parse_datetime(_as_str(latest.get("created_at")))
+            if created_at is None:
+                apply_signal("bundle-freshness", False, 10, "Latest bundle timestamp is unreadable")
+            else:
+                bundle_age_days = max(0.0, (datetime.now(timezone.utc) - created_at).total_seconds() / 86_400)
+                if bundle_age_days <= 7:
+                    apply_signal("bundle-freshness", True, 0, f"Latest bundle age is {bundle_age_days:.1f} days")
+                else:
+                    penalty = min(20, max(1, round(bundle_age_days)))
+                    apply_signal(
+                        "bundle-freshness",
+                        False,
+                        penalty,
+                        f"Latest bundle age is {bundle_age_days:.1f} days",
+                    )
+
+        if validation_snapshot is None:
+            apply_signal("validation-available", False, 20, "No recovery validation snapshot is available")
+        else:
+            apply_signal("validation-available", True, 0, "Recovery validation snapshot is available")
+            validation_checks = {
+                "manifest_present": ("validation-manifest", 20, "manifest.json is missing"),
+                "checksum_valid": ("validation-checksum", 15, "At least one bundle file checksum drifted"),
+                "compatible": ("validation-compatibility", 10, "Bundle runtime compatibility failed"),
+                "git_ok": ("validation-git", 10, "Git is not synchronized with the bundle"),
+                "docker_ok": ("validation-docker", 5, "Docker is unavailable for recovery"),
+                "postgresql_ok": ("validation-postgresql", 5, "PostgreSQL is unavailable for recovery"),
+                "restore_ready": ("validation-restore-ready", 15, "Bundle is not ready to restore"),
+            }
+            for key, (signal_name, penalty, detail) in validation_checks.items():
+                passed = bool(validation_snapshot.get(key))
+                apply_signal(signal_name, passed, penalty, detail if not passed else f"{key.replace('_', ' ').title()} passed")
+
+        secret_inventory: list[dict[str, Any]] = []
+        if bundle_path is None:
+            apply_signal("secret-inventory", False, 15, "Recovery bundle is unavailable")
+        else:
+            secret_inventory_payload = self._read_json_file(bundle_path / "inventories" / "secret-inventory.json")
+            if not isinstance(secret_inventory_payload, list):
+                apply_signal("secret-inventory", False, 15, "Secret inventory is missing or unreadable")
+            else:
+                secret_inventory = [entry for entry in secret_inventory_payload if isinstance(entry, dict)]
+                required = [entry for entry in secret_inventory if bool(entry.get("required"))]
+                missing_required = [str(entry.get("name") or "unknown") for entry in required if not bool(entry.get("present"))]
+                if missing_required:
+                    penalty = min(15, max(5, len(missing_required) * 5))
+                    apply_signal(
+                        "secret-coverage",
+                        False,
+                        penalty,
+                        f"Missing required secrets: {', '.join(sorted(missing_required))}",
+                    )
+                else:
+                    apply_signal("secret-coverage", True, 0, "All required secrets were inventoried")
+
+        report_payload = self._read_recovery_test_report()
+        if report_payload is None:
+            apply_signal("isolated-recovery-test", False, 15, "No isolated recovery test report is available")
+        else:
+            report_status = _as_str(report_payload.get("status")).upper()
+            report_exit_code = int(report_payload.get("exit_code") or 0)
+            report_passed = report_status == "PASS" and report_exit_code == 0
+            report_completed_at = _parse_datetime(_as_str(report_payload.get("completed_at")))
+            report_age_days: float | None = None
+            if report_completed_at is not None:
+                report_age_days = max(0.0, (datetime.now(timezone.utc) - report_completed_at).total_seconds() / 86_400)
+            if report_passed:
+                penalty = 0
+                if report_age_days is not None and report_age_days > 30:
+                    penalty = 10
+                apply_signal(
+                    "isolated-recovery-test",
+                    True,
+                    penalty,
+                    f"Latest isolated recovery test passed{'' if report_age_days is None else f' ({report_age_days:.1f} days old)'}",
+                )
+            else:
+                penalty = 15
+                if report_age_days is not None and report_age_days > 30:
+                    penalty += 5
+                apply_signal(
+                    "isolated-recovery-test",
+                    False,
+                    penalty,
+                    "Latest isolated recovery test did not pass",
+                )
+
+        destinations = backup_snapshot.get("destinations")
+        if not isinstance(destinations, list):
+            apply_signal("destination-health", False, 10, "Backup destinations are unavailable")
+        else:
+            destination_rows = [entry for entry in destinations if isinstance(entry, dict)]
+            google_drive = next((entry for entry in destination_rows if str(entry.get("identifier")) == "google-drive"), None)
+            external_disk = next((entry for entry in destination_rows if str(entry.get("identifier")) == "external-disk"), None)
+            google_drive_ready = google_drive is not None and str(google_drive.get("state")) == "AVAILABLE"
+            external_ready = external_disk is not None and str(external_disk.get("state")) == "AVAILABLE"
+            apply_signal(
+                "offsite-destination",
+                google_drive_ready,
+                10,
+                "Google Drive destination is unavailable" if not google_drive_ready else "Google Drive destination is available",
+            )
+            apply_signal(
+                "offline-destination",
+                external_ready,
+                5,
+                "External disk destination is unavailable" if not external_ready else "External disk destination is available",
+            )
+
+        metrics = backup_snapshot.get("metrics") if isinstance(backup_snapshot, dict) else {}
+        rpo_seconds = float(metrics.get("rpo_seconds") or 0) if isinstance(metrics, dict) else 0.0
+        rto_seconds = float(metrics.get("rto_seconds") or 0) if isinstance(metrics, dict) else 0.0
+        if rpo_seconds > 24 * 3600:
+            apply_signal("rpo-target", False, 10, f"RPO is {rpo_seconds:.0f} seconds")
+        else:
+            apply_signal("rpo-target", True, 0, f"RPO is {rpo_seconds:.0f} seconds")
+        if rto_seconds > 2 * 3600:
+            apply_signal("rto-target", False, 10, f"RTO is {rto_seconds:.0f} seconds")
+        else:
+            apply_signal("rto-target", True, 0, f"RTO is {rto_seconds:.0f} seconds")
+
+        state = "READY" if score >= 90 else "WATCH" if score >= 75 else "DEGRADED" if score >= 50 else "BLOCKED"
+        return RecoveryReadinessScore(
+            score=score,
+            state=state,
+            bundle_id=bundle_id,
+            bundle_age_days=bundle_age_days,
+            rpo_seconds=rpo_seconds,
+            rto_seconds=rto_seconds,
+            signals=signals,
+            reasons=reasons,
+        ).as_dict()
+
     def list_bundles(self, *, limit: int = 20) -> list[dict[str, object]]:
         if not self.bundle_root.is_dir():
             return []
@@ -982,14 +1204,16 @@ class DisasterRecoveryService:
 
     def status(self) -> dict[str, object]:
         latest = self.latest_bundle()
-        validation = self.validate_bundle((latest or {}).get("bundle_id") if latest else None) if latest else None
         backup_status = self.backup.status()
+        validation = self.validate_bundle((latest or {}).get("bundle_id") if latest else None) if latest else None
+        readiness = self.readiness_score(latest_bundle=latest, validation=validation, backup_status=backup_status)
         git_state = _git_state(self.repo_root)
         versions = _command_versions()
         return {
             "bundle_root": str(self.bundle_root),
             "latest_bundle": latest,
             "validation": validation,
+            "readiness": readiness,
             "git": git_state,
             "versions": versions,
             "backup": {

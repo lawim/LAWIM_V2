@@ -145,10 +145,31 @@ export interface DisasterRecoveryValidationSnapshot extends Record<string, unkno
   validated_at: string;
 }
 
+export interface DisasterRecoveryReadinessSignal {
+  name: string;
+  passed: boolean;
+  weight: number;
+  detail: string;
+}
+
+export interface DisasterRecoveryReadinessSnapshot extends Record<string, unknown> {
+  score: number;
+  maximum_score: number;
+  state: string;
+  bundle_id: string;
+  bundle_age_days: number | null;
+  rpo_seconds: number;
+  rto_seconds: number;
+  signals: DisasterRecoveryReadinessSignal[];
+  reasons: string[];
+  calculated_at: string;
+}
+
 export interface DisasterRecoveryStatusSnapshot extends Record<string, unknown> {
   bundle_root: string;
   latest_bundle: DisasterRecoveryBundleRecord | null;
   validation: DisasterRecoveryValidationSnapshot | null;
+  readiness: DisasterRecoveryReadinessSnapshot | null;
   git: Record<string, unknown>;
   versions: Record<string, unknown>;
   backup: Record<string, unknown>;
@@ -1359,6 +1380,22 @@ export const apiSdk = {
             duration_seconds: 0.25,
             validated_at: '2026-07-11T00:00:00+00:00'
           },
+          readiness: {
+            score: 92,
+            maximum_score: 100,
+            state: 'READY',
+            bundle_id: 'LAWIM-DRF-MOCK',
+            bundle_age_days: 2,
+            rpo_seconds: 300,
+            rto_seconds: 900,
+            signals: [
+              { name: 'latest-bundle-present', passed: true, weight: 0, detail: 'Latest bundle LAWIM-DRF-MOCK is available' },
+              { name: 'bundle-freshness', passed: true, weight: 0, detail: 'Latest bundle age is 2.0 days' },
+              { name: 'validation-available', passed: true, weight: 0, detail: 'Recovery validation snapshot is available' }
+            ],
+            reasons: [],
+            calculated_at: '2026-07-11T00:00:00+00:00'
+          },
           git: snapshot.version,
           versions: snapshot.version,
           backup: { last_backup: snapshot.last_backup, last_restore: snapshot.last_restore },
@@ -1371,6 +1408,7 @@ export const apiSdk = {
       bundle_root: '',
       latest_bundle: null,
       validation: null,
+      readiness: null,
       git: {},
       versions: {},
       backup: {},

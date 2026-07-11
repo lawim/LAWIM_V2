@@ -36,6 +36,22 @@ const mockStatus = {
     duration_seconds: 0.48,
     validated_at: '2026-07-11T02:05:00Z'
   },
+  readiness: {
+    score: 92,
+    maximum_score: 100,
+    state: 'READY',
+    bundle_id: 'LAWIM-DRF-20260711-020000',
+    bundle_age_days: 2,
+    rpo_seconds: 300,
+    rto_seconds: 900,
+    signals: [
+      { name: 'latest-bundle-present', passed: true, weight: 0, detail: 'Latest bundle is available' },
+      { name: 'bundle-freshness', passed: true, weight: 0, detail: 'Latest bundle age is 2.0 days' },
+      { name: 'validation-available', passed: true, weight: 0, detail: 'Recovery validation snapshot is available' }
+    ],
+    reasons: [],
+    calculated_at: '2026-07-11T02:05:00Z'
+  },
   git: {
     remote: 'git@github.com:lawim/lawim_v2.git',
     branch: 'main',
@@ -135,7 +151,8 @@ describe('Disaster Recovery cockpit', () => {
     expect(await screen.findByRole('heading', { name: /disaster recovery framework/i })).toBeInTheDocument();
     await screen.findAllByText('LAWIM-DRF-20260711-020000');
     expect(screen.getByText(/reconstruction cockpit for a fresh host/i)).toBeInTheDocument();
-    expect(await screen.findByText(/^80%$/)).toBeInTheDocument();
+    expect(await screen.findByText(/^92%$/)).toBeInTheDocument();
+    expect(screen.getByText(/readiness signals/i)).toBeInTheDocument();
     expect(screen.getByText(/validation checks/i)).toBeInTheDocument();
     expect(screen.getByText(/^# Recovery Checklist/)).toBeInTheDocument();
     expect(screen.getByText(/^Git state$/i)).toBeInTheDocument();

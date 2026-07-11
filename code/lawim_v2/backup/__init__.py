@@ -29,6 +29,7 @@ from .recovery import (
     DisasterRecoveryService,
     RecoveryBundleManifest,
     RecoveryBundleSummary,
+    RecoveryReadinessScore,
     RecoveryValidationResult,
     build_recovery_bundle_id,
 )
@@ -90,6 +91,7 @@ __all__ = [
     "RestoreResultBundle",
     "RecoveryBundleManifest",
     "RecoveryBundleSummary",
+    "RecoveryReadinessScore",
     "RecoveryValidationResult",
     "LocalDiskProvider",
     "StorageProvider",
