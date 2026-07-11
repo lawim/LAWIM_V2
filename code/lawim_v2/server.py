@@ -1479,6 +1479,25 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/v2/backup":
             self._send_json({"data": self.services.backup.list(limit=limit)})
             return
+        if path.startswith("/api/v2/backup/recovery/bundles/") and path.endswith("/download"):
+            bundle_id = path[len("/api/v2/backup/recovery/bundles/") : -len("/download")].strip("/")
+            if not bundle_id or ".." in bundle_id or "/" in bundle_id:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", "Recovery bundle identifier is invalid")
+            try:
+                filename, payload = self.services.disaster_recovery.archive_bundle(bundle_id)
+            except FileNotFoundError as exc:
+                raise ApiError(HTTPStatus.NOT_FOUND, "not_found", str(exc)) from exc
+            except ValueError as exc:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_payload", str(exc)) from exc
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "application/zip")
+            self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+            self.send_header("Content-Length", str(len(payload)))
+            self._send_cors_headers()
+            self._send_security_headers()
+            self.end_headers()
+            self.wfile.write(payload)
+            return
         if path == "/api/v2/backup/recovery":
             self._send_json({"data": self.services.disaster_recovery.status()})
             return

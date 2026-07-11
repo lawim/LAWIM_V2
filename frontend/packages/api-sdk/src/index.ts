@@ -111,6 +111,50 @@ export interface BackupStatusSnapshot extends Record<string, unknown> {
   counts: Record<string, number>;
 }
 
+export interface DisasterRecoveryBundleRecord extends Record<string, unknown> {
+  bundle_id: string;
+  created_at: string;
+  size_bytes: number;
+  checksum: string;
+  file_count: number;
+  environment: string;
+  validation_state: string;
+  path: string;
+}
+
+export interface DisasterRecoveryValidationCheck {
+  name: string;
+  passed: boolean;
+  status: string;
+  detail: string;
+}
+
+export interface DisasterRecoveryValidationSnapshot extends Record<string, unknown> {
+  bundle_id: string;
+  manifest_present: boolean;
+  checksum_valid: boolean;
+  compatible: boolean;
+  git_ok: boolean;
+  docker_ok: boolean;
+  postgresql_ok: boolean;
+  restore_ready: boolean;
+  missing_files: string[];
+  warnings: string[];
+  checks: DisasterRecoveryValidationCheck[];
+  duration_seconds: number;
+  validated_at: string;
+}
+
+export interface DisasterRecoveryStatusSnapshot extends Record<string, unknown> {
+  bundle_root: string;
+  latest_bundle: DisasterRecoveryBundleRecord | null;
+  validation: DisasterRecoveryValidationSnapshot | null;
+  git: Record<string, unknown>;
+  versions: Record<string, unknown>;
+  backup: Record<string, unknown>;
+  checklist: string | null;
+}
+
 export interface MatchResult {
   score: number;
   score_percent: number;
@@ -788,6 +832,33 @@ const requestJson = async <T>(path: string, init: RequestInit = {}, fallback: T)
   }
 };
 
+const requestBlob = async (path: string, init: RequestInit = {}, fallbackFilename = 'download.bin'): Promise<{ blob: Blob; filename: string }> => {
+  if (useMocks) {
+    await mockDelay();
+    return { blob: new Blob(['mock'], { type: 'application/octet-stream' }), filename: fallbackFilename };
+  }
+
+  const token = readStorageToken();
+  const response = await fetch(resolveUrl(path), {
+    ...init,
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(init.headers || {})
+    }
+  });
+
+  if (!response.ok) {
+    const text = await response.text().catch(() => '');
+    throw new Error(text || `Request failed with ${response.status}`);
+  }
+
+  const blob = await response.blob();
+  const disposition = response.headers.get('Content-Disposition') || '';
+  const match = disposition.match(/filename="?([^"]+)"?/i);
+  const filename = match?.[1] || fallbackFilename;
+  return { blob, filename };
+};
+
 const mockProperties: PropertySummary[] = [
   { id: 'p1', title: 'Maison Bellevue', location: 'Lyon', price: 420000, type: 'House', status: 'Available' },
   { id: 'p2', title: 'Appartement Lumière', location: 'Paris', price: 610000, type: 'Apartment', status: 'Reserved' }
@@ -1251,6 +1322,131 @@ export const apiSdk = {
       return { data: { ...snapshot.configuration, ...payload }, message: 'mock' };
     }
     return requestJson<Record<string, unknown>>('/v2/backup/config', { method: 'PATCH', body: JSON.stringify(payload) }, {});
+  },
+
+  async getDisasterRecoveryStatus(): Promise<ApiResponse<DisasterRecoveryStatusSnapshot>> {
+    if (useMocks) {
+      await mockDelay();
+      const snapshot = buildMockBackupSnapshot();
+      return {
+        data: {
+          bundle_root: '/var/lib/lawim-backup/recovery-bundles',
+          latest_bundle: {
+            bundle_id: 'LAWIM-DRF-MOCK',
+            created_at: '2026-07-11T00:00:00+00:00',
+            size_bytes: 1024,
+            checksum: 'mock-checksum',
+            file_count: 10,
+            environment: 'test',
+            validation_state: 'generated',
+            path: '/var/lib/lawim-backup/recovery-bundles/LAWIM-DRF-MOCK'
+          },
+          validation: {
+            bundle_id: 'LAWIM-DRF-MOCK',
+            manifest_present: true,
+            checksum_valid: true,
+            compatible: true,
+            git_ok: true,
+            docker_ok: true,
+            postgresql_ok: true,
+            restore_ready: true,
+            missing_files: [],
+            warnings: [],
+            checks: [
+              { name: 'manifest-present', passed: true, status: 'pass', detail: 'Manifest available' },
+              { name: 'restore-ready', passed: true, status: 'pass', detail: 'Ready' }
+            ],
+            duration_seconds: 0.25,
+            validated_at: '2026-07-11T00:00:00+00:00'
+          },
+          git: snapshot.version,
+          versions: snapshot.version,
+          backup: { last_backup: snapshot.last_backup, last_restore: snapshot.last_restore },
+          checklist: '# Recovery Checklist\n'
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<DisasterRecoveryStatusSnapshot>('/v2/backup/recovery', { method: 'GET' }, {
+      bundle_root: '',
+      latest_bundle: null,
+      validation: null,
+      git: {},
+      versions: {},
+      backup: {},
+      checklist: null
+    });
+  },
+
+  async getDisasterRecoveryBundles(limit = 20): Promise<ApiResponse<DisasterRecoveryBundleRecord[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: [
+          {
+            bundle_id: 'LAWIM-DRF-MOCK',
+            created_at: '2026-07-11T00:00:00+00:00',
+            size_bytes: 1024,
+            checksum: 'mock-checksum',
+            file_count: 10,
+            environment: 'test',
+            validation_state: 'generated',
+            path: '/var/lib/lawim-backup/recovery-bundles/LAWIM-DRF-MOCK'
+          }
+        ],
+        message: 'mock'
+      };
+    }
+    return requestJson<DisasterRecoveryBundleRecord[]>(`/v2/backup/recovery/bundles?limit=${limit}`, { method: 'GET' }, []);
+  },
+
+  async validateDisasterRecoveryBundle(bundleId?: string): Promise<ApiResponse<DisasterRecoveryValidationSnapshot>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          bundle_id: bundleId || 'LAWIM-DRF-MOCK',
+          manifest_present: true,
+          checksum_valid: true,
+          compatible: true,
+          git_ok: true,
+          docker_ok: true,
+          postgresql_ok: true,
+          restore_ready: true,
+          missing_files: [],
+          warnings: [],
+          checks: [
+            { name: 'manifest-present', passed: true, status: 'pass', detail: 'Manifest available' },
+            { name: 'restore-ready', passed: true, status: 'pass', detail: 'Ready' }
+          ],
+          duration_seconds: 0.25,
+          validated_at: '2026-07-11T00:00:00+00:00'
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<DisasterRecoveryValidationSnapshot>('/v2/backup/recovery/validate', {
+      method: 'POST',
+      body: JSON.stringify({ bundle_id: bundleId })
+    }, {
+      bundle_id: bundleId || '',
+      manifest_present: false,
+      checksum_valid: false,
+      compatible: false,
+      git_ok: false,
+      docker_ok: false,
+      postgresql_ok: false,
+      restore_ready: false,
+      missing_files: [],
+      warnings: [],
+      checks: [],
+      duration_seconds: 0,
+      validated_at: ''
+    });
+  },
+
+  async downloadDisasterRecoveryBundle(bundleId: string): Promise<{ blob: Blob; filename: string }> {
+    return requestBlob(`/v2/backup/recovery/bundles/${encodeURIComponent(bundleId)}/download`, { method: 'GET' }, `${bundleId}.zip`);
   },
 
   async getReleases(): Promise<ApiResponse<Array<{ id: string; title: string; status: string }>>> {

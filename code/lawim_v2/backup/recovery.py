@@ -1,14 +1,17 @@
 from __future__ import annotations
 
+import io
 import hashlib
 import json
 import os
 import platform
+import re
 import socket
 import shutil
 import subprocess
 import sys
 import time
+import zipfile
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -513,14 +516,31 @@ class DisasterRecoveryService:
         self.bundle_root = state_root / "recovery-bundles"
         self.bundle_root.mkdir(parents=True, exist_ok=True)
 
+    def _safe_bundle_identifier(self, bundle_id: str) -> str:
+        identifier = bundle_id.strip()
+        if not identifier or not re.fullmatch(r"[A-Za-z0-9._-]+", identifier):
+            raise ValueError(f"Invalid recovery bundle identifier: {bundle_id!r}")
+        return identifier
+
     def bundle_path(self, bundle_id: str) -> Path:
-        return self.bundle_root / bundle_id
+        return self.bundle_root / self._safe_bundle_identifier(bundle_id)
 
     def manifest_path(self, bundle_id: str) -> Path:
         return self.bundle_path(bundle_id) / "manifest.json"
 
     def checklist_path(self, bundle_id: str) -> Path:
         return self.bundle_path(bundle_id) / "documents" / "RECOVERY_CHECKLIST.md"
+
+    def archive_bundle(self, bundle_id: str) -> tuple[str, bytes]:
+        bundle_dir = self.bundle_path(bundle_id)
+        if not bundle_dir.is_dir():
+            raise FileNotFoundError(f"Recovery bundle not found: {bundle_id}")
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
+            for source in sorted(bundle_dir.rglob("*")):
+                if source.is_file():
+                    archive.write(source, arcname=str(source.relative_to(bundle_dir)))
+        return f"{self._safe_bundle_identifier(bundle_id)}.zip", buffer.getvalue()
 
     def _copy_config_sources(self, bundle_dir: Path) -> list[dict[str, Any]]:
         records: list[dict[str, Any]] = []
@@ -849,7 +869,26 @@ class DisasterRecoveryService:
             ).as_dict()
 
         started = time.perf_counter()
-        manifest = self._read_manifest(target_id)
+        try:
+            manifest = self._read_manifest(target_id)
+        except ValueError as exc:
+            return RecoveryValidationResult(
+                bundle_id=target_id,
+                manifest_present=False,
+                checksum_valid=False,
+                compatible=False,
+                git_ok=False,
+                docker_ok=False,
+                postgresql_ok=False,
+                restore_ready=False,
+                missing_files=[target_id],
+                warnings=[str(exc)],
+                checks=[
+                    _validation_check("manifest-present", False, str(exc)),
+                    _validation_check("restore-ready", False, "Bundle identifier is invalid"),
+                ],
+                duration_seconds=round(time.perf_counter() - started, 3),
+            ).as_dict()
         if manifest is None:
             return RecoveryValidationResult(
                 bundle_id=target_id,

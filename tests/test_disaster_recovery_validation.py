@@ -47,6 +47,20 @@ class DisasterRecoveryValidationTests(LawimTestHarness):
         self.assertEqual(Path(str(bundle["bundle_path"])).name, bundle_id)
         self.assertGreaterEqual(len(bundles.body_json()["data"]), 1)
 
+    def test_recovery_bundle_download_streams_zip_bytes(self) -> None:
+        token = self.login(email="admin@lawim.local")
+        services = LawimServices(self.repository, self.config)
+        bundle_id = "LAWIM-DRF-API-DOWNLOAD"
+        services.disaster_recovery.generate_bundle(bundle_id=bundle_id)
+
+        download = self.invoke(f"/api/v2/backup/recovery/bundles/{bundle_id}/download", token=token)
+
+        self.assertEqual(download.status, HTTPStatus.OK)
+        self.assertEqual(download.response_headers.get("Content-Type"), "application/zip")
+        self.assertIn("attachment; filename=\"LAWIM-DRF-API-DOWNLOAD.zip\"", download.response_headers.get("Content-Disposition", ""))
+        self.assertGreater(len(download.wfile.getvalue()), 0)
+        self.assertTrue(download.wfile.getvalue().startswith(b"PK"))
+
     def test_recovery_validation_detects_checksum_drift(self) -> None:
         services = LawimServices(self.repository, self.config)
         bundle_id = "LAWIM-DRF-CHECKSUM-DRIFT"
