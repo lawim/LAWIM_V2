@@ -12,6 +12,7 @@ This checklist is the operational gate between DEV validation and production act
 - [ ] Regenerate the webhook secret before production cutover.
 - [ ] Rotate any token, username/password, or related provider credential used during DEV validation.
 - [ ] Confirm no secret was copied into documentation, logs, or commits.
+- [ ] Confirm the live OVH provider health no longer reports `Invalid token` before any public payment attempt.
 
 ## 3. URL and HTTPS Gate
 - [ ] Confirm the public base URL uses HTTPS.
@@ -47,3 +48,4 @@ This checklist is the operational gate between DEV validation and production act
 ## 8. Final Decision
 - [ ] Only promote to production if the payment path, webhook validation, reconciliation, audit, and backup checks all pass.
 - [ ] If any step fails, keep Campay production disabled and document the reserve.
+- [ ] The current Mission 14 closure attempt remains blocked until a valid Campay credential set is provisioned on the server.

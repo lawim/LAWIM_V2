@@ -126,6 +126,8 @@ If health is degraded:
 - check webhook secret
 - inspect recent failures
 - stop repeated retries until the cause is understood
+- if the snapshot reports `Invalid token`, treat it as a credentials issue and do not expect a successful collect/status check until the Campay token or username/password set is rotated
+- if a payment intent already exists, preserve it and keep reconciliation/audit evidence instead of recreating the flow
 
 ## 11. Alerts
 Operational alerts should be raised for:
@@ -187,6 +189,7 @@ If Campay or the backend becomes unavailable:
 - let reconciliation close the gap if a webhook arrived during downtime
 - preserve audit evidence and provider events
 - check the recovery bundle and PostgreSQL backup when restoring a broken environment
+- if provider health is degraded because of invalid Campay credentials, stop retry loops and escalate for secret rotation rather than forcing the checkout path
 
 ## 17. Related Documentation
 - `docs/financial/FINANCIAL_CORE_ARCHITECTURE.md`

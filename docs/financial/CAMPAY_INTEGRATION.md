@@ -234,6 +234,9 @@ Validation notes:
 - the adapter and unit tests cover the integration logic
 - live sandbox or production credentials were not required for the code delivery itself
 - when live credentials are available, the connector can be exercised without changing the Financial Core design
+- on the current OVH deployment, provider health reported `status: degraded` with `error: Invalid token`
+- the live payment attempt for `PAY-2026-000001` failed at `POST /api/collect/` with HTTP 401, so no transaction, receipt, ledger entry, or provider event was created
+- this is an external credential blocker, not a Financial Core defect
 
 ## 17. Secret Rotation
 Secret rotation is supported operationally by replacing:
@@ -273,6 +276,7 @@ Current limitations are explicit:
 - live sandbox/prod verification depends on external credentials
 - payment-link and disbursement validation must be rechecked before production activation
 - widget validation remains environment-gated and should be executed again when the final DEV credentials are available
+- the current OVH validation run could not complete a real payment because the provider token was invalid and no Campay username/password pair was provisioned on the server
 
 ## 20. References
 Sources consulted for the integration design:
