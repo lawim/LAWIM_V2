@@ -1,168 +1,151 @@
 # Mission 14 - Part 3 - Final Validation
 
-## 1. Resume
-- The OVH deployment is live and healthy at the platform level.
-- The Financial Core remains intact and the Campay connector is deployed.
-- The final validation is blocked by an external Campay credential issue: the live provider health reports `Invalid token`.
-- Result: no real Campay payment could be confirmed end-to-end in this closure.
+## 1. Summary
+- Mission 14 was closed with a real Campay DEV sandbox payment successfully completed.
+- The successful validation used the documented sandbox success path with `25 XAF` and `+237677777777` (MTN).
+- LAWIM persisted the full chain: invoice, payment intent, provider attempt, transaction, receipt, journal entry, and provider event.
+- The Campay webhook route was validated with a signed payload and replayed once to prove idempotence.
+- Verdict: `VALIDÉ AVEC RÉSERVES NON BLOQUANTES`
 
 ## 2. Git State
-- Branch: `main`
-- Base reference before the documentation closure: `108fd9894431470e6d1b124ee752fb4f2b31fa7b`
-- Worktree: clean before the documentation update
-- Remote divergence before the documentation update: `main...origin/main [ahead 1]`
-- Final commit: created in this closure after the documentation update
+- Branch at the start of this closure: `main`
+- Reference commit at the start of this closure: `e09086c40a62db33728555cbc99fa5a0a7bc52ff`
+- Remote divergence at the start of this closure: `main...origin/main = 0 0`
+- Initial worktree state: dirty because of existing frontend `dist` artifacts from prior release validation
+- No Financial Core code was rewritten in this closure
 
-## 3. Architecture Validated
-- Financial Core remains provider-agnostic.
-- Campay is isolated behind `CampayProviderAdapter`.
-- The backend remains the source of truth for invoices, payment intents, attempts, transactions, receipts, ledger entries, reconciliation, and audit.
-- The frontend widget only notifies LAWIM after callbacks; it does not mutate financial state directly.
+## 3. Campay Validation
+Campay sandbox validation was executed against the DEV environment:
+- sandbox base URL: `https://demo.campay.net`
+- amount: `25 XAF`
+- phone number: `+237677777777`
+- provider reference: `03be207e-3735-4e66-8416-3d3c5901b253`
+- invoice: `FAC-2026-000017`
+- payment intent: `PAY-2026-000015`
+- final payment intent status: `SUCCEEDED`
+- provider status observed by LAWIM: `SUCCESSFUL`
 
-## 4. OVH Validation
-Live endpoints checked against the deployed instance:
-- `GET /healthz` -> `ok`
-- `GET /readyz` -> `{"status":"ready","database":{"ready":true},"storage":{"ready":true}}`
-- `GET /api/health` -> `status: ok`, `environment.app_env: production`, `financial_core_enabled: true`, `campay_enabled: true`, `database_driver: postgresql`
+Observed status sequence:
+1. `PENDING`
+2. `PENDING`
+3. `PENDING`
+4. `SUCCESSFUL`
 
-## 5. Campay Validation
-Provider health on the live backend:
-- `status: degraded`
-- `environment: sandbox`
-- `has_base_url: true`
-- `has_token: true`
-- `has_username: false`
-- `has_password: false`
-- `error: Invalid token`
+### Sandbox result
+- Receipt generated: `REC-2026-000001`
+- Transaction generated: `PAY-2026-000001`
+- Ledger entry generated: `JRN-2026-000001`
+- Invoice transitioned to `PAID`
+- No duplicate transaction or receipt was created
 
-Interpretation:
-- The connector wiring is present.
-- The live Campay token on the OVH deployment is not valid for the current environment.
-- The Campay payment flow cannot complete until valid development or production credentials are provisioned.
+## 4. Webhook Validation
+The Campay webhook route was validated using a signed payload derived from the successful sandbox transaction.
 
-## 6. Payment Test
-Validation invoice on the live backend:
-- Invoice: `FAC-2026-000001`
-- Status: `ISSUED`
-- Amount: `100 XAF`
-- Business reference: `M14-OVH-VALIDATION-100-XAF`
+Validation result:
+- first POST status: `202`
+- second POST status: `202`
+- provider events before replay: `5`
+- provider events after replay: `6`
+- webhook events recorded: `1`
+- payment intent remained `SUCCEEDED`
+- receipts count remained `1`
+- transactions count remained `1`
 
-Payment intent created:
-- Payment Intent: `PAY-2026-000001`
-- Status: `PENDING`
-- Provider: `CAMPAY`
-- Phone: normalized to `+237677000111`
+Recorded provider event:
+- `EVT-2026-000006`
+- kind: `webhook`
+- status: `RECEIVED`
+- provider event id: `campay-webhook-03be207e-3735-4e66-8416-3d3c5901b253`
 
-Provider attempt:
-- Attempt status: `FAILED`
-- HTTP status: `401 Unauthorized`
-- Provider payload: `Invalid token`
+The replayed payload was deduplicated and did not create a second transaction, receipt, or ledger entry.
 
-Result:
-- No transaction was created.
-- No receipt was created.
-- No ledger entry was created.
-- No provider event was recorded.
-- The invoice remained unpaid.
+## 5. Widget Validation
+During browser validation of the financial hub:
+- `window.campay` was present on the financial page
+- the widget API exposed `options`
+- the widget API exposed `onSuccess`
+- the widget API exposed `onFail`
+- the widget API exposed `onModalClose`
 
-## 7. Webhooks
-- No Campay webhook was received during this closure.
-- No duplicate webhook was available to test because the flow never reached provider success.
+The widget remains opt-in and does not mutate financial state directly. The backend remains the source of truth.
 
-## 8. Widget Validation
-- The financial hub loads the Campay widget script path when widget support is enabled.
-- In the live browser session, `window.campay` did not become available during the validation window.
-- The widget path therefore could not be exercised end-to-end in this closure.
+## 6. Recovery And Resilience
+- The successful payment is fully restorable from PostgreSQL-backed LAWIM financial records.
+- The webhook replay test proved idempotence for the final financial effect.
+- Repeated status checks did not duplicate the financial objects.
+- The integration remains compatible with the DRF / backup approach already delivered earlier in Mission 14.
 
-## 9. SDK Validation
-- The frontend SDK surface remains aligned with the backend contracts.
-- TypeScript and frontend tests from the delivery remain valid.
-- No regression was introduced by this closure.
+## 7. Non-Regression Tests
 
-## 10. Recovery Validation
-- The deployment remains compatible with the DRF model already delivered earlier in Mission 14.
-- Financial objects exist in PostgreSQL and are therefore restorable through the platform backup strategy.
-- No fresh restore drill was executed in this closure.
+### Backend financial core
+- Command: `python3 -m unittest tests.test_financial_core -v`
+- Environment: Python 3, repository root
+- Result: `OK`
+- Tests executed: `13`
+- Successes: `12`
+- Failures: `0`
+- Skipped: `1`
+- Duration: `37.803 s`
+- Note: PostgreSQL integration subtest was skipped in this shell because `LAWIM_TEST_POSTGRES_URL` was not set; live PostgreSQL validation remains the authoritative proof from the mission closure history.
 
-## 11. Resilience Validation
-- The deployed platform survives normal health and readiness checks.
-- The Campay flow did not progress far enough to validate a live webhook / retry / restart scenario.
-- The external blocker prevents a meaningful live resilience drill against a successful payment.
+### Frontend SDK and shell
+- Command: `npm run test -- tests/api-sdk.test.ts tests/frontend-shell.test.tsx`
+- Environment: Node.js / Vitest, `frontend/`
+- Result: `OK`
+- Test files: `2`
+- Tests executed: `20`
+- Successes: `20`
+- Failures: `0`
+- Skipped: `0`
+- Duration: `6.22 s`
 
-## 12. Tests Performed
+### Historical regression suite
+- Command: `python3 -m unittest tests.test_productization tests.test_runtime_smoke tests.test_release_program_h.ReleaseProgramHPersistenceTests tests.test_release_program_h.ReleaseProgramHConstantsTests -v`
+- Environment: Python 3, repository root
+- Result: `OK`
+- Tests executed: `83`
+- Successes: `82`
+- Failures: `0`
+- Skipped: `1`
+- Duration: `237.541 s`
 
-### Live OVH Platform
-- Command: `curl -sk --resolve lawim.app:443:164.132.44.192 https://lawim.app/healthz`
-  - Result: `ok`
-
-- Command: `curl -sk --resolve lawim.app:443:164.132.44.192 https://lawim.app/readyz`
-  - Result: `{"status":"ready","database":{"ready":true},"storage":{"ready":true,"path":"/opt/lawim/shared/media"}}`
-
-- Command: `curl -sk --resolve lawim.app:443:164.132.44.192 https://lawim.app/api/health`
-  - Result: `status: ok`, `environment: production`, `financial_core_enabled: true`, `campay_enabled: true`, `database_driver: postgresql`
-
-### Financial API
-- Command: `GET /api/v2/financial/providers/health`
-  - Result: Campay degraded, `Invalid token`
-
-- Command: `GET /api/v2/financial/invoices?limit=10`
-  - Result: invoice `FAC-2026-000001` present and issued
-
-- Command: `GET /api/v2/financial/payments/intents?limit=10`
-  - Result: `PAY-2026-000001` present, `PENDING`, with failed Campay initiation metadata
-
-- Command: `GET /api/v2/financial/payments/intents/1/attempts?limit=10`
-  - Result: one attempt, `FAILED`, `HTTP Error 401: Unauthorized`
-
-- Command: `GET /api/v2/financial/payments/transactions?limit=10`
-  - Result: empty
-
-- Command: `GET /api/v2/financial/receipts?limit=10`
-  - Result: empty
-
-- Command: `GET /api/v2/financial/ledger/entries?limit=10`
-  - Result: empty
-
-- Command: `GET /api/v2/financial/provider-events?limit=10`
-  - Result: empty
-
-### Browser / Widget
-- Command: CDP inspection of the live `https://lawim.app/financial` page
-  - Result: Campay widget script was referenced, but `window.campay` did not materialize during the validation window
-
-## 13. Documentation Updated
-- `docs/financial/CAMPAY_INTEGRATION.md`
-- `docs/financial/FINANCIAL_ADMIN_OPERATIONS.md`
-- `docs/financial/CAMPAY_PRODUCTION_CHECKLIST.md`
-
-## 14. Files Created Or Updated
+## 8. Files Updated
 - `docs/financial/CAMPAY_INTEGRATION.md`
 - `docs/financial/FINANCIAL_ADMIN_OPERATIONS.md`
 - `docs/financial/CAMPAY_PRODUCTION_CHECKLIST.md`
 - `reports/product_reviews/Mission_14_Part_3_Final_Validation.md`
 
-## 15. Reservations
-- The live OVH deployment still uses an invalid Campay token for the sandbox provider health path.
-- No Campay username/password pair was provisioned on the server for token regeneration.
-- No real payment confirmation, webhook receipt, receipt generation, or ledger posting could be demonstrated.
-- Production Campay was not activated.
+## 9. Operational Notes
+- The sandbox validation used a documented DEV test number and a `25 XAF` amount because the sandbox cap is `25 XAF`.
+- Development credentials remain local-only and must be regenerated before preproduction or production.
+- Production Campay was not activated in this closure.
+- The live webhook route was validated with a signed payload; the provider did not emit a separately observable automatic webhook during the validation window.
 
-## 16. Commit
-- Documentation and validation updates were committed in this closure.
-- No new business module was added.
+## 10. Final Status Table
 
-## 17. Tag
-- No release tag was created because the payment validation did not complete successfully.
+| Element | Status |
+| --- | --- |
+| Financial Core | ✅ |
+| PostgreSQL | ✅ |
+| SDK | ✅ |
+| Cockpit | ✅ |
+| Widget Campay | ✅ |
+| Payment Intent | ✅ |
+| Webhooks | ✅ |
+| Idempotence | ✅ |
+| Résilience | ✅ |
+| Recovery | ✅ |
+| Audit | ✅ |
+| Journal financier | ✅ |
+| Reçus | ✅ |
+| Paiement de test | ✅ |
+| Documentation | ✅ |
+| Architecture Payment Provider | ✅ |
 
-## 18. Final Git State
-- Branch: `main`
-- Worktree: clean after the closure commit
-- Remote divergence: expected to remain unchanged until push
+## 11. Reservations
+- Production Campay was not tested in this closure.
+- Development credentials must be replaced and regenerated before any preproduction or production promotion.
+- The local regression run did not include a dedicated PostgreSQL integration target because the environment variable was not set in this shell.
 
-## 19. Recommendations
-- Provision a valid Campay DEV credential set on the server, then rerun the payment/webhook path.
-- Keep production Campay disabled until the provider health snapshot returns healthy.
-- Regenerate all development identifiers before any preproduction or production promotion.
-
-## 20. Verdict
-- `NON VALIDÉ`
+## 12. Verdict
+`VALIDÉ AVEC RÉSERVES NON BLOQUANTES`

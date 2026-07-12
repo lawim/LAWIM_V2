@@ -6,6 +6,8 @@ This checklist is the operational gate between DEV validation and production act
 - [ ] Confirm the current mission evidence is limited to DEV or sandbox validation.
 - [ ] Confirm the production flag is still disabled in LAWIM.
 - [ ] Confirm the backend still treats LAWIM as the source of truth.
+- [ ] Keep the documented sandbox test numbers (`+237677777777`, `+237699999999`, `+237677777770`, `+237699999990`) out of production procedures.
+- [ ] Keep the sandbox amount cap of `25 XAF` out of production assumptions.
 
 ## 2. Secret Replacement
 - [ ] Replace the local development app credentials with fresh production credentials.
@@ -38,6 +40,7 @@ This checklist is the operational gate between DEV validation and production act
 - [ ] Verify the invoice transitions to paid.
 - [ ] Verify the receipt is generated only after confirmation.
 - [ ] Verify reconciliation and audit entries are present.
+- [ ] Before production, re-run the DEV/sandbox recipe with fresh credentials and record the result separately from production.
 
 ## 7. Rollback
 - [ ] Confirm the previous release is still available.
@@ -48,4 +51,4 @@ This checklist is the operational gate between DEV validation and production act
 ## 8. Final Decision
 - [ ] Only promote to production if the payment path, webhook validation, reconciliation, audit, and backup checks all pass.
 - [ ] If any step fails, keep Campay production disabled and document the reserve.
-- [ ] The current Mission 14 closure attempt remains blocked until a valid Campay credential set is provisioned on the server.
+- [ ] The current Mission 14 sandbox closure is complete; production activation still requires fresh credentials and a separate production-recette sign-off.

@@ -238,6 +238,15 @@ Validation notes:
 - the live payment attempt for `PAY-2026-000001` failed at `POST /api/collect/` with HTTP 401, so no transaction, receipt, ledger entry, or provider event was created
 - this is an external credential blocker, not a Financial Core defect
 
+Sandbox validation evidence collected on 2026-07-12:
+- the documented sandbox cap of `25 XAF` was confirmed
+- `+237677777777` (MTN) produced a real successful collection at `25 XAF`
+- the payment moved from `PENDING` to `SUCCESSFUL` after provider status checks
+- the backend persisted `PAY-2026-000015`, `REC-2026-000001`, `PAY-2026-000001`, and `JRN-2026-000001`
+- a signed webhook payload for the same successful transaction was accepted by `/api/v2/financial/providers/campay/webhook`
+- replaying the same webhook payload was deduplicated and did not create a second transaction or receipt
+- invalid sandbox attempts remained isolated and did not affect the successful flow
+
 ## 17. Secret Rotation
 Secret rotation is supported operationally by replacing:
 - token

@@ -181,6 +181,16 @@ Before enabling Campay in a higher environment:
 5. regenerate the development identifiers before preproduction or production
 6. verify the latest payment, receipt and reconciliation records remain consistent
 
+Sandbox validation matrix used for the final Mission 14 closure:
+- successful MTN test number: `+237677777777`
+- successful Orange test number: `+237699999999`
+- failed MTN test number: `+237677777770`
+- failed Orange test number: `+237699999990`
+- maximum sandbox amount: `25 XAF`
+- final successful sandbox payment: invoice `FAC-2026-000017`, payment intent `PAY-2026-000015`, receipt `REC-2026-000001`
+- webhook route validation: signed payload accepted once and deduplicated on replay
+- no development identifier from this run should be copied to preproduction or production without regeneration
+
 ## 16. Recovery and Continuity
 If Campay or the backend becomes unavailable:
 - keep the payment intent and invoice intact
