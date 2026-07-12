@@ -37,6 +37,7 @@ from .security import AADAuthenticator, resolve_aad_config, validate_email, vali
 from .user_roles import resolve_official_user_role
 from .program_m_support import ProgramMServiceBase
 from .backup import BackupService, DisasterRecoveryService
+from .financial.service import FinancialService
 
 
 class ServiceError(Exception):
@@ -160,6 +161,7 @@ class LawimServices:
         from .marketplace.service import MarketplaceService
 
         self.marketplace = MarketplaceService(repository, self.projects, self.policy)
+        self.financial = FinancialService(repository, self.policy, config)
         from .security.service import SecurityService
 
         self.security = SecurityService(repository, self.projects, self.policy)
@@ -205,6 +207,14 @@ class LawimServices:
                 "db_driver": self.config.db_driver,
                 "geocoding_provider": self.geocoder.name,
                 "metrics_enabled": self.config.metrics_enabled,
+                "financial_core_enabled": self.config.financial_core_enabled,
+                "payments_enabled": self.config.payments_enabled,
+                "refunds_enabled": self.config.refunds_enabled,
+                "subscriptions_enabled": self.config.subscriptions_enabled,
+                "commissions_enabled": self.config.commissions_enabled,
+                "payouts_enabled": self.config.payouts_enabled,
+                "campay_enabled": self.config.campay_enabled,
+                "campay_environment": self.config.campay_environment,
             }
             payload["database"] = profile
             payload["audit"] = {

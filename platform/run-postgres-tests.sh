@@ -30,5 +30,9 @@ export LAWIM_TEST_POSTGRES_URL="${LAWIM_TEST_POSTGRES_URL:-postgresql://lawim:la
 export LAWIM_TEST_MODE=1
 
 echo "Running PostgreSQL integration tests (${LAWIM_TEST_POSTGRES_URL})..."
-"${PYTHON}" -m unittest tests.test_productization.PostgreSQLIntegrationTest tests.test_rc_postgresql -v
+"${PYTHON}" -m unittest \
+  tests.test_productization.PostgreSQLIntegrationTest \
+  tests.test_rc_postgresql \
+  tests.test_financial_core.PostgreSQLFinancialCoreIntegrationTests \
+  -v
 "${PYTHON}" "${ROOT}/scripts/smoke_postgres.py"

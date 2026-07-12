@@ -9,6 +9,10 @@ if [[ -f "${ROOT}/.env.platform" ]]; then
   source "${ROOT}/.env.platform"
 fi
 
+# shellcheck disable=SC1091
+source "${ROOT}/platform/runtime-env.sh"
+lawim_prepare_podman_runtime
+
 CONTAINER_NAME="${LAWIM_POSTGRES_CONTAINER_NAME:-compose_postgres_1}"
 if command -v podman >/dev/null 2>&1; then
   RUNTIME="podman"

@@ -88,6 +88,32 @@ class RuntimeMetrics:
     transaction_list_total: int = 0
     transaction_started_total: int = 0
     transaction_closed_total: int = 0
+    financial_requests_total: int = 0
+    financial_catalog_total: int = 0
+    financial_quote_total: int = 0
+    financial_invoice_total: int = 0
+    financial_payment_total: int = 0
+    financial_refund_total: int = 0
+    financial_subscription_total: int = 0
+    financial_commission_total: int = 0
+    financial_payout_total: int = 0
+    financial_ledger_total: int = 0
+    financial_reconciliation_total: int = 0
+    financial_audit_total: int = 0
+    campay_auth_success_total: int = 0
+    campay_auth_failure_total: int = 0
+    campay_request_total: int = 0
+    campay_request_duration_seconds: float = 0.0
+    campay_payment_initiated_total: int = 0
+    campay_payment_success_total: int = 0
+    campay_payment_failure_total: int = 0
+    campay_webhook_received_total: int = 0
+    campay_webhook_rejected_total: int = 0
+    campay_webhook_duplicate_total: int = 0
+    campay_status_check_total: int = 0
+    campay_status_conflict_total: int = 0
+    campay_refund_total: int = 0
+    campay_provider_health: float = 0.0
     intelligence_computed_total: int = 0
     crm_requests_total: int = 0
     marketplace_requests_total: int = 0
@@ -420,6 +446,59 @@ class RuntimeMetrics:
             ):
                 self.marketplace_requests_total += 1
                 self._crm_metric_counts[name] = self._crm_metric_counts.get(name, 0) + 1
+            elif any(name.startswith(prefix) for prefix in ("financial_", "campay_")):
+                self.financial_requests_total += 1
+                self._crm_metric_counts[name] = self._crm_metric_counts.get(name, 0) + 1
+                if name.startswith("financial_"):
+                    if name == "financial_catalog_total":
+                        self.financial_catalog_total += 1
+                    elif name == "financial_quote_total":
+                        self.financial_quote_total += 1
+                    elif name == "financial_invoice_total":
+                        self.financial_invoice_total += 1
+                    elif name == "financial_payment_total":
+                        self.financial_payment_total += 1
+                    elif name == "financial_refund_total":
+                        self.financial_refund_total += 1
+                    elif name == "financial_subscription_total":
+                        self.financial_subscription_total += 1
+                    elif name == "financial_commission_total":
+                        self.financial_commission_total += 1
+                    elif name == "financial_payout_total":
+                        self.financial_payout_total += 1
+                    elif name == "financial_ledger_total":
+                        self.financial_ledger_total += 1
+                    elif name == "financial_reconciliation_total":
+                        self.financial_reconciliation_total += 1
+                    elif name == "financial_audit_total":
+                        self.financial_audit_total += 1
+                else:
+                    if name == "campay_auth_success_total":
+                        self.campay_auth_success_total += 1
+                    elif name == "campay_auth_failure_total":
+                        self.campay_auth_failure_total += 1
+                    elif name == "campay_request_total":
+                        self.campay_request_total += 1
+                    elif name == "campay_request_duration_seconds":
+                        self.campay_request_duration_seconds += 1.0
+                    elif name == "campay_payment_initiated_total":
+                        self.campay_payment_initiated_total += 1
+                    elif name == "campay_payment_success_total":
+                        self.campay_payment_success_total += 1
+                    elif name == "campay_payment_failure_total":
+                        self.campay_payment_failure_total += 1
+                    elif name == "campay_webhook_received_total":
+                        self.campay_webhook_received_total += 1
+                    elif name == "campay_webhook_rejected_total":
+                        self.campay_webhook_rejected_total += 1
+                    elif name == "campay_webhook_duplicate_total":
+                        self.campay_webhook_duplicate_total += 1
+                    elif name == "campay_status_check_total":
+                        self.campay_status_check_total += 1
+                    elif name == "campay_status_conflict_total":
+                        self.campay_status_conflict_total += 1
+                    elif name == "campay_refund_total":
+                        self.campay_refund_total += 1
             elif any(
                 name.startswith(prefix)
                 for prefix in (
@@ -555,6 +634,32 @@ class RuntimeMetrics:
                 "transaction_list_total": self.transaction_list_total,
                 "transaction_started_total": self.transaction_started_total,
                 "transaction_closed_total": self.transaction_closed_total,
+                "financial_requests_total": self.financial_requests_total,
+                "financial_catalog_total": self.financial_catalog_total,
+                "financial_quote_total": self.financial_quote_total,
+                "financial_invoice_total": self.financial_invoice_total,
+                "financial_payment_total": self.financial_payment_total,
+                "financial_refund_total": self.financial_refund_total,
+                "financial_subscription_total": self.financial_subscription_total,
+                "financial_commission_total": self.financial_commission_total,
+                "financial_payout_total": self.financial_payout_total,
+                "financial_ledger_total": self.financial_ledger_total,
+                "financial_reconciliation_total": self.financial_reconciliation_total,
+                "financial_audit_total": self.financial_audit_total,
+                "campay_auth_success_total": self.campay_auth_success_total,
+                "campay_auth_failure_total": self.campay_auth_failure_total,
+                "campay_request_total": self.campay_request_total,
+                "campay_request_duration_seconds": self.campay_request_duration_seconds,
+                "campay_payment_initiated_total": self.campay_payment_initiated_total,
+                "campay_payment_success_total": self.campay_payment_success_total,
+                "campay_payment_failure_total": self.campay_payment_failure_total,
+                "campay_webhook_received_total": self.campay_webhook_received_total,
+                "campay_webhook_rejected_total": self.campay_webhook_rejected_total,
+                "campay_webhook_duplicate_total": self.campay_webhook_duplicate_total,
+                "campay_status_check_total": self.campay_status_check_total,
+                "campay_status_conflict_total": self.campay_status_conflict_total,
+                "campay_refund_total": self.campay_refund_total,
+                "campay_provider_health": self.campay_provider_health,
                 "intelligence_computed_total": self.intelligence_computed_total,
                 "crm_requests_total": self.crm_requests_total,
                 "marketplace_requests_total": self.marketplace_requests_total,

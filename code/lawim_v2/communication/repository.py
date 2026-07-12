@@ -80,27 +80,27 @@ class CommunicationRepositoryMixin:
             conn.execute(
                 """
                 INSERT OR IGNORE INTO whatsapp_accounts (
-                    account_key, handle, phone_e164, provider, status, created_at
-                ) VALUES (?, ?, ?, 'meta_cloud', 'active', ?)
+                    account_key, handle, phone_e164, provider, status, created_at, updated_at
+                ) VALUES (?, ?, ?, 'meta_cloud', 'active', ?, ?)
                 """,
-                (wa_key, wa_handle, wa_phone, now),
+                (wa_key, wa_handle, wa_phone, now, now),
             )
             tg_key, tg_handle = DEFAULT_TELEGRAM_BOT
             conn.execute(
                 """
                 INSERT OR IGNORE INTO telegram_bots (
-                    bot_key, bot_handle, status, created_at
-                ) VALUES (?, ?, 'active', ?)
+                    bot_key, bot_handle, status, created_at, updated_at
+                ) VALUES (?, ?, 'active', ?, ?)
                 """,
-                (tg_key, tg_handle, now),
+                (tg_key, tg_handle, now, now),
             )
             conn.execute(
                 """
                 INSERT OR IGNORE INTO sms_providers (
-                    provider_key, name, provider_type, status, created_at
-                ) VALUES ('sms-orange', 'Orange Cameroon', 'orange', 'active', ?)
+                    provider_key, name, provider_type, status, created_at, updated_at
+                ) VALUES ('sms-orange', 'Orange Cameroon', 'orange', 'active', ?, ?)
                 """,
-                (now,),
+                (now, now),
             )
         self.record_event(
             "communication_catalog_seeded",

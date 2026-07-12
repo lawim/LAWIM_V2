@@ -5,6 +5,8 @@ from pathlib import Path
 from urllib.parse import urlparse
 import os
 
+from .financial.constants import FINANCIAL_CURRENCIES
+
 
 def _parse_cors_origins(raw: str | None, public_base_url: str) -> tuple[str, ...]:
     if raw is not None and raw.strip():
@@ -73,6 +75,28 @@ class AppConfig:
     auth_rate_limit_max: int = 30
     auth_rate_limit_window_seconds: int = 300
     public_media: bool = True
+    financial_core_enabled: bool = True
+    payments_enabled: bool = True
+    refunds_enabled: bool = True
+    subscriptions_enabled: bool = True
+    commissions_enabled: bool = True
+    payouts_enabled: bool = True
+    financial_admin_enabled: bool = True
+    campay_enabled: bool = False
+    campay_sandbox_enabled: bool = True
+    campay_environment: str = "sandbox"
+    campay_base_url: str = ""
+    campay_app_username: str | None = None
+    campay_app_password: str | None = None
+    campay_token: str | None = None
+    campay_webhook_secret: str | None = None
+    campay_webhook_url: str | None = None
+    campay_redirect_url: str | None = None
+    campay_default_currency: str = "XAF"
+    campay_timeout_seconds: int = 30
+    campay_max_retries: int = 3
+    campay_status_check_interval: int = 60
+    campay_provider_priority: int = 10
 
     @classmethod
     def legacy_construct(
@@ -173,6 +197,28 @@ class AppConfig:
             auth_rate_limit_max=_int_env("LAWIM_AUTH_RATE_LIMIT_MAX", 30),
             auth_rate_limit_window_seconds=_int_env("LAWIM_AUTH_RATE_LIMIT_WINDOW_SECONDS", 300),
             public_media=_bool_env("LAWIM_PUBLIC_MEDIA", public_media_default),
+            financial_core_enabled=_bool_env("LAWIM_FINANCIAL_CORE_ENABLED", True),
+            payments_enabled=_bool_env("LAWIM_PAYMENTS_ENABLED", True),
+            refunds_enabled=_bool_env("LAWIM_REFUNDS_ENABLED", True),
+            subscriptions_enabled=_bool_env("LAWIM_SUBSCRIPTIONS_ENABLED", True),
+            commissions_enabled=_bool_env("LAWIM_COMMISSIONS_ENABLED", True),
+            payouts_enabled=_bool_env("LAWIM_PAYOUTS_ENABLED", True),
+            financial_admin_enabled=_bool_env("LAWIM_FINANCIAL_ADMIN_ENABLED", True),
+            campay_enabled=_bool_env("LAWIM_CAMPAY_ENABLED", False),
+            campay_sandbox_enabled=_bool_env("LAWIM_CAMPAY_SANDBOX_ENABLED", True),
+            campay_environment=os.getenv("LAWIM_CAMPAY_ENVIRONMENT", "sandbox").strip().lower(),
+            campay_base_url=os.getenv("LAWIM_CAMPAY_BASE_URL", "").strip(),
+            campay_app_username=(os.getenv("LAWIM_CAMPAY_APP_USERNAME") or None),
+            campay_app_password=(os.getenv("LAWIM_CAMPAY_APP_PASSWORD") or None),
+            campay_token=(os.getenv("LAWIM_CAMPAY_TOKEN") or None),
+            campay_webhook_secret=(os.getenv("LAWIM_CAMPAY_WEBHOOK_SECRET") or None),
+            campay_webhook_url=(os.getenv("LAWIM_CAMPAY_WEBHOOK_URL") or None),
+            campay_redirect_url=(os.getenv("LAWIM_CAMPAY_REDIRECT_URL") or None),
+            campay_default_currency=os.getenv("LAWIM_CAMPAY_DEFAULT_CURRENCY", "XAF").strip().upper(),
+            campay_timeout_seconds=_int_env("LAWIM_CAMPAY_TIMEOUT_SECONDS", 30),
+            campay_max_retries=_int_env("LAWIM_CAMPAY_MAX_RETRIES", 3),
+            campay_status_check_interval=_int_env("LAWIM_CAMPAY_STATUS_CHECK_INTERVAL", 60),
+            campay_provider_priority=_int_env("LAWIM_CAMPAY_PROVIDER_PRIORITY", 10),
         )
 
     def validate(self) -> None:
@@ -204,6 +250,25 @@ class AppConfig:
                 errors.append("LAWIM_PUBLIC_MEDIA must be false when APP_ENV=production")
         if not self.media_provider:
             errors.append("LAWIM_MEDIA_PROVIDER must be set to a non-empty provider name")
+        if self.campay_environment not in {"sandbox", "production"}:
+            errors.append(f"LAWIM_CAMPAY_ENVIRONMENT must be sandbox or production (got {self.campay_environment!r})")
+        if self.campay_default_currency not in FINANCIAL_CURRENCIES:
+            errors.append(f"LAWIM_CAMPAY_DEFAULT_CURRENCY must be one of {sorted(FINANCIAL_CURRENCIES)}")
+        if self.campay_enabled:
+            if not self.campay_base_url:
+                errors.append("LAWIM_CAMPAY_BASE_URL is required when LAWIM_CAMPAY_ENABLED=true")
+            if not self.campay_webhook_url:
+                errors.append("LAWIM_CAMPAY_WEBHOOK_URL is required when LAWIM_CAMPAY_ENABLED=true")
+            if not self.campay_webhook_secret:
+                errors.append("LAWIM_CAMPAY_WEBHOOK_SECRET is required when LAWIM_CAMPAY_ENABLED=true")
+            if not (self.campay_token or (self.campay_app_username and self.campay_app_password)):
+                errors.append("LAWIM_CAMPAY_TOKEN or APP_USERNAME/APP_PASSWORD is required when LAWIM_CAMPAY_ENABLED=true")
+            if self.campay_timeout_seconds < 1:
+                errors.append("LAWIM_CAMPAY_TIMEOUT_SECONDS must be positive")
+            if self.campay_max_retries < 0:
+                errors.append("LAWIM_CAMPAY_MAX_RETRIES must be non-negative")
+            if self.campay_status_check_interval < 5:
+                errors.append("LAWIM_CAMPAY_STATUS_CHECK_INTERVAL must be at least 5 seconds")
         if errors:
             raise ValueError("Invalid LAWIM_V2 configuration: " + "; ".join(errors))
 

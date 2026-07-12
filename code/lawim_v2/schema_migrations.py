@@ -7,6 +7,7 @@ from typing import Protocol
 
 from .persistence import APPLICATION_SCHEMA_VERSION
 from .source_intelligence.engines import ReferenceCodeEngine
+from .financial.schema_v20_ddl import SQLITE_V20_TABLES_SCRIPT
 from .backup.schema_v19_ddl import SQLITE_BACKUP_TABLES_SCRIPT
 
 # Production PostgreSQL: apply prisma/migrations via `prisma migrate deploy`.
@@ -444,6 +445,7 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
     from .analytics.schema_v18_ddl import SQLITE_V18_TABLES_SCRIPT
 
     conn.executescript(SQLITE_V18_TABLES_SCRIPT)
+    conn.executescript(SQLITE_V20_TABLES_SCRIPT)
 
 
 def migration_strategy_profile() -> dict[str, object]:

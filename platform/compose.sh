@@ -10,6 +10,10 @@ if [[ -f "${ROOT}/.env.platform" ]]; then
   source "${ROOT}/.env.platform"
 fi
 
+# shellcheck disable=SC1091
+source "${ROOT}/platform/runtime-env.sh"
+lawim_prepare_podman_runtime
+
 COMPOSE="${LAWIM_COMPOSE:-}"
 if [[ -z "${COMPOSE}" ]]; then
   if command -v podman-compose >/dev/null 2>&1; then
@@ -38,11 +42,7 @@ if [[ -z "${COMPOSE}" ]]; then
 fi
 
 if [[ "${COMPOSE}" == "podman-compose" ]]; then
-  runtime_dir="${LAWIM_PODMAN_RUNTIME_DIR:-/tmp/lawim_v2_podman_runtime}"
-  export XDG_RUNTIME_DIR="${runtime_dir}"
-  export TMPDIR="${runtime_dir}"
-  mkdir -p "${runtime_dir}/podman" "${runtime_dir}/libpod/tmp/events"
-  chmod 700 "${runtime_dir}" 2>/dev/null || true
+  lawim_prepare_podman_runtime
 fi
 
 exec ${COMPOSE} "$@"

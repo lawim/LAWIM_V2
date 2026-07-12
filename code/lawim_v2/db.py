@@ -56,6 +56,7 @@ from .cognition.repository import CognitionRepositoryMixin
 from .ecosystem.repository import EcosystemRepositoryMixin
 from .program_m_support import ProgramMRepositoryMixinBase
 from .backup.repository import BackupRepositoryMixin
+from .financial.repository import FinancialRepositoryMixin
 
 
 SCHEMA = SQLITE_INIT_SCRIPT
@@ -109,7 +110,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase, BackupRepositoryMixin, BrainRepositoryMixin, BrainRelationRepositoryMixin):
+class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, FinancialRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase, BackupRepositoryMixin, BrainRepositoryMixin, BrainRelationRepositoryMixin):
     driver = "sqlite"
 
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
@@ -190,6 +191,8 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
             self.seed_marketplace_catalog()
         if hasattr(self, "seed_security_catalog"):
             self.seed_security_catalog()
+        if hasattr(self, "seed_financial_catalog"):
+            self.seed_financial_catalog()
         if hasattr(self, "seed_communication_catalog"):
             self.seed_communication_catalog()
         if hasattr(self, "seed_analytics_catalog"):
@@ -1879,7 +1882,16 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
                 (SELECT COUNT(*) FROM projects WHERE status != 'archived') AS projects,
                 (SELECT COUNT(*) FROM crm_lead_sources) AS sources,
                 (SELECT COUNT(*) FROM source_intelligence_source_contexts) AS source_contexts,
-                (SELECT COUNT(*) FROM source_intelligence_imports) AS source_imports
+                (SELECT COUNT(*) FROM source_intelligence_imports) AS source_imports,
+                (SELECT COUNT(*) FROM financial_invoices) AS financial_invoices,
+                (SELECT COUNT(*) FROM financial_payment_intents) AS payment_intents,
+                (SELECT COUNT(*) FROM financial_payment_transactions) AS payment_transactions,
+                (SELECT COUNT(*) FROM financial_receipts) AS receipts,
+                (SELECT COUNT(*) FROM financial_refunds) AS refunds,
+                (SELECT COUNT(*) FROM financial_subscriptions) AS subscriptions,
+                (SELECT COUNT(*) FROM financial_commissions) AS commissions,
+                (SELECT COUNT(*) FROM financial_payouts) AS payouts,
+                (SELECT COUNT(*) FROM financial_provider_events) AS provider_events
             """
         )
         assert row is not None
@@ -1897,6 +1909,15 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
             "sources": int(row["sources"]),
             "source_contexts": int(row["source_contexts"]),
             "source_imports": int(row["source_imports"]),
+            "financial_invoices": int(row["financial_invoices"]),
+            "payment_intents": int(row["payment_intents"]),
+            "payment_transactions": int(row["payment_transactions"]),
+            "receipts": int(row["receipts"]),
+            "refunds": int(row["refunds"]),
+            "subscriptions": int(row["subscriptions"]),
+            "commissions": int(row["commissions"]),
+            "payouts": int(row["payouts"]),
+            "provider_events": int(row["provider_events"]),
         }
 
     def bootstrap_payload(self, *, token: str | None = None) -> dict[str, object]:

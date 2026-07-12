@@ -271,6 +271,21 @@ def _backup_table_specs() -> tuple[TableSpec, ...]:
         for name in BACKUP_TABLE_NAMES
     )
 
+def _financial_table_specs() -> tuple[TableSpec, ...]:
+    from .financial.schema_v20_ddl import FINANCIAL_TABLE_NAMES
+    from .program_m_support import COMMON_TABLE_COLUMNS
+
+    return tuple(
+        TableSpec(
+            name=name,
+            purpose=f"LAWIM 2.x financial core entity ({name}).",
+            primary_key="id",
+            columns=COMMON_TABLE_COLUMNS,
+            indexes=(f"idx_{name}_status", f"idx_{name}_record_key"),
+        )
+        for name in FINANCIAL_TABLE_NAMES
+    )
+
 
 
 
@@ -791,6 +806,7 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _security_table_specs()
     + _communication_table_specs()
     + _analytics_table_specs()
+    + _financial_table_specs()
     + _program_m_table_specs()
     + _backup_table_specs(),
 )

@@ -431,6 +431,38 @@ class PostgreSQLLawimRepository(LawimRepository):
                 )
         if seed_demo_data:
             self.seed_demo_data()
+        if hasattr(self, "seed_ecosystem_catalog"):
+            self.seed_ecosystem_catalog()
+            self.seed_demo_partners()
+            project = self.one("SELECT id FROM projects ORDER BY id ASC LIMIT 1")
+            if project and hasattr(self, "bootstrap_project_ecosystem"):
+                self.bootstrap_project_ecosystem(int(project["id"]))
+            if project and hasattr(self, "bootstrap_project_cognition"):
+                self.bootstrap_project_cognition(int(project["id"]))
+            if project and hasattr(self, "seed_assistant_catalog"):
+                self.seed_assistant_catalog()
+            if project and hasattr(self, "bootstrap_project_assistant"):
+                self.bootstrap_project_assistant(int(project["id"]))
+        if hasattr(self, "seed_expert_knowledge_catalog"):
+            self.seed_expert_knowledge_catalog()
+        if hasattr(self, "seed_automation_catalog"):
+            self.seed_automation_catalog()
+        if hasattr(self, "seed_rei_catalog"):
+            self.seed_rei_catalog()
+        if hasattr(self, "seed_crm_catalog"):
+            self.seed_crm_catalog()
+        if hasattr(self, "seed_marketplace_catalog"):
+            self.seed_marketplace_catalog()
+        if hasattr(self, "seed_security_catalog"):
+            self.seed_security_catalog()
+        if hasattr(self, "seed_financial_catalog"):
+            self.seed_financial_catalog()
+        if hasattr(self, "seed_communication_catalog"):
+            self.seed_communication_catalog()
+        if hasattr(self, "seed_analytics_catalog"):
+            self.seed_analytics_catalog()
+        if hasattr(self, "seed_backup_catalog"):
+            self.seed_backup_catalog()
 
     def backend_profile(self) -> dict[str, object]:
         profile = build_postgresql_profile(self.dsn, self.schema_version())

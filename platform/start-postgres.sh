@@ -12,6 +12,10 @@ elif [[ -f "${ROOT}/platform/platform.env.example" ]]; then
   source "${ROOT}/platform/platform.env.example"
 fi
 
+# shellcheck disable=SC1091
+source "${ROOT}/platform/runtime-env.sh"
+lawim_prepare_podman_runtime
+
 export LAWIM_POSTGRES_PORT="${LAWIM_POSTGRES_PORT:-5433}"
 VOLUME="${LAWIM_VOLUME_POSTGRES_NAME:-lawim_v2_postgres}"
 CONTAINER_NAME="${LAWIM_POSTGRES_CONTAINER_NAME:-compose_postgres_1}"
@@ -26,8 +30,14 @@ else
 fi
 
 echo "Starting PostgreSQL dev container on port ${LAWIM_POSTGRES_PORT}..."
+container_output="$(mktemp "${TMPDIR:-/tmp}/lawim-postgres-start.XXXXXX")"
+cleanup() {
+  rm -f "${container_output}"
+}
+trap cleanup EXIT
+
 "${RUNTIME}" rm -f "${CONTAINER_NAME}" >/dev/null 2>&1 || true
-"${RUNTIME}" run -d \
+if ! "${RUNTIME}" run -d \
   --name "${CONTAINER_NAME}" \
   --network host \
   -e POSTGRES_DB="${LAWIM_POSTGRES_DB:-lawim_v2}" \
@@ -36,9 +46,18 @@ echo "Starting PostgreSQL dev container on port ${LAWIM_POSTGRES_PORT}..."
   -v "${VOLUME}:/var/lib/postgresql/data" \
   postgres:16-alpine \
   -c "port=${LAWIM_POSTGRES_PORT}" \
-  "$@" >/dev/null
+  "$@" >"${container_output}" 2>&1; then
+  echo "Failed to start PostgreSQL container." >&2
+  sed -n '1,160p' "${container_output}" >&2
+  exit 1
+fi
 
 echo "Waiting for PostgreSQL..."
-"${ROOT}/platform/wait-postgres.sh"
+if ! "${ROOT}/platform/wait-postgres.sh"; then
+  echo "PostgreSQL container logs:" >&2
+  "${RUNTIME}" logs "${CONTAINER_NAME}" >&2 || true
+  "${RUNTIME}" ps -a --filter "name=${CONTAINER_NAME}" >&2 || true
+  exit 1
+fi
 
 echo "LAWIM_TEST_POSTGRES_URL=${LAWIM_TEST_POSTGRES_URL:-postgresql://lawim:lawim@127.0.0.1:${LAWIM_POSTGRES_PORT}/lawim_v2}"

@@ -9,6 +9,10 @@ if [[ -f "${ROOT}/.env.platform" ]]; then
   source "${ROOT}/.env.platform"
 fi
 
+# shellcheck disable=SC1091
+source "${ROOT}/platform/runtime-env.sh"
+lawim_prepare_podman_runtime
+
 export LAWIM_POSTGRES_PORT="${LAWIM_POSTGRES_PORT:-5433}"
 VOLUME="${LAWIM_VOLUME_POSTGRES_NAME:-lawim_v2_postgres}"
 

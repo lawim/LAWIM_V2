@@ -11,6 +11,10 @@ elif [[ -f "${ROOT}/platform/platform.env.example" ]]; then
   source "${ROOT}/platform/platform.env.example"
 fi
 
+# shellcheck disable=SC1091
+source "${ROOT}/platform/runtime-env.sh"
+lawim_prepare_podman_runtime
+
 PORT="${LAWIM_POSTGRES_PORT:-5433}"
 USER="${LAWIM_POSTGRES_USER:-lawim}"
 DB="${LAWIM_POSTGRES_DB:-lawim_v2}"

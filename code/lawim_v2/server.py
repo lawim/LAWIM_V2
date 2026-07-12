@@ -504,6 +504,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_security_get(path, query)
             return
 
+        if path.startswith("/api/v2/financial"):
+            self._handle_v2_financial_get(path, query)
+            return
+
         if path.startswith("/api/v2/marketplace"):
             self._handle_v2_marketplace_get(path, query)
             return
@@ -773,6 +777,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
 
         if path.startswith("/api/v2/security"):
             self._handle_v2_security_post(path, body, actor)
+            return
+
+        if path.startswith("/api/v2/financial"):
+            self._handle_v2_financial_post(path, body, actor)
             return
 
         if path.startswith("/api/v2/marketplace"):
@@ -2170,6 +2178,293 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json(sec.grant_consent_by_id(actor=actor, consent_id=consent_id))
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown security API route")
+
+    def _handle_v2_financial_get(self, path: str, query: dict[str, list[str]]) -> None:
+        actor = self._require_user(optional=path == "/api/v2/financial/readiness")
+        financial = self.services.financial
+        if path == "/api/v2/financial/dashboard":
+            self._send_json(financial.dashboard(actor=actor))
+            return
+        if path == "/api/v2/financial/readiness":
+            self._send_json(financial.readiness(actor=actor))
+            return
+        if path == "/api/v2/financial/providers":
+            self._send_json(financial.list_payment_providers(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/providers/health":
+            self._send_json(financial.provider_health(actor=actor))
+            return
+        if path == "/api/v2/financial/catalog/products":
+            self._send_json(financial.list_products(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/catalog/pricing-rules":
+            self._send_json(
+                financial.list_pricing_rules(
+                    actor=actor,
+                    product_id=self._first_int(query, "product_id", minimum=1),
+                    status=self._first(query, "status"),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path == "/api/v2/financial/quotes":
+            self._send_json(
+                financial.list_quotes(
+                    actor=actor,
+                    status=self._first(query, "status"),
+                    customer_user_id=self._first_int(query, "customer_user_id", minimum=1),
+                    organization_id=self._first_int(query, "organization_id", minimum=1),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path.startswith("/api/v2/financial/quotes/") and path.count("/") == 5:
+            quote_id = self._extract_path_id(path, marker="/api/v2/financial/quotes/", resource="Quote")
+            self._send_json(financial.get_quote(actor=actor, quote_id=quote_id))
+            return
+        if path == "/api/v2/financial/invoices":
+            self._send_json(
+                financial.list_invoices(
+                    actor=actor,
+                    status=self._first(query, "status"),
+                    customer_user_id=self._first_int(query, "customer_user_id", minimum=1),
+                    organization_id=self._first_int(query, "organization_id", minimum=1),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path.startswith("/api/v2/financial/invoices/") and path.count("/") == 5:
+            invoice_id = self._extract_path_id(path, marker="/api/v2/financial/invoices/", resource="Invoice")
+            self._send_json(financial.get_invoice(actor=actor, invoice_id=invoice_id))
+            return
+        if path.startswith("/api/v2/financial/invoices/") and path.endswith("/receipts"):
+            invoice_id = self._extract_path_id(path, marker="/api/v2/financial/invoices/", suffix="/receipts", resource="Invoice")
+            self._send_json(financial.list_receipts(actor=actor, invoice_id=invoice_id, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/payments/providers":
+            self._send_json(financial.list_payment_providers(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/payments/intents":
+            self._send_json(
+                financial.list_payment_intents(
+                    actor=actor,
+                    status=self._first(query, "status"),
+                    invoice_id=self._first_int(query, "invoice_id", minimum=1),
+                    customer_user_id=self._first_int(query, "customer_user_id", minimum=1),
+                    provider_code=self._first(query, "provider_code"),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path.startswith("/api/v2/financial/payments/intents/") and path.count("/") == 6:
+            intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", resource="PaymentIntent")
+            self._send_json(financial.get_payment_intent(actor=actor, payment_intent_id=intent_id))
+            return
+        if path.startswith("/api/v2/financial/payments/intents/") and path.endswith("/attempts"):
+            intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", suffix="/attempts", resource="PaymentIntent")
+            self._send_json(financial.list_payment_attempts(actor=actor, payment_intent_id=intent_id, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/payments/attempts":
+            self._send_json(financial.list_payment_attempts(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/payments/transactions":
+            self._send_json(
+                financial.list_payment_transactions(
+                    actor=actor,
+                    payment_intent_id=self._first_int(query, "payment_intent_id", minimum=1),
+                    payment_attempt_id=self._first_int(query, "payment_attempt_id", minimum=1),
+                    invoice_id=self._first_int(query, "invoice_id", minimum=1),
+                    status=self._first(query, "status"),
+                    limit=self._query_limit(query),
+                )
+            )
+            return
+        if path == "/api/v2/financial/refunds":
+            self._send_json(financial.list_refunds(actor=actor, payment_transaction_id=self._first_int(query, "payment_transaction_id", minimum=1), status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path.startswith("/api/v2/financial/refunds/") and path.count("/") == 5:
+            refund_id = self._extract_path_id(path, marker="/api/v2/financial/refunds/", resource="Refund")
+            self._send_json(financial.get_refund(actor=actor, refund_id=refund_id))
+            return
+        if path == "/api/v2/financial/subscriptions/plans":
+            self._send_json(financial.list_subscription_plans(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/subscriptions":
+            self._send_json(financial.list_subscriptions(actor=actor, status=self._first(query, "status"), customer_user_id=self._first_int(query, "customer_user_id", minimum=1), organization_id=self._first_int(query, "organization_id", minimum=1), plan_id=self._first_int(query, "plan_id", minimum=1), limit=self._query_limit(query)))
+            return
+        if path.startswith("/api/v2/financial/subscriptions/") and path.count("/") == 5:
+            subscription_id = self._extract_path_id(path, marker="/api/v2/financial/subscriptions/", resource="Subscription")
+            self._send_json(financial.get_subscription(actor=actor, subscription_id=subscription_id))
+            return
+        if path == "/api/v2/financial/commissions/rules":
+            self._send_json(financial.list_commission_rules(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/commissions":
+            self._send_json(financial.list_commissions(actor=actor, status=self._first(query, "status"), beneficiary_user_id=self._first_int(query, "beneficiary_user_id", minimum=1), beneficiary_organization_id=self._first_int(query, "beneficiary_organization_id", minimum=1), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/payouts":
+            self._send_json(financial.list_payouts(actor=actor, status=self._first(query, "status"), beneficiary_user_id=self._first_int(query, "beneficiary_user_id", minimum=1), beneficiary_organization_id=self._first_int(query, "beneficiary_organization_id", minimum=1), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/ledger/accounts":
+            self._send_json(financial.list_ledger_accounts(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/ledger/entries":
+            self._send_json(financial.list_ledger_entries(actor=actor, source_type=self._first(query, "source_type"), source_id=self._first_int(query, "source_id", minimum=1), transaction_id=self._first_int(query, "transaction_id", minimum=1), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/reconciliation":
+            self._send_json(financial.list_reconciliation_records(actor=actor, status=self._first(query, "status"), provider_code=self._first(query, "provider_code"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/audit":
+            self._send_json(financial.list_audit_events(actor=actor, actor_user_id=self._first_int(query, "actor_user_id", minimum=1), object_type=self._first(query, "object_type"), limit=self._query_limit(query)))
+            return
+        if path == "/api/v2/financial/provider-events":
+            self._send_json(financial.list_provider_events(actor=actor, provider_code=self._first(query, "provider_code"), status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown financial API route")
+
+    def _handle_v2_financial_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
+        financial = self.services.financial
+        if path == "/api/v2/financial/catalog/products":
+            self._send_json(financial.create_product(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/financial/catalog/pricing-rules":
+            self._send_json(financial.create_pricing_rule(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/financial/pricing/calculate":
+            self._send_json(financial.calculate_price(actor=actor, body=body))
+            return
+        if path == "/api/v2/financial/quotes":
+            self._send_json(financial.create_quote(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/financial/quotes/") and path.endswith("/issue"):
+            quote_id = self._extract_path_id(path, marker="/api/v2/financial/quotes/", suffix="/issue", resource="Quote")
+            self._send_json(financial.issue_quote(actor=actor, quote_id=quote_id))
+            return
+        if path.startswith("/api/v2/financial/quotes/") and path.endswith("/accept"):
+            quote_id = self._extract_path_id(path, marker="/api/v2/financial/quotes/", suffix="/accept", resource="Quote")
+            self._send_json(financial.accept_quote(actor=actor, quote_id=quote_id))
+            return
+        if path.startswith("/api/v2/financial/quotes/") and path.endswith("/reject"):
+            quote_id = self._extract_path_id(path, marker="/api/v2/financial/quotes/", suffix="/reject", resource="Quote")
+            self._send_json(financial.reject_quote(actor=actor, quote_id=quote_id))
+            return
+        if path.startswith("/api/v2/financial/quotes/") and path.endswith("/convert"):
+            quote_id = self._extract_path_id(path, marker="/api/v2/financial/quotes/", suffix="/convert", resource="Quote")
+            self._send_json(financial.convert_quote(actor=actor, quote_id=quote_id, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/financial/invoices":
+            self._send_json(financial.create_invoice(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/financial/invoices/") and path.endswith("/issue"):
+            invoice_id = self._extract_path_id(path, marker="/api/v2/financial/invoices/", suffix="/issue", resource="Invoice")
+            self._send_json(financial.issue_invoice(actor=actor, invoice_id=invoice_id, body=body))
+            return
+        if path.startswith("/api/v2/financial/invoices/") and path.endswith("/cancel"):
+            invoice_id = self._extract_path_id(path, marker="/api/v2/financial/invoices/", suffix="/cancel", resource="Invoice")
+            self._send_json(financial.cancel_invoice(actor=actor, invoice_id=invoice_id, body=body))
+            return
+        if path.startswith("/api/v2/financial/invoices/") and path.endswith("/credit-notes"):
+            self._send_json(financial.create_credit_note(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/financial/payments/intents":
+            self._send_json(financial.create_payment_intent(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/financial/payments/intents/") and path.endswith("/attempts"):
+            intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", suffix="/attempts", resource="PaymentIntent")
+            self._send_json(financial.create_payment_attempt(actor=actor, payment_intent_id=intent_id, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/financial/payments/intents/") and path.endswith("/confirm"):
+            intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", suffix="/confirm", resource="PaymentIntent")
+            self._send_json(financial.confirm_payment(actor=actor, payment_intent_id=intent_id, body=body))
+            return
+        if path.startswith("/api/v2/financial/payments/intents/") and path.endswith("/fail"):
+            intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", suffix="/fail", resource="PaymentIntent")
+            self._send_json(financial.fail_payment(actor=actor, payment_intent_id=intent_id, body=body))
+            return
+        if path.startswith("/api/v2/financial/payments/intents/") and path.endswith("/expire"):
+            intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", suffix="/expire", resource="PaymentIntent")
+            self._send_json(financial.expire_payment(actor=actor, payment_intent_id=intent_id))
+            return
+        if path.startswith("/api/v2/financial/payments/intents/") and path.endswith("/cancel"):
+            intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", suffix="/cancel", resource="PaymentIntent")
+            self._send_json(financial.cancel_payment(actor=actor, payment_intent_id=intent_id, body=body))
+            return
+        if path == "/api/v2/financial/refunds":
+            self._send_json(financial.request_refund(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/financial/refunds/") and path.endswith("/approve"):
+            refund_id = self._extract_path_id(path, marker="/api/v2/financial/refunds/", suffix="/approve", resource="Refund")
+            self._send_json(financial.approve_refund(actor=actor, refund_id=refund_id))
+            return
+        if path.startswith("/api/v2/financial/refunds/") and path.endswith("/process"):
+            refund_id = self._extract_path_id(path, marker="/api/v2/financial/refunds/", suffix="/process", resource="Refund")
+            self._send_json(financial.process_refund(actor=actor, refund_id=refund_id, body=body))
+            return
+        if path == "/api/v2/financial/subscriptions/plans":
+            self._send_json(financial.create_subscription_plan(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/financial/subscriptions":
+            self._send_json(financial.subscribe(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/financial/subscriptions/") and path.endswith("/renew"):
+            subscription_id = self._extract_path_id(path, marker="/api/v2/financial/subscriptions/", suffix="/renew", resource="Subscription")
+            self._send_json(financial.renew_subscription(actor=actor, subscription_id=subscription_id, body=body))
+            return
+        if path.startswith("/api/v2/financial/subscriptions/") and path.endswith("/change-plan"):
+            subscription_id = self._extract_path_id(path, marker="/api/v2/financial/subscriptions/", suffix="/change-plan", resource="Subscription")
+            self._send_json(financial.change_subscription_plan(actor=actor, subscription_id=subscription_id, body=body))
+            return
+        if path.startswith("/api/v2/financial/subscriptions/") and path.endswith("/suspend"):
+            subscription_id = self._extract_path_id(path, marker="/api/v2/financial/subscriptions/", suffix="/suspend", resource="Subscription")
+            self._send_json(financial.suspend_subscription(actor=actor, subscription_id=subscription_id, body=body))
+            return
+        if path.startswith("/api/v2/financial/subscriptions/") and path.endswith("/cancel"):
+            subscription_id = self._extract_path_id(path, marker="/api/v2/financial/subscriptions/", suffix="/cancel", resource="Subscription")
+            self._send_json(financial.cancel_subscription(actor=actor, subscription_id=subscription_id, body=body))
+            return
+        if path == "/api/v2/financial/commissions/rules":
+            self._send_json(financial.create_commission_rule(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/financial/commissions/calculate":
+            self._send_json(financial.calculate_commission(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/financial/commissions/") and path.endswith("/validate"):
+            commission_id = self._extract_path_id(path, marker="/api/v2/financial/commissions/", suffix="/validate", resource="Commission")
+            self._send_json(financial.validate_commission(actor=actor, commission_id=commission_id))
+            return
+        if path.startswith("/api/v2/financial/commissions/") and path.endswith("/payable"):
+            commission_id = self._extract_path_id(path, marker="/api/v2/financial/commissions/", suffix="/payable", resource="Commission")
+            self._send_json(financial.mark_commission_payable(actor=actor, commission_id=commission_id))
+            return
+        if path.startswith("/api/v2/financial/commissions/") and path.endswith("/pay"):
+            commission_id = self._extract_path_id(path, marker="/api/v2/financial/commissions/", suffix="/pay", resource="Commission")
+            self._send_json(financial.pay_commission(actor=actor, commission_id=commission_id, body=body))
+            return
+        if path == "/api/v2/financial/payouts":
+            self._send_json(financial.create_payout(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/financial/payouts/") and path.endswith("/approve"):
+            payout_id = self._extract_path_id(path, marker="/api/v2/financial/payouts/", suffix="/approve", resource="Payout")
+            self._send_json(financial.approve_payout(actor=actor, payout_id=payout_id))
+            return
+        if path.startswith("/api/v2/financial/payouts/") and path.endswith("/process"):
+            payout_id = self._extract_path_id(path, marker="/api/v2/financial/payouts/", suffix="/process", resource="Payout")
+            self._send_json(financial.process_payout(actor=actor, payout_id=payout_id, body=body))
+            return
+        if path == "/api/v2/financial/ledger/entries":
+            self._send_json(financial.record_ledger_entry(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path == "/api/v2/financial/reconciliation":
+            self._send_json(financial.create_reconciliation_record(actor=actor, body=body), status=HTTPStatus.CREATED)
+            return
+        if path.startswith("/api/v2/financial/reconciliation/") and path.endswith("/resolve"):
+            reconciliation_id = self._extract_path_id(path, marker="/api/v2/financial/reconciliation/", suffix="/resolve", resource="Reconciliation")
+            self._send_json(financial.resolve_reconciliation(actor=actor, reconciliation_id=reconciliation_id, body=body))
+            return
+        if path == "/api/v2/financial/providers/campay/webhook":
+            self._send_json(self.services.financial.repository.record_provider_event(provider_code="CAMPAY", event_type=str(body.get("event_type") or "webhook"), provider_event_id=str(body.get("event_id") or uuid.uuid4().hex), payload=body, headers={k: str(v) for k, v in self.headers.items()}, source_reference=self._optional_text(body.get("reference")), correlation_id=self._optional_text(body.get("correlation_id")), idempotency_key=self._optional_text(body.get("idempotency_key"))), status=HTTPStatus.ACCEPTED)
+            return
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown financial API route")
 
     def _handle_v2_marketplace_get(self, path: str, query: dict[str, list[str]]) -> None:
         if path == "/api/v2/marketplace/integrations":
