@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 from pathlib import Path
 from urllib.parse import urlparse
+from hashlib import sha256
 import os
 
 from .financial.constants import FINANCIAL_CURRENCIES
@@ -44,6 +45,20 @@ def _float_env(name: str, default: float) -> float:
         return float(value)
     except ValueError as exc:
         raise ValueError(f"Environment variable {name} must be a number") from exc
+
+
+def _text_env(name: str, default: str | None = None) -> str | None:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    stripped = value.strip()
+    return stripped or None
+
+
+def _telegram_webhook_secret_from_token(token: str | None) -> str | None:
+    if not token:
+        return None
+    return sha256(token.encode("utf-8")).hexdigest()
 
 
 @dataclass(frozen=True, slots=True)
@@ -102,6 +117,15 @@ class AppConfig:
     campay_disbursement_enabled: bool = False
     campay_dev_mode: bool = True
     campay_prod_mode: bool = False
+    green_api_api_url: str | None = None
+    green_api_media_url: str | None = None
+    green_api_id_instance: str | None = None
+    green_api_token_instance: str | None = None
+    green_api_webhook_secret: str | None = None
+    green_api_webhook_url: str | None = None
+    green_api_phone: str | None = None
+    telegram_webhook_secret: str | None = None
+    telegram_webhook_url: str | None = None
 
     @classmethod
     def legacy_construct(
@@ -173,6 +197,7 @@ class AppConfig:
         cdn_base_url = os.getenv("LAWIM_CDN_BASE_URL")
         public_base_url = os.getenv("PUBLIC_BASE_URL", "http://localhost:3000")
         app_env = os.getenv("APP_ENV", "development")
+        telegram_bot_token = _text_env("TELEGRAM_BOT_TOKEN")
         public_media_default = app_env in {"development", "test", "staging"}
         campay_environment = os.getenv("LAWIM_CAMPAY_ENVIRONMENT", "sandbox").strip().lower()
         campay_base_url = os.getenv("LAWIM_CAMPAY_BASE_URL", "").strip()
@@ -235,6 +260,16 @@ class AppConfig:
             campay_disbursement_enabled=_bool_env("LAWIM_CAMPAY_DISBURSEMENT_ENABLED", False),
             campay_dev_mode=_bool_env("LAWIM_CAMPAY_DEV_MODE", campay_dev_mode_default),
             campay_prod_mode=_bool_env("LAWIM_CAMPAY_PROD_MODE", campay_prod_mode_default),
+            green_api_api_url=_text_env("GREEN_API_API_URL"),
+            green_api_media_url=_text_env("GREEN_API_MEDIA_URL"),
+            green_api_id_instance=_text_env("GREEN_API_ID_INSTANCE"),
+            green_api_token_instance=_text_env("GREEN_API_TOKEN_INSTANCE"),
+            green_api_webhook_secret=_text_env("GREEN_API_WEBHOOK_SECRET"),
+            green_api_webhook_url=_text_env("GREEN_API_WEBHOOK_URL"),
+            green_api_phone=_text_env("GREEN_API_PHONE"),
+            telegram_webhook_secret=_text_env("TELEGRAM_WEBHOOK_SECRET")
+            or _telegram_webhook_secret_from_token(telegram_bot_token),
+            telegram_webhook_url=_text_env("TELEGRAM_WEBHOOK_URL"),
         )
 
     def validate(self) -> None:
@@ -287,6 +322,10 @@ class AppConfig:
                 errors.append("LAWIM_CAMPAY_MAX_RETRIES must be non-negative")
             if self.campay_status_check_interval < 5:
                 errors.append("LAWIM_CAMPAY_STATUS_CHECK_INTERVAL must be at least 5 seconds")
+        if bool(self.green_api_webhook_url) != bool(self.green_api_webhook_secret):
+            errors.append("GREEN_API_WEBHOOK_URL and GREEN_API_WEBHOOK_SECRET must be set together")
+        if bool(self.telegram_webhook_url) != bool(self.telegram_webhook_secret):
+            errors.append("TELEGRAM_WEBHOOK_URL and TELEGRAM_WEBHOOK_SECRET must be set together")
         if errors:
             raise ValueError("Invalid LAWIM_V2 configuration: " + "; ".join(errors))
 

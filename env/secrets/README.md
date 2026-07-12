@@ -19,6 +19,8 @@ Separer strictement les variables d'environnement non secretes et les secrets, d
 - les noms restent explicites, stables et en majuscules;
 - un secret correspond a une seule cle logique;
 - aucune cle sensible ne doit apparaitre dans un fichier versionne.
+- certaines integrations externes peuvent imposer des noms de variables dedies au fournisseur, par exemple `GREEN_API_TOKEN_INSTANCE` et `GREEN_API_WEBHOOK_SECRET`; dans ce cas, le secret reste injecte runtime et ne doit jamais etre commite en clair.
+- Telegram utilise egalement des variables dediees au fournisseur, par exemple `TELEGRAM_BOT_TOKEN` et `TELEGRAM_WEBHOOK_SECRET`; les memes regles de protection s'appliquent.
 
 ## Separation variables / secrets
 

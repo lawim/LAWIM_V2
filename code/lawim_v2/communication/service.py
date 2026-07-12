@@ -3,6 +3,25 @@ from __future__ import annotations
 from ..observability import METRICS
 from ..project_service import ProjectPermissionDenied, ProjectService
 from . import dto as cdto
+from .green_api import (
+    GREEN_API_MESSAGE_WEBHOOKS,
+    GREEN_API_SUPPORTED_WEBHOOKS,
+    build_event_key,
+    build_message_key,
+    map_message_status,
+    normalize_webhook_payload,
+    redact_headers,
+    summarize_for_log,
+)
+from .telegram_webhook import (
+    TELEGRAM_MESSAGE_UPDATE_TYPES,
+    TELEGRAM_SUPPORTED_UPDATE_TYPES,
+    build_event_key as build_telegram_event_key,
+    build_message_key as build_telegram_message_key,
+    normalize_webhook_payload as normalize_telegram_webhook_payload,
+    redact_headers as redact_telegram_headers,
+    summarize_for_log as summarize_telegram_for_log,
+)
 from .analytics import AnalyticsModule
 from .campaigns import CampaignsModule
 from .email import EmailModule
@@ -518,6 +537,306 @@ class CommunicationService:
         )
         METRICS.increment("communication_event_processed")
         return {"result": result}
+
+    def process_green_api_webhook(
+        self,
+        *,
+        payload: dict[str, object],
+        headers: dict[str, str],
+    ) -> dict[str, object]:
+        normalized = normalize_webhook_payload(payload)
+        type_webhook = str(normalized.get("type_webhook") or "unknown")
+        event_key = build_event_key(normalized)
+        message_key = build_message_key(normalized) if type_webhook in GREEN_API_MESSAGE_WEBHOOKS else None
+        duplicate = self.repository.one("SELECT 1 FROM communication_events WHERE event_key = ?", (event_key,)) is not None
+        safe_headers = redact_headers(headers)
+
+        if type_webhook not in GREEN_API_SUPPORTED_WEBHOOKS:
+            self.repository.create_communication_log(
+                level="warning",
+                message=f"Ignored unsupported Green API webhook: {type_webhook}",
+                payload={
+                    "webhook": summarize_for_log(normalized, duplicate=False, event_key=event_key, message_key=message_key),
+                    "headers": safe_headers,
+                },
+            )
+            METRICS.increment("communication_green_api_webhook_ignored_total")
+            return {"status": "ignored", "accepted": True, "typeWebhook": type_webhook, "duplicate": False}
+
+        message_row: dict[str, object] | None = None
+        desired_status = ""
+        if type_webhook == "incomingMessageReceived":
+            desired_status = "delivered"
+            message_row = self._upsert_green_api_message(
+                normalized=normalized,
+                message_key=message_key,
+                direction="inbound",
+                desired_status=desired_status,
+            )
+        elif type_webhook == "outgoingAPIMessageReceived":
+            desired_status = "sent"
+            message_row = self._upsert_green_api_message(
+                normalized=normalized,
+                message_key=message_key,
+                direction="outbound",
+                desired_status=desired_status,
+            )
+        elif type_webhook == "outgoingMessageStatus":
+            desired_status = map_message_status(str(normalized.get("status") or ""))
+            message_row = self._upsert_green_api_message(
+                normalized=normalized,
+                message_key=message_key,
+                direction="outbound",
+                desired_status=desired_status,
+                allow_empty_body=True,
+            )
+        event_row = self.repository.create_communication_event(
+            event_kind=type_webhook,
+            source_program="green_api",
+            payload=dict(normalized.get("raw_payload") or {}),
+            event_key=event_key,
+            message_id=int(message_row["id"]) if message_row else None,
+            metadata={
+                "webhook": summarize_for_log(normalized, duplicate=duplicate, event_key=event_key, message_key=message_key),
+                "headers": safe_headers,
+            },
+        )
+        log_message = (
+            f"Green API webhook processed: {type_webhook}"
+            if not duplicate
+            else f"Green API webhook duplicate ignored: {type_webhook}"
+        )
+        self.repository.create_communication_log(
+            level="info" if not duplicate else "debug",
+            message=log_message,
+            payload={
+                "webhook": summarize_for_log(normalized, duplicate=duplicate, event_key=event_key, message_key=message_key),
+                "event_id": int(event_row["id"]),
+                "message_id": int(message_row["id"]) if message_row else None,
+            },
+        )
+        METRICS.increment(
+            "communication_green_api_webhook_duplicate_total" if duplicate else "communication_green_api_webhook_received_total"
+        )
+        return {
+            "status": "ok",
+            "accepted": True,
+            "duplicate": duplicate,
+            "typeWebhook": type_webhook,
+            "event_id": int(event_row["id"]),
+            "message_id": int(message_row["id"]) if message_row else None,
+        }
+
+    def process_telegram_webhook(
+        self,
+        *,
+        payload: dict[str, object],
+        headers: dict[str, str],
+    ) -> dict[str, object]:
+        normalized = normalize_telegram_webhook_payload(payload)
+        update_type = str(normalized.get("update_type") or "unknown")
+        update_key = build_telegram_event_key(normalized)
+        message_key = build_telegram_message_key(normalized) if update_type in TELEGRAM_MESSAGE_UPDATE_TYPES else None
+        duplicate = self.repository.one("SELECT 1 FROM telegram_updates WHERE update_key = ?", (update_key,)) is not None
+        safe_headers = redact_telegram_headers(headers)
+
+        if update_type not in TELEGRAM_SUPPORTED_UPDATE_TYPES:
+            self.repository.create_communication_log(
+                level="warning",
+                message=f"Ignored unsupported Telegram update: {update_type}",
+                payload={
+                    "webhook": summarize_telegram_for_log(
+                        normalized,
+                        duplicate=False,
+                        event_key=update_key,
+                        message_key=message_key,
+                    ),
+                    "headers": safe_headers,
+                },
+            )
+            METRICS.increment("communication_telegram_webhook_ignored_total")
+            return {"status": "ignored", "accepted": True, "update_type": update_type, "duplicate": False}
+
+        self.repository.create_telegram_update(
+            update_key=update_key,
+            update_type=update_type,
+            payload=dict(normalized.get("raw_payload") or {}),
+            metadata={
+                "webhook": summarize_telegram_for_log(
+                    normalized,
+                    duplicate=duplicate,
+                    event_key=update_key,
+                    message_key=message_key,
+                ),
+                "headers": safe_headers,
+            },
+        )
+
+        message_row: dict[str, object] | None = None
+        if update_type in TELEGRAM_MESSAGE_UPDATE_TYPES:
+            message_row = self._upsert_telegram_message(
+                normalized=normalized,
+                message_key=message_key,
+                desired_status="delivered",
+            )
+        elif update_type in {"my_chat_member", "chat_member"}:
+            self.repository.create_communication_log(
+                level="info",
+                message=f"Telegram state update received: {update_type}",
+                payload={
+                    "webhook": summarize_telegram_for_log(
+                        normalized,
+                        duplicate=duplicate,
+                        event_key=update_key,
+                        message_key=message_key,
+                    ),
+                    "headers": safe_headers,
+                },
+            )
+
+        event_kind = {
+            "callback_query": "TelegramCallbackQuery",
+            "my_chat_member": "TelegramStateChanged",
+            "chat_member": "TelegramStateChanged",
+        }.get(update_type, "TelegramMessageReceived")
+        event_row = self.repository.create_communication_event(
+            event_kind=event_kind,
+            source_program="telegram",
+            payload=dict(normalized.get("raw_payload") or {}),
+            event_key=update_key,
+            message_id=int(message_row["id"]) if message_row else None,
+            metadata={
+                "webhook": summarize_telegram_for_log(
+                    normalized,
+                    duplicate=duplicate,
+                    event_key=update_key,
+                    message_key=message_key,
+                ),
+                "headers": safe_headers,
+            },
+        )
+        log_message = (
+            f"Telegram webhook processed: {update_type}"
+            if not duplicate
+            else f"Telegram webhook duplicate ignored: {update_type}"
+        )
+        self.repository.create_communication_log(
+            level="info" if not duplicate else "debug",
+            message=log_message,
+            payload={
+                "webhook": summarize_telegram_for_log(
+                    normalized,
+                    duplicate=duplicate,
+                    event_key=update_key,
+                    message_key=message_key,
+                ),
+                "event_id": int(event_row["id"]),
+                "update_id": normalized.get("update_id"),
+                "message_id": int(message_row["id"]) if message_row else None,
+            },
+        )
+        METRICS.increment(
+            "communication_telegram_webhook_duplicate_total"
+            if duplicate
+            else "communication_telegram_webhook_received_total"
+        )
+        return {
+            "status": "ok",
+            "accepted": True,
+            "duplicate": duplicate,
+            "update_type": update_type,
+            "event_id": int(event_row["id"]),
+            "update_id": normalized.get("update_id"),
+            "message_id": int(message_row["id"]) if message_row else None,
+        }
+
+    def _upsert_green_api_message(
+        self,
+        *,
+        normalized: dict[str, object],
+        message_key: str | None,
+        direction: str,
+        desired_status: str,
+        allow_empty_body: bool = False,
+    ) -> dict[str, object]:
+        body = str(normalized.get("message_body") or "")
+        subject = str(normalized.get("sender_name") or normalized.get("chat_id") or "Green API WhatsApp")
+        payload = dict(normalized.get("raw_payload") or {})
+        message = self.repository.create_communication_message(
+            channel_type="whatsapp",
+            body=body,
+            subject=subject,
+            direction=direction,
+            status=desired_status,
+            message_key=message_key,
+            payload=payload,
+        )
+        current_status = str(message.get("status") or "")
+        current_body = str(message.get("body") or "")
+        updates: dict[str, object] = {}
+        if body and body != current_body:
+            updates["body"] = body
+            updates["payload"] = payload
+        if not allow_empty_body and not body and current_body:
+            updates["body"] = current_body
+        if desired_status and current_status != desired_status:
+            if self._can_promote_green_api_status(current_status, desired_status):
+                updates["status"] = desired_status
+        if updates:
+            message = self.repository.update_communication_message(int(message["id"]), **updates)
+        return message
+
+    def _upsert_telegram_message(
+        self,
+        *,
+        normalized: dict[str, object],
+        message_key: str | None,
+        desired_status: str,
+        allow_empty_body: bool = False,
+    ) -> dict[str, object]:
+        body = str(normalized.get("message_body") or "")
+        if not body:
+            body = str(normalized.get("callback_data") or "")
+        subject = str(normalized.get("full_name") or normalized.get("username") or normalized.get("chat_id") or "Telegram Update")
+        payload = dict(normalized.get("raw_payload") or {})
+        message = self.repository.create_communication_message(
+            channel_type="telegram",
+            body=body,
+            subject=subject,
+            direction="inbound",
+            status=desired_status,
+            message_key=message_key,
+            payload=payload,
+        )
+        current_status = str(message.get("status") or "")
+        current_body = str(message.get("body") or "")
+        updates: dict[str, object] = {}
+        if body and body != current_body:
+            updates["body"] = body
+            updates["payload"] = payload
+        if not allow_empty_body and not body and current_body:
+            updates["body"] = current_body
+        if desired_status and current_status != desired_status:
+            if self._can_promote_green_api_status(current_status, desired_status):
+                updates["status"] = desired_status
+        if updates:
+            message = self.repository.update_communication_message(int(message["id"]), **updates)
+        return message
+
+    @staticmethod
+    def _can_promote_green_api_status(current_status: str, desired_status: str) -> bool:
+        order = {
+            "draft": 0,
+            "queued": 1,
+            "sending": 2,
+            "sent": 3,
+            "delivered": 4,
+            "failed": 5,
+            "cancelled": 5,
+            "expired": 5,
+            "archived": 6,
+        }
+        return order.get(desired_status, 0) >= order.get(current_status, 0)
 
     def seed_catalog(self, *, actor: dict[str, object]) -> dict[str, object]:
         self._require_admin(actor)

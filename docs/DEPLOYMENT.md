@@ -99,6 +99,8 @@ Production deployment includes:
 - `CAMPAY_API_KEY`: Payment gateway credentials
 - `SMTP_SERVER`, `SMTP_USER`, `SMTP_PASSWORD`: Email configuration
 - `WHATSAPP_API_KEY`: WhatsApp Business API credentials
+- `GREEN_API_API_URL`, `GREEN_API_MEDIA_URL`, `GREEN_API_ID_INSTANCE`, `GREEN_API_TOKEN_INSTANCE`, `GREEN_API_WEBHOOK_SECRET`, `GREEN_API_WEBHOOK_URL`, `GREEN_API_PHONE`: Green API webhook and instance settings
+- `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET`, `TELEGRAM_WEBHOOK_URL`: Telegram bot webhook settings
 
 **Backup:**
 - `BACKUP_LOCAL_PATH`: Local backup directory

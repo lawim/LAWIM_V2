@@ -28,6 +28,8 @@ from .multipart import parse_multipart_form_data
 from .observability import METRICS
 from .rate_limit import AuthRateLimiter
 from .services import LawimServices, ServiceError
+from .communication.green_api import validate_webhook_authorization
+from .communication.telegram_webhook import validate_webhook_authorization as validate_telegram_webhook_authorization
 from .user_roles import USER_ROLE_VALUES
 from .project_service import ProjectPermissionDenied
 
@@ -204,6 +206,12 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             if "application/json" not in content_type.lower():
                 raise ApiError(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, "unsupported_media_type", "Campay webhook must use application/json")
             self._handle_v2_financial_campay_webhook(raw_body)
+            return
+        if parsed.path == "/api/notifications/whatsapp/webhook":
+            self._handle_green_api_webhook()
+            return
+        if parsed.path == "/api/notifications/telegram/webhook":
+            self._handle_telegram_webhook()
             return
         if parsed.path == "/api/media/upload" and "multipart/form-data" in self.headers.get("Content-Type", "").lower():
             self._handle_multipart_media_upload(parsed)
@@ -2487,6 +2495,56 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             headers={k: str(v) for k, v in self.headers.items()},
         )
         self._send_json(result, status=HTTPStatus.ACCEPTED)
+
+    def _handle_green_api_webhook(self) -> None:
+        authorization = self.headers.get("Authorization")
+        if not authorization:
+            raise ApiError(HTTPStatus.UNAUTHORIZED, "missing_token", "Green API webhook token required")
+        if not validate_webhook_authorization(authorization, self.config.green_api_webhook_secret):
+            raise ApiError(HTTPStatus.UNAUTHORIZED, "invalid_token", "Valid Green API webhook token required")
+        content_type = self.headers.get("Content-Type", "")
+        if "application/json" not in content_type.lower():
+            raise ApiError(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, "unsupported_media_type", "Green API webhook must use application/json")
+        raw_body = self._read_raw_body(max_bytes=self.config.max_json_body_bytes)
+        if not raw_body:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_json", "Request body must be valid JSON")
+        try:
+            payload = json.loads(raw_body.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_json", "Request body must be valid JSON") from exc
+        if not isinstance(payload, dict):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_json", "Request body must be a JSON object")
+        result = self.services.communication.process_green_api_webhook(
+            payload=payload,
+            headers={k: str(v) for k, v in self.headers.items()},
+        )
+        self._send_json(result, status=HTTPStatus.OK)
+
+    def _handle_telegram_webhook(self) -> None:
+        if not self.config.telegram_webhook_secret:
+            raise ApiError(HTTPStatus.SERVICE_UNAVAILABLE, "webhook_not_configured", "Telegram webhook is not configured")
+        secret_token = self.headers.get("X-Telegram-Bot-Api-Secret-Token")
+        if not secret_token:
+            raise ApiError(HTTPStatus.UNAUTHORIZED, "missing_token", "Telegram webhook token required")
+        if not validate_telegram_webhook_authorization(secret_token, self.config.telegram_webhook_secret):
+            raise ApiError(HTTPStatus.UNAUTHORIZED, "invalid_token", "Valid Telegram webhook token required")
+        content_type = self.headers.get("Content-Type", "")
+        if "application/json" not in content_type.lower():
+            raise ApiError(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, "unsupported_media_type", "Telegram webhook must use application/json")
+        raw_body = self._read_raw_body(max_bytes=self.config.max_json_body_bytes)
+        if not raw_body:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_json", "Request body must be valid JSON")
+        try:
+            payload = json.loads(raw_body.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_json", "Request body must be valid JSON") from exc
+        if not isinstance(payload, dict):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_json", "Request body must be a JSON object")
+        result = self.services.communication.process_telegram_webhook(
+            payload=payload,
+            headers={k: str(v) for k, v in self.headers.items()},
+        )
+        self._send_json(result, status=HTTPStatus.OK)
 
     def _handle_v2_marketplace_get(self, path: str, query: dict[str, list[str]]) -> None:
         if path == "/api/v2/marketplace/integrations":

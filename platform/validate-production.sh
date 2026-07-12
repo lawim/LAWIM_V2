@@ -34,6 +34,16 @@ export LAWIM_DB_FALLBACK="${LAWIM_DB_FALLBACK:-false}"
 export LAWIM_PUBLIC_MEDIA="${LAWIM_PUBLIC_MEDIA:-false}"
 export LAWIM_DATABASE_URL="${LAWIM_DATABASE_URL:-postgresql://lawim:lawim@postgres:5432/lawim_v2}"
 export PUBLIC_BASE_URL="${PUBLIC_BASE_URL:-https://lawim.example}"
+export GREEN_API_API_URL="${GREEN_API_API_URL:-https://7107.api.greenapi.com}"
+export GREEN_API_MEDIA_URL="${GREEN_API_MEDIA_URL:-https://7107.api.greenapi.com}"
+export GREEN_API_ID_INSTANCE="${GREEN_API_ID_INSTANCE:-7107644927}"
+export GREEN_API_TOKEN_INSTANCE="${GREEN_API_TOKEN_INSTANCE:-green-api-token-instance-placeholder}"
+export GREEN_API_WEBHOOK_SECRET="${GREEN_API_WEBHOOK_SECRET:-green-api-webhook-secret-placeholder}"
+export GREEN_API_WEBHOOK_URL="${GREEN_API_WEBHOOK_URL:-https://api.lawim.app/api/notifications/whatsapp/webhook}"
+export GREEN_API_PHONE="${GREEN_API_PHONE:-237650000000}"
+export TELEGRAM_BOT_TOKEN="${TELEGRAM_BOT_TOKEN:-telegram-bot-token-placeholder}"
+export TELEGRAM_WEBHOOK_SECRET="${TELEGRAM_WEBHOOK_SECRET:-telegram-webhook-secret-placeholder}"
+export TELEGRAM_WEBHOOK_URL="${TELEGRAM_WEBHOOK_URL:-https://api.lawim.app/api/notifications/telegram/webhook}"
 
 check "APP_ENV is production" test "${APP_ENV}" = "production"
 check "PUBLIC_BASE_URL uses https" bash -c '[[ "${PUBLIC_BASE_URL}" == https://* ]]'
@@ -46,7 +56,11 @@ export PYTHONPATH="${code_dir}${PYTHONPATH:+:${PYTHONPATH}}"
 check "production AppConfig validates" python3 - <<'PY'
 from pathlib import Path
 import os
+from hashlib import sha256
 from lawim_v2.config import AppConfig
+
+telegram_bot_token = os.environ["TELEGRAM_BOT_TOKEN"]
+telegram_webhook_secret = os.environ.get("TELEGRAM_WEBHOOK_SECRET") or sha256(telegram_bot_token.encode("utf-8")).hexdigest()
 
 config = AppConfig(
     host="0.0.0.0",
@@ -75,6 +89,15 @@ config = AppConfig(
     auth_rate_limit_max=30,
     auth_rate_limit_window_seconds=300,
     public_media=False,
+    green_api_api_url=os.environ["GREEN_API_API_URL"],
+    green_api_media_url=os.environ["GREEN_API_MEDIA_URL"],
+    green_api_id_instance=os.environ["GREEN_API_ID_INSTANCE"],
+    green_api_token_instance=os.environ["GREEN_API_TOKEN_INSTANCE"],
+    green_api_webhook_secret=os.environ["GREEN_API_WEBHOOK_SECRET"],
+    green_api_webhook_url=os.environ["GREEN_API_WEBHOOK_URL"],
+    green_api_phone=os.environ["GREEN_API_PHONE"],
+    telegram_webhook_secret=telegram_webhook_secret,
+    telegram_webhook_url=os.environ["TELEGRAM_WEBHOOK_URL"],
 )
 config.validate()
 PY

@@ -26,6 +26,11 @@ describe('Deployment Platform', () => {
         'REDIS_PASSWORD',
         'JWT_SECRET',
         'CAMPAY_API_KEY',
+        'GREEN_API_TOKEN_INSTANCE',
+        'GREEN_API_WEBHOOK_SECRET',
+        'TELEGRAM_BOT_TOKEN',
+        'TELEGRAM_WEBHOOK_SECRET',
+        'TELEGRAM_WEBHOOK_URL',
         'SMTP_PASSWORD'
       ];
       

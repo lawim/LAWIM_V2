@@ -110,7 +110,7 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
         self.assertEqual(FACEBOOK_USERNAME, "@lawimofficial")
 
     def test_telegram_bot_constant(self) -> None:
-        self.assertEqual(TELEGRAM_BOT, "@lawim_assistant_bot")
+        self.assertEqual(TELEGRAM_BOT, "@lawim_bot")
 
     def test_whatsapp_username_constant(self) -> None:
         self.assertEqual(WHATSAPP_USERNAME, "@lawimofficial")
@@ -134,7 +134,7 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
         self.assertEqual(to_public_dict()["phone_number"], "686 822 667")
 
     def test_to_public_dict_telegram(self) -> None:
-        self.assertEqual(to_public_dict()["telegram_bot"], "@lawim_assistant_bot")
+        self.assertEqual(to_public_dict()["telegram_bot"], "@lawim_bot")
 
     def test_to_public_dict_brand_subslogan_is_removed(self) -> None:
         self.assertEqual(to_public_dict()["brand_subslogan"], "")
@@ -143,7 +143,7 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
         self.assertTrue(whatsapp_link().startswith("https://wa.me/237686822667"))
 
     def test_telegram_link_format(self) -> None:
-        self.assertEqual(telegram_link(), "https://t.me/lawim_assistant_bot")
+        self.assertEqual(telegram_link(), "https://t.me/lawim_bot")
 
     def test_facebook_link_format(self) -> None:
         self.assertEqual(facebook_link(), "https://facebook.com/lawimofficial")
@@ -152,7 +152,7 @@ class ReleaseProgramHContactNormalizationTests(LawimTestHarness):
         self.assertIn("686 822 667", official_signature_block())
 
     def test_official_signature_contains_telegram(self) -> None:
-        self.assertIn("@lawim_assistant_bot", official_signature_block())
+        self.assertIn("@lawim_bot", official_signature_block())
 
     def test_official_signature_omits_old_slogan(self) -> None:
         self.assertNotIn("EN TOUTE CONFIANCE", official_signature_block())
@@ -1276,10 +1276,10 @@ class ReleaseProgramHUiTests(LawimTestHarness):
 class ReleaseProgramHHealthTests(LawimTestHarness):
     def test_health_schema_v14(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 18)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 19)
 
     def test_migration_strategy_v14(self) -> None:
-        self.assertEqual(migration_strategy_profile()["schema_version"], 18)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 19)
 
     def test_metrics_include_crm_counters(self) -> None:
         token = self.login(email="agent@lawim.local")

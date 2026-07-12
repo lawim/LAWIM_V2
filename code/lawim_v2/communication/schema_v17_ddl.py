@@ -677,7 +677,7 @@ CREATE TABLE IF NOT EXISTS telegram_bots (
     status TEXT NOT NULL DEFAULT 'active',
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
-    bot_handle TEXT NOT NULL DEFAULT '@lawim_assistant_bot',
+    bot_handle TEXT NOT NULL DEFAULT '@lawim_bot',
     bot_token_ref TEXT NOT NULL DEFAULT '',
     config_json TEXT NOT NULL DEFAULT '{}',
     updated_at TEXT NOT NULL
@@ -1940,7 +1940,7 @@ CREATE TABLE IF NOT EXISTS telegram_bots (
     status TEXT NOT NULL DEFAULT 'active',
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
-    bot_handle TEXT NOT NULL DEFAULT '@lawim_assistant_bot',
+    bot_handle TEXT NOT NULL DEFAULT '@lawim_bot',
     bot_token_ref TEXT NOT NULL DEFAULT '',
     config_json TEXT NOT NULL DEFAULT '{}',
     updated_at TEXT NOT NULL

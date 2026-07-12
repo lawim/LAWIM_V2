@@ -39,6 +39,20 @@ def _parse_json(value: str | None) -> Any:
         return None
 
 
+def _normalize_message_key(value: str | None) -> str | None:
+    if value is None:
+        return None
+    stripped = value.strip()
+    return stripped or None
+
+
+def _normalize_event_key(value: str | None) -> str | None:
+    if value is None:
+        return None
+    stripped = value.strip()
+    return stripped or None
+
+
 class CommunicationRepositoryMixin:
     def communication_tables_present(self) -> bool:
         return table_exists(self, "communication_channels")
@@ -137,6 +151,7 @@ class CommunicationRepositoryMixin:
         direction: str = "outbound",
         priority: str = "normal",
         status: str = "draft",
+        message_key: str | None = None,
         sender_user_id: int | None = None,
         recipient_user_id: int | None = None,
         contact_id: int | None = None,
@@ -152,11 +167,11 @@ class CommunicationRepositoryMixin:
         if status not in MESSAGE_STATUSES:
             status = "draft"
         now = _utcnow()
-        key = f"msg-{uuid.uuid4().hex[:12]}"
+        key = _normalize_message_key(message_key) or f"msg-{uuid.uuid4().hex[:12]}"
         with self._transaction() as conn:
             conn.execute(
                 """
-                INSERT INTO communication_messages (
+                INSERT OR IGNORE INTO communication_messages (
                     message_key, thread_id, channel_type, direction, priority, status,
                     sender_user_id, recipient_user_id, contact_id, organization_id,
                     subject, body, payload_json, scheduled_at, created_at, updated_at
@@ -182,6 +197,100 @@ class CommunicationRepositoryMixin:
                 ),
             )
         return dict(self.one("SELECT * FROM communication_messages WHERE message_key = ?", (key,)))
+
+    def create_communication_event(
+        self,
+        *,
+        event_kind: str,
+        source_program: str = "platform",
+        payload: dict[str, Any] | None = None,
+        event_key: str | None = None,
+        message_id: int | None = None,
+        metadata: dict[str, Any] | None = None,
+        status: str = "active",
+    ) -> dict[str, object]:
+        now = _utcnow()
+        key = _normalize_event_key(event_key) or f"evt-{uuid.uuid4().hex[:10]}"
+        with self._transaction() as conn:
+            conn.execute(
+                """
+                INSERT OR IGNORE INTO communication_events (
+                    event_key, status, metadata_json, created_at, event_kind, source_program, payload_json, message_id
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    key,
+                    status,
+                    _json(metadata or {}),
+                    now,
+                    event_kind,
+                    source_program,
+                    _json(payload or {}),
+                    message_id,
+                ),
+            )
+        return dict(self.one("SELECT * FROM communication_events WHERE event_key = ?", (key,)))
+
+    def create_communication_log(
+        self,
+        *,
+        level: str = "info",
+        message: str,
+        payload: dict[str, Any] | None = None,
+        message_id: int | None = None,
+    ) -> dict[str, object]:
+        now = _utcnow()
+        key = f"log-{uuid.uuid4().hex[:10]}"
+        with self._transaction() as conn:
+            conn.execute(
+                """
+                INSERT INTO communication_logs (
+                    log_key, status, metadata_json, created_at, message_id, level, message, payload_json
+                ) VALUES (?, 'active', ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    key,
+                    _json({"level": level}),
+                    now,
+                    message_id,
+                    level,
+                    message,
+                    _json(payload or {}),
+                ),
+        )
+        return dict(self.one("SELECT * FROM communication_logs WHERE log_key = ?", (key,)))
+
+    def create_telegram_update(
+        self,
+        *,
+        update_key: str,
+        update_type: str,
+        payload: dict[str, Any] | None = None,
+        bot_id: int | None = None,
+        metadata: dict[str, Any] | None = None,
+        received_at: str | None = None,
+    ) -> dict[str, object]:
+        now = received_at or _utcnow()
+        key = _normalize_event_key(update_key) or f"tgupd-{uuid.uuid4().hex[:10]}"
+        with self._transaction() as conn:
+            conn.execute(
+                """
+                INSERT OR IGNORE INTO telegram_updates (
+                    update_key, status, metadata_json, created_at, bot_id, update_type, payload_json, received_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    key,
+                    "active",
+                    _json(metadata or {}),
+                    now,
+                    bot_id,
+                    update_type,
+                    _json(payload or {}),
+                    now,
+                ),
+            )
+        return dict(self.one("SELECT * FROM telegram_updates WHERE update_key = ?", (key,)))
 
     def get_communication_message(self, message_id: int) -> dict[str, object]:
         row = self.one("SELECT * FROM communication_messages WHERE id = ?", (message_id,))
@@ -211,10 +320,12 @@ class CommunicationRepositoryMixin:
         return [dict(r) for r in self.all(query, tuple(params))]
 
     def update_communication_message(self, message_id: int, **fields: object) -> dict[str, object]:
-        allowed = {"status", "priority", "body", "subject", "scheduled_at", "sent_at", "metadata_json"}
+        allowed = {"status", "priority", "body", "subject", "scheduled_at", "sent_at", "metadata_json", "payload_json"}
         updates = {k: v for k, v in fields.items() if k in allowed and v is not None}
         if "metadata" in fields and fields["metadata"] is not None:
             updates["metadata_json"] = _json(fields["metadata"])
+        if "payload" in fields and fields["payload"] is not None:
+            updates["payload_json"] = _json(fields["payload"])
         if not updates:
             return self.get_communication_message(message_id)
         updates["updated_at"] = _utcnow()
