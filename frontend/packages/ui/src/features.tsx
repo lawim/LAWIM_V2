@@ -17,6 +17,7 @@ export type FeatureKey =
   | 'calendar'
   | 'estimations'
   | 'marketplace'
+  | 'financial_core'
   | 'admin_supervision'
   | 'admin_security'
   | 'admin_users'
@@ -43,6 +44,7 @@ const DEFAULT_FEATURES: FeatureConfig = {
   calendar: true,
   estimations: true,
   marketplace: true,
+  financial_core: true,
   admin_supervision: true,
   admin_security: true,
   admin_users: true,
@@ -66,6 +68,7 @@ const FEATURE_LABELS: Record<FeatureKey, string> = {
   calendar: '📅 Calendrier',
   estimations: '💰 Estimations',
   marketplace: '🏪 Marketplace',
+  financial_core: '💳 Financial Core',
   admin_supervision: '🟢 Supervision',
   admin_security: '🔐 Sécurité',
   admin_users: '👥 Utilisateurs',

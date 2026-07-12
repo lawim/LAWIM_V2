@@ -48,6 +48,7 @@ import { GoogleDriveCredentialsPage } from './GoogleDriveCredentialsPage';
 import { GoogleDriveSecurityPage } from './GoogleDriveSecurityPage';
 import { BackupCockpitPage } from './BackupCockpitPage';
 import { DisasterRecoveryPage } from './DisasterRecoveryPage';
+import { FinancialOperationsPage } from './FinancialOperationsPage';
 
 const navItems = [
   { to: '/', label: 'Dashboard' },
@@ -63,6 +64,7 @@ const navItems = [
   { to: '/deployment', label: 'Deployment' },
   { to: '/admin/infrastructure/backups', label: 'Backup' },
   { to: '/admin/disaster-recovery', label: 'Disaster Recovery' },
+  { to: '/admin/financial', label: 'Financial' },
   { to: '/admin/storage-resources', label: 'Storage Resources' },
   { to: '/admin/google-drive-admin-center', label: 'Drive Center' },
   { to: '/admin/credential-vault', label: 'Credential Vault' },
@@ -312,6 +314,7 @@ export function AdminApp() {
         <Route path="/backup" element={<BackupPage />} />
         <Route path="/admin/infrastructure/backups" element={<BackupCockpitPage />} />
         <Route path="/admin/disaster-recovery" element={<DisasterRecoveryPage />} />
+        <Route path="/admin/financial" element={<FinancialOperationsPage />} />
         <Route path="/admin/storage-resources" element={<StorageResourcesPage />} />
         <Route path="/admin/google-drive-admin-center" element={<GoogleDriveRegistryPage />} />
         <Route path="/admin/google-drive-registry" element={<GoogleDriveRegistryPage />} />

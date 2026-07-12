@@ -404,4 +404,186 @@ describe('apiSdk', () => {
     });
     setApiBaseForTesting(null);
   });
+
+  it('targets the financial core endpoints for catalog, pricing, quotes, invoices and payment intents', async () => {
+    testEnv.VITE_LAWIM_USE_MOCKS = 'false';
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith('/api/v2/financial/catalog/products?status=active&limit=2')) {
+        return createJsonResponse({ products: [{ id: 1, code: 'FIN-001', name: 'Finance', status: 'active' }] });
+      }
+
+      if (url.endsWith('/api/v2/financial/pricing/calculate')) {
+        expect(JSON.parse(String(init?.body))).toMatchObject({
+          currency: 'XAF',
+          discount_minor: 100,
+          fee_minor: 50
+        });
+        return createJsonResponse({
+          subtotal_minor: 2500,
+          discount_minor: 100,
+          fee_minor: 50,
+          tax_minor: 0,
+          total_minor: 2450,
+          currency: 'XAF',
+          lines: [{ description: 'Service', quantity: 1, unit_price_minor: 2500 }]
+        });
+      }
+
+      if (url.endsWith('/api/v2/financial/quotes')) {
+        return createJsonResponse({
+          id: 11,
+          number: 'DEV-2026-000011',
+          status: 'ISSUED',
+          currency: 'XAF',
+          total_minor: 2500,
+          lines: [{ description: 'Service', quantity: 1, unit_price_minor: 2500 }]
+        }, 201);
+      }
+
+      if (url.endsWith('/api/v2/financial/payments/intents')) {
+        expect(JSON.parse(String(init?.body))).toMatchObject({
+          invoice_id: 44,
+          provider_code: 'CAMPAY',
+          initiate: true
+        });
+        return createJsonResponse({
+          id: 77,
+          number: 'PAY-2026-000077',
+          status: 'PENDING',
+          amount_minor: 2500,
+          currency: 'XAF',
+          provider_code: 'CAMPAY',
+          phone_number_e164: '+237677000111'
+        }, 201);
+      }
+
+      if (url.endsWith('/api/v2/financial/payments/intents/77/status')) {
+        return createJsonResponse({
+          payment_intent: { id: 77, number: 'PAY-2026-000077', status: 'SUCCEEDED' },
+          provider_status: { status: 'SUCCESSFUL', provider_reference: 'campay-77' }
+        });
+      }
+
+      if (url.endsWith('/api/v2/financial/receipts?limit=2')) {
+        return createJsonResponse({ receipts: [{ id: 3, number: 'REC-2026-000003', status: 'GENERATED', currency: 'XAF', amount_minor: 2500 }] });
+      }
+
+      if (url.endsWith('/api/v2/financial/subscriptions?limit=2')) {
+        return createJsonResponse({ subscriptions: [{ id: 4, status: 'ACTIVE', customer_user_id: 1, plan_id: 2, renewal_mode: 'automatic' }] });
+      }
+
+      throw new Error(`Unexpected request: ${url}`);
+    });
+
+    const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
+    setApiBaseForTesting('https://api.lawim.app');
+
+    const products = await apiSdk.listFinancialProducts({ status: 'active', limit: 2 });
+    const pricing = await apiSdk.calculatePrice({
+      line_items: [{ description: 'Service', quantity: 1, unit_price_minor: 2500 }],
+      discount_minor: 100,
+      fee_minor: 50,
+      tax_rate_bps: 0,
+      currency: 'XAF'
+    });
+    const quote = await apiSdk.createQuote({ customer_user_id: 1, lines: [{ description: 'Service', quantity: 1, unit_price_minor: 2500 }], currency: 'XAF' });
+    const intent = await apiSdk.createPaymentIntent({
+      invoice_id: 44,
+      amount_minor: 2500,
+      currency: 'XAF',
+      provider_code: 'CAMPAY',
+      channel: 'mobile_money',
+      phone_number_e164: '+237677000111',
+      initiate: true,
+      idempotency_key: 'intent-77'
+    });
+    const status = await apiSdk.getPaymentStatus(77);
+    const receipts = await apiSdk.listReceipts({ limit: 2 });
+    const subscriptions = await apiSdk.listSubscriptions({ limit: 2 });
+
+    expect(fetchMock).toHaveBeenCalledTimes(7);
+    expect(fetchMock.mock.calls[0][0]).toBe('https://api.lawim.app/api/v2/financial/catalog/products?status=active&limit=2');
+    expect(fetchMock.mock.calls[1][0]).toBe('https://api.lawim.app/api/v2/financial/pricing/calculate');
+    expect(fetchMock.mock.calls[2][0]).toBe('https://api.lawim.app/api/v2/financial/quotes');
+    expect(fetchMock.mock.calls[3][0]).toBe('https://api.lawim.app/api/v2/financial/payments/intents');
+    expect(fetchMock.mock.calls[4][0]).toBe('https://api.lawim.app/api/v2/financial/payments/intents/77/status');
+    expect(fetchMock.mock.calls[5][0]).toBe('https://api.lawim.app/api/v2/financial/receipts?limit=2');
+    expect(fetchMock.mock.calls[6][0]).toBe('https://api.lawim.app/api/v2/financial/subscriptions?limit=2');
+    expect(products.data[0].code).toBe('FIN-001');
+    expect(pricing.data.total_minor).toBe(2450);
+    expect(quote.data.status).toBe('ISSUED');
+    expect(intent.data.number).toBe('PAY-2026-000077');
+    expect(status.data.payment_intent).toBeDefined();
+    expect(receipts.data[0].number).toBe('REC-2026-000003');
+    expect(subscriptions.data[0].status).toBe('ACTIVE');
+    setApiBaseForTesting(null);
+  });
+
+  it('targets the admin financial endpoints for provider health and reconciliation', async () => {
+    testEnv.VITE_LAWIM_USE_MOCKS = 'false';
+
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith('/api/v2/financial/providers/health')) {
+        return createJsonResponse({
+          code: 'CAMPAY',
+          name: 'Campay',
+          status: 'active',
+          environment: 'sandbox',
+          available: true,
+          details: { supports_collection: true }
+        });
+      }
+
+      if (url.endsWith('/api/v2/financial/reconciliation?status=CONFLICT&limit=5')) {
+        return createJsonResponse({ records: [{ id: 9, status: 'CONFLICT', conflict_type: 'amount_mismatch', currency: 'XAF' }] });
+      }
+
+      if (url.endsWith('/api/v2/financial/reconciliation/9/resolve')) {
+        expect(JSON.parse(String(init?.body))).toMatchObject({
+          status: 'RESOLVED',
+          resolution_note: 'Checked in admin cockpit'
+        });
+        return createJsonResponse({ id: 9, status: 'RESOLVED', conflict_type: 'amount_mismatch', currency: 'XAF' });
+      }
+
+      if (url.endsWith('/api/v2/financial/refunds?limit=3')) {
+        return createJsonResponse({ refunds: [{ id: 5, number: 'AVR-2026-000005', status: 'APPROVED', amount_minor: 300, currency: 'XAF' }] });
+      }
+
+      if (url.endsWith('/api/v2/financial/commissions?limit=3')) {
+        return createJsonResponse({ commissions: [{ id: 6, status: 'CALCULATED', amount_minor: 300, currency: 'XAF' }] });
+      }
+
+      if (url.endsWith('/api/v2/financial/provider-events?limit=3')) {
+        return createJsonResponse({ provider_events: [{ id: 7, provider_code: 'CAMPAY', event_type: 'webhook', provider_event_id: 'evt-7', status: 'RECEIVED' }] });
+      }
+
+      throw new Error(`Unexpected request: ${url}`);
+    });
+
+    const { apiSdk, setApiBaseForTesting } = await loadApiSdkModule();
+    setApiBaseForTesting('https://api.lawim.app');
+
+    const health = await apiSdk.adminGetProviderHealth();
+    const conflicts = await apiSdk.adminListReconciliationConflicts({ status: 'CONFLICT', limit: 5 });
+    const resolved = await apiSdk.adminResolveReconciliation(9, { status: 'RESOLVED', resolution_note: 'Checked in admin cockpit' });
+    const refunds = await apiSdk.adminListRefunds({ limit: 3 });
+    const commissions = await apiSdk.adminListCommissions({ limit: 3 });
+    const events = await apiSdk.adminListProviderEvents({ limit: 3 });
+
+    expect(fetchMock).toHaveBeenCalledTimes(6);
+    expect(fetchMock.mock.calls[0][0]).toBe('https://api.lawim.app/api/v2/financial/providers/health');
+    expect(fetchMock.mock.calls[1][0]).toBe('https://api.lawim.app/api/v2/financial/reconciliation?status=CONFLICT&limit=5');
+    expect(fetchMock.mock.calls[2][0]).toBe('https://api.lawim.app/api/v2/financial/reconciliation/9/resolve');
+    expect(health.data.available).toBe(true);
+    expect(conflicts.data[0].status).toBe('CONFLICT');
+    expect(resolved.data.status).toBe('RESOLVED');
+    expect(refunds.data[0].number).toBe('AVR-2026-000005');
+    expect(commissions.data[0].status).toBe('CALCULATED');
+    expect(events.data[0].provider_event_id).toBe('evt-7');
+    setApiBaseForTesting(null);
+  });
 });

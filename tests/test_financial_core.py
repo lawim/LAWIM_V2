@@ -1,12 +1,17 @@
 from __future__ import annotations
 
+from dataclasses import replace
+import hmac
+import json
 import os
 import sqlite3
 import tempfile
 import unittest
 import uuid
 from http import HTTPStatus
+from hashlib import sha256
 from pathlib import Path
+from unittest.mock import patch
 
 from lawim_v2.errors import ValidationError
 from lawim_v2.persistence import APPLICATION_SCHEMA_VERSION
@@ -16,11 +21,11 @@ from lawim_v2.financial.exceptions import (
     CommissionAlreadyPaid,
     InvoiceAlreadyPaid,
     PaymentAlreadyProcessed,
-    PaymentProviderUnavailable,
     RefundAmountExceeded,
     SubscriptionAlreadyRenewed,
 )
 from lawim_v2.financial.providers.campay import CampayProviderAdapter
+from lawim_v2.services import LawimServices
 
 from tests.lawim_harness import LawimTestHarness
 
@@ -297,8 +302,202 @@ class FinancialCoreCampayScaffoldTests(LawimTestHarness):
         self.assertEqual(health["code"], "CAMPAY")
         self.assertFalse(health["available"])
         self.assertFalse(adapter.validate_webhook(headers={}, payload=b"{}"))
-        with self.assertRaises(PaymentProviderUnavailable):
-            adapter.authenticate()
+        auth = adapter.authenticate()
+        self.assertFalse(auth["ok"])
+        self.assertEqual(auth["status"], "FAILED")
+        self.assertEqual(auth["error_code"], "campay_error")
+
+
+class FinancialCoreCampayBehaviorTests(LawimTestHarness):
+    def test_campay_authentication_caches_token_and_creates_payments(self) -> None:
+        config = replace(
+            self.config,
+            campay_enabled=True,
+            campay_app_username="campay-user",
+            campay_app_password="campay-pass",
+            campay_webhook_secret="campay-webhook-secret",
+        )
+        adapter = CampayProviderAdapter(config)
+
+        with patch.object(
+            CampayProviderAdapter,
+            "_request_json",
+            side_effect=[
+                {"ok": True, "payload": {"token": "campay-token-1", "expires_in": 3600}},
+                {"ok": True, "payload": {"reference": "campay-ref-001", "status": "PENDING"}},
+            ],
+        ) as request_json:
+            auth_1 = adapter.authenticate()
+            auth_2 = adapter.authenticate()
+            payment = adapter.create_payment(
+                payload={
+                    "amount_minor": 2_500,
+                    "currency": "XAF",
+                    "phone_number_e164": "+237677000111",
+                    "description": "LAWIM validation",
+                    "external_reference": "LAWIM-INTENT-001",
+                }
+            )
+
+        self.assertTrue(auth_1["ok"])
+        self.assertTrue(auth_2["ok"])
+        self.assertEqual(request_json.call_count, 2)
+        self.assertEqual(payment["status"], "PENDING")
+        self.assertEqual(payment["provider_reference"], "campay-ref-001")
+
+    @patch.object(
+        CampayProviderAdapter,
+        "create_payment",
+        return_value={
+            "ok": True,
+            "provider": "CAMPAY",
+            "provider_name": "Campay",
+            "status": "PENDING",
+            "provider_reference": "campay-service-001",
+            "available": True,
+            "response": {"reference": "campay-service-001", "status": "PENDING"},
+        },
+    )
+    def test_service_initiates_campay_payment_intent(self, create_payment: object) -> None:
+        config = replace(
+            self.config,
+            campay_enabled=True,
+            campay_app_username="campay-user",
+            campay_app_password="campay-pass",
+            campay_webhook_secret="campay-webhook-secret",
+        )
+        services = LawimServices(self.repository, config)
+
+        invoice = self.repository.create_invoice(
+            actor_user_id=1,
+            customer_user_id=1,
+            quote_id=None,
+            organization_id=None,
+            lines=[{"description": "Campay initiated invoice", "quantity": 1, "unit_price_minor": 2_500}],
+            currency="XAF",
+            idempotency_key="campay-service-invoice",
+        )
+        invoice = self.repository.issue_invoice(int(invoice["id"]))
+
+        result = services.financial.create_payment_intent(
+            actor={"id": 1, "role": "admin"},
+            body={
+                "invoice_id": int(invoice["id"]),
+                "amount_minor": 2_500,
+                "currency": "XAF",
+                "provider_code": "CAMPAY",
+                "channel": "mobile_money",
+                "phone_number_e164": "+237677000111",
+                "initiate": True,
+                "idempotency_key": "campay-service-intent",
+            },
+        )
+
+        self.assertEqual(create_payment.call_count, 1)
+        self.assertEqual(result["payment_intent"]["status"], "PENDING")
+        self.assertEqual(result["payment_attempt"]["provider_reference"], "campay-service-001")
+        self.assertTrue(result["provider_available"])
+
+    def test_campay_webhook_confirms_payment_and_is_idempotent(self) -> None:
+        config = replace(
+            self.config,
+            campay_enabled=True,
+            campay_webhook_secret="campay-webhook-secret",
+        )
+        services = LawimServices(self.repository, config)
+        adapter = CampayProviderAdapter(config)
+
+        invoice = self.repository.create_invoice(
+            actor_user_id=1,
+            customer_user_id=1,
+            quote_id=None,
+            organization_id=None,
+            lines=[{"description": "Campay webhook invoice", "quantity": 1, "unit_price_minor": 2_500}],
+            currency="XAF",
+            idempotency_key="campay-webhook-invoice",
+        )
+        invoice = self.repository.issue_invoice(int(invoice["id"]))
+        intent = self.repository.create_payment_intent(
+            actor_user_id=1,
+            customer_user_id=1,
+            invoice_id=int(invoice["id"]),
+            amount_minor=2_500,
+            currency="XAF",
+            provider_code="CAMPAY",
+            phone_number_e164="+237677000111",
+            idempotency_key="campay-webhook-intent",
+        )
+        self.repository.create_payment_attempt(
+            payment_intent_id=int(intent["id"]),
+            provider_code="CAMPAY",
+            request_json={"amount_minor": 2_500, "currency": "XAF"},
+            provider_reference="campay-webhook-001",
+            idempotency_key="campay-webhook-attempt",
+        )
+
+        payload = json.dumps(
+            {
+                "event_id": "event-campay-001",
+                "reference": "campay-webhook-001",
+                "status": "SUCCESSFUL",
+                "amount_minor": 2_500,
+                "currency": "XAF",
+                "event_type": "payment.successful",
+                "idempotency_key": "event-campay-001",
+                "correlation_id": "corr-campay-001",
+            }
+        ).encode("utf-8")
+        signature = hmac.new(b"campay-webhook-secret", payload, sha256).hexdigest()
+        headers = {"X-LAWIM-WEBHOOK-SIGNATURE": signature}
+
+        self.assertTrue(adapter.validate_webhook(headers=headers, payload=payload))
+        parsed = adapter.parse_webhook(payload=payload)
+        self.assertTrue(parsed["ok"])
+        self.assertEqual(parsed["provider_reference"], "campay-webhook-001")
+
+        first = services.financial.process_campay_webhook(raw_body=payload, headers=headers, actor_user_id=1)
+        second = services.financial.process_campay_webhook(raw_body=payload, headers=headers, actor_user_id=1)
+
+        self.assertIn("payment_intent", first)
+        self.assertEqual(first["payment_intent"]["status"], "SUCCEEDED")
+        self.assertEqual(first["invoice"]["status"], "PAID")
+        self.assertEqual(first["payment_transaction"]["status"], "SUCCESSFUL")
+        self.assertEqual(first["provider_status"]["status"], "SUCCESSFUL")
+        self.assertEqual(second["payment_intent"]["status"], "SUCCEEDED")
+        self.assertEqual(len(self.repository.list_payment_transactions(payment_intent_id=int(intent["id"]))), 1)
+        self.assertEqual(len(self.repository.list_receipts(invoice_id=int(invoice["id"]))), 1)
+
+    def test_auto_initiated_payment_requires_mobile_money_number(self) -> None:
+        config = replace(
+            self.config,
+            campay_enabled=True,
+            campay_app_username="campay-user",
+            campay_app_password="campay-pass",
+        )
+        services = LawimServices(self.repository, config)
+        invoice = self.repository.create_invoice(
+            actor_user_id=1,
+            customer_user_id=1,
+            quote_id=None,
+            organization_id=None,
+            lines=[{"description": "Missing phone", "quantity": 1, "unit_price_minor": 1_500}],
+            currency="XAF",
+            idempotency_key="campay-phone-invoice",
+        )
+        invoice = self.repository.issue_invoice(int(invoice["id"]))
+
+        with self.assertRaises(ValidationError):
+            services.financial.create_payment_intent(
+                actor={"id": 1, "role": "admin"},
+                body={
+                    "invoice_id": int(invoice["id"]),
+                    "amount_minor": 1_500,
+                    "currency": "XAF",
+                    "provider_code": "CAMPAY",
+                    "initiate": True,
+                    "idempotency_key": "campay-phone-intent",
+                },
+            )
 
 
 class PostgreSQLFinancialCoreIntegrationTests(unittest.TestCase):

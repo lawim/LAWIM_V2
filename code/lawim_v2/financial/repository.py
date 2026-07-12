@@ -362,7 +362,7 @@ class FinancialRepositoryMixin:
                             "supports_refund": False,
                             "supports_status_query": True,
                             "supports_webhook": True,
-                            "supports_payout": False,
+                            "supports_payout": True,
                             "priority": 10,
                             "configuration_state": "disabled",
                             "last_health_check": None,
@@ -1058,6 +1058,9 @@ class FinancialRepositoryMixin:
 
     def update_payment_intent(self, payment_intent_id: int, **fields: object) -> dict[str, object]:
         return self._update_financial_record("financial_payment_intents", payment_intent_id, **fields)
+
+    def update_payment_attempt(self, payment_attempt_id: int, **fields: object) -> dict[str, object]:
+        return self._update_financial_record("financial_payment_attempts", payment_attempt_id, **fields)
 
     def create_payment_attempt(
         self,

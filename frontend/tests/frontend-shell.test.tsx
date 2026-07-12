@@ -236,4 +236,136 @@ describe('LAWIM frontend shell', () => {
     renderWithProviders(<AdminApp />);
     expect(screen.getByRole('heading', { name: /manage operations and oversight/i })).toBeInTheDocument();
   });
+
+  it('renders the financial hub and initiates a Campay payment', async () => {
+    const user = userEvent.setup();
+    window.localStorage.setItem('lawim_token', 'financial-token');
+    useAuthStore.setState({
+      user: { id: 'u-1', name: 'Finance Admin', role: 'admin', email: 'admin@lawim.app' },
+      token: 'financial-token',
+      roles: ['admin'],
+      isAuthenticated: true,
+      isLoading: false,
+      hasHydrated: true,
+      sessionExpired: false,
+      sessionUnavailable: false
+    });
+    vi.mocked(apiSdk.getSession).mockResolvedValue({
+      data: {
+        user: { id: 'u-1', name: 'Finance Admin', role: 'admin', email: 'admin@lawim.app' },
+        token: 'financial-token',
+        roles: ['admin']
+      },
+      message: 'ok'
+    });
+    vi.spyOn(apiSdk, 'listInvoices').mockResolvedValue({
+      data: [
+        {
+          id: 42,
+          number: 'FAC-2026-000042',
+          status: 'ISSUED',
+          currency: 'XAF',
+          total_minor: 2500,
+          balance_minor: 2500,
+          amount_paid_minor: 0,
+          lines: []
+        }
+      ],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listReceipts').mockResolvedValue({
+      data: [{ id: 5, number: 'REC-2026-000005', status: 'GENERATED', currency: 'XAF', amount_minor: 2500 }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listPaymentIntents').mockResolvedValue({
+      data: [{ id: 77, number: 'PAY-2026-000077', status: 'PENDING', amount_minor: 2500, currency: 'XAF', provider_code: 'CAMPAY' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listSubscriptions').mockResolvedValue({
+      data: [{ id: 3, status: 'ACTIVE', customer_user_id: 1, plan_id: 2, renewal_mode: 'automatic' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listOwnCommissions').mockResolvedValue({
+      data: [{ id: 8, status: 'PAYABLE', amount_minor: 300, currency: 'XAF' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listOwnPayouts').mockResolvedValue({
+      data: [{ id: 9, status: 'APPROVED', amount_minor: 300, currency: 'XAF' }],
+      message: 'mock'
+    } as never);
+    const createPaymentIntentSpy = vi.spyOn(apiSdk, 'createPaymentIntent').mockResolvedValue({
+      data: { id: 88, number: 'PAY-2026-000088', status: 'PENDING', amount_minor: 2500, currency: 'XAF', provider_code: 'CAMPAY', phone_number_e164: '+237677000111' },
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'getPaymentStatus').mockResolvedValue({
+      data: {
+        payment_intent: { id: 88, number: 'PAY-2026-000088', status: 'SUCCEEDED' },
+        provider_status: { status: 'SUCCESSFUL' }
+      },
+      message: 'mock'
+    } as never);
+
+    renderWithProviders(<WebApp />, ['/financial']);
+
+    expect(await screen.findByRole('heading', { name: /financial hub/i })).toBeInTheDocument();
+    expect(screen.getAllByText('FAC-2026-000042').length).toBeGreaterThan(0);
+    await user.click(screen.getByRole('button', { name: /initier le paiement/i }));
+    expect(createPaymentIntentSpy).toHaveBeenCalled();
+    expect(createPaymentIntentSpy.mock.calls[0][0]).toMatchObject({
+      invoice_id: 42,
+      provider_code: 'CAMPAY',
+      initiate: true
+    });
+    expect(await screen.findByText(/PAY-2026-000088/)).toBeInTheDocument();
+  });
+
+  it('renders the admin financial operations cockpit', async () => {
+    vi.spyOn(apiSdk, 'adminGetProviderHealth').mockResolvedValue({
+      data: {
+        code: 'CAMPAY',
+        name: 'Campay',
+        status: 'active',
+        environment: 'sandbox',
+        available: true,
+        details: { supports_collection: true }
+      },
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'adminListPayments').mockResolvedValue({
+      data: [{ id: 1, number: 'PAY-2026-000001', status: 'PENDING', amount_minor: 2500, currency: 'XAF', provider_code: 'CAMPAY' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'adminListReconciliationConflicts').mockResolvedValue({
+      data: [{ id: 9, status: 'CONFLICT', conflict_type: 'amount_mismatch', currency: 'XAF' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'adminResolveReconciliation').mockResolvedValue({
+      data: { id: 9, status: 'RESOLVED', conflict_type: 'amount_mismatch', currency: 'XAF' },
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'adminListRefunds').mockResolvedValue({
+      data: [{ id: 5, number: 'AVR-2026-000005', status: 'APPROVED', amount_minor: 300, currency: 'XAF' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'adminListCommissions').mockResolvedValue({
+      data: [{ id: 6, status: 'CALCULATED', amount_minor: 300, currency: 'XAF' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'adminListProviderEvents').mockResolvedValue({
+      data: [{ id: 7, provider_code: 'CAMPAY', event_type: 'webhook', provider_event_id: 'evt-7', status: 'RECEIVED' }],
+      message: 'mock'
+    } as never);
+
+    render(
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+        <MemoryRouter initialEntries={['/admin/financial']}>
+          <AdminApp />
+        </MemoryRouter>
+      </QueryClientProvider>
+    );
+
+    expect(await screen.findByRole('heading', { name: /financial operations/i })).toBeInTheDocument();
+    expect(screen.getByText(/Campay provider health/i)).toBeInTheDocument();
+    expect(await screen.findByText(/PAY-2026-000001/)).toBeInTheDocument();
+  });
 });

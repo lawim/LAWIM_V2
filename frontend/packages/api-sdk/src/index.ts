@@ -244,6 +244,231 @@ export interface DocumentItem {
   kind: string;
 }
 
+export interface FinancialLine extends Record<string, unknown> {
+  description: string;
+  quantity: number;
+  unit_price_minor: number;
+  total_minor?: number;
+}
+
+export interface FinancialProduct extends Record<string, unknown> {
+  id: number;
+  code: string;
+  name: string;
+  description: string;
+  category: string;
+  status: string;
+  unit: string;
+  default_price_minor: number;
+  currency: string;
+  tax_rate_bps: number;
+}
+
+export interface PricingBreakdown extends Record<string, unknown> {
+  subtotal_minor: number;
+  discount_minor: number;
+  fee_minor: number;
+  tax_minor: number;
+  total_minor: number;
+  currency: string;
+  lines: FinancialLine[];
+}
+
+export interface Quote extends Record<string, unknown> {
+  id: number;
+  number: string;
+  status: string;
+  currency: string;
+  total_minor: number;
+  lines: FinancialLine[];
+  breakdown?: PricingBreakdown;
+}
+
+export interface Invoice extends Record<string, unknown> {
+  id: number;
+  number: string;
+  status: string;
+  currency: string;
+  total_minor: number;
+  balance_minor: number;
+  amount_paid_minor: number;
+  lines: FinancialLine[];
+}
+
+export interface Receipt extends Record<string, unknown> {
+  id: number;
+  number: string;
+  status: string;
+  currency: string;
+  amount_minor: number;
+  invoice_id?: number | null;
+  payment_intent_id?: number | null;
+}
+
+export interface PaymentProvider extends Record<string, unknown> {
+  id: number;
+  code: string;
+  name: string;
+  status: string;
+  environment: string;
+  supported_currencies?: string[];
+  supported_channels?: string[];
+  supports_collection?: boolean;
+  supports_refund?: boolean;
+  supports_status_query?: boolean;
+  supports_webhook?: boolean;
+  supports_payout?: boolean;
+  priority?: number;
+}
+
+export interface PaymentIntent extends Record<string, unknown> {
+  id: number;
+  number: string;
+  status: string;
+  amount_minor: number;
+  currency: string;
+  provider_code: string;
+  phone_number_e164?: string | null;
+  idempotency_key?: string | null;
+}
+
+export interface PaymentAttempt extends Record<string, unknown> {
+  id: number;
+  status: string;
+  provider_code: string;
+  provider_reference?: string | null;
+  idempotency_key?: string | null;
+}
+
+export interface PaymentTransaction extends Record<string, unknown> {
+  id: number;
+  status: string;
+  type: string;
+  direction: string;
+  amount_minor: number;
+  currency: string;
+  provider_reference?: string | null;
+}
+
+export interface ProviderEvent extends Record<string, unknown> {
+  id: number;
+  provider_code: string;
+  event_type: string;
+  provider_event_id: string;
+  status: string;
+}
+
+export interface Refund extends Record<string, unknown> {
+  id: number;
+  number: string;
+  status: string;
+  amount_minor: number;
+  currency: string;
+  payment_transaction_id?: number | null;
+}
+
+export interface SubscriptionPlan extends Record<string, unknown> {
+  id: number;
+  code: string;
+  name: string;
+  status: string;
+  currency: string;
+  price_minor: number;
+  frequency: string;
+}
+
+export interface Subscription extends Record<string, unknown> {
+  id: number;
+  status: string;
+  customer_user_id?: number | null;
+  plan_id?: number | null;
+  renewal_mode?: string | null;
+}
+
+export interface SubscriptionCycle extends Record<string, unknown> {
+  id: number;
+  status: string;
+  subscription_id?: number | null;
+  amount_minor: number;
+  currency: string;
+}
+
+export interface CommissionRule extends Record<string, unknown> {
+  id: number;
+  code: string;
+  name: string;
+  status: string;
+}
+
+export interface Commission extends Record<string, unknown> {
+  id: number;
+  status: string;
+  amount_minor: number;
+  currency: string;
+  beneficiary_user_id?: number | null;
+}
+
+export interface Payout extends Record<string, unknown> {
+  id: number;
+  status: string;
+  amount_minor: number;
+  currency: string;
+  beneficiary_user_id?: number | null;
+}
+
+export interface LedgerAccount extends Record<string, unknown> {
+  id: number;
+  code: string;
+  name: string;
+  status: string;
+}
+
+export interface LedgerEntry extends Record<string, unknown> {
+  id: number;
+  status: string;
+  amount_minor: number;
+  currency: string;
+  source_type: string;
+  transaction_id?: number | null;
+}
+
+export interface ReconciliationRecord extends Record<string, unknown> {
+  id: number;
+  status: string;
+  conflict_type: string;
+  currency: string;
+}
+
+export interface FinancialAuditEvent extends Record<string, unknown> {
+  id: number;
+  action: string;
+  object_type: string;
+  status: string;
+}
+
+export interface FinancialDashboardSummary extends Record<string, unknown> {
+  invoice_count: number;
+  payment_count: number;
+  receipt_count: number;
+  refund_count: number;
+  subscription_count: number;
+  commission_count: number;
+  payout_count: number;
+  reconciliation_conflict_count: number;
+  total_factured_minor: number;
+  total_paid_minor: number;
+  outstanding_minor: number;
+}
+
+export interface ProviderHealth extends Record<string, unknown> {
+  code: string;
+  name: string;
+  status: string;
+  environment: string;
+  available: boolean;
+  details: Record<string, unknown>;
+}
+
 export interface AuthCredentials {
   identifier?: string;
   email?: string;
@@ -558,6 +783,15 @@ const toNumber = (value: unknown, fallback = 0) => {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
+};
+
+const buildQuery = (params: Record<string, unknown>) => {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined || value === null || value === '') continue;
+    query.set(key, String(value));
+  }
+  return query.toString();
 };
 
 const joinLocation = (...parts: Array<unknown>) => parts.map((part) => toText(part)).filter(Boolean).join(' • ');
@@ -2008,6 +2242,490 @@ export const apiSdk = {
       return { data: { estimate: '€500k - €560k', confidence: 'High' }, message: 'mock' };
     }
     return requestJson<EstimationResult>('/v2/estimation', { method: 'POST', body: JSON.stringify(payload) }, { estimate: 'Pending', confidence: 'Low' });
+  },
+
+  async listFinancialProducts(params?: { status?: string; limit?: number }): Promise<ApiResponse<FinancialProduct[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: [
+          {
+            id: 1,
+            code: 'FIN-SVC-001',
+            name: 'Service financier',
+            description: 'Offre financière LAWIM',
+            category: 'service',
+            status: 'active',
+            unit: 'item',
+            default_price_minor: 2500,
+            currency: 'XAF',
+            tax_rate_bps: 0
+          }
+        ],
+        message: 'mock'
+      };
+    }
+    const query = buildQuery({ status: params?.status, limit: params?.limit });
+    const response = await requestJson<{ products?: FinancialProduct[]; financial_products?: FinancialProduct[] }>(`/v2/financial/catalog/products${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.products ?? record.financial_products ?? []) as FinancialProduct[] };
+  },
+
+  async calculatePrice(payload: { line_items: FinancialLine[]; discount_minor?: number; fee_minor?: number; tax_rate_bps?: number; currency?: string; context?: Record<string, unknown> }): Promise<ApiResponse<PricingBreakdown>> {
+    if (useMocks) {
+      await mockDelay();
+      const subtotal = (payload.line_items ?? []).reduce((sum, line) => sum + Math.round(Number(line.unit_price_minor) * Number(line.quantity || 1)), 0);
+      return {
+        data: {
+          subtotal_minor: subtotal,
+          discount_minor: payload.discount_minor ?? 0,
+          fee_minor: payload.fee_minor ?? 0,
+          tax_minor: Math.round(subtotal * ((payload.tax_rate_bps ?? 0) / 10_000)),
+          total_minor: subtotal - (payload.discount_minor ?? 0) + (payload.fee_minor ?? 0) + Math.round(subtotal * ((payload.tax_rate_bps ?? 0) / 10_000)),
+          currency: payload.currency ?? 'XAF',
+          lines: payload.line_items ?? []
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<PricingBreakdown>('/v2/financial/pricing/calculate', { method: 'POST', body: JSON.stringify(payload) }, {
+      subtotal_minor: 0,
+      discount_minor: 0,
+      fee_minor: 0,
+      tax_minor: 0,
+      total_minor: 0,
+      currency: payload.currency ?? 'XAF',
+      lines: []
+    });
+  },
+
+  async createQuote(payload: Record<string, unknown>): Promise<ApiResponse<Quote>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          id: 1,
+          number: 'DEV-2026-000001',
+          status: 'DRAFT',
+          currency: String(payload.currency ?? 'XAF'),
+          total_minor: Number(payload.total_minor ?? 2500),
+          lines: Array.isArray(payload.lines) ? (payload.lines as FinancialLine[]) : []
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<Quote>('/v2/financial/quotes', { method: 'POST', body: JSON.stringify(payload) }, {
+      id: 0,
+      number: '',
+      status: 'DRAFT',
+      currency: 'XAF',
+      total_minor: 0,
+      lines: []
+    });
+  },
+
+  async getQuote(id: number | string): Promise<ApiResponse<Quote>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          id: Number(id),
+          number: `DEV-2026-${String(id).padStart(6, '0')}`,
+          status: 'ISSUED',
+          currency: 'XAF',
+          total_minor: 2500,
+          lines: [{ description: 'Service financier', quantity: 1, unit_price_minor: 2500 }]
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<Quote>(`/v2/financial/quotes/${encodeURIComponent(String(id))}`, { method: 'GET' }, {
+      id: Number(id),
+      number: '',
+      status: 'DRAFT',
+      currency: 'XAF',
+      total_minor: 0,
+      lines: []
+    });
+  },
+
+  async acceptQuote(id: number | string): Promise<ApiResponse<Quote>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), number: `DEV-2026-${String(id).padStart(6, '0')}`, status: 'ACCEPTED', currency: 'XAF', total_minor: 2500, lines: [] }, message: 'mock' };
+    }
+    return requestJson<Quote>(`/v2/financial/quotes/${encodeURIComponent(String(id))}/accept`, { method: 'POST' }, {
+      id: Number(id),
+      number: '',
+      status: 'ACCEPTED',
+      currency: 'XAF',
+      total_minor: 0,
+      lines: []
+    });
+  },
+
+  async listInvoices(params?: { status?: string; customer_user_id?: number; organization_id?: number; limit?: number }): Promise<ApiResponse<Invoice[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: [
+          {
+            id: 1,
+            number: 'FAC-2026-000001',
+            status: 'ISSUED',
+            currency: 'XAF',
+            total_minor: 2500,
+            balance_minor: 2500,
+            amount_paid_minor: 0,
+            lines: [{ description: 'Service financier', quantity: 1, unit_price_minor: 2500 }]
+          }
+        ],
+        message: 'mock'
+      };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ invoices?: Invoice[] }>(`/v2/financial/invoices${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.invoices ?? []) as Invoice[] };
+  },
+
+  async getInvoice(id: number | string): Promise<ApiResponse<Invoice>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          id: Number(id),
+          number: `FAC-2026-${String(id).padStart(6, '0')}`,
+          status: 'ISSUED',
+          currency: 'XAF',
+          total_minor: 2500,
+          balance_minor: 2500,
+          amount_paid_minor: 0,
+          lines: [{ description: 'Service financier', quantity: 1, unit_price_minor: 2500 }]
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<Invoice>(`/v2/financial/invoices/${encodeURIComponent(String(id))}`, { method: 'GET' }, {
+      id: Number(id),
+      number: '',
+      status: 'DRAFT',
+      currency: 'XAF',
+      total_minor: 0,
+      balance_minor: 0,
+      amount_paid_minor: 0,
+      lines: []
+    });
+  },
+
+  async createPaymentIntent(payload: Record<string, unknown>): Promise<ApiResponse<PaymentIntent>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          id: 1,
+          number: 'PAY-2026-000001',
+          status: 'PENDING',
+          amount_minor: Number(payload.amount_minor ?? 2500),
+          currency: String(payload.currency ?? 'XAF'),
+          provider_code: String(payload.provider_code ?? 'CAMPAY'),
+          phone_number_e164: String(payload.phone_number_e164 ?? '+237677000111'),
+          idempotency_key: String(payload.idempotency_key ?? 'financial-intent-mock')
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<PaymentIntent>('/v2/financial/payments/intents', { method: 'POST', body: JSON.stringify(payload) }, {
+      id: 0,
+      number: '',
+      status: 'CREATED',
+      amount_minor: 0,
+      currency: 'XAF',
+      provider_code: 'CAMPAY'
+    });
+  },
+
+  async getPaymentIntent(id: number | string): Promise<ApiResponse<PaymentIntent>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), number: `PAY-2026-${String(id).padStart(6, '0')}`, status: 'PENDING', amount_minor: 2500, currency: 'XAF', provider_code: 'CAMPAY' }, message: 'mock' };
+    }
+    return requestJson<PaymentIntent>(`/v2/financial/payments/intents/${encodeURIComponent(String(id))}`, { method: 'GET' }, {
+      id: Number(id),
+      number: '',
+      status: 'CREATED',
+      amount_minor: 0,
+      currency: 'XAF',
+      provider_code: 'CAMPAY'
+    });
+  },
+
+  async retryPayment(id: number | string, payload: Record<string, unknown> = {}): Promise<ApiResponse<PaymentAttempt>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), status: 'PENDING', provider_code: 'CAMPAY', provider_reference: 'campay-mock', idempotency_key: String(payload.idempotency_key ?? 'retry-mock') }, message: 'mock' };
+    }
+    return requestJson<PaymentAttempt>(`/v2/financial/payments/intents/${encodeURIComponent(String(id))}/attempts`, { method: 'POST', body: JSON.stringify(payload) }, {
+      id: Number(id),
+      status: 'PENDING',
+      provider_code: 'CAMPAY'
+    });
+  },
+
+  async getPaymentStatus(id: number | string): Promise<ApiResponse<Record<string, unknown>>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { payment_intent: { id: Number(id), status: 'SUCCEEDED' }, provider_status: { status: 'SUCCESSFUL' } }, message: 'mock' };
+    }
+    return requestJson<Record<string, unknown>>(`/v2/financial/payments/intents/${encodeURIComponent(String(id))}/status`, { method: 'GET' }, {});
+  },
+
+  async listPaymentIntents(params?: { status?: string; invoice_id?: number; customer_user_id?: number; provider_code?: string; limit?: number }): Promise<ApiResponse<PaymentIntent[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, number: 'PAY-2026-000001', status: 'PENDING', amount_minor: 2500, currency: 'XAF', provider_code: 'CAMPAY' }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ payment_intents?: PaymentIntent[] }>(`/v2/financial/payments/intents${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.payment_intents ?? []) as PaymentIntent[] };
+  },
+
+  async listPaymentTransactions(params?: { payment_intent_id?: number; payment_attempt_id?: number; invoice_id?: number; status?: string; limit?: number }): Promise<ApiResponse<PaymentTransaction[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, status: 'SUCCESSFUL', type: 'collection', direction: 'inflow', amount_minor: 2500, currency: 'XAF' }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ payment_transactions?: PaymentTransaction[] }>(`/v2/financial/payments/transactions${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.payment_transactions ?? []) as PaymentTransaction[] };
+  },
+
+  async listReceipts(params?: { invoice_id?: number; status?: string; limit?: number }): Promise<ApiResponse<Receipt[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, number: 'REC-2026-000001', status: 'GENERATED', currency: 'XAF', amount_minor: 2500, invoice_id: 1, payment_intent_id: 1 }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ receipts?: Receipt[] }>(`/v2/financial/receipts${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.receipts ?? []) as Receipt[] };
+  },
+
+  async getReceipt(id: number | string): Promise<ApiResponse<Receipt>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), number: `REC-2026-${String(id).padStart(6, '0')}`, status: 'GENERATED', currency: 'XAF', amount_minor: 2500 }, message: 'mock' };
+    }
+    return requestJson<Receipt>(`/v2/financial/receipts/${encodeURIComponent(String(id))}`, { method: 'GET' }, {
+      id: Number(id),
+      number: '',
+      status: 'DRAFT',
+      currency: 'XAF',
+      amount_minor: 0
+    });
+  },
+
+  async listSubscriptions(params?: { status?: string; customer_user_id?: number; organization_id?: number; plan_id?: number; limit?: number }): Promise<ApiResponse<Subscription[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, status: 'ACTIVE', customer_user_id: 1, plan_id: 1, renewal_mode: 'automatic' }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ subscriptions?: Subscription[] }>(`/v2/financial/subscriptions${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.subscriptions ?? []) as Subscription[] };
+  },
+
+  async subscribeToPlan(payload: Record<string, unknown>): Promise<ApiResponse<Subscription>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: 1, status: 'ACTIVE', customer_user_id: Number(payload.customer_user_id ?? 1), plan_id: Number(payload.plan_id ?? 1), renewal_mode: String(payload.renewal_mode ?? 'automatic') }, message: 'mock' };
+    }
+    return requestJson<Subscription>('/v2/financial/subscriptions', { method: 'POST', body: JSON.stringify(payload) }, { id: 0, status: 'PENDING' });
+  },
+
+  async renewSubscription(id: number | string, payload: Record<string, unknown> = {}): Promise<ApiResponse<Subscription>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), status: 'ACTIVE', plan_id: Number(payload.plan_id ?? 1), renewal_mode: String(payload.renewal_mode ?? 'automatic') }, message: 'mock' };
+    }
+    return requestJson<Subscription>(`/v2/financial/subscriptions/${encodeURIComponent(String(id))}/renew`, { method: 'POST', body: JSON.stringify(payload) }, { id: Number(id), status: 'ACTIVE' });
+  },
+
+  async changeSubscriptionPlan(id: number | string, payload: Record<string, unknown>): Promise<ApiResponse<Subscription>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), status: 'ACTIVE', plan_id: Number(payload.plan_id ?? 1), renewal_mode: String(payload.renewal_mode ?? 'automatic') }, message: 'mock' };
+    }
+    return requestJson<Subscription>(`/v2/financial/subscriptions/${encodeURIComponent(String(id))}/change-plan`, { method: 'POST', body: JSON.stringify(payload) }, { id: Number(id), status: 'ACTIVE' });
+  },
+
+  async cancelSubscription(id: number | string, payload: Record<string, unknown> = {}): Promise<ApiResponse<Subscription>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), status: 'CANCELLED', renewal_mode: String(payload.renewal_mode ?? 'manual') }, message: 'mock' };
+    }
+    return requestJson<Subscription>(`/v2/financial/subscriptions/${encodeURIComponent(String(id))}/cancel`, { method: 'POST', body: JSON.stringify(payload) }, { id: Number(id), status: 'CANCELLED' });
+  },
+
+  async listOwnCommissions(params?: { status?: string; limit?: number }): Promise<ApiResponse<Commission[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, status: 'PAYABLE', amount_minor: 300, currency: 'XAF', beneficiary_user_id: 1 }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ commissions?: Commission[] }>(`/v2/financial/commissions${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.commissions ?? []) as Commission[] };
+  },
+
+  async listOwnPayouts(params?: { status?: string; limit?: number }): Promise<ApiResponse<Payout[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, status: 'APPROVED', amount_minor: 300, currency: 'XAF', beneficiary_user_id: 1 }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ payouts?: Payout[] }>(`/v2/financial/payouts${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.payouts ?? []) as Payout[] };
+  },
+
+  async requestRefund(payload: Record<string, unknown>): Promise<ApiResponse<Refund>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: 1, number: 'AVR-2026-000001', status: 'REQUESTED', amount_minor: Number(payload.amount_minor ?? 0), currency: String(payload.currency ?? 'XAF'), payment_transaction_id: Number(payload.payment_transaction_id ?? 1) }, message: 'mock' };
+    }
+    return requestJson<Refund>('/v2/financial/refunds', { method: 'POST', body: JSON.stringify(payload) }, { id: 0, number: '', status: 'REQUESTED', amount_minor: 0, currency: 'XAF' });
+  },
+
+  async getRefund(id: number | string): Promise<ApiResponse<Refund>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), number: `AVR-2026-${String(id).padStart(6, '0')}`, status: 'APPROVED', amount_minor: 300, currency: 'XAF' }, message: 'mock' };
+    }
+    return requestJson<Refund>(`/v2/financial/refunds/${encodeURIComponent(String(id))}`, { method: 'GET' }, { id: Number(id), number: '', status: 'REQUESTED', amount_minor: 0, currency: 'XAF' });
+  },
+
+  async adminListPayments(params?: { status?: string; invoice_id?: number; customer_user_id?: number; provider_code?: string; limit?: number }): Promise<ApiResponse<PaymentIntent[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, number: 'PAY-2026-000001', status: 'PENDING', amount_minor: 2500, currency: 'XAF', provider_code: 'CAMPAY' }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ payment_intents?: PaymentIntent[] }>(`/v2/financial/payments/intents${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.payment_intents ?? []) as PaymentIntent[] };
+  },
+
+  async adminVerifyPayment(id: number | string): Promise<ApiResponse<Record<string, unknown>>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { payment_intent: { id: Number(id), status: 'SUCCEEDED' }, provider_status: { status: 'SUCCESSFUL' } }, message: 'mock' };
+    }
+    return requestJson<Record<string, unknown>>(`/v2/financial/payments/intents/${encodeURIComponent(String(id))}/status`, { method: 'GET' }, {});
+  },
+
+  async adminListReconciliationConflicts(params?: { provider_code?: string; status?: string; limit?: number }): Promise<ApiResponse<ReconciliationRecord[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, status: 'CONFLICT', conflict_type: 'amount_mismatch', currency: 'XAF' }], message: 'mock' };
+    }
+    const query = buildQuery({ ...params, status: params?.status ?? 'CONFLICT' });
+    const response = await requestJson<{ reconciliation?: ReconciliationRecord[]; records?: ReconciliationRecord[] }>(`/v2/financial/reconciliation${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.reconciliation ?? record.records ?? []) as ReconciliationRecord[] };
+  },
+
+  async adminResolveReconciliation(id: number | string, payload: Record<string, unknown>): Promise<ApiResponse<ReconciliationRecord>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), status: 'RESOLVED', conflict_type: 'amount_mismatch', currency: 'XAF' }, message: 'mock' };
+    }
+    return requestJson<ReconciliationRecord>(`/v2/financial/reconciliation/${encodeURIComponent(String(id))}/resolve`, { method: 'POST', body: JSON.stringify(payload) }, { id: Number(id), status: 'RESOLVED', conflict_type: 'unknown', currency: 'XAF' });
+  },
+
+  async adminListRefunds(params?: { status?: string; payment_transaction_id?: number; limit?: number }): Promise<ApiResponse<Refund[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, number: 'AVR-2026-000001', status: 'REQUESTED', amount_minor: 300, currency: 'XAF' }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ refunds?: Refund[] }>(`/v2/financial/refunds${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.refunds ?? []) as Refund[] };
+  },
+
+  async adminApproveRefund(id: number | string): Promise<ApiResponse<Refund>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), number: `AVR-2026-${String(id).padStart(6, '0')}`, status: 'APPROVED', amount_minor: 300, currency: 'XAF' }, message: 'mock' };
+    }
+    return requestJson<Refund>(`/v2/financial/refunds/${encodeURIComponent(String(id))}/approve`, { method: 'POST' }, { id: Number(id), number: '', status: 'APPROVED', amount_minor: 0, currency: 'XAF' });
+  },
+
+  async adminListCommissions(params?: { status?: string; beneficiary_user_id?: number; beneficiary_organization_id?: number; limit?: number }): Promise<ApiResponse<Commission[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, status: 'CALCULATED', amount_minor: 300, currency: 'XAF', beneficiary_user_id: 1 }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ commissions?: Commission[] }>(`/v2/financial/commissions${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.commissions ?? []) as Commission[] };
+  },
+
+  async adminValidateCommission(id: number | string): Promise<ApiResponse<Commission>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: Number(id), status: 'VALIDATED', amount_minor: 300, currency: 'XAF' }, message: 'mock' };
+    }
+    return requestJson<Commission>(`/v2/financial/commissions/${encodeURIComponent(String(id))}/validate`, { method: 'POST' }, { id: Number(id), status: 'VALIDATED', amount_minor: 0, currency: 'XAF' });
+  },
+
+  async adminCreatePayout(payload: Record<string, unknown>): Promise<ApiResponse<Payout>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: { id: 1, status: 'DRAFT', amount_minor: Number(payload.amount_minor ?? 0), currency: String(payload.currency ?? 'XAF') }, message: 'mock' };
+    }
+    return requestJson<Payout>('/v2/financial/payouts', { method: 'POST', body: JSON.stringify(payload) }, { id: 0, status: 'DRAFT', amount_minor: 0, currency: 'XAF' });
+  },
+
+  async adminListProviderEvents(params?: { provider_code?: string; status?: string; limit?: number }): Promise<ApiResponse<ProviderEvent[]>> {
+    if (useMocks) {
+      await mockDelay();
+      return { data: [{ id: 1, provider_code: 'CAMPAY', event_type: 'webhook', provider_event_id: 'evt-1', status: 'RECEIVED' }], message: 'mock' };
+    }
+    const query = buildQuery(params ?? {});
+    const response = await requestJson<{ provider_events?: ProviderEvent[] }>(`/v2/financial/provider-events${query ? `?${query}` : ''}`, { method: 'GET' }, {});
+    const record = toRecord(response.data);
+    return { ...response, data: (record.provider_events ?? []) as ProviderEvent[] };
+  },
+
+  async adminGetProviderHealth(): Promise<ApiResponse<ProviderHealth>> {
+    if (useMocks) {
+      await mockDelay();
+      return {
+        data: {
+          code: 'CAMPAY',
+          name: 'Campay',
+          status: 'active',
+          environment: 'sandbox',
+          available: true,
+          details: { supports_collection: true, supports_status_query: true, supports_webhook: true, supports_payout: true, supports_refund: false }
+        },
+        message: 'mock'
+      };
+    }
+    return requestJson<ProviderHealth>('/v2/financial/providers/health', { method: 'GET' }, {
+      code: 'CAMPAY',
+      name: 'Campay',
+      status: 'disabled',
+      environment: 'sandbox',
+      available: false,
+      details: {}
+    });
   }
 };
 

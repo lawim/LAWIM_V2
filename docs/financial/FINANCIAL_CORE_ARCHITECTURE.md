@@ -15,8 +15,8 @@ Le stockage reste dans la base de données applicative existante. Aucun schéma 
 
 ## 3. Limites
 - La Partie 1 livre le Financial Core interne.
-- L'adaptateur Campay reste un scaffold sécurisé; l'intégration API réelle et les webhooks authentifiés sont réservés à la Partie 2.
-- Le stockage documentaire détaillé et le cockpit métier financier complet sont hors périmètre de cette section.
+- L'adaptateur Campay est maintenant intégré comme connecteur isolé, mais la validation live sandbox/production reste soumise aux accès d'environnement.
+- Le stockage documentaire détaillé et le cockpit métier financier complet sont désormais livrés par la Partie 2, avec une supervision administrative séparée.
 
 ## 4. Modèles
 Modèles persistants mis en place:
@@ -179,14 +179,18 @@ Routes principales implémentées:
 - `/api/v2/financial/readiness`
 - `/api/v2/financial/providers`
 - `/api/v2/financial/providers/health`
+- `/api/v2/financial/providers/campay/webhook`
 - `/api/v2/financial/catalog/products`
 - `/api/v2/financial/catalog/pricing-rules`
 - `/api/v2/financial/pricing/calculate`
 - `/api/v2/financial/quotes`
 - `/api/v2/financial/invoices`
 - `/api/v2/financial/payments/intents`
+- `/api/v2/financial/payments/intents/{id}/status`
 - `/api/v2/financial/payments/attempts`
 - `/api/v2/financial/payments/transactions`
+- `/api/v2/financial/receipts`
+- `/api/v2/financial/receipts/{id}`
 - `/api/v2/financial/refunds`
 - `/api/v2/financial/subscriptions`
 - `/api/v2/financial/subscriptions/plans`
@@ -267,13 +271,17 @@ L'intégration réelle se fait par:
 - routes HTTP du serveur
 
 ## 18. Intégration Future Campay
-Le dépôt contient un adaptateur Campay isolé:
-- configuration dédiée
-- health check
-- validation de webhook de base
-- méthodes métier encore non activées
+Campay est intégré comme premier fournisseur concret du Financial Core:
+- adaptateur isolé dans `code/lawim_v2/financial/providers/campay.py`
+- registre générique des fournisseurs via `PaymentProviderRegistry`
+- authentification par jeton avec cache
+- initiation de paiement côté backend
+- vérification de statut serveur à serveur
+- validation de webhook sur payload brut
+- santé du fournisseur via `GET /api/balance/`
+- support du catalogue Campay dans le seed financier
 
-L'intégration Campay réelle, les signatures officielles et les webhooks confirmés arrivent en Partie 2.
+Les capacités supportées restent bornées par l'API réellement documentée et par les accès de test disponibles. Les remboursements automatiques et les annulations fournisseur ne sont pas exposés par le connecteur actuel.
 
 ## 19. Tests
 Tests exécutés pour cette partie:
@@ -304,12 +312,8 @@ Résultats:
 - démarrer PostgreSQL local via Podman rootless avec un runtime writable explicite afin d'éviter le blocage `/run/user/1000`
 
 ## 21. Éléments Restants Pour Les Parties 2 Et 3
-- connecteur Campay complet
-- webhooks signés et anti-rejeu
-- SDK frontend financier
-- écrans de paiement et cockpits
-- métriques et alertes Campay détaillées
-- tests sandbox Campay
+- validation live sandbox/production Campay quand les accès sont fournis
+- durcissement éventuel du cycle de remboursement fournisseur si l'API Campay l'autorise
 - déploiement OVH
 - recette de production
 - rollback de release

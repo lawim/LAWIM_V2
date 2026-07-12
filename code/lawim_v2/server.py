@@ -198,6 +198,13 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         parsed = urlparse(self.path)
         if not parsed.path.startswith("/api/"):
             raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Resource not found")
+        if parsed.path == "/api/v2/financial/providers/campay/webhook":
+            raw_body = self._read_raw_body(max_bytes=self.config.max_json_body_bytes)
+            content_type = self.headers.get("Content-Type", "")
+            if "application/json" not in content_type.lower():
+                raise ApiError(HTTPStatus.UNSUPPORTED_MEDIA_TYPE, "unsupported_media_type", "Campay webhook must use application/json")
+            self._handle_v2_financial_campay_webhook(raw_body)
+            return
         if parsed.path == "/api/media/upload" and "multipart/form-data" in self.headers.get("Content-Type", "").lower():
             self._handle_multipart_media_upload(parsed)
             return
@@ -2241,6 +2248,13 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             invoice_id = self._extract_path_id(path, marker="/api/v2/financial/invoices/", suffix="/receipts", resource="Invoice")
             self._send_json(financial.list_receipts(actor=actor, invoice_id=invoice_id, status=self._first(query, "status"), limit=self._query_limit(query)))
             return
+        if path == "/api/v2/financial/receipts":
+            self._send_json(financial.list_receipts(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
+            return
+        if path.startswith("/api/v2/financial/receipts/") and path.count("/") == 5:
+            receipt_id = self._extract_path_id(path, marker="/api/v2/financial/receipts/", resource="Receipt")
+            self._send_json(financial.get_receipt(actor=actor, receipt_id=receipt_id))
+            return
         if path == "/api/v2/financial/payments/providers":
             self._send_json(financial.list_payment_providers(actor=actor, status=self._first(query, "status"), limit=self._query_limit(query)))
             return
@@ -2259,6 +2273,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/api/v2/financial/payments/intents/") and path.count("/") == 6:
             intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", resource="PaymentIntent")
             self._send_json(financial.get_payment_intent(actor=actor, payment_intent_id=intent_id))
+            return
+        if path.startswith("/api/v2/financial/payments/intents/") and path.endswith("/status"):
+            intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", suffix="/status", resource="PaymentIntent")
+            self._send_json(financial.get_payment_status(actor=actor, payment_intent_id=intent_id))
             return
         if path.startswith("/api/v2/financial/payments/intents/") and path.endswith("/attempts"):
             intent_id = self._extract_path_id(path, marker="/api/v2/financial/payments/intents/", suffix="/attempts", resource="PaymentIntent")
@@ -2461,10 +2479,14 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             reconciliation_id = self._extract_path_id(path, marker="/api/v2/financial/reconciliation/", suffix="/resolve", resource="Reconciliation")
             self._send_json(financial.resolve_reconciliation(actor=actor, reconciliation_id=reconciliation_id, body=body))
             return
-        if path == "/api/v2/financial/providers/campay/webhook":
-            self._send_json(self.services.financial.repository.record_provider_event(provider_code="CAMPAY", event_type=str(body.get("event_type") or "webhook"), provider_event_id=str(body.get("event_id") or uuid.uuid4().hex), payload=body, headers={k: str(v) for k, v in self.headers.items()}, source_reference=self._optional_text(body.get("reference")), correlation_id=self._optional_text(body.get("correlation_id")), idempotency_key=self._optional_text(body.get("idempotency_key"))), status=HTTPStatus.ACCEPTED)
-            return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown financial API route")
+
+    def _handle_v2_financial_campay_webhook(self, raw_body: bytes) -> None:
+        result = self.services.financial.process_campay_webhook(
+            raw_body=raw_body,
+            headers={k: str(v) for k, v in self.headers.items()},
+        )
+        self._send_json(result, status=HTTPStatus.ACCEPTED)
 
     def _handle_v2_marketplace_get(self, path: str, query: dict[str, list[str]]) -> None:
         if path == "/api/v2/marketplace/integrations":

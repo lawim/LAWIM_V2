@@ -38,6 +38,7 @@ from .user_roles import resolve_official_user_role
 from .program_m_support import ProgramMServiceBase
 from .backup import BackupService, DisasterRecoveryService
 from .financial.service import FinancialService
+from .financial.providers.registry import build_default_provider_registry
 
 
 class ServiceError(Exception):
@@ -161,7 +162,8 @@ class LawimServices:
         from .marketplace.service import MarketplaceService
 
         self.marketplace = MarketplaceService(repository, self.projects, self.policy)
-        self.financial = FinancialService(repository, self.policy, config)
+        self.payment_provider_registry = build_default_provider_registry(config)
+        self.financial = FinancialService(repository, self.policy, config, self.payment_provider_registry)
         from .security.service import SecurityService
 
         self.security = SecurityService(repository, self.projects, self.policy)

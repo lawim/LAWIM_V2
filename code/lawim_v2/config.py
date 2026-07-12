@@ -169,6 +169,10 @@ class AppConfig:
         public_base_url = os.getenv("PUBLIC_BASE_URL", "http://localhost:3000")
         app_env = os.getenv("APP_ENV", "development")
         public_media_default = app_env in {"development", "test", "staging"}
+        campay_environment = os.getenv("LAWIM_CAMPAY_ENVIRONMENT", "sandbox").strip().lower()
+        campay_base_url = os.getenv("LAWIM_CAMPAY_BASE_URL", "").strip()
+        if not campay_base_url:
+            campay_base_url = "https://www.campay.net" if campay_environment == "production" else "https://demo.campay.net"
         return cls(
             host=os.getenv("LAWIM_HOST", "0.0.0.0"),
             port=_int_env("LAWIM_PORT", 3000),
@@ -206,8 +210,8 @@ class AppConfig:
             financial_admin_enabled=_bool_env("LAWIM_FINANCIAL_ADMIN_ENABLED", True),
             campay_enabled=_bool_env("LAWIM_CAMPAY_ENABLED", False),
             campay_sandbox_enabled=_bool_env("LAWIM_CAMPAY_SANDBOX_ENABLED", True),
-            campay_environment=os.getenv("LAWIM_CAMPAY_ENVIRONMENT", "sandbox").strip().lower(),
-            campay_base_url=os.getenv("LAWIM_CAMPAY_BASE_URL", "").strip(),
+            campay_environment=campay_environment,
+            campay_base_url=campay_base_url,
             campay_app_username=(os.getenv("LAWIM_CAMPAY_APP_USERNAME") or None),
             campay_app_password=(os.getenv("LAWIM_CAMPAY_APP_PASSWORD") or None),
             campay_token=(os.getenv("LAWIM_CAMPAY_TOKEN") or None),

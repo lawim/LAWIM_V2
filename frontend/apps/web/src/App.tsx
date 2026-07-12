@@ -27,6 +27,7 @@ import { ProtectedRoute, resolveDashboardPath as resolveCockpitPath, resolvePrim
 import { WorkflowOrchestratorPage } from './WorkflowOrchestratorPage';
 import { ObservabilityConsolePage } from './ObservabilityConsolePage';
 import { ProductReadinessDashboardPage } from './ProductReadinessDashboardPage';
+import { FinancialHubPage } from './FinancialHubPage';
 import {
   CockpitEntryPage,
   ConversationStudioPage,
@@ -745,6 +746,7 @@ function WebAppContent() {
       <Route path="/map" element={<MapPage />} />
       <Route path="/property/:id" element={<PropertyDetailPage />} />
       <Route path="/estimation" element={<EstimationPage />} />
+      <Route path="/financial" element={<ProtectedRoute><FinancialHubPage /></ProtectedRoute>} />
       <Route path="/marketplace" element={<MarketplacePage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/workflow" element={<WorkflowOrchestratorPage />} />

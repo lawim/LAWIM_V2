@@ -438,6 +438,7 @@ function SecondaryActionsBlock({ role }: { role?: MissionRole }) {
     { icon: '👤', label: t('nav.profile'), to: '/profile', feature: 'profile' },
     { icon: '💰', label: t('nav.estimation'), to: '/estimation', feature: 'estimations' },
     { icon: '✉️', label: t('module.contact.title'), to: '/contact', feature: 'profile' },
+    { icon: '💳', label: 'Finances', to: '/financial', feature: 'financial_core' },
   ];
 
   if (role === 'admin') {
