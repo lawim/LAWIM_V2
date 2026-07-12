@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import re
+
 from ..observability import METRICS
 from ..project_service import ProjectPermissionDenied, ProjectService
+from ..ai import AIMessage, AIOrchestrator
+from ..financial.engines import normalize_mobile_money_number
 from . import dto as cdto
 from .green_api import (
     GREEN_API_MESSAGE_WEBHOOKS,
@@ -236,10 +240,11 @@ class IntegrationService:
 
 
 class CommunicationService:
-    def __init__(self, repository, project_service: ProjectService, policy) -> None:
+    def __init__(self, repository, project_service: ProjectService, policy, config=None, ai_orchestrator: AIOrchestrator | None = None) -> None:
         self.repository = repository
         self.projects = project_service
         self.policy = policy
+        self.config = config
         self.engine = CommunicationPlatformEngine()
         self.notifications = NotificationService(repository)
         self.email = EmailService(repository)
@@ -254,6 +259,12 @@ class CommunicationService:
         self.conversations = ConversationService(repository)
         self.analytics_service = AnalyticsService(repository)
         self.integrations = IntegrationService(repository)
+        if ai_orchestrator is not None:
+            self.ai_orchestrator = ai_orchestrator
+        elif config is not None:
+            self.ai_orchestrator = AIOrchestrator(repository, config)
+        else:
+            self.ai_orchestrator = None
 
     def _require_auth(self, actor: dict[str, object] | None) -> None:
         if actor is None:
@@ -538,6 +549,273 @@ class CommunicationService:
         METRICS.increment("communication_event_processed")
         return {"result": result}
 
+    def _ai_enabled(self) -> bool:
+        return bool(self.ai_orchestrator is not None and getattr(self.config, "ai_orchestrator_enabled", False))
+
+    def _normalize_whatsapp_number(self, value: str) -> str:
+        raw = re.sub(r"[^0-9+]", "", value or "")
+        if not raw:
+            return ""
+        try:
+            return normalize_mobile_money_number(raw)
+        except Exception:
+            digits = re.sub(r"\D", "", raw)
+            if len(digits) == 12 and digits.startswith("237"):
+                return f"+{digits}"
+            if len(digits) == 9 and digits.startswith("6"):
+                return f"+237{digits}"
+            if digits:
+                return f"+{digits}"
+            return ""
+
+    def _resolve_ai_contact(self, channel: str, normalized: dict[str, object]) -> dict[str, object] | None:
+        try:
+            if channel == "whatsapp":
+                raw_chat_id = str(normalized.get("chat_id") or normalized.get("sender") or "")
+                phone = self._normalize_whatsapp_number(raw_chat_id)
+                if not phone:
+                    return None
+                row = self.repository.one(
+                    """
+                    SELECT * FROM crm_contact_profiles
+                    WHERE whatsapp = ? OR phone = ?
+                    ORDER BY id ASC
+                    LIMIT 1
+                    """,
+                    (phone, phone),
+                )
+                if row is not None:
+                    return dict(row)
+                full_name = str(normalized.get("sender_name") or normalized.get("full_name") or phone)
+                return self.repository.create_crm_contact(
+                    full_name=full_name,
+                    phone=phone,
+                    whatsapp=phone,
+                    country="Cameroon",
+                    metadata={
+                        "channel": channel,
+                        "external_chat_id": raw_chat_id,
+                        "external_user_id": normalized.get("user_id"),
+                    },
+                )
+            if channel == "telegram":
+                username = str(normalized.get("username") or "").strip()
+                chat_id = str(normalized.get("chat_id") or "")
+                telegram_handle = f"@{username}" if username else f"telegram:{chat_id}"
+                row = self.repository.one(
+                    """
+                    SELECT * FROM crm_contact_profiles
+                    WHERE telegram = ?
+                    ORDER BY id ASC
+                    LIMIT 1
+                    """,
+                    (telegram_handle,),
+                )
+                if row is not None:
+                    return dict(row)
+                full_name = str(normalized.get("full_name") or username or chat_id or "Telegram Contact")
+                return self.repository.create_crm_contact(
+                    full_name=full_name,
+                    telegram=telegram_handle,
+                    country="Cameroon",
+                    metadata={
+                        "channel": channel,
+                        "external_chat_id": chat_id,
+                        "external_user_id": normalized.get("user_id"),
+                        "username": username,
+                    },
+                )
+        except Exception as exc:
+            self.repository.create_communication_log(
+                level="warning",
+                message=f"AI contact resolution failed for {channel}",
+                payload={"channel": channel, "error": exc.__class__.__name__},
+            )
+        return None
+
+    def _resolve_ai_thread(
+        self,
+        *,
+        channel: str,
+        conversation_key: str,
+        subject: str,
+        contact: dict[str, object] | None,
+        metadata: dict[str, object],
+    ) -> dict[str, object] | None:
+        try:
+            row = self.repository.one("SELECT * FROM communication_threads WHERE thread_key = ?", (conversation_key,))
+            if row is not None:
+                return dict(row)
+            thread = self.repository.create_communication_thread(
+                subject=subject,
+                thread_key=conversation_key,
+                metadata={
+                    **metadata,
+                    "channel": channel,
+                    "contact_id": int(contact["id"]) if contact and contact.get("id") is not None else None,
+                },
+            )
+            return thread
+        except Exception as exc:
+            self.repository.create_communication_log(
+                level="warning",
+                message=f"AI thread resolution failed for {channel}",
+                payload={"channel": channel, "conversation_key": conversation_key, "error": exc.__class__.__name__},
+            )
+            return None
+
+    def _load_ai_context_messages(self, *, thread_id: int | None, exclude_message_id: int | None = None) -> tuple[AIMessage, ...]:
+        if thread_id is None:
+            return ()
+        query = "SELECT direction, body, created_at FROM communication_messages WHERE thread_id = ?"
+        params: list[object] = [thread_id]
+        if exclude_message_id is not None:
+            query += " AND id <> ?"
+            params.append(exclude_message_id)
+        query += " ORDER BY id DESC LIMIT ?"
+        params.append(getattr(self.config, "ai_max_context_messages", 20))
+        rows = self.repository.all(query, tuple(params))
+        ordered = list(reversed(rows))
+        messages: list[AIMessage] = []
+        for row in ordered:
+            direction = str(row.get("direction") or "inbound")
+            role = "assistant" if direction == "outbound" else "user"
+            content = str(row.get("body") or "").strip()
+            if not content:
+                continue
+            messages.append(AIMessage(role=role, content=content))
+        return tuple(messages)
+
+    def _dispatch_ai_reply(
+        self,
+        *,
+        channel: str,
+        normalized: dict[str, object],
+        message_row: dict[str, object],
+    ) -> dict[str, object] | None:
+        if not self._ai_enabled():
+            return None
+        orchestrator = self.ai_orchestrator
+        if orchestrator is None:
+            return None
+        conversation_key = f"{channel}:{normalized.get('chat_id') or normalized.get('sender') or normalized.get('user_id') or message_row.get('message_key')}"
+        metadata = {
+            "channel": channel,
+            "message_key": message_row.get("message_key"),
+            "type_webhook": normalized.get("type_webhook"),
+            "update_type": normalized.get("update_type"),
+        }
+        contact = self._resolve_ai_contact(channel, normalized)
+        subject = str(
+            normalized.get("sender_name")
+            or normalized.get("full_name")
+            or normalized.get("username")
+            or normalized.get("chat_id")
+            or conversation_key
+        )
+        thread = self._resolve_ai_thread(
+            channel=channel,
+            conversation_key=conversation_key,
+            subject=subject,
+            contact=contact,
+            metadata=metadata,
+        )
+        thread_id = int(thread["id"]) if thread and thread.get("id") is not None else None
+        if thread_id is not None:
+            self.repository.update_communication_message(
+                int(message_row["id"]),
+                thread_id=thread_id,
+                contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+                metadata={
+                    "channel": channel,
+                    "conversation_key": conversation_key,
+                    "contact_id": int(contact["id"]) if contact and contact.get("id") is not None else None,
+                    "thread_id": thread_id,
+                },
+            )
+        context_messages = self._load_ai_context_messages(thread_id=thread_id, exclude_message_id=int(message_row["id"]))
+        request = orchestrator.build_request(
+            channel=channel,
+            text=str(message_row.get("body") or normalized.get("message_body") or ""),
+            conversation_key=conversation_key,
+            external_chat_id=str(normalized.get("chat_id") or normalized.get("sender") or ""),
+            external_user_id=str(normalized.get("user_id") or ""),
+            message_id=str(message_row.get("message_key") or message_row.get("id") or ""),
+            thread_id=thread_id,
+            contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+            organization_id=int(contact["organization_id"]) if contact and contact.get("organization_id") is not None else None,
+            language=str(normalized.get("language") or getattr(self.config, "fallback_default_language", "fr")),
+            context_messages=context_messages,
+            metadata={
+                **metadata,
+                "sender_name": normalized.get("sender_name") or normalized.get("full_name") or "",
+                "contact_id": int(contact["id"]) if contact and contact.get("id") is not None else None,
+                "thread_id": thread_id,
+            },
+        )
+        outcome = orchestrator.generate(request)
+        response_text = str(outcome.response.content or "").strip()
+        if not response_text:
+            return {"status": "skipped", "reason": "empty_response"}
+        if channel == "whatsapp":
+            normalized_number = self._normalize_whatsapp_number(str(normalized.get("chat_id") or normalized.get("sender") or ""))
+            if not normalized_number:
+                return {"status": "skipped", "reason": "missing_recipient"}
+            delivery = self.repository.send_whatsapp(
+                to_number=normalized_number,
+                body=response_text,
+                thread_id=thread_id,
+                contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+                external_chat_id=str(normalized.get("chat_id") or normalized.get("sender") or ""),
+                external_user_id=str(normalized.get("user_id") or ""),
+                provider_message_id=outcome.response.provider_request_id,
+                metadata={
+                    "ai_request_id": outcome.request.request_id,
+                    "ai_provider": outcome.response.provider,
+                    "ai_fallback_used": outcome.decision.fallback_used,
+                    "ai_selected_provider": outcome.decision.selected_provider,
+                },
+            )
+        else:
+            chat_id = str(normalized.get("chat_id") or "")
+            if not chat_id:
+                return {"status": "skipped", "reason": "missing_chat_id"}
+            delivery = self.repository.send_telegram(
+                chat_id=chat_id,
+                body=response_text,
+                thread_id=thread_id,
+                contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+                external_chat_id=chat_id,
+                external_user_id=str(normalized.get("user_id") or ""),
+                provider_message_id=outcome.response.provider_request_id,
+                metadata={
+                    "ai_request_id": outcome.request.request_id,
+                    "ai_provider": outcome.response.provider,
+                    "ai_fallback_used": outcome.decision.fallback_used,
+                    "ai_selected_provider": outcome.decision.selected_provider,
+                },
+            )
+        self.repository.create_communication_log(
+            level="info",
+            message=f"AI reply delivered on {channel}",
+            payload={
+                "channel": channel,
+                "conversation_key": conversation_key,
+                "provider": outcome.response.provider,
+                "selected_provider": outcome.decision.selected_provider,
+                "fallback_used": outcome.decision.fallback_used,
+                "request_id": outcome.request.request_id,
+                "delivery_id": delivery.get("id") if isinstance(delivery, dict) else None,
+            },
+        )
+        return {
+            "status": "sent",
+            "provider": outcome.response.provider,
+            "selected_provider": outcome.decision.selected_provider,
+            "fallback_used": outcome.decision.fallback_used,
+            "request_id": outcome.request.request_id,
+        }
+
     def process_green_api_webhook(
         self,
         *,
@@ -618,6 +896,9 @@ class CommunicationService:
         METRICS.increment(
             "communication_green_api_webhook_duplicate_total" if duplicate else "communication_green_api_webhook_received_total"
         )
+        ai_reply = None
+        if not duplicate and type_webhook == "incomingMessageReceived" and message_row is not None:
+            ai_reply = self._dispatch_ai_reply(channel="whatsapp", normalized=normalized, message_row=message_row)
         return {
             "status": "ok",
             "accepted": True,
@@ -625,6 +906,7 @@ class CommunicationService:
             "typeWebhook": type_webhook,
             "event_id": int(event_row["id"]),
             "message_id": int(message_row["id"]) if message_row else None,
+            "ai_reply": ai_reply,
         }
 
     def process_telegram_webhook(
@@ -740,6 +1022,9 @@ class CommunicationService:
             if duplicate
             else "communication_telegram_webhook_received_total"
         )
+        ai_reply = None
+        if not duplicate and update_type in {"message", "business_message", "guest_message"} and message_row is not None:
+            ai_reply = self._dispatch_ai_reply(channel="telegram", normalized=normalized, message_row=message_row)
         return {
             "status": "ok",
             "accepted": True,
@@ -748,6 +1033,7 @@ class CommunicationService:
             "event_id": int(event_row["id"]),
             "update_id": normalized.get("update_id"),
             "message_id": int(message_row["id"]) if message_row else None,
+            "ai_reply": ai_reply,
         }
 
     def _upsert_green_api_message(

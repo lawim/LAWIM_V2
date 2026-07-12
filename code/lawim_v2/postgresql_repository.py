@@ -459,6 +459,10 @@ class PostgreSQLLawimRepository(LawimRepository):
             self.seed_financial_catalog()
         if hasattr(self, "seed_communication_catalog"):
             self.seed_communication_catalog()
+        if hasattr(self, "initialize_ai_catalog"):
+            self.initialize_ai_catalog()
+        if hasattr(self, "seed_ai_catalog"):
+            self.seed_ai_catalog()
         if hasattr(self, "seed_analytics_catalog"):
             self.seed_analytics_catalog()
         if hasattr(self, "seed_backup_catalog"):

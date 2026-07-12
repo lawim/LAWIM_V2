@@ -21,3 +21,13 @@ This document captures the official connector catalog for LAWIM 1.x, focusing on
 - Update types handled: `message`, `edited_message`, `callback_query`, `my_chat_member`, `chat_member`
 - Persistence targets: `communication_messages`, `telegram_updates`, `communication_events`, `communication_logs`
 - Idempotence key: Telegram `update_id`, with a payload hash fallback only when `update_id` is absent
+
+## AI Orchestrator
+
+- Orchestrator flag: `AI_ORCHESTRATOR_ENABLED=true`
+- Primary chain: `AI_PRIMARY_PROVIDER=deepseek`, `AI_COMPLEX_PROVIDER=openai`
+- Fallback chain: `AI_FALLBACK_CHAIN=deepseek,openai,gemini_primary,gemini_secondary,internal`
+- Provider credentials: `DEEPSEEK_API_KEY`, `OPENAI_API_KEY`, `GEMINI_PRIMARY_API_KEY`, `GEMINI_SECONDARY_API_KEY`
+- Provider models: `DEEPSEEK_MODEL`, `OPENAI_MODEL`, `GEMINI_PRIMARY_MODEL`, `GEMINI_SECONDARY_MODEL`
+- Safety controls: timeouts, circuit breakers, response validation, fallback, and learning approval are all configured through environment variables and persisted catalog tables
+- Telegram transport: outbound API calls should prefer IPv4 when the deployment path requires it

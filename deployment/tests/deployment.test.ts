@@ -31,6 +31,10 @@ describe('Deployment Platform', () => {
         'TELEGRAM_BOT_TOKEN',
         'TELEGRAM_WEBHOOK_SECRET',
         'TELEGRAM_WEBHOOK_URL',
+        'DEEPSEEK_API_KEY',
+        'OPENAI_API_KEY',
+        'GEMINI_PRIMARY_API_KEY',
+        'GEMINI_SECONDARY_API_KEY',
         'SMTP_PASSWORD'
       ];
       

@@ -57,6 +57,7 @@ from .ecosystem.repository import EcosystemRepositoryMixin
 from .program_m_support import ProgramMRepositoryMixinBase
 from .backup.repository import BackupRepositoryMixin
 from .financial.repository import FinancialRepositoryMixin
+from .ai.repository import AIRepositoryMixin
 
 
 SCHEMA = SQLITE_INIT_SCRIPT
@@ -110,7 +111,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, FinancialRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase, BackupRepositoryMixin, BrainRepositoryMixin, BrainRelationRepositoryMixin):
+class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, AIRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, FinancialRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase, BackupRepositoryMixin, BrainRepositoryMixin, BrainRelationRepositoryMixin):
     driver = "sqlite"
 
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
@@ -195,6 +196,10 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, Se
             self.seed_financial_catalog()
         if hasattr(self, "seed_communication_catalog"):
             self.seed_communication_catalog()
+        if hasattr(self, "initialize_ai_catalog"):
+            self.initialize_ai_catalog()
+        if hasattr(self, "seed_ai_catalog"):
+            self.seed_ai_catalog()
         if hasattr(self, "seed_analytics_catalog"):
             self.seed_analytics_catalog()
         if hasattr(self, "seed_backup_catalog"):

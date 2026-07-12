@@ -167,9 +167,12 @@ class LawimServices:
         from .security.service import SecurityService
 
         self.security = SecurityService(repository, self.projects, self.policy)
+        from .ai import AIOrchestrator
+
+        self.ai = AIOrchestrator(repository, config)
         from .communication.service import CommunicationService
 
-        self.communication = CommunicationService(repository, self.projects, self.policy)
+        self.communication = CommunicationService(repository, self.projects, self.policy, config=config, ai_orchestrator=self.ai)
         from .analytics.service import AnalyticsService
 
         self.analytics = AnalyticsService(repository, self.projects, self.policy)

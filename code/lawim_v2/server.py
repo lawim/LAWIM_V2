@@ -577,6 +577,36 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             )
             return
 
+        if path.startswith("/api/admin/ai"):
+            actor = self._require_user()
+            if not self.services.policy.is_admin(actor):
+                raise ApiError(HTTPStatus.FORBIDDEN, "forbidden", "Admin required")
+            if path == "/api/admin/ai/providers":
+                self._send_json({"providers": self.services.ai.list_providers()})
+                return
+            if path == "/api/admin/ai/health":
+                self._send_json({"health": self.services.ai.list_health()})
+                return
+            if path == "/api/admin/ai/usage":
+                period = self._first(query, "period") or "daily"
+                self._send_json({"usage": self.services.ai.list_usage(period=period)})
+                return
+            if path == "/api/admin/ai/alerts":
+                self._send_json({"alerts": self.services.ai.list_alerts(status=self._first(query, "status"))})
+                return
+            if path == "/api/admin/ai/fallback":
+                self._send_json({"fallback": self.services.ai.list_fallback_entries(status=self._first(query, "status"))})
+                return
+            if path == "/api/admin/ai/learning/candidates":
+                self._send_json({"candidates": self.services.ai.list_learning_candidates(status=self._first(query, "status"))})
+                return
+            if path == "/api/admin/ai/knowledge/versions":
+                self._send_json({"versions": self.services.ai.list_knowledge_versions()})
+                return
+            if path == "/api/admin/ai/overview":
+                self._send_json({"overview": self.services.ai.ai_overview()})
+                return
+
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
 
     def _handle_api_post(self, parsed, body: dict[str, Any]) -> None:
@@ -848,6 +878,41 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             )
             self._send_json({"project": project}, status=HTTPStatus.CREATED)
             return
+
+        if path.startswith("/api/admin/ai"):
+            actor = self._require_user()
+            if not self.services.policy.is_admin(actor):
+                raise ApiError(HTTPStatus.FORBIDDEN, "forbidden", "Admin required")
+            if path == "/api/admin/ai/learning/candidates/review":
+                candidate_key = self._require_text(body, "candidate_key")
+                decision = self._optional_text(body.get("decision")) or "review_required"
+                notes = self._optional_text(body.get("notes")) or ""
+                result = self.services.ai.review_learning_candidate(
+                    candidate_key=candidate_key,
+                    decision=decision,
+                    notes=notes,
+                    reviewer_user_id=int(actor["id"]) if actor.get("id") is not None else None,
+                )
+                self._send_json({"candidate": result}, status=HTTPStatus.CREATED)
+                return
+            if path == "/api/admin/ai/learning/candidates/publish":
+                candidate_key = self._require_text(body, "candidate_key")
+                result = self.services.ai.publish_learning_candidate(
+                    candidate_key=candidate_key,
+                    reviewer_user_id=int(actor["id"]) if actor.get("id") is not None else None,
+                )
+                self._send_json({"result": result}, status=HTTPStatus.CREATED)
+                return
+            if path == "/api/admin/ai/learning/candidates/deprecate":
+                candidate_key = self._require_text(body, "candidate_key")
+                result = self.services.ai.deprecate_learning_candidate(candidate_key=candidate_key)
+                self._send_json({"candidate": result}, status=HTTPStatus.CREATED)
+                return
+            if path == "/api/admin/ai/knowledge/versions/rollback":
+                version_key = self._require_text(body, "version_key")
+                result = self.services.ai.rollback_knowledge_version(version_key=version_key)
+                self._send_json({"version": result}, status=HTTPStatus.CREATED)
+                return
 
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
 

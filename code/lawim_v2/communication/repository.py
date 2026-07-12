@@ -159,6 +159,7 @@ class CommunicationRepositoryMixin:
         thread_id: int | None = None,
         scheduled_at: str | None = None,
         payload: dict[str, Any] | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> dict[str, object]:
         engine = CommunicationPlatformEngine()
         channel_type = engine.communication.validate_channel(channel_type)
@@ -174,8 +175,8 @@ class CommunicationRepositoryMixin:
                 INSERT OR IGNORE INTO communication_messages (
                     message_key, thread_id, channel_type, direction, priority, status,
                     sender_user_id, recipient_user_id, contact_id, organization_id,
-                    subject, body, payload_json, scheduled_at, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    subject, body, payload_json, scheduled_at, metadata_json, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     key,
@@ -192,6 +193,7 @@ class CommunicationRepositoryMixin:
                     body,
                     _json(payload or {}),
                     scheduled_at,
+                    _json(metadata or {}),
                     now,
                     now,
                 ),
@@ -320,7 +322,21 @@ class CommunicationRepositoryMixin:
         return [dict(r) for r in self.all(query, tuple(params))]
 
     def update_communication_message(self, message_id: int, **fields: object) -> dict[str, object]:
-        allowed = {"status", "priority", "body", "subject", "scheduled_at", "sent_at", "metadata_json", "payload_json"}
+        allowed = {
+            "status",
+            "priority",
+            "body",
+            "subject",
+            "scheduled_at",
+            "sent_at",
+            "metadata_json",
+            "payload_json",
+            "thread_id",
+            "contact_id",
+            "organization_id",
+            "sender_user_id",
+            "recipient_user_id",
+        }
         updates = {k: v for k, v in fields.items() if k in allowed and v is not None}
         if "metadata" in fields and fields["metadata"] is not None:
             updates["metadata_json"] = _json(fields["metadata"])
@@ -362,17 +378,19 @@ class CommunicationRepositoryMixin:
         subject: str = "",
         channel_id: int | None = None,
         organization_id: int | None = None,
+        thread_key: str | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> dict[str, object]:
         now = _utcnow()
-        key = f"thread-{uuid.uuid4().hex[:10]}"
+        key = _normalize_message_key(thread_key) or f"thread-{uuid.uuid4().hex[:10]}"
         with self._transaction() as conn:
             conn.execute(
                 """
-                INSERT INTO communication_threads (
-                    thread_key, channel_id, subject, status, organization_id, created_at, updated_at
-                ) VALUES (?, ?, ?, 'open', ?, ?, ?)
+                INSERT OR IGNORE INTO communication_threads (
+                    thread_key, channel_id, subject, status, organization_id, metadata_json, created_at, updated_at
+                ) VALUES (?, ?, ?, 'open', ?, ?, ?, ?)
                 """,
-                (key, channel_id, subject, organization_id, now, now),
+                (key, channel_id, subject, organization_id, _json(metadata or {}), now, now),
             )
         return dict(self.one("SELECT * FROM communication_threads WHERE thread_key = ?", (key,)))
 
@@ -653,12 +671,37 @@ class CommunicationRepositoryMixin:
         to_number: str,
         body: str,
         account_id: int | None = None,
+        thread_id: int | None = None,
+        contact_id: int | None = None,
+        external_chat_id: str | None = None,
+        external_user_id: str | None = None,
+        provider_message_id: str | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> dict[str, object]:
         engine = CommunicationPlatformEngine()
         payload = engine.whatsapp.build_payload(to_number=to_number, body=body)
+        payload.update(
+            {
+                "external_chat_id": external_chat_id or "",
+                "external_user_id": external_user_id or "",
+                "provider_message_id": provider_message_id or "",
+            }
+        )
         result = engine.whatsapp.stub_send(payload)
         now = _utcnow()
-        msg = self.create_communication_message(channel_type="whatsapp", body=body, status="sent")
+        msg = self.create_communication_message(
+            channel_type="whatsapp",
+            body=body,
+            status="sent",
+            thread_id=thread_id,
+            contact_id=contact_id,
+            payload=payload,
+            metadata=metadata or {
+                "external_chat_id": external_chat_id or "",
+                "external_user_id": external_user_id or "",
+                "provider_message_id": provider_message_id or "",
+            },
+        )
         key = f"wa-{uuid.uuid4().hex[:10]}"
         with self._transaction() as conn:
             conn.execute(
@@ -684,12 +727,37 @@ class CommunicationRepositoryMixin:
         chat_id: str,
         body: str,
         bot_id: int | None = None,
+        thread_id: int | None = None,
+        contact_id: int | None = None,
+        external_chat_id: str | None = None,
+        external_user_id: str | None = None,
+        provider_message_id: str | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> dict[str, object]:
         engine = CommunicationPlatformEngine()
         payload = engine.telegram.build_payload(chat_id=chat_id, body=body)
+        payload.update(
+            {
+                "external_chat_id": external_chat_id or chat_id,
+                "external_user_id": external_user_id or "",
+                "provider_message_id": provider_message_id or "",
+            }
+        )
         result = engine.telegram.stub_send(payload)
         now = _utcnow()
-        msg = self.create_communication_message(channel_type="telegram", body=body, status="sent")
+        msg = self.create_communication_message(
+            channel_type="telegram",
+            body=body,
+            status="sent",
+            thread_id=thread_id,
+            contact_id=contact_id,
+            payload=payload,
+            metadata=metadata or {
+                "external_chat_id": external_chat_id or chat_id,
+                "external_user_id": external_user_id or "",
+                "provider_message_id": provider_message_id or "",
+            },
+        )
         key = f"tg-{uuid.uuid4().hex[:10]}"
         with self._transaction() as conn:
             conn.execute(
