@@ -217,6 +217,11 @@ class LawimServices:
                 "payouts_enabled": self.config.payouts_enabled,
                 "campay_enabled": self.config.campay_enabled,
                 "campay_environment": self.config.campay_environment,
+                "campay_widget_enabled": self.config.campay_widget_enabled,
+                "campay_payment_links_enabled": self.config.campay_payment_links_enabled,
+                "campay_disbursement_enabled": self.config.campay_disbursement_enabled,
+                "campay_dev_mode": self.config.campay_dev_mode,
+                "campay_prod_mode": self.config.campay_prod_mode,
             }
             payload["database"] = profile
             payload["audit"] = {

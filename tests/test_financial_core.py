@@ -307,6 +307,24 @@ class FinancialCoreCampayScaffoldTests(LawimTestHarness):
         self.assertEqual(auth["status"], "FAILED")
         self.assertEqual(auth["error_code"], "campay_error")
 
+    def test_campay_feature_flags_are_exposed_in_health_details(self) -> None:
+        config = replace(
+            self.config,
+            campay_widget_enabled=True,
+            campay_payment_links_enabled=True,
+            campay_disbursement_enabled=False,
+            campay_dev_mode=True,
+            campay_prod_mode=False,
+        )
+        adapter = CampayProviderAdapter(config)
+        health = adapter.health_check().to_dict()
+        flags = health["details"]["flags"]
+        self.assertTrue(flags["widget_enabled"])
+        self.assertTrue(flags["payment_links_enabled"])
+        self.assertFalse(flags["disbursement_enabled"])
+        self.assertTrue(flags["dev_mode"])
+        self.assertFalse(flags["prod_mode"])
+
 
 class FinancialCoreCampayBehaviorTests(LawimTestHarness):
     def test_campay_authentication_caches_token_and_creates_payments(self) -> None:

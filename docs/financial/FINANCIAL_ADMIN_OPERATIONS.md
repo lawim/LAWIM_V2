@@ -170,7 +170,25 @@ Escalate to engineering when:
 - payment status differs from internal state
 - a refund cannot be reconciled
 
-## 15. Related Documentation
+## 15. Campay Readiness
+Before enabling Campay in a higher environment:
+1. confirm the active environment is still DEV or sandbox
+2. verify the widget, payment-link and disbursement flags
+3. confirm the webhook URL and signature secret are present
+4. check that credentials are local-only and have not been copied into documentation
+5. regenerate the development identifiers before preproduction or production
+6. verify the latest payment, receipt and reconciliation records remain consistent
+
+## 16. Recovery and Continuity
+If Campay or the backend becomes unavailable:
+- keep the payment intent and invoice intact
+- do not recreate the payment intent on retry
+- re-run the status refresh once the backend returns
+- let reconciliation close the gap if a webhook arrived during downtime
+- preserve audit evidence and provider events
+- check the recovery bundle and PostgreSQL backup when restoring a broken environment
+
+## 17. Related Documentation
 - `docs/financial/FINANCIAL_CORE_ARCHITECTURE.md`
 - `docs/financial/CAMPAY_INTEGRATION.md`
 - `reports/product_reviews/Mission_14_Part_2_Campay_Integration.md`

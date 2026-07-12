@@ -182,6 +182,11 @@ The connector health check uses:
 - configuration presence
 - token presence or credential presence
 - `/api/balance/`
+- feature flags prepared in LAWIM_V2:
+  - widget
+  - payment links
+  - disbursement
+  - DEV / PROD mode selection
 
 The health snapshot includes:
 - environment
@@ -222,6 +227,8 @@ Sandbox and production are separated by configuration:
 - sandbox defaults to `https://demo.campay.net`
 - production defaults to `https://www.campay.net`
 - environment is recorded in the provider health snapshot
+- development identifiers remain local-only and must be replaced and regenerated before preproduction or production
+- the widget and payment-link toggles stay opt-in until the corresponding environment is explicitly prepared
 
 Validation notes:
 - the adapter and unit tests cover the integration logic
@@ -233,8 +240,10 @@ Secret rotation is supported operationally by replacing:
 - token
 - username/password
 - webhook secret
+- development identifiers for the widget and provider flows
 
 The adapter reads secrets from configuration at runtime and does not persist them in the database.
+- the production checklist requires fresh keys before preproduction and production promotion
 
 ## 18. Troubleshooting
 Common failure modes:
@@ -247,6 +256,7 @@ Common failure modes:
 - amount mismatch
 - currency mismatch
 - orphan webhook event
+- widget disabled because `LAWIM_CAMPAY_WIDGET_ENABLED` or the widget app id is missing
 
 Recommended action:
 1. check provider health
@@ -261,6 +271,8 @@ Current limitations are explicit:
 - automatic Campay cancellations are not enabled in this delivery
 - the connector does not act as a second source of truth
 - live sandbox/prod verification depends on external credentials
+- payment-link and disbursement validation must be rechecked before production activation
+- widget validation remains environment-gated and should be executed again when the final DEV credentials are available
 
 ## 20. References
 Sources consulted for the integration design:

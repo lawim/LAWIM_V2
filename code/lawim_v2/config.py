@@ -97,6 +97,11 @@ class AppConfig:
     campay_max_retries: int = 3
     campay_status_check_interval: int = 60
     campay_provider_priority: int = 10
+    campay_widget_enabled: bool = False
+    campay_payment_links_enabled: bool = False
+    campay_disbursement_enabled: bool = False
+    campay_dev_mode: bool = True
+    campay_prod_mode: bool = False
 
     @classmethod
     def legacy_construct(
@@ -173,6 +178,8 @@ class AppConfig:
         campay_base_url = os.getenv("LAWIM_CAMPAY_BASE_URL", "").strip()
         if not campay_base_url:
             campay_base_url = "https://www.campay.net" if campay_environment == "production" else "https://demo.campay.net"
+        campay_dev_mode_default = campay_environment != "production"
+        campay_prod_mode_default = campay_environment == "production"
         return cls(
             host=os.getenv("LAWIM_HOST", "0.0.0.0"),
             port=_int_env("LAWIM_PORT", 3000),
@@ -223,6 +230,11 @@ class AppConfig:
             campay_max_retries=_int_env("LAWIM_CAMPAY_MAX_RETRIES", 3),
             campay_status_check_interval=_int_env("LAWIM_CAMPAY_STATUS_CHECK_INTERVAL", 60),
             campay_provider_priority=_int_env("LAWIM_CAMPAY_PROVIDER_PRIORITY", 10),
+            campay_widget_enabled=_bool_env("LAWIM_CAMPAY_WIDGET_ENABLED", False),
+            campay_payment_links_enabled=_bool_env("LAWIM_CAMPAY_PAYMENT_LINKS_ENABLED", False),
+            campay_disbursement_enabled=_bool_env("LAWIM_CAMPAY_DISBURSEMENT_ENABLED", False),
+            campay_dev_mode=_bool_env("LAWIM_CAMPAY_DEV_MODE", campay_dev_mode_default),
+            campay_prod_mode=_bool_env("LAWIM_CAMPAY_PROD_MODE", campay_prod_mode_default),
         )
 
     def validate(self) -> None:
@@ -267,6 +279,8 @@ class AppConfig:
                 errors.append("LAWIM_CAMPAY_WEBHOOK_SECRET is required when LAWIM_CAMPAY_ENABLED=true")
             if not (self.campay_token or (self.campay_app_username and self.campay_app_password)):
                 errors.append("LAWIM_CAMPAY_TOKEN or APP_USERNAME/APP_PASSWORD is required when LAWIM_CAMPAY_ENABLED=true")
+            if self.campay_dev_mode == self.campay_prod_mode:
+                errors.append("Exactly one of LAWIM_CAMPAY_DEV_MODE or LAWIM_CAMPAY_PROD_MODE must be true when Campay is enabled")
             if self.campay_timeout_seconds < 1:
                 errors.append("LAWIM_CAMPAY_TIMEOUT_SECONDS must be positive")
             if self.campay_max_retries < 0:

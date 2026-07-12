@@ -1,8 +1,36 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiSdk } from '@api-sdk';
 import { Badge, Button, Card, Input, PageShell } from '@ui';
 import { useAuthStore } from '@auth';
+
+type CampayWidgetPayload = {
+  status?: string;
+  reference?: string;
+  [key: string]: unknown;
+};
+
+type CampayWidgetOptions = {
+  payButtonId: string;
+  description: string;
+  amount?: string;
+  currency: string;
+  externalReference?: string;
+  redirectUrl?: string;
+};
+
+type CampayWidgetApi = {
+  options: (options: CampayWidgetOptions) => void;
+  onSuccess?: (data: CampayWidgetPayload) => void;
+  onFail?: (data: CampayWidgetPayload) => void;
+  onModalClose?: (data: CampayWidgetPayload) => void;
+};
+
+declare global {
+  interface Window {
+    campay?: CampayWidgetApi;
+  }
+}
 
 function formatMoney(value?: number | null, currency = 'XAF') {
   if (value == null) return '—';
@@ -51,10 +79,16 @@ function PaymentPanel({
   defaultAmount?: number | null;
   defaultCurrency?: string | null;
 }) {
+  const campayWidgetEnabled = import.meta.env.VITE_CAMPAY_WIDGET_ENABLED === 'true';
+  const campayWidgetAppId = String(import.meta.env.VITE_CAMPAY_WIDGET_APP_ID ?? '').trim();
+  const campayWidgetScriptUrl = String(import.meta.env.VITE_CAMPAY_WIDGET_SCRIPT_URL ?? 'https://demo.campay.net/sdk/js').trim();
   const [targetInvoiceId, setTargetInvoiceId] = useState(String(invoiceId ?? ''));
   const [phoneNumber, setPhoneNumber] = useState('+237677000111');
   const [message, setMessage] = useState<string | null>(null);
   const [latestIntentId, setLatestIntentId] = useState<number | null>(null);
+  const [latestIntentNumber, setLatestIntentNumber] = useState<string | null>(null);
+  const [widgetMessage, setWidgetMessage] = useState<string | null>(null);
+  const [widgetReady, setWidgetReady] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const submitPayment = async () => {
@@ -78,8 +112,10 @@ function PaymentPanel({
       });
       const intent = response.data;
       setLatestIntentId(intent?.id ?? null);
+      setLatestIntentNumber(intent?.number ? String(intent.number) : null);
       const status = String(intent?.status ?? 'PENDING');
       setMessage(`${intent?.number ?? 'Payment intent'}: ${status}`);
+      setWidgetMessage(intent?.number ? `Payment intent ${intent.number} prêt pour le widget Campay.` : null);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Impossible de créer l’intention de paiement.');
     } finally {
@@ -102,6 +138,92 @@ function PaymentPanel({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!campayWidgetEnabled || !campayWidgetAppId) {
+      return;
+    }
+
+    if (window.campay) {
+      setWidgetReady(true);
+      return;
+    }
+
+    const scriptId = 'campay-widget-sdk';
+    const existing = document.getElementById(scriptId) as HTMLScriptElement | null;
+    if (existing) {
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.async = true;
+    try {
+      const src = new URL(campayWidgetScriptUrl);
+      src.searchParams.set('app-id', campayWidgetAppId);
+      script.src = src.toString();
+    } catch {
+      setWidgetMessage('Configuration du widget Campay invalide.');
+      return;
+    }
+    script.onload = () => setWidgetReady(true);
+    script.onerror = () => setWidgetMessage('Impossible de charger le widget Campay.');
+    document.head.appendChild(script);
+  }, [campayWidgetAppId, campayWidgetEnabled, campayWidgetScriptUrl]);
+
+  useEffect(() => {
+    if (!campayWidgetEnabled) {
+      return;
+    }
+    if (!latestIntentNumber) {
+      setWidgetMessage('Créez d’abord une intention de paiement pour activer le widget Campay.');
+      return;
+    }
+    if (!widgetReady || !window.campay) {
+      return;
+    }
+
+    const widget = window.campay;
+    const description = `LAWIM payment intent ${latestIntentNumber}`;
+    const redirectUrl = window.location.href;
+
+    const notifyBackend = async () => {
+      if (!latestIntentId) {
+        return;
+      }
+      try {
+        const response = await apiSdk.getPaymentStatus(latestIntentId);
+        const payload = response.data as Record<string, unknown>;
+        const intent = payload.payment_intent as Record<string, unknown> | undefined;
+        const provider = payload.provider_status as Record<string, unknown> | undefined;
+        setMessage(`${String(intent?.number ?? 'Payment')} → ${String(intent?.status ?? 'UNKNOWN')} / ${String(provider?.status ?? 'UNKNOWN')}`);
+      } catch (error) {
+        setMessage(error instanceof Error ? error.message : 'Impossible de notifier le backend.');
+      }
+    };
+
+    widget.options({
+      payButtonId: 'campay-widget-pay-button',
+      description,
+      amount: String(defaultAmount ?? ''),
+      currency: defaultCurrency ?? 'XAF',
+      externalReference: latestIntentNumber,
+      redirectUrl,
+    });
+
+    widget.onSuccess = (data) => {
+      setWidgetMessage(`Widget Campay: ${String(data.status ?? 'SUCCESSFUL')} · ${String(data.reference ?? latestIntentNumber)}`);
+      void notifyBackend();
+    };
+    widget.onFail = (data) => {
+      setWidgetMessage(`Widget Campay: ${String(data.status ?? 'FAILED')} · ${String(data.reference ?? latestIntentNumber)}`);
+      void notifyBackend();
+    };
+    widget.onModalClose = (data) => {
+      setWidgetMessage(`Widget Campay: modal ${String(data.status ?? 'CLOSED')}`);
+    };
+    setWidgetMessage(`Widget Campay prêt pour ${latestIntentNumber}.`);
+  }, [campayWidgetEnabled, defaultAmount, defaultCurrency, latestIntentId, latestIntentNumber, widgetReady]);
 
   return (
     <Card title="Paiement Mobile Money" description="Initier un paiement Campay à partir d’une facture payable.">
@@ -128,6 +250,40 @@ function PaymentPanel({
         </div>
         <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-300">
           {message ?? 'Aucune initiation en cours.'}
+        </div>
+        <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm text-slate-200">
+          <div className="flex items-center justify-between gap-3">
+            <strong className="text-white">Campay widget</strong>
+            <span className="rounded-full border border-amber-500/30 px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.22em] text-amber-200">
+              {campayWidgetEnabled ? 'Enabled' : 'Disabled'}
+            </span>
+          </div>
+          <p className="mt-2 text-slate-300">
+            Le widget reste opt-in et ne remplace pas la source de vérité backend. Il notifie LAWIM après les callbacks.
+          </p>
+          {campayWidgetEnabled ? (
+            <>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <Button
+                  id="campay-widget-pay-button"
+                  variant="secondary"
+                  disabled={!widgetReady || !latestIntentNumber}
+                >
+                  Ouvrir le widget Campay
+                </Button>
+                <Button variant="secondary" onClick={() => void refreshStatus()} disabled={!latestIntentId || loading}>
+                  Rafraîchir backend
+                </Button>
+              </div>
+              <div className="mt-3 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-xs text-slate-300">
+                {widgetMessage ?? 'Le widget attend une intention de paiement.'}
+              </div>
+            </>
+          ) : (
+            <div className="mt-3 rounded-xl border border-slate-800 bg-slate-950/60 p-3 text-xs text-slate-400">
+              Activez `VITE_CAMPAY_WIDGET_ENABLED` avec un `VITE_CAMPAY_WIDGET_APP_ID` local pour charger le widget de démo.
+            </div>
+          )}
         </div>
       </div>
     </Card>

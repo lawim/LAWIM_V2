@@ -463,6 +463,15 @@ class CampayProviderAdapter:
             "supports_payout": True,
             "environment": self._environment(),
             "base_url": self._base_url(),
+            "flags": {
+                "enabled": bool(getattr(self.config, "campay_enabled", False)),
+                "sandbox_enabled": bool(getattr(self.config, "campay_sandbox_enabled", False)),
+                "widget_enabled": bool(getattr(self.config, "campay_widget_enabled", False)),
+                "payment_links_enabled": bool(getattr(self.config, "campay_payment_links_enabled", False)),
+                "disbursement_enabled": bool(getattr(self.config, "campay_disbursement_enabled", False)),
+                "dev_mode": bool(getattr(self.config, "campay_dev_mode", False)),
+                "prod_mode": bool(getattr(self.config, "campay_prod_mode", False)),
+            },
         }
         if not self._enabled():
             with METRICS.lock:

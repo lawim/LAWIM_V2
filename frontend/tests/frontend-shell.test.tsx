@@ -92,6 +92,8 @@ const defaultPartnerMatches = {
   message: 'mock'
 };
 
+const testEnv = import.meta.env as Record<string, string | boolean | undefined>;
+
 function renderWithProviders(ui: ReactElement, initialEntries: string[] = ['/']) {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
@@ -115,6 +117,10 @@ function loginResponse(role: string, roles: string[], email: string, name: strin
 beforeEach(() => {
   vi.restoreAllMocks();
   window.localStorage.clear();
+  delete (window as Window & { campay?: unknown }).campay;
+  testEnv.VITE_CAMPAY_WIDGET_ENABLED = undefined;
+  testEnv.VITE_CAMPAY_WIDGET_SCRIPT_URL = undefined;
+  testEnv.VITE_CAMPAY_WIDGET_APP_ID = undefined;
   useAuthStore.setState({
     user: null,
     token: null,
@@ -145,6 +151,10 @@ beforeEach(() => {
 
 afterEach(() => {
   window.localStorage.clear();
+  delete (window as Window & { campay?: unknown }).campay;
+  testEnv.VITE_CAMPAY_WIDGET_ENABLED = undefined;
+  testEnv.VITE_CAMPAY_WIDGET_SCRIPT_URL = undefined;
+  testEnv.VITE_CAMPAY_WIDGET_APP_ID = undefined;
   vi.restoreAllMocks();
 });
 
@@ -317,6 +327,112 @@ describe('LAWIM frontend shell', () => {
       initiate: true
     });
     expect(await screen.findByText(/PAY-2026-000088/)).toBeInTheDocument();
+  });
+
+  it('configures the Campay widget and notifies the backend on callbacks', async () => {
+    const user = userEvent.setup();
+    testEnv.VITE_CAMPAY_WIDGET_ENABLED = 'true';
+    testEnv.VITE_CAMPAY_WIDGET_SCRIPT_URL = 'https://demo.campay.net/sdk/js';
+    testEnv.VITE_CAMPAY_WIDGET_APP_ID = 'demo-widget-app-id';
+
+    const campayOptionsSpy = vi.fn();
+    const getPaymentStatusSpy = vi.spyOn(apiSdk, 'getPaymentStatus').mockResolvedValue({
+      data: {
+        payment_intent: { id: 88, number: 'PAY-2026-000088', status: 'SUCCEEDED' },
+        provider_status: { status: 'SUCCESSFUL' }
+      },
+      message: 'mock'
+    } as never);
+    const campayWidget = {
+      options: campayOptionsSpy
+    } as {
+      options: typeof campayOptionsSpy;
+      onSuccess?: (data: { status?: string; reference?: string }) => void;
+      onFail?: (data: { status?: string; reference?: string }) => void;
+      onModalClose?: (data: { status?: string; reference?: string }) => void;
+    };
+    (window as Window & { campay?: typeof campayWidget }).campay = campayWidget;
+
+    window.localStorage.setItem('lawim_token', 'financial-token');
+    useAuthStore.setState({
+      user: { id: 'u-1', name: 'Finance Admin', role: 'admin', email: 'admin@lawim.app' },
+      token: 'financial-token',
+      roles: ['admin'],
+      isAuthenticated: true,
+      isLoading: false,
+      hasHydrated: true,
+      sessionExpired: false,
+      sessionUnavailable: false
+    });
+    vi.mocked(apiSdk.getSession).mockResolvedValue({
+      data: {
+        user: { id: 'u-1', name: 'Finance Admin', role: 'admin', email: 'admin@lawim.app' },
+        token: 'financial-token',
+        roles: ['admin']
+      },
+      message: 'ok'
+    });
+    vi.spyOn(apiSdk, 'listInvoices').mockResolvedValue({
+      data: [
+        {
+          id: 42,
+          number: 'FAC-2026-000042',
+          status: 'ISSUED',
+          currency: 'XAF',
+          total_minor: 2500,
+          balance_minor: 2500,
+          amount_paid_minor: 0,
+          lines: []
+        }
+      ],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listReceipts').mockResolvedValue({
+      data: [{ id: 5, number: 'REC-2026-000005', status: 'GENERATED', currency: 'XAF', amount_minor: 2500 }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listPaymentIntents').mockResolvedValue({
+      data: [{ id: 77, number: 'PAY-2026-000077', status: 'PENDING', amount_minor: 2500, currency: 'XAF', provider_code: 'CAMPAY' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listSubscriptions').mockResolvedValue({
+      data: [{ id: 3, status: 'ACTIVE', customer_user_id: 1, plan_id: 2, renewal_mode: 'automatic' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listOwnCommissions').mockResolvedValue({
+      data: [{ id: 8, status: 'PAYABLE', amount_minor: 300, currency: 'XAF' }],
+      message: 'mock'
+    } as never);
+    vi.spyOn(apiSdk, 'listOwnPayouts').mockResolvedValue({
+      data: [{ id: 9, status: 'APPROVED', amount_minor: 300, currency: 'XAF' }],
+      message: 'mock'
+    } as never);
+    const createPaymentIntentSpy = vi.spyOn(apiSdk, 'createPaymentIntent').mockResolvedValue({
+      data: { id: 88, number: 'PAY-2026-000088', status: 'PENDING', amount_minor: 2500, currency: 'XAF', provider_code: 'CAMPAY', phone_number_e164: '+237677000111' },
+      message: 'mock'
+    } as never);
+
+    renderWithProviders(<WebApp />, ['/financial']);
+
+    await screen.findByRole('heading', { name: /financial hub/i });
+    await user.click(screen.getByRole('button', { name: /initier le paiement/i }));
+
+    expect(createPaymentIntentSpy).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(campayOptionsSpy).toHaveBeenCalled();
+    });
+    expect(campayOptionsSpy.mock.calls.at(-1)?.[0]).toMatchObject({
+      payButtonId: 'campay-widget-pay-button',
+      currency: 'XAF',
+      externalReference: 'PAY-2026-000088'
+    });
+
+    const campayButton = screen.getByRole('button', { name: /ouvrir le widget campay/i });
+    expect(campayButton).toBeInTheDocument();
+
+    await campayWidget.onSuccess?.({ status: 'SUCCESSFUL', reference: 'campay-widget-001' });
+    expect(getPaymentStatusSpy).toHaveBeenCalledWith(88);
+    expect(await screen.findByText(/^Widget Campay:/i)).toBeInTheDocument();
   });
 
   it('renders the admin financial operations cockpit', async () => {
