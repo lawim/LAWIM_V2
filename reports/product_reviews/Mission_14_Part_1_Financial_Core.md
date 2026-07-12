@@ -308,12 +308,12 @@
 - Les transitions de paiement et de remboursement devront etre encore durcies en Partie 2 avec les webhooks et la verification Campay reelle.
 - Le reporting documentaire et les artefacts de restauration attendront la suite de la mission.
 
-## 22. Etat Git Avant Commit De Cloture
+## 22. Etat Git Final
 - Branche active: `main`
-- `HEAD` au moment du reporting: `37aeee39a33b198d71d36511cfd8d5d5b0128476`
-- `origin/main`: `37aeee39a33b198d71d36511cfd8d5d5b0128476`
+- `HEAD`: `c7143ddcdf078e15a0d445258997e4ba4ecadae3`
+- `origin/main`: `c7143ddcdf078e15a0d445258997e4ba4ecadae3`
 - Divergence: `0 0`
-- Worktree: modifie en attente du commit final de cloture
+- Worktree: propre
 
 ## 23. Verdict De La Partie 1
 - `VALIDÉ`
