@@ -310,8 +310,8 @@
 
 ## 22. Etat Git Final
 - Branche active: `main`
-- `HEAD`: `373642c3b1e511638e311c3f56c775f7308463bb`
-- `origin/main`: `373642c3b1e511638e311c3f56c775f7308463bb`
+- `HEAD`: aligne sur `origin/main`
+- `origin/main`: aligne sur `HEAD`
 - Divergence: `0 0`
 - Worktree: propre
 
