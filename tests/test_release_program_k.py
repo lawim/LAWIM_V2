@@ -1184,10 +1184,10 @@ class ReleaseProgramKUiTests(LawimTestHarness):
 class ReleaseProgramKHealthTests(LawimTestHarness):
     def test_health_schema_v17(self) -> None:
         health = self.invoke('/api/health')
-        self.assertEqual(health.body_json()['database']['schema_version'], 18)
+        self.assertEqual(health.body_json()['database']['schema_version'], 19)
 
     def test_migration_strategy_v17(self) -> None:
-        self.assertEqual(migration_strategy_profile()['schema_version'], 18)
+        self.assertEqual(migration_strategy_profile()['schema_version'], 19)
 
     def test_bootstrap_schema_v17(self) -> None:
         bootstrap = self.invoke('/api/bootstrap')
@@ -1635,4 +1635,3 @@ class ReleaseProgramKChannelTests(LawimTestHarness):
         token = self.login(email='admin@lawim.local')
         response = self.invoke('/api/v2/communication/messages/send', method='POST', token=token, body={'channel_type': 'push', 'title': 'T', 'body': 'Push'})
         self.assertIn(response.status, {HTTPStatus.OK, HTTPStatus.CREATED})
-

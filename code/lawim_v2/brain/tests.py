@@ -209,6 +209,7 @@ class TestResumeEngine(unittest.TestCase):
         )
         self.assertFalse(result["has_history"])
         self.assertIn("Bienvenue", result["short_summary"])
+        self.assertIn("LAWIM AI", result["summary"])
 
     def test_existing_project_with_facts(self):
         result = self.engine.build(

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..persona import assistant_start_message
+
 RESUMPTION_TEMPLATES: dict[str, str] = {
     "fr": (
         "Nous avions avancé sur votre projet **{objective}** à **{city}**.\n\n"
@@ -63,9 +65,9 @@ def build_resumption(
     city = str(project.get("location_city", "")) if project else ""
     if not confirmed_facts and not pending_hypotheses and not project:
         short = {
-            "fr": "Bienvenue sur LAWIM ! Comment puis-je vous accompagner dans votre projet immobilier ?",
-            "en": "Welcome to LAWIM! How can I help you with your real estate project?",
-            "pcm": "You don well come for LAWIM! How I fit help you for your property matter?",
+            "fr": assistant_start_message("fr"),
+            "en": assistant_start_message("en"),
+            "pcm": assistant_start_message("pcm"),
         }
         return {
             "has_history": False,

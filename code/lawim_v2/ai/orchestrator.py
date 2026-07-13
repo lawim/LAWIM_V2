@@ -14,9 +14,9 @@ from .learning import LearningEngine
 from .models import FallbackResolution, RoutingDecision
 from .monitoring import CircuitBreakerManager
 from .providers import DeepSeekProvider, GeminiProvider, InternalFallbackProvider, OpenAIProvider
-from .prompts.system import SYSTEM_PROMPT
 from .router import build_provider_chain, dedupe_chain
 from .safety import estimate_simple_token_count, looks_like_prompt_injection, redact_sensitive_object, redact_sensitive_text, stable_hash
+from ..persona import assistant_system_prompt
 
 
 def _utcnow() -> str:
@@ -141,7 +141,7 @@ class AIOrchestrator:
             filtered_metadata = {}
         filtered_metadata.update(
             {
-                "system_prompt": SYSTEM_PROMPT,
+                "system_prompt": assistant_system_prompt(request.language),
                 "prompt_injection_suspected": looks_like_prompt_injection(text),
                 "company_name": COMPANY_NAME,
             }

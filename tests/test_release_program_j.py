@@ -1161,10 +1161,10 @@ class ReleaseProgramJUiTests(LawimTestHarness):
 class ReleaseProgramJHealthTests(LawimTestHarness):
     def test_health_schema_v17(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 18)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 19)
 
     def test_migration_strategy_v17(self) -> None:
-        self.assertEqual(migration_strategy_profile()["schema_version"], 18)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 19)
 
     def test_bootstrap_schema_v17(self) -> None:
         bootstrap = self.invoke("/api/bootstrap")
@@ -1390,4 +1390,3 @@ class ReleaseProgramJObservabilityTests(LawimTestHarness):
         self.invoke("/api/v2/security/incidents", token=token)
         metrics = self._admin_metrics()
         self.assertGreaterEqual(metrics.get("security_requests_total", 0), 1)
-

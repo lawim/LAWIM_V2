@@ -10,7 +10,7 @@
 | `crm_*_messages` (Program H) | Enregistrements CRM ; envoi délégué à K |
 | `automation_notifications` (F) | Pont événementiel |
 | `ecosystem_notifications` (B) | Pont événementiel |
-| `contact.py` | Handles officiels `@lawimofficial`, `@lawim_assistant_bot` |
+| `contact.py` | Handles officiels `@lawimofficial`, `@lawim_bot` |
 | `events` / `record_event()` | Bus grossier ; `communication_events` pour payload riche |
 | `risk_alerts` (J) | Source `SecurityAlertRaised`, pas de duplication |
 

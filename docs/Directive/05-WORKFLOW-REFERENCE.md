@@ -1720,7 +1720,7 @@ Exemple.
 
 ↓
 
-👨🏽‍💼 Conseiller LAWIM
+🤖 LAWIM AI
 
 ↓
 
@@ -1749,7 +1749,7 @@ Les rôles affichés sont notamment :
 
 🤝 Introduceur
 
-👨🏽‍💼 Conseiller LAWIM
+🤖 LAWIM AI
 
 🛠 Support LAWIM
 
@@ -4534,7 +4534,7 @@ Acteurs obligatoires :
 
 Acteurs optionnels selon le contexte :
 
-* 👨🏽‍💼 Conseiller LAWIM ;
+* 🤖 LAWIM AI ;
 * 🤝 Introduceur ;
 * 🏢 Agence ;
 * ⚖️ Notaire ;

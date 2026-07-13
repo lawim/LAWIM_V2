@@ -1,14 +1,11 @@
 from __future__ import annotations
 
+from ..persona import assistant_system_prompt
 from .constants import DEFAULT_PROMPT_VERSION, PROMPT_KEYS
 
 SYSTEM_PROMPTS: dict[str, dict[str, str]] = {
     "system.base": {
-        DEFAULT_PROMPT_VERSION: (
-            "Tu es l'assistant LAWIM 2.x pour les projets immobilier. "
-            "Réponds en français, de façon concise, en t'appuyant sur le contexte projet, "
-            "l'écosystème et la cognition déterministe. Ne fabrique pas de données absentes du contexte."
-        ),
+        DEFAULT_PROMPT_VERSION: assistant_system_prompt("fr"),
     },
     "system.project_advisor": {
         DEFAULT_PROMPT_VERSION: (

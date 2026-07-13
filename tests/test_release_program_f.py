@@ -755,10 +755,10 @@ class ReleaseProgramFUiTests(LawimTestHarness):
 class ReleaseProgramFHealthTests(LawimTestHarness):
     def test_health_schema_v12(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 18)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 19)
 
     def test_migration_strategy_v12(self) -> None:
-        self.assertEqual(migration_strategy_profile()["schema_version"], 18)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 19)
 
     def test_metrics_include_automation_counters(self) -> None:
         token = self.login(email="agent@lawim.local")

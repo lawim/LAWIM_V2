@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from ..persona import assistant_greeting, assistant_persona, assistant_start_message
 from .intent_engine import IntentEngine, analyze_message
 from .memory import BrainMemory
 from .progression import ProgressionEngine, build_progression_state
@@ -9,15 +10,15 @@ from .resumption import ResumeEngine, build_resumption
 from .accompaniment import AccompanimentEngine, evaluate_suggestions
 
 ADVISOR_PERSONAS: dict[str, str] = {
-    "fr": "Je suis votre Conseiller LAWIM. Je connais votre dossier et je suis là pour vous accompagner pas à pas dans votre projet immobilier.",
-    "en": "I am your LAWIM Advisor. I know your file and I am here to guide you step by step through your real estate project.",
-    "pcm": "I be your LAWIM Advisor. I know your matter and I dey here to follow you for your property project.",
+    "fr": assistant_persona("fr"),
+    "en": assistant_persona("en"),
+    "pcm": assistant_persona("pcm"),
 }
 
 GREETINGS: dict[str, str] = {
-    "fr": "Bonjour ! Je suis votre Conseiller LAWIM. Comment puis-je vous aider pour votre projet immobilier aujourd'hui ?",
-    "en": "Hello! I am your LAWIM Advisor. How can I help you with your real estate project today?",
-    "pcm": "Hello! I be your LAWIM Advisor. How I fit help you for your property matter today?",
+    "fr": assistant_start_message("fr"),
+    "en": assistant_start_message("en"),
+    "pcm": assistant_start_message("pcm"),
 }
 
 
@@ -126,11 +127,11 @@ class AdvisorEngine:
 
     def get_greeting(self, language: str = "fr") -> str:
         lang = language if language in GREETINGS else "fr"
-        return GREETINGS[lang]
+        return assistant_greeting(lang)
 
     def get_persona(self, language: str = "fr") -> str:
         lang = language if language in ADVISOR_PERSONAS else "fr"
-        return ADVISOR_PERSONAS[lang]
+        return assistant_persona(lang)
 
     def handle_confirmation(
         self,

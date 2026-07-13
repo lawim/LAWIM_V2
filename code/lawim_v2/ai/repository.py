@@ -5,6 +5,7 @@ from typing import Any
 import json
 import uuid
 
+from ..persona import assistant_fallback_message, assistant_start_message
 from ..repository_introspection import table_exists
 from .schema_ddl import AI_TABLE_NAMES, POSTGRESQL_AI_STATEMENTS, SQLITE_AI_TABLES_SCRIPT
 
@@ -125,7 +126,7 @@ class AIRepositoryMixin:
                 "category": "presentation",
                 "language": "fr",
                 "channel": "all",
-                "response_text": "Bonjour et bienvenue sur LAWIM. Comment puis-je vous aider ?",
+                "response_text": assistant_start_message("fr"),
                 "confidence": 0.98,
                 "validated_at": now,
                 "validated_by": "system",
@@ -146,7 +147,7 @@ class AIRepositoryMixin:
                 "category": "contact",
                 "language": "fr",
                 "channel": "all",
-                "response_text": "Vous pouvez contacter LAWIM via WhatsApp ou Telegram. Merci de préciser votre demande pour une prise en charge rapide.",
+                "response_text": "Je suis LAWIM AI. Vous pouvez contacter LAWIM via WhatsApp ou Telegram. Merci de préciser votre demande pour une prise en charge rapide.",
                 "confidence": 0.95,
                 "validated_at": now,
                 "validated_by": "system",
@@ -167,7 +168,7 @@ class AIRepositoryMixin:
                 "category": "services",
                 "language": "fr",
                 "channel": "all",
-                "response_text": "Les horaires d'assistance peuvent varier selon l'équipe de service. Merci de préciser votre besoin pour être orienté correctement.",
+                "response_text": "Je suis LAWIM AI. Les horaires d'assistance peuvent varier selon l'équipe de service. Merci de préciser votre besoin pour être orienté correctement.",
                 "confidence": 0.9,
                 "validated_at": now,
                 "validated_by": "system",
@@ -188,7 +189,7 @@ class AIRepositoryMixin:
                 "category": "support",
                 "language": "fr",
                 "channel": "all",
-                "response_text": "Bonjour et bienvenue sur LAWIM. Votre message a bien été reçu. Merci de préciser brièvement l'objet de votre demande.",
+                "response_text": assistant_fallback_message("fr"),
                 "confidence": 0.85,
                 "validated_at": now,
                 "validated_by": "system",
@@ -219,9 +220,8 @@ class AIRepositoryMixin:
                     last_checked_at=now,
                     metadata_json={},
                 )
-        if self.scalar("SELECT COUNT(*) FROM ai_fallback_entries") == 0:
-            for entry in fallback_entries:
-                self.upsert_ai_fallback_entry(**entry, created_at=now, updated_at=now)
+        for entry in fallback_entries:
+            self.upsert_ai_fallback_entry(**entry, created_at=now, updated_at=now)
         if self.scalar("SELECT COUNT(*) FROM ai_knowledge_versions") == 0:
             self.create_ai_knowledge_version(
                 version_number=1,

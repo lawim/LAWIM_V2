@@ -12,6 +12,7 @@ from lawim_v2.assistant.engines import (
 )
 from lawim_v2.assistant.prompts import get_system_prompt, list_prompt_catalog
 from lawim_v2.assistant.providers import DeterministicLLMProvider, OptionalLLMProvider, resolve_llm_provider
+from lawim_v2.persona import assistant_fallback_message, assistant_greeting, assistant_persona, assistant_start_message, assistant_system_prompt
 from lawim_v2.assistant.schema_v10_ddl import V10_TABLE_NAMES
 from lawim_v2.schema_migrations import apply_sqlite_legacy_migrations
 
@@ -132,7 +133,15 @@ class ReleaseProgramDEngineTests(LawimTestHarness):
 
     def test_get_system_prompt(self) -> None:
         text = get_system_prompt("system.base")
-        self.assertIn("LAWIM", text)
+        self.assertIn("LAWIM AI", text)
+
+    def test_canonical_persona_helpers(self) -> None:
+        self.assertIn("LAWIM AI", assistant_persona("fr"))
+        self.assertIn("LAWIM AI", assistant_system_prompt("fr"))
+        self.assertIn("LAWIM AI", assistant_greeting("fr"))
+        self.assertIn("LAWIM AI", assistant_start_message("fr"))
+        self.assertIn("LAWIM AI", assistant_fallback_message("fr"))
+        self.assertNotIn("support et de qualification", assistant_system_prompt("fr"))
 
     def test_prompt_catalog(self) -> None:
         self.assertGreaterEqual(len(list_prompt_catalog()), 7)
@@ -288,12 +297,12 @@ class ReleaseProgramDUiTests(LawimTestHarness):
 class ReleaseProgramDHealthTests(LawimTestHarness):
     def test_health_schema_v10(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 18)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 19)
 
     def test_migration_strategy_v10(self) -> None:
         from lawim_v2.schema_migrations import migration_strategy_profile
 
-        self.assertEqual(migration_strategy_profile()["schema_version"], 18)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 19)
 
     def test_metrics_include_assistant_counters(self) -> None:
         token = self.login(email="admin@lawim.local")

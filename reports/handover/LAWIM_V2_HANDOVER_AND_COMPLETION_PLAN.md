@@ -486,3 +486,14 @@ curl -k https://lawim.app/readyz
 ssh user@ovh 'cd /var/www/lawim && cp -r releases/release-mission-09.2-premium/* .'
 ssh user@ovh 'supervisorctl restart lawim-backend'
 ```
+
+## Mission 15 Update
+
+- Official assistant identity: `LAWIM AI`
+- Canonical official channels: WhatsApp `+237 686 822 667`, Telegram `@lawim_bot`, email `contact@lawim.app`
+- Shared persona source: `code/lawim_v2/persona.py`
+- Conversation cycle: canonical and channel-agnostic
+- Feature management: centralized and auditable
+- Private beta preparation: documented in `docs/platform/PRIVATE_BETA_CONFIGURATION.md`
+- Readiness matrix: `reports/readiness/LAWIM_TEST_READINESS_MATRIX.md`
+- Next phase: technical and functional production recipe only

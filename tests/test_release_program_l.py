@@ -1054,7 +1054,7 @@ class ReleaseProgramLUiTests(LawimTestHarness):
 class ReleaseProgramLHealthTests(LawimTestHarness):
     def test_migration_profile_v18(self) -> None:
         profile = migration_strategy_profile()
-        self.assertEqual(profile['schema_version'], 18)
+        self.assertEqual(profile['schema_version'], 19)
 
     def test_analytics_health_public(self) -> None:
         response = self.invoke('/api/v2/analytics/health')

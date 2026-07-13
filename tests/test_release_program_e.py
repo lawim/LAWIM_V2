@@ -501,10 +501,10 @@ class ReleaseProgramEUiTests(LawimTestHarness):
 class ReleaseProgramEHealthTests(LawimTestHarness):
     def test_health_schema_v11(self) -> None:
         health = self.invoke("/api/health")
-        self.assertEqual(health.body_json()["database"]["schema_version"], 18)
+        self.assertEqual(health.body_json()["database"]["schema_version"], 19)
 
     def test_migration_strategy_v11(self) -> None:
-        self.assertEqual(migration_strategy_profile()["schema_version"], 18)
+        self.assertEqual(migration_strategy_profile()["schema_version"], 19)
 
     def test_metrics_include_knowledge_counters(self) -> None:
         token = self.login(email="agent@lawim.local")

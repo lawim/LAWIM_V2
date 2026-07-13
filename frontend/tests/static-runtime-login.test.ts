@@ -65,13 +65,13 @@ describe('static runtime login flow', () => {
       green_api_number: '686 822 667',
       facebook_username: '@lawimofficial',
       whatsapp_username: '@lawimofficial',
-      telegram_bot: '@lawim_assistant_bot',
+      telegram_bot: '@lawim_bot',
       support_contact: 'LAWIM',
       support_email: 'contact@lawim.app',
       default_country: 'Cameroon',
       website_url: 'https://lawim.app',
       whatsapp_link: 'https://wa.me/237686822667',
-      telegram_link: 'https://t.me/lawim_assistant_bot',
+      telegram_link: 'https://t.me/lawim_bot',
       facebook_link: 'https://facebook.com/lawimofficial',
     };
 

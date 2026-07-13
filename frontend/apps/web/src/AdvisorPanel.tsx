@@ -26,9 +26,9 @@ interface AdvisorPanelProps {
 /* ── Helpers ──────────────────────────────────── */
 
 const GREETINGS: Record<Lang, string> = {
-  fr: 'Bonjour ! Je suis votre Conseiller LAWIM. Comment puis-je vous accompagner dans votre projet immobilier ?',
-  en: 'Hello! I am your LAWIM Advisor. How can I help you with your real estate project?',
-  pcm: 'Hello! I be your LAWIM Advisor. How I fit help you for your property matter?',
+  fr: 'Bonjour ! Je suis LAWIM AI, votre conseiller immobilier intelligent. Comment puis-je vous accompagner dans votre projet immobilier ?',
+  en: 'Hello! I am LAWIM AI, your intelligent real estate advisor. How can I help you with your real estate project?',
+  pcm: 'Hello! I be LAWIM AI, your intelligent property advisor. How I fit help you for your property matter?',
 };
 
 const RESUME_CTA: Record<Lang, { continue: string; edit: string; view: string; new: string }> = {
@@ -419,7 +419,7 @@ export function AdvisorPanel({ userName, roleLabel, onNavigate }: AdvisorPanelPr
       <div className="flex flex-col">
         <div className="border-b border-slate-200 px-4 py-3">
           <p className="text-sm font-semibold text-slate-900">
-            {userName ? `Bonjour ${getFirstName(userName)} 👋` : '👋 Conseiller LAWIM'}
+            {userName ? `Bonjour ${getFirstName(userName)} 👋` : '👋 LAWIM AI'}
           </p>
           {roleLabel && <p className="mt-0.5 text-xs text-slate-500">{roleLabel}</p>}
         </div>
@@ -448,7 +448,7 @@ export function AdvisorPanel({ userName, roleLabel, onNavigate }: AdvisorPanelPr
         </button>
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-slate-900">
-            {activeDossier?.title || (isNewDossier ? '📋 Nouveau projet' : '💬 Conseiller LAWIM')}
+            {activeDossier?.title || (isNewDossier ? '📋 Nouveau projet' : '💬 LAWIM AI')}
           </p>
           {activeResume?.short_summary && (
             <p className="truncate text-xs text-slate-400">{activeResume.short_summary}</p>
@@ -603,9 +603,9 @@ export function AdvisorWidget({ onOpenConversation }: { onOpenConversation?: () 
   const active = dossiers.find((d) => d.resume.has_history);
 
   const greetings: Record<Lang, string> = {
-    fr: 'Votre Conseiller LAWIM',
-    en: 'Your LAWIM Advisor',
-    pcm: 'Your LAWIM Advisor',
+    fr: 'Votre LAWIM AI',
+    en: 'Your LAWIM AI',
+    pcm: 'Your LAWIM AI',
   };
 
   return (

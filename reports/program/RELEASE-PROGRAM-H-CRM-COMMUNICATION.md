@@ -33,7 +33,7 @@ Fichier : `code/lawim_v2/contact.py`
 | `WHATSAPP_NUMBER` / `GREEN_API_NUMBER` | 686 822 667 |
 | `FACEBOOK_USERNAME` | @lawimofficial |
 | `WHATSAPP_USERNAME` | @lawimofficial |
-| `TELEGRAM_BOT` | @lawim_assistant_bot |
+| `TELEGRAM_BOT` | @lawim_bot |
 | `DEFAULT_COUNTRY` | Cameroon |
 
 ### Propagation
