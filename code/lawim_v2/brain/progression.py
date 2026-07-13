@@ -242,9 +242,18 @@ def build_progression_state(
     memory_items: list[dict[str, Any]],
     project: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    template = QUESTION_TEMPLATES.get(intent)
+    resolved_intent = str(intent or "").strip()
+    project_intent = str(project.get("project_type") or "").strip() if project else ""
+    if resolved_intent not in QUESTION_TEMPLATES:
+        if project_intent in QUESTION_TEMPLATES:
+            resolved_intent = project_intent
+        elif resolved_intent == "find_property" and project_intent in QUESTION_TEMPLATES:
+            resolved_intent = project_intent
+        else:
+            resolved_intent = "find_property"
+    template = QUESTION_TEMPLATES.get(resolved_intent)
     if template is None:
-        intent = "find_property"
+        resolved_intent = "find_property"
         template = QUESTION_TEMPLATES.get("buy")
     if template is None:
         return {
@@ -335,7 +344,7 @@ def build_progression_state(
         next_action = str(template_actions[0])
 
     return {
-        "intent": intent,
+        "intent": resolved_intent,
         "progress_pct": progress_pct,
         "total_steps": len(all_steps),
         "required_fields": required_fields,

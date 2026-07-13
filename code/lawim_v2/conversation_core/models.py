@@ -22,6 +22,22 @@ class ConversationTurnPlan:
     thread_id: int | None = None
     contact_id: int | None = None
     organization_id: int | None = None
+    conversation_id: str = ""
+    dossier_id: int | None = None
+    intent: str = ""
+    transaction_type: str = ""
+    property_type: str = ""
+    conversation_state: str = ""
+    known_fields: list[str] = field(default_factory=list)
+    missing_fields: list[str] = field(default_factory=list)
+    priority_field: str | None = None
+    business_goal: str = ""
+    next_action: str = ""
+    authorized_modules: tuple[str, ...] = ()
+    forbidden_modules: tuple[str, ...] = ()
+    response_mode: str = "ai"
+    responsible_actor: str = ""
+    deadline: str | None = None
     contact: dict[str, Any] | None = None
     thread: dict[str, Any] | None = None
     project: dict[str, Any] | None = None

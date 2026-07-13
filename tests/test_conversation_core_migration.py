@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import replace
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -292,6 +293,133 @@ class ConversationCoreMigrationTests(LawimTestHarness):
                 language="fr",
             )
 
-        self.assertEqual(result.response_kind, "next_action")
-        self.assertEqual(result.final_text, result.plan.progression["next_action"])
+        self.assertEqual(result.response_kind, "search_results")
+        self.assertEqual(result.plan.intent, "rent")
+        self.assertEqual(result.plan.transaction_type, "rent")
+        self.assertEqual(result.plan.property_type, "studio")
+        self.assertEqual(result.plan.next_action, "SEARCH_LAWIM_PROPERTIES")
+        self.assertIn("LAWIM", result.final_text)
         generate.assert_not_called()
+
+    def test_conversation_core_studio_flow_persists_memory_and_executes_real_search(self) -> None:
+        services = LawimServices(self.repository, self.config)
+        _, actor = self._project_actor()
+        project = self.repository.create_project(
+            title="Studio Flow",
+            project_type="rent",
+            objective="Trouver un studio",
+            user_id=int(actor["id"]),
+            status="draft",
+        )
+        self.repository.create_property(
+            title="Studio A",
+            summary="Studio A",
+            city="Yaounde",
+            country="Cameroon",
+            price_min=50000,
+            price_max=50000,
+            currency="XAF",
+            status="published",
+            availability="available",
+            property_type="studio",
+        )
+        self.repository.create_property(
+            title="Studio B",
+            summary="Studio B",
+            city="Yaounde",
+            country="Cameroon",
+            price_min=55000,
+            price_max=55000,
+            currency="XAF",
+            status="published",
+            availability="available",
+            property_type="studio",
+        )
+
+        with patch.object(
+            services.conversation_core.ai_orchestrator,
+            "generate",
+            side_effect=AssertionError("LLM should not be called during the studio flow"),
+        ) as generate:
+            rows = [
+                self.repository.create_communication_message(
+                    channel_type="web",
+                    body=body,
+                    direction="inbound",
+                    status="delivered",
+                    message_key=f"studio-flow-{index}",
+                )
+                for index, body in enumerate(["J'ai besoin d'un stuf", "Yaounde", "50 mil"], start=1)
+            ]
+            first = services.conversation_core.process_message(
+                channel="web",
+                message="J'ai besoin d'un stuf",
+                message_row=rows[0],
+                project_id=int(project["id"]),
+                actor=dict(actor),
+                language="fr",
+            )
+            second = services.conversation_core.process_message(
+                channel="web",
+                message="Yaounde",
+                message_row=rows[1],
+                project_id=int(project["id"]),
+                actor=dict(actor),
+                language="fr",
+            )
+            third = services.conversation_core.process_message(
+                channel="web",
+                message="50 mil",
+                message_row=rows[2],
+                project_id=int(project["id"]),
+                actor=dict(actor),
+                language="fr",
+            )
+
+        self.assertEqual(first.response_kind, "qualification")
+        self.assertIn("ville", first.final_text.lower())
+        self.assertEqual(second.response_kind, "qualification")
+        self.assertIn("loyer", second.final_text.lower())
+        self.assertEqual(third.response_kind, "search_results")
+        self.assertIn("Studio A", third.final_text)
+        self.assertIn("Studio B", third.final_text)
+        self.assertNotIn("Airbnb", third.final_text)
+        self.assertNotIn("Booking", third.final_text)
+        self.assertEqual(third.plan.conversation_id, f"project:{project['id']}")
+        self.assertEqual(third.plan.dossier_id, int(project["id"]))
+        self.assertEqual(third.plan.intent, "rent")
+        self.assertEqual(third.plan.transaction_type, "rent")
+        self.assertEqual(third.plan.property_type, "studio")
+        self.assertEqual(third.plan.response_mode, "deterministic_action")
+        self.assertEqual(third.plan.business_goal, "search_properties")
+        self.assertIn("Yaounde", third.metadata["business_action"]["payload"]["query"])
+        self.assertIn("studio", third.metadata["business_action"]["payload"]["query"])
+        self.assertIn("50000", third.metadata["business_action"]["payload"]["query"])
+        self.assertGreaterEqual(int(third.metadata["business_action"]["payload"]["matching_count"]), 1)
+        self.assertTrue(third.metadata["business_action"]["payload"]["search_session_key"])
+        generate.assert_not_called()
+
+        context_row = self.repository.get_project_context(int(project["id"]))
+        assert context_row is not None
+        context = json.loads(str(context_row["context_json"]))
+        self.assertEqual(context["captured_facts"]["city"], "Yaounde")
+        self.assertEqual(context["captured_facts"]["budget_max"], 50000)
+        self.assertEqual(context["captured_facts"]["property_type"], "studio")
+        self.assertEqual(context["captured_facts"]["transaction_type"], "rent")
+        self.assertEqual(context["captured_facts"]["intent"], "rent")
+        self.assertEqual(context["conversation_id"], f"project:{project['id']}")
+        self.assertEqual(context["dossier_id"], int(project["id"]))
+
+        memories = self.repository.list_brain_memory(int(project["id"]), status="active")
+        field_values = {str(item.get("field_key")): str(item.get("value")) for item in memories if item.get("field_key")}
+        self.assertEqual(field_values.get("city"), "Yaounde")
+        self.assertEqual(field_values.get("budget_max"), "50000")
+        self.assertEqual(field_values.get("property_type"), "studio")
+        self.assertEqual(field_values.get("transaction_type"), "rent")
+        self.assertEqual(field_values.get("intent"), "rent")
+
+        matching_sessions = self.repository.all("SELECT * FROM rei_matching_sessions WHERE project_id = ? ORDER BY id DESC LIMIT 1", (int(project["id"]),))
+        self.assertEqual(len(matching_sessions), 1)
+        self.assertEqual(json.loads(str(matching_sessions[0]["criteria_json"]))["city"], "Yaounde")
+        self.assertEqual(json.loads(str(matching_sessions[0]["criteria_json"]))["property_type"], "studio")
+        self.assertEqual(json.loads(str(matching_sessions[0]["criteria_json"]))["budget_max"], 50000)

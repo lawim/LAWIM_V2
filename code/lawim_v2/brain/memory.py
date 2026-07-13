@@ -37,14 +37,16 @@ class BrainMemory:
         key: str,
         label: str,
         value: str,
+        field_key: str | None = None,
         source_table: str | None = None,
         source_id: int | None = None,
         confidence: int = 50,
         is_global: bool = False,
+        status: MemoryStatus | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         now = _utcnow()
-        status: MemoryStatus = "active" if kind != "hypothesis" else "pending_confirmation"
+        resolved_status: MemoryStatus = status or ("active" if kind != "hypothesis" else "pending_confirmation")
         row = self.repository.create_brain_memory(
             project_id=project_id,
             kind=kind,
@@ -54,8 +56,9 @@ class BrainMemory:
             source_table=source_table,
             source_id=source_id,
             confidence=confidence,
-            status=status,
+            status=resolved_status,
             is_global=is_global,
+            field_key=field_key,
             metadata_json=metadata or {},
             created_at=now,
         )

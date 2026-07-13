@@ -3928,7 +3928,7 @@ CREATE TABLE IF NOT EXISTS telegram_bots (
     status TEXT NOT NULL DEFAULT 'active',
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
-    bot_handle TEXT NOT NULL DEFAULT '@lawim_assistant_bot',
+    bot_handle TEXT NOT NULL DEFAULT '@lawim_bot',
     bot_token_ref TEXT NOT NULL DEFAULT '',
     config_json TEXT NOT NULL DEFAULT '{}',
     updated_at TEXT NOT NULL
@@ -5491,6 +5491,481 @@ CREATE TABLE IF NOT EXISTS analytics_ai_feedback (
 
 CREATE INDEX IF NOT EXISTS idx_analytics_ai_feedback_status ON analytics_ai_feedback(status, created_at);
 
+CREATE TABLE IF NOT EXISTS financial_products (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_products_status ON financial_products(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_products_record_key ON financial_products(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_pricing_rules (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_pricing_rules_status ON financial_pricing_rules(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_pricing_rules_record_key ON financial_pricing_rules(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_quotes (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_quotes_status ON financial_quotes(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_quotes_record_key ON financial_quotes(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_quote_lines (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_quote_lines_status ON financial_quote_lines(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_quote_lines_record_key ON financial_quote_lines(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_invoices (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_invoices_status ON financial_invoices(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_invoices_record_key ON financial_invoices(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_invoice_lines (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_invoice_lines_status ON financial_invoice_lines(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_invoice_lines_record_key ON financial_invoice_lines(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_credit_notes (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_credit_notes_status ON financial_credit_notes(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_credit_notes_record_key ON financial_credit_notes(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_credit_note_lines (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_credit_note_lines_status ON financial_credit_note_lines(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_credit_note_lines_record_key ON financial_credit_note_lines(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_receipts (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_receipts_status ON financial_receipts(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_receipts_record_key ON financial_receipts(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_payment_providers (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payment_providers_status ON financial_payment_providers(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payment_providers_record_key ON financial_payment_providers(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_payment_intents (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payment_intents_status ON financial_payment_intents(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payment_intents_record_key ON financial_payment_intents(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_payment_attempts (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payment_attempts_status ON financial_payment_attempts(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payment_attempts_record_key ON financial_payment_attempts(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_payment_transactions (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payment_transactions_status ON financial_payment_transactions(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payment_transactions_record_key ON financial_payment_transactions(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_provider_events (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_provider_events_status ON financial_provider_events(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_provider_events_record_key ON financial_provider_events(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_refunds (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_refunds_status ON financial_refunds(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_refunds_record_key ON financial_refunds(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_subscription_plans (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_subscription_plans_status ON financial_subscription_plans(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_subscription_plans_record_key ON financial_subscription_plans(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_subscriptions (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_subscriptions_status ON financial_subscriptions(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_subscriptions_record_key ON financial_subscriptions(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_subscription_cycles (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_subscription_cycles_status ON financial_subscription_cycles(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_subscription_cycles_record_key ON financial_subscription_cycles(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_commission_rules (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_commission_rules_status ON financial_commission_rules(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_commission_rules_record_key ON financial_commission_rules(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_commissions (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_commissions_status ON financial_commissions(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_commissions_record_key ON financial_commissions(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_payouts (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payouts_status ON financial_payouts(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_payouts_record_key ON financial_payouts(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_ledger_accounts (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_ledger_accounts_status ON financial_ledger_accounts(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_ledger_accounts_record_key ON financial_ledger_accounts(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_ledger_entries (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_ledger_entries_status ON financial_ledger_entries(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_ledger_entries_record_key ON financial_ledger_entries(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_reconciliation_records (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_reconciliation_records_status ON financial_reconciliation_records(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_reconciliation_records_record_key ON financial_reconciliation_records(record_key);
+
+CREATE TABLE IF NOT EXISTS financial_audit_events (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_financial_audit_events_status ON financial_audit_events(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_financial_audit_events_record_key ON financial_audit_events(record_key);
+
 CREATE TABLE IF NOT EXISTS source_intelligence_source_contexts (
         id SERIAL PRIMARY KEY,
         source_id INTEGER NOT NULL UNIQUE REFERENCES crm_lead_sources(id) ON DELETE CASCADE,
@@ -5537,6 +6012,125 @@ CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_source ON source_inte
 
 CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_status ON source_intelligence_imports(import_status, imported_at);
 
+CREATE TABLE IF NOT EXISTS brain_intents (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
+        source_message_id INTEGER REFERENCES assistant_messages(id) ON DELETE SET NULL,
+        intent_type TEXT NOT NULL,
+        entities_json TEXT NOT NULL DEFAULT '{}',
+        language TEXT NOT NULL DEFAULT 'fr',
+        confidence INTEGER NOT NULL DEFAULT 50,
+        status TEXT NOT NULL DEFAULT 'hypothesis' CHECK (status IN ('hypothesis', 'confirmed', 'rejected')),
+        engine_version TEXT NOT NULL DEFAULT '1.0.0',
+        origin TEXT NOT NULL DEFAULT 'conversation',
+        created_at TEXT NOT NULL
+    );
+
+CREATE TABLE IF NOT EXISTS brain_memory_items (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        memory_key TEXT NOT NULL,
+        kind TEXT NOT NULL CHECK (kind IN ('confirmed_fact', 'preference', 'constraint', 'decision', 'hypothesis', 'temporary')),
+        label TEXT NOT NULL,
+        value TEXT NOT NULL,
+        source_table TEXT,
+        source_id INTEGER,
+        confidence INTEGER NOT NULL DEFAULT 50,
+        status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'pending_confirmation', 'expired', 'superseded')),
+        is_global INTEGER NOT NULL DEFAULT 0,
+        field_key TEXT,
+        metadata_json TEXT NOT NULL DEFAULT '{}',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE (project_id, memory_key)
+    );
+
+CREATE TABLE IF NOT EXISTS brain_progression_state (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        intent_type TEXT NOT NULL,
+        current_step INTEGER NOT NULL DEFAULT 0,
+        total_steps INTEGER NOT NULL DEFAULT 0,
+        asked_questions_json TEXT NOT NULL DEFAULT '[]',
+        answers_json TEXT NOT NULL DEFAULT '{}',
+        missing_fields_json TEXT NOT NULL DEFAULT '[]',
+        next_question TEXT,
+        next_question_key TEXT,
+        status TEXT NOT NULL DEFAULT 'in_progress' CHECK (status IN ('not_started', 'in_progress', 'complete', 'stuck')),
+        schema_version TEXT NOT NULL DEFAULT '1.0.0',
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        UNIQUE (project_id, intent_type)
+    );
+
+CREATE TABLE IF NOT EXISTS brain_suggestions (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        suggestion_type TEXT NOT NULL,
+        content TEXT NOT NULL,
+        justification TEXT NOT NULL DEFAULT '',
+        priority TEXT NOT NULL DEFAULT 'medium' CHECK (priority IN ('high', 'medium', 'low')),
+        status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'accepted', 'rejected', 'ignored', 'deferred')),
+        target_action TEXT,
+        target_partner TEXT,
+        language TEXT NOT NULL DEFAULT 'fr',
+        expires_at TEXT,
+        accepted_at TEXT,
+        rejected_at TEXT,
+        created_at TEXT NOT NULL
+    );
+
+CREATE INDEX IF NOT EXISTS idx_brain_intents_project ON brain_intents(project_id, intent_type, status);
+
+CREATE INDEX IF NOT EXISTS idx_brain_intents_session ON brain_intents(session_id, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_brain_memory_project ON brain_memory_items(project_id, kind, status);
+
+CREATE INDEX IF NOT EXISTS idx_brain_progression_project ON brain_progression_state(project_id, intent_type);
+
+CREATE INDEX IF NOT EXISTS idx_brain_suggestions_project ON brain_suggestions(project_id, status, priority);
+
+CREATE TABLE IF NOT EXISTS brain_relation_proposals (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        relation_type TEXT NOT NULL CHECK (relation_type IN ('person_to_property', 'person_to_person', 'person_to_partner', 'project_to_project', 'property_to_partner', 'partner_to_partner')),
+        target_type TEXT NOT NULL,
+        target_id INTEGER NOT NULL,
+        score INTEGER NOT NULL DEFAULT 50,
+        justification TEXT NOT NULL,
+        metadata_json TEXT NOT NULL DEFAULT '{}',
+        status TEXT NOT NULL DEFAULT 'detected' CHECK (status IN ('detected', 'proposed', 'consulted', 'accepted', 'rejected', 'deferred', 'consent_pending', 'relation_established', 'contact_made', 'appointment_scheduled', 'in_progress', 'completed', 'no_follow_up', 'expired', 'cancelled')),
+        proposed_at TEXT,
+        accepted_at TEXT,
+        rejected_at TEXT,
+        consent_requested_at TEXT,
+        consent_granted_at TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+
+CREATE TABLE IF NOT EXISTS brain_relations (
+        id SERIAL PRIMARY KEY,
+        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+        relation_type TEXT NOT NULL CHECK (relation_type IN ('person_to_property', 'person_to_person', 'person_to_partner', 'project_to_project', 'property_to_partner', 'partner_to_partner')),
+        source_type TEXT NOT NULL,
+        source_id INTEGER,
+        target_type TEXT NOT NULL,
+        target_id INTEGER NOT NULL,
+        status TEXT NOT NULL DEFAULT 'established',
+        metadata_json TEXT NOT NULL DEFAULT '{}',
+        established_at TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+    );
+
+CREATE INDEX IF NOT EXISTS idx_brain_proposals_project ON brain_relation_proposals(project_id, status);
+
+CREATE INDEX IF NOT EXISTS idx_brain_proposals_target ON brain_relation_proposals(target_type, target_id);
+
+CREATE INDEX IF NOT EXISTS idx_brain_relations_project ON brain_relations(project_id, relation_type);
+
 CREATE TABLE IF NOT EXISTS operations (
     id SERIAL PRIMARY KEY,
     record_key TEXT NOT NULL UNIQUE,
@@ -5575,25 +6169,6 @@ CREATE INDEX IF NOT EXISTS idx_deployment_status ON deployment(status, created_a
 
 CREATE INDEX IF NOT EXISTS idx_deployment_record_key ON deployment(record_key);
 
-CREATE TABLE IF NOT EXISTS backup (
-    id SERIAL PRIMARY KEY,
-    record_key TEXT NOT NULL UNIQUE,
-    name TEXT NOT NULL DEFAULT '',
-    kind TEXT NOT NULL DEFAULT '',
-    scope TEXT NOT NULL DEFAULT '',
-    status TEXT NOT NULL DEFAULT 'active',
-    parent_id INTEGER,
-    reference_id INTEGER,
-    secondary_id INTEGER,
-    payload_json TEXT NOT NULL DEFAULT '{}',
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_backup_status ON backup(status, created_at);
-
-CREATE INDEX IF NOT EXISTS idx_backup_record_key ON backup(record_key);
-
 CREATE TABLE IF NOT EXISTS installer (
     id SERIAL PRIMARY KEY,
     record_key TEXT NOT NULL UNIQUE,
@@ -5631,3 +6206,174 @@ CREATE TABLE IF NOT EXISTS releases (
 CREATE INDEX IF NOT EXISTS idx_releases_status ON releases(status, created_at);
 
 CREATE INDEX IF NOT EXISTS idx_releases_record_key ON releases(record_key);
+
+CREATE TABLE IF NOT EXISTS backup_configurations (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_backup_configurations_status ON backup_configurations(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_backup_configurations_record_key ON backup_configurations(record_key);
+
+CREATE TABLE IF NOT EXISTS backup_destinations (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_backup_destinations_status ON backup_destinations(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_backup_destinations_record_key ON backup_destinations(record_key);
+
+CREATE TABLE IF NOT EXISTS backup_jobs (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_backup_jobs_status ON backup_jobs(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_backup_jobs_record_key ON backup_jobs(record_key);
+
+CREATE TABLE IF NOT EXISTS backup_artifacts (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_backup_artifacts_status ON backup_artifacts(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_backup_artifacts_record_key ON backup_artifacts(record_key);
+
+CREATE TABLE IF NOT EXISTS backup_events (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_backup_events_status ON backup_events(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_backup_events_record_key ON backup_events(record_key);
+
+CREATE TABLE IF NOT EXISTS backup_alerts (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_backup_alerts_status ON backup_alerts(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_backup_alerts_record_key ON backup_alerts(record_key);
+
+CREATE TABLE IF NOT EXISTS restore_jobs (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_restore_jobs_status ON restore_jobs(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_restore_jobs_record_key ON restore_jobs(record_key);
+
+CREATE TABLE IF NOT EXISTS restore_results (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_restore_results_status ON restore_results(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_restore_results_record_key ON restore_results(record_key);
+
+CREATE TABLE IF NOT EXISTS backup_metrics (
+    id SERIAL PRIMARY KEY,
+    record_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL DEFAULT '',
+    kind TEXT NOT NULL DEFAULT '',
+    scope TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    parent_id INTEGER,
+    reference_id INTEGER,
+    secondary_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_backup_metrics_status ON backup_metrics(status, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_backup_metrics_record_key ON backup_metrics(record_key);

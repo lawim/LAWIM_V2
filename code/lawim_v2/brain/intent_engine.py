@@ -13,6 +13,7 @@ SPECIFIC_INTENTS: dict[str, tuple[str, ...]] = {
         "louer", "location", "locataire", "loyer",
         "rent", "rental", "lease", "tenant",
         "hire", "apartment", "appartement",
+        "studio",
     ),
     "sell": (
         "vendre", "vente", "mettre en vente",
@@ -81,7 +82,7 @@ PROPERTY_TYPES: tuple[str, ...] = (
 )
 
 BUDGET_PATTERN = re.compile(
-    r"(\d+[\s]*[mM]illon[s]?|\d+[\s]*[mM]|\d+[\s]*[kK]F[Aa]?|\d+[\s]*(?:fois|FCFA|franc[s]?|XAF|EUR|USD|euro|dollar)s?|\d{4,})"
+    r"(\d+[\s]*(?:milliard[s]?|million[s]?|mil(?:le)?|[mM](?![a-zA-Z])|[kK])(?:[\s]*(?:FCFA|XAF|franc[s]?|EUR|USD|euro|dollar)s?)?|\d{4,})"
 )
 
 SURFACE_PATTERN = re.compile(r"(\d+)\s*m[²2]")
@@ -165,6 +166,20 @@ def _normalize(text: str) -> str:
     return text.lower().strip()
 
 
+TYPO_CORRECTIONS: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"\bstuf\b", re.IGNORECASE), "studio"),
+    (re.compile(r"\bapart\b", re.IGNORECASE), "appartement"),
+    (re.compile(r"\bvila\b", re.IGNORECASE), "villa"),
+)
+
+
+def _normalize_for_detection(text: str) -> str:
+    normalized = _normalize(text)
+    for pattern, replacement in TYPO_CORRECTIONS:
+        normalized = pattern.sub(replacement, normalized)
+    return normalized
+
+
 def _tokenize(text: str) -> list[str]:
     return re.findall(r"[a-zàâäéèêëïîôùûüç0-9']+", text.lower())
 
@@ -195,7 +210,8 @@ def _detect_cities(text: str) -> list[dict[str, Any]]:
 
 def _detect_budget(text: str) -> list[dict[str, Any]]:
     found: list[dict[str, Any]] = []
-    for match in BUDGET_PATTERN.finditer(text):
+    prepared = re.sub(r"(?<=\d)\s+(?=\d)", "", text)
+    for match in BUDGET_PATTERN.finditer(prepared):
         raw = match.group(0)
         value = _parse_budget_value(raw)
         if value is not None:
@@ -205,17 +221,18 @@ def _detect_budget(text: str) -> list[dict[str, Any]]:
 
 def _parse_budget_value(raw: str) -> int | None:
     raw = raw.strip()
+    compact = re.sub(r"\s+", "", raw.lower())
     multiplier = 1
-    if "million" in raw or "millions" in raw:
+    if "milliard" in compact or compact.endswith("bn"):
+        multiplier = 1_000_000_000
+        compact = compact.replace("milliard", "").replace("bn", "")
+    elif "million" in compact or compact.endswith("m"):
         multiplier = 1_000_000
-        raw = raw.replace("million", "").replace("millions", "").strip()
-    elif raw.endswith("M") or raw.endswith("m"):
-        multiplier = 1_000_000
-        raw = raw[:-1].strip()
-    elif raw.upper().endswith("K") or raw.upper().endswith("KFCFA"):
+        compact = compact.replace("million", "")
+    elif compact.endswith("mil") or compact.endswith("mille") or compact.endswith("k"):
         multiplier = 1_000
-        raw = raw[:-1].strip() if raw.upper().endswith("K") else raw[:-5].strip()
-    digits = re.sub(r"[^0-9]", "", raw)
+        compact = re.sub(r"(mil(le)?|k)$", "", compact)
+    digits = re.sub(r"[^0-9]", "", compact)
     if not digits:
         return None
     return int(digits) * multiplier
@@ -352,7 +369,7 @@ def _intent_priority(intent_key: str) -> int:
 
 
 def detect_intents(text: str) -> list[dict[str, Any]]:
-    normalized = _normalize(text)
+    normalized = _normalize_for_detection(text)
     tokens = _tokenize(normalized)
     detected: list[dict[str, Any]] = []
 
@@ -386,8 +403,9 @@ def detect_intents(text: str) -> list[dict[str, Any]]:
 
 
 def analyze_message(message: str) -> dict[str, Any]:
-    intents = detect_intents(message)
-    entities = _parse_context_for_text(message)
+    normalized = _normalize_for_detection(message)
+    intents = detect_intents(normalized)
+    entities = _parse_context_for_text(normalized)
     primary = intents[0] if intents else {"intent": "other", "score": 50, "confidence": 1}
     return {
         "intents": intents,
