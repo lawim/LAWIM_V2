@@ -7,6 +7,7 @@ from ..project_service import ProjectPermissionDenied, ProjectService
 from ..ai import AIMessage, AIOrchestrator
 from ..financial.engines import normalize_mobile_money_number
 from . import dto as cdto
+from .delivery import mask_delivery_recipient
 from .green_api import (
     GREEN_API_MESSAGE_WEBHOOKS,
     GREEN_API_SUPPORTED_WEBHOOKS,
@@ -757,47 +758,142 @@ class CommunicationService:
         response_text = str(outcome.response.content or "").strip()
         if not response_text:
             return {"status": "skipped", "reason": "empty_response"}
+        recipient_masked = mask_delivery_recipient(
+            str(normalized.get("chat_id") or normalized.get("sender") or normalized.get("user_id") or "")
+        )
+        self.repository.create_communication_log(
+            level="info",
+            message=f"AI outbound delivery started on {channel}",
+            payload={
+                "channel": channel,
+                "conversation_key": conversation_key,
+                "request_id": outcome.request.request_id,
+                "message_id": int(message_row["id"]),
+                "recipient": recipient_masked,
+                "response_length": len(response_text),
+                "provider": outcome.response.provider,
+                "selected_provider": outcome.decision.selected_provider,
+                "fallback_used": outcome.decision.fallback_used,
+            },
+        )
         if channel == "whatsapp":
             normalized_number = self._normalize_whatsapp_number(str(normalized.get("chat_id") or normalized.get("sender") or ""))
             if not normalized_number:
                 return {"status": "skipped", "reason": "missing_recipient"}
-            delivery = self.repository.send_whatsapp(
-                to_number=normalized_number,
-                body=response_text,
-                thread_id=thread_id,
-                contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
-                external_chat_id=str(normalized.get("chat_id") or normalized.get("sender") or ""),
-                external_user_id=str(normalized.get("user_id") or ""),
-                provider_message_id=outcome.response.provider_request_id,
-                metadata={
-                    "ai_request_id": outcome.request.request_id,
-                    "ai_provider": outcome.response.provider,
-                    "ai_fallback_used": outcome.decision.fallback_used,
-                    "ai_selected_provider": outcome.decision.selected_provider,
-                },
-            )
+            try:
+                delivery = self.repository.send_whatsapp(
+                    to_number=normalized_number,
+                    body=response_text,
+                    thread_id=thread_id,
+                    contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+                    external_chat_id=str(normalized.get("chat_id") or normalized.get("sender") or ""),
+                    external_user_id=str(normalized.get("user_id") or ""),
+                    provider_message_id=outcome.response.provider_request_id,
+                    metadata={
+                        "ai_request_id": outcome.request.request_id,
+                        "ai_provider": outcome.response.provider,
+                        "ai_fallback_used": outcome.decision.fallback_used,
+                        "ai_selected_provider": outcome.decision.selected_provider,
+                    },
+                )
+            except Exception as exc:
+                self.repository.create_communication_log(
+                    level="error",
+                    message=f"AI outbound delivery raised on {channel}",
+                    payload={
+                        "channel": channel,
+                        "conversation_key": conversation_key,
+                        "request_id": outcome.request.request_id,
+                        "message_id": int(message_row["id"]),
+                        "recipient": recipient_masked,
+                        "response_length": len(response_text),
+                        "provider": outcome.response.provider,
+                        "selected_provider": outcome.decision.selected_provider,
+                        "fallback_used": outcome.decision.fallback_used,
+                        "error_type": exc.__class__.__name__,
+                        "error_message": str(exc),
+                    },
+                )
+                return {
+                    "status": "failed",
+                    "provider": outcome.response.provider,
+                    "selected_provider": outcome.decision.selected_provider,
+                    "fallback_used": outcome.decision.fallback_used,
+                    "request_id": outcome.request.request_id,
+                    "error_type": exc.__class__.__name__,
+                }
         else:
             chat_id = str(normalized.get("chat_id") or "")
             if not chat_id:
                 return {"status": "skipped", "reason": "missing_chat_id"}
-            delivery = self.repository.send_telegram(
-                chat_id=chat_id,
-                body=response_text,
-                thread_id=thread_id,
-                contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
-                external_chat_id=chat_id,
-                external_user_id=str(normalized.get("user_id") or ""),
-                provider_message_id=outcome.response.provider_request_id,
-                metadata={
-                    "ai_request_id": outcome.request.request_id,
-                    "ai_provider": outcome.response.provider,
-                    "ai_fallback_used": outcome.decision.fallback_used,
-                    "ai_selected_provider": outcome.decision.selected_provider,
-                },
-            )
+            try:
+                delivery = self.repository.send_telegram(
+                    chat_id=chat_id,
+                    body=response_text,
+                    thread_id=thread_id,
+                    contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+                    external_chat_id=chat_id,
+                    external_user_id=str(normalized.get("user_id") or ""),
+                    provider_message_id=outcome.response.provider_request_id,
+                    metadata={
+                        "ai_request_id": outcome.request.request_id,
+                        "ai_provider": outcome.response.provider,
+                        "ai_fallback_used": outcome.decision.fallback_used,
+                        "ai_selected_provider": outcome.decision.selected_provider,
+                    },
+                )
+            except Exception as exc:
+                self.repository.create_communication_log(
+                    level="error",
+                    message=f"AI outbound delivery raised on {channel}",
+                    payload={
+                        "channel": channel,
+                        "conversation_key": conversation_key,
+                        "request_id": outcome.request.request_id,
+                        "message_id": int(message_row["id"]),
+                        "recipient": recipient_masked,
+                        "response_length": len(response_text),
+                        "provider": outcome.response.provider,
+                        "selected_provider": outcome.decision.selected_provider,
+                        "fallback_used": outcome.decision.fallback_used,
+                        "error_type": exc.__class__.__name__,
+                        "error_message": str(exc),
+                    },
+                )
+                return {
+                    "status": "failed",
+                    "provider": outcome.response.provider,
+                    "selected_provider": outcome.decision.selected_provider,
+                    "fallback_used": outcome.decision.fallback_used,
+                    "request_id": outcome.request.request_id,
+                    "error_type": exc.__class__.__name__,
+                }
+        delivery_status = str(delivery.get("delivery_status") or (delivery.get("delivery") or {}).get("delivery_status") or "failed")
+        delivery_payload = delivery.get("delivery") if isinstance(delivery, dict) else {}
         self.repository.create_communication_log(
-            level="info",
-            message=f"AI reply delivered on {channel}",
+            level="info" if delivery_status == "sent" else "warning",
+            message=f"AI outbound delivery finished on {channel}",
+            payload={
+                "channel": channel,
+                "conversation_key": conversation_key,
+                "request_id": outcome.request.request_id,
+                "message_id": int(message_row["id"]),
+                "recipient": recipient_masked,
+                "response_length": len(response_text),
+                "provider": outcome.response.provider,
+                "selected_provider": outcome.decision.selected_provider,
+                "fallback_used": outcome.decision.fallback_used,
+                "delivery_status": delivery_status,
+                "http_status": delivery_payload.get("http_status") if isinstance(delivery_payload, dict) else None,
+                "provider_message_id": delivery_payload.get("provider_message_id") if isinstance(delivery_payload, dict) else None,
+                "resolved_ipv4": delivery_payload.get("resolved_ipv4") if isinstance(delivery_payload, dict) else None,
+                "sanitized_url": delivery_payload.get("sanitized_url") if isinstance(delivery_payload, dict) else None,
+                "error_type": delivery_payload.get("error_type") if isinstance(delivery_payload, dict) else None,
+            },
+        )
+        self.repository.create_communication_log(
+            level="info" if delivery_status == "sent" else "warning",
+            message=f"AI reply {delivery_status} on {channel}",
             payload={
                 "channel": channel,
                 "conversation_key": conversation_key,
@@ -809,11 +905,13 @@ class CommunicationService:
             },
         )
         return {
-            "status": "sent",
+            "status": delivery_status,
             "provider": outcome.response.provider,
             "selected_provider": outcome.decision.selected_provider,
             "fallback_used": outcome.decision.fallback_used,
             "request_id": outcome.request.request_id,
+            "delivery_status": delivery_status,
+            "provider_message_id": delivery_payload.get("provider_message_id") if isinstance(delivery_payload, dict) else None,
         }
 
     def process_green_api_webhook(

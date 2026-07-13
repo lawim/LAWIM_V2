@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import logging
+import os
 import uuid
 from datetime import datetime, timezone
 from typing import Any
@@ -19,7 +21,19 @@ from .constants import (
     MESSAGE_STATUSES,
     NOTIFICATION_TYPES,
 )
+from .delivery import (
+    dry_run_delivery,
+    failed_delivery,
+    green_api_chat_id,
+    mask_delivery_recipient,
+    sanitize_delivery_record,
+    send_green_api_message,
+    send_telegram_message,
+    should_use_real_delivery,
+)
 from .engines import CommunicationPlatformEngine
+
+LOGGER = logging.getLogger(__name__)
 
 
 def _utcnow() -> str:
@@ -687,12 +701,11 @@ class CommunicationRepositoryMixin:
                 "provider_message_id": provider_message_id or "",
             }
         )
-        result = engine.whatsapp.stub_send(payload)
         now = _utcnow()
-        msg = self.create_communication_message(
+        request_row = self.create_communication_message(
             channel_type="whatsapp",
             body=body,
-            status="sent",
+            status="sending",
             thread_id=thread_id,
             contact_id=contact_id,
             payload=payload,
@@ -700,21 +713,163 @@ class CommunicationRepositoryMixin:
                 "external_chat_id": external_chat_id or "",
                 "external_user_id": external_user_id or "",
                 "provider_message_id": provider_message_id or "",
+                "delivery_stage": "request_created",
             },
         )
+        recipient = str(to_number or "").strip()
+        request_summary = {
+            "channel": "whatsapp",
+            "message_id": int(request_row["id"]),
+            "recipient": mask_delivery_recipient(recipient),
+            "response_length": len(body.strip()),
+            "provider": "green_api",
+            "selected_provider": "green_api",
+            "stage": "delivery_start",
+        }
+        self.create_communication_log(
+            level="info",
+            message="WhatsApp outbound delivery started",
+            payload=request_summary,
+            message_id=int(request_row["id"]),
+        )
+        LOGGER.info("%s", json.dumps(request_summary, ensure_ascii=False, sort_keys=True))
+        if should_use_real_delivery():
+            api_url = (os.getenv("GREEN_API_API_URL") or "").strip()
+            id_instance = (os.getenv("GREEN_API_ID_INSTANCE") or "").strip()
+            token_instance = (os.getenv("GREEN_API_TOKEN_INSTANCE") or "").strip()
+            chat_id = green_api_chat_id(recipient)
+            if api_url and id_instance and token_instance and chat_id:
+                delivery = send_green_api_message(
+                    api_url=api_url,
+                    id_instance=id_instance,
+                    token_instance=token_instance,
+                    chat_id=chat_id,
+                    message=body,
+                )
+            else:
+                missing = [
+                    name
+                    for name, value in (
+                        ("GREEN_API_API_URL", api_url),
+                        ("GREEN_API_ID_INSTANCE", id_instance),
+                        ("GREEN_API_TOKEN_INSTANCE", token_instance),
+                        ("GREEN_API_CHAT_ID", chat_id),
+                    )
+                    if not value
+                ]
+                delivery = failed_delivery(
+                    provider="green_api",
+                    method="POST",
+                    url=f"{api_url.rstrip('/') if api_url else 'https://api.greenapi.com'}/waInstance{id_instance or 'unknown'}/sendMessage/[redacted]",
+                    payload={"chatId": chat_id or recipient, "message": body},
+                    recipient=recipient,
+                    error_type="unconfigured",
+                    error_message=f"Missing Green API delivery configuration: {', '.join(missing)}",
+                )
+        else:
+            delivery = dry_run_delivery(
+                provider="green_api",
+                method="POST",
+                url=f"{os.getenv('GREEN_API_API_URL', 'https://api.greenapi.com').rstrip('/')}/waInstance{os.getenv('GREEN_API_ID_INSTANCE', 'unknown')}/sendMessage/[redacted]",
+                payload={"chatId": green_api_chat_id(recipient) or recipient, "message": body},
+                recipient=recipient,
+            )
+        delivery_record = sanitize_delivery_record(delivery, recipient=recipient)
+        outbound_status = "sent" if delivery.ok else "failed"
+        request_metadata = {
+            "external_chat_id": external_chat_id or "",
+            "external_user_id": external_user_id or "",
+            "provider_message_id": delivery.provider_message_id,
+            "provider_response": delivery_record,
+            "provider_status": delivery.delivery_status,
+            "delivery_status": outbound_status,
+            "resolved_ipv4": delivery.resolved_ipv4,
+            "sanitized_url": delivery.sanitized_url,
+        }
+        self.update_communication_message(
+            int(request_row["id"]),
+            status=outbound_status,
+            sent_at=now,
+            metadata=request_metadata,
+            payload={**payload, "provider_response": delivery_record},
+        )
+        account_row = self.one("SELECT id FROM whatsapp_accounts ORDER BY id LIMIT 1")
+        account_id = int(account_row["id"]) if account_row and account_row.get("id") is not None else None
         key = f"wa-{uuid.uuid4().hex[:10]}"
         with self._transaction() as conn:
             conn.execute(
                 """
                 INSERT INTO whatsapp_messages (
-                    message_key, account_id, message_id, to_number, body,
-                    whatsapp_status, sent_at, status, created_at
-                ) VALUES (?, ?, ?, ?, ?, 'sent', ?, 'active', ?)
+                    message_key, status, metadata_json, created_at, account_id, message_id, to_number, body,
+                    whatsapp_status, sent_at
+                ) VALUES (?, 'active', ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
-                (key, account_id, msg["id"], to_number, body, now, now),
+                (
+                    key,
+                    json.dumps(request_metadata, ensure_ascii=False, sort_keys=True),
+                    now,
+                    account_id,
+                    request_row["id"],
+                    to_number,
+                    body,
+                    outbound_status,
+                    now,
+                ),
             )
         row = dict(self.one("SELECT * FROM whatsapp_messages WHERE message_key = ?", (key,)))
-        row["delivery"] = result
+        self.record_delivery(
+            channel_type="whatsapp",
+            resource_type="whatsapp_message",
+            resource_id=int(row["id"]),
+            delivery_status=outbound_status,
+            provider_response=json.dumps(delivery_record, ensure_ascii=False, sort_keys=True),
+        )
+        self.create_communication_log(
+            level="info" if delivery.ok else "warning",
+            message="WhatsApp outbound delivery completed" if delivery.ok else "WhatsApp outbound delivery failed",
+            payload={
+                "channel": "whatsapp",
+                "message_id": int(request_row["id"]),
+                "whatsapp_message_id": int(row["id"]),
+                "recipient": mask_delivery_recipient(recipient),
+                "response_length": len(body.strip()),
+                "provider": delivery.provider,
+                "selected_provider": "green_api",
+                "delivery_status": outbound_status,
+                "http_status": delivery.http_status,
+                "provider_message_id": delivery.provider_message_id,
+                "resolved_ipv4": delivery.resolved_ipv4,
+                "sanitized_url": delivery.sanitized_url,
+                "error_type": delivery.error_type,
+            },
+            message_id=int(request_row["id"]),
+        )
+        LOGGER.info(
+            "%s",
+            json.dumps(
+                {
+                    "channel": "whatsapp",
+                    "message_id": int(request_row["id"]),
+                    "whatsapp_message_id": int(row["id"]),
+                    "recipient": mask_delivery_recipient(recipient),
+                    "response_length": len(body.strip()),
+                    "provider": delivery.provider,
+                    "selected_provider": "green_api",
+                    "delivery_status": outbound_status,
+                    "http_status": delivery.http_status,
+                    "provider_message_id": delivery.provider_message_id,
+                    "resolved_ipv4": delivery.resolved_ipv4,
+                    "sanitized_url": delivery.sanitized_url,
+                    "error_type": delivery.error_type,
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            ),
+        )
+        row["delivery"] = delivery_record
+        row["communication_message_id"] = int(request_row["id"])
+        row["delivery_status"] = outbound_status
+        row["provider_message_id"] = delivery.provider_message_id
         return row
 
     def list_whatsapp_messages(self, *, limit: int = 50) -> list[dict[str, object]]:
@@ -743,12 +898,11 @@ class CommunicationRepositoryMixin:
                 "provider_message_id": provider_message_id or "",
             }
         )
-        result = engine.telegram.stub_send(payload)
         now = _utcnow()
-        msg = self.create_communication_message(
+        request_row = self.create_communication_message(
             channel_type="telegram",
             body=body,
-            status="sent",
+            status="sending",
             thread_id=thread_id,
             contact_id=contact_id,
             payload=payload,
@@ -756,21 +910,151 @@ class CommunicationRepositoryMixin:
                 "external_chat_id": external_chat_id or chat_id,
                 "external_user_id": external_user_id or "",
                 "provider_message_id": provider_message_id or "",
+                "delivery_stage": "request_created",
             },
+        )
+        recipient = str(chat_id or "").strip()
+        request_summary = {
+            "channel": "telegram",
+            "message_id": int(request_row["id"]),
+            "recipient": mask_delivery_recipient(recipient),
+            "response_length": len(body.strip()),
+            "provider": "telegram",
+            "selected_provider": "telegram",
+            "stage": "delivery_start",
+        }
+        self.create_communication_log(
+            level="info",
+            message="Telegram outbound delivery started",
+            payload=request_summary,
+            message_id=int(request_row["id"]),
+        )
+        LOGGER.info("%s", json.dumps(request_summary, ensure_ascii=False, sort_keys=True))
+        if should_use_real_delivery():
+            bot_row = self.one("SELECT id FROM telegram_bots ORDER BY id LIMIT 1")
+            bot_id = int(bot_row["id"]) if bot_row and bot_row.get("id") is not None else None
+            bot_token = (os.getenv("TELEGRAM_BOT_TOKEN") or "").strip()
+            if bot_token and recipient:
+                delivery = send_telegram_message(
+                    bot_token=bot_token,
+                    chat_id=recipient,
+                    message=body,
+                )
+            else:
+                missing = [
+                    name
+                    for name, value in (
+                        ("TELEGRAM_BOT_TOKEN", bot_token),
+                        ("TELEGRAM_CHAT_ID", recipient),
+                    )
+                    if not value
+                ]
+                delivery = failed_delivery(
+                    provider="telegram",
+                    method="POST",
+                    url=f"https://api.telegram.org/bot[redacted]/sendMessage",
+                    payload={"chat_id": recipient, "text": body},
+                    recipient=recipient,
+                    error_type="unconfigured",
+                    error_message=f"Missing Telegram delivery configuration: {', '.join(missing)}",
+                )
+        else:
+            bot_row = self.one("SELECT id FROM telegram_bots ORDER BY id LIMIT 1")
+            bot_id = int(bot_row["id"]) if bot_row and bot_row.get("id") is not None else None
+            delivery = dry_run_delivery(
+                provider="telegram",
+                method="POST",
+                url="https://api.telegram.org/bot[redacted]/sendMessage",
+                payload={"chat_id": recipient, "text": body},
+                recipient=recipient,
+            )
+        delivery_record = sanitize_delivery_record(delivery, recipient=recipient)
+        outbound_status = "sent" if delivery.ok else "failed"
+        request_metadata = {
+            "external_chat_id": external_chat_id or recipient,
+            "external_user_id": external_user_id or "",
+            "provider_message_id": delivery.provider_message_id,
+            "provider_response": delivery_record,
+            "provider_status": delivery.delivery_status,
+            "delivery_status": outbound_status,
+            "resolved_ipv4": delivery.resolved_ipv4,
+            "sanitized_url": delivery.sanitized_url,
+        }
+        self.update_communication_message(
+            int(request_row["id"]),
+            status=outbound_status,
+            sent_at=now,
+            metadata=request_metadata,
+            payload={**payload, "provider_response": delivery_record},
         )
         key = f"tg-{uuid.uuid4().hex[:10]}"
         with self._transaction() as conn:
             conn.execute(
                 """
                 INSERT INTO telegram_messages (
-                    message_key, bot_id, message_id, chat_id, body,
-                    telegram_status, sent_at, status, created_at
-                ) VALUES (?, ?, ?, ?, ?, 'sent', ?, 'active', ?)
+                    message_key, status, metadata_json, created_at, bot_id, message_id, chat_id, body,
+                    telegram_status, sent_at
+                ) VALUES (?, 'active', ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
-                (key, bot_id, msg["id"], chat_id, body, now, now),
+                (
+                    key,
+                    json.dumps(request_metadata, ensure_ascii=False, sort_keys=True),
+                    now,
+                    bot_id,
+                    request_row["id"],
+                    chat_id,
+                    body,
+                    outbound_status,
+                    now,
+                ),
             )
         row = dict(self.one("SELECT * FROM telegram_messages WHERE message_key = ?", (key,)))
-        row["delivery"] = result
+        self.create_communication_log(
+            level="info" if delivery.ok else "warning",
+            message="Telegram outbound delivery completed" if delivery.ok else "Telegram outbound delivery failed",
+            payload={
+                "channel": "telegram",
+                "message_id": int(request_row["id"]),
+                "telegram_message_id": int(row["id"]),
+                "recipient": mask_delivery_recipient(recipient),
+                "response_length": len(body.strip()),
+                "provider": delivery.provider,
+                "selected_provider": "telegram",
+                "delivery_status": outbound_status,
+                "http_status": delivery.http_status,
+                "provider_message_id": delivery.provider_message_id,
+                "resolved_ipv4": delivery.resolved_ipv4,
+                "sanitized_url": delivery.sanitized_url,
+                "error_type": delivery.error_type,
+            },
+            message_id=int(request_row["id"]),
+        )
+        LOGGER.info(
+            "%s",
+            json.dumps(
+                {
+                    "channel": "telegram",
+                    "message_id": int(request_row["id"]),
+                    "telegram_message_id": int(row["id"]),
+                    "recipient": mask_delivery_recipient(recipient),
+                    "response_length": len(body.strip()),
+                    "provider": delivery.provider,
+                    "selected_provider": "telegram",
+                    "delivery_status": outbound_status,
+                    "http_status": delivery.http_status,
+                    "provider_message_id": delivery.provider_message_id,
+                    "resolved_ipv4": delivery.resolved_ipv4,
+                    "sanitized_url": delivery.sanitized_url,
+                    "error_type": delivery.error_type,
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            ),
+        )
+        row["delivery"] = delivery_record
+        row["communication_message_id"] = int(request_row["id"])
+        row["delivery_status"] = outbound_status
+        row["provider_message_id"] = delivery.provider_message_id
         return row
 
     def list_telegram_messages(self, *, limit: int = 50) -> list[dict[str, object]]:
