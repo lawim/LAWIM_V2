@@ -84,7 +84,7 @@ def run_deepseek() -> dict[str, object]:
         "Accept": "application/json",
     }
     payload = dict(MESSAGE_BODY)
-    payload.update({"model": model, "max_tokens": 8})
+    payload.update({"model": model, "max_tokens": 64})
     try:
         http_status, response, latency_ms = _json_request(url, headers, payload)
         content = ""
@@ -157,7 +157,7 @@ def run_gemini(provider_name: str, alias: str, api_key_env: str, model_env: str)
         ],
         "generationConfig": {
             "temperature": 0,
-            "maxOutputTokens": 8,
+            "maxOutputTokens": 32,
         },
     }
     try:
