@@ -10,6 +10,10 @@ Références SIE :
 * `docs/Specifications/LAWIM_V2_Source_Intelligence_Engine_Implementation.md`
 * `docs/Prompts/LAWIM_V2_Source_Intelligence_Engine_Prompt.md`
 
+Référence Conversation Core :
+
+* `docs/Specifications/LAWIM_DEVELOPMENT_RULES.md`
+
 ## Feuille de route des releases
 
 - [docs/ROADMAP_RELEASES.md](docs/ROADMAP_RELEASES.md)
