@@ -198,9 +198,9 @@ Added:
 
 ## 18. Commit
 
-- Commit: pending at the time of this document draft
+- Commit: `d867910e` (`feat(platform): unify LAWIM persona and readiness docs`)
 - Branch: `main`
-- Worktree: modified by the persona, docs, tests, and frontend build outputs
+- Worktree: clean after this implementation snapshot
 
 ## 19. Verdict
 
@@ -209,4 +209,3 @@ Added:
 ## 20. Next Phase
 
 The next phase is the technical and functional production recipe only.
-
