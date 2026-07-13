@@ -205,9 +205,10 @@ class CommunicationDeliveryTests(unittest.TestCase):
             },
             clear=False,
         ):
-            result = self.runtime.repository.send_telegram(chat_id="12345", body="Bonjour LAWIM")
+            result = self.runtime.repository.send_telegram(chat_id=12345, body="Bonjour LAWIM")
         self.assertEqual(result["delivery_status"], "sent")
         self.assertEqual(result["delivery"]["provider_message_id"], "654")
+        self.assertEqual(mock_send.call_args.kwargs["chat_id"], 12345)
         row = self.runtime.repository.one("SELECT metadata_json FROM telegram_messages ORDER BY id DESC LIMIT 1")
         metadata = json.loads(str(row["metadata_json"]))
         self.assertEqual(metadata["provider_response"]["url"], "https://api.telegram.org/bot[redacted]/sendMessage")

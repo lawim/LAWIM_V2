@@ -879,7 +879,7 @@ class CommunicationRepositoryMixin:
     def send_telegram(
         self,
         *,
-        chat_id: str,
+        chat_id: str | int,
         body: str,
         bot_id: int | None = None,
         thread_id: int | None = None,
@@ -891,9 +891,11 @@ class CommunicationRepositoryMixin:
     ) -> dict[str, object]:
         engine = CommunicationPlatformEngine()
         payload = engine.telegram.build_payload(chat_id=chat_id, body=body)
+        recipient_text = str(chat_id or "").strip()
+        recipient_value: str | int = chat_id if isinstance(chat_id, int) else recipient_text
         payload.update(
             {
-                "external_chat_id": external_chat_id or chat_id,
+                "external_chat_id": external_chat_id or recipient_text,
                 "external_user_id": external_user_id or "",
                 "provider_message_id": provider_message_id or "",
             }
@@ -907,17 +909,16 @@ class CommunicationRepositoryMixin:
             contact_id=contact_id,
             payload=payload,
             metadata=metadata or {
-                "external_chat_id": external_chat_id or chat_id,
+                "external_chat_id": external_chat_id or recipient_text,
                 "external_user_id": external_user_id or "",
                 "provider_message_id": provider_message_id or "",
                 "delivery_stage": "request_created",
             },
         )
-        recipient = str(chat_id or "").strip()
         request_summary = {
             "channel": "telegram",
             "message_id": int(request_row["id"]),
-            "recipient": mask_delivery_recipient(recipient),
+            "recipient": mask_delivery_recipient(recipient_text),
             "response_length": len(body.strip()),
             "provider": "telegram",
             "selected_provider": "telegram",
@@ -934,10 +935,10 @@ class CommunicationRepositoryMixin:
             bot_row = self.one("SELECT id FROM telegram_bots ORDER BY id LIMIT 1")
             bot_id = int(bot_row["id"]) if bot_row and bot_row.get("id") is not None else None
             bot_token = (os.getenv("TELEGRAM_BOT_TOKEN") or "").strip()
-            if bot_token and recipient:
+            if bot_token and recipient_text:
                 delivery = send_telegram_message(
                     bot_token=bot_token,
-                    chat_id=recipient,
+                    chat_id=recipient_value,
                     message=body,
                 )
             else:
@@ -945,7 +946,7 @@ class CommunicationRepositoryMixin:
                     name
                     for name, value in (
                         ("TELEGRAM_BOT_TOKEN", bot_token),
-                        ("TELEGRAM_CHAT_ID", recipient),
+                        ("TELEGRAM_CHAT_ID", recipient_text),
                     )
                     if not value
                 ]
@@ -953,8 +954,8 @@ class CommunicationRepositoryMixin:
                     provider="telegram",
                     method="POST",
                     url=f"https://api.telegram.org/bot[redacted]/sendMessage",
-                    payload={"chat_id": recipient, "text": body},
-                    recipient=recipient,
+                    payload={"chat_id": recipient_value, "text": body},
+                    recipient=recipient_text,
                     error_type="unconfigured",
                     error_message=f"Missing Telegram delivery configuration: {', '.join(missing)}",
                 )
@@ -965,13 +966,13 @@ class CommunicationRepositoryMixin:
                 provider="telegram",
                 method="POST",
                 url="https://api.telegram.org/bot[redacted]/sendMessage",
-                payload={"chat_id": recipient, "text": body},
-                recipient=recipient,
+                payload={"chat_id": recipient_value, "text": body},
+                recipient=recipient_text,
             )
-        delivery_record = sanitize_delivery_record(delivery, recipient=recipient)
+        delivery_record = sanitize_delivery_record(delivery, recipient=recipient_text)
         outbound_status = "sent" if delivery.ok else "failed"
         request_metadata = {
-            "external_chat_id": external_chat_id or recipient,
+            "external_chat_id": external_chat_id or recipient_text,
             "external_user_id": external_user_id or "",
             "provider_message_id": delivery.provider_message_id,
             "provider_response": delivery_record,
@@ -1016,7 +1017,7 @@ class CommunicationRepositoryMixin:
                 "channel": "telegram",
                 "message_id": int(request_row["id"]),
                 "telegram_message_id": int(row["id"]),
-                "recipient": mask_delivery_recipient(recipient),
+                "recipient": mask_delivery_recipient(recipient_text),
                 "response_length": len(body.strip()),
                 "provider": delivery.provider,
                 "selected_provider": "telegram",
@@ -1036,7 +1037,7 @@ class CommunicationRepositoryMixin:
                     "channel": "telegram",
                     "message_id": int(request_row["id"]),
                     "telegram_message_id": int(row["id"]),
-                    "recipient": mask_delivery_recipient(recipient),
+                    "recipient": mask_delivery_recipient(recipient_text),
                     "response_length": len(body.strip()),
                     "provider": delivery.provider,
                     "selected_provider": "telegram",

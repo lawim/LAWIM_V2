@@ -770,6 +770,8 @@ class CommunicationService:
                 "request_id": outcome.request.request_id,
                 "message_id": int(message_row["id"]),
                 "recipient": recipient_masked,
+                "telegram_chat_id": normalized.get("chat_id_raw") if channel == "telegram" else None,
+                "telegram_username": normalized.get("username") if channel == "telegram" else None,
                 "response_length": len(response_text),
                 "provider": outcome.response.provider,
                 "selected_provider": outcome.decision.selected_provider,
@@ -823,12 +825,13 @@ class CommunicationService:
                     "error_type": exc.__class__.__name__,
                 }
         else:
-            chat_id = str(normalized.get("chat_id") or "")
+            chat_id_value = normalized.get("chat_id_raw")
+            chat_id = str(chat_id_value or normalized.get("chat_id") or "")
             if not chat_id:
                 return {"status": "skipped", "reason": "missing_chat_id"}
             try:
                 delivery = self.repository.send_telegram(
-                    chat_id=chat_id,
+                    chat_id=chat_id_value if chat_id_value is not None else chat_id,
                     body=response_text,
                     thread_id=thread_id,
                     contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
@@ -852,6 +855,8 @@ class CommunicationService:
                         "request_id": outcome.request.request_id,
                         "message_id": int(message_row["id"]),
                         "recipient": recipient_masked,
+                        "telegram_chat_id": chat_id_value,
+                        "telegram_username": normalized.get("username"),
                         "response_length": len(response_text),
                         "provider": outcome.response.provider,
                         "selected_provider": outcome.decision.selected_provider,
@@ -879,6 +884,8 @@ class CommunicationService:
                 "request_id": outcome.request.request_id,
                 "message_id": int(message_row["id"]),
                 "recipient": recipient_masked,
+                "telegram_chat_id": chat_id_value if channel == "telegram" else None,
+                "telegram_username": normalized.get("username") if channel == "telegram" else None,
                 "response_length": len(response_text),
                 "provider": outcome.response.provider,
                 "selected_provider": outcome.decision.selected_provider,
@@ -889,6 +896,13 @@ class CommunicationService:
                 "resolved_ipv4": delivery_payload.get("resolved_ipv4") if isinstance(delivery_payload, dict) else None,
                 "sanitized_url": delivery_payload.get("sanitized_url") if isinstance(delivery_payload, dict) else None,
                 "error_type": delivery_payload.get("error_type") if isinstance(delivery_payload, dict) else None,
+                "response_text": delivery_payload.get("response_text") if isinstance(delivery_payload, dict) else None,
+                "ok": delivery_payload.get("ok") if isinstance(delivery_payload, dict) else None,
+                "description": (
+                    (delivery_payload.get("response_json") or {}).get("description")
+                    if isinstance(delivery_payload, dict)
+                    else None
+                ),
             },
         )
         self.repository.create_communication_log(

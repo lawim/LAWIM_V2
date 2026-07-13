@@ -211,6 +211,7 @@ def normalize_webhook_payload(payload: Mapping[str, Any]) -> dict[str, Any]:
         "update_type": update_type,
         "message_id": message_id,
         "chat_id": chat_id,
+        "chat_id_raw": chat_data.get("id"),
         "user_id": user_id,
         "username": username,
         "full_name": full_name,

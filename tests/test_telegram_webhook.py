@@ -34,6 +34,7 @@ class TelegramWebhookTests(unittest.TestCase):
         normalized = normalize_webhook_payload(self.payload)
         self.assertEqual(normalized["message_body"], "Bonjour")
         self.assertEqual(normalized["chat_id"], "123")
+        self.assertEqual(normalized["chat_id_raw"], 123)
         self.assertEqual(normalized["user_id"], 456)
         self.assertEqual(extract_message_body(normalized["message_data"]), "Bonjour")
         self.assertTrue(build_message_key(normalized))
