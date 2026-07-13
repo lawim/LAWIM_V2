@@ -69,6 +69,21 @@ class TestIntentEngine(unittest.TestCase):
         bedrooms = result["entities"].get("bedrooms", [])
         self.assertIn(3, bedrooms)
 
+    def test_timeline_extraction(self):
+        result = self.engine.analyze("Je veux emménager demain avant la fin du mois")
+        timelines = result["entities"].get("timelines", [])
+        self.assertTrue(len(timelines) > 0)
+        self.assertEqual(result["entities"].get("timeline"), "immediate")
+        self.assertEqual(result["entities"].get("urgency"), "high")
+
+    def test_land_status_extraction(self):
+        result = self.engine.analyze("J'ai déjà un terrain à Douala pour construire")
+        self.assertEqual(result["entities"].get("land_status"), "available")
+
+    def test_project_type_extraction(self):
+        result = self.engine.analyze("Je cherche un prêt bancaire pour acheter")
+        self.assertEqual(result["entities"].get("project_type"), "buy")
+
     def test_confirmations(self):
         self.assertTrue(self.engine.analyze("Oui c'est correct")["is_confirmation"])
         self.assertTrue(self.engine.analyze("Yes that's right")["is_confirmation"])
@@ -154,6 +169,58 @@ class TestProgressionEngine(unittest.TestCase):
         self.assertIn("city", state["known_fields"])
         self.assertIn("budget_max", state["known_fields"])
 
+    def test_buy_minimum_search_ready(self):
+        state = build_progression_state(
+            project_id=1,
+            intent="buy",
+            entities={
+                "cities": [{"city": "Douala", "match": "douala", "region": None}],
+                "budgets": [{"raw": "50M", "value": 50000000, "currency": "XAF"}],
+                "property_types": ["appartement"],
+            },
+            memory_items=[],
+            project=None,
+        )
+        self.assertTrue(state.get("minimum_search_ready", False))
+        self.assertGreaterEqual(int(state.get("qualification_score", 0)), 70)
+        self.assertEqual(state.get("commercial_maturity"), "ACTIVE")
+        self.assertIn("Lancer", state.get("next_action", ""))
+        self.assertIsNone(state.get("next_question"))
+
+    def test_sell_minimum_search_ready(self):
+        state = build_progression_state(
+            project_id=1,
+            intent="sell",
+            entities={
+                "cities": [{"city": "Douala", "match": "douala", "region": None}],
+                "budgets": [{"raw": "50M", "value": 50000000, "currency": "XAF"}],
+                "property_types": ["maison"],
+            },
+            memory_items=[],
+            project=None,
+        )
+        self.assertTrue(state.get("minimum_search_ready", False))
+        self.assertEqual(state.get("commercial_maturity"), "ACTIVE")
+        self.assertIn("mise en vente", state.get("next_action", "").lower())
+        self.assertIsNone(state.get("next_question"))
+
+    def test_build_minimum_search_ready(self):
+        state = build_progression_state(
+            project_id=1,
+            intent="build",
+            entities={
+                "cities": [{"city": "Douala", "match": "douala", "region": None}],
+                "budgets": [{"raw": "20M", "value": 20000000, "currency": "XAF"}],
+                "land_status": "available",
+            },
+            memory_items=[],
+            project=None,
+        )
+        self.assertTrue(state.get("minimum_search_ready", False))
+        self.assertEqual(state.get("commercial_maturity"), "ACTIVE")
+        self.assertIn("terrain", state.get("next_action", "").lower())
+        self.assertIsNone(state.get("next_question"))
+
     def test_rent_qualification(self):
         state = build_progression_state(
             project_id=1,
@@ -176,14 +243,32 @@ class TestProgressionEngine(unittest.TestCase):
             memory_items=[],
             project={"location_city": "Douala"},
         )
-        # Should be close to complete with city, budget, and surface known
-        self.assertIn("usage", state.get("next_question", "").lower())
+        self.assertTrue(state.get("minimum_search_ready", False))
+        self.assertEqual(state.get("commercial_maturity"), "ACTIVE")
+        self.assertIsNone(state.get("next_question"))
+        self.assertIn("recherche", state.get("next_action", "").lower())
 
     def test_requires_confirmation(self):
         self.assertTrue(self.engine.requires_confirmation("budget_max"))
         self.assertTrue(self.engine.requires_confirmation("city"))
         self.assertTrue(self.engine.requires_confirmation("property_type"))
         self.assertFalse(self.engine.requires_confirmation("surface_m2"))
+
+    def test_find_funding_minimum_search_ready(self):
+        state = build_progression_state(
+            project_id=1,
+            intent="find_funding",
+            entities={
+                "budgets": [{"raw": "10M", "value": 10000000, "currency": "XAF"}],
+                "project_type": "buy",
+            },
+            memory_items=[],
+            project=None,
+        )
+        self.assertTrue(state.get("minimum_search_ready", False))
+        self.assertEqual(state.get("commercial_maturity"), "ACTIVE")
+        self.assertIn("Simuler", state.get("next_action", ""))
+        self.assertIsNone(state.get("next_question"))
 
     def test_next_actions(self):
         state = build_progression_state(
@@ -291,6 +376,15 @@ class TestAccompanimentEngine(unittest.TestCase):
         self.assertTrue(len(suggestions) > 0)
         self.assertTrue(any("capacité" in s["content"] or "loan" in s["content"].lower() for s in suggestions))
 
+    def test_buy_suggestions_with_minimum_search_ready(self):
+        suggestions = evaluate_suggestions(
+            intent="buy",
+            entities={"cities": [{"city": "Douala", "match": "douala", "region": None}], "budgets": [{"raw": "50M", "value": 50000000, "currency": "XAF"}], "property_types": ["appartement"]},
+            progression={"known_fields": ["city", "budget_max", "property_type"], "minimum_search_ready": True, "complete": False},
+            memory_items=[],
+        )
+        self.assertTrue(any("recherche" in s["content"].lower() for s in suggestions))
+
     def test_complete_progression_suggestions(self):
         suggestions = evaluate_suggestions(
             intent="buy",
@@ -352,7 +446,8 @@ class TestScenarioSimulations(unittest.TestCase):
         analysis3 = self._analyze("500 m²")
         all_known.append("surface_m2")
         state3 = self._check_progression("find_land", analysis3["entities"], all_known)
-        self.assertIn("usage", state3.get("next_question", "").lower())
+        self.assertTrue(state3.get("minimum_search_ready", False))
+        self.assertIsNone(state3.get("next_question"))
 
         analysis4 = self._analyze("Pour construire")
         all_known.append("purpose")

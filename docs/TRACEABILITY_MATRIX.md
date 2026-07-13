@@ -68,7 +68,7 @@ This matrix traces every functional requirement through release programs to impl
 | Brain Intelligence Center | AK | Brain | BRAIN_INTELLIGENCE.md | ✅ | ✅ 🚀 |
 | Conversation Intelligence | AL | Conversation | CONVERSATION_INTELLIGENCE.md | ✅ | ✅ 🚀 |
 | Intelligence Governance | AM | Governance | INTELLIGENCE_GOVERNANCE.md | ✅ | ✅ 🚀 |
-| LAWIM 2.0 Console | AN | Intelligence | LAWIM_2_FOUNDATION.md | ✅ | ✅ 🚀 |
+| LAWIM 2.0 Console | AN | Intelligence | docs/platform/PLATFORM_READINESS.md | ✅ | ✅ 🚀 |
 
 **Status:** All 8 programs complete ✅ 🚀
 
@@ -76,8 +76,8 @@ This matrix traces every functional requirement through release programs to impl
 
 | Feature | Release | Module | Documentation | Tests | Status |
 |---------|---------|--------|----------------|-------|--------|
-| Cognitive Core | AO | Cognition | COGNITIVE_CORE.md | ✅ | ✅ 🚀 |
-| Permanent Conversation | AP | Conversation | PERMANENT_CONVERSATION_ARCHITECTURE.md | ✅ | ✅ 🚀 |
+| Cognitive Core | AO | Cognition | docs/Specifications/LAWIM_DEVELOPMENT_RULES.md | ✅ | ✅ 🚀 |
+| Permanent Conversation | AP | Conversation | docs/platform/CONVERSATION_LIFECYCLE.md | ✅ | ✅ 🚀 |
 | Advanced Digital Twin | AQ | Digital Twin | ADVANCED_DIGITAL_TWIN.md | ✅ | ✅ 🚀 |
 | Distributed Intelligence | AR | Agents | DISTRIBUTED_INTELLIGENCE.md | ✅ | ✅ 🚀 |
 | Autonomous Workflow Preview | AS | Workflows | AUTONOMOUS_WORKFLOW_PREVIEW.md | ✅ | ✅ 🚀 |
@@ -85,9 +85,9 @@ This matrix traces every functional requirement through release programs to impl
 | Predictive Intelligence | AU | Learning | PREDICTIVE_INTELLIGENCE_PREVIEW.md | ✅ | ✅ 🚀 |
 | Autonomy Governance | AV | Governance | AUTONOMY_GOVERNANCE.md | ✅ | ✅ 🚀 |
 | Cognitive Operations | AW | Operations | COGNITIVE_OPERATIONS.md | ✅ | ✅ 🚀 |
-| LAWIM 3.0 Console | AX | Cognition | LAWIM_3_FOUNDATION.md | ✅ | ✅ 🚀 |
+| LAWIM 3.0 Console | AX | Cognition | docs/Specifications/LAWIM_DEVELOPMENT_RULES.md | ✅ | ✅ 🚀 |
 | Future Compatibility | AY | Architecture | FUTURE_COMPATIBILITY.md | ✅ | ✅ 🚀 |
-| LAWIM 3.0 Constitution | AZ | Governance | LAWIM_3_CONSTITUTION.md | ✅ | ✅ 🚀 |
+| LAWIM 3.0 Constitution | AZ | Governance | docs/Specifications/LAWIM_DEVELOPMENT_RULES.md | ✅ | ✅ 🚀 |
 
 **Status:** All 12 programs complete ✅ 🚀
 
@@ -113,10 +113,10 @@ This matrix traces every functional requirement through release programs to impl
 | Agents (@agents) | DistributedIntelligencePage.tsx | DISTRIBUTED_INTELLIGENCE.md | ✅ | ✅ 🚀 |
 | Workflows (@workflows) | AutonomousWorkflowPreviewPage.tsx | AUTONOMOUS_WORKFLOW_PREVIEW.md | ✅ | ✅ 🚀 |
 | Knowledge (@knowledge) | CognitiveKnowledgeEvolutionPage.tsx | COGNITIVE_KNOWLEDGE_EVOLUTION.md | ✅ | ✅ 🚀 |
-| Cognition | CognitiveCorePage.tsx, PredictiveIntelligencePreviewPage.tsx | COGNITIVE_CORE.md | ✅ | ✅ 🚀 |
+| Cognition | CognitiveCorePage.tsx, PredictiveIntelligencePreviewPage.tsx | docs/platform/PLATFORM_READINESS.md | ✅ | ✅ 🚀 |
 | Governance | AutonomyGovernancePage.tsx, CognitiveOperationsPage.tsx | AUTONOMY_GOVERNANCE.md | ✅ | ✅ 🚀 |
-| LAWIM 2.0 | Lawim2ConsolePage.tsx | LAWIM_2_FOUNDATION.md | ✅ | ✅ 🚀 |
-| LAWIM 3.0 | Lawim3ConsolePage.tsx, Lawim3ConstitutionPage.tsx, FutureCompatibilityPage.tsx | LAWIM_3_FOUNDATION.md | ✅ | ✅ 🚀 |
+| LAWIM 2.0 | Lawim2ConsolePage.tsx | docs/platform/PLATFORM_READINESS.md | ✅ | ✅ 🚀 |
+| LAWIM 3.0 | Lawim3ConsolePage.tsx, Lawim3ConstitutionPage.tsx, FutureCompatibilityPage.tsx | docs/Specifications/LAWIM_DEVELOPMENT_RULES.md | ✅ | ✅ 🚀 |
 
 **Status:** All 18 frontend modules complete with pages, docs, and tests ✅ 🚀
 
@@ -130,15 +130,15 @@ This matrix traces every functional requirement through release programs to impl
 | Database | db.py (73KB) | DEPLOYMENT.md | ✅ | ✅ 🚀 |
 | DTOs | dto.py | API docs | ✅ | ✅ 🚀 |
 | Contact Domain | contact.py | Domain docs | ✅ | ✅ 🚀 |
-| Conversation Domain | conversation_domain.py | CONVERSATION_ENGINE.md | ✅ | ✅ 🚀 |
+| Conversation Domain | conversation_domain.py | docs/platform/CONVERSATION_LIFECYCLE.md | ✅ | ✅ 🚀 |
 | Analytics | analytics/ | OBSERVABILITY.md | ✅ | ✅ 🚀 |
 | Assistant | assistant/ | docs/ | ✅ | ✅ 🚀 |
-| Cognition | cognition/ | COGNITIVE_CORE.md | ✅ | ✅ 🚀 |
+| Cognition | cognition/ | docs/platform/PLATFORM_READINESS.md | ✅ | ✅ 🚀 |
 | Communication | communication/ | INTEGRATIONS.md | ✅ | ✅ 🚀 |
 | Communications | communications/ | INTEGRATIONS.md | ✅ | ✅ 🚀 |
 | CRM | crm/ | Domain docs, intent-aware lead scoring | ✅ | ✅ 🚀 |
 | Ecosystem | ecosystem/ | INTEGRATIONS.md | ✅ | ✅ 🚀 |
-| Intelligent Platform | intelligent/ | LAWIM_2_FOUNDATION.md | ✅ | ✅ 🚀 |
+| Intelligent Platform | intelligent/ | docs/platform/PLATFORM_READINESS.md | ✅ | ✅ 🚀 |
 | Knowledge Platform | knowledge_platform/ | KNOWLEDGE.md | ✅ | ✅ 🚀 |
 | Marketplace | marketplace/ | INTEGRATIONS.md | ✅ | ✅ 🚀 |
 | Observability | observability.py | OBSERVABILITY.md | ✅ | ✅ 🚀 |
@@ -198,8 +198,8 @@ This matrix traces every functional requirement through release programs to impl
 
 | Document | Release | Module | Type | Status |
 |----------|---------|--------|------|--------|
-| LAWIM_2_FOUNDATION.md | AG-AN | Intelligence | Architecture | ✅ 📄 |
-| LAWIM_3_FOUNDATION.md | AO-AZ | Cognition | Architecture | ✅ 📄 |
+| docs/platform/PLATFORM_READINESS.md | AG-AN | Intelligence | Architecture | ✅ 📄 |
+| docs/Specifications/LAWIM_DEVELOPMENT_RULES.md | AO-AZ | Cognition | Architecture | ✅ 📄 |
 | MEMORY_EVOLUTION.md | AG | Memory | Feature | ✅ 📄 |
 | MONTHLY_INTELLIGENCE_REVIEW_V2.md | AH | Learning | Feature | ✅ 📄 |
 | SUPERVISED_LEARNING.md | AI | Learning | Feature | ✅ 📄 |
@@ -207,8 +207,8 @@ This matrix traces every functional requirement through release programs to impl
 | BRAIN_INTELLIGENCE.md | AK | Brain | Feature | ✅ 📄 |
 | CONVERSATION_INTELLIGENCE.md | AL | Conversation | Feature | ✅ 📄 |
 | INTELLIGENCE_GOVERNANCE.md | AM | Governance | Feature | ✅ 📄 |
-| COGNITIVE_CORE.md | AO | Cognition | Feature | ✅ 📄 |
-| PERMANENT_CONVERSATION_ARCHITECTURE.md | AP | Conversation | Feature | ✅ 📄 |
+| docs/Specifications/LAWIM_DEVELOPMENT_RULES.md | AO | Cognition | Feature | ✅ 📄 |
+| docs/platform/CONVERSATION_LIFECYCLE.md | AP | Conversation | Feature | ✅ 📄 |
 | ADVANCED_DIGITAL_TWIN.md | AQ | Digital Twin | Feature | ✅ 📄 |
 | DISTRIBUTED_INTELLIGENCE.md | AR | Agents | Feature | ✅ 📄 |
 | AUTONOMOUS_WORKFLOW_PREVIEW.md | AS | Workflows | Feature | ✅ 📄 |
@@ -217,7 +217,7 @@ This matrix traces every functional requirement through release programs to impl
 | AUTONOMY_GOVERNANCE.md | AV | Governance | Feature | ✅ 📄 |
 | COGNITIVE_OPERATIONS.md | AW | Operations | Feature | ✅ 📄 |
 | FUTURE_COMPATIBILITY.md | AY | Architecture | Feature | ✅ 📄 |
-| LAWIM_3_CONSTITUTION.md | AZ | Governance | Feature | ✅ 📄 |
+| docs/Specifications/LAWIM_DEVELOPMENT_RULES.md | AZ | Governance | Feature | ✅ 📄 |
 | PERFORMANCE.md | AA | Performance | Feature | ✅ 📄 |
 | SECURITY_HARDENING.md | AB | Security | Feature | ✅ 📄 |
 | OBSERVABILITY.md | AC | Observability | Feature | ✅ 📄 |
@@ -236,7 +236,7 @@ This matrix traces every functional requirement through release programs to impl
 | KNOWLEDGE.md | All | Knowledge | Architecture | ✅ 📄 |
 | MEMORY.md | All | Memory | Architecture | ✅ 📄 |
 | LEARNING_FRAMEWORK.md | All | Learning | Architecture | ✅ 📄 |
-| CONVERSATION_ENGINE.md | All | Conversation | Architecture | ✅ 📄 |
+| docs/platform/CONVERSATION_LIFECYCLE.md | All | Conversation | Architecture | ✅ 📄 |
 | DIGITAL_TWIN.md | All | Digital Twin | Architecture | ✅ 📄 |
 | BRAIN.md | All | Brain | Architecture | ✅ 📄 |
 | Plus 20+ additional docs | All | All | Various | ✅ 📄 |

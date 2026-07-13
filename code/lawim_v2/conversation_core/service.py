@@ -110,6 +110,13 @@ class ConversationCoreService:
             "memory_summary": memory_summary,
             "direct_reply": bool(direct_reply),
             "reply_kind": reply_kind,
+            "commercial_maturity": progression.get("commercial_maturity"),
+            "qualification_score": progression.get("qualification_score"),
+            "minimum_search_ready": progression.get("minimum_search_ready"),
+            "next_action": progression.get("next_action"),
+            "transaction_stage": progression.get("transaction_stage"),
+            "required_fields": progression.get("required_fields"),
+            "optional_fields": progression.get("optional_fields"),
             "warning": assistant_brief_warning(normalized_language),
         }
         request = self.ai_orchestrator.build_request(
@@ -219,6 +226,10 @@ class ConversationCoreService:
                 "blocked_external_service": blocked_external_service,
                 "selected_provider": outcome.decision.selected_provider,
                 "provider": outcome.response.provider,
+                "commercial_maturity": progression.get("commercial_maturity"),
+                "qualification_score": progression.get("qualification_score"),
+                "minimum_search_ready": progression.get("minimum_search_ready"),
+                "next_action": progression.get("next_action"),
             },
         )
 
@@ -241,12 +252,11 @@ class ConversationCoreService:
         if is_blocked_external_service_request(text):
             return compose_external_service_refusal(language), "refusal"
         next_question = str(progression.get("next_question") or "").strip()
-        if next_question and not progression.get("complete"):
+        search_ready = bool(progression.get("minimum_search_ready") or progression.get("search_ready"))
+        if next_question and not progression.get("complete") and not search_ready:
             return next_question, "qualification"
         if channel == "web" and not text.strip():
             return compose_welcome(language, known_user=known_user, name=(str(contact.get("full_name") or "") if contact else None)), "greeting"
-        if analysis.get("primary_intent") in {"find_partner", "find_funding"} and next_question:
-            return next_question, "qualification"
         return None, "ai"
 
     def _resolve_identity_and_thread(

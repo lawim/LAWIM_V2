@@ -13,6 +13,11 @@ Références SIE :
 Référence Conversation Core :
 
 * `docs/Specifications/LAWIM_DEVELOPMENT_RULES.md`
+* `docs/platform/TRANSACTION_QUALIFICATION_AND_COMMERCIAL_FLOW.md`
+* `docs/platform/PROPERTY_SEARCH_QUALIFICATION_MATRIX.md`
+* `docs/platform/CONVERSATION_LIFECYCLE.md`
+* `docs/platform/LAWIM_AI_PERSONA.md`
+* `docs/platform/PLATFORM_READINESS.md`
 
 ## Feuille de route des releases
 

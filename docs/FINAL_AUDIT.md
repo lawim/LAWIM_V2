@@ -272,13 +272,14 @@ PWA precache:    467.39 KiB
 **Status:** PASS
 
 **Core Documentation Present:**
-- ✓ LAWIM_2_FOUNDATION.md - Intelligence platform overview
-- ✓ LAWIM_3_FOUNDATION.md - Cognitive architecture
-- ✓ LAWIM_3_CONSTITUTION.md - Ethical principles
+- ✓ docs/Specifications/LAWIM_DEVELOPMENT_RULES.md - Conversation Core constitution
+- ✓ docs/platform/PLATFORM_READINESS.md - Platform readiness and commercial journey
+- ✓ docs/platform/CONVERSATION_LIFECYCLE.md - Stateful omnichannel lifecycle
+- ✓ docs/platform/LAWIM_AI_PERSONA.md - Official AI persona
 - ✓ DEPLOYMENT.md - Deployment procedures
 - ✓ DOCKER.md - Container setup
 - ✓ INTEGRATIONS.md - External service bindings
-- ✓ MEMORY.md, LEARNING.md, CONVERSATION_ENGINE.md - Core systems
+- ✓ MEMORY.md, LEARNING.md, docs/platform/CONVERSATION_LIFECYCLE.md - Core systems
 - ✓ Performance, Security, Observability documentation
 
 **Documentation Coverage:**

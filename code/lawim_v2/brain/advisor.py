@@ -120,7 +120,11 @@ class AdvisorEngine:
             confirmed_facts=confirmed,
             pending_hypotheses=pending,
             last_action=last_action,
-            next_step=progression.get("next_actions", [None])[0] if progression.get("next_actions") else None,
+            next_step=str(
+                progression.get("next_action")
+                or (progression.get("next_actions", [None])[0] if progression.get("next_actions") else None)
+                or ""
+            ) or None,
             next_question=progression.get("next_question"),
             language=language,
         )

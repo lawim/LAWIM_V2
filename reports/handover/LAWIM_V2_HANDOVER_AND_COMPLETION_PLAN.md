@@ -238,7 +238,7 @@ Les documents suivants sont présents dans le dépôt :
 - `docs/PRODUCTION.md`
 - `docs/IMPLEMENTATION_HISTORY.md`
 - `docs/BRAIN.md`
-- `docs/CONVERSATION_ENGINE.md`
+- `docs/platform/CONVERSATION_LIFECYCLE.md`
 - `reports/product_reviews/Release_09.md`
 - `reports/product_reviews/Mission_10_Report.md`
 - `reports/product_reviews/Mission_11_Report.md`

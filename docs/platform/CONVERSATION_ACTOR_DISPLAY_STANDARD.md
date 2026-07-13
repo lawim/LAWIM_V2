@@ -6,6 +6,7 @@
 - `LAWIM (Name)` for staff members
 - `User` for platform users
 - Specialized roles keep a visual label and a textual role
+- The same display model must be used on web, WhatsApp, Telegram, email, and cockpits
 
 ## Examples
 
@@ -14,10 +15,15 @@
 - `👤 User`
 - `🏠 Agent immobilier (Name)`
 - `⚖️ Notaire (Name)`
+- `📐 Architecte (Name)`
+- `🧑‍🔧 Ingénieur (Name)`
+- `🛠️ Technicien (Name)`
+- `💼 Investisseur (Name)`
+- `🏢 Agence (Name)`
 
 ## Accessibility
 
 - Emojis must never be the only identifier.
 - Always keep a text label for screen readers and exports.
 - Store structured sender metadata, not only the rendered message body.
-
+- Avoid hiding changes of interlocutor.

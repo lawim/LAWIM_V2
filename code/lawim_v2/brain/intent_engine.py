@@ -92,6 +92,52 @@ TEXT_NUMBERS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, 
 BEDROOM_PATTERN = re.compile(r"(\d+)\s*(?:-?\s*(?:chambr|pièce|room|bedroom|pièces|chambres))")
 TEXT_BEDROOM_PATTERN = re.compile(r"(one|two|three|four|five|six|seven|eight|nine|ten|un|deux|trois|quatre|cinq)\s*(?:-?\s*(?:chambr|pièce|room|bedroom|pièces|chambres))")
 
+TIMELINE_PATTERNS: dict[str, tuple[str, ...]] = {
+    "immediate": (
+        r"\b(demain|today|tomorrow|aujourd'hui|imm[ée]diat(?:ement)?|asap|tout de suite|right away|now)\b",
+    ),
+    "short_term": (
+        r"\b(cette semaine|next week|semaine prochaine|fin du mois|avant la fin du mois|dans quelques jours|in a few days)\b",
+    ),
+    "medium_term": (
+        r"\b(le mois prochain|next month|dans un mois|dans trois mois|3 mois|three months|within three months)\b",
+    ),
+}
+
+PROJECT_TYPE_PHRASES: dict[str, tuple[str, ...]] = {
+    "buy": ("achat", "acheter", "acquérir", "purchase", "buy"),
+    "build": ("construction", "construire", "bâtir", "build"),
+    "invest": ("investir", "investissement", "investment", "invest"),
+}
+
+LAND_STATUS_PHRASES: dict[str, tuple[str, ...]] = {
+    "available": (
+        "j'ai déjà un terrain",
+        "j’ai déjà un terrain",
+        "j'ai un terrain",
+        "j’ai un terrain",
+        "terrain déjà acquis",
+        "terrain déjà disponible",
+        "terrain existant",
+        "terrain réservé",
+        "i already have land",
+        "i already have a land",
+        "my land",
+    ),
+    "unavailable": (
+        "je n'ai pas de terrain",
+        "je n’ai pas de terrain",
+        "je n'ai pas encore de terrain",
+        "je n’ai pas encore de terrain",
+        "pas encore de terrain",
+        "i do not have land",
+        "i don't have land",
+        "i do not have a land",
+        "i don't have a land",
+        "no land yet",
+    ),
+}
+
 LANGUAGE_PATTERNS: dict[str, tuple[str, str, ...]] = {
     "fr": (r"\bje\b", r"\bnous\b", r"\bvoudrais\b", r"\bveux\b", r"\bcherche\b", r"\bbonjour\b", r"\bsvp\b", r"\bs'il vous plaît\b"),
     "en": (r"\bi want\b", r"\bi would\b", r"\bi need\b", r"\bi am looking\b", r"\bhello\b", r"\bhi\b", r"\bplease\b"),
@@ -206,6 +252,35 @@ def _detect_bedrooms(text: str) -> list[int]:
     return results
 
 
+def _detect_timelines(text: str) -> list[dict[str, str]]:
+    lowered = text.lower()
+    found: list[dict[str, str]] = []
+    for bucket, patterns in TIMELINE_PATTERNS.items():
+        for pattern in patterns:
+            match = re.search(pattern, lowered)
+            if match:
+                raw = match.group(0)
+                found.append({"raw": raw, "bucket": bucket})
+                break
+    return found
+
+
+def _detect_project_type(text: str) -> str | None:
+    lowered = text.lower()
+    for project_type, phrases in PROJECT_TYPE_PHRASES.items():
+        if any(phrase in lowered for phrase in phrases):
+            return project_type
+    return None
+
+
+def _detect_land_status(text: str) -> str | None:
+    lowered = text.lower()
+    for bucket, phrases in LAND_STATUS_PHRASES.items():
+        if any(phrase in lowered for phrase in phrases):
+            return bucket
+    return None
+
+
 def _parse_context_for_text(text: str) -> dict[str, Any]:
     lowered = text.lower()
     entities: dict[str, Any] = {}
@@ -224,6 +299,21 @@ def _parse_context_for_text(text: str) -> dict[str, Any]:
     bedrooms = _detect_bedrooms(text)
     if bedrooms:
         entities["bedrooms"] = bedrooms
+    timelines = _detect_timelines(text)
+    if timelines:
+        entities["timelines"] = timelines
+        entities["timeline"] = timelines[0]["bucket"]
+        if timelines[0]["bucket"] == "immediate":
+            entities["urgency"] = "high"
+        elif timelines[0]["bucket"] == "short_term":
+            entities["urgency"] = "medium"
+    project_type = _detect_project_type(text)
+    if project_type:
+        entities["project_type"] = project_type
+        entities["project_types"] = [project_type]
+    land_status = _detect_land_status(text)
+    if land_status:
+        entities["land_status"] = land_status
     language = _detect_language(text)
     entities["lang"] = language
     is_confirmation = any(p in lowered for p in CONFIRMATION_PATTERNS)
