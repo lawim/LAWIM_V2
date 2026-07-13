@@ -235,15 +235,16 @@
 - `npm run prisma:validate` n’a pas pu être exécuté dans cet environnement car le binaire `prisma` n’est pas installé.
 
 ## 53. Commit
-- Commit de nettoyage à créer après ce rapport: `chore: decommission legacy assistant fallback paths`.
+- Commit de nettoyage: `6e6a2cc8` (`chore: decommission legacy assistant fallback paths`).
 
 ## 54. Tag
 - Tag de sécurité: `pre-cleanup-lawim-v2`.
-- Aucun tag de release final n’a encore été posé à ce stade du rapport.
+- Tag de release: `lawim-v2-cleanup-2026-07-13`.
 
 ## 55. État Git final
-- État attendu après commit: worktree propre.
-- L’état final sera confirmé après l’ajout du rapport et le commit de nettoyage.
+- Worktree propre au moment du commit de cleanup.
+- Tag de release posé sur l’état de nettoyage.
+- Les changements sont désormais figés dans Git.
 
 ## 56. Réserves
 - La documentation historique n’a pas été purgée dans cette phase.
