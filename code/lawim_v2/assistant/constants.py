@@ -34,14 +34,4 @@ RAG_SOURCE_TYPES: frozenset[str] = frozenset(
     }
 )
 
-INTENT_KEYWORDS: dict[str, tuple[str, ...]] = {
-    "decision_coach": ("décision", "decision", "choisir", "alternative", "confiance"),
-    "ecosystem_navigator": ("partenaire", "partner", "service", "matching", "agence", "notaire"),
-    "risk_analyst": ("risque", "risk", "danger", "mitigation", "bloquant"),
-    "journey_guide": ("parcours", "journey", "étape", "step", "progression", "timeline"),
-    "simulation_planner": ("simulation", "scénario", "scenario", "budget", "prêt", "loan"),
-}
-
-ASSISTANT_MODES: frozenset[str] = frozenset({"deterministic", "llm"})
-
 DEFAULT_PROMPT_VERSION = "1.0.0"

@@ -3,25 +3,6 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .constants import AGENT_KEYS, INTENT_KEYWORDS
-from .prompts import get_system_prompt
-
-
-class AgentRouterEngine:
-    def route(self, *, message: str, project: dict[str, object], default_agent: str = "project_advisor") -> dict[str, object]:
-        text = message.lower()
-        scores: dict[str, int] = {key: 0 for key in AGENT_KEYS}
-        for agent_key, keywords in INTENT_KEYWORDS.items():
-            for keyword in keywords:
-                if keyword in text:
-                    scores[agent_key] += 1
-        best = max(scores.items(), key=lambda item: item[1])
-        agent_key = best[0] if best[1] > 0 else default_agent
-        if agent_key not in AGENT_KEYS:
-            agent_key = "project_advisor"
-        return {"agent_key": agent_key, "scores": scores, "confidence": min(95, 40 + best[1] * 15)}
-
-
 class ProjectContextEngine:
     def build(
         self,
@@ -95,82 +76,6 @@ class RAGFoundationEngine:
         ]
         scored.sort(key=lambda row: int(row.get("score", 0)), reverse=True)
         return [row for row in scored if int(row.get("score", 0)) > 0][:limit]
-
-
-class DeterministicAssistantEngine:
-    def compose(
-        self,
-        *,
-        agent_key: str,
-        user_message: str,
-        context: dict[str, object],
-        rag_chunks: list[dict[str, object]],
-        routing: dict[str, object],
-    ) -> dict[str, object]:
-        project = context.get("project") or {}
-        title = str(project.get("title") or "votre projet")
-        nba = context.get("next_best_action") or {}
-        next_title = str(nba.get("title") or "consolider le contexte projet")
-        rag_hint = ""
-        if rag_chunks:
-            rag_hint = f" Référence : {rag_chunks[0].get('content', '')[:120]}…"
-        templates = {
-            "project_advisor": (
-                f"Pour {title}, je recommande de prioriser : {next_title}. "
-                f"Votre question « {user_message[:80]} » concerne le pilotage global du projet.{rag_hint}"
-            ),
-            "decision_coach": (
-                f"Analyse décisionnelle pour {title} : consultez les décisions cognition récentes "
-                f"et leur niveau de confiance avant d'agir.{rag_hint}"
-            ),
-            "ecosystem_navigator": (
-                f"Écosystème : mobilisez les partenaires et services matchés pour {title}. "
-                f"Vérifiez le matching et l'orchestration.{rag_hint}"
-            ),
-            "risk_analyst": (
-                f"Risques : traitez d'abord les scores élevés identifiés par l'intelligence risques "
-                f"sur {title}.{rag_hint}"
-            ),
-            "journey_guide": (
-                f"Parcours : avancez l'étape courante et débloquez les milestones en attente "
-                f"pour {title}.{rag_hint}"
-            ),
-            "simulation_planner": (
-                f"Simulation : lancez un scénario (budget, prêt, relocation) pour évaluer "
-                f"l'impact sur {title}.{rag_hint}"
-            ),
-        }
-        content = templates.get(agent_key, templates["project_advisor"])
-        return {
-            "content": content,
-            "agent_key": agent_key,
-            "mode": "deterministic",
-            "provider": "deterministic",
-            "fallback_used": True,
-            "routing": routing,
-            "rag_chunks_used": len(rag_chunks),
-        }
-
-    def maybe_llm_enhance(
-        self,
-        *,
-        provider,
-        system_prompt: str,
-        user_message: str,
-        context: dict[str, object],
-        deterministic: dict[str, object],
-    ) -> dict[str, object]:
-        if provider.is_available():
-            llm_text = provider.complete(system_prompt=system_prompt, user_message=user_message, context=context)
-            if llm_text:
-                return {
-                    **deterministic,
-                    "content": llm_text,
-                    "mode": "llm",
-                    "provider": getattr(provider, "name", "llm"),
-                    "fallback_used": False,
-                }
-        return deterministic
 
 
 class ConversationMemoryEngine:

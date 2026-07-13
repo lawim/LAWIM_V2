@@ -186,7 +186,6 @@ class LawimServices:
             self.projects,
             self.policy,
             config=config,
-            ai_orchestrator=self.ai,
             conversation_core=self.conversation_core,
         )
         from .analytics.service import AnalyticsService

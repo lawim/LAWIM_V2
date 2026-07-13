@@ -9,9 +9,11 @@ from . import dto as bdto
 
 
 class BrainService:
-    def __init__(self, repository, project_service, conversation_core=None) -> None:
+    def __init__(self, repository, project_service, conversation_core) -> None:
         self.repository = repository
         self.projects = project_service
+        if conversation_core is None:
+            raise ValueError("conversation_core is required")
         self.conversation_core = conversation_core
         self.advisor = AdvisorEngine(repository)
         self.relations = RelationEngine(repository)
@@ -38,98 +40,54 @@ class BrainService:
     ) -> dict[str, Any]:
         self._require_access(actor, project_id)
         METRICS.increment("brain_chat")
-        if self.conversation_core is not None:
-            result = self.conversation_core.process_message(
-                channel=channel,
-                message=message,
-                project_id=project_id,
-                actor=actor,
-                session_id=session_id,
-                language=language or "fr",
-            )
-            progression = result.plan.progression
-            suggestions = [
-                {
-                    "type": "action",
-                    "content": action,
-                    "action": action,
-                    "priority": "medium",
-                    "priority_order": index + 1,
-                    "status": "proposed",
-                }
-                for index, action in enumerate(progression.get("next_actions") or [])
-            ]
-            if suggestions:
-                self.advisor.accompaniment.persist_suggestions(
-                    self.repository,
-                    project_id=project_id,
-                    suggestions=suggestions,
-                    language=result.plan.language,
-                )
-            intent_row = self.repository.one(
-                "SELECT * FROM brain_intents WHERE project_id = ? ORDER BY id DESC LIMIT 1",
-                (project_id,),
-            )
-            self.repository.upsert_brain_progression(
-                project_id=project_id,
-                intent_type=str(result.plan.analysis.get("primary_intent") or "other"),
-                current_step=int(progression.get("progress_pct", 0)),
-                total_steps=int(progression.get("total_steps", 0)),
-                missing_fields=list(progression.get("missing_fields") or []),
-                next_question=progression.get("next_question"),
-                next_question_key=progression.get("next_key"),
-                status="complete" if progression.get("complete") else "in_progress",
-            )
-            return {
-                "analysis": bdto.intent_dto(result.plan.analysis),
-                "detected_language": result.plan.language,
-                "progression": bdto.progression_dto(progression),
-                "suggestions": suggestions,
-                "memory_summary": result.plan.memory_summary,
-                "intent_id": intent_row.get("id") if intent_row else None,
-            }
-
-        result = self.advisor.process_message(
-            project_id=project_id,
+        result = self.conversation_core.process_message(
+            channel=channel,
             message=message,
+            project_id=project_id,
+            actor=actor,
+            session_id=session_id,
             language=language or "fr",
-            session_id=session_id,
         )
-
-        intent_row = self.advisor.store_intent(
-            project_id=project_id,
-            analysis=result["analysis"],
-            session_id=session_id,
-        )
-
-        progression = result.get("progression", {})
-        self.repository.upsert_brain_progression(
-            project_id=project_id,
-            intent_type=result["analysis"]["primary_intent"],
-            current_step=progression.get("progress_pct", 0),
-            total_steps=progression.get("total_steps", 0),
-            missing_fields=progression.get("missing_fields", []),
-            next_question=progression.get("next_question"),
-            next_question_key=progression.get("next_key"),
-            status="complete" if progression.get("complete") else "in_progress",
-        )
-
-        suggestions = result.get("suggestions", [])
+        progression = result.plan.progression
+        suggestions = [
+            {
+                "type": "action",
+                "content": action,
+                "action": action,
+                "priority": "medium",
+                "priority_order": index + 1,
+                "status": "proposed",
+            }
+            for index, action in enumerate(progression.get("next_actions") or [])
+        ]
         if suggestions:
             self.advisor.accompaniment.persist_suggestions(
                 self.repository,
                 project_id=project_id,
                 suggestions=suggestions,
-                language=result.get("detected_language", "fr"),
+                language=result.plan.language,
             )
-
+        intent_row = self.repository.one(
+            "SELECT * FROM brain_intents WHERE project_id = ? ORDER BY id DESC LIMIT 1",
+            (project_id,),
+        )
+        self.repository.upsert_brain_progression(
+            project_id=project_id,
+            intent_type=str(result.plan.analysis.get("primary_intent") or "other"),
+            current_step=int(progression.get("progress_pct", 0)),
+            total_steps=int(progression.get("total_steps", 0)),
+            missing_fields=list(progression.get("missing_fields") or []),
+            next_question=progression.get("next_question"),
+            next_question_key=progression.get("next_key"),
+            status="complete" if progression.get("complete") else "in_progress",
+        )
         METRICS.increment("brain_intents")
         return {
-            "analysis": bdto.intent_dto(result["analysis"]),
-            "detected_language": result["detected_language"],
+            "analysis": bdto.intent_dto(result.plan.analysis),
+            "detected_language": result.plan.language,
             "progression": bdto.progression_dto(progression),
-            "suggestions": [bdto.suggestion_dto(s) for s in suggestions],
-            "memory_summary": result.get("memory_summary"),
+            "suggestions": suggestions,
+            "memory_summary": result.plan.memory_summary,
             "intent_id": intent_row.get("id") if intent_row else None,
         }
 

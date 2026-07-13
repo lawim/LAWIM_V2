@@ -43,6 +43,9 @@ class FallbackEngine:
                 confidence=best.confidence,
                 metadata={"match": best.metadata},
             )
+        progression_resolution = self._progression_resolution(request)
+        if progression_resolution is not None:
+            return progression_resolution
         return FallbackResolution(
             provider="internal",
             model="internal-fallback",
@@ -104,6 +107,31 @@ class FallbackEngine:
                     },
                 )
         return best_match
+
+    def _progression_resolution(self, request) -> FallbackResolution | None:
+        metadata = request.metadata if isinstance(request.metadata, dict) else {}
+        progression = metadata.get("progression")
+        if not isinstance(progression, dict):
+            return None
+        next_question = str(progression.get("next_question") or "").strip()
+        next_action = str(progression.get("next_action") or "").strip()
+        content = next_question or next_action
+        if not content:
+            return None
+        return FallbackResolution(
+            provider="internal",
+            model="internal-fallback",
+            content=content,
+            used_generic=False,
+            entry_key="progression_state",
+            intent=str(progression.get("intent") or "progression_state"),
+            confidence=0.92,
+            metadata={
+                "reason": "progression_state",
+                "next_question": next_question or None,
+                "next_action": next_action or None,
+            },
+        )
 
     @staticmethod
     def _normalize(value: str) -> str:

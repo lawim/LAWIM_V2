@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from types import SimpleNamespace
 import json
 from typing import Any
 import uuid
@@ -136,20 +137,37 @@ class ConversationCoreService:
                 "sender_name": sender_name or normalized_payload.get("sender_name") or normalized_payload.get("full_name") or "",
             },
         )
-        outcome = self.ai_orchestrator.generate(request)
+        if direct_reply is not None:
+            outcome = SimpleNamespace(
+                request=request,
+                decision=SimpleNamespace(selected_provider="deterministic", fallback_used=False),
+                response=SimpleNamespace(provider="deterministic", content=direct_reply, provider_request_id=None),
+            )
+        else:
+            outcome = self.ai_orchestrator.generate(request)
         selected_text = direct_reply or normalize_text(outcome.response.content)
         blocked_external_service = is_blocked_external_service_request(selected_text) or is_blocked_external_service_request(text)
+        fallback_text = compose_fallback(
+            normalized_language,
+            next_question=str(progression.get("next_question") or "").strip() or None,
+            next_action=str(progression.get("next_action") or "").strip() or None,
+        )
+        fallback_kind = "fallback"
+        if progression.get("next_question"):
+            fallback_kind = "qualification"
+        elif progression.get("next_action"):
+            fallback_kind = "next_action"
         if not selected_text:
-            selected_text = compose_fallback(normalized_language)
-            reply_kind = "fallback"
+            selected_text = fallback_text
+            reply_kind = fallback_kind
         if blocked_external_service:
             selected_text = compose_external_service_refusal(normalized_language)
             reply_kind = "refusal"
         quality = validate_final_response(selected_text)
         if not quality.valid:
-            selected_text = compose_fallback(normalized_language)
+            selected_text = fallback_text
             quality = validate_final_response(selected_text)
-            reply_kind = "fallback"
+            reply_kind = fallback_kind
         if project_id is not None:
             self._persist_project_turn(
                 project_id=project_id,
@@ -255,6 +273,9 @@ class ConversationCoreService:
         search_ready = bool(progression.get("minimum_search_ready") or progression.get("search_ready"))
         if next_question and not progression.get("complete") and not search_ready:
             return next_question, "qualification"
+        next_action = str(progression.get("next_action") or "").strip()
+        if search_ready and next_action:
+            return next_action, "next_action"
         if channel == "web" and not text.strip():
             return compose_welcome(language, known_user=known_user, name=(str(contact.get("full_name") or "") if contact else None)), "greeting"
         return None, "ai"

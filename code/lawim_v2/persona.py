@@ -133,22 +133,16 @@ _WELCOME_KNOWN: dict[str, str] = {
 
 _FALLBACK_MESSAGE: dict[str, str] = {
     "fr": (
-        "Bonjour et bienvenue sur LAWIM.\n\n"
-        "Votre message a bien été reçu. Je suis LAWIM AI, votre conseiller immobilier intelligent. "
-        "Nos assistants avancés ne sont pas disponibles pour le moment, mais votre demande a été enregistrée.\n\n"
-        "Merci de préciser brièvement l'objet de votre demande. Un membre de notre équipe pourra reprendre la conversation si nécessaire."
+        "LAWIM AI : il me manque encore des informations pour avancer.\n\n"
+        "Précisez la ville, le budget ou le type de bien, puis je poursuis le dossier."
     ),
     "en": (
-        "Hello and welcome to LAWIM.\n\n"
-        "Your message has been received. I am LAWIM AI, your intelligent real estate advisor. "
-        "Our advanced assistants are currently unavailable, but your request has been recorded.\n\n"
-        "Please briefly tell us what you need. A team member can resume the conversation if needed."
+        "LAWIM AI: I still need a few details to continue.\n\n"
+        "Share the city, budget, or property type, and I will continue the file."
     ),
     "pcm": (
-        "Hello and welcome to LAWIM.\n\n"
-        "Your message don arrive. I be LAWIM AI, your intelligent property advisor. "
-        "Our advanced assistants no dey available now, but we don record your request.\n\n"
-        "Abeg tell us your request in short. One team member fit continue the conversation if needed."
+        "LAWIM AI: I still need a few details to continue.\n\n"
+        "Tell me the city, budget, or property type, and I go continue the file."
     ),
 }
 

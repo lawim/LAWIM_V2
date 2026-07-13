@@ -45,7 +45,16 @@ def compose_welcome(language: str | None = "fr", *, known_user: bool = False, na
     return assistant_start_message(language, known_user=known_user, name=name)
 
 
-def compose_fallback(language: str | None = "fr") -> str:
+def compose_fallback(
+    language: str | None = "fr",
+    *,
+    next_question: str | None = None,
+    next_action: str | None = None,
+) -> str:
+    if next_question:
+        return str(next_question)
+    if next_action:
+        return str(next_action)
     return assistant_fallback_message(language)
 
 

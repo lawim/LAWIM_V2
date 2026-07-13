@@ -6,15 +6,9 @@ from datetime import datetime, timezone
 from typing import Any
 
 from ..repository_introspection import table_exists
-from .constants import AGENT_KEYS, DEFAULT_PROMPT_VERSION
-from .engines import (
-    AgentRouterEngine,
-    ConversationMemoryEngine,
-    DeterministicAssistantEngine,
-    ProjectContextEngine,
-    RAGFoundationEngine,
-)
-from .prompts import get_system_prompt, list_prompt_catalog
+from .constants import AGENT_KEYS
+from .engines import ConversationMemoryEngine, ProjectContextEngine, RAGFoundationEngine
+from .prompts import list_prompt_catalog
 
 
 def _utcnow() -> str:
@@ -260,9 +254,10 @@ class AssistantRepositoryMixin:
         session_id: int | None = None,
         agent_key: str | None = None,
         actor: dict[str, object] | None = None,
-        llm_provider=None,
         conversation_core=None,
     ) -> dict[str, object]:
+        if conversation_core is None:
+            raise ValueError("conversation_core is required")
         self.seed_assistant_catalog()
         session = (
             self.get_assistant_session(project_id, session_id)
@@ -277,47 +272,26 @@ class AssistantRepositoryMixin:
             session = dict(existing) if existing else self.create_assistant_session(project_id=project_id, user_id=user_id)
         session_id = int(session["id"])
         now = _utcnow()
-        routing = AgentRouterEngine().route(message=message, project=self.get_project(project_id), default_agent=str(session.get("agent_key", "project_advisor")))
-        selected_agent = agent_key or str(routing["agent_key"])
+        selected_agent = agent_key or str(session.get("agent_key", "project_advisor"))
         if selected_agent not in AGENT_KEYS:
             selected_agent = "project_advisor"
         context = self._collect_assistant_context(project_id)
         rag_chunks = self.retrieve_assistant_rag(project_id, message)
-        prompt_key = f"system.{selected_agent}" if selected_agent != "project_advisor" else "system.project_advisor"
-        system_prompt = get_system_prompt("system.base") + "\n" + get_system_prompt(prompt_key)
-        if conversation_core is not None:
-            core_result = conversation_core.process_message(
-                channel="web",
-                message=message,
-                project_id=project_id,
-                actor=actor or {"id": user_id},
-                session_id=session_id,
-                language=str((actor or {}).get("preferred_language") or "fr"),
-            )
-            response_payload = {
-                "content": core_result.final_text,
-                "mode": core_result.response_source,
-                "provider": core_result.outcome.response.provider,
-                "fallback_used": core_result.fallback_used,
-            }
-        else:
-            deterministic = DeterministicAssistantEngine().compose(
-                agent_key=selected_agent,
-                user_message=message,
-                context=context,
-                rag_chunks=rag_chunks,
-                routing=routing,
-            )
-            if llm_provider is not None:
-                response_payload = DeterministicAssistantEngine().maybe_llm_enhance(
-                    provider=llm_provider,
-                    system_prompt=system_prompt,
-                    user_message=message,
-                    context=context,
-                    deterministic=deterministic,
-                )
-            else:
-                response_payload = deterministic
+        core_result = conversation_core.process_message(
+            channel="web",
+            message=message,
+            project_id=project_id,
+            actor=actor or {"id": user_id},
+            session_id=session_id,
+            language=str((actor or {}).get("preferred_language") or "fr"),
+        )
+        response_payload = {
+            "content": core_result.final_text,
+            "mode": core_result.response_source,
+            "provider": core_result.outcome.response.provider,
+            "fallback_used": core_result.fallback_used,
+        }
+        routing = {"agent_key": selected_agent, "source": "conversation_core"}
         user_key = f"user-{now}"
         with self._transaction() as conn:
             user_cursor = conn.execute(

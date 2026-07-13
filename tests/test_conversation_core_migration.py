@@ -231,3 +231,67 @@ class ConversationCoreMigrationTests(LawimTestHarness):
         self.assertEqual(result["provider_message_id"], "prov-out-1")
         self.assertEqual(result["selected_provider"], "internal")
         self.assertTrue(send_whatsapp.called)
+
+    def test_communication_dispatch_without_conversation_core_returns_error(self) -> None:
+        config = replace(self.config, ai_orchestrator_enabled=True)
+        services = LawimServices(self.repository, config)
+        services.communication.conversation_core = None
+
+        message_row = self.repository.create_communication_message(
+            channel_type="whatsapp",
+            body="Bonjour LAWIM",
+            direction="inbound",
+            status="delivered",
+            message_key="inbound-missing-core-1",
+        )
+        normalized = {
+            "chat_id": "237686822667@c.us",
+            "chat_id_raw": "237686822667@c.us",
+            "sender": "237686822667@c.us",
+            "user_id": "237686822667",
+            "language": "fr",
+            "message_body": "Bonjour LAWIM",
+            "sender_name": "Client LAWIM",
+            "type_webhook": "incomingMessageReceived",
+        }
+
+        with patch.object(services.communication.repository, "send_whatsapp") as send_whatsapp:
+            result = services.communication._dispatch_ai_reply(
+                channel="whatsapp",
+                normalized=normalized,
+                message_row=message_row,
+            )
+
+        self.assertEqual(result["status"], "error")
+        self.assertEqual(result["reason"], "conversation_core_missing")
+        send_whatsapp.assert_not_called()
+
+    def test_conversation_core_uses_deterministic_next_action_without_llm(self) -> None:
+        services = LawimServices(self.repository, self.config)
+        project_id, actor = self._project_actor()
+        self.repository.update_project(project_id, project_type="buy", location_city="Douala")
+        message_row = self.repository.create_communication_message(
+            channel_type="web",
+            body="Je veux un studio à Douala avec budget 50000 XAF",
+            direction="inbound",
+            status="delivered",
+            message_key="core-next-action-1",
+        )
+
+        with patch.object(
+            services.conversation_core.ai_orchestrator,
+            "generate",
+            side_effect=AssertionError("LLM should not be called for deterministic next actions"),
+        ) as generate:
+            result = services.conversation_core.process_message(
+                channel="web",
+                message="Je veux un studio à Douala avec budget 50000 XAF",
+                message_row=message_row,
+                project_id=project_id,
+                actor=actor,
+                language="fr",
+            )
+
+        self.assertEqual(result.response_kind, "next_action")
+        self.assertEqual(result.final_text, result.plan.progression["next_action"])
+        generate.assert_not_called()
