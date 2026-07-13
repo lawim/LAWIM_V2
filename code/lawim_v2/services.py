@@ -144,9 +144,21 @@ class LawimServices:
         from .cognition.service import CognitionService
 
         self.cognition = CognitionService(repository, self.projects)
+        from .ai import AIOrchestrator
+
+        self.ai = AIOrchestrator(repository, config)
+        from .conversation_core import ConversationCoreService
+
+        self.conversation_core = ConversationCoreService(
+            repository,
+            self.projects,
+            self.policy,
+            config,
+            ai_orchestrator=self.ai,
+        )
         from .assistant.service import AssistantService
 
-        self.assistant = AssistantService(repository, self.projects)
+        self.assistant = AssistantService(repository, self.projects, conversation_core=self.conversation_core)
         from .knowledge_platform.service import KnowledgePlatformService
 
         self.knowledge_platform = KnowledgePlatformService(repository, self.projects, self.policy)
@@ -167,12 +179,16 @@ class LawimServices:
         from .security.service import SecurityService
 
         self.security = SecurityService(repository, self.projects, self.policy)
-        from .ai import AIOrchestrator
-
-        self.ai = AIOrchestrator(repository, config)
         from .communication.service import CommunicationService
 
-        self.communication = CommunicationService(repository, self.projects, self.policy, config=config, ai_orchestrator=self.ai)
+        self.communication = CommunicationService(
+            repository,
+            self.projects,
+            self.policy,
+            config=config,
+            ai_orchestrator=self.ai,
+            conversation_core=self.conversation_core,
+        )
         from .analytics.service import AnalyticsService
 
         self.analytics = AnalyticsService(repository, self.projects, self.policy)
@@ -181,7 +197,7 @@ class LawimServices:
         self.source_intelligence = SourceIntelligenceService(repository, self.projects, self.policy)
         from .brain.service import BrainService
 
-        self.brain = BrainService(repository, self.projects)
+        self.brain = BrainService(repository, self.projects, conversation_core=self.conversation_core)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()

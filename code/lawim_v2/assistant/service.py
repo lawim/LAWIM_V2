@@ -9,9 +9,10 @@ from .providers import resolve_llm_provider
 
 
 class AssistantService:
-    def __init__(self, repository, project_service: ProjectService) -> None:
+    def __init__(self, repository, project_service: ProjectService, conversation_core=None) -> None:
         self.repository = repository
         self.projects = project_service
+        self.conversation_core = conversation_core
         self.llm = resolve_llm_provider(enabled=os.environ.get("LAWIM_LLM_ENABLED", "").lower() in {"1", "true", "yes"})
 
     def _require_access(self, actor: dict[str, object], project_id: int) -> None:
@@ -98,7 +99,9 @@ class AssistantService:
             message=message,
             session_id=session_id,
             agent_key=agent_key,
+            actor=actor,
             llm_provider=self.llm,
+            conversation_core=self.conversation_core,
         )
         METRICS.increment("assistant_chat")
         return {"chat": adto.chat_response_dto(payload)}

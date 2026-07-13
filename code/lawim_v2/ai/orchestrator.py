@@ -141,7 +141,7 @@ class AIOrchestrator:
             filtered_metadata = {}
         filtered_metadata.update(
             {
-                "system_prompt": assistant_system_prompt(request.language),
+                "system_prompt": assistant_system_prompt(requested_language),
                 "prompt_injection_suspected": looks_like_prompt_injection(text),
                 "company_name": COMPANY_NAME,
             }

@@ -259,7 +259,9 @@ class AssistantRepositoryMixin:
         message: str,
         session_id: int | None = None,
         agent_key: str | None = None,
+        actor: dict[str, object] | None = None,
         llm_provider=None,
+        conversation_core=None,
     ) -> dict[str, object]:
         self.seed_assistant_catalog()
         session = (
@@ -283,23 +285,39 @@ class AssistantRepositoryMixin:
         rag_chunks = self.retrieve_assistant_rag(project_id, message)
         prompt_key = f"system.{selected_agent}" if selected_agent != "project_advisor" else "system.project_advisor"
         system_prompt = get_system_prompt("system.base") + "\n" + get_system_prompt(prompt_key)
-        deterministic = DeterministicAssistantEngine().compose(
-            agent_key=selected_agent,
-            user_message=message,
-            context=context,
-            rag_chunks=rag_chunks,
-            routing=routing,
-        )
-        if llm_provider is not None:
-            response_payload = DeterministicAssistantEngine().maybe_llm_enhance(
-                provider=llm_provider,
-                system_prompt=system_prompt,
+        if conversation_core is not None:
+            core_result = conversation_core.process_message(
+                channel="web",
+                message=message,
+                project_id=project_id,
+                actor=actor or {"id": user_id},
+                session_id=session_id,
+                language=str((actor or {}).get("preferred_language") or "fr"),
+            )
+            response_payload = {
+                "content": core_result.final_text,
+                "mode": core_result.response_source,
+                "provider": core_result.outcome.response.provider,
+                "fallback_used": core_result.fallback_used,
+            }
+        else:
+            deterministic = DeterministicAssistantEngine().compose(
+                agent_key=selected_agent,
                 user_message=message,
                 context=context,
-                deterministic=deterministic,
+                rag_chunks=rag_chunks,
+                routing=routing,
             )
-        else:
-            response_payload = deterministic
+            if llm_provider is not None:
+                response_payload = DeterministicAssistantEngine().maybe_llm_enhance(
+                    provider=llm_provider,
+                    system_prompt=system_prompt,
+                    user_message=message,
+                    context=context,
+                    deterministic=deterministic,
+                )
+            else:
+                response_payload = deterministic
         user_key = f"user-{now}"
         with self._transaction() as conn:
             user_cursor = conn.execute(

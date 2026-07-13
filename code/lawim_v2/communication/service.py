@@ -241,11 +241,20 @@ class IntegrationService:
 
 
 class CommunicationService:
-    def __init__(self, repository, project_service: ProjectService, policy, config=None, ai_orchestrator: AIOrchestrator | None = None) -> None:
+    def __init__(
+        self,
+        repository,
+        project_service: ProjectService,
+        policy,
+        config=None,
+        ai_orchestrator: AIOrchestrator | None = None,
+        conversation_core=None,
+    ) -> None:
         self.repository = repository
         self.projects = project_service
         self.policy = policy
         self.config = config
+        self.conversation_core = conversation_core
         self.engine = CommunicationPlatformEngine()
         self.notifications = NotificationService(repository)
         self.email = EmailService(repository)
@@ -696,66 +705,86 @@ class CommunicationService:
     ) -> dict[str, object] | None:
         if not self._ai_enabled():
             return None
-        orchestrator = self.ai_orchestrator
-        if orchestrator is None:
-            return None
         conversation_key = f"{channel}:{normalized.get('chat_id') or normalized.get('sender') or normalized.get('user_id') or message_row.get('message_key')}"
-        metadata = {
-            "channel": channel,
-            "message_key": message_row.get("message_key"),
-            "type_webhook": normalized.get("type_webhook"),
-            "update_type": normalized.get("update_type"),
-        }
-        contact = self._resolve_ai_contact(channel, normalized)
-        subject = str(
-            normalized.get("sender_name")
-            or normalized.get("full_name")
-            or normalized.get("username")
-            or normalized.get("chat_id")
-            or conversation_key
-        )
-        thread = self._resolve_ai_thread(
-            channel=channel,
-            conversation_key=conversation_key,
-            subject=subject,
-            contact=contact,
-            metadata=metadata,
-        )
-        thread_id = int(thread["id"]) if thread and thread.get("id") is not None else None
-        if thread_id is not None:
-            self.repository.update_communication_message(
-                int(message_row["id"]),
+        chat_id_value = normalized.get("chat_id_raw")
+        conversation_core = self.conversation_core
+        if conversation_core is not None:
+            processing = conversation_core.process_message(
+                channel=channel,
+                message=str(message_row.get("body") or normalized.get("message_body") or ""),
+                normalized=normalized,
+                message_row=message_row,
+                language=str(normalized.get("language") or getattr(self.config, "fallback_default_language", "fr")),
+                external_chat_id=str(normalized.get("chat_id") or normalized.get("sender") or ""),
+                external_user_id=str(normalized.get("user_id") or ""),
+                message_id=str(message_row.get("message_key") or message_row.get("id") or ""),
+                sender_name=str(normalized.get("sender_name") or normalized.get("full_name") or normalized.get("username") or ""),
+            )
+            conversation_key = str(processing.plan.conversation_key or conversation_key)
+            response_text = str(processing.final_text or "").strip()
+            outcome = processing.outcome
+            thread_id = processing.plan.thread_id
+            contact = processing.plan.contact
+        else:
+            orchestrator = self.ai_orchestrator
+            if orchestrator is None:
+                return None
+            metadata = {
+                "channel": channel,
+                "message_key": message_row.get("message_key"),
+                "type_webhook": normalized.get("type_webhook"),
+                "update_type": normalized.get("update_type"),
+            }
+            contact = self._resolve_ai_contact(channel, normalized)
+            subject = str(
+                normalized.get("sender_name")
+                or normalized.get("full_name")
+                or normalized.get("username")
+                or normalized.get("chat_id")
+                or conversation_key
+            )
+            thread = self._resolve_ai_thread(
+                channel=channel,
+                conversation_key=conversation_key,
+                subject=subject,
+                contact=contact,
+                metadata=metadata,
+            )
+            thread_id = int(thread["id"]) if thread and thread.get("id") is not None else None
+            if thread_id is not None:
+                self.repository.update_communication_message(
+                    int(message_row["id"]),
+                    thread_id=thread_id,
+                    contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+                    metadata={
+                        "channel": channel,
+                        "conversation_key": conversation_key,
+                        "contact_id": int(contact["id"]) if contact and contact.get("id") is not None else None,
+                        "thread_id": thread_id,
+                    },
+                )
+            context_messages = self._load_ai_context_messages(thread_id=thread_id, exclude_message_id=int(message_row["id"]))
+            request = orchestrator.build_request(
+                channel=channel,
+                text=str(message_row.get("body") or normalized.get("message_body") or ""),
+                conversation_key=conversation_key,
+                external_chat_id=str(normalized.get("chat_id") or normalized.get("sender") or ""),
+                external_user_id=str(normalized.get("user_id") or ""),
+                message_id=str(message_row.get("message_key") or message_row.get("id") or ""),
                 thread_id=thread_id,
                 contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+                organization_id=int(contact["organization_id"]) if contact and contact.get("organization_id") is not None else None,
+                language=str(normalized.get("language") or getattr(self.config, "fallback_default_language", "fr")),
+                context_messages=context_messages,
                 metadata={
-                    "channel": channel,
-                    "conversation_key": conversation_key,
+                    **metadata,
+                    "sender_name": normalized.get("sender_name") or normalized.get("full_name") or "",
                     "contact_id": int(contact["id"]) if contact and contact.get("id") is not None else None,
                     "thread_id": thread_id,
                 },
             )
-        context_messages = self._load_ai_context_messages(thread_id=thread_id, exclude_message_id=int(message_row["id"]))
-        request = orchestrator.build_request(
-            channel=channel,
-            text=str(message_row.get("body") or normalized.get("message_body") or ""),
-            conversation_key=conversation_key,
-            external_chat_id=str(normalized.get("chat_id") or normalized.get("sender") or ""),
-            external_user_id=str(normalized.get("user_id") or ""),
-            message_id=str(message_row.get("message_key") or message_row.get("id") or ""),
-            thread_id=thread_id,
-            contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
-            organization_id=int(contact["organization_id"]) if contact and contact.get("organization_id") is not None else None,
-            language=str(normalized.get("language") or getattr(self.config, "fallback_default_language", "fr")),
-            context_messages=context_messages,
-            metadata={
-                **metadata,
-                "sender_name": normalized.get("sender_name") or normalized.get("full_name") or "",
-                "contact_id": int(contact["id"]) if contact and contact.get("id") is not None else None,
-                "thread_id": thread_id,
-            },
-        )
-        outcome = orchestrator.generate(request)
-        response_text = str(outcome.response.content or "").strip()
+            outcome = orchestrator.generate(request)
+            response_text = str(outcome.response.content or "").strip()
         if not response_text:
             return {"status": "skipped", "reason": "empty_response"}
         recipient_masked = mask_delivery_recipient(

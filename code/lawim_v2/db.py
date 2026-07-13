@@ -376,6 +376,13 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, AI
             rows = cursor.fetchall()
         return [dict(row) for row in rows]
 
+    def execute(self, sql: str, params: tuple[object, ...] = ()) -> sqlite3.Cursor:
+        with self.lock:
+            cursor = self.connection.execute(sql, params)
+            self.connection.commit()
+        self.cursor = cursor
+        return cursor
+
     def record_event(self, kind: str, payload: dict[str, object]) -> None:
         with self._transaction() as conn:
             conn.execute(
