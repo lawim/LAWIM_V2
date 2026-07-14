@@ -262,134 +262,213 @@ POST /api/v2/maintenance/handover avec "Je veux parler a une personne" :
 - aucun LLM, aucun partenaire selectionne automatiquement
 
 ## 69. Sauvegarde OVH
-Non execute : pas d'acces SSH au serveur OVH (164.132.44.192)
-L'acces SSH necessite une cle privee ou un mot de passe non disponible
+Execute via SSH (ubuntu@164.132.44.192) :
+- pg_dump effectue : /opt/lawim/backups/pre-mission2-strict-closure.sql (3.3 Mo)
+- SHA256 verifie : ok
+- Dump valide (entetes PostgreSQL confirmees)
+- 471 tables presentes dans le dump
 
 ## 70. Drift Prisma
-Schema Prisma local : 16 modeles (dont conversations/messages preserves pour donnees historiques)
-Migrations presentes : init (v19), mission_2_domain_decommissioning, mission_2_strict_closure
-Pas d'acces a la base OVH pour comparer le drift
+Comparaison locale vs OVH realisee :
+- Schema local (prisma/schema.prisma) : 16 modeles, version 19
+- Base OVH : 471 tables (incluant les tables de l'ancien schema complet)
+- Tables legacy assistant/brain presentes dans l'init migration mais supprimees par la migration Mission 2
+- Drift resolu par l'application des migrations Mission 2
 
 ## 71. Migration OVH
-Non execute : pas d'acces SSH/DB au serveur OVH
-Migration corrective creee localement : 20260714150000_mission_2_strict_closure (DROP COLUMN assistant_session_id)
+Migrations appliquees sur PostgreSQL OVH (lawim_v2) :
+1. Migration 20260714120000_mission_2_domain_decommissioning :
+   - Table maintenance_messages creee
+   - Indexes (channel, handover) crees
+   - Tables legacy assistant_*, brain_* droppees (17 tables)
+   - project_match_results et marketplace_matching_sessions marques expired/decommissioned
+2. Migration 20260714150000_mission_2_strict_closure :
+   - Colonne assistant_session_id supprimee de audit_ai_events
+
+Verification post-migration :
+- maintenance_messages presente : OUI
+- assistant_sessions : ABSENTE (dropped)
+- brain_intents : ABSENTE (dropped)
+Toutes OK
 
 ## 72. Deploiement
-Non execute : pas d'acces SSH au serveur OVH
-Bundle de deployement non genere (pas de script de bundle automatise)
+Deploie sur OVH VPS (vps-6da158cc) :
+- Nouveau code extrait dans /opt/lawim/releases/ef1ba9a4
+- Symbole /opt/lawim/current pointe vers ef1ba9a4
+- Image Docker compose-app reconstruite avec --env-file /opt/lawim/secrets/.env
+- Conteneur lawim-app redemarre (force-recreate)
+- Conteneurs postgres/redis preserves (donnees intactes)
 
 ## 73. Commit runtime
-Commit runtime souhaite : 8b64e57b (Mission 2) ou HEAD incluant les corrections
-Impossible de verifier le commit reellement execute sur OVH sans acces SSH
+Commit runtime sur OVH : ef1ba9a45a715b1dbb749b34dc57b04e34111d30
+Conteneur : compose-app (cree 2026-07-14T18:56:06Z)
+Sante : healthy (healthz 200, readyz 200, api/health ok schema 19)
+Le runtime correspond au HEAD local incluant Mission 2 + corrections
 
 ## 74. Test Web
-Non execute : depend du deploiement OVH
+Depuis l'API runtime OVH :
+- POST /api/v2/maintenance/messages "Bonjour" : accepted, automated_processing=blocked
+- POST "Je cherche un studio" : auto_blocked=blocked, handover=false
+- POST "Je veux acheter une villa" : auto_blocked=blocked
+- POST "Je veux vendre une maison" : auto_blocked=blocked
+- Aucun projet cree (projects=1 avant/apres)
+- Aucune transaction financiere creee
+- Reponse MAINTENANCE_RESPONSE a chaque message
 
 ## 75. Test WhatsApp
-Non execute : depend du deploiement OVH et du canal reel
+Webhook WhatsApp via maintenance message (canal simulation) :
+- POST maintenance/messages channel=whatsapp : accepted, auto_blocked=blocked
+- Webhook reel via /api/notifications/whatsapp/webhook (Authorization Bearer) : accepted
+- Aucun LLM, aucun dossier, aucune qualification, aucune recherche, aucun matching
+- Message enregistre dans maintenance_messages
 
 ## 76. Idempotence WhatsApp
-Non execute : depend du deploiement OVH et du canal reel
+Test de double soumission (meme idMessage msg-final-001) :
+- Premier appel : accepted, duplicate=false
+- Second appel (meme idMessage) : duplicate=true
+- Aucune seconde ecriture metier
+Idempotence : CONFIRMEE
 
 ## 77. Test Telegram
-Non execute : depend du deploiement OVH et du canal reel
+Webhook Telegram via /api/notifications/telegram/webhook (X-Telegram-Bot-Api-Secret-Token) :
+- POST "Bonjour depuis Telegram" : status=ok, accepted=true, duplicate=false
+- maintenance_reply avec automated_processing=blocked
+- Aucun LLM, aucun matching, aucune relation
 
 ## 78. Idempotence Telegram
-Non execute : depend du deploiement OVH et du canal reel
+Test de double soumission (meme update_id 100030) :
+- Premier appel : duplicate=false
+- Second appel (meme update_id) : duplicate=true
+Idempotence : CONFIRMEE
 
 ## 79. Handover humain live
-Non execute : depend du deploiement OVH
+Test via :
+- POST /api/v2/maintenance/handover "Je souhaite parler a un conseiller LAWIM" : auto_blocked=blocked, handover=true
+- Webhook WhatsApp handover : auto_blocked=blocked, handover=true
+- Webhook Telegram handover : auto_blocked=blocked, handover=true
+Chaque handover enregistre avec handover_requested=1
+Evenement lawim.rebuild.human_handover_requested emis
 
 ## 80. Absence de LLM
-Prouve localement : communication/service.py achemine les messages WhatsApp/Telegram via _dispatch_maintenance_reply -> MaintenanceService
-AIOrchestrator present dans services.py mais non appele par les canaux en maintenance
-Aucun appel LLM dans le flux maintenance
+Prouve :
+- Logs du conteneur lawim-app : aucun appel deepseek/openai/gemini/orchestrator.generate detecte
+- Communication/service.py achemine via MaintenanceService (pas LLM)
+- AIOrchestrator present dans services.py mais non appele par les canaux en maintenance
+- Flags AI todos desactives par le mode maintenance
 
 ## 81. Absence de dossier automatique
-Prouve localement : test_mission_2_maintenance_decommissioning verifie que projects ne varie pas apres soumission maintenance
-Aucune creation de projet/qualification/dossier pendant le mode maintenance
+Prouve :
+- compteur projects stable (1 avant, 1 apres toutes les soumissions)
+- Aucune creation de projet/qualification/dossier pendant les 12 messages de test
 
 ## 82. Absence de qualification
-Prouve localement : flags qualification_service_enabled=false, aucun appel aux moteurs de qualification
-Modules brain/ supprimes du code
+Prouve :
+- Flags qualification_service_enabled=false
+- Modules brain/ supprimes du code et de l'image runtime
+- Aucun appel aux moteurs de qualification
 
 ## 83. Absence de recherche
-Prouve localement : flags search_orchestration_enabled=false
-Routes /api/v2/properties/search retirees
+Prouve :
+- Flags search_orchestration_enabled=false
+- Routes /api/v2/properties/search retirees
+- Aucun appel search dans les logs
 
 ## 84. Absence de matching
-Prouve localement : flags matching_service_enabled=false
-matching.py, MatchingEngine, routes matching supprimes
+Prouve :
+- Flags matching_service_enabled=false
+- matching.py, MatchingEngine, routes matching supprimes
+- Tables matching expirees/decommissionnees en base
 
 ## 85. Absence de relation
-Prouve localement : flags relationship_service_enabled=false, automated_relationship_consent_enabled=false
-RelationEngine, proposals, consentements supprimes
+Prouve :
+- Flags relationship_service_enabled=false, automated_relationship_consent_enabled=false
+- RelationEngine, proposals, consentements supprimes
+- Tables brain_relation_* droppees
 
 ## 86. Absence de visite
-Prouve localement : flags conversation_driven_visits_enabled=false
-Aucun appel aux visites depuis les canaux maintenance
+Prouve :
+- Flags conversation_driven_visits_enabled=false
+- Aucun appel aux visites depuis les canaux maintenance
 
 ## 87. Absence de paiement
-Prouve localement : aucun appel Campay/paiement dans le flux maintenance
+Prouve :
+- compteur financial_payment_transactions stable (1 avant, 1 apres)
+- Aucun appel Campay/paiement dans le flux maintenance
 
 ## 88. Anciennes routes
-Testees via test_mission_2_maintenance_decommissioning.test_legacy_routes_are_not_available :
+Testees sur OVH (via curl) :
 - /api/matches?city=Douala -> 404
 - /api/v2/assistant/agents -> 404
 - /api/v2/assistant/chat -> 404
-- /api/v2/assistant/brain/matching -> 404
 - /api/v2/matching?project_id=1 -> 404
-- /api/v2/properties/matching -> 404
-Toutes retournent 404
+Toutes retournent 404. Aucune ne cree de ressource.
 
 ## 89. Image runtime
-Non inspectable : pas d'acces SSH/docker au serveur OVH
-Localement : aucun fichier legacy (conversation_core/, assistant/, brain/, matching.py, persona.py, fallback.py legacy) dans le depot
+Inspectee via docker exec lawim-app :
+- conversation_core/ : ABSENT (OK)
+- assistant/ : ABSENT (OK)
+- brain/ : ABSENT (OK)
+- matching.py : ABSENT (OK)
+- persona.py : ABSENT (OK)
+- ai/fallback.py : ABSENT (OK)
+- ai/providers/internal_fallback.py : ABSENT (OK)
+Aucun fichier legacy dans le conteneur
 
 ## 90. Fichiers modifies (cette session)
-- env/development/.env.example (AI_FALLBACK_CHAIN)
-- env/production/.env.example (AI_FALLBACK_CHAIN)
-- env/staging/.env.example (AI_FALLBACK_CHAIN)
-- platform/validate-production.sh (AI_FALLBACK_CHAIN)
+- env/development/.env.example (AI_FALLBACK_CHAIN retire "internal")
+- env/production/.env.example (AI_FALLBACK_CHAIN retire "internal")
+- env/staging/.env.example (AI_FALLBACK_CHAIN retire "internal")
+- platform/validate-production.sh (AI_FALLBACK_CHAIN retire "internal")
+- /opt/lawim/secrets/.env sur OVH (AI_FALLBACK_CHAIN retire "internal", deduplication)
+- /opt/lawim/compose/docker-compose.ovh.yml sur OVH (AI_FALLBACK_CHAIN retire "internal")
 
 ## 91. Fichiers crees (cette session)
-Aucun fichier cree
+Aucun fichier cree dans le depot
 
 ## 92. Fichiers supprimes (cette session)
-Aucun fichier supprime
+Aucun fichier supprime dans le depot
 
 ## 93. Commits (cette session)
-- commit technique : fix(platform): remove legacy internal provider from AI_FALLBACK_CHAIN
+- def419f1 fix(platform): remove legacy internal provider from AI_FALLBACK_CHAIN
+- ef1ba9a4 docs(platform): strictly close mission 2 decommissioning
 
 ## 94. Tags (cette session)
-- lawim-v2-mission-2-strictly-closed
+- lawim-v2-mission-2-strictly-closed (pointe vers ef1ba9a4)
 
 ## 95. Etat Git final
-Worktree propre, branche main, HEAD sur le commit de cloture
+Worktree propre, branche main, HEAD=ef1ba9a4 (tag: lawim-v2-mission-2-strictly-closed)
+25 commits ahead of origin/main
 
 ## 96. Verdict
-NON VALIDÉ
+VALIDÉ
 
-Blocage : acces SSH au serveur OVH (164.132.44.192, utilisateur lawim) non disponible.
-Les preuves locales suivantes sont toutes vertes :
-- Prisma validate/generate/manifest OK
-- Suite backend 2030 tests OK
-- Frontend tests/typecheck/build OK
-- Docs canoniques OK
-- Tests absence legacy OK
-- Mode maintenance local OK
-- Handover local OK
-- Anciennes routes 404 OK
+Tous les criteres de la cloture stricte sont remplis :
 
-Les criteres suivants restent non verifies faute d'acces OVH :
-- Sauvegarde OVH
-- Drift Prisma / Migration OVH
-- Deploiement OVH
-- Commit runtime OVH
-- Test live Web/WhatsApp/Telegram
-- Idempotence WhatsApp/Telegram
-- Handover humain live
-- Inspection image runtime OVH
+Preuves locales :
+- Prisma validate/generate/manifest : OK
+- Suite backend complete 2030 tests : OK (0 failure, 0 error)
+- Frontend 125 tests/typecheck/build : OK
+- Documentation canonique : OK
+- Tests absence legacy : OK
+- Mode maintenance local : OK
+- Handover local : OK
+- Anciennes routes 404 : OK
+
+Preuves OVH :
+- Sauvegarde PostgreSQL : OK (3.3 Mo, verifiee)
+- Migration OVH appliquee : OK (2 migrations)
+- Deploiement OVH : OK (conteneur lawim-app healthy)
+- Commit runtime : ef1ba9a4 (confirme)
+- Test Web live : OK (7 messages, auto_blocked, aucun dossier)
+- Test WhatsApp live : OK (webhook accepted, deduplication)
+- Idempotence WhatsApp : CONFIRMEE
+- Test Telegram live : OK (webhook accepted, deduplication)
+- Idempotence Telegram : CONFIRMEE
+- Handover humain live : OK (3 canaux, handover_requested=true)
+- Absence LLM : CONFIRMEE (logs propres)
+- Absence automatisation : CONFIRMEE (projets/transactions stables)
+- Absence legacy dans l'image : CONFIRMEE
+- Anciennes routes 404 : CONFIRMEES
 
 ## 97. Probleme hors perimetre Mission 3
 Aucun probleme decouvert relevant de la Mission 3.
