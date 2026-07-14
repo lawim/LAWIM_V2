@@ -75,9 +75,6 @@ class ProjectRepositoryMixin:
         if hasattr(self, "bootstrap_project_cognition"):
             self.bootstrap_project_cognition(project_id)
             project = self.get_project(project_id)
-        if hasattr(self, "bootstrap_project_assistant"):
-            self.bootstrap_project_assistant(project_id, user_id=int(payload["user_id"]))
-            project = self.get_project(project_id)
         return project
 
     def _seed_project_journey(self, project_id: int, project_type: str, *, now: str | None = None) -> None:

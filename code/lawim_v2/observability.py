@@ -39,12 +39,6 @@ class RuntimeMetrics:
     cognition_next_action_total: int = 0
     cognition_risks_total: int = 0
     cognition_opportunities_total: int = 0
-    assistant_sessions_total: int = 0
-    assistant_chat_total: int = 0
-    assistant_agents_total: int = 0
-    assistant_prompts_total: int = 0
-    assistant_context_total: int = 0
-    assistant_rag_total: int = 0
     knowledge_documents_total: int = 0
     knowledge_chunks_total: int = 0
     knowledge_queries_total: int = 0
@@ -211,18 +205,6 @@ class RuntimeMetrics:
                 self.cognition_risks_total += 1
             elif name == "cognition_opportunities":
                 self.cognition_opportunities_total += 1
-            elif name == "assistant_sessions":
-                self.assistant_sessions_total += 1
-            elif name == "assistant_chat":
-                self.assistant_chat_total += 1
-            elif name == "assistant_agents":
-                self.assistant_agents_total += 1
-            elif name == "assistant_prompts":
-                self.assistant_prompts_total += 1
-            elif name == "assistant_context":
-                self.assistant_context_total += 1
-            elif name == "assistant_rag":
-                self.assistant_rag_total += 1
             elif name == "knowledge_documents":
                 self.knowledge_documents_total += 1
             elif name == "knowledge_chunks":
@@ -585,12 +567,6 @@ class RuntimeMetrics:
                 "cognition_next_action_total": self.cognition_next_action_total,
                 "cognition_risks_total": self.cognition_risks_total,
                 "cognition_opportunities_total": self.cognition_opportunities_total,
-                "assistant_sessions_total": self.assistant_sessions_total,
-                "assistant_chat_total": self.assistant_chat_total,
-                "assistant_agents_total": self.assistant_agents_total,
-                "assistant_prompts_total": self.assistant_prompts_total,
-                "assistant_context_total": self.assistant_context_total,
-                "assistant_rag_total": self.assistant_rag_total,
                 "knowledge_documents_total": self.knowledge_documents_total,
                 "knowledge_chunks_total": self.knowledge_chunks_total,
                 "knowledge_queries_total": self.knowledge_queries_total,

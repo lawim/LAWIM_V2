@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from http import HTTPStatus
 
-from lawim_harness import LawimTestHarness
+from tests.lawim_harness import LawimTestHarness
 
 
 class ReleaseCandidateSecurityTest(LawimTestHarness):

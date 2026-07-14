@@ -43,7 +43,7 @@ class WorkflowAutomationRepositoryMixin:
             ("juridique", "contrats", "wf-juridique-contrats", "Validation contractuelle", ["start", "relecture", "approbation", "signature", "archivage"]),
             ("financement", "demande", "wf-financement-demande", "Demande de financement", ["start", "etude", "scoring", "validation", "decaissement"]),
             ("administration", "support", "wf-admin-support", "Ticket support", ["start", "qualification", "traitement", "cloture"]),
-            ("ia", "assistant", "wf-ia-assistant", "Orchestration assistant IA", ["start", "contexte", "rag", "reponse", "cloture"]),
+            ("ia", "maintenance", "wf-ia-maintenance", "Orchestration maintenance IA", ["start", "contexte", "enregistrement", "handover", "cloture"]),
         )
         with self._transaction() as conn:
             for domain, process_key, workflow_key, title, states in samples:
@@ -673,7 +673,7 @@ class WorkflowAutomationRepositoryMixin:
             "pending_approvals": self.scalar("SELECT COUNT(*) FROM automation_approvals WHERE status = 'pending'"),
             "open_escalations": self.scalar("SELECT COUNT(*) FROM automation_escalations WHERE status = 'open'"),
             "pending_timers": self.scalar("SELECT COUNT(*) FROM automation_timers WHERE status = 'pending'"),
-            "ai_hooks": list(bridge.resolve_hook_action(h) for h in ("assistant_chat", "knowledge_rag", "cognition_decision")),
+            "ai_hooks": list(bridge.resolve_hook_action(h) for h in ("maintenance_intake", "knowledge_rag", "cognition_decision")),
         }
 
     def invoke_automation_ai_hook(self, *, hook_type: str, query: str, project_id: int | None) -> dict[str, object]:

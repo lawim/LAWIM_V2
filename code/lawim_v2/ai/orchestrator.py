@@ -141,7 +141,7 @@ class AIOrchestrator:
             conversation_key=conversation_key,
             text=str(text or ""),
             sanitized_text=sanitized_text,
-            language=requested_language,
+            language=language,
             complexity=report.complexity,
             external_chat_id=str(external_chat_id or ""),
             external_user_id=str(external_user_id or ""),

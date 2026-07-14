@@ -170,8 +170,9 @@ class ReleaseProgramLConstantsTests(LawimTestHarness):
     def test_metric_categories_activity(self) -> None:
         self.assertIn('activity', METRIC_CATEGORIES)
 
-    def test_metric_categories_assistant(self) -> None:
-        self.assertIn('assistant', METRIC_CATEGORIES)
+    def test_metric_categories_maintenance(self) -> None:
+        self.assertIn('maintenance', METRIC_CATEGORIES)
+        self.assertNotIn('assistant', METRIC_CATEGORIES)
 
     def test_metric_categories_cognition(self) -> None:
         self.assertIn('cognition', METRIC_CATEGORIES)
@@ -224,8 +225,9 @@ class ReleaseProgramLConstantsTests(LawimTestHarness):
     def test_kpi_categories_activity(self) -> None:
         self.assertIn('activity', KPI_CATEGORIES)
 
-    def test_kpi_categories_assistant(self) -> None:
-        self.assertIn('assistant', KPI_CATEGORIES)
+    def test_kpi_categories_maintenance(self) -> None:
+        self.assertIn('maintenance', KPI_CATEGORIES)
+        self.assertNotIn('assistant', KPI_CATEGORIES)
 
     def test_kpi_categories_cognition(self) -> None:
         self.assertIn('cognition', KPI_CATEGORIES)
@@ -440,8 +442,9 @@ class ReleaseProgramLConstantsTests(LawimTestHarness):
     def test_score_types_workflow(self) -> None:
         self.assertIn('workflow', SCORE_TYPES)
 
-    def test_data_mart_types_assistant(self) -> None:
-        self.assertIn('assistant', DATA_MART_TYPES)
+    def test_data_mart_types_maintenance(self) -> None:
+        self.assertIn('maintenance', DATA_MART_TYPES)
+        self.assertNotIn('assistant', DATA_MART_TYPES)
 
     def test_data_mart_types_communication(self) -> None:
         self.assertIn('communication', DATA_MART_TYPES)
@@ -491,8 +494,9 @@ class ReleaseProgramLConstantsTests(LawimTestHarness):
     def test_insight_types_trend(self) -> None:
         self.assertIn('trend', INSIGHT_TYPES)
 
-    def test_program_codes_assistant(self) -> None:
-        self.assertIn('assistant', PROGRAM_CODES)
+    def test_program_codes_maintenance(self) -> None:
+        self.assertIn('maintenance', PROGRAM_CODES)
+        self.assertNotIn('assistant', PROGRAM_CODES)
 
     def test_program_codes_cognition(self) -> None:
         self.assertIn('cognition', PROGRAM_CODES)
@@ -824,10 +828,11 @@ class ReleaseProgramLRepositoryTests(LawimTestHarness):
         keys = {item['source_key'] for item in sources['sources']}
         self.assertIn('knowledge_metrics', keys)
 
-    def test_source_assistant_metrics(self) -> None:
+    def test_source_maintenance_metrics(self) -> None:
         sources = self.repository.analytics_integration_sources()
         keys = {item['source_key'] for item in sources['sources']}
-        self.assertIn('assistant_metrics', keys)
+        self.assertIn('maintenance_metrics', keys)
+        self.assertNotIn('assistant_metrics', keys)
 
     def test_source_cognition_metrics(self) -> None:
         sources = self.repository.analytics_integration_sources()
@@ -1410,9 +1415,10 @@ class ReleaseProgramLIntegrationTests(LawimTestHarness):
         sources = self.repository.analytics_integration_sources()
         self.assertIn('cognition', sources['programs'])
 
-    def test_integration_assistant(self) -> None:
+    def test_integration_maintenance(self) -> None:
         sources = self.repository.analytics_integration_sources()
-        self.assertIn('assistant', sources['programs'])
+        self.assertIn('maintenance', sources['programs'])
+        self.assertNotIn('assistant', sources['programs'])
 
     def test_integration_knowledge_platform(self) -> None:
         sources = self.repository.analytics_integration_sources()
@@ -1628,10 +1634,11 @@ class ReleaseProgramLCatalogTests(LawimTestHarness):
         keys = {row['kpi_key'] for row in rows}
         self.assertIn('kpi-knowledge-queries', keys)
 
-    def test_default_kpi_kpi_assistant_sessions(self) -> None:
+    def test_default_kpi_kpi_maintenance_messages(self) -> None:
         rows = self.repository.list_kpi_definitions()
         keys = {row['kpi_key'] for row in rows}
-        self.assertIn('kpi-assistant-sessions', keys)
+        self.assertIn('kpi-maintenance-messages', keys)
+        self.assertNotIn('kpi-assistant-sessions', keys)
 
     def test_default_kpi_kpi_ecosystem_partners(self) -> None:
         rows = self.repository.list_kpi_definitions()
@@ -1743,10 +1750,11 @@ class ReleaseProgramLCatalogTests(LawimTestHarness):
         keys = {row['mart_key'] for row in rows}
         self.assertIn('mart-rei', keys)
 
-    def test_default_mart_mart_assistant(self) -> None:
+    def test_default_mart_mart_maintenance(self) -> None:
         rows = self.repository.list_data_marts()
         keys = {row['mart_key'] for row in rows}
-        self.assertIn('mart-assistant', keys)
+        self.assertIn('mart-maintenance', keys)
+        self.assertNotIn('mart-assistant', keys)
 
     def test_default_mart_mart_global(self) -> None:
         rows = self.repository.list_data_marts()

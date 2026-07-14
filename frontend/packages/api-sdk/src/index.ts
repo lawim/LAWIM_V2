@@ -469,29 +469,6 @@ export interface EstimationResult {
   confidence: string;
 }
 
-export interface AssistantMessagePayload {
-  message: string;
-  project_id?: number;
-  session_id?: number;
-  agent_key?: string;
-}
-
-export interface AssistantChatPayload extends AssistantMessagePayload {
-  project_id: number;
-}
-
-export interface AssistantReply {
-  reply: string;
-  suggestions: string[];
-  session_id?: number;
-  agent_key?: string;
-  mode?: string;
-  provider?: string;
-  context_snapshot_key?: string;
-  project_id?: number;
-  raw?: Record<string, unknown>;
-}
-
 /* ── Maintenance mode types ─────────────────────────────────── */
 
 export interface MaintenanceMessagePayload {
@@ -1489,75 +1466,6 @@ export const apiSdk = {
       return { data: [{ id: 's1', title: 'Reference code ingestion', score: 91 }], message: 'mock' };
     }
     return requestJson<Array<{ id: string; title: string; score: number }>>('/v2/source-intelligence/dashboard', { method: 'GET' }, []);
-  },
-
-  async getAssistantSuggestions(): Promise<ApiResponse<Array<{ title: string; description: string }>>> {
-    if (useMocks) {
-      await mockDelay();
-      return { data: [{ title: 'Summarize pipeline', description: 'Review last updates' }], message: 'mock' };
-    }
-    const response = await requestJson<unknown[]>('/v2/assistant/agents', { method: 'GET' }, []);
-    return {
-      ...response,
-      data: Array.isArray(response.data)
-        ? response.data.map((item) => {
-            const record = toRecord(item);
-            return {
-              title: toText(record.title ?? record.agent_key ?? 'Assistant'),
-              description: toText(record.description ?? record.prompt_key ?? '')
-            };
-          })
-        : []
-    };
-  },
-
-  async askAssistant(payload: AssistantMessagePayload): Promise<ApiResponse<AssistantReply>> {
-    if (useMocks) {
-      await mockDelay();
-      return { data: { reply: `I can help with: ${payload.message}`, suggestions: ['Review pipeline', 'Send follow-up'] }, message: 'mock' };
-    }
-    const projectId = Number(payload.project_id ?? 1);
-    const response = await requestJson<{ chat?: Record<string, unknown> }>(
-      '/v2/assistant/chat',
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          message: payload.message,
-          project_id: projectId,
-          session_id: payload.session_id,
-          agent_key: payload.agent_key
-        })
-      },
-      { chat: {} }
-    );
-    const chat = toRecord(response.data.chat);
-    const assistantMessage = toRecord(chat.assistant_message);
-    const userMessage = toRecord(chat.user_message);
-    const ragChunks = Array.isArray(chat.rag_chunks) ? chat.rag_chunks : [];
-    const suggestions = [
-      toText(ragChunks[0] ? toRecord(ragChunks[0]).content : ''),
-      toText(ragChunks[1] ? toRecord(ragChunks[1]).content : ''),
-      'Ouvrir le cockpit',
-      'Relancer une question'
-    ].filter((item, index, values) => Boolean(item) && values.indexOf(item) === index).slice(0, 4);
-    return {
-      ...response,
-      data: {
-        reply: toText(assistantMessage.content, 'Connected to assistant service'),
-        suggestions,
-        session_id: Number(chat.session_id ?? toRecord(chat.session).id ?? 0) || undefined,
-        agent_key: toText(chat.agent_key ?? ''),
-        mode: toText(chat.mode ?? ''),
-        provider: toText(chat.provider ?? ''),
-        context_snapshot_key: toText(chat.context_snapshot_key ?? ''),
-        project_id: projectId,
-        raw: {
-          chat,
-          user_message: userMessage,
-          assistant_message: assistantMessage
-        }
-      }
-    };
   },
 
   async createProperty(payload: CreatePropertyPayload): Promise<ApiResponse<PropertySummary>> {

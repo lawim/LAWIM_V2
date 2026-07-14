@@ -219,6 +219,7 @@ class AIIntegrationBridge:
 
     def resolve_hook_action(self, hook_type: str) -> str:
         mapping = {
+            "maintenance_intake": "/api/v2/maintenance/messages",
             "maintenance_message": "/api/v2/maintenance/messages",
             "knowledge_rag": "/api/v2/knowledge/rag",
             "cognition_decision": "/api/v2/decisions",

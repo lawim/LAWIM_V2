@@ -318,7 +318,7 @@ class SecurityRepositoryMixin:
             "intelligent_core": hasattr(self, "get_intelligent_decision"),
             "ecosystem": hasattr(self, "get_service_catalog_item"),
             "cognition": hasattr(self, "cognition_query"),
-            "assistant": hasattr(self, "assistant_chat"),
+            "maintenance": hasattr(self, "create_maintenance_message"),
             "knowledge_platform": hasattr(self, "expert_rag_query"),
             "workflow_automation": hasattr(self, "start_automation_instance"),
             "real_estate_intelligence": hasattr(self, "get_rei_property_bundle"),
@@ -833,13 +833,12 @@ class SecurityRepositoryMixin:
                     (event_key, trail_id, actor_user_id, action, _json(payload_data), now),
                 )
             elif event_type == "ai":
-                assistant_session_id = payload_data.get("assistant_session_id")
                 conn.execute(
                     """
-                    INSERT INTO audit_ai_events (event_key, trail_entry_id, assistant_session_id, action, payload_json, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    INSERT INTO audit_ai_events (event_key, trail_entry_id, action, payload_json, created_at)
+                    VALUES (?, ?, ?, ?, ?)
                     """,
-                    (event_key, trail_id, assistant_session_id, action, _json(payload_data), now),
+                    (event_key, trail_id, action, _json(payload_data), now),
                 )
             else:
                 conn.execute(

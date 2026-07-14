@@ -93,7 +93,7 @@ class ReleaseProgramFConstantsTests(LawimTestHarness):
         self.assertIn("support", AUTOMATION_DOMAINS["administration"])
 
     def test_automation_domains_ia(self) -> None:
-        self.assertIn("assistant", AUTOMATION_DOMAINS["ia"])
+        self.assertIn("maintenance", AUTOMATION_DOMAINS["ia"])
 
     def test_workflow_statuses(self) -> None:
         self.assertIn("active", WORKFLOW_STATUSES)
@@ -121,7 +121,7 @@ class ReleaseProgramFConstantsTests(LawimTestHarness):
 
     def test_ai_hook_types(self) -> None:
         self.assertIn("knowledge_rag", AI_HOOK_TYPES)
-        self.assertIn("assistant_chat", AI_HOOK_TYPES)
+        self.assertIn("maintenance_intake", AI_HOOK_TYPES)
 
     def test_default_retry_max(self) -> None:
         self.assertEqual(DEFAULT_RETRY_MAX, 3)
@@ -768,7 +768,7 @@ class ReleaseProgramFHealthTests(LawimTestHarness):
             "/api/v2/workflows/instances",
             method="POST",
             token=admin,
-            body={"workflow_key": "wf-ia-assistant"},
+            body={"workflow_key": "wf-ia-maintenance"},
         )
         metrics = self.invoke("/api/metrics", token=admin)
         snapshot = metrics.body_json()["metrics"]

@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import replace
 from http import HTTPStatus
 
-from lawim_harness import LawimTestHarness, MINIMAL_JPEG_BYTES
+from tests.lawim_harness import LawimTestHarness, MINIMAL_JPEG_BYTES
 from lawim_v2.config import AppConfig
 from lawim_v2.rate_limit import AuthRateLimiter
 

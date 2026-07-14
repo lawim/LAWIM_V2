@@ -5,7 +5,6 @@ import tempfile
 from http import HTTPStatus
 from pathlib import Path
 
-from lawim_v2.assistant.schema_v10_ddl import V10_TABLE_NAMES
 from lawim_v2.knowledge_platform.constants import (
     DOCUMENT_STATUSES,
     EXPORT_FORMATS,
@@ -44,10 +43,10 @@ class ReleaseProgramEPersistenceTests(LawimTestHarness):
         for table in V11_TABLE_NAMES:
             self.assertIn(table, names)
 
-    def test_v10_tables_still_present(self) -> None:
+    def test_assistant_v10_tables_are_decommissioned(self) -> None:
         names = {row["name"] for row in self.repository.all("SELECT name FROM sqlite_master WHERE type='table'")}
-        for table in V10_TABLE_NAMES:
-            self.assertIn(table, names)
+        self.assertNotIn("assistant_sessions", names)
+        self.assertNotIn("assistant_agents", names)
 
     def test_expert_knowledge_catalog_seeded(self) -> None:
         self.assertGreaterEqual(self.repository.scalar("SELECT COUNT(*) FROM expert_knowledge_collections"), 5)
@@ -68,8 +67,7 @@ class ReleaseProgramEPersistenceTests(LawimTestHarness):
         names = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
         conn.close()
         self.assertIn("expert_knowledge_documents", names)
-        for table in V10_TABLE_NAMES:
-            self.assertIn(table, names)
+        self.assertNotIn("assistant_sessions", names)
 
 
 class ReleaseProgramEConstantsTests(LawimTestHarness):

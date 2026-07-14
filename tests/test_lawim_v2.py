@@ -7,7 +7,7 @@ from pathlib import Path
 
 from lawim_v2.db import ConflictError, LawimRepository
 
-from lawim_harness import LawimTestHarness, MINIMAL_JPEG_BYTES, minimal_jpeg_base64
+from tests.lawim_harness import LawimTestHarness, MINIMAL_JPEG_BYTES, minimal_jpeg_base64
 
 
 class LawimV2ExecutableBaselineTest(LawimTestHarness):

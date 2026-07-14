@@ -5,7 +5,7 @@ AUTOMATION_DOMAINS: dict[str, tuple[str, ...]] = {
     "juridique": ("contrats", "conformite", "validation_documentaire", "contentieux", "archivage"),
     "financement": ("demande", "etude", "scoring", "validation", "decaissement"),
     "administration": ("creation_comptes", "moderation", "support", "incidents", "reclamations"),
-    "ia": ("analyse", "recommandations", "decisions_assistees", "enrichissement", "assistant"),
+    "ia": ("analyse", "recommandations", "decisions_assistees", "enrichissement", "maintenance"),
 }
 
 WORKFLOW_STATUSES: frozenset[str] = frozenset({"draft", "active", "paused", "archived"})
@@ -15,7 +15,7 @@ APPROVAL_STATUSES: frozenset[str] = frozenset({"pending", "approved", "rejected"
 QUEUE_PRIORITIES: frozenset[str] = frozenset({"low", "normal", "high", "critical"})
 RULE_OPERATORS: frozenset[str] = frozenset({"eq", "neq", "gt", "gte", "lt", "lte", "contains", "in"})
 AI_HOOK_TYPES: frozenset[str] = frozenset(
-    {"assistant_chat", "knowledge_rag", "cognition_decision", "expert_search", "enrichment", "recommendation"}
+    {"maintenance_intake", "knowledge_rag", "cognition_decision", "expert_search", "enrichment", "recommendation"}
 )
 
 DEFAULT_RETRY_MAX = 3

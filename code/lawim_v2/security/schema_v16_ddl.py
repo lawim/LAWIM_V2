@@ -302,12 +302,10 @@ CREATE TABLE IF NOT EXISTS audit_ai_events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     event_key TEXT NOT NULL UNIQUE,
     trail_entry_id INTEGER,
-    assistant_session_id INTEGER,
     action TEXT NOT NULL DEFAULT '',
     payload_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
-    FOREIGN KEY (trail_entry_id) REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
-    FOREIGN KEY (assistant_session_id) REFERENCES assistant_sessions(id) ON DELETE SET NULL
+    FOREIGN KEY (trail_entry_id) REFERENCES audit_trail_entries(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS compliance_policies (
@@ -741,7 +739,6 @@ POSTGRESQL_V16_STATEMENTS: tuple[str, ...] = tuple(
             id SERIAL PRIMARY KEY,
             event_key TEXT NOT NULL UNIQUE,
             trail_entry_id INTEGER REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
-            assistant_session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
             action TEXT NOT NULL DEFAULT '',
             payload_json TEXT NOT NULL DEFAULT '{}',
             created_at TEXT NOT NULL

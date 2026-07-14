@@ -106,7 +106,7 @@ class AnalyticsRepositoryMixin:
             "intelligent_core": hasattr(self, "get_intelligent_decision"),
             "ecosystem": hasattr(self, "get_service_catalog_item"),
             "cognition": hasattr(self, "cognition_query"),
-            "assistant": hasattr(self, "assistant_chat"),
+            "maintenance": hasattr(self, "create_maintenance_message"),
             "knowledge_platform": hasattr(self, "expert_rag_query"),
             "workflow_automation": hasattr(self, "start_automation_instance"),
             "real_estate_intelligence": hasattr(self, "get_rei_property_bundle"),
@@ -295,7 +295,7 @@ class AnalyticsRepositoryMixin:
             ),
             "kpi-security-incidents": float((collected.get("security_metrics") or {}).get("open_incidents") or 0),
             "kpi-knowledge-queries": float((collected.get("knowledge_metrics") or {}).get("queries") or 0),
-            "kpi-assistant-sessions": float(METRICS.snapshot().get("assistant_sessions_total") or 0),
+            "kpi-maintenance-messages": float(METRICS.snapshot().get("lawim_rebuild_maintenance_messages_total") or 0),
             "kpi-ecosystem-partners": float(METRICS.snapshot().get("ecosystem_partners_total") or 0),
             "kpi-platform-health": engine.score.aggregate_components(
                 [{"value": 80, "weight": 1}, {"value": 90, "weight": 1}]

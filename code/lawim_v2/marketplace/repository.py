@@ -166,8 +166,6 @@ class MarketplaceRepositoryMixin:
             payload["real_estate_intelligence"] = True
         if hasattr(self, "expert_rag_query"):
             payload["knowledge_platform"] = True
-        if hasattr(self, "assistant_chat"):
-            payload["assistant"] = True
         return payload
 
     def marketplace_link_contact(self, contact_id: int) -> dict[str, object] | None:

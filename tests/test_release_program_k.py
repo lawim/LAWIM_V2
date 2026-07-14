@@ -232,8 +232,9 @@ class ReleaseProgramKConstantsTests(LawimTestHarness):
     def test_notification_types_api(self) -> None:
         self.assertIn('api', NOTIFICATION_TYPES)
 
-    def test_notification_types_assistant(self) -> None:
-        self.assertIn('assistant', NOTIFICATION_TYPES)
+    def test_notification_types_maintenance(self) -> None:
+        self.assertIn('maintenance', NOTIFICATION_TYPES)
+        self.assertNotIn('assistant', NOTIFICATION_TYPES)
 
     def test_notification_types_critical(self) -> None:
         self.assertIn('critical', NOTIFICATION_TYPES)
@@ -499,11 +500,13 @@ class ReleaseProgramKConstantsTests(LawimTestHarness):
     def test_push_platforms_web(self) -> None:
         self.assertIn('web', PUSH_PLATFORMS)
 
-    def test_event_kinds_AssistantConversationCreated(self) -> None:
-        self.assertIn('AssistantConversationCreated', EVENT_KINDS)
+    def test_event_kinds_MaintenanceMessageReceived(self) -> None:
+        self.assertIn('MaintenanceMessageReceived', EVENT_KINDS)
+        self.assertNotIn('AssistantConversationCreated', EVENT_KINDS)
 
-    def test_event_kinds_AssistantRecommendation(self) -> None:
-        self.assertIn('AssistantRecommendation', EVENT_KINDS)
+    def test_event_kinds_HumanHandoverRequested(self) -> None:
+        self.assertIn('HumanHandoverRequested', EVENT_KINDS)
+        self.assertNotIn('AssistantRecommendation', EVENT_KINDS)
 
     def test_event_kinds_AuditCompleted(self) -> None:
         self.assertIn('AuditCompleted', EVENT_KINDS)

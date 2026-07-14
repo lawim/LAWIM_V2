@@ -439,10 +439,6 @@ class PostgreSQLLawimRepository(LawimRepository):
                 self.bootstrap_project_ecosystem(int(project["id"]))
             if project and hasattr(self, "bootstrap_project_cognition"):
                 self.bootstrap_project_cognition(int(project["id"]))
-            if project and hasattr(self, "seed_assistant_catalog"):
-                self.seed_assistant_catalog()
-            if project and hasattr(self, "bootstrap_project_assistant"):
-                self.bootstrap_project_assistant(int(project["id"]))
         if hasattr(self, "seed_expert_knowledge_catalog"):
             self.seed_expert_knowledge_catalog()
         if hasattr(self, "seed_automation_catalog"):

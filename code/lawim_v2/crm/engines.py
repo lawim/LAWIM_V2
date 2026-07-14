@@ -201,7 +201,7 @@ class AiIntegrationBridge:
         "intelligent_core",
         "ecosystem",
         "cognition",
-        "assistant",
+        "maintenance",
         "knowledge_platform",
         "workflow_automation",
         "real_estate_intelligence",
@@ -236,14 +236,6 @@ class AiIntegrationBridge:
         if hasattr(repository, "expert_rag_query"):
             try:
                 return repository.expert_rag_query(query)
-            except Exception:
-                return None
-        return None
-
-    def enrich_with_assistant(self, repository: Any, prompt: str) -> dict[str, object] | None:
-        if hasattr(repository, "assistant_chat"):
-            try:
-                return repository.assistant_chat(prompt)
             except Exception:
                 return None
         return None

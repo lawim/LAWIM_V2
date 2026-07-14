@@ -11,7 +11,7 @@ export function createCrmAgent() {
     capabilities: ['lead-preparation', 'follow-up-coordination', 'contact-enrichment'],
     permissions: ['crm:prepare', 'crm:follow-up'],
     supportedIntents: ['CreateLead', 'PrepareFollowUp', 'EnrichContact'],
-    dependencies: ['assistant-agent'],
+    dependencies: ['knowledge-agent'],
     health: AgentHealth.Healthy,
     availability: AgentAvailability.Available,
     summary: 'CRM coordination prepared without making a business decision.',

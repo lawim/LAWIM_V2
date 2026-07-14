@@ -421,7 +421,7 @@ describe('13 Business Workflows', () => {
     'create_service_request',
     'marketplace',
     'property_estimation',
-    'ai_assistant',
+    'maintenance_intake',
     'document_search',
     'user_dashboard',
     'admin_dashboard'

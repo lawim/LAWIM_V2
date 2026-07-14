@@ -23,7 +23,7 @@ class AiOrchestratorTests(unittest.TestCase):
             ai_provider_gemini_secondary_enabled=True,
             ai_primary_provider="deepseek",
             ai_complex_provider="openai",
-            ai_fallback_chain=("deepseek", "openai", "gemini_primary", "gemini_secondary", "internal"),
+            ai_fallback_chain=("deepseek", "openai", "gemini_primary", "gemini_secondary"),
         )
         self.orchestrator = AIOrchestrator(repository=FakeRepository(), config=self.config, providers={})
 
@@ -32,20 +32,20 @@ class AiOrchestratorTests(unittest.TestCase):
             complexity="simple",
             primary_provider="deepseek",
             complex_provider="openai",
-            fallback_chain=("deepseek", "openai", "gemini_primary", "gemini_secondary", "internal"),
+            fallback_chain=("deepseek", "openai", "gemini_primary", "gemini_secondary"),
         )
         complex_chain = build_provider_chain(
             complexity="complex",
             primary_provider="deepseek",
             complex_provider="openai",
-            fallback_chain=("deepseek", "openai", "gemini_primary", "gemini_secondary", "internal"),
+            fallback_chain=("deepseek", "openai", "gemini_primary", "gemini_secondary"),
         )
         self.assertEqual(simple_chain[0], "deepseek")
         self.assertEqual(simple_chain[1], "openai")
         self.assertEqual(complex_chain[0], "openai")
         self.assertEqual(complex_chain[1], "deepseek")
-        self.assertEqual(simple_chain[-1], "internal")
-        self.assertEqual(complex_chain[-1], "internal")
+        self.assertEqual(simple_chain[-1], "gemini_secondary")
+        self.assertEqual(complex_chain[-1], "gemini_secondary")
 
     def test_build_request_preserves_metadata(self) -> None:
         request = self.orchestrator.build_request(
@@ -64,7 +64,7 @@ class AiOrchestratorTests(unittest.TestCase):
         self.assertEqual(request.external_chat_id, "12345@c.us")
         self.assertEqual(request.message_id, "msg-1")
         self.assertEqual(request.context_messages[0].content, "Salut")
-        self.assertIn("LAWIM", request.metadata["system_prompt"])
+        self.assertEqual(request.metadata["system_prompt"], "SYS")
         self.assertEqual(request.max_output_tokens, 128)
 
     def test_classify_detects_simple_and_complex_requests(self) -> None:

@@ -733,7 +733,6 @@ function WebAppContent() {
       <Route path="/biens" element={<ProtectedRoute><PropertyJourneyPage /></ProtectedRoute>} />
       <Route path="/search" element={<SearchSpacePage />} />
       <Route path="/conversation" element={<ProtectedRoute><ConversationStudioPage /></ProtectedRoute>} />
-      <Route path="/assistant" element={<ProtectedRoute><ConversationStudioPage /></ProtectedRoute>} />
       <Route path="/dossier" element={<ProtectedRoute><ProjectDossierPage /></ProtectedRoute>} />
       <Route path="/dossier/:projectId" element={<ProtectedRoute><ProjectDossierPage /></ProtectedRoute>} />
       <Route path="/partners" element={<ProtectedRoute><PartnerJourneyPage /></ProtectedRoute>} />

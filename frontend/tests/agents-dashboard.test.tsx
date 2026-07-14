@@ -11,6 +11,6 @@ describe('agent dashboard', () => {
     expect(screen.getByText(/brain routing/i)).toBeInTheDocument();
     expect(screen.getByText(/agent registry/i)).toBeInTheDocument();
     expect(screen.getAllByText(/approval queue/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/13 agents/i)).toBeInTheDocument();
+    expect(screen.getByText(/12 agents/i)).toBeInTheDocument();
   });
 });

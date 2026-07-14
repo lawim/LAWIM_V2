@@ -11,7 +11,7 @@ export function createWorkflowAgent() {
     capabilities: ['task-orchestration', 'dependency-mapping', 'automation-design'],
     permissions: ['workflow:prepare'],
     supportedIntents: ['BuildWorkflow', 'OrchestrateTasks', 'DesignAutomation'],
-    dependencies: ['assistant-agent', 'knowledge-agent'],
+    dependencies: ['knowledge-agent'],
     health: AgentHealth.Healthy,
     availability: AgentAvailability.Available,
     summary: 'Workflow graph prepared without changing the underlying business rules.',

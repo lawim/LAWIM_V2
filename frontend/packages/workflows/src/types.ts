@@ -22,7 +22,7 @@ export type WorkflowType =
   | 'create_service_request'
   | 'marketplace'
   | 'property_estimation'
-  | 'ai_assistant'
+  | 'maintenance_intake'
   | 'document_search'
   | 'user_dashboard'
   | 'admin_dashboard';
@@ -61,7 +61,7 @@ export interface WorkflowExecution {
   metadata: {
     userId?: string;
     sessionId?: string;
-    source: 'web' | 'admin' | 'assistant';
+    source: 'web' | 'admin' | 'maintenance';
     mockMode: boolean;
   };
 }
@@ -144,7 +144,7 @@ export interface WorkflowContext {
   workflowType: WorkflowType;
   userId?: string;
   sessionId: string;
-  source: 'web' | 'admin' | 'assistant';
+  source: 'web' | 'admin' | 'maintenance';
   mockMode: boolean;
   startTime: number;
   currentLayer: ExecutionLayer['name'];
@@ -206,7 +206,7 @@ export const WorkflowTypeSchema = z.enum([
   'create_service_request',
   'marketplace',
   'property_estimation',
-  'ai_assistant',
+  'maintenance_intake',
   'document_search',
   'user_dashboard',
   'admin_dashboard'

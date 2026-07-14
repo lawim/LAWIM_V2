@@ -20,7 +20,6 @@ This document describes the official intelligent agent layer for LAWIM V2.
 - `frontend/packages/agents/src/security/`: security coordination agent.
 - `frontend/packages/agents/src/operations/`: operations, deployment, and backup coordination agents.
 - `frontend/packages/agents/src/workflow/`: workflow coordination agent.
-- `frontend/packages/agents/src/assistant/`: assistant coordination agent.
 - `frontend/packages/agents/src/knowledge/`: knowledge coordination agent.
 - `frontend/packages/agents/src/map/`: map and spatial coordination agent.
 
@@ -32,6 +31,6 @@ This document describes the official intelligent agent layer for LAWIM V2.
 
 ## Compatibility
 
-- The new layer is additive.
+- The assistant coordination agent was removed during Mission 2 decommissioning.
 - No backend contract, schema, or frozen release behavior is changed.
 - Existing A to Q modules remain intact.

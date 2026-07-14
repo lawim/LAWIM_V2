@@ -179,7 +179,7 @@ class RealEstatePlatformEngine:
             "intelligent_core",
             "ecosystem",
             "cognition",
-            "assistant",
+            "maintenance",
             "knowledge_platform",
             "workflow_automation",
             "source_intelligence",

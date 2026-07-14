@@ -207,7 +207,7 @@ class IntegrationBridge:
         "intelligent_core",
         "ecosystem",
         "cognition",
-        "assistant",
+        "maintenance",
         "knowledge_platform",
         "workflow_automation",
         "real_estate_intelligence",

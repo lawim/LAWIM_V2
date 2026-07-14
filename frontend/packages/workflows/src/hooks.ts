@@ -72,8 +72,11 @@ export function useWorkflow(type: WorkflowType, options?: UseWorkflowOptions) {
               expectedPrice: (payload?.expectedPrice as string) || ''
             });
             break;
-          case 'ai_assistant':
-            result = await apiSdk.askAssistant({ message: (payload?.message as string) || '' });
+          case 'maintenance_intake':
+            result = await apiSdk.submitMaintenanceMessage({
+              channel: 'web',
+              message: (payload?.message as string) || ''
+            });
             break;
           case 'document_search':
             result = await apiSdk.getDocuments();
@@ -178,10 +181,10 @@ export function usePropertyEstimationWorkflow(options?: UseWorkflowOptions) {
 }
 
 /**
- * AI assistant workflow
+ * Maintenance intake workflow
  */
-export function useAIAssistantWorkflow(options?: UseWorkflowOptions) {
-  return useWorkflow('ai_assistant', options);
+export function useMaintenanceIntakeWorkflow(options?: UseWorkflowOptions) {
+  return useWorkflow('maintenance_intake', options);
 }
 
 /**

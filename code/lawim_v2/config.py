@@ -172,7 +172,6 @@ class AppConfig:
         "openai",
         "gemini_primary",
         "gemini_secondary",
-        "internal",
     )
     ai_request_timeout_seconds: int = 30
     ai_total_timeout_seconds: int = 75
@@ -318,7 +317,7 @@ class AppConfig:
         campay_prod_mode_default = campay_environment == "production"
         ai_fallback_chain = _csv_env(
             "AI_FALLBACK_CHAIN",
-            ("deepseek", "openai", "gemini_primary", "gemini_secondary", "internal"),
+            ("deepseek", "openai", "gemini_primary", "gemini_secondary"),
         )
         ai_admin_recipients = _csv_env("AI_ALERT_ADMIN_RECIPIENTS")
         return cls(
@@ -524,12 +523,16 @@ class AppConfig:
                 self.ai_provider_gemini_secondary_enabled,
             )
         ):
-            if self.ai_primary_provider not in {"deepseek", "openai", "gemini_primary", "gemini_secondary", "internal"}:
+            allowed_ai_providers = {"deepseek", "openai", "gemini_primary", "gemini_secondary"}
+            if self.ai_primary_provider not in allowed_ai_providers:
                 errors.append("AI_PRIMARY_PROVIDER has unsupported value")
-            if self.ai_complex_provider not in {"deepseek", "openai", "gemini_primary", "gemini_secondary", "internal"}:
+            if self.ai_complex_provider not in allowed_ai_providers:
                 errors.append("AI_COMPLEX_PROVIDER has unsupported value")
-            if "internal" not in self.ai_fallback_chain:
-                errors.append("AI_FALLBACK_CHAIN must include internal")
+            unsupported_fallbacks = set(self.ai_fallback_chain) - allowed_ai_providers
+            if unsupported_fallbacks:
+                errors.append("AI_FALLBACK_CHAIN contains unsupported provider")
+            if not self.ai_fallback_chain:
+                errors.append("AI_FALLBACK_CHAIN must include at least one provider")
             if self.ai_request_timeout_seconds < 1:
                 errors.append("AI_REQUEST_TIMEOUT_SECONDS must be positive")
             if self.ai_total_timeout_seconds < self.ai_request_timeout_seconds:

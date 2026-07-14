@@ -7,7 +7,7 @@ import time
 from http import HTTPStatus
 from pathlib import Path
 
-from lawim_harness import LawimTestHarness
+from tests.lawim_harness import LawimTestHarness
 from lawim_v2.observability import METRICS, RuntimeMetrics
 from lawim_v2.schema_ddl import POSTGRESQL_INIT_STATEMENTS, SQLITE_INIT_SCRIPT
 

@@ -43,8 +43,10 @@ beforeEach(() => {
   vi.spyOn(apiSdk, 'getSession').mockResolvedValue({ data: null, message: 'mock' });
   vi.spyOn(apiSdk, 'getDashboardSummary').mockResolvedValue({ data: mockSummary, message: 'mock' });
   vi.spyOn(apiSdk, 'getProjects').mockResolvedValue(mockProjects as never);
-  vi.spyOn(apiSdk, 'getAssistantSuggestions').mockResolvedValue({ data: [], message: 'mock' });
-  vi.spyOn(apiSdk, 'askAssistant').mockResolvedValue({ data: { reply: 'Réponse test', suggestions: [] }, message: 'mock' });
+  vi.spyOn(apiSdk, 'submitMaintenanceMessage').mockResolvedValue({
+    data: { maintenance_status: 'received', handover_requested: false },
+    message: 'mock'
+  } as never);
   vi.spyOn(apiSdk, 'getFavorites').mockResolvedValue({ data: [], message: 'mock' });
   vi.spyOn(apiSdk, 'getNotifications').mockResolvedValue({ data: [], message: 'mock' });
   vi.spyOn(apiSdk, 'getProperties').mockResolvedValue({ data: [], message: 'mock' });

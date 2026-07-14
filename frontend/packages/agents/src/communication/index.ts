@@ -11,7 +11,7 @@ export function createCommunicationAgent() {
     capabilities: ['message-preparation', 'reminder-coordination', 'notification-routing'],
     permissions: ['communication:prepare', 'communication:send'],
     supportedIntents: ['SendReminder', 'PrepareMessage', 'RouteNotification'],
-    dependencies: ['assistant-agent'],
+    dependencies: ['knowledge-agent'],
     health: AgentHealth.Healthy,
     availability: AgentAvailability.Available,
     summary: 'Communication coordination prepared for the Brain.',

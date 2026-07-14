@@ -244,7 +244,7 @@ class WorkflowAutomationService:
         if project_id is not None:
             self.projects._require_access(actor, project_id)
         return self.repository.invoke_automation_ai_hook(
-            hook_type=str(body.get("hook_type") or "assistant_chat"),
+            hook_type=str(body.get("hook_type") or "maintenance_intake"),
             query=str(body.get("query") or ""),
             project_id=project_id,
         )

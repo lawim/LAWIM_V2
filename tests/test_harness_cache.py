@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from unittest import TestCase
 
-from lawim_harness import build_test_fixture
+from tests.lawim_harness import build_test_fixture
 from lawim_v2.db import NotFoundError
 
 

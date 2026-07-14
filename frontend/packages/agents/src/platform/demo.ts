@@ -29,7 +29,6 @@ import {
   type ExecutionPipeline
 } from '../core';
 import { createAnalyticsAgent } from '../analytics';
-import { createAssistantAgent } from '../assistant';
 import { createCommunicationAgent } from '../communication';
 import { createCrmAgent } from '../crm';
 import { createDeploymentAgent, createBackupAgent, createOperationsAgent } from '../operations';
@@ -186,7 +185,6 @@ export function createMockAgentPlatform(): MockAgentPlatform {
     createOperationsAgent(),
     createDeploymentAgent(),
     createBackupAgent(),
-    createAssistantAgent(),
     createKnowledgeAgent(),
     createMapAgent(),
     createWorkflowAgent()
@@ -211,8 +209,6 @@ export function createMockAgentPlatform(): MockAgentPlatform {
       'operations:prepare',
       'deployment:prepare',
       'backup:prepare',
-      'assistant:read',
-      'assistant:prepare',
       'knowledge:read',
       'knowledge:prepare',
       'maps:read',

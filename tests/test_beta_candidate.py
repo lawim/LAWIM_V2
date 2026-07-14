@@ -3,7 +3,7 @@ from __future__ import annotations
 from http import HTTPStatus
 from importlib import resources
 
-from lawim_harness import LawimTestHarness, MINIMAL_JPEG_BYTES
+from tests.lawim_harness import LawimTestHarness, MINIMAL_JPEG_BYTES
 
 
 class BetaSecurityTest(LawimTestHarness):

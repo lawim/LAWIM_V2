@@ -34,14 +34,6 @@ const defaultProjects = {
   message: 'mock'
 };
 
-const defaultAssistantSuggestions = {
-  data: [
-    { title: 'Explore a project', description: 'Review the active dossier' },
-    { title: 'Search by intent', description: 'Ask LAWIM to guide the next step' }
-  ],
-  message: 'mock'
-};
-
 const defaultPropertyMatches = {
   data: [
     {
@@ -134,14 +126,10 @@ beforeEach(() => {
   vi.spyOn(apiSdk, 'getSession').mockResolvedValue({ data: null, message: 'mock' });
   vi.spyOn(apiSdk, 'getDashboardSummary').mockResolvedValue({ data: defaultDashboardSummary, message: 'mock' });
   vi.spyOn(apiSdk, 'getProjects').mockResolvedValue(defaultProjects as never);
-  vi.spyOn(apiSdk, 'getAssistantSuggestions').mockResolvedValue(defaultAssistantSuggestions as never);
-  vi.spyOn(apiSdk, 'askAssistant').mockImplementation(async (payload) => ({
-    data: {
-      reply: `I can help with: ${payload.message}`,
-      suggestions: ['Review project dossier', 'Open a related module']
-    },
+  vi.spyOn(apiSdk, 'submitMaintenanceMessage').mockResolvedValue({
+    data: { maintenance_status: 'received', handover_requested: false },
     message: 'mock'
-  }));
+  } as never);
   vi.spyOn(apiSdk, 'logout').mockResolvedValue({ data: { success: true }, message: 'mock' });
 });
 

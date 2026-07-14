@@ -5,8 +5,9 @@ describe('agent registry', () => {
   it('registers the full agent set and resolves intents', () => {
     const platform = createMockAgentPlatform();
 
-    expect(platform.registry.list()).toHaveLength(13);
-    expect(platform.registry.healthy()).toHaveLength(13);
+    expect(platform.registry.list()).toHaveLength(12);
+    expect(platform.registry.healthy()).toHaveLength(12);
+    expect(platform.registry.snapshot().agents.some((agent) => agent.id === 'agent-assistant')).toBe(false);
 
     const leadCandidates = platform.registry.resolveIntent('CreateLead');
     expect(leadCandidates[0]?.name).toBe('CRM Agent');

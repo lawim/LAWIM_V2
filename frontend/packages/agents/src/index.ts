@@ -7,7 +7,6 @@ export * from './analytics';
 export * from './security';
 export * from './operations';
 export * from './workflow';
-export * from './assistant';
 export * from './knowledge';
 export * from './map';
 export * from './dashboard';

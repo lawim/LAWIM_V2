@@ -122,12 +122,12 @@ class PostgreSQLCompatibilityTest(unittest.TestCase):
     def test_tables_present_uses_information_schema_for_postgresql(self) -> None:
         repository = _FakeIntrospectionRepository(
             "postgresql",
-            [{"name": "assistant_sessions"}, {"name": "assistant_agents"}],
+            [{"name": "maintenance_messages"}, {"name": "users"}],
         )
 
-        self.assertTrue(tables_present(repository, ("assistant_sessions", "assistant_agents")))
+        self.assertTrue(tables_present(repository, ("maintenance_messages", "users")))
         self.assertIn("information_schema.tables", repository.calls[0][0])
-        self.assertEqual(repository.calls[0][1], ("assistant_sessions", "assistant_agents"))
+        self.assertEqual(repository.calls[0][1], ("maintenance_messages", "users"))
 
     def test_table_exists_uses_sqlite_catalog_for_sqlite_driver(self) -> None:
         repository = _FakeIntrospectionRepository("sqlite", [{"name": "analytics_events"}])
