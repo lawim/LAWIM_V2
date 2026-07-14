@@ -162,10 +162,234 @@ Tag final: `lawim-v2-domain-decommission-mission-2`.
 Worktree propre apres commit et tag final; branche `main` en avance sur `origin/main`.
 
 ## 53. Réserves
-Deploiement OVH et tests live non executes; Prisma CLI indisponible via npm script.
+Deploiement OVH et tests live non executes; Prisma CLI necessite LAWIM_DATABASE_URL via environnement.
 
 ## 54. Verdict
 NON VALIDÉ pour les criteres de deploiement/live. Decommissionnement local: conforme.
 
 ## 55. Entrée Mission 3
 Reconstruire Conversation, Qualification, Search, Matching et Relationship a partir du canon, sur le socle maintenance propre.
+
+---
+
+# CLÔTURE STRICTE DE LA MISSION 2
+
+Date de cloture : 2026-07-14
+Commit de cloture : a definir
+Tag de cloture : lawim-v2-mission-2-strictly-closed
+
+## 56. Reserves initiales
+Les reserves du rapport precedent portaient sur :
+- Prisma CLI indisponible (`prisma: not found`)
+- Suite backend complete non verifiee
+- Deploiement OVH non execute
+- Tests live Web/WhatsApp/Telegram non executes
+- Preuve d'absence du legacy dans l'image runtime
+
+## 57. Etat Git de reprise
+- HEAD: 8b64e57b (Mission 2 commit)
+- Commits ulterieurs: 8e3bbe8d (fix: close mission 2 decommissioning validation gaps) — corrige Prisma, tests, frontend, ajoute migration 20260714150000
+- Tags presents: lawim-v2-domain-decommission-mission-2, pre-domain-decommission-mission-2, lawim-v2-canonical-specification-v1
+- Worktree: propre (aucune modification non staged avant cette session)
+- Commits depuis Mission 2: 1 commit technique de correction
+
+## 58. Prisma CLI
+npm run prisma:validate : OK (avec LAWIM_DATABASE_URL fourni)
+Prisma version : 6.19.3
+Schema valide : 281 lignes, 16 modeles
+Aucun modele legacy dans le schema
+
+## 59. Prisma generate
+npm run prisma:generate : OK
+@prisma/client genere dans node_modules/
+
+## 60. Manifest Prisma
+python3 scripts/validate_prisma_manifest.py : PASS (3/3 tests)
+manifest_version=19
+fingerprint coherent
+
+## 61. Suite backend complete
+python3 -m unittest discover -s tests -t . : 2030 tests, 0 echecs, 0 erreurs, 4 ignores
+Duree : 350 secondes
+
+## 62. Echecs detectes
+1 echec initial : test_week002_production.test_production_validation_script_passes
+Cause : AI_FALLBACK_CHAIN contenait "internal" (provider legacy supprime)
+Correction : retire "internal" de AI_FALLBACK_CHAIN dans 3 fichiers .env.example et validate-production.sh
+Apres correction : 2030 tests OK
+
+## 63. Corrections
+Fichiers modifies :
+- env/development/.env.example : AI_FALLBACK_CHAIN retire "internal"
+- env/production/.env.example : AI_FALLBACK_CHAIN retire "internal"
+- env/staging/.env.example : AI_FALLBACK_CHAIN retire "internal"
+- platform/validate-production.sh : AI_FALLBACK_CHAIN retire "internal"
+
+## 64. Frontend
+npm --prefix frontend test : 30 fichiers, 125 tests OK
+npm --prefix frontend run typecheck : OK
+npm --prefix frontend run build : OK
+
+## 65. Documentation canonique
+python3 scripts/validate_canonical_docs.py : OK (26 documents, 12 prerequis)
+Statuts canoniques des domaines decommissionnes : DECOMMISSIONED / REBUILD_PENDING
+
+## 66. Tests d'absence legacy
+Recherche ConversationCoreService|ProgressionEngine|BrainMemory|RelationEngine|MatchingEngine : aucune occurrence runtime
+Recherche assistant.providers|assistant.engines|assistant.repository : aucune occurrence runtime
+Recherche findMatches|run_full_match|requestConsent|acceptConsent|listRelations : aucune occurrence runtime
+Recherche AdvisorPanel|MatchResultsPanel|MatchSummaryWidget : aucune occurrence runtime
+Recherche AIOrchestrator.generate dans communication/maintenance : aucune occurrence
+Verification repertoire conversation_core/assistant/brain/persona.py/fallback.py : aucun trouve
+Test dedie test_mission_2_maintenance_decommissioning : 4/4 OK
+
+## 67. Mode maintenance local
+Demarrage serveur local (port 19999, sqlite) :
+- GET /api/health : OK (status ok, schema v19)
+- GET /readyz : OK (ready)
+- GET /api/v2/maintenance/status : OK (maintenance_mode=true, flags verrouilles, services=DECOMMISSIONED)
+- POST /api/v2/maintenance/messages : OK (message persiste, reponse MAINTENANCE_RESPONSE, automated_processing=blocked)
+- POST /api/v2/maintenance/handover : OK (handover_requested=true)
+
+Messages testes : "Bonjour, je cherche un studio", "Je veux parler a une personne"
+Aucun LLM, aucun dossier automatique, aucune qualification, aucune recherche, aucun matching, aucune relation, aucune visite, aucun paiement
+
+## 68. Handover local
+POST /api/v2/maintenance/handover avec "Je veux parler a une personne" :
+- message persiste avec handover_requested=1
+- evenement lawim.rebuild.human_handover_requested cree
+- reponse MAINTENANCE_RESPONSE
+- aucun LLM, aucun partenaire selectionne automatiquement
+
+## 69. Sauvegarde OVH
+Non execute : pas d'acces SSH au serveur OVH (164.132.44.192)
+L'acces SSH necessite une cle privee ou un mot de passe non disponible
+
+## 70. Drift Prisma
+Schema Prisma local : 16 modeles (dont conversations/messages preserves pour donnees historiques)
+Migrations presentes : init (v19), mission_2_domain_decommissioning, mission_2_strict_closure
+Pas d'acces a la base OVH pour comparer le drift
+
+## 71. Migration OVH
+Non execute : pas d'acces SSH/DB au serveur OVH
+Migration corrective creee localement : 20260714150000_mission_2_strict_closure (DROP COLUMN assistant_session_id)
+
+## 72. Deploiement
+Non execute : pas d'acces SSH au serveur OVH
+Bundle de deployement non genere (pas de script de bundle automatise)
+
+## 73. Commit runtime
+Commit runtime souhaite : 8b64e57b (Mission 2) ou HEAD incluant les corrections
+Impossible de verifier le commit reellement execute sur OVH sans acces SSH
+
+## 74. Test Web
+Non execute : depend du deploiement OVH
+
+## 75. Test WhatsApp
+Non execute : depend du deploiement OVH et du canal reel
+
+## 76. Idempotence WhatsApp
+Non execute : depend du deploiement OVH et du canal reel
+
+## 77. Test Telegram
+Non execute : depend du deploiement OVH et du canal reel
+
+## 78. Idempotence Telegram
+Non execute : depend du deploiement OVH et du canal reel
+
+## 79. Handover humain live
+Non execute : depend du deploiement OVH
+
+## 80. Absence de LLM
+Prouve localement : communication/service.py achemine les messages WhatsApp/Telegram via _dispatch_maintenance_reply -> MaintenanceService
+AIOrchestrator present dans services.py mais non appele par les canaux en maintenance
+Aucun appel LLM dans le flux maintenance
+
+## 81. Absence de dossier automatique
+Prouve localement : test_mission_2_maintenance_decommissioning verifie que projects ne varie pas apres soumission maintenance
+Aucune creation de projet/qualification/dossier pendant le mode maintenance
+
+## 82. Absence de qualification
+Prouve localement : flags qualification_service_enabled=false, aucun appel aux moteurs de qualification
+Modules brain/ supprimes du code
+
+## 83. Absence de recherche
+Prouve localement : flags search_orchestration_enabled=false
+Routes /api/v2/properties/search retirees
+
+## 84. Absence de matching
+Prouve localement : flags matching_service_enabled=false
+matching.py, MatchingEngine, routes matching supprimes
+
+## 85. Absence de relation
+Prouve localement : flags relationship_service_enabled=false, automated_relationship_consent_enabled=false
+RelationEngine, proposals, consentements supprimes
+
+## 86. Absence de visite
+Prouve localement : flags conversation_driven_visits_enabled=false
+Aucun appel aux visites depuis les canaux maintenance
+
+## 87. Absence de paiement
+Prouve localement : aucun appel Campay/paiement dans le flux maintenance
+
+## 88. Anciennes routes
+Testees via test_mission_2_maintenance_decommissioning.test_legacy_routes_are_not_available :
+- /api/matches?city=Douala -> 404
+- /api/v2/assistant/agents -> 404
+- /api/v2/assistant/chat -> 404
+- /api/v2/assistant/brain/matching -> 404
+- /api/v2/matching?project_id=1 -> 404
+- /api/v2/properties/matching -> 404
+Toutes retournent 404
+
+## 89. Image runtime
+Non inspectable : pas d'acces SSH/docker au serveur OVH
+Localement : aucun fichier legacy (conversation_core/, assistant/, brain/, matching.py, persona.py, fallback.py legacy) dans le depot
+
+## 90. Fichiers modifies (cette session)
+- env/development/.env.example (AI_FALLBACK_CHAIN)
+- env/production/.env.example (AI_FALLBACK_CHAIN)
+- env/staging/.env.example (AI_FALLBACK_CHAIN)
+- platform/validate-production.sh (AI_FALLBACK_CHAIN)
+
+## 91. Fichiers crees (cette session)
+Aucun fichier cree
+
+## 92. Fichiers supprimes (cette session)
+Aucun fichier supprime
+
+## 93. Commits (cette session)
+- commit technique : fix(platform): remove legacy internal provider from AI_FALLBACK_CHAIN
+
+## 94. Tags (cette session)
+- lawim-v2-mission-2-strictly-closed
+
+## 95. Etat Git final
+Worktree propre, branche main, HEAD sur le commit de cloture
+
+## 96. Verdict
+NON VALIDÉ
+
+Blocage : acces SSH au serveur OVH (164.132.44.192, utilisateur lawim) non disponible.
+Les preuves locales suivantes sont toutes vertes :
+- Prisma validate/generate/manifest OK
+- Suite backend 2030 tests OK
+- Frontend tests/typecheck/build OK
+- Docs canoniques OK
+- Tests absence legacy OK
+- Mode maintenance local OK
+- Handover local OK
+- Anciennes routes 404 OK
+
+Les criteres suivants restent non verifies faute d'acces OVH :
+- Sauvegarde OVH
+- Drift Prisma / Migration OVH
+- Deploiement OVH
+- Commit runtime OVH
+- Test live Web/WhatsApp/Telegram
+- Idempotence WhatsApp/Telegram
+- Handover humain live
+- Inspection image runtime OVH
+
+## 97. Probleme hors perimetre Mission 3
+Aucun probleme decouvert relevant de la Mission 3.
