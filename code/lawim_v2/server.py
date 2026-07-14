@@ -650,6 +650,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 phone_e164=phone_e164,
                 preferred_language=preferred_language,
                 accept_terms=accept_terms,
+                organization_id=self._optional_int(body.get("organization_id"), minimum=1),
             )
             self._send_json(payload, status=HTTPStatus.CREATED)
             return

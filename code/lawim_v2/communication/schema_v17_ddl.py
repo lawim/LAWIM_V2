@@ -1,5 +1,7 @@
 """Schema v17 DDL — Communication platform (RELEASE PROGRAM K)."""
 
+import re
+
 V17_TABLE_NAMES: tuple[str, ...] = (
     "communication_messages",
     "communication_threads",
@@ -1197,12 +1199,12 @@ CREATE TABLE IF NOT EXISTS communication_messages (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    thread_id INTEGER REFERENCES communication_threads(id) ON DELETE SET NULL,
-    channel_id INTEGER REFERENCES communication_channels(id) ON DELETE SET NULL,
-    sender_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    recipient_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
-    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL
+    FOREIGN KEY (thread_id) REFERENCES communication_threads(id) ON DELETE SET NULL,
+    FOREIGN KEY (channel_id) REFERENCES communication_channels(id) ON DELETE SET NULL,
+    FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (recipient_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (contact_id) REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
+    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE SET NULL
 )
     """,
     """
@@ -2585,3 +2587,114 @@ CREATE TABLE IF NOT EXISTS communication_ai_recommendations (
 CREATE INDEX IF NOT EXISTS idx_communication_ai_recommendations_status ON communication_ai_recommendations(status, created_at)
     """,
 )
+
+
+def _canonicalize_postgresql_v17_statement(statement: str) -> str:
+    text = statement.strip()
+    if not text.startswith("CREATE TABLE IF NOT EXISTS"):
+        return text
+
+    lines = [line.rstrip() for line in text.splitlines()]
+    if lines and lines[-1].strip() == ")":
+        lines = lines[:-1]
+
+    header = lines[0].strip()
+    seen_columns: set[str] = set()
+    body_items: list[str] = []
+
+    for raw_line in lines[1:]:
+        line = raw_line.strip().rstrip(",")
+        if not line:
+            continue
+
+        upper = line.upper()
+        if upper.startswith(("FOREIGN KEY", "UNIQUE", "CHECK", "CONSTRAINT")):
+            body_items.append(line)
+            continue
+
+        column_name = line.split()[0]
+        if "REFERENCES" in upper:
+            if column_name in seen_columns:
+                reference_clause = line.split("REFERENCES", 1)[1].strip()
+                body_items.append(f"FOREIGN KEY ({column_name}) REFERENCES {reference_clause}")
+            else:
+                seen_columns.add(column_name)
+                body_items.append(line)
+            continue
+
+        if column_name in seen_columns:
+            continue
+
+        seen_columns.add(column_name)
+        body_items.append(line)
+
+    body = ",\n".join(f"    {item}" for item in body_items)
+    return "\n".join([header, body, ")"])
+
+
+def _postgresql_v17_block_name(statement: str) -> str | None:
+    first_line = statement.lstrip().splitlines()[0].strip()
+    match = re.match(r"CREATE TABLE IF NOT EXISTS\s+([a-zA-Z0-9_]+)\s*\($", first_line)
+    if match:
+        return match.group(1)
+    return None
+
+
+def _canonicalize_postgresql_v17_statements(statements: tuple[str, ...]) -> tuple[str, ...]:
+    blocks: list[tuple[str | None, list[str], set[str]]] = []
+    current_block: list[str] = []
+    current_name: str | None = None
+
+    for statement in statements:
+        normalized = _canonicalize_postgresql_v17_statement(statement)
+        block_name = _postgresql_v17_block_name(normalized)
+        if block_name is not None:
+            if current_block:
+                blocks.append((current_name, current_block, set()))
+            current_name = block_name
+            current_block = [normalized]
+        else:
+            if not current_block:
+                current_block = [normalized]
+                current_name = None
+            else:
+                current_block.append(normalized)
+
+    if current_block:
+        blocks.append((current_name, current_block, set()))
+
+    table_names = {name for name, _, _ in blocks if name is not None}
+    annotated_blocks: list[tuple[str | None, list[str], set[str]]] = []
+    for name, block, _ in blocks:
+        dependencies = set()
+        if name is not None and block:
+            dependencies = {
+                reference
+                for reference in re.findall(r"REFERENCES\s+([a-zA-Z0-9_]+)\s*\(", block[0])
+                if reference in table_names and reference != name
+            }
+        annotated_blocks.append((name, block, dependencies))
+
+    remaining = annotated_blocks[:]
+    ordered_blocks: list[tuple[str | None, list[str]]] = []
+    placed_tables: set[str] = set()
+
+    while remaining:
+        for index, (name, block, dependencies) in enumerate(remaining):
+            if dependencies.issubset(placed_tables):
+                ordered_blocks.append((name, block))
+                if name is not None:
+                    placed_tables.add(name)
+                remaining.pop(index)
+                break
+        else:
+            ordered_blocks.extend((name, block) for name, block, _ in remaining)
+            break
+
+    flattened: list[str] = []
+    for _, block in ordered_blocks:
+        flattened.extend(block)
+    return tuple(flattened)
+
+
+POSTGRESQL_V17_STATEMENTS = _canonicalize_postgresql_v17_statements(POSTGRESQL_V17_STATEMENTS)

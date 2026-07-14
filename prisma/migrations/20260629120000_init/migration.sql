@@ -1,132 +1,132 @@
 -- LAWIM_V2 schema v19 initial migration (generated from code/lawim_v2/schema_ddl.py; aligned with persistence manifest)
 
 CREATE TABLE IF NOT EXISTS organizations (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        slug TEXT NOT NULL UNIQUE,
-        kind TEXT NOT NULL DEFAULT 'agency',
-        city TEXT,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE,
+    kind TEXT NOT NULL DEFAULT 'agency',
+    city TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        email TEXT NOT NULL UNIQUE,
-        username TEXT UNIQUE,
-        full_name TEXT NOT NULL,
-        phone_e164 TEXT UNIQUE,
-        preferred_language TEXT NOT NULL DEFAULT 'fr',
-        role TEXT NOT NULL CHECK (role IN ('admin', 'manager', 'operator', 'partner', 'user', 'administrator', 'superadmin', 'director', 'root', 'supervisor', 'lead', 'coordinator', 'agent', 'operateur', 'opérateur', 'staff', 'support', 'moderator', 'photographer', 'photographe', 'notary', 'notaire', 'bank', 'banque', 'artisan', 'architect', 'architecte', 'diagnostician', 'diagnostiqueur', 'decorator', 'decorateur', 'demenageur', 'mover', 'broker', 'owner', 'buyer', 'seller', 'vendeur', 'acheteur', 'tenant', 'locataire', 'landlord', 'proprietaire', 'investor', 'investisseur', 'promoter', 'promoteur', 'customer', 'viewer', 'company', 'enterprise', 'entreprise', 'business', 'particulier', 'private', 'requester')),
-        organization_id INTEGER REFERENCES organizations(id),
-        password_salt TEXT NOT NULL,
-        password_hash TEXT NOT NULL,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    username TEXT UNIQUE,
+    full_name TEXT NOT NULL,
+    phone_e164 TEXT UNIQUE,
+    preferred_language TEXT NOT NULL DEFAULT 'fr',
+    role TEXT NOT NULL CHECK (role IN ('admin', 'manager', 'operator', 'partner', 'user', 'administrator', 'superadmin', 'director', 'root', 'supervisor', 'lead', 'coordinator', 'agent', 'operateur', 'opérateur', 'staff', 'support', 'moderator', 'photographer', 'photographe', 'notary', 'notaire', 'bank', 'banque', 'artisan', 'architect', 'architecte', 'diagnostician', 'diagnostiqueur', 'decorator', 'decorateur', 'demenageur', 'mover', 'broker', 'owner', 'buyer', 'seller', 'vendeur', 'acheteur', 'tenant', 'locataire', 'landlord', 'proprietaire', 'investor', 'investisseur', 'promoter', 'promoteur', 'customer', 'viewer', 'company', 'enterprise', 'entreprise', 'business', 'particulier', 'private', 'requester')),
+    organization_id INTEGER REFERENCES organizations(id),
+    password_salt TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS sessions (
-        token TEXT PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        created_at TEXT NOT NULL,
-        expires_at TEXT NOT NULL
-    );
+    token TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS properties (
-        id SERIAL PRIMARY KEY,
-        listing_code TEXT UNIQUE,
-        title TEXT NOT NULL,
-        summary TEXT NOT NULL,
-        address_line TEXT,
-        city TEXT NOT NULL,
-        region TEXT,
-        postal_code TEXT,
-        country TEXT NOT NULL,
-        search_key TEXT,
-        latitude DOUBLE PRECISION,
-        longitude DOUBLE PRECISION,
-        price_min INTEGER,
-        price_max INTEGER,
-        currency TEXT NOT NULL,
-        status TEXT NOT NULL,
-        availability TEXT NOT NULL DEFAULT 'available',
-        property_type TEXT NOT NULL,
-        owner_organization_id INTEGER REFERENCES organizations(id),
-        bedrooms INTEGER NOT NULL DEFAULT 0,
-        bathrooms INTEGER NOT NULL DEFAULT 0,
-        area_sqm DOUBLE PRECISION NOT NULL DEFAULT 0,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        version INTEGER NOT NULL DEFAULT 1,
-        published_at TEXT,
-        deleted_at TEXT,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    listing_code TEXT UNIQUE,
+    title TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    address_line TEXT,
+    city TEXT NOT NULL,
+    region TEXT,
+    postal_code TEXT,
+    country TEXT NOT NULL,
+    search_key TEXT,
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    price_min INTEGER,
+    price_max INTEGER,
+    currency TEXT NOT NULL,
+    status TEXT NOT NULL,
+    availability TEXT NOT NULL DEFAULT 'available',
+    property_type TEXT NOT NULL,
+    owner_organization_id INTEGER REFERENCES organizations(id),
+    bedrooms INTEGER NOT NULL DEFAULT 0,
+    bathrooms INTEGER NOT NULL DEFAULT 0,
+    area_sqm DOUBLE PRECISION NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    version INTEGER NOT NULL DEFAULT 1,
+    published_at TEXT,
+    deleted_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS media (
-        id SERIAL PRIMARY KEY,
-        property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-        kind TEXT NOT NULL,
-        url TEXT NOT NULL,
-        caption TEXT NOT NULL,
-        storage_path TEXT,
-        provider_name TEXT NOT NULL DEFAULT 'local',
-        provider_media_id TEXT,
-        provider_public_id TEXT,
-        provider_resource_type TEXT DEFAULT 'image',
-        provider_storage_key TEXT,
-        provider_object_id TEXT,
-        mime_type TEXT,
-        size_bytes INTEGER,
-        thumbnail_url TEXT,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        position INTEGER NOT NULL DEFAULT 0,
-        lifecycle_state TEXT NOT NULL DEFAULT 'active',
-        backup_state TEXT NOT NULL DEFAULT 'available',
-        version INTEGER NOT NULL DEFAULT 1,
-        deleted_at TEXT,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    kind TEXT NOT NULL,
+    url TEXT NOT NULL,
+    caption TEXT NOT NULL,
+    storage_path TEXT,
+    provider_name TEXT NOT NULL DEFAULT 'local',
+    provider_media_id TEXT,
+    provider_public_id TEXT,
+    provider_resource_type TEXT DEFAULT 'image',
+    provider_storage_key TEXT,
+    provider_object_id TEXT,
+    mime_type TEXT,
+    size_bytes INTEGER,
+    thumbnail_url TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    position INTEGER NOT NULL DEFAULT 0,
+    lifecycle_state TEXT NOT NULL DEFAULT 'active',
+    backup_state TEXT NOT NULL DEFAULT 'available',
+    version INTEGER NOT NULL DEFAULT 1,
+    deleted_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS conversations (
-        id SERIAL PRIMARY KEY,
-        property_id INTEGER REFERENCES properties(id),
-        user_id INTEGER NOT NULL REFERENCES users(id),
-        organization_id INTEGER REFERENCES organizations(id),
-        subject TEXT NOT NULL,
-        status TEXT NOT NULL,
-        negotiation_stage TEXT NOT NULL DEFAULT 'inquiry',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER REFERENCES properties(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    organization_id INTEGER REFERENCES organizations(id),
+    subject TEXT NOT NULL,
+    status TEXT NOT NULL,
+    negotiation_stage TEXT NOT NULL DEFAULT 'inquiry',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS messages (
-        id SERIAL PRIMARY KEY,
-        conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
-        sender_user_id INTEGER NOT NULL REFERENCES users(id),
-        body TEXT NOT NULL,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+    sender_user_id INTEGER NOT NULL REFERENCES users(id),
+    body TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS events (
-        id SERIAL PRIMARY KEY,
-        kind TEXT NOT NULL,
-        payload TEXT NOT NULL,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    kind TEXT NOT NULL,
+    payload TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS notifications (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        kind TEXT NOT NULL,
-        title TEXT NOT NULL,
-        body TEXT NOT NULL,
-        payload_json TEXT NOT NULL DEFAULT '{}',
-        read_at TEXT,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    kind TEXT NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    read_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS schema_meta (
-        key TEXT PRIMARY KEY,
-        value TEXT NOT NULL
-    );
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_properties_status_city ON properties(status, city);
 
@@ -169,68 +169,68 @@ CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
 CREATE INDEX IF NOT EXISTS idx_properties_owner_status ON properties(owner_organization_id, status, deleted_at);
 
 CREATE TABLE IF NOT EXISTS projects (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        organization_id INTEGER REFERENCES organizations(id),
-        title TEXT NOT NULL,
-        project_type TEXT NOT NULL,
-        objective TEXT NOT NULL,
-        budget_min INTEGER,
-        budget_max INTEGER,
-        currency TEXT NOT NULL DEFAULT 'XAF',
-        location_city TEXT,
-        location_region TEXT,
-        location_country TEXT DEFAULT 'Cameroon',
-        location_latitude DOUBLE PRECISION,
-        location_longitude DOUBLE PRECISION,
-        timeline_horizon TEXT,
-        status TEXT NOT NULL DEFAULT 'draft',
-        priority TEXT NOT NULL DEFAULT 'normal',
-        progress_percent INTEGER NOT NULL DEFAULT 0,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        primary_goal_key TEXT,
-        intelligence_json TEXT NOT NULL DEFAULT '{}',
-        archived_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    organization_id INTEGER REFERENCES organizations(id),
+    title TEXT NOT NULL,
+    project_type TEXT NOT NULL,
+    objective TEXT NOT NULL,
+    budget_min INTEGER,
+    budget_max INTEGER,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    location_city TEXT,
+    location_region TEXT,
+    location_country TEXT DEFAULT 'Cameroon',
+    location_latitude DOUBLE PRECISION,
+    location_longitude DOUBLE PRECISION,
+    timeline_horizon TEXT,
+    status TEXT NOT NULL DEFAULT 'draft',
+    priority TEXT NOT NULL DEFAULT 'normal',
+    progress_percent INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    primary_goal_key TEXT,
+    intelligence_json TEXT NOT NULL DEFAULT '{}',
+    archived_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_steps (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        step_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        description TEXT,
-        position INTEGER NOT NULL DEFAULT 0,
-        status TEXT NOT NULL DEFAULT 'pending',
-        milestone TEXT,
-        next_action TEXT,
-        completed_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, step_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    step_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    position INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'pending',
+    milestone TEXT,
+    next_action TEXT,
+    completed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, step_key)
+);
 
 CREATE TABLE IF NOT EXISTS project_checklist_items (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        step_id INTEGER REFERENCES project_steps(id) ON DELETE CASCADE,
-        label TEXT NOT NULL,
-        checked INTEGER NOT NULL DEFAULT 0,
-        position INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    step_id INTEGER REFERENCES project_steps(id) ON DELETE CASCADE,
+    label TEXT NOT NULL,
+    checked INTEGER NOT NULL DEFAULT 0,
+    position INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_step_history (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        step_id INTEGER NOT NULL REFERENCES project_steps(id) ON DELETE CASCADE,
-        from_status TEXT,
-        to_status TEXT NOT NULL,
-        note TEXT,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    step_id INTEGER NOT NULL REFERENCES project_steps(id) ON DELETE CASCADE,
+    from_status TEXT,
+    to_status TEXT NOT NULL,
+    note TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_projects_user_status ON projects(user_id, status, created_at);
 
@@ -245,266 +245,266 @@ CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_it
 CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);
 
 CREATE TABLE IF NOT EXISTS journeys (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        journey_key TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'draft',
-        replan_count INTEGER NOT NULL DEFAULT 0,
-        started_at TEXT,
-        completed_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, journey_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    journey_key TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'draft',
+    replan_count INTEGER NOT NULL DEFAULT 0,
+    started_at TEXT,
+    completed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, journey_key)
+);
 
 CREATE TABLE IF NOT EXISTS project_goals (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        goal_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        priority TEXT NOT NULL DEFAULT 'normal',
-        status TEXT NOT NULL DEFAULT 'active',
-        influence_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    goal_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    priority TEXT NOT NULL DEFAULT 'normal',
+    status TEXT NOT NULL DEFAULT 'active',
+    influence_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_needs (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        need_key TEXT NOT NULL,
-        description TEXT NOT NULL,
-        priority TEXT NOT NULL DEFAULT 'normal',
-        status TEXT NOT NULL DEFAULT 'open',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    need_key TEXT NOT NULL,
+    description TEXT NOT NULL,
+    priority TEXT NOT NULL DEFAULT 'normal',
+    status TEXT NOT NULL DEFAULT 'open',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_constraints (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        constraint_type TEXT NOT NULL,
-        description TEXT NOT NULL,
-        severity TEXT NOT NULL DEFAULT 'medium',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    constraint_type TEXT NOT NULL,
+    description TEXT NOT NULL,
+    severity TEXT NOT NULL DEFAULT 'medium',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_preferences (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        preference_key TEXT NOT NULL,
-        value_json TEXT NOT NULL DEFAULT '{}',
-        weight INTEGER NOT NULL DEFAULT 50,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    preference_key TEXT NOT NULL,
+    value_json TEXT NOT NULL DEFAULT '{}',
+    weight INTEGER NOT NULL DEFAULT 50,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_funding (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        source_type TEXT NOT NULL,
-        amount INTEGER,
-        currency TEXT NOT NULL DEFAULT 'XAF',
-        status TEXT NOT NULL DEFAULT 'planned',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    source_type TEXT NOT NULL,
+    amount INTEGER,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    status TEXT NOT NULL DEFAULT 'planned',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_life_events (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        event_type TEXT NOT NULL,
-        title TEXT NOT NULL,
-        impact_json TEXT NOT NULL DEFAULT '{}',
-        occurred_at TEXT NOT NULL,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    event_type TEXT NOT NULL,
+    title TEXT NOT NULL,
+    impact_json TEXT NOT NULL DEFAULT '{}',
+    occurred_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_risks (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        risk_key TEXT NOT NULL,
-        severity TEXT NOT NULL DEFAULT 'medium',
-        likelihood TEXT NOT NULL DEFAULT 'medium',
-        description TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'open',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    risk_key TEXT NOT NULL,
+    severity TEXT NOT NULL DEFAULT 'medium',
+    likelihood TEXT NOT NULL DEFAULT 'medium',
+    description TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'open',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_opportunities (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        opportunity_key TEXT NOT NULL,
-        value_score INTEGER NOT NULL DEFAULT 50,
-        description TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'open',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    opportunity_key TEXT NOT NULL,
+    value_score INTEGER NOT NULL DEFAULT 50,
+    description TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'open',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_decisions (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        decision_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'proposed',
-        reason TEXT NOT NULL,
-        confidence INTEGER NOT NULL DEFAULT 50,
-        alternatives_json TEXT NOT NULL DEFAULT '[]',
-        tradeoffs_json TEXT NOT NULL DEFAULT '[]',
-        next_action TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    decision_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'proposed',
+    reason TEXT NOT NULL,
+    confidence INTEGER NOT NULL DEFAULT 50,
+    alternatives_json TEXT NOT NULL DEFAULT '[]',
+    tradeoffs_json TEXT NOT NULL DEFAULT '[]',
+    next_action TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_recommendations (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        recommendation_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        priority TEXT NOT NULL DEFAULT 'normal',
-        confidence INTEGER NOT NULL DEFAULT 50,
-        score INTEGER NOT NULL DEFAULT 50,
-        reasons_json TEXT NOT NULL DEFAULT '[]',
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    recommendation_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    priority TEXT NOT NULL DEFAULT 'normal',
+    confidence INTEGER NOT NULL DEFAULT 50,
+    score INTEGER NOT NULL DEFAULT 50,
+    reasons_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_actions (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        action_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'pending',
-        priority TEXT NOT NULL DEFAULT 'normal',
-        due_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    action_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    priority TEXT NOT NULL DEFAULT 'normal',
+    due_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_tasks (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        action_id INTEGER REFERENCES project_actions(id) ON DELETE SET NULL,
-        title TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'todo',
-        assignee_user_id INTEGER REFERENCES users(id),
-        due_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    action_id INTEGER REFERENCES project_actions(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'todo',
+    assignee_user_id INTEGER REFERENCES users(id),
+    due_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_milestones (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        step_id INTEGER REFERENCES project_steps(id) ON DELETE SET NULL,
-        title TEXT NOT NULL,
-        target_at TEXT,
-        achieved_at TEXT,
-        status TEXT NOT NULL DEFAULT 'pending',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    step_id INTEGER REFERENCES project_steps(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    target_at TEXT,
+    achieved_at TEXT,
+    status TEXT NOT NULL DEFAULT 'pending',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS knowledge_facts (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        category TEXT NOT NULL,
-        fact_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        content TEXT NOT NULL,
-        source TEXT NOT NULL DEFAULT 'system',
-        confidence INTEGER NOT NULL DEFAULT 70,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    category TEXT NOT NULL,
+    fact_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    source TEXT NOT NULL DEFAULT 'system',
+    confidence INTEGER NOT NULL DEFAULT 70,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS user_contexts (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        context_json TEXT NOT NULL DEFAULT '{}',
-        version INTEGER NOT NULL DEFAULT 1,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    context_json TEXT NOT NULL DEFAULT '{}',
+    version INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_contexts (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        context_json TEXT NOT NULL DEFAULT '{}',
-        version INTEGER NOT NULL DEFAULT 1,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    context_json TEXT NOT NULL DEFAULT '{}',
+    version INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS partner_suggestions (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        partner_kind TEXT NOT NULL,
-        title TEXT NOT NULL,
-        rationale TEXT NOT NULL,
-        priority TEXT NOT NULL DEFAULT 'normal',
-        confidence INTEGER NOT NULL DEFAULT 50,
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    partner_kind TEXT NOT NULL,
+    title TEXT NOT NULL,
+    rationale TEXT NOT NULL,
+    priority TEXT NOT NULL DEFAULT 'normal',
+    confidence INTEGER NOT NULL DEFAULT 50,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS service_suggestions (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        service_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        rationale TEXT NOT NULL,
-        priority TEXT NOT NULL DEFAULT 'normal',
-        confidence INTEGER NOT NULL DEFAULT 50,
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    service_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    rationale TEXT NOT NULL,
+    priority TEXT NOT NULL DEFAULT 'normal',
+    confidence INTEGER NOT NULL DEFAULT 50,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS trust_scores (
-        id SERIAL PRIMARY KEY,
-        subject_type TEXT NOT NULL,
-        subject_id INTEGER NOT NULL,
-        score INTEGER NOT NULL DEFAULT 50,
-        factors_json TEXT NOT NULL DEFAULT '[]',
-        computed_at TEXT NOT NULL,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    subject_type TEXT NOT NULL,
+    subject_id INTEGER NOT NULL,
+    score INTEGER NOT NULL DEFAULT 50,
+    factors_json TEXT NOT NULL DEFAULT '[]',
+    computed_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS timeline_entries (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        entry_type TEXT NOT NULL,
-        title TEXT NOT NULL,
-        description TEXT,
-        status TEXT NOT NULL DEFAULT 'planned',
-        scheduled_at TEXT,
-        occurred_at TEXT,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    entry_type TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL DEFAULT 'planned',
+    scheduled_at TEXT,
+    occurred_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS progress_snapshots (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        progress_percent INTEGER NOT NULL DEFAULT 0,
-        metrics_json TEXT NOT NULL DEFAULT '{}',
-        captured_at TEXT NOT NULL,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    progress_percent INTEGER NOT NULL DEFAULT 0,
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    captured_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_resources (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        resource_type TEXT NOT NULL,
-        resource_id INTEGER NOT NULL,
-        role TEXT NOT NULL DEFAULT 'linked',
-        created_at TEXT NOT NULL,
-        UNIQUE (project_id, resource_type, resource_id)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    resource_type TEXT NOT NULL,
+    resource_id INTEGER NOT NULL,
+    role TEXT NOT NULL DEFAULT 'linked',
+    created_at TEXT NOT NULL,
+    UNIQUE (project_id, resource_type, resource_id)
+);
 
 CREATE INDEX IF NOT EXISTS idx_journeys_project ON journeys(project_id, status);
 
@@ -525,251 +525,251 @@ CREATE INDEX IF NOT EXISTS idx_trust_scores_subject ON trust_scores(subject_type
 CREATE INDEX IF NOT EXISTS idx_project_resources_project ON project_resources(project_id, resource_type);
 
 CREATE TABLE IF NOT EXISTS partner_profiles (
-        id SERIAL PRIMARY KEY,
-        organization_id INTEGER NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
-        partner_type TEXT NOT NULL,
-        display_name TEXT NOT NULL,
-        legal_name TEXT,
-        description TEXT,
-        status TEXT NOT NULL DEFAULT 'active',
-        quality_score INTEGER NOT NULL DEFAULT 70,
-        trust_score INTEGER NOT NULL DEFAULT 70,
-        completion_rate REAL NOT NULL DEFAULT 0.85,
-        reliability_score INTEGER NOT NULL DEFAULT 75,
-        response_time_hours REAL NOT NULL DEFAULT 24,
-        satisfaction_score INTEGER NOT NULL DEFAULT 80,
-        incident_count INTEGER NOT NULL DEFAULT 0,
-        specialties_json TEXT NOT NULL DEFAULT '[]',
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (organization_id, partner_type)
-    );
+    id SERIAL PRIMARY KEY,
+    organization_id INTEGER NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+    partner_type TEXT NOT NULL,
+    display_name TEXT NOT NULL,
+    legal_name TEXT,
+    description TEXT,
+    status TEXT NOT NULL DEFAULT 'active',
+    quality_score INTEGER NOT NULL DEFAULT 70,
+    trust_score INTEGER NOT NULL DEFAULT 70,
+    completion_rate REAL NOT NULL DEFAULT 0.85,
+    reliability_score INTEGER NOT NULL DEFAULT 75,
+    response_time_hours REAL NOT NULL DEFAULT 24,
+    satisfaction_score INTEGER NOT NULL DEFAULT 80,
+    incident_count INTEGER NOT NULL DEFAULT 0,
+    specialties_json TEXT NOT NULL DEFAULT '[]',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (organization_id, partner_type)
+);
 
 CREATE TABLE IF NOT EXISTS partner_zones (
-        id SERIAL PRIMARY KEY,
-        partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
-        city TEXT,
-        region TEXT,
-        country TEXT NOT NULL DEFAULT 'Cameroon',
-        radius_km REAL,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
+    city TEXT,
+    region TEXT,
+    country TEXT NOT NULL DEFAULT 'Cameroon',
+    radius_km REAL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS partner_skills (
-        id SERIAL PRIMARY KEY,
-        partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
-        skill_key TEXT NOT NULL,
-        level TEXT NOT NULL DEFAULT 'standard',
-        created_at TEXT NOT NULL,
-        UNIQUE (partner_profile_id, skill_key)
-    );
+    id SERIAL PRIMARY KEY,
+    partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
+    skill_key TEXT NOT NULL,
+    level TEXT NOT NULL DEFAULT 'standard',
+    created_at TEXT NOT NULL,
+    UNIQUE (partner_profile_id, skill_key)
+);
 
 CREATE TABLE IF NOT EXISTS partner_certifications (
-        id SERIAL PRIMARY KEY,
-        partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
-        certification_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        valid_until TEXT,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
+    certification_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    valid_until TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS partner_availability (
-        id SERIAL PRIMARY KEY,
-        partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
-        status TEXT NOT NULL DEFAULT 'available',
-        schedule_json TEXT NOT NULL DEFAULT '{}',
-        updated_at TEXT NOT NULL,
-        UNIQUE (partner_profile_id)
-    );
+    id SERIAL PRIMARY KEY,
+    partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
+    status TEXT NOT NULL DEFAULT 'available',
+    schedule_json TEXT NOT NULL DEFAULT '{}',
+    updated_at TEXT NOT NULL,
+    UNIQUE (partner_profile_id)
+);
 
 CREATE TABLE IF NOT EXISTS partner_sla (
-        id SERIAL PRIMARY KEY,
-        partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
-        response_hours REAL NOT NULL DEFAULT 24,
-        completion_days INTEGER NOT NULL DEFAULT 14,
-        uptime_percent REAL NOT NULL DEFAULT 95,
-        created_at TEXT NOT NULL,
-        UNIQUE (partner_profile_id)
-    );
+    id SERIAL PRIMARY KEY,
+    partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
+    response_hours REAL NOT NULL DEFAULT 24,
+    completion_days INTEGER NOT NULL DEFAULT 14,
+    uptime_percent REAL NOT NULL DEFAULT 95,
+    created_at TEXT NOT NULL,
+    UNIQUE (partner_profile_id)
+);
 
 CREATE TABLE IF NOT EXISTS service_catalog (
-        id SERIAL PRIMARY KEY,
-        service_key TEXT NOT NULL UNIQUE,
-        category TEXT NOT NULL,
-        title TEXT NOT NULL,
-        description TEXT NOT NULL,
-        conditions TEXT,
-        indicative_price_min INTEGER,
-        indicative_price_max INTEGER,
-        currency TEXT NOT NULL DEFAULT 'XAF',
-        estimated_duration_days INTEGER NOT NULL DEFAULT 7,
-        documents_json TEXT NOT NULL DEFAULT '[]',
-        prerequisites_json TEXT NOT NULL DEFAULT '[]',
-        deliverables_json TEXT NOT NULL DEFAULT '[]',
-        status TEXT NOT NULL DEFAULT 'active',
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    service_key TEXT NOT NULL UNIQUE,
+    category TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    conditions TEXT,
+    indicative_price_min INTEGER,
+    indicative_price_max INTEGER,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    estimated_duration_days INTEGER NOT NULL DEFAULT 7,
+    documents_json TEXT NOT NULL DEFAULT '[]',
+    prerequisites_json TEXT NOT NULL DEFAULT '[]',
+    deliverables_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS service_catalog_partners (
-        id SERIAL PRIMARY KEY,
-        service_catalog_id INTEGER NOT NULL REFERENCES service_catalog(id) ON DELETE CASCADE,
-        partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
-        priority INTEGER NOT NULL DEFAULT 50,
-        created_at TEXT NOT NULL,
-        UNIQUE (service_catalog_id, partner_profile_id)
-    );
+    id SERIAL PRIMARY KEY,
+    service_catalog_id INTEGER NOT NULL REFERENCES service_catalog(id) ON DELETE CASCADE,
+    partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
+    priority INTEGER NOT NULL DEFAULT 50,
+    created_at TEXT NOT NULL,
+    UNIQUE (service_catalog_id, partner_profile_id)
+);
 
 CREATE TABLE IF NOT EXISTS project_match_results (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        match_type TEXT NOT NULL,
-        partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
-        service_catalog_id INTEGER REFERENCES service_catalog(id) ON DELETE SET NULL,
-        score INTEGER NOT NULL DEFAULT 50,
-        confidence INTEGER NOT NULL DEFAULT 50,
-        priority INTEGER NOT NULL DEFAULT 50,
-        rationale_json TEXT NOT NULL DEFAULT '[]',
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    match_type TEXT NOT NULL,
+    partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
+    service_catalog_id INTEGER REFERENCES service_catalog(id) ON DELETE SET NULL,
+    score INTEGER NOT NULL DEFAULT 50,
+    confidence INTEGER NOT NULL DEFAULT 50,
+    priority INTEGER NOT NULL DEFAULT 50,
+    rationale_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS service_orders (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        service_catalog_id INTEGER NOT NULL REFERENCES service_catalog(id) ON DELETE RESTRICT,
-        partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
-        status TEXT NOT NULL DEFAULT 'requested',
-        cost_estimate INTEGER,
-        currency TEXT NOT NULL DEFAULT 'XAF',
-        scheduled_at TEXT,
-        completed_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    service_catalog_id INTEGER NOT NULL REFERENCES service_catalog(id) ON DELETE RESTRICT,
+    partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'requested',
+    cost_estimate INTEGER,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    scheduled_at TEXT,
+    completed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS project_interventions (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
-        service_order_id INTEGER REFERENCES service_orders(id) ON DELETE SET NULL,
-        intervention_type TEXT NOT NULL DEFAULT 'service',
-        title TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'planned',
-        scheduled_at TEXT,
-        completed_at TEXT,
-        cost_actual INTEGER,
-        currency TEXT NOT NULL DEFAULT 'XAF',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
+    service_order_id INTEGER REFERENCES service_orders(id) ON DELETE SET NULL,
+    intervention_type TEXT NOT NULL DEFAULT 'service',
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'planned',
+    scheduled_at TEXT,
+    completed_at TEXT,
+    cost_actual INTEGER,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS workflows (
-        id SERIAL PRIMARY KEY,
-        workflow_key TEXT NOT NULL UNIQUE,
-        workflow_type TEXT NOT NULL,
-        title TEXT NOT NULL,
-        description TEXT,
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    workflow_key TEXT NOT NULL UNIQUE,
+    workflow_type TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS workflow_steps (
-        id SERIAL PRIMARY KEY,
-        workflow_id INTEGER NOT NULL REFERENCES workflows(id) ON DELETE CASCADE,
-        step_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        position INTEGER NOT NULL DEFAULT 0,
-        partner_type TEXT,
-        service_key TEXT,
-        depends_on_json TEXT NOT NULL DEFAULT '[]',
-        validation_rules_json TEXT NOT NULL DEFAULT '[]',
-        created_at TEXT NOT NULL,
-        UNIQUE (workflow_id, step_key)
-    );
+    id SERIAL PRIMARY KEY,
+    workflow_id INTEGER NOT NULL REFERENCES workflows(id) ON DELETE CASCADE,
+    step_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    position INTEGER NOT NULL DEFAULT 0,
+    partner_type TEXT,
+    service_key TEXT,
+    depends_on_json TEXT NOT NULL DEFAULT '[]',
+    validation_rules_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL,
+    UNIQUE (workflow_id, step_key)
+);
 
 CREATE TABLE IF NOT EXISTS workflow_instances (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        workflow_id INTEGER NOT NULL REFERENCES workflows(id) ON DELETE RESTRICT,
-        status TEXT NOT NULL DEFAULT 'active',
-        current_step_key TEXT,
-        started_at TEXT NOT NULL,
-        completed_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, workflow_id)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    workflow_id INTEGER NOT NULL REFERENCES workflows(id) ON DELETE RESTRICT,
+    status TEXT NOT NULL DEFAULT 'active',
+    current_step_key TEXT,
+    started_at TEXT NOT NULL,
+    completed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, workflow_id)
+);
 
 CREATE TABLE IF NOT EXISTS workflow_instance_steps (
-        id SERIAL PRIMARY KEY,
-        workflow_instance_id INTEGER NOT NULL REFERENCES workflow_instances(id) ON DELETE CASCADE,
-        step_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'pending',
-        partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
-        due_at TEXT,
-        completed_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (workflow_instance_id, step_key)
-    );
+    id SERIAL PRIMARY KEY,
+    workflow_instance_id INTEGER NOT NULL REFERENCES workflow_instances(id) ON DELETE CASCADE,
+    step_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
+    due_at TEXT,
+    completed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (workflow_instance_id, step_key)
+);
 
 CREATE TABLE IF NOT EXISTS ecosystem_events (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
-        user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-        event_type TEXT NOT NULL,
-        title TEXT NOT NULL,
-        payload_json TEXT NOT NULL DEFAULT '{}',
-        occurred_at TEXT NOT NULL,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    event_type TEXT NOT NULL,
+    title TEXT NOT NULL,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    occurred_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS ecosystem_notifications (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
-        event_id INTEGER REFERENCES ecosystem_events(id) ON DELETE SET NULL,
-        kind TEXT NOT NULL,
-        title TEXT NOT NULL,
-        body TEXT NOT NULL,
-        channel TEXT NOT NULL DEFAULT 'in_app',
-        status TEXT NOT NULL DEFAULT 'pending',
-        scheduled_at TEXT,
-        delivered_at TEXT,
-        payload_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    project_id INTEGER REFERENCES projects(id) ON DELETE CASCADE,
+    event_id INTEGER REFERENCES ecosystem_events(id) ON DELETE SET NULL,
+    kind TEXT NOT NULL,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    channel TEXT NOT NULL DEFAULT 'in_app',
+    status TEXT NOT NULL DEFAULT 'pending',
+    scheduled_at TEXT,
+    delivered_at TEXT,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS reputation_metrics (
-        id SERIAL PRIMARY KEY,
-        subject_type TEXT NOT NULL,
-        subject_id INTEGER NOT NULL,
-        trust_score INTEGER NOT NULL DEFAULT 70,
-        quality_score INTEGER NOT NULL DEFAULT 70,
-        completion_rate REAL NOT NULL DEFAULT 0.85,
-        reliability INTEGER NOT NULL DEFAULT 75,
-        avg_response_hours REAL NOT NULL DEFAULT 24,
-        satisfaction INTEGER NOT NULL DEFAULT 80,
-        incident_count INTEGER NOT NULL DEFAULT 0,
-        history_json TEXT NOT NULL DEFAULT '[]',
-        computed_at TEXT NOT NULL,
-        UNIQUE (subject_type, subject_id, computed_at)
-    );
+    id SERIAL PRIMARY KEY,
+    subject_type TEXT NOT NULL,
+    subject_id INTEGER NOT NULL,
+    trust_score INTEGER NOT NULL DEFAULT 70,
+    quality_score INTEGER NOT NULL DEFAULT 70,
+    completion_rate REAL NOT NULL DEFAULT 0.85,
+    reliability INTEGER NOT NULL DEFAULT 75,
+    avg_response_hours REAL NOT NULL DEFAULT 24,
+    satisfaction INTEGER NOT NULL DEFAULT 80,
+    incident_count INTEGER NOT NULL DEFAULT 0,
+    history_json TEXT NOT NULL DEFAULT '[]',
+    computed_at TEXT NOT NULL,
+    UNIQUE (subject_type, subject_id, computed_at)
+);
 
 CREATE TABLE IF NOT EXISTS project_ecosystem_state (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        orchestration_json TEXT NOT NULL DEFAULT '{}',
-        last_matched_at TEXT,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    orchestration_json TEXT NOT NULL DEFAULT '{}',
+    last_matched_at TEXT,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id)
+);
 
 CREATE INDEX IF NOT EXISTS idx_partner_profiles_type ON partner_profiles(partner_type, status);
 
@@ -792,188 +792,188 @@ CREATE INDEX IF NOT EXISTS idx_ecosystem_notifications_user ON ecosystem_notific
 CREATE INDEX IF NOT EXISTS idx_reputation_metrics_subject ON reputation_metrics(subject_type, subject_id, computed_at);
 
 CREATE TABLE IF NOT EXISTS knowledge_nodes (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        node_key TEXT NOT NULL,
-        node_type TEXT NOT NULL,
-        entity_type TEXT NOT NULL,
-        entity_id INTEGER,
-        title TEXT NOT NULL,
-        content_json TEXT NOT NULL DEFAULT '{}',
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, node_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    node_key TEXT NOT NULL,
+    node_type TEXT NOT NULL,
+    entity_type TEXT NOT NULL,
+    entity_id INTEGER,
+    title TEXT NOT NULL,
+    content_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, node_key)
+);
 
 CREATE TABLE IF NOT EXISTS knowledge_edges (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        source_node_id INTEGER NOT NULL REFERENCES knowledge_nodes(id) ON DELETE CASCADE,
-        target_node_id INTEGER NOT NULL REFERENCES knowledge_nodes(id) ON DELETE CASCADE,
-        edge_type TEXT NOT NULL,
-        weight INTEGER NOT NULL DEFAULT 50,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        UNIQUE (project_id, source_node_id, target_node_id, edge_type)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    source_node_id INTEGER NOT NULL REFERENCES knowledge_nodes(id) ON DELETE CASCADE,
+    target_node_id INTEGER NOT NULL REFERENCES knowledge_nodes(id) ON DELETE CASCADE,
+    edge_type TEXT NOT NULL,
+    weight INTEGER NOT NULL DEFAULT 50,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (project_id, source_node_id, target_node_id, edge_type)
+);
 
 CREATE TABLE IF NOT EXISTS knowledge_relations (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        relation_key TEXT NOT NULL,
-        subject_node_id INTEGER NOT NULL REFERENCES knowledge_nodes(id) ON DELETE CASCADE,
-        object_node_id INTEGER NOT NULL REFERENCES knowledge_nodes(id) ON DELETE CASCADE,
-        relation_type TEXT NOT NULL,
-        confidence INTEGER NOT NULL DEFAULT 50,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        UNIQUE (project_id, relation_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    relation_key TEXT NOT NULL,
+    subject_node_id INTEGER NOT NULL REFERENCES knowledge_nodes(id) ON DELETE CASCADE,
+    object_node_id INTEGER NOT NULL REFERENCES knowledge_nodes(id) ON DELETE CASCADE,
+    relation_type TEXT NOT NULL,
+    confidence INTEGER NOT NULL DEFAULT 50,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (project_id, relation_key)
+);
 
 CREATE TABLE IF NOT EXISTS knowledge_snapshots (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        snapshot_key TEXT NOT NULL,
-        graph_json TEXT NOT NULL DEFAULT '{}',
-        node_count INTEGER NOT NULL DEFAULT 0,
-        edge_count INTEGER NOT NULL DEFAULT 0,
-        relation_count INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT NOT NULL,
-        UNIQUE (project_id, snapshot_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    snapshot_key TEXT NOT NULL,
+    graph_json TEXT NOT NULL DEFAULT '{}',
+    node_count INTEGER NOT NULL DEFAULT 0,
+    edge_count INTEGER NOT NULL DEFAULT 0,
+    relation_count INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    UNIQUE (project_id, snapshot_key)
+);
 
 CREATE TABLE IF NOT EXISTS knowledge_inferences (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        inference_key TEXT NOT NULL,
-        premise_json TEXT NOT NULL DEFAULT '[]',
-        conclusion TEXT NOT NULL,
-        confidence INTEGER NOT NULL DEFAULT 50,
-        rule_key TEXT NOT NULL,
-        created_at TEXT NOT NULL,
-        UNIQUE (project_id, inference_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    inference_key TEXT NOT NULL,
+    premise_json TEXT NOT NULL DEFAULT '[]',
+    conclusion TEXT NOT NULL,
+    confidence INTEGER NOT NULL DEFAULT 50,
+    rule_key TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE (project_id, inference_key)
+);
 
 CREATE TABLE IF NOT EXISTS knowledge_history (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        node_id INTEGER REFERENCES knowledge_nodes(id) ON DELETE SET NULL,
-        change_type TEXT NOT NULL,
-        before_json TEXT NOT NULL DEFAULT '{}',
-        after_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    node_id INTEGER REFERENCES knowledge_nodes(id) ON DELETE SET NULL,
+    change_type TEXT NOT NULL,
+    before_json TEXT NOT NULL DEFAULT '{}',
+    after_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS cognition_decisions (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        decision_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'proposed',
-        reason TEXT NOT NULL,
-        confidence INTEGER NOT NULL DEFAULT 50,
-        priority TEXT NOT NULL DEFAULT 'normal',
-        alternatives_json TEXT NOT NULL DEFAULT '[]',
-        tradeoffs_json TEXT NOT NULL DEFAULT '[]',
-        explainability_json TEXT NOT NULL DEFAULT '{}',
-        next_action TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, decision_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    decision_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'proposed',
+    reason TEXT NOT NULL,
+    confidence INTEGER NOT NULL DEFAULT 50,
+    priority TEXT NOT NULL DEFAULT 'normal',
+    alternatives_json TEXT NOT NULL DEFAULT '[]',
+    tradeoffs_json TEXT NOT NULL DEFAULT '[]',
+    explainability_json TEXT NOT NULL DEFAULT '{}',
+    next_action TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, decision_key)
+);
 
 CREATE TABLE IF NOT EXISTS decision_evidences (
-        id SERIAL PRIMARY KEY,
-        decision_id INTEGER NOT NULL REFERENCES cognition_decisions(id) ON DELETE CASCADE,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        evidence_key TEXT NOT NULL,
-        label TEXT NOT NULL,
-        source_type TEXT NOT NULL,
-        source_id INTEGER,
-        weight INTEGER NOT NULL DEFAULT 50,
-        content_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    decision_id INTEGER NOT NULL REFERENCES cognition_decisions(id) ON DELETE CASCADE,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    evidence_key TEXT NOT NULL,
+    label TEXT NOT NULL,
+    source_type TEXT NOT NULL,
+    source_id INTEGER,
+    weight INTEGER NOT NULL DEFAULT 50,
+    content_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS decision_histories (
-        id SERIAL PRIMARY KEY,
-        decision_id INTEGER NOT NULL REFERENCES cognition_decisions(id) ON DELETE CASCADE,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        from_status TEXT,
-        to_status TEXT NOT NULL,
-        note TEXT,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    decision_id INTEGER NOT NULL REFERENCES cognition_decisions(id) ON DELETE CASCADE,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    from_status TEXT,
+    to_status TEXT NOT NULL,
+    note TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS simulation_runs (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        scenario_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        input_json TEXT NOT NULL DEFAULT '{}',
-        output_json TEXT NOT NULL DEFAULT '{}',
-        impacts_json TEXT NOT NULL DEFAULT '{}',
-        status TEXT NOT NULL DEFAULT 'completed',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    scenario_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    input_json TEXT NOT NULL DEFAULT '{}',
+    output_json TEXT NOT NULL DEFAULT '{}',
+    impacts_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'completed',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS reasoning_traces (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        trace_key TEXT NOT NULL,
-        rules_fired_json TEXT NOT NULL DEFAULT '[]',
-        conclusions_json TEXT NOT NULL DEFAULT '[]',
-        merged_priority_json TEXT NOT NULL DEFAULT '[]',
-        created_at TEXT NOT NULL,
-        UNIQUE (project_id, trace_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    trace_key TEXT NOT NULL,
+    rules_fired_json TEXT NOT NULL DEFAULT '[]',
+    conclusions_json TEXT NOT NULL DEFAULT '[]',
+    merged_priority_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL,
+    UNIQUE (project_id, trace_key)
+);
 
 CREATE TABLE IF NOT EXISTS next_best_actions (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        action_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        score INTEGER NOT NULL DEFAULT 50,
-        confidence INTEGER NOT NULL DEFAULT 50,
-        justification TEXT NOT NULL,
-        explanation_json TEXT NOT NULL DEFAULT '{}',
-        factors_json TEXT NOT NULL DEFAULT '[]',
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, action_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    action_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    score INTEGER NOT NULL DEFAULT 50,
+    confidence INTEGER NOT NULL DEFAULT 50,
+    justification TEXT NOT NULL,
+    explanation_json TEXT NOT NULL DEFAULT '{}',
+    factors_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, action_key)
+);
 
 CREATE TABLE IF NOT EXISTS risk_intelligence_scores (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        risk_key TEXT NOT NULL,
-        severity TEXT NOT NULL DEFAULT 'medium',
-        likelihood TEXT NOT NULL DEFAULT 'medium',
-        score INTEGER NOT NULL DEFAULT 50,
-        mitigation_json TEXT NOT NULL DEFAULT '[]',
-        computed_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    risk_key TEXT NOT NULL,
+    severity TEXT NOT NULL DEFAULT 'medium',
+    likelihood TEXT NOT NULL DEFAULT 'medium',
+    score INTEGER NOT NULL DEFAULT 50,
+    mitigation_json TEXT NOT NULL DEFAULT '[]',
+    computed_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS opportunity_intelligence_scores (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        opportunity_key TEXT NOT NULL,
-        value_score INTEGER NOT NULL DEFAULT 50,
-        opportunity_score INTEGER NOT NULL DEFAULT 50,
-        description TEXT NOT NULL,
-        computed_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    opportunity_key TEXT NOT NULL,
+    value_score INTEGER NOT NULL DEFAULT 50,
+    opportunity_score INTEGER NOT NULL DEFAULT 50,
+    description TEXT NOT NULL,
+    computed_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS intelligence_snapshots (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        snapshot_key TEXT NOT NULL,
-        payload_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        UNIQUE (project_id, snapshot_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    snapshot_key TEXT NOT NULL,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (project_id, snapshot_key)
+);
 
 CREATE INDEX IF NOT EXISTS idx_knowledge_nodes_project ON knowledge_nodes(project_id, node_type);
 
@@ -988,129 +988,129 @@ CREATE INDEX IF NOT EXISTS idx_simulation_runs_project ON simulation_runs(projec
 CREATE INDEX IF NOT EXISTS idx_reasoning_traces_project ON reasoning_traces(project_id, created_at);
 
 CREATE TABLE IF NOT EXISTS assistant_agents (
-        id SERIAL PRIMARY KEY,
-        agent_key TEXT NOT NULL UNIQUE,
-        title TEXT NOT NULL,
-        description TEXT NOT NULL DEFAULT '',
-        capabilities_json TEXT NOT NULL DEFAULT '[]',
-        prompt_key TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    agent_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    capabilities_json TEXT NOT NULL DEFAULT '[]',
+    prompt_key TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS assistant_prompt_versions (
-        id SERIAL PRIMARY KEY,
-        prompt_key TEXT NOT NULL,
-        version TEXT NOT NULL,
-        content TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'active',
-        created_at TEXT NOT NULL,
-        UNIQUE (prompt_key, version)
-    );
+    id SERIAL PRIMARY KEY,
+    prompt_key TEXT NOT NULL,
+    version TEXT NOT NULL,
+    content TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL,
+    UNIQUE (prompt_key, version)
+);
 
 CREATE TABLE IF NOT EXISTS assistant_sessions (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        session_key TEXT NOT NULL,
-        agent_key TEXT NOT NULL DEFAULT 'project_advisor',
-        status TEXT NOT NULL DEFAULT 'active',
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, session_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    session_key TEXT NOT NULL,
+    agent_key TEXT NOT NULL DEFAULT 'project_advisor',
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, session_key)
+);
 
 CREATE TABLE IF NOT EXISTS assistant_messages (
-        id SERIAL PRIMARY KEY,
-        session_id INTEGER NOT NULL REFERENCES assistant_sessions(id) ON DELETE CASCADE,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        message_key TEXT NOT NULL,
-        role TEXT NOT NULL,
-        content TEXT NOT NULL,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        UNIQUE (session_id, message_key)
-    );
+    id SERIAL PRIMARY KEY,
+    session_id INTEGER NOT NULL REFERENCES assistant_sessions(id) ON DELETE CASCADE,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    message_key TEXT NOT NULL,
+    role TEXT NOT NULL,
+    content TEXT NOT NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (session_id, message_key)
+);
 
 CREATE TABLE IF NOT EXISTS assistant_context_snapshots (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
-        snapshot_key TEXT NOT NULL,
-        context_json TEXT NOT NULL DEFAULT '{}',
-        sources_json TEXT NOT NULL DEFAULT '[]',
-        created_at TEXT NOT NULL,
-        UNIQUE (project_id, snapshot_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
+    snapshot_key TEXT NOT NULL,
+    context_json TEXT NOT NULL DEFAULT '{}',
+    sources_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL,
+    UNIQUE (project_id, snapshot_key)
+);
 
 CREATE TABLE IF NOT EXISTS assistant_rag_documents (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        document_key TEXT NOT NULL,
-        source_type TEXT NOT NULL,
-        title TEXT NOT NULL,
-        content_text TEXT NOT NULL,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, document_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    document_key TEXT NOT NULL,
+    source_type TEXT NOT NULL,
+    title TEXT NOT NULL,
+    content_text TEXT NOT NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, document_key)
+);
 
 CREATE TABLE IF NOT EXISTS assistant_rag_chunks (
-        id SERIAL PRIMARY KEY,
-        document_id INTEGER NOT NULL REFERENCES assistant_rag_documents(id) ON DELETE CASCADE,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        chunk_key TEXT NOT NULL,
-        content TEXT NOT NULL,
-        token_estimate INTEGER NOT NULL DEFAULT 0,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        UNIQUE (project_id, chunk_key)
-    );
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES assistant_rag_documents(id) ON DELETE CASCADE,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    chunk_key TEXT NOT NULL,
+    content TEXT NOT NULL,
+    token_estimate INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (project_id, chunk_key)
+);
 
 CREATE TABLE IF NOT EXISTS assistant_rag_retrievals (
-        id SERIAL PRIMARY KEY,
-        session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        query_text TEXT NOT NULL,
-        chunks_json TEXT NOT NULL DEFAULT '[]',
-        score INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    query_text TEXT NOT NULL,
+    chunks_json TEXT NOT NULL DEFAULT '[]',
+    score INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS assistant_turns (
-        id SERIAL PRIMARY KEY,
-        session_id INTEGER NOT NULL REFERENCES assistant_sessions(id) ON DELETE CASCADE,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        user_message_id INTEGER REFERENCES assistant_messages(id) ON DELETE SET NULL,
-        assistant_message_id INTEGER REFERENCES assistant_messages(id) ON DELETE SET NULL,
-        agent_key TEXT NOT NULL,
-        mode TEXT NOT NULL DEFAULT 'deterministic',
-        provider TEXT NOT NULL DEFAULT 'deterministic',
-        fallback_used INTEGER NOT NULL DEFAULT 1,
-        routing_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    session_id INTEGER NOT NULL REFERENCES assistant_sessions(id) ON DELETE CASCADE,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    user_message_id INTEGER REFERENCES assistant_messages(id) ON DELETE SET NULL,
+    assistant_message_id INTEGER REFERENCES assistant_messages(id) ON DELETE SET NULL,
+    agent_key TEXT NOT NULL,
+    mode TEXT NOT NULL DEFAULT 'deterministic',
+    provider TEXT NOT NULL DEFAULT 'deterministic',
+    fallback_used INTEGER NOT NULL DEFAULT 1,
+    routing_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS assistant_memory_summaries (
-        id SERIAL PRIMARY KEY,
-        session_id INTEGER NOT NULL REFERENCES assistant_sessions(id) ON DELETE CASCADE,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        summary_text TEXT NOT NULL,
-        message_count INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    session_id INTEGER NOT NULL REFERENCES assistant_sessions(id) ON DELETE CASCADE,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    summary_text TEXT NOT NULL,
+    message_count INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS assistant_agent_assignments (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
-        agent_key TEXT NOT NULL,
-        assigned_at TEXT NOT NULL,
-        UNIQUE (project_id, session_id, agent_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
+    agent_key TEXT NOT NULL,
+    assigned_at TEXT NOT NULL,
+    UNIQUE (project_id, session_id, agent_key)
+);
 
 CREATE INDEX IF NOT EXISTS idx_assistant_sessions_project ON assistant_sessions(project_id, user_id, status);
 
@@ -1123,259 +1123,259 @@ CREATE INDEX IF NOT EXISTS idx_assistant_rag_chunks_project ON assistant_rag_chu
 CREATE INDEX IF NOT EXISTS idx_assistant_turns_session ON assistant_turns(session_id, created_at);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_collections (
-        id SERIAL PRIMARY KEY,
-        collection_key TEXT NOT NULL UNIQUE,
-        title TEXT NOT NULL,
-        domain TEXT NOT NULL,
-        description TEXT NOT NULL DEFAULT '',
-        status TEXT NOT NULL DEFAULT 'active',
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    collection_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    domain TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_sources (
-        id SERIAL PRIMARY KEY,
-        source_key TEXT NOT NULL UNIQUE,
-        title TEXT NOT NULL,
-        source_type TEXT NOT NULL,
-        url TEXT,
-        publisher TEXT,
-        trust_score INTEGER NOT NULL DEFAULT 70,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    source_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    source_type TEXT NOT NULL,
+    url TEXT,
+    publisher TEXT,
+    trust_score INTEGER NOT NULL DEFAULT 70,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_categories (
-        id SERIAL PRIMARY KEY,
-        category_key TEXT NOT NULL UNIQUE,
-        domain TEXT NOT NULL,
-        title TEXT NOT NULL,
-        parent_key TEXT,
-        description TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    category_key TEXT NOT NULL UNIQUE,
+    domain TEXT NOT NULL,
+    title TEXT NOT NULL,
+    parent_key TEXT,
+    description TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_tags (
-        id SERIAL PRIMARY KEY,
-        tag_key TEXT NOT NULL UNIQUE,
-        label TEXT NOT NULL,
-        domain TEXT NOT NULL,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    tag_key TEXT NOT NULL UNIQUE,
+    label TEXT NOT NULL,
+    domain TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_documents (
-        id SERIAL PRIMARY KEY,
-        collection_id INTEGER NOT NULL REFERENCES expert_knowledge_collections(id) ON DELETE CASCADE,
-        source_id INTEGER REFERENCES expert_knowledge_sources(id) ON DELETE SET NULL,
-        document_key TEXT NOT NULL UNIQUE,
-        title TEXT NOT NULL,
-        format TEXT NOT NULL DEFAULT 'markdown',
-        status TEXT NOT NULL DEFAULT 'draft',
-        author TEXT,
-        current_version_id INTEGER,
-        category_key TEXT,
-        tags_json TEXT NOT NULL DEFAULT '[]',
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    collection_id INTEGER NOT NULL REFERENCES expert_knowledge_collections(id) ON DELETE CASCADE,
+    source_id INTEGER REFERENCES expert_knowledge_sources(id) ON DELETE SET NULL,
+    document_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    format TEXT NOT NULL DEFAULT 'markdown',
+    status TEXT NOT NULL DEFAULT 'draft',
+    author TEXT,
+    current_version_id INTEGER,
+    category_key TEXT,
+    tags_json TEXT NOT NULL DEFAULT '[]',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_versions (
-        id SERIAL PRIMARY KEY,
-        document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        version_key TEXT NOT NULL,
-        version_number INTEGER NOT NULL DEFAULT 1,
-        content_hash TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'draft',
-        change_note TEXT,
-        content_text TEXT NOT NULL,
-        created_at TEXT NOT NULL,
-        UNIQUE (document_id, version_number)
-    );
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    version_key TEXT NOT NULL,
+    version_number INTEGER NOT NULL DEFAULT 1,
+    content_hash TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'draft',
+    change_note TEXT,
+    content_text TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE (document_id, version_number)
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_articles (
-        id SERIAL PRIMARY KEY,
-        document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        article_key TEXT NOT NULL UNIQUE,
-        title TEXT NOT NULL,
-        slug TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'draft',
-        summary TEXT NOT NULL DEFAULT '',
-        body_format TEXT NOT NULL DEFAULT 'markdown',
-        published_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    article_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    slug TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'draft',
+    summary TEXT NOT NULL DEFAULT '',
+    body_format TEXT NOT NULL DEFAULT 'markdown',
+    published_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_sections (
-        id SERIAL PRIMARY KEY,
-        article_id INTEGER NOT NULL REFERENCES expert_knowledge_articles(id) ON DELETE CASCADE,
-        section_key TEXT NOT NULL,
-        title TEXT NOT NULL,
-        position INTEGER NOT NULL DEFAULT 0,
-        content TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL,
-        UNIQUE (article_id, section_key)
-    );
+    id SERIAL PRIMARY KEY,
+    article_id INTEGER NOT NULL REFERENCES expert_knowledge_articles(id) ON DELETE CASCADE,
+    section_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    position INTEGER NOT NULL DEFAULT 0,
+    content TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    UNIQUE (article_id, section_key)
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_paragraphs (
-        id SERIAL PRIMARY KEY,
-        section_id INTEGER NOT NULL REFERENCES expert_knowledge_sections(id) ON DELETE CASCADE,
-        paragraph_key TEXT NOT NULL,
-        position INTEGER NOT NULL DEFAULT 0,
-        content TEXT NOT NULL,
-        created_at TEXT NOT NULL,
-        UNIQUE (section_id, paragraph_key)
-    );
+    id SERIAL PRIMARY KEY,
+    section_id INTEGER NOT NULL REFERENCES expert_knowledge_sections(id) ON DELETE CASCADE,
+    paragraph_key TEXT NOT NULL,
+    position INTEGER NOT NULL DEFAULT 0,
+    content TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE (section_id, paragraph_key)
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_chunks (
-        id SERIAL PRIMARY KEY,
-        document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        article_id INTEGER REFERENCES expert_knowledge_articles(id) ON DELETE SET NULL,
-        chunk_key TEXT NOT NULL UNIQUE,
-        content TEXT NOT NULL,
-        token_estimate INTEGER NOT NULL DEFAULT 0,
-        index_lexical TEXT NOT NULL DEFAULT '',
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        freshness_score INTEGER NOT NULL DEFAULT 80,
-        confidence_score INTEGER NOT NULL DEFAULT 75,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    article_id INTEGER REFERENCES expert_knowledge_articles(id) ON DELETE SET NULL,
+    chunk_key TEXT NOT NULL UNIQUE,
+    content TEXT NOT NULL,
+    token_estimate INTEGER NOT NULL DEFAULT 0,
+    index_lexical TEXT NOT NULL DEFAULT '',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    freshness_score INTEGER NOT NULL DEFAULT 80,
+    confidence_score INTEGER NOT NULL DEFAULT 75,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_citations (
-        id SERIAL PRIMARY KEY,
-        chunk_id INTEGER NOT NULL REFERENCES expert_knowledge_chunks(id) ON DELETE CASCADE,
-        citation_key TEXT NOT NULL,
-        label TEXT NOT NULL,
-        source_ref TEXT,
-        page TEXT,
-        quote TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL,
-        UNIQUE (chunk_id, citation_key)
-    );
+    id SERIAL PRIMARY KEY,
+    chunk_id INTEGER NOT NULL REFERENCES expert_knowledge_chunks(id) ON DELETE CASCADE,
+    citation_key TEXT NOT NULL,
+    label TEXT NOT NULL,
+    source_ref TEXT,
+    page TEXT,
+    quote TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    UNIQUE (chunk_id, citation_key)
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_attachments (
-        id SERIAL PRIMARY KEY,
-        document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        attachment_key TEXT NOT NULL,
-        filename TEXT NOT NULL,
-        mime_type TEXT NOT NULL,
-        size_bytes INTEGER NOT NULL DEFAULT 0,
-        storage_path TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL,
-        UNIQUE (document_id, attachment_key)
-    );
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    attachment_key TEXT NOT NULL,
+    filename TEXT NOT NULL,
+    mime_type TEXT NOT NULL,
+    size_bytes INTEGER NOT NULL DEFAULT 0,
+    storage_path TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    UNIQUE (document_id, attachment_key)
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_references (
-        id SERIAL PRIMARY KEY,
-        from_document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        to_document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        reference_type TEXT NOT NULL DEFAULT 'references',
-        label TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    from_document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    to_document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    reference_type TEXT NOT NULL DEFAULT 'references',
+    label TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_embeddings (
-        id SERIAL PRIMARY KEY,
-        chunk_id INTEGER NOT NULL REFERENCES expert_knowledge_chunks(id) ON DELETE CASCADE,
-        model_key TEXT NOT NULL DEFAULT 'lawim-deterministic-v1',
-        vector_json TEXT NOT NULL DEFAULT '[]',
-        dimensions INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT NOT NULL,
-        UNIQUE (chunk_id, model_key)
-    );
+    id SERIAL PRIMARY KEY,
+    chunk_id INTEGER NOT NULL REFERENCES expert_knowledge_chunks(id) ON DELETE CASCADE,
+    model_key TEXT NOT NULL DEFAULT 'lawim-deterministic-v1',
+    vector_json TEXT NOT NULL DEFAULT '[]',
+    dimensions INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    UNIQUE (chunk_id, model_key)
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_indexes (
-        id SERIAL PRIMARY KEY,
-        document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        index_key TEXT NOT NULL,
-        index_type TEXT NOT NULL DEFAULT 'lexical',
-        status TEXT NOT NULL DEFAULT 'active',
-        token_count INTEGER NOT NULL DEFAULT 0,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (document_id, index_key)
-    );
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    index_key TEXT NOT NULL,
+    index_type TEXT NOT NULL DEFAULT 'lexical',
+    status TEXT NOT NULL DEFAULT 'active',
+    token_count INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (document_id, index_key)
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_relationships (
-        id SERIAL PRIMARY KEY,
-        subject_type TEXT NOT NULL,
-        subject_id INTEGER NOT NULL,
-        object_type TEXT NOT NULL,
-        object_id INTEGER NOT NULL,
-        relation_type TEXT NOT NULL,
-        confidence INTEGER NOT NULL DEFAULT 50,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    subject_type TEXT NOT NULL,
+    subject_id INTEGER NOT NULL,
+    object_type TEXT NOT NULL,
+    object_id INTEGER NOT NULL,
+    relation_type TEXT NOT NULL,
+    confidence INTEGER NOT NULL DEFAULT 50,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_feedback (
-        id SERIAL PRIMARY KEY,
-        article_id INTEGER NOT NULL REFERENCES expert_knowledge_articles(id) ON DELETE CASCADE,
-        user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-        rating INTEGER NOT NULL DEFAULT 3,
-        comment TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    article_id INTEGER NOT NULL REFERENCES expert_knowledge_articles(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    rating INTEGER NOT NULL DEFAULT 3,
+    comment TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_reviews (
-        id SERIAL PRIMARY KEY,
-        document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        reviewer_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-        status TEXT NOT NULL DEFAULT 'pending',
-        note TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    reviewer_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    note TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_approvals (
-        id SERIAL PRIMARY KEY,
-        document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        approver_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-        status TEXT NOT NULL DEFAULT 'pending',
-        note TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    approver_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    note TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_publications (
-        id SERIAL PRIMARY KEY,
-        document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
-        publication_key TEXT NOT NULL UNIQUE,
-        status TEXT NOT NULL DEFAULT 'draft',
-        published_at TEXT,
-        unpublished_at TEXT,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    document_id INTEGER NOT NULL REFERENCES expert_knowledge_documents(id) ON DELETE CASCADE,
+    publication_key TEXT NOT NULL UNIQUE,
+    status TEXT NOT NULL DEFAULT 'draft',
+    published_at TEXT,
+    unpublished_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_imports (
-        id SERIAL PRIMARY KEY,
-        import_key TEXT NOT NULL UNIQUE,
-        format TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'completed',
-        source_filename TEXT,
-        records_count INTEGER NOT NULL DEFAULT 0,
-        error_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    import_key TEXT NOT NULL UNIQUE,
+    format TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'completed',
+    source_filename TEXT,
+    records_count INTEGER NOT NULL DEFAULT 0,
+    error_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_exports (
-        id SERIAL PRIMARY KEY,
-        export_key TEXT NOT NULL UNIQUE,
-        format TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'completed',
-        destination TEXT NOT NULL DEFAULT '',
-        records_count INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    export_key TEXT NOT NULL UNIQUE,
+    format TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'completed',
+    destination TEXT NOT NULL DEFAULT '',
+    records_count INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS expert_knowledge_snapshots (
-        id SERIAL PRIMARY KEY,
-        snapshot_key TEXT NOT NULL UNIQUE,
-        scope TEXT NOT NULL DEFAULT 'global',
-        payload_json TEXT NOT NULL DEFAULT '{}',
-        record_count INTEGER NOT NULL DEFAULT 0,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    snapshot_key TEXT NOT NULL UNIQUE,
+    scope TEXT NOT NULL DEFAULT 'global',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    record_count INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_expert_knowledge_documents_collection ON expert_knowledge_documents(collection_id, status);
 
@@ -1388,280 +1388,280 @@ CREATE INDEX IF NOT EXISTS idx_expert_knowledge_chunks_lexical ON expert_knowled
 CREATE INDEX IF NOT EXISTS idx_expert_knowledge_categories_domain ON expert_knowledge_categories(domain, category_key);
 
 CREATE TABLE IF NOT EXISTS automation_workflow_definitions (
-            id SERIAL PRIMARY KEY,
-            workflow_key TEXT NOT NULL UNIQUE,
-            domain TEXT NOT NULL,
-            process_key TEXT NOT NULL,
-            title TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            version INTEGER NOT NULL DEFAULT 1,
-            status TEXT NOT NULL DEFAULT 'draft',
-            definition_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    workflow_key TEXT NOT NULL UNIQUE,
+    domain TEXT NOT NULL,
+    process_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    version INTEGER NOT NULL DEFAULT 1,
+    status TEXT NOT NULL DEFAULT 'draft',
+    definition_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_templates (
-            id SERIAL PRIMARY KEY,
-            template_key TEXT NOT NULL UNIQUE,
-            workflow_key TEXT NOT NULL,
-            title TEXT NOT NULL,
-            domain TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'active',
-            steps_json TEXT NOT NULL DEFAULT '[]',
-            variables_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    template_key TEXT NOT NULL UNIQUE,
+    workflow_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    domain TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active',
+    steps_json TEXT NOT NULL DEFAULT '[]',
+    variables_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_process_instances (
-            id SERIAL PRIMARY KEY,
-            instance_key TEXT NOT NULL UNIQUE,
-            workflow_key TEXT NOT NULL,
-            project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
-            current_state_key TEXT NOT NULL DEFAULT 'start',
-            status TEXT NOT NULL DEFAULT 'pending',
-            context_json TEXT NOT NULL DEFAULT '{}',
-            priority TEXT NOT NULL DEFAULT 'normal',
-            started_at TEXT,
-            completed_at TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    instance_key TEXT NOT NULL UNIQUE,
+    workflow_key TEXT NOT NULL,
+    project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
+    current_state_key TEXT NOT NULL DEFAULT 'start',
+    status TEXT NOT NULL DEFAULT 'pending',
+    context_json TEXT NOT NULL DEFAULT '{}',
+    priority TEXT NOT NULL DEFAULT 'normal',
+    started_at TEXT,
+    completed_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_executions (
-            id SERIAL PRIMARY KEY,
-            execution_key TEXT NOT NULL UNIQUE,
-            instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
-            workflow_key TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'pending',
-            current_step_key TEXT,
-            attempt INTEGER NOT NULL DEFAULT 1,
-            error_message TEXT,
-            context_json TEXT NOT NULL DEFAULT '{}',
-            started_at TEXT,
-            finished_at TEXT,
-            duration_ms INTEGER NOT NULL DEFAULT 0,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    execution_key TEXT NOT NULL UNIQUE,
+    instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
+    workflow_key TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    current_step_key TEXT,
+    attempt INTEGER NOT NULL DEFAULT 1,
+    error_message TEXT,
+    context_json TEXT NOT NULL DEFAULT '{}',
+    started_at TEXT,
+    finished_at TEXT,
+    duration_ms INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_states (
-            id SERIAL PRIMARY KEY,
-            workflow_key TEXT NOT NULL,
-            state_key TEXT NOT NULL,
-            title TEXT NOT NULL,
-            state_type TEXT NOT NULL DEFAULT 'task',
-            is_terminal INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            UNIQUE (workflow_key, state_key)
-        );
+    id SERIAL PRIMARY KEY,
+    workflow_key TEXT NOT NULL,
+    state_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    state_type TEXT NOT NULL DEFAULT 'task',
+    is_terminal INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (workflow_key, state_key)
+);
 
 CREATE TABLE IF NOT EXISTS automation_transitions (
-            id SERIAL PRIMARY KEY,
-            workflow_key TEXT NOT NULL,
-            transition_key TEXT NOT NULL,
-            from_state_key TEXT NOT NULL,
-            to_state_key TEXT NOT NULL,
-            condition_json TEXT NOT NULL DEFAULT '{}',
-            priority INTEGER NOT NULL DEFAULT 0,
-            created_at TEXT NOT NULL,
-            UNIQUE (workflow_key, transition_key)
-        );
+    id SERIAL PRIMARY KEY,
+    workflow_key TEXT NOT NULL,
+    transition_key TEXT NOT NULL,
+    from_state_key TEXT NOT NULL,
+    to_state_key TEXT NOT NULL,
+    condition_json TEXT NOT NULL DEFAULT '{}',
+    priority INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    UNIQUE (workflow_key, transition_key)
+);
 
 CREATE TABLE IF NOT EXISTS automation_tasks (
-            id SERIAL PRIMARY KEY,
-            task_key TEXT NOT NULL UNIQUE,
-            instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
-            execution_id INTEGER REFERENCES automation_executions(id) ON DELETE SET NULL,
-            title TEXT NOT NULL,
-            task_type TEXT NOT NULL DEFAULT 'human',
-            status TEXT NOT NULL DEFAULT 'pending',
-            assignee_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            priority TEXT NOT NULL DEFAULT 'normal',
-            due_at TEXT,
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            result_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL,
-            completed_at TEXT
-        );
+    id SERIAL PRIMARY KEY,
+    task_key TEXT NOT NULL UNIQUE,
+    instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
+    execution_id INTEGER REFERENCES automation_executions(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    task_type TEXT NOT NULL DEFAULT 'human',
+    status TEXT NOT NULL DEFAULT 'pending',
+    assignee_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    priority TEXT NOT NULL DEFAULT 'normal',
+    due_at TEXT,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    completed_at TEXT
+);
 
 CREATE TABLE IF NOT EXISTS automation_queues (
-            id SERIAL PRIMARY KEY,
-            queue_key TEXT NOT NULL UNIQUE,
-            title TEXT NOT NULL,
-            domain TEXT NOT NULL DEFAULT 'general',
-            status TEXT NOT NULL DEFAULT 'active',
-            capacity INTEGER NOT NULL DEFAULT 500,
-            depth INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    queue_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    domain TEXT NOT NULL DEFAULT 'general',
+    status TEXT NOT NULL DEFAULT 'active',
+    capacity INTEGER NOT NULL DEFAULT 500,
+    depth INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_queue_items (
-            id SERIAL PRIMARY KEY,
-            queue_key TEXT NOT NULL REFERENCES automation_queues(queue_key) ON DELETE CASCADE,
-            item_key TEXT NOT NULL UNIQUE,
-            priority TEXT NOT NULL DEFAULT 'normal',
-            status TEXT NOT NULL DEFAULT 'queued',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            attempts INTEGER NOT NULL DEFAULT 0,
-            scheduled_at TEXT,
-            processed_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    queue_key TEXT NOT NULL REFERENCES automation_queues(queue_key) ON DELETE CASCADE,
+    item_key TEXT NOT NULL UNIQUE,
+    priority TEXT NOT NULL DEFAULT 'normal',
+    status TEXT NOT NULL DEFAULT 'queued',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    attempts INTEGER NOT NULL DEFAULT 0,
+    scheduled_at TEXT,
+    processed_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_events (
-            id SERIAL PRIMARY KEY,
-            event_key TEXT NOT NULL UNIQUE,
-            instance_id INTEGER REFERENCES automation_process_instances(id) ON DELETE SET NULL,
-            event_type TEXT NOT NULL,
-            source TEXT NOT NULL DEFAULT 'engine',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    event_key TEXT NOT NULL UNIQUE,
+    instance_id INTEGER REFERENCES automation_process_instances(id) ON DELETE SET NULL,
+    event_type TEXT NOT NULL,
+    source TEXT NOT NULL DEFAULT 'engine',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_schedules (
-            id SERIAL PRIMARY KEY,
-            schedule_key TEXT NOT NULL UNIQUE,
-            workflow_key TEXT NOT NULL,
-            cron_expr TEXT NOT NULL DEFAULT '@daily',
-            status TEXT NOT NULL DEFAULT 'active',
-            next_run_at TEXT,
-            last_run_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    schedule_key TEXT NOT NULL UNIQUE,
+    workflow_key TEXT NOT NULL,
+    cron_expr TEXT NOT NULL DEFAULT '@daily',
+    status TEXT NOT NULL DEFAULT 'active',
+    next_run_at TEXT,
+    last_run_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_timers (
-            id SERIAL PRIMARY KEY,
-            timer_key TEXT NOT NULL UNIQUE,
-            instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
-            fire_at TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'pending',
-            action_json TEXT NOT NULL DEFAULT '{}',
-            fired_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    timer_key TEXT NOT NULL UNIQUE,
+    instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
+    fire_at TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    action_json TEXT NOT NULL DEFAULT '{}',
+    fired_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_retries (
-            id SERIAL PRIMARY KEY,
-            execution_id INTEGER NOT NULL REFERENCES automation_executions(id) ON DELETE CASCADE,
-            attempt INTEGER NOT NULL DEFAULT 1,
-            status TEXT NOT NULL DEFAULT 'pending',
-            backoff_seconds INTEGER NOT NULL DEFAULT 60,
-            error_message TEXT,
-            scheduled_at TEXT NOT NULL,
-            executed_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    execution_id INTEGER NOT NULL REFERENCES automation_executions(id) ON DELETE CASCADE,
+    attempt INTEGER NOT NULL DEFAULT 1,
+    status TEXT NOT NULL DEFAULT 'pending',
+    backoff_seconds INTEGER NOT NULL DEFAULT 60,
+    error_message TEXT,
+    scheduled_at TEXT NOT NULL,
+    executed_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_escalations (
-            id SERIAL PRIMARY KEY,
-            escalation_key TEXT NOT NULL UNIQUE,
-            instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
-            task_id INTEGER REFERENCES automation_tasks(id) ON DELETE SET NULL,
-            level INTEGER NOT NULL DEFAULT 1,
-            reason TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'open',
-            escalated_to_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            created_at TEXT NOT NULL,
-            resolved_at TEXT
-        );
+    id SERIAL PRIMARY KEY,
+    escalation_key TEXT NOT NULL UNIQUE,
+    instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
+    task_id INTEGER REFERENCES automation_tasks(id) ON DELETE SET NULL,
+    level INTEGER NOT NULL DEFAULT 1,
+    reason TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'open',
+    escalated_to_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL,
+    resolved_at TEXT
+);
 
 CREATE TABLE IF NOT EXISTS automation_approvals (
-            id SERIAL PRIMARY KEY,
-            approval_key TEXT NOT NULL UNIQUE,
-            instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
-            level INTEGER NOT NULL DEFAULT 1,
-            approver_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            status TEXT NOT NULL DEFAULT 'pending',
-            note TEXT NOT NULL DEFAULT '',
-            decided_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    approval_key TEXT NOT NULL UNIQUE,
+    instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
+    level INTEGER NOT NULL DEFAULT 1,
+    approver_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    note TEXT NOT NULL DEFAULT '',
+    decided_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_rules (
-            id SERIAL PRIMARY KEY,
-            rule_key TEXT NOT NULL UNIQUE,
-            workflow_key TEXT,
-            title TEXT NOT NULL,
-            domain TEXT NOT NULL DEFAULT 'general',
-            expression TEXT NOT NULL DEFAULT '',
-            action_json TEXT NOT NULL DEFAULT '{}',
-            priority INTEGER NOT NULL DEFAULT 0,
-            status TEXT NOT NULL DEFAULT 'active',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    rule_key TEXT NOT NULL UNIQUE,
+    workflow_key TEXT,
+    title TEXT NOT NULL,
+    domain TEXT NOT NULL DEFAULT 'general',
+    expression TEXT NOT NULL DEFAULT '',
+    action_json TEXT NOT NULL DEFAULT '{}',
+    priority INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_rule_bindings (
-            id SERIAL PRIMARY KEY,
-            rule_key TEXT NOT NULL REFERENCES automation_rules(rule_key) ON DELETE CASCADE,
-            variable_key TEXT NOT NULL,
-            binding_type TEXT NOT NULL DEFAULT 'context',
-            default_value TEXT NOT NULL DEFAULT '',
-            created_at TEXT NOT NULL,
-            UNIQUE (rule_key, variable_key)
-        );
+    id SERIAL PRIMARY KEY,
+    rule_key TEXT NOT NULL REFERENCES automation_rules(rule_key) ON DELETE CASCADE,
+    variable_key TEXT NOT NULL,
+    binding_type TEXT NOT NULL DEFAULT 'context',
+    default_value TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    UNIQUE (rule_key, variable_key)
+);
 
 CREATE TABLE IF NOT EXISTS automation_notifications (
-            id SERIAL PRIMARY KEY,
-            notification_key TEXT NOT NULL UNIQUE,
-            instance_id INTEGER REFERENCES automation_process_instances(id) ON DELETE SET NULL,
-            channel TEXT NOT NULL DEFAULT 'in_app',
-            recipient_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            title TEXT NOT NULL,
-            body TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            sent_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    notification_key TEXT NOT NULL UNIQUE,
+    instance_id INTEGER REFERENCES automation_process_instances(id) ON DELETE SET NULL,
+    channel TEXT NOT NULL DEFAULT 'in_app',
+    recipient_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    sent_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_audit_log (
-            id SERIAL PRIMARY KEY,
-            audit_key TEXT NOT NULL UNIQUE,
-            actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            action TEXT NOT NULL,
-            resource_type TEXT NOT NULL,
-            resource_id INTEGER,
-            detail_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    audit_key TEXT NOT NULL UNIQUE,
+    actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    action TEXT NOT NULL,
+    resource_type TEXT NOT NULL,
+    resource_id INTEGER,
+    detail_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_history (
-            id SERIAL PRIMARY KEY,
-            instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
-            from_state_key TEXT,
-            to_state_key TEXT NOT NULL,
-            transition_key TEXT,
-            actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            note TEXT NOT NULL DEFAULT '',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    instance_id INTEGER NOT NULL REFERENCES automation_process_instances(id) ON DELETE CASCADE,
+    from_state_key TEXT,
+    to_state_key TEXT NOT NULL,
+    transition_key TEXT,
+    actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    note TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_sla_policies (
-            id SERIAL PRIMARY KEY,
-            policy_key TEXT NOT NULL UNIQUE,
-            workflow_key TEXT NOT NULL,
-            step_key TEXT,
-            target_hours INTEGER NOT NULL DEFAULT 48,
-            escalation_level INTEGER NOT NULL DEFAULT 1,
-            status TEXT NOT NULL DEFAULT 'active',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    policy_key TEXT NOT NULL UNIQUE,
+    workflow_key TEXT NOT NULL,
+    step_key TEXT,
+    target_hours INTEGER NOT NULL DEFAULT 48,
+    escalation_level INTEGER NOT NULL DEFAULT 1,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS automation_metrics_snapshots (
-            id SERIAL PRIMARY KEY,
-            snapshot_key TEXT NOT NULL UNIQUE,
-            scope TEXT NOT NULL DEFAULT 'global',
-            metrics_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    snapshot_key TEXT NOT NULL UNIQUE,
+    scope TEXT NOT NULL DEFAULT 'global',
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_automation_instances_project ON automation_process_instances(project_id, status);
 
@@ -1678,283 +1678,283 @@ CREATE INDEX IF NOT EXISTS idx_automation_history_instance ON automation_history
 CREATE INDEX IF NOT EXISTS idx_automation_workflows_domain ON automation_workflow_definitions(domain, status);
 
 CREATE TABLE IF NOT EXISTS rei_property_profiles (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL UNIQUE REFERENCES properties(id) ON DELETE CASCADE,
-            property_type TEXT NOT NULL DEFAULT 'apartment',
-            subtype TEXT,
-            characteristics_json TEXT NOT NULL DEFAULT '{}',
-            provenance TEXT NOT NULL DEFAULT 'internal',
-            availability_status TEXT NOT NULL DEFAULT 'available',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL UNIQUE REFERENCES properties(id) ON DELETE CASCADE,
+    property_type TEXT NOT NULL DEFAULT 'apartment',
+    subtype TEXT,
+    characteristics_json TEXT NOT NULL DEFAULT '{}',
+    provenance TEXT NOT NULL DEFAULT 'internal',
+    availability_status TEXT NOT NULL DEFAULT 'available',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_listings (
-            id SERIAL PRIMARY KEY,
-            listing_key TEXT NOT NULL UNIQUE,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            title TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'draft',
-            visibility TEXT NOT NULL DEFAULT 'public',
-            ai_score INTEGER NOT NULL DEFAULT 0,
-            diffusion_json TEXT NOT NULL DEFAULT '[]',
-            expires_at TEXT,
-            published_at TEXT,
-            archived_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    listing_key TEXT NOT NULL UNIQUE,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'draft',
+    visibility TEXT NOT NULL DEFAULT 'public',
+    ai_score INTEGER NOT NULL DEFAULT 0,
+    diffusion_json TEXT NOT NULL DEFAULT '[]',
+    expires_at TEXT,
+    published_at TEXT,
+    archived_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_listing_publications (
-            id SERIAL PRIMARY KEY,
-            listing_id INTEGER NOT NULL REFERENCES rei_listings(id) ON DELETE CASCADE,
-            channel TEXT NOT NULL DEFAULT 'lawim',
-            status TEXT NOT NULL DEFAULT 'published',
-            published_at TEXT NOT NULL,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    listing_id INTEGER NOT NULL REFERENCES rei_listings(id) ON DELETE CASCADE,
+    channel TEXT NOT NULL DEFAULT 'lawim',
+    status TEXT NOT NULL DEFAULT 'published',
+    published_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_listing_scores (
-            id SERIAL PRIMARY KEY,
-            listing_id INTEGER NOT NULL REFERENCES rei_listings(id) ON DELETE CASCADE,
-            score_type TEXT NOT NULL DEFAULT 'visibility',
-            score INTEGER NOT NULL DEFAULT 0,
-            factors_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            UNIQUE (listing_id, score_type)
-        );
+    id SERIAL PRIMARY KEY,
+    listing_id INTEGER NOT NULL REFERENCES rei_listings(id) ON DELETE CASCADE,
+    score_type TEXT NOT NULL DEFAULT 'visibility',
+    score INTEGER NOT NULL DEFAULT 0,
+    factors_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (listing_id, score_type)
+);
 
 CREATE TABLE IF NOT EXISTS rei_property_owners (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            owner_type TEXT NOT NULL DEFAULT 'individual',
-            owner_name TEXT NOT NULL,
-            owner_contact TEXT NOT NULL DEFAULT '',
-            ownership_share REAL NOT NULL DEFAULT 100.0,
-            verified INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    owner_type TEXT NOT NULL DEFAULT 'individual',
+    owner_name TEXT NOT NULL,
+    owner_contact TEXT NOT NULL DEFAULT '',
+    ownership_share REAL NOT NULL DEFAULT 100.0,
+    verified INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_property_documents (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            document_key TEXT NOT NULL,
-            document_type TEXT NOT NULL DEFAULT 'other',
-            title TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'pending',
-            storage_ref TEXT NOT NULL DEFAULT '',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            UNIQUE (property_id, document_key)
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    document_key TEXT NOT NULL,
+    document_type TEXT NOT NULL DEFAULT 'other',
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    storage_ref TEXT NOT NULL DEFAULT '',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (property_id, document_key)
+);
 
 CREATE TABLE IF NOT EXISTS rei_property_valuations (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            valuation_key TEXT NOT NULL UNIQUE,
-            amount INTEGER NOT NULL,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            method TEXT NOT NULL DEFAULT 'comparative',
-            confidence INTEGER NOT NULL DEFAULT 70,
-            factors_json TEXT NOT NULL DEFAULT '{}',
-            valued_at TEXT NOT NULL,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    valuation_key TEXT NOT NULL UNIQUE,
+    amount INTEGER NOT NULL,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    method TEXT NOT NULL DEFAULT 'comparative',
+    confidence INTEGER NOT NULL DEFAULT 70,
+    factors_json TEXT NOT NULL DEFAULT '{}',
+    valued_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_verification_checks (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            check_key TEXT NOT NULL,
-            check_type TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'pending',
-            result_json TEXT NOT NULL DEFAULT '{}',
-            anomaly_flags_json TEXT NOT NULL DEFAULT '[]',
-            checked_at TEXT,
-            created_at TEXT NOT NULL,
-            UNIQUE (property_id, check_key)
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    check_key TEXT NOT NULL,
+    check_type TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    anomaly_flags_json TEXT NOT NULL DEFAULT '[]',
+    checked_at TEXT,
+    created_at TEXT NOT NULL,
+    UNIQUE (property_id, check_key)
+);
 
 CREATE TABLE IF NOT EXISTS rei_verification_scores (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL UNIQUE REFERENCES properties(id) ON DELETE CASCADE,
-            trust_score INTEGER NOT NULL DEFAULT 0,
-            consistency_score INTEGER NOT NULL DEFAULT 0,
-            details_json TEXT NOT NULL DEFAULT '{}',
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL UNIQUE REFERENCES properties(id) ON DELETE CASCADE,
+    trust_score INTEGER NOT NULL DEFAULT 0,
+    consistency_score INTEGER NOT NULL DEFAULT 0,
+    details_json TEXT NOT NULL DEFAULT '{}',
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_matching_sessions (
-            id SERIAL PRIMARY KEY,
-            session_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
-            criteria_json TEXT NOT NULL DEFAULT '{}',
-            status TEXT NOT NULL DEFAULT 'active',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    session_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
+    criteria_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_matching_results (
-            id SERIAL PRIMARY KEY,
-            session_id INTEGER NOT NULL REFERENCES rei_matching_sessions(id) ON DELETE CASCADE,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            score INTEGER NOT NULL DEFAULT 0,
-            reasons_json TEXT NOT NULL DEFAULT '[]',
-            rank_position INTEGER NOT NULL DEFAULT 0,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    session_id INTEGER NOT NULL REFERENCES rei_matching_sessions(id) ON DELETE CASCADE,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    score INTEGER NOT NULL DEFAULT 0,
+    reasons_json TEXT NOT NULL DEFAULT '[]',
+    rank_position INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_visits (
-            id SERIAL PRIMARY KEY,
-            visit_key TEXT NOT NULL UNIQUE,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            scheduled_at TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'scheduled',
-            confirmed_at TEXT,
-            cancelled_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    visit_key TEXT NOT NULL UNIQUE,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    scheduled_at TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'scheduled',
+    confirmed_at TEXT,
+    cancelled_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_visit_reports (
-            id SERIAL PRIMARY KEY,
-            visit_id INTEGER NOT NULL UNIQUE REFERENCES rei_visits(id) ON DELETE CASCADE,
-            summary TEXT NOT NULL DEFAULT '',
-            rating INTEGER NOT NULL DEFAULT 3,
-            signed INTEGER NOT NULL DEFAULT 0,
-            report_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    visit_id INTEGER NOT NULL UNIQUE REFERENCES rei_visits(id) ON DELETE CASCADE,
+    summary TEXT NOT NULL DEFAULT '',
+    rating INTEGER NOT NULL DEFAULT 3,
+    signed INTEGER NOT NULL DEFAULT 0,
+    report_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_negotiations (
-            id SERIAL PRIMARY KEY,
-            negotiation_key TEXT NOT NULL UNIQUE,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            buyer_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            status TEXT NOT NULL DEFAULT 'open',
-            current_offer_id INTEGER,
-            workflow_instance_id INTEGER,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    negotiation_key TEXT NOT NULL UNIQUE,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    buyer_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'open',
+    current_offer_id INTEGER,
+    workflow_instance_id INTEGER,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_offers (
-            id SERIAL PRIMARY KEY,
-            offer_key TEXT NOT NULL UNIQUE,
-            negotiation_id INTEGER NOT NULL REFERENCES rei_negotiations(id) ON DELETE CASCADE,
-            amount INTEGER NOT NULL,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            status TEXT NOT NULL DEFAULT 'submitted',
-            offer_type TEXT NOT NULL DEFAULT 'purchase',
-            terms_json TEXT NOT NULL DEFAULT '{}',
-            submitted_at TEXT NOT NULL,
-            decided_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    offer_key TEXT NOT NULL UNIQUE,
+    negotiation_id INTEGER NOT NULL REFERENCES rei_negotiations(id) ON DELETE CASCADE,
+    amount INTEGER NOT NULL,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    status TEXT NOT NULL DEFAULT 'submitted',
+    offer_type TEXT NOT NULL DEFAULT 'purchase',
+    terms_json TEXT NOT NULL DEFAULT '{}',
+    submitted_at TEXT NOT NULL,
+    decided_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_transactions (
-            id SERIAL PRIMARY KEY,
-            transaction_key TEXT NOT NULL UNIQUE,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            transaction_type TEXT NOT NULL DEFAULT 'sale',
-            status TEXT NOT NULL DEFAULT 'pending',
-            amount INTEGER,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            buyer_id INTEGER,
-            seller_id INTEGER,
-            workflow_instance_id INTEGER,
-            closed_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    transaction_key TEXT NOT NULL UNIQUE,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    transaction_type TEXT NOT NULL DEFAULT 'sale',
+    status TEXT NOT NULL DEFAULT 'pending',
+    amount INTEGER,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    buyer_id INTEGER,
+    seller_id INTEGER,
+    workflow_instance_id INTEGER,
+    closed_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_reservations (
-            id SERIAL PRIMARY KEY,
-            reservation_key TEXT NOT NULL UNIQUE,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            status TEXT NOT NULL DEFAULT 'pending',
-            reserved_until TEXT NOT NULL,
-            amount INTEGER,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    reservation_key TEXT NOT NULL UNIQUE,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    reserved_until TEXT NOT NULL,
+    amount INTEGER,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_property_history (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            event_type TEXT NOT NULL,
-            event_key TEXT NOT NULL,
-            summary TEXT NOT NULL DEFAULT '',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            created_at TEXT NOT NULL,
-            UNIQUE (property_id, event_key)
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    event_type TEXT NOT NULL,
+    event_key TEXT NOT NULL,
+    summary TEXT NOT NULL DEFAULT '',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE (property_id, event_key)
+);
 
 CREATE TABLE IF NOT EXISTS rei_recommendations (
-            id SERIAL PRIMARY KEY,
-            recommendation_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
-            property_id INTEGER REFERENCES properties(id) ON DELETE SET NULL,
-            recommendation_type TEXT NOT NULL DEFAULT 'property',
-            score INTEGER NOT NULL DEFAULT 0,
-            title TEXT NOT NULL,
-            rationale TEXT NOT NULL DEFAULT '',
-            sources_json TEXT NOT NULL DEFAULT '[]',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    recommendation_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
+    property_id INTEGER REFERENCES properties(id) ON DELETE SET NULL,
+    recommendation_type TEXT NOT NULL DEFAULT 'property',
+    score INTEGER NOT NULL DEFAULT 0,
+    title TEXT NOT NULL,
+    rationale TEXT NOT NULL DEFAULT '',
+    sources_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_intelligence_scores (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            score_key TEXT NOT NULL,
-            score INTEGER NOT NULL DEFAULT 0,
-            factors_json TEXT NOT NULL DEFAULT '{}',
-            computed_at TEXT NOT NULL,
-            UNIQUE (property_id, score_key)
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    score_key TEXT NOT NULL,
+    score INTEGER NOT NULL DEFAULT 0,
+    factors_json TEXT NOT NULL DEFAULT '{}',
+    computed_at TEXT NOT NULL,
+    UNIQUE (property_id, score_key)
+);
 
 CREATE TABLE IF NOT EXISTS rei_analytics_snapshots (
-            id SERIAL PRIMARY KEY,
-            snapshot_key TEXT NOT NULL UNIQUE,
-            scope TEXT NOT NULL DEFAULT 'global',
-            metrics_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    snapshot_key TEXT NOT NULL UNIQUE,
+    scope TEXT NOT NULL DEFAULT 'global',
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_search_index (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL UNIQUE REFERENCES properties(id) ON DELETE CASCADE,
-            index_text TEXT NOT NULL DEFAULT '',
-            geo_hash TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL UNIQUE REFERENCES properties(id) ON DELETE CASCADE,
+    index_text TEXT NOT NULL DEFAULT '',
+    geo_hash TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS rei_nearby_properties (
-            id SERIAL PRIMARY KEY,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            nearby_property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            distance_km REAL NOT NULL DEFAULT 0,
-            created_at TEXT NOT NULL,
-            UNIQUE (property_id, nearby_property_id)
-        );
+    id SERIAL PRIMARY KEY,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    nearby_property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    distance_km REAL NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    UNIQUE (property_id, nearby_property_id)
+);
 
 CREATE TABLE IF NOT EXISTS rei_property_reports (
-            id SERIAL PRIMARY KEY,
-            report_key TEXT NOT NULL UNIQUE,
-            property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-            report_type TEXT NOT NULL DEFAULT 'summary',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    report_key TEXT NOT NULL UNIQUE,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    report_type TEXT NOT NULL DEFAULT 'summary',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_rei_listings_property ON rei_listings(property_id, status);
 
@@ -1971,393 +1971,393 @@ CREATE INDEX IF NOT EXISTS idx_rei_intelligence_scores_property ON rei_intellige
 CREATE INDEX IF NOT EXISTS idx_rei_search_index_text ON rei_search_index(index_text);
 
 CREATE TABLE IF NOT EXISTS crm_contact_profiles (
-            id SERIAL PRIMARY KEY,
-            contact_key TEXT NOT NULL UNIQUE,
-            contact_type TEXT NOT NULL DEFAULT 'individual',
-            full_name TEXT NOT NULL,
-            email TEXT NOT NULL DEFAULT '',
-            phone TEXT NOT NULL DEFAULT '',
-            whatsapp TEXT NOT NULL DEFAULT '',
-            telegram TEXT NOT NULL DEFAULT '',
-            company TEXT NOT NULL DEFAULT '',
-            country TEXT NOT NULL DEFAULT 'Cameroon',
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    contact_key TEXT NOT NULL UNIQUE,
+    contact_type TEXT NOT NULL DEFAULT 'individual',
+    full_name TEXT NOT NULL,
+    email TEXT NOT NULL DEFAULT '',
+    phone TEXT NOT NULL DEFAULT '',
+    whatsapp TEXT NOT NULL DEFAULT '',
+    telegram TEXT NOT NULL DEFAULT '',
+    company TEXT NOT NULL DEFAULT '',
+    country TEXT NOT NULL DEFAULT 'Cameroon',
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_contact_tags (
-            id SERIAL PRIMARY KEY,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            tag TEXT NOT NULL,
-            created_at TEXT NOT NULL,
-            UNIQUE (contact_id, tag)
-        );
+    id SERIAL PRIMARY KEY,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    tag TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE (contact_id, tag)
+);
 
 CREATE TABLE IF NOT EXISTS crm_contact_consents (
-            id SERIAL PRIMARY KEY,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            consent_type TEXT NOT NULL DEFAULT 'marketing',
-            granted INTEGER NOT NULL DEFAULT 0,
-            granted_at TEXT,
-            revoked_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            UNIQUE (contact_id, consent_type)
-        );
+    id SERIAL PRIMARY KEY,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    consent_type TEXT NOT NULL DEFAULT 'marketing',
+    granted INTEGER NOT NULL DEFAULT 0,
+    granted_at TEXT,
+    revoked_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (contact_id, consent_type)
+);
 
 CREATE TABLE IF NOT EXISTS crm_lead_sources (
-            id SERIAL PRIMARY KEY,
-            source_key TEXT NOT NULL UNIQUE,
-            reference_code TEXT NOT NULL DEFAULT '' UNIQUE,
-            name TEXT NOT NULL,
-            channel TEXT NOT NULL DEFAULT 'web',
-            target TEXT NOT NULL DEFAULT 'acquisition',
-            status TEXT NOT NULL DEFAULT 'active',
-            created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    source_key TEXT NOT NULL UNIQUE,
+    reference_code TEXT NOT NULL DEFAULT '' UNIQUE,
+    name TEXT NOT NULL,
+    channel TEXT NOT NULL DEFAULT 'web',
+    target TEXT NOT NULL DEFAULT 'acquisition',
+    status TEXT NOT NULL DEFAULT 'active',
+    created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_reference_code ON crm_lead_sources(reference_code);
 
 CREATE INDEX IF NOT EXISTS idx_crm_lead_sources_status ON crm_lead_sources(status, created_at);
 
 CREATE TABLE IF NOT EXISTS crm_leads (
-            id SERIAL PRIMARY KEY,
-            lead_key TEXT NOT NULL UNIQUE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            source_id INTEGER REFERENCES crm_lead_sources(id) ON DELETE SET NULL,
-            status TEXT NOT NULL DEFAULT 'new',
-            score INTEGER NOT NULL DEFAULT 0,
-            title TEXT NOT NULL DEFAULT '',
-            notes TEXT NOT NULL DEFAULT '',
-            assigned_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            converted_customer_id INTEGER,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    lead_key TEXT NOT NULL UNIQUE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    source_id INTEGER REFERENCES crm_lead_sources(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'new',
+    score INTEGER NOT NULL DEFAULT 0,
+    title TEXT NOT NULL DEFAULT '',
+    notes TEXT NOT NULL DEFAULT '',
+    assigned_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    converted_customer_id INTEGER,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_customers (
-            id SERIAL PRIMARY KEY,
-            customer_key TEXT NOT NULL UNIQUE,
-            contact_id INTEGER NOT NULL UNIQUE REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            status TEXT NOT NULL DEFAULT 'active',
-            lifetime_value INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    customer_key TEXT NOT NULL UNIQUE,
+    contact_id INTEGER NOT NULL UNIQUE REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    status TEXT NOT NULL DEFAULT 'active',
+    lifetime_value INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_customer_roles (
-            id SERIAL PRIMARY KEY,
-            customer_id INTEGER NOT NULL REFERENCES crm_customers(id) ON DELETE CASCADE,
-            role TEXT NOT NULL DEFAULT 'buyer',
-            assigned_at TEXT NOT NULL,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            UNIQUE (customer_id, role)
-        );
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER NOT NULL REFERENCES crm_customers(id) ON DELETE CASCADE,
+    role TEXT NOT NULL DEFAULT 'buyer',
+    assigned_at TEXT NOT NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (customer_id, role)
+);
 
 CREATE TABLE IF NOT EXISTS crm_pipelines (
-            id SERIAL PRIMARY KEY,
-            pipeline_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            is_default INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    pipeline_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    is_default INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_pipeline_stages (
-            id SERIAL PRIMARY KEY,
-            pipeline_id INTEGER NOT NULL REFERENCES crm_pipelines(id) ON DELETE CASCADE,
-            stage_key TEXT NOT NULL,
-            label TEXT NOT NULL,
-            position INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            UNIQUE (pipeline_id, stage_key)
-        );
+    id SERIAL PRIMARY KEY,
+    pipeline_id INTEGER NOT NULL REFERENCES crm_pipelines(id) ON DELETE CASCADE,
+    stage_key TEXT NOT NULL,
+    label TEXT NOT NULL,
+    position INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (pipeline_id, stage_key)
+);
 
 CREATE TABLE IF NOT EXISTS crm_pipeline_items (
-            id SERIAL PRIMARY KEY,
-            pipeline_id INTEGER NOT NULL REFERENCES crm_pipelines(id) ON DELETE CASCADE,
-            stage_id INTEGER NOT NULL REFERENCES crm_pipeline_stages(id) ON DELETE CASCADE,
-            entity_type TEXT NOT NULL DEFAULT 'lead',
-            entity_id INTEGER NOT NULL,
-            position INTEGER NOT NULL DEFAULT 0,
-            entered_at TEXT NOT NULL,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    pipeline_id INTEGER NOT NULL REFERENCES crm_pipelines(id) ON DELETE CASCADE,
+    stage_id INTEGER NOT NULL REFERENCES crm_pipeline_stages(id) ON DELETE CASCADE,
+    entity_type TEXT NOT NULL DEFAULT 'lead',
+    entity_id INTEGER NOT NULL,
+    position INTEGER NOT NULL DEFAULT 0,
+    entered_at TEXT NOT NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_opportunities (
-            id SERIAL PRIMARY KEY,
-            opportunity_key TEXT NOT NULL UNIQUE,
-            customer_id INTEGER REFERENCES crm_customers(id) ON DELETE SET NULL,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            title TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'open',
-            amount INTEGER,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            probability INTEGER NOT NULL DEFAULT 50,
-            pipeline_item_id INTEGER REFERENCES crm_pipeline_items(id) ON DELETE SET NULL,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL,
-            closed_at TEXT
-        );
+    id SERIAL PRIMARY KEY,
+    opportunity_key TEXT NOT NULL UNIQUE,
+    customer_id INTEGER REFERENCES crm_customers(id) ON DELETE SET NULL,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'open',
+    amount INTEGER,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    probability INTEGER NOT NULL DEFAULT 50,
+    pipeline_item_id INTEGER REFERENCES crm_pipeline_items(id) ON DELETE SET NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    closed_at TEXT
+);
 
 CREATE TABLE IF NOT EXISTS crm_journey_events (
-            id SERIAL PRIMARY KEY,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            event_type TEXT NOT NULL,
-            event_key TEXT NOT NULL,
-            summary TEXT NOT NULL DEFAULT '',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            created_at TEXT NOT NULL,
-            UNIQUE (contact_id, event_key)
-        );
+    id SERIAL PRIMARY KEY,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    event_type TEXT NOT NULL,
+    event_key TEXT NOT NULL,
+    summary TEXT NOT NULL DEFAULT '',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    actor_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE (contact_id, event_key)
+);
 
 CREATE TABLE IF NOT EXISTS crm_timeline_entries (
-            id SERIAL PRIMARY KEY,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            entry_type TEXT NOT NULL,
-            summary TEXT NOT NULL DEFAULT '',
-            reference_type TEXT,
-            reference_id INTEGER,
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    entry_type TEXT NOT NULL,
+    summary TEXT NOT NULL DEFAULT '',
+    reference_type TEXT,
+    reference_id INTEGER,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_communications (
-            id SERIAL PRIMARY KEY,
-            communication_key TEXT NOT NULL UNIQUE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            channel TEXT NOT NULL DEFAULT 'email',
-            direction TEXT NOT NULL DEFAULT 'outbound',
-            status TEXT NOT NULL DEFAULT 'pending',
-            subject TEXT NOT NULL DEFAULT '',
-            body TEXT NOT NULL DEFAULT '',
-            sender_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            sent_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    communication_key TEXT NOT NULL UNIQUE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    channel TEXT NOT NULL DEFAULT 'email',
+    direction TEXT NOT NULL DEFAULT 'outbound',
+    status TEXT NOT NULL DEFAULT 'pending',
+    subject TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    sender_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    sent_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_whatsapp_messages (
-            id SERIAL PRIMARY KEY,
-            communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            from_number TEXT NOT NULL DEFAULT '',
-            to_number TEXT NOT NULL DEFAULT '',
-            body TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            lawim_sender_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            sent_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    from_number TEXT NOT NULL DEFAULT '',
+    to_number TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    lawim_sender_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    sent_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_telegram_messages (
-            id SERIAL PRIMARY KEY,
-            communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            from_handle TEXT NOT NULL DEFAULT '',
-            to_handle TEXT NOT NULL DEFAULT '',
-            body TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            lawim_sender_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            sent_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    from_handle TEXT NOT NULL DEFAULT '',
+    to_handle TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    lawim_sender_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    sent_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_email_messages (
-            id SERIAL PRIMARY KEY,
-            communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            from_email TEXT NOT NULL DEFAULT '',
-            to_email TEXT NOT NULL DEFAULT '',
-            subject TEXT NOT NULL DEFAULT '',
-            body TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            lawim_sender_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            sent_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    from_email TEXT NOT NULL DEFAULT '',
+    to_email TEXT NOT NULL DEFAULT '',
+    subject TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    lawim_sender_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    sent_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_sms_messages (
-            id SERIAL PRIMARY KEY,
-            communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            from_number TEXT NOT NULL DEFAULT '',
-            to_number TEXT NOT NULL DEFAULT '',
-            body TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            lawim_sender_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            sent_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    communication_id INTEGER NOT NULL REFERENCES crm_communications(id) ON DELETE CASCADE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    from_number TEXT NOT NULL DEFAULT '',
+    to_number TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    lawim_sender_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    sent_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_reminders (
-            id SERIAL PRIMARY KEY,
-            reminder_key TEXT NOT NULL UNIQUE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            assigned_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            title TEXT NOT NULL,
-            due_at TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'pending',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            completed_at TEXT
-        );
+    id SERIAL PRIMARY KEY,
+    reminder_key TEXT NOT NULL UNIQUE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    assigned_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    due_at TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    completed_at TEXT
+);
 
 CREATE TABLE IF NOT EXISTS crm_followups (
-            id SERIAL PRIMARY KEY,
-            followup_key TEXT NOT NULL UNIQUE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            lead_id INTEGER REFERENCES crm_leads(id) ON DELETE SET NULL,
-            opportunity_id INTEGER REFERENCES crm_opportunities(id) ON DELETE SET NULL,
-            channel TEXT NOT NULL DEFAULT 'whatsapp',
-            scheduled_at TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'scheduled',
-            notes TEXT NOT NULL DEFAULT '',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            completed_at TEXT
-        );
+    id SERIAL PRIMARY KEY,
+    followup_key TEXT NOT NULL UNIQUE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    lead_id INTEGER REFERENCES crm_leads(id) ON DELETE SET NULL,
+    opportunity_id INTEGER REFERENCES crm_opportunities(id) ON DELETE SET NULL,
+    channel TEXT NOT NULL DEFAULT 'whatsapp',
+    scheduled_at TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'scheduled',
+    notes TEXT NOT NULL DEFAULT '',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    completed_at TEXT
+);
 
 CREATE TABLE IF NOT EXISTS crm_campaigns (
-            id SERIAL PRIMARY KEY,
-            campaign_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            channel TEXT NOT NULL DEFAULT 'email',
-            status TEXT NOT NULL DEFAULT 'draft',
-            audience_json TEXT NOT NULL DEFAULT '{}',
-            content_json TEXT NOT NULL DEFAULT '{}',
-            scheduled_at TEXT,
-            started_at TEXT,
-            completed_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    campaign_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    channel TEXT NOT NULL DEFAULT 'email',
+    status TEXT NOT NULL DEFAULT 'draft',
+    audience_json TEXT NOT NULL DEFAULT '{}',
+    content_json TEXT NOT NULL DEFAULT '{}',
+    scheduled_at TEXT,
+    started_at TEXT,
+    completed_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_campaign_targets (
-            id SERIAL PRIMARY KEY,
-            campaign_id INTEGER NOT NULL REFERENCES crm_campaigns(id) ON DELETE CASCADE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            status TEXT NOT NULL DEFAULT 'pending',
-            sent_at TEXT,
-            response_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            UNIQUE (campaign_id, contact_id)
-        );
+    id SERIAL PRIMARY KEY,
+    campaign_id INTEGER NOT NULL REFERENCES crm_campaigns(id) ON DELETE CASCADE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    status TEXT NOT NULL DEFAULT 'pending',
+    sent_at TEXT,
+    response_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (campaign_id, contact_id)
+);
 
 CREATE TABLE IF NOT EXISTS crm_segments (
-            id SERIAL PRIMARY KEY,
-            segment_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            criteria_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    segment_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    criteria_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_segment_members (
-            id SERIAL PRIMARY KEY,
-            segment_id INTEGER NOT NULL REFERENCES crm_segments(id) ON DELETE CASCADE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            added_at TEXT NOT NULL,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            UNIQUE (segment_id, contact_id)
-        );
+    id SERIAL PRIMARY KEY,
+    segment_id INTEGER NOT NULL REFERENCES crm_segments(id) ON DELETE CASCADE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    added_at TEXT NOT NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    UNIQUE (segment_id, contact_id)
+);
 
 CREATE TABLE IF NOT EXISTS crm_customer_scores (
-            id SERIAL PRIMARY KEY,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            score_key TEXT NOT NULL,
-            score INTEGER NOT NULL DEFAULT 0,
-            factors_json TEXT NOT NULL DEFAULT '{}',
-            computed_at TEXT NOT NULL,
-            UNIQUE (contact_id, score_key)
-        );
+    id SERIAL PRIMARY KEY,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    score_key TEXT NOT NULL,
+    score INTEGER NOT NULL DEFAULT 0,
+    factors_json TEXT NOT NULL DEFAULT '{}',
+    computed_at TEXT NOT NULL,
+    UNIQUE (contact_id, score_key)
+);
 
 CREATE TABLE IF NOT EXISTS crm_satisfaction_surveys (
-            id SERIAL PRIMARY KEY,
-            survey_key TEXT NOT NULL UNIQUE,
-            title TEXT NOT NULL,
-            survey_type TEXT NOT NULL DEFAULT 'csat',
-            questions_json TEXT NOT NULL DEFAULT '[]',
-            status TEXT NOT NULL DEFAULT 'draft',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    survey_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    survey_type TEXT NOT NULL DEFAULT 'csat',
+    questions_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'draft',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_satisfaction_responses (
-            id SERIAL PRIMARY KEY,
-            survey_id INTEGER NOT NULL REFERENCES crm_satisfaction_surveys(id) ON DELETE CASCADE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            rating INTEGER NOT NULL DEFAULT 3,
-            answers_json TEXT NOT NULL DEFAULT '{}',
-            submitted_at TEXT NOT NULL,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    survey_id INTEGER NOT NULL REFERENCES crm_satisfaction_surveys(id) ON DELETE CASCADE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    rating INTEGER NOT NULL DEFAULT 3,
+    answers_json TEXT NOT NULL DEFAULT '{}',
+    submitted_at TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_notes (
-            id SERIAL PRIMARY KEY,
-            note_key TEXT NOT NULL UNIQUE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            author_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            content TEXT NOT NULL,
-            visibility TEXT NOT NULL DEFAULT 'internal',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    note_key TEXT NOT NULL UNIQUE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    author_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    content TEXT NOT NULL,
+    visibility TEXT NOT NULL DEFAULT 'internal',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_documents (
-            id SERIAL PRIMARY KEY,
-            document_key TEXT NOT NULL UNIQUE,
-            contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
-            title TEXT NOT NULL,
-            document_type TEXT NOT NULL DEFAULT 'other',
-            storage_ref TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    document_key TEXT NOT NULL UNIQUE,
+    contact_id INTEGER NOT NULL REFERENCES crm_contact_profiles(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    document_type TEXT NOT NULL DEFAULT 'other',
+    storage_ref TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_ai_suggestions (
-            id SERIAL PRIMARY KEY,
-            suggestion_key TEXT NOT NULL UNIQUE,
-            contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
-            suggestion_type TEXT NOT NULL DEFAULT 'followup',
-            title TEXT NOT NULL,
-            rationale TEXT NOT NULL DEFAULT '',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            status TEXT NOT NULL DEFAULT 'pending',
-            sources_json TEXT NOT NULL DEFAULT '[]',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    suggestion_key TEXT NOT NULL UNIQUE,
+    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
+    suggestion_type TEXT NOT NULL DEFAULT 'followup',
+    title TEXT NOT NULL,
+    rationale TEXT NOT NULL DEFAULT '',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'pending',
+    sources_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS crm_analytics_snapshots (
-            id SERIAL PRIMARY KEY,
-            snapshot_key TEXT NOT NULL UNIQUE,
-            scope TEXT NOT NULL DEFAULT 'global',
-            metrics_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    snapshot_key TEXT NOT NULL UNIQUE,
+    scope TEXT NOT NULL DEFAULT 'global',
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_crm_leads_status ON crm_leads(status, score);
 
@@ -2382,444 +2382,444 @@ CREATE INDEX IF NOT EXISTS idx_crm_customer_scores_contact ON crm_customer_score
 CREATE INDEX IF NOT EXISTS idx_crm_followups_scheduled ON crm_followups(scheduled_at, status);
 
 CREATE TABLE IF NOT EXISTS marketplace_partner_registrations (
-            id SERIAL PRIMARY KEY,
-            registration_key TEXT NOT NULL UNIQUE,
-            partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
-            organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL,
-            applicant_name TEXT NOT NULL,
-            applicant_email TEXT NOT NULL DEFAULT '',
-            applicant_phone TEXT NOT NULL DEFAULT '',
-            provider_type TEXT NOT NULL DEFAULT 'company',
-            status TEXT NOT NULL DEFAULT 'draft',
-            service_categories_json TEXT NOT NULL DEFAULT '[]',
-            documents_json TEXT NOT NULL DEFAULT '[]',
-            notes TEXT NOT NULL DEFAULT '',
-            reviewed_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            reviewed_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    registration_key TEXT NOT NULL UNIQUE,
+    partner_profile_id INTEGER REFERENCES partner_profiles(id) ON DELETE SET NULL,
+    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL,
+    applicant_name TEXT NOT NULL,
+    applicant_email TEXT NOT NULL DEFAULT '',
+    applicant_phone TEXT NOT NULL DEFAULT '',
+    provider_type TEXT NOT NULL DEFAULT 'company',
+    status TEXT NOT NULL DEFAULT 'draft',
+    service_categories_json TEXT NOT NULL DEFAULT '[]',
+    documents_json TEXT NOT NULL DEFAULT '[]',
+    notes TEXT NOT NULL DEFAULT '',
+    reviewed_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    reviewed_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_provider_profiles (
-            id SERIAL PRIMARY KEY,
-            provider_key TEXT NOT NULL UNIQUE,
-            partner_profile_id INTEGER NOT NULL UNIQUE REFERENCES partner_profiles(id) ON DELETE CASCADE,
-            provider_type TEXT NOT NULL DEFAULT 'company',
-            headline TEXT NOT NULL DEFAULT '',
-            bio TEXT NOT NULL DEFAULT '',
-            service_radius_km INTEGER NOT NULL DEFAULT 50,
-            languages_json TEXT NOT NULL DEFAULT '["fr"]',
-            status TEXT NOT NULL DEFAULT 'active',
-            featured INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    provider_key TEXT NOT NULL UNIQUE,
+    partner_profile_id INTEGER NOT NULL UNIQUE REFERENCES partner_profiles(id) ON DELETE CASCADE,
+    provider_type TEXT NOT NULL DEFAULT 'company',
+    headline TEXT NOT NULL DEFAULT '',
+    bio TEXT NOT NULL DEFAULT '',
+    service_radius_km INTEGER NOT NULL DEFAULT 50,
+    languages_json TEXT NOT NULL DEFAULT '["fr"]',
+    status TEXT NOT NULL DEFAULT 'active',
+    featured INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_provider_certifications (
-            id SERIAL PRIMARY KEY,
-            provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
-            certification_key TEXT NOT NULL,
-            title TEXT NOT NULL,
-            issuer TEXT NOT NULL DEFAULT '',
-            issued_at TEXT,
-            expires_at TEXT,
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            UNIQUE (provider_profile_id, certification_key)
-        );
+    id SERIAL PRIMARY KEY,
+    provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
+    certification_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    issuer TEXT NOT NULL DEFAULT '',
+    issued_at TEXT,
+    expires_at TEXT,
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (provider_profile_id, certification_key)
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_catalog_categories (
-            id SERIAL PRIMARY KEY,
-            category_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            parent_id INTEGER REFERENCES marketplace_catalog_categories(id) ON DELETE SET NULL,
-            position INTEGER NOT NULL DEFAULT 0,
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    category_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    parent_id INTEGER REFERENCES marketplace_catalog_categories(id) ON DELETE SET NULL,
+    position INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_catalog_items (
-            id SERIAL PRIMARY KEY,
-            item_key TEXT NOT NULL UNIQUE,
-            category_id INTEGER NOT NULL REFERENCES marketplace_catalog_categories(id) ON DELETE CASCADE,
-            service_catalog_id INTEGER REFERENCES service_catalog(id) ON DELETE SET NULL,
-            provider_profile_id INTEGER REFERENCES marketplace_provider_profiles(id) ON DELETE SET NULL,
-            title TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            category TEXT NOT NULL DEFAULT 'other',
-            price_min INTEGER,
-            price_max INTEGER,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            duration_days INTEGER,
-            status TEXT NOT NULL DEFAULT 'draft',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    item_key TEXT NOT NULL UNIQUE,
+    category_id INTEGER NOT NULL REFERENCES marketplace_catalog_categories(id) ON DELETE CASCADE,
+    service_catalog_id INTEGER REFERENCES service_catalog(id) ON DELETE SET NULL,
+    provider_profile_id INTEGER REFERENCES marketplace_provider_profiles(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    category TEXT NOT NULL DEFAULT 'other',
+    price_min INTEGER,
+    price_max INTEGER,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    duration_days INTEGER,
+    status TEXT NOT NULL DEFAULT 'draft',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_service_requests (
-            id SERIAL PRIMARY KEY,
-            request_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
-            project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
-            property_id INTEGER REFERENCES properties(id) ON DELETE SET NULL,
-            catalog_item_id INTEGER REFERENCES marketplace_catalog_items(id) ON DELETE SET NULL,
-            title TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            category TEXT NOT NULL DEFAULT 'other',
-            city TEXT NOT NULL DEFAULT '',
-            region TEXT NOT NULL DEFAULT '',
-            country TEXT NOT NULL DEFAULT 'Cameroon',
-            budget_min INTEGER,
-            budget_max INTEGER,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            status TEXT NOT NULL DEFAULT 'draft',
-            urgency TEXT NOT NULL DEFAULT 'normal',
-            criteria_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            submitted_at TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    request_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
+    project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
+    property_id INTEGER REFERENCES properties(id) ON DELETE SET NULL,
+    catalog_item_id INTEGER REFERENCES marketplace_catalog_items(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    category TEXT NOT NULL DEFAULT 'other',
+    city TEXT NOT NULL DEFAULT '',
+    region TEXT NOT NULL DEFAULT '',
+    country TEXT NOT NULL DEFAULT 'Cameroon',
+    budget_min INTEGER,
+    budget_max INTEGER,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    status TEXT NOT NULL DEFAULT 'draft',
+    urgency TEXT NOT NULL DEFAULT 'normal',
+    criteria_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    submitted_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_request_documents (
-            id SERIAL PRIMARY KEY,
-            request_id INTEGER NOT NULL REFERENCES marketplace_service_requests(id) ON DELETE CASCADE,
-            document_key TEXT NOT NULL UNIQUE,
-            title TEXT NOT NULL,
-            document_type TEXT NOT NULL DEFAULT 'other',
-            storage_ref TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    request_id INTEGER NOT NULL REFERENCES marketplace_service_requests(id) ON DELETE CASCADE,
+    document_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    document_type TEXT NOT NULL DEFAULT 'other',
+    storage_ref TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_quotes (
-            id SERIAL PRIMARY KEY,
-            quote_key TEXT NOT NULL UNIQUE,
-            request_id INTEGER NOT NULL REFERENCES marketplace_service_requests(id) ON DELETE CASCADE,
-            provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
-            status TEXT NOT NULL DEFAULT 'draft',
-            amount INTEGER NOT NULL DEFAULT 0,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            valid_until TEXT,
-            notes TEXT NOT NULL DEFAULT '',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            sent_at TEXT,
-            accepted_at TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    quote_key TEXT NOT NULL UNIQUE,
+    request_id INTEGER NOT NULL REFERENCES marketplace_service_requests(id) ON DELETE CASCADE,
+    provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
+    status TEXT NOT NULL DEFAULT 'draft',
+    amount INTEGER NOT NULL DEFAULT 0,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    valid_until TEXT,
+    notes TEXT NOT NULL DEFAULT '',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    sent_at TEXT,
+    accepted_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_quote_lines (
-            id SERIAL PRIMARY KEY,
-            quote_id INTEGER NOT NULL REFERENCES marketplace_quotes(id) ON DELETE CASCADE,
-            line_key TEXT NOT NULL,
-            description TEXT NOT NULL,
-            quantity INTEGER NOT NULL DEFAULT 1,
-            unit_price INTEGER NOT NULL DEFAULT 0,
-            amount INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            UNIQUE (quote_id, line_key)
-        );
+    id SERIAL PRIMARY KEY,
+    quote_id INTEGER NOT NULL REFERENCES marketplace_quotes(id) ON DELETE CASCADE,
+    line_key TEXT NOT NULL,
+    description TEXT NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 1,
+    unit_price INTEGER NOT NULL DEFAULT 0,
+    amount INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    UNIQUE (quote_id, line_key)
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_contracts (
-            id SERIAL PRIMARY KEY,
-            contract_key TEXT NOT NULL UNIQUE,
-            request_id INTEGER NOT NULL REFERENCES marketplace_service_requests(id) ON DELETE CASCADE,
-            quote_id INTEGER NOT NULL REFERENCES marketplace_quotes(id) ON DELETE CASCADE,
-            provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
-            status TEXT NOT NULL DEFAULT 'draft',
-            amount INTEGER NOT NULL DEFAULT 0,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            terms_json TEXT NOT NULL DEFAULT '{}',
-            signed_at TEXT,
-            starts_at TEXT,
-            ends_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    contract_key TEXT NOT NULL UNIQUE,
+    request_id INTEGER NOT NULL REFERENCES marketplace_service_requests(id) ON DELETE CASCADE,
+    quote_id INTEGER NOT NULL REFERENCES marketplace_quotes(id) ON DELETE CASCADE,
+    provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
+    status TEXT NOT NULL DEFAULT 'draft',
+    amount INTEGER NOT NULL DEFAULT 0,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    terms_json TEXT NOT NULL DEFAULT '{}',
+    signed_at TEXT,
+    starts_at TEXT,
+    ends_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_contract_documents (
-            id SERIAL PRIMARY KEY,
-            contract_id INTEGER NOT NULL REFERENCES marketplace_contracts(id) ON DELETE CASCADE,
-            document_key TEXT NOT NULL UNIQUE,
-            title TEXT NOT NULL,
-            document_type TEXT NOT NULL DEFAULT 'contract',
-            storage_ref TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    contract_id INTEGER NOT NULL REFERENCES marketplace_contracts(id) ON DELETE CASCADE,
+    document_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    document_type TEXT NOT NULL DEFAULT 'contract',
+    storage_ref TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_missions (
-            id SERIAL PRIMARY KEY,
-            mission_key TEXT NOT NULL UNIQUE,
-            contract_id INTEGER NOT NULL REFERENCES marketplace_contracts(id) ON DELETE CASCADE,
-            provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
-            title TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'planned',
-            scheduled_start TEXT,
-            scheduled_end TEXT,
-            actual_start TEXT,
-            actual_end TEXT,
-            progress_percent INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    mission_key TEXT NOT NULL UNIQUE,
+    contract_id INTEGER NOT NULL REFERENCES marketplace_contracts(id) ON DELETE CASCADE,
+    provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'planned',
+    scheduled_start TEXT,
+    scheduled_end TEXT,
+    actual_start TEXT,
+    actual_end TEXT,
+    progress_percent INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_mission_milestones (
-            id SERIAL PRIMARY KEY,
-            mission_id INTEGER NOT NULL REFERENCES marketplace_missions(id) ON DELETE CASCADE,
-            milestone_key TEXT NOT NULL,
-            title TEXT NOT NULL,
-            due_at TEXT,
-            status TEXT NOT NULL DEFAULT 'pending',
-            position INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            completed_at TEXT,
-            created_at TEXT NOT NULL,
-            UNIQUE (mission_id, milestone_key)
-        );
+    id SERIAL PRIMARY KEY,
+    mission_id INTEGER NOT NULL REFERENCES marketplace_missions(id) ON DELETE CASCADE,
+    milestone_key TEXT NOT NULL,
+    title TEXT NOT NULL,
+    due_at TEXT,
+    status TEXT NOT NULL DEFAULT 'pending',
+    position INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    completed_at TEXT,
+    created_at TEXT NOT NULL,
+    UNIQUE (mission_id, milestone_key)
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_mission_deliverables (
-            id SERIAL PRIMARY KEY,
-            mission_id INTEGER NOT NULL REFERENCES marketplace_missions(id) ON DELETE CASCADE,
-            deliverable_key TEXT NOT NULL UNIQUE,
-            title TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            storage_ref TEXT NOT NULL DEFAULT '',
-            submitted_at TEXT,
-            accepted_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    mission_id INTEGER NOT NULL REFERENCES marketplace_missions(id) ON DELETE CASCADE,
+    deliverable_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    storage_ref TEXT NOT NULL DEFAULT '',
+    submitted_at TEXT,
+    accepted_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_availability (
-            id SERIAL PRIMARY KEY,
-            provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
-            day_of_week INTEGER NOT NULL DEFAULT 1,
-            start_time TEXT NOT NULL DEFAULT '08:00',
-            end_time TEXT NOT NULL DEFAULT '18:00',
-            timezone TEXT NOT NULL DEFAULT 'Africa/Douala',
-            status TEXT NOT NULL DEFAULT 'available',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
+    day_of_week INTEGER NOT NULL DEFAULT 1,
+    start_time TEXT NOT NULL DEFAULT '08:00',
+    end_time TEXT NOT NULL DEFAULT '18:00',
+    timezone TEXT NOT NULL DEFAULT 'Africa/Douala',
+    status TEXT NOT NULL DEFAULT 'available',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_reviews (
-            id SERIAL PRIMARY KEY,
-            review_key TEXT NOT NULL UNIQUE,
-            provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
-            mission_id INTEGER REFERENCES marketplace_missions(id) ON DELETE SET NULL,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            rating INTEGER NOT NULL DEFAULT 5,
-            title TEXT NOT NULL DEFAULT '',
-            body TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            published_at TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    review_key TEXT NOT NULL UNIQUE,
+    provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
+    mission_id INTEGER REFERENCES marketplace_missions(id) ON DELETE SET NULL,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    rating INTEGER NOT NULL DEFAULT 5,
+    title TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    published_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_review_moderation (
-            id SERIAL PRIMARY KEY,
-            review_id INTEGER NOT NULL UNIQUE REFERENCES marketplace_reviews(id) ON DELETE CASCADE,
-            moderator_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            action TEXT NOT NULL DEFAULT 'pending',
-            reason TEXT NOT NULL DEFAULT '',
-            notes TEXT NOT NULL DEFAULT '',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    review_id INTEGER NOT NULL UNIQUE REFERENCES marketplace_reviews(id) ON DELETE CASCADE,
+    moderator_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    action TEXT NOT NULL DEFAULT 'pending',
+    reason TEXT NOT NULL DEFAULT '',
+    notes TEXT NOT NULL DEFAULT '',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_reputation_snapshots (
-            id SERIAL PRIMARY KEY,
-            provider_profile_id INTEGER NOT NULL,
-            score_key TEXT NOT NULL,
-            score INTEGER NOT NULL DEFAULT 0,
-            factors_json TEXT NOT NULL DEFAULT '{}',
-            computed_at TEXT NOT NULL,
-            UNIQUE (provider_profile_id, score_key)
-        );
+    id SERIAL PRIMARY KEY,
+    provider_profile_id INTEGER NOT NULL,
+    score_key TEXT NOT NULL,
+    score INTEGER NOT NULL DEFAULT 0,
+    factors_json TEXT NOT NULL DEFAULT '{}',
+    computed_at TEXT NOT NULL,
+    UNIQUE (provider_profile_id, score_key)
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_disputes (
-            id SERIAL PRIMARY KEY,
-            dispute_key TEXT NOT NULL UNIQUE,
-            contract_id INTEGER NOT NULL REFERENCES marketplace_contracts(id) ON DELETE CASCADE,
-            mission_id INTEGER REFERENCES marketplace_missions(id) ON DELETE SET NULL,
-            opened_by_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            status TEXT NOT NULL DEFAULT 'open',
-            reason TEXT NOT NULL DEFAULT '',
-            resolution TEXT NOT NULL DEFAULT '',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            opened_at TEXT NOT NULL,
-            resolved_at TEXT,
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    dispute_key TEXT NOT NULL UNIQUE,
+    contract_id INTEGER NOT NULL REFERENCES marketplace_contracts(id) ON DELETE CASCADE,
+    mission_id INTEGER REFERENCES marketplace_missions(id) ON DELETE SET NULL,
+    opened_by_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'open',
+    reason TEXT NOT NULL DEFAULT '',
+    resolution TEXT NOT NULL DEFAULT '',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    opened_at TEXT NOT NULL,
+    resolved_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_dispute_messages (
-            id SERIAL PRIMARY KEY,
-            dispute_id INTEGER NOT NULL REFERENCES marketplace_disputes(id) ON DELETE CASCADE,
-            author_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            message TEXT NOT NULL,
-            visibility TEXT NOT NULL DEFAULT 'parties',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    dispute_id INTEGER NOT NULL REFERENCES marketplace_disputes(id) ON DELETE CASCADE,
+    author_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    message TEXT NOT NULL,
+    visibility TEXT NOT NULL DEFAULT 'parties',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_subscription_plans (
-            id SERIAL PRIMARY KEY,
-            plan_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            price INTEGER NOT NULL DEFAULT 0,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            billing_period TEXT NOT NULL DEFAULT 'monthly',
-            features_json TEXT NOT NULL DEFAULT '[]',
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    plan_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    price INTEGER NOT NULL DEFAULT 0,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    billing_period TEXT NOT NULL DEFAULT 'monthly',
+    features_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_subscriptions (
-            id SERIAL PRIMARY KEY,
-            subscription_key TEXT NOT NULL UNIQUE,
-            plan_id INTEGER NOT NULL REFERENCES marketplace_subscription_plans(id) ON DELETE CASCADE,
-            provider_profile_id INTEGER REFERENCES marketplace_provider_profiles(id) ON DELETE SET NULL,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            status TEXT NOT NULL DEFAULT 'trial',
-            started_at TEXT NOT NULL,
-            ends_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    subscription_key TEXT NOT NULL UNIQUE,
+    plan_id INTEGER NOT NULL REFERENCES marketplace_subscription_plans(id) ON DELETE CASCADE,
+    provider_profile_id INTEGER REFERENCES marketplace_provider_profiles(id) ON DELETE SET NULL,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'trial',
+    started_at TEXT NOT NULL,
+    ends_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_commission_rules (
-            id SERIAL PRIMARY KEY,
-            rule_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            commission_type TEXT NOT NULL DEFAULT 'percentage',
-            rate_percent REAL NOT NULL DEFAULT 10.0,
-            flat_amount INTEGER NOT NULL DEFAULT 0,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            category TEXT,
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    rule_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    commission_type TEXT NOT NULL DEFAULT 'percentage',
+    rate_percent REAL NOT NULL DEFAULT 10.0,
+    flat_amount INTEGER NOT NULL DEFAULT 0,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    category TEXT,
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_commissions (
-            id SERIAL PRIMARY KEY,
-            commission_key TEXT NOT NULL UNIQUE,
-            contract_id INTEGER NOT NULL REFERENCES marketplace_contracts(id) ON DELETE CASCADE,
-            rule_id INTEGER REFERENCES marketplace_commission_rules(id) ON DELETE SET NULL,
-            commission_type TEXT NOT NULL DEFAULT 'percentage',
-            amount INTEGER NOT NULL DEFAULT 0,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            status TEXT NOT NULL DEFAULT 'pending',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            computed_at TEXT NOT NULL,
-            paid_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    commission_key TEXT NOT NULL UNIQUE,
+    contract_id INTEGER NOT NULL REFERENCES marketplace_contracts(id) ON DELETE CASCADE,
+    rule_id INTEGER REFERENCES marketplace_commission_rules(id) ON DELETE SET NULL,
+    commission_type TEXT NOT NULL DEFAULT 'percentage',
+    amount INTEGER NOT NULL DEFAULT 0,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    status TEXT NOT NULL DEFAULT 'pending',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    computed_at TEXT NOT NULL,
+    paid_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_payment_preparations (
-            id SERIAL PRIMARY KEY,
-            preparation_key TEXT NOT NULL UNIQUE,
-            contract_id INTEGER REFERENCES marketplace_contracts(id) ON DELETE SET NULL,
-            subscription_id INTEGER REFERENCES marketplace_subscriptions(id) ON DELETE SET NULL,
-            payment_method TEXT NOT NULL DEFAULT 'mobile_money',
-            amount INTEGER NOT NULL DEFAULT 0,
-            currency TEXT NOT NULL DEFAULT 'XAF',
-            status TEXT NOT NULL DEFAULT 'prepared',
-            payer_reference TEXT NOT NULL DEFAULT '',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            prepared_at TEXT NOT NULL,
-            expires_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    preparation_key TEXT NOT NULL UNIQUE,
+    contract_id INTEGER REFERENCES marketplace_contracts(id) ON DELETE SET NULL,
+    subscription_id INTEGER REFERENCES marketplace_subscriptions(id) ON DELETE SET NULL,
+    payment_method TEXT NOT NULL DEFAULT 'mobile_money',
+    amount INTEGER NOT NULL DEFAULT 0,
+    currency TEXT NOT NULL DEFAULT 'XAF',
+    status TEXT NOT NULL DEFAULT 'prepared',
+    payer_reference TEXT NOT NULL DEFAULT '',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    prepared_at TEXT NOT NULL,
+    expires_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_matching_sessions (
-            id SERIAL PRIMARY KEY,
-            session_key TEXT NOT NULL UNIQUE,
-            request_id INTEGER NOT NULL REFERENCES marketplace_service_requests(id) ON DELETE CASCADE,
-            status TEXT NOT NULL DEFAULT 'pending',
-            criteria_json TEXT NOT NULL DEFAULT '{}',
-            result_count INTEGER NOT NULL DEFAULT 0,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            started_at TEXT NOT NULL,
-            completed_at TEXT,
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    session_key TEXT NOT NULL UNIQUE,
+    request_id INTEGER NOT NULL REFERENCES marketplace_service_requests(id) ON DELETE CASCADE,
+    status TEXT NOT NULL DEFAULT 'pending',
+    criteria_json TEXT NOT NULL DEFAULT '{}',
+    result_count INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    started_at TEXT NOT NULL,
+    completed_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_matching_results (
-            id SERIAL PRIMARY KEY,
-            session_id INTEGER NOT NULL REFERENCES marketplace_matching_sessions(id) ON DELETE CASCADE,
-            provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
-            partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
-            score REAL NOT NULL DEFAULT 0,
-            rank INTEGER NOT NULL DEFAULT 0,
-            reasons_json TEXT NOT NULL DEFAULT '[]',
-            breakdown_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    session_id INTEGER NOT NULL REFERENCES marketplace_matching_sessions(id) ON DELETE CASCADE,
+    provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
+    partner_profile_id INTEGER NOT NULL REFERENCES partner_profiles(id) ON DELETE CASCADE,
+    score REAL NOT NULL DEFAULT 0,
+    rank INTEGER NOT NULL DEFAULT 0,
+    reasons_json TEXT NOT NULL DEFAULT '[]',
+    breakdown_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_portfolio_items (
-            id SERIAL PRIMARY KEY,
-            portfolio_key TEXT NOT NULL UNIQUE,
-            provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
-            title TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            category TEXT NOT NULL DEFAULT 'other',
-            media_ref TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'published',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    portfolio_key TEXT NOT NULL UNIQUE,
+    provider_profile_id INTEGER NOT NULL REFERENCES marketplace_provider_profiles(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    category TEXT NOT NULL DEFAULT 'other',
+    media_ref TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'published',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_analytics_snapshots (
-            id SERIAL PRIMARY KEY,
-            snapshot_key TEXT NOT NULL UNIQUE,
-            scope TEXT NOT NULL DEFAULT 'global',
-            metrics_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    snapshot_key TEXT NOT NULL UNIQUE,
+    scope TEXT NOT NULL DEFAULT 'global',
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS marketplace_ai_recommendations (
-            id SERIAL PRIMARY KEY,
-            recommendation_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            request_id INTEGER REFERENCES marketplace_service_requests(id) ON DELETE SET NULL,
-            provider_profile_id INTEGER REFERENCES marketplace_provider_profiles(id) ON DELETE SET NULL,
-            recommendation_type TEXT NOT NULL DEFAULT 'provider',
-            title TEXT NOT NULL,
-            rationale TEXT NOT NULL DEFAULT '',
-            score REAL NOT NULL DEFAULT 0,
-            sources_json TEXT NOT NULL DEFAULT '[]',
-            status TEXT NOT NULL DEFAULT 'pending',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    recommendation_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    request_id INTEGER REFERENCES marketplace_service_requests(id) ON DELETE SET NULL,
+    provider_profile_id INTEGER REFERENCES marketplace_provider_profiles(id) ON DELETE SET NULL,
+    recommendation_type TEXT NOT NULL DEFAULT 'provider',
+    title TEXT NOT NULL,
+    rationale TEXT NOT NULL DEFAULT '',
+    score REAL NOT NULL DEFAULT 0,
+    sources_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'pending',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_marketplace_registrations_status ON marketplace_partner_registrations(status, created_at);
 
@@ -2844,390 +2844,390 @@ CREATE INDEX IF NOT EXISTS idx_marketplace_matching_session ON marketplace_match
 CREATE INDEX IF NOT EXISTS idx_marketplace_subscriptions_status ON marketplace_subscriptions(status, ends_at);
 
 CREATE TABLE IF NOT EXISTS iam_roles (
-            id SERIAL PRIMARY KEY,
-            role_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    role_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS iam_permissions (
-            id SERIAL PRIMARY KEY,
-            permission_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            resource TEXT NOT NULL DEFAULT '*',
-            action TEXT NOT NULL DEFAULT 'read',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    permission_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    resource TEXT NOT NULL DEFAULT '*',
+    action TEXT NOT NULL DEFAULT 'read',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS iam_role_permissions (
-            id SERIAL PRIMARY KEY,
-            role_id INTEGER NOT NULL REFERENCES iam_roles(id) ON DELETE CASCADE,
-            permission_id INTEGER NOT NULL REFERENCES iam_permissions(id) ON DELETE CASCADE,
-            granted_at TEXT NOT NULL,
-            UNIQUE (role_id, permission_id)
-        );
+    id SERIAL PRIMARY KEY,
+    role_id INTEGER NOT NULL REFERENCES iam_roles(id) ON DELETE CASCADE,
+    permission_id INTEGER NOT NULL REFERENCES iam_permissions(id) ON DELETE CASCADE,
+    granted_at TEXT NOT NULL,
+    UNIQUE (role_id, permission_id)
+);
 
 CREATE TABLE IF NOT EXISTS iam_user_roles (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            role_id INTEGER NOT NULL REFERENCES iam_roles(id) ON DELETE CASCADE,
-            assigned_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            assigned_at TEXT NOT NULL,
-            expires_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            UNIQUE (user_id, role_id)
-        );
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role_id INTEGER NOT NULL REFERENCES iam_roles(id) ON DELETE CASCADE,
+    assigned_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    assigned_at TEXT NOT NULL,
+    expires_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    UNIQUE (user_id, role_id)
+);
 
 CREATE TABLE IF NOT EXISTS iam_groups (
-            id SERIAL PRIMARY KEY,
-            group_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL,
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    group_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS iam_group_members (
-            id SERIAL PRIMARY KEY,
-            group_id INTEGER NOT NULL REFERENCES iam_groups(id) ON DELETE CASCADE,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            role_in_group TEXT NOT NULL DEFAULT 'member',
-            joined_at TEXT NOT NULL,
-            UNIQUE (group_id, user_id)
-        );
+    id SERIAL PRIMARY KEY,
+    group_id INTEGER NOT NULL REFERENCES iam_groups(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role_in_group TEXT NOT NULL DEFAULT 'member',
+    joined_at TEXT NOT NULL,
+    UNIQUE (group_id, user_id)
+);
 
 CREATE TABLE IF NOT EXISTS iam_teams (
-            id SERIAL PRIMARY KEY,
-            team_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL,
-            leader_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    team_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL DEFAULT '',
+    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL,
+    leader_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS iam_team_members (
-            id SERIAL PRIMARY KEY,
-            team_id INTEGER NOT NULL REFERENCES iam_teams(id) ON DELETE CASCADE,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            role_in_team TEXT NOT NULL DEFAULT 'member',
-            joined_at TEXT NOT NULL,
-            UNIQUE (team_id, user_id)
-        );
+    id SERIAL PRIMARY KEY,
+    team_id INTEGER NOT NULL REFERENCES iam_teams(id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role_in_team TEXT NOT NULL DEFAULT 'member',
+    joined_at TEXT NOT NULL,
+    UNIQUE (team_id, user_id)
+);
 
 CREATE TABLE IF NOT EXISTS iam_access_policies (
-            id SERIAL PRIMARY KEY,
-            policy_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            policy_type TEXT NOT NULL DEFAULT 'rbac',
-            rules_json TEXT NOT NULL DEFAULT '[]',
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    policy_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    policy_type TEXT NOT NULL DEFAULT 'rbac',
+    rules_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS iam_policy_bindings (
-            id SERIAL PRIMARY KEY,
-            policy_id INTEGER NOT NULL REFERENCES iam_access_policies(id) ON DELETE CASCADE,
-            binding_type TEXT NOT NULL DEFAULT 'role',
-            binding_id INTEGER NOT NULL,
-            created_at TEXT NOT NULL,
-            UNIQUE (policy_id, binding_type, binding_id)
-        );
+    id SERIAL PRIMARY KEY,
+    policy_id INTEGER NOT NULL REFERENCES iam_access_policies(id) ON DELETE CASCADE,
+    binding_type TEXT NOT NULL DEFAULT 'role',
+    binding_id INTEGER NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE (policy_id, binding_type, binding_id)
+);
 
 CREATE TABLE IF NOT EXISTS access_devices (
-            id SERIAL PRIMARY KEY,
-            device_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            device_type TEXT NOT NULL DEFAULT 'browser',
-            device_name TEXT NOT NULL DEFAULT '',
-            fingerprint TEXT NOT NULL DEFAULT '',
-            trust_level TEXT NOT NULL DEFAULT 'unknown',
-            last_seen_at TEXT,
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    device_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    device_type TEXT NOT NULL DEFAULT 'browser',
+    device_name TEXT NOT NULL DEFAULT '',
+    fingerprint TEXT NOT NULL DEFAULT '',
+    trust_level TEXT NOT NULL DEFAULT 'unknown',
+    last_seen_at TEXT,
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS access_api_keys (
-            id SERIAL PRIMARY KEY,
-            api_key_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL,
-            name TEXT NOT NULL,
-            key_prefix TEXT NOT NULL DEFAULT '',
-            key_hash TEXT NOT NULL DEFAULT '',
-            scopes_json TEXT NOT NULL DEFAULT '[]',
-            status TEXT NOT NULL DEFAULT 'active',
-            expires_at TEXT,
-            last_used_at TEXT,
-            created_at TEXT NOT NULL,
-            revoked_at TEXT
-        );
+    id SERIAL PRIMARY KEY,
+    api_key_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL,
+    name TEXT NOT NULL,
+    key_prefix TEXT NOT NULL DEFAULT '',
+    key_hash TEXT NOT NULL DEFAULT '',
+    scopes_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'active',
+    expires_at TEXT,
+    last_used_at TEXT,
+    created_at TEXT NOT NULL,
+    revoked_at TEXT
+);
 
 CREATE TABLE IF NOT EXISTS access_session_records (
-            id SERIAL PRIMARY KEY,
-            session_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            session_token TEXT REFERENCES sessions(token) ON DELETE SET NULL,
-            device_id INTEGER REFERENCES access_devices(id) ON DELETE SET NULL,
-            ip_address TEXT NOT NULL DEFAULT '',
-            user_agent TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'active',
-            started_at TEXT NOT NULL,
-            expires_at TEXT,
-            revoked_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}'
-        );
+    id SERIAL PRIMARY KEY,
+    session_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    session_token TEXT REFERENCES sessions(token) ON DELETE SET NULL,
+    device_id INTEGER REFERENCES access_devices(id) ON DELETE SET NULL,
+    ip_address TEXT NOT NULL DEFAULT '',
+    user_agent TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    started_at TEXT NOT NULL,
+    expires_at TEXT,
+    revoked_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}'
+);
 
 CREATE TABLE IF NOT EXISTS access_route_policies (
-            id SERIAL PRIMARY KEY,
-            route_key TEXT NOT NULL UNIQUE,
-            path_pattern TEXT NOT NULL,
-            methods_json TEXT NOT NULL DEFAULT '["GET"]',
-            required_roles_json TEXT NOT NULL DEFAULT '[]',
-            required_permissions_json TEXT NOT NULL DEFAULT '[]',
-            policy_type TEXT NOT NULL DEFAULT 'rbac',
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    route_key TEXT NOT NULL UNIQUE,
+    path_pattern TEXT NOT NULL,
+    methods_json TEXT NOT NULL DEFAULT '["GET"]',
+    required_roles_json TEXT NOT NULL DEFAULT '[]',
+    required_permissions_json TEXT NOT NULL DEFAULT '[]',
+    policy_type TEXT NOT NULL DEFAULT 'rbac',
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS access_mfa_enrollments (
-            id SERIAL PRIMARY KEY,
-            enrollment_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            mfa_type TEXT NOT NULL DEFAULT 'totp',
-            secret_ref TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'pending',
-            enrolled_at TEXT,
-            last_used_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}'
-        );
+    id SERIAL PRIMARY KEY,
+    enrollment_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    mfa_type TEXT NOT NULL DEFAULT 'totp',
+    secret_ref TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    enrolled_at TEXT,
+    last_used_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}'
+);
 
 CREATE TABLE IF NOT EXISTS access_token_rotations (
-            id SERIAL PRIMARY KEY,
-            rotation_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            token_type TEXT NOT NULL DEFAULT 'session',
-            old_token_ref TEXT NOT NULL DEFAULT '',
-            new_token_ref TEXT NOT NULL DEFAULT '',
-            rotated_at TEXT NOT NULL,
-            reason TEXT NOT NULL DEFAULT '',
-            metadata_json TEXT NOT NULL DEFAULT '{}'
-        );
+    id SERIAL PRIMARY KEY,
+    rotation_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token_type TEXT NOT NULL DEFAULT 'session',
+    old_token_ref TEXT NOT NULL DEFAULT '',
+    new_token_ref TEXT NOT NULL DEFAULT '',
+    rotated_at TEXT NOT NULL,
+    reason TEXT NOT NULL DEFAULT '',
+    metadata_json TEXT NOT NULL DEFAULT '{}'
+);
 
 CREATE TABLE IF NOT EXISTS audit_trail_entries (
-            id SERIAL PRIMARY KEY,
-            entry_key TEXT NOT NULL UNIQUE,
-            event_type TEXT NOT NULL DEFAULT 'system',
-            actor_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            resource_type TEXT NOT NULL DEFAULT '',
-            resource_id INTEGER,
-            action TEXT NOT NULL DEFAULT '',
-            severity TEXT NOT NULL DEFAULT 'info',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            checksum TEXT NOT NULL DEFAULT '',
-            previous_checksum TEXT NOT NULL DEFAULT '',
-            ip_address TEXT NOT NULL DEFAULT '',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    entry_key TEXT NOT NULL UNIQUE,
+    event_type TEXT NOT NULL DEFAULT 'system',
+    actor_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    resource_type TEXT NOT NULL DEFAULT '',
+    resource_id INTEGER,
+    action TEXT NOT NULL DEFAULT '',
+    severity TEXT NOT NULL DEFAULT 'info',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    checksum TEXT NOT NULL DEFAULT '',
+    previous_checksum TEXT NOT NULL DEFAULT '',
+    ip_address TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS audit_system_events (
-            id SERIAL PRIMARY KEY,
-            event_key TEXT NOT NULL UNIQUE,
-            trail_entry_id INTEGER REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
-            component TEXT NOT NULL DEFAULT 'platform',
-            message TEXT NOT NULL DEFAULT '',
-            severity TEXT NOT NULL DEFAULT 'info',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    event_key TEXT NOT NULL UNIQUE,
+    trail_entry_id INTEGER REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
+    component TEXT NOT NULL DEFAULT 'platform',
+    message TEXT NOT NULL DEFAULT '',
+    severity TEXT NOT NULL DEFAULT 'info',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS audit_user_events (
-            id SERIAL PRIMARY KEY,
-            event_key TEXT NOT NULL UNIQUE,
-            trail_entry_id INTEGER REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            action TEXT NOT NULL DEFAULT '',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    event_key TEXT NOT NULL UNIQUE,
+    trail_entry_id INTEGER REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    action TEXT NOT NULL DEFAULT '',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS audit_admin_events (
-            id SERIAL PRIMARY KEY,
-            event_key TEXT NOT NULL UNIQUE,
-            trail_entry_id INTEGER REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
-            admin_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            action TEXT NOT NULL DEFAULT '',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    event_key TEXT NOT NULL UNIQUE,
+    trail_entry_id INTEGER REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
+    admin_user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    action TEXT NOT NULL DEFAULT '',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS audit_ai_events (
-            id SERIAL PRIMARY KEY,
-            event_key TEXT NOT NULL UNIQUE,
-            trail_entry_id INTEGER REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
-            assistant_session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
-            action TEXT NOT NULL DEFAULT '',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    event_key TEXT NOT NULL UNIQUE,
+    trail_entry_id INTEGER REFERENCES audit_trail_entries(id) ON DELETE SET NULL,
+    assistant_session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
+    action TEXT NOT NULL DEFAULT '',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS compliance_policies (
-            id SERIAL PRIMARY KEY,
-            policy_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            framework TEXT NOT NULL DEFAULT 'internal',
-            rules_json TEXT NOT NULL DEFAULT '[]',
-            status TEXT NOT NULL DEFAULT 'active',
-            effective_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    policy_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    framework TEXT NOT NULL DEFAULT 'internal',
+    rules_json TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'active',
+    effective_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS compliance_consents (
-            id SERIAL PRIMARY KEY,
-            consent_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
-            consent_type TEXT NOT NULL DEFAULT 'terms',
-            status TEXT NOT NULL DEFAULT 'pending',
-            granted_at TEXT,
-            revoked_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    consent_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
+    consent_type TEXT NOT NULL DEFAULT 'terms',
+    status TEXT NOT NULL DEFAULT 'pending',
+    granted_at TEXT,
+    revoked_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS compliance_retention_rules (
-            id SERIAL PRIMARY KEY,
-            rule_key TEXT NOT NULL UNIQUE,
-            name TEXT NOT NULL,
-            resource_type TEXT NOT NULL DEFAULT 'audit',
-            retention_days INTEGER NOT NULL DEFAULT 365,
-            action_on_expiry TEXT NOT NULL DEFAULT 'archive',
-            status TEXT NOT NULL DEFAULT 'active',
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    rule_key TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    resource_type TEXT NOT NULL DEFAULT 'audit',
+    retention_days INTEGER NOT NULL DEFAULT 365,
+    action_on_expiry TEXT NOT NULL DEFAULT 'archive',
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS compliance_deletion_requests (
-            id SERIAL PRIMARY KEY,
-            request_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
-            deletion_type TEXT NOT NULL DEFAULT 'soft_delete',
-            status TEXT NOT NULL DEFAULT 'pending',
-            requested_at TEXT NOT NULL,
-            completed_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}'
-        );
+    id SERIAL PRIMARY KEY,
+    request_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
+    deletion_type TEXT NOT NULL DEFAULT 'soft_delete',
+    status TEXT NOT NULL DEFAULT 'pending',
+    requested_at TEXT NOT NULL,
+    completed_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}'
+);
 
 CREATE TABLE IF NOT EXISTS privacy_data_exports (
-            id SERIAL PRIMARY KEY,
-            export_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
-            format TEXT NOT NULL DEFAULT 'json',
-            scope_json TEXT NOT NULL DEFAULT '{}',
-            status TEXT NOT NULL DEFAULT 'pending',
-            storage_ref TEXT NOT NULL DEFAULT '',
-            requested_at TEXT NOT NULL,
-            completed_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}'
-        );
+    id SERIAL PRIMARY KEY,
+    export_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
+    format TEXT NOT NULL DEFAULT 'json',
+    scope_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'pending',
+    storage_ref TEXT NOT NULL DEFAULT '',
+    requested_at TEXT NOT NULL,
+    completed_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}'
+);
 
 CREATE TABLE IF NOT EXISTS privacy_erasure_requests (
-            id SERIAL PRIMARY KEY,
-            request_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
-            scope_json TEXT NOT NULL DEFAULT '{}',
-            status TEXT NOT NULL DEFAULT 'pending',
-            requested_at TEXT NOT NULL,
-            completed_at TEXT,
-            validation_json TEXT NOT NULL DEFAULT '{}',
-            metadata_json TEXT NOT NULL DEFAULT '{}'
-        );
+    id SERIAL PRIMARY KEY,
+    request_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
+    scope_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'pending',
+    requested_at TEXT NOT NULL,
+    completed_at TEXT,
+    validation_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}'
+);
 
 CREATE TABLE IF NOT EXISTS risk_signals (
-            id SERIAL PRIMARY KEY,
-            signal_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            signal_type TEXT NOT NULL DEFAULT 'login_anomaly',
-            severity TEXT NOT NULL DEFAULT 'medium',
-            score_delta INTEGER NOT NULL DEFAULT 10,
-            source TEXT NOT NULL DEFAULT 'platform',
-            payload_json TEXT NOT NULL DEFAULT '{}',
-            detected_at TEXT NOT NULL,
-            status TEXT NOT NULL DEFAULT 'open',
-            metadata_json TEXT NOT NULL DEFAULT '{}'
-        );
+    id SERIAL PRIMARY KEY,
+    signal_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    signal_type TEXT NOT NULL DEFAULT 'login_anomaly',
+    severity TEXT NOT NULL DEFAULT 'medium',
+    score_delta INTEGER NOT NULL DEFAULT 10,
+    source TEXT NOT NULL DEFAULT 'platform',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    detected_at TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'open',
+    metadata_json TEXT NOT NULL DEFAULT '{}'
+);
 
 CREATE TABLE IF NOT EXISTS risk_scores (
-            id SERIAL PRIMARY KEY,
-            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            score_key TEXT NOT NULL DEFAULT 'overall',
-            score INTEGER NOT NULL DEFAULT 0,
-            level TEXT NOT NULL DEFAULT 'low',
-            factors_json TEXT NOT NULL DEFAULT '{}',
-            computed_at TEXT NOT NULL,
-            UNIQUE (user_id, score_key)
-        );
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    score_key TEXT NOT NULL DEFAULT 'overall',
+    score INTEGER NOT NULL DEFAULT 0,
+    level TEXT NOT NULL DEFAULT 'low',
+    factors_json TEXT NOT NULL DEFAULT '{}',
+    computed_at TEXT NOT NULL,
+    UNIQUE (user_id, score_key)
+);
 
 CREATE TABLE IF NOT EXISTS risk_alerts (
-            id SERIAL PRIMARY KEY,
-            alert_key TEXT NOT NULL UNIQUE,
-            user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            signal_id INTEGER REFERENCES risk_signals(id) ON DELETE SET NULL,
-            level TEXT NOT NULL DEFAULT 'medium',
-            title TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL DEFAULT 'open',
-            acknowledged_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            created_at TEXT NOT NULL,
-            resolved_at TEXT
-        );
+    id SERIAL PRIMARY KEY,
+    alert_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    signal_id INTEGER REFERENCES risk_signals(id) ON DELETE SET NULL,
+    level TEXT NOT NULL DEFAULT 'medium',
+    title TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'open',
+    acknowledged_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    created_at TEXT NOT NULL,
+    resolved_at TEXT
+);
 
 CREATE TABLE IF NOT EXISTS security_incidents (
-            id SERIAL PRIMARY KEY,
-            incident_key TEXT NOT NULL UNIQUE,
-            title TEXT NOT NULL,
-            severity TEXT NOT NULL DEFAULT 'medium',
-            status TEXT NOT NULL DEFAULT 'open',
-            reported_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            assigned_to INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            description TEXT NOT NULL DEFAULT '',
-            resolution TEXT NOT NULL DEFAULT '',
-            opened_at TEXT NOT NULL,
-            resolved_at TEXT,
-            metadata_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    incident_key TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    severity TEXT NOT NULL DEFAULT 'medium',
+    status TEXT NOT NULL DEFAULT 'open',
+    reported_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    assigned_to INTEGER REFERENCES users(id) ON DELETE SET NULL,
+    description TEXT NOT NULL DEFAULT '',
+    resolution TEXT NOT NULL DEFAULT '',
+    opened_at TEXT NOT NULL,
+    resolved_at TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS security_analytics_snapshots (
-            id SERIAL PRIMARY KEY,
-            snapshot_key TEXT NOT NULL UNIQUE,
-            scope TEXT NOT NULL DEFAULT 'global',
-            metrics_json TEXT NOT NULL DEFAULT '{}',
-            created_at TEXT NOT NULL
-        );
+    id SERIAL PRIMARY KEY,
+    snapshot_key TEXT NOT NULL UNIQUE,
+    scope TEXT NOT NULL DEFAULT 'global',
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_iam_user_roles_user ON iam_user_roles(user_id, role_id);
 
@@ -3248,6 +3248,37 @@ CREATE INDEX IF NOT EXISTS idx_risk_signals_user ON risk_signals(user_id, status
 CREATE INDEX IF NOT EXISTS idx_risk_scores_user ON risk_scores(user_id, score_key);
 
 CREATE INDEX IF NOT EXISTS idx_security_incidents_status ON security_incidents(status, opened_at);
+
+CREATE TABLE IF NOT EXISTS communication_channels (
+    id SERIAL PRIMARY KEY,
+    channel_key TEXT NOT NULL UNIQUE,
+    channel_type TEXT NOT NULL DEFAULT 'email',
+    name TEXT NOT NULL,
+    provider TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'active',
+    config_json TEXT NOT NULL DEFAULT '{}',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_communication_channels_status ON communication_channels(status, created_at);
+
+CREATE TABLE IF NOT EXISTS communication_threads (
+    id SERIAL PRIMARY KEY,
+    thread_key TEXT NOT NULL UNIQUE,
+    channel_id INTEGER,
+    subject TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'open',
+    organization_id INTEGER,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (channel_id) REFERENCES communication_channels(id) ON DELETE SET NULL,
+    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_communication_threads_status ON communication_threads(status, created_at);
 
 CREATE TABLE IF NOT EXISTS communication_messages (
     id SERIAL PRIMARY KEY,
@@ -3272,48 +3303,17 @@ CREATE TABLE IF NOT EXISTS communication_messages (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    thread_id INTEGER REFERENCES communication_threads(id) ON DELETE SET NULL,
-    channel_id INTEGER REFERENCES communication_channels(id) ON DELETE SET NULL,
-    sender_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    recipient_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
-    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL
+    FOREIGN KEY (thread_id) REFERENCES communication_threads(id) ON DELETE SET NULL,
+    FOREIGN KEY (channel_id) REFERENCES communication_channels(id) ON DELETE SET NULL,
+    FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (recipient_user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (contact_id) REFERENCES crm_contact_profiles(id) ON DELETE SET NULL,
+    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_messages_status ON communication_messages(status, created_at);
 
 CREATE INDEX IF NOT EXISTS idx_communication_messages_channel ON communication_messages(channel_type, status);
-
-CREATE TABLE IF NOT EXISTS communication_threads (
-    id SERIAL PRIMARY KEY,
-    thread_key TEXT NOT NULL UNIQUE,
-    channel_id INTEGER,
-    subject TEXT NOT NULL DEFAULT '',
-    status TEXT NOT NULL DEFAULT 'open',
-    organization_id INTEGER,
-    metadata_json TEXT NOT NULL DEFAULT '{}',
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL,
-    channel_id INTEGER REFERENCES communication_channels(id) ON DELETE SET NULL,
-    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_communication_threads_status ON communication_threads(status, created_at);
-
-CREATE TABLE IF NOT EXISTS communication_channels (
-    id SERIAL PRIMARY KEY,
-    channel_key TEXT NOT NULL UNIQUE,
-    channel_type TEXT NOT NULL DEFAULT 'email',
-    name TEXT NOT NULL,
-    provider TEXT NOT NULL DEFAULT '',
-    status TEXT NOT NULL DEFAULT 'active',
-    config_json TEXT NOT NULL DEFAULT '{}',
-    metadata_json TEXT NOT NULL DEFAULT '{}',
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_communication_channels_status ON communication_channels(status, created_at);
 
 CREATE TABLE IF NOT EXISTS communication_recipients (
     id SERIAL PRIMARY KEY,
@@ -3325,8 +3325,8 @@ CREATE TABLE IF NOT EXISTS communication_recipients (
     user_id INTEGER,
     contact_id INTEGER,
     address TEXT NOT NULL DEFAULT '',
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (contact_id) REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_recipients_status ON communication_recipients(status, created_at);
@@ -3340,7 +3340,7 @@ CREATE TABLE IF NOT EXISTS communication_groups (
     name TEXT NOT NULL DEFAULT '',
     organization_id INTEGER,
     updated_at TEXT NOT NULL,
-    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL
+    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_groups_status ON communication_groups(status, created_at);
@@ -3355,7 +3355,7 @@ CREATE TABLE IF NOT EXISTS communication_events (
     source_program TEXT NOT NULL DEFAULT 'platform',
     payload_json TEXT NOT NULL DEFAULT '{}',
     message_id INTEGER,
-    message_id INTEGER REFERENCES communication_messages(id) ON DELETE SET NULL
+    FOREIGN KEY (message_id) REFERENCES communication_messages(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_events_status ON communication_events(status, created_at);
@@ -3370,7 +3370,7 @@ CREATE TABLE IF NOT EXISTS communication_logs (
     level TEXT NOT NULL DEFAULT 'info',
     message TEXT NOT NULL DEFAULT '',
     payload_json TEXT NOT NULL DEFAULT '{}',
-    message_id INTEGER REFERENCES communication_messages(id) ON DELETE SET NULL
+    FOREIGN KEY (message_id) REFERENCES communication_messages(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_logs_status ON communication_logs(status, created_at);
@@ -3385,8 +3385,8 @@ CREATE TABLE IF NOT EXISTS communication_history (
     action TEXT NOT NULL DEFAULT '',
     actor_user_id INTEGER,
     payload_json TEXT NOT NULL DEFAULT '{}',
-    message_id INTEGER REFERENCES communication_messages(id) ON DELETE CASCADE,
-    actor_user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+    FOREIGN KEY (message_id) REFERENCES communication_messages(id) ON DELETE CASCADE,
+    FOREIGN KEY (actor_user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_history_status ON communication_history(status, created_at);
@@ -3399,7 +3399,7 @@ CREATE TABLE IF NOT EXISTS communication_archives (
     created_at TEXT NOT NULL,
     message_id INTEGER,
     archived_at TEXT NOT NULL,
-    message_id INTEGER REFERENCES communication_messages(id) ON DELETE CASCADE
+    FOREIGN KEY (message_id) REFERENCES communication_messages(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_archives_status ON communication_archives(status, created_at);
@@ -3432,8 +3432,8 @@ CREATE TABLE IF NOT EXISTS notification_events (
     body TEXT NOT NULL DEFAULT '',
     payload_json TEXT NOT NULL DEFAULT '{}',
     priority TEXT NOT NULL DEFAULT 'normal',
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (contact_id) REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_notification_events_status ON notification_events(status, created_at);
@@ -3481,8 +3481,8 @@ CREATE TABLE IF NOT EXISTS notification_preferences (
     enabled INTEGER NOT NULL DEFAULT 1,
     settings_json TEXT NOT NULL DEFAULT '{}',
     updated_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (contact_id) REFERENCES crm_contact_profiles(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_notification_preferences_status ON notification_preferences(status, created_at);
@@ -3497,7 +3497,7 @@ CREATE TABLE IF NOT EXISTS notification_deliveries (
     channel_type TEXT NOT NULL DEFAULT 'in_app',
     delivery_status TEXT NOT NULL DEFAULT 'pending',
     delivered_at TEXT,
-    notification_event_id INTEGER REFERENCES notification_events(id) ON DELETE CASCADE
+    FOREIGN KEY (notification_event_id) REFERENCES notification_events(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_notification_deliveries_status ON notification_deliveries(status, created_at);
@@ -3525,8 +3525,8 @@ CREATE TABLE IF NOT EXISTS notification_acknowledgements (
     notification_event_id INTEGER,
     user_id INTEGER,
     acknowledged_at TEXT NOT NULL,
-    notification_event_id INTEGER REFERENCES notification_events(id) ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (notification_event_id) REFERENCES notification_events(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_notification_acknowledgements_status ON notification_acknowledgements(status, created_at);
@@ -3541,7 +3541,7 @@ CREATE TABLE IF NOT EXISTS notification_failures (
     error_code TEXT NOT NULL DEFAULT '',
     error_message TEXT NOT NULL DEFAULT '',
     failed_at TEXT NOT NULL,
-    notification_event_id INTEGER REFERENCES notification_events(id) ON DELETE CASCADE
+    FOREIGN KEY (notification_event_id) REFERENCES notification_events(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_notification_failures_status ON notification_failures(status, created_at);
@@ -3569,7 +3569,7 @@ CREATE TABLE IF NOT EXISTS notification_queue (
     priority TEXT NOT NULL DEFAULT 'normal',
     queue_status TEXT NOT NULL DEFAULT 'pending',
     scheduled_at TEXT,
-    notification_event_id INTEGER REFERENCES notification_events(id) ON DELETE CASCADE
+    FOREIGN KEY (notification_event_id) REFERENCES notification_events(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_notification_queue_status ON notification_queue(status, created_at);
@@ -3585,7 +3585,7 @@ CREATE TABLE IF NOT EXISTS email_accounts (
     display_name TEXT NOT NULL DEFAULT '',
     provider TEXT NOT NULL DEFAULT '',
     updated_at TEXT NOT NULL,
-    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL
+    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_email_accounts_status ON email_accounts(status, created_at);
@@ -3620,8 +3620,8 @@ CREATE TABLE IF NOT EXISTS email_messages (
     body TEXT NOT NULL DEFAULT '',
     email_status TEXT NOT NULL DEFAULT 'draft',
     sent_at TEXT,
-    account_id INTEGER REFERENCES email_accounts(id) ON DELETE SET NULL,
-    message_id INTEGER REFERENCES communication_messages(id) ON DELETE SET NULL
+    FOREIGN KEY (account_id) REFERENCES email_accounts(id) ON DELETE SET NULL,
+    FOREIGN KEY (message_id) REFERENCES communication_messages(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_email_messages_status ON email_messages(status, created_at);
@@ -3637,7 +3637,7 @@ CREATE TABLE IF NOT EXISTS email_attachments (
     content_type TEXT NOT NULL DEFAULT 'application/octet-stream',
     size_bytes INTEGER NOT NULL DEFAULT 0,
     storage_ref TEXT NOT NULL DEFAULT '',
-    email_message_id INTEGER REFERENCES email_messages(id) ON DELETE CASCADE
+    FOREIGN KEY (email_message_id) REFERENCES email_messages(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_email_attachments_status ON email_attachments(status, created_at);
@@ -3665,7 +3665,7 @@ CREATE TABLE IF NOT EXISTS email_delivery_logs (
     delivery_status TEXT NOT NULL DEFAULT 'pending',
     provider_response TEXT NOT NULL DEFAULT '',
     logged_at TEXT NOT NULL,
-    email_message_id INTEGER REFERENCES email_messages(id) ON DELETE CASCADE
+    FOREIGN KEY (email_message_id) REFERENCES email_messages(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_email_delivery_logs_status ON email_delivery_logs(status, created_at);
@@ -3693,7 +3693,7 @@ CREATE TABLE IF NOT EXISTS email_bounces (
     bounce_type TEXT NOT NULL DEFAULT 'hard',
     reason TEXT NOT NULL DEFAULT '',
     bounced_at TEXT NOT NULL,
-    email_message_id INTEGER REFERENCES email_messages(id) ON DELETE CASCADE
+    FOREIGN KEY (email_message_id) REFERENCES email_messages(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_email_bounces_status ON email_bounces(status, created_at);
@@ -3707,7 +3707,7 @@ CREATE TABLE IF NOT EXISTS email_click_tracking (
     email_message_id INTEGER,
     link_url TEXT NOT NULL DEFAULT '',
     clicked_at TEXT NOT NULL,
-    email_message_id INTEGER REFERENCES email_messages(id) ON DELETE CASCADE
+    FOREIGN KEY (email_message_id) REFERENCES email_messages(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_email_click_tracking_status ON email_click_tracking(status, created_at);
@@ -3720,7 +3720,7 @@ CREATE TABLE IF NOT EXISTS email_open_tracking (
     created_at TEXT NOT NULL,
     email_message_id INTEGER,
     opened_at TEXT NOT NULL,
-    email_message_id INTEGER REFERENCES email_messages(id) ON DELETE CASCADE
+    FOREIGN KEY (email_message_id) REFERENCES email_messages(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_email_open_tracking_status ON email_open_tracking(status, created_at);
@@ -3738,40 +3738,6 @@ CREATE TABLE IF NOT EXISTS sms_templates (
 );
 
 CREATE INDEX IF NOT EXISTS idx_sms_templates_status ON sms_templates(status, created_at);
-
-CREATE TABLE IF NOT EXISTS sms_messages (
-    id SERIAL PRIMARY KEY,
-    message_key TEXT NOT NULL UNIQUE,
-    status TEXT NOT NULL DEFAULT 'active',
-    metadata_json TEXT NOT NULL DEFAULT '{}',
-    created_at TEXT NOT NULL,
-    provider_id INTEGER,
-    message_id INTEGER,
-    to_number TEXT NOT NULL DEFAULT '',
-    from_number TEXT NOT NULL DEFAULT '',
-    body TEXT NOT NULL DEFAULT '',
-    sms_status TEXT NOT NULL DEFAULT 'draft',
-    sent_at TEXT,
-    provider_id INTEGER REFERENCES sms_providers(id) ON DELETE SET NULL,
-    message_id INTEGER REFERENCES communication_messages(id) ON DELETE SET NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_sms_messages_status ON sms_messages(status, created_at);
-
-CREATE TABLE IF NOT EXISTS sms_delivery_logs (
-    id SERIAL PRIMARY KEY,
-    log_key TEXT NOT NULL UNIQUE,
-    status TEXT NOT NULL DEFAULT 'active',
-    metadata_json TEXT NOT NULL DEFAULT '{}',
-    created_at TEXT NOT NULL,
-    sms_message_id INTEGER,
-    delivery_status TEXT NOT NULL DEFAULT 'pending',
-    provider_response TEXT NOT NULL DEFAULT '',
-    logged_at TEXT NOT NULL,
-    sms_message_id INTEGER REFERENCES sms_messages(id) ON DELETE CASCADE
-);
-
-CREATE INDEX IF NOT EXISTS idx_sms_delivery_logs_status ON sms_delivery_logs(status, created_at);
 
 CREATE TABLE IF NOT EXISTS sms_statistics (
     id SERIAL PRIMARY KEY,
@@ -3800,6 +3766,40 @@ CREATE TABLE IF NOT EXISTS sms_providers (
 
 CREATE INDEX IF NOT EXISTS idx_sms_providers_status ON sms_providers(status, created_at);
 
+CREATE TABLE IF NOT EXISTS sms_messages (
+    id SERIAL PRIMARY KEY,
+    message_key TEXT NOT NULL UNIQUE,
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    provider_id INTEGER,
+    message_id INTEGER,
+    to_number TEXT NOT NULL DEFAULT '',
+    from_number TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    sms_status TEXT NOT NULL DEFAULT 'draft',
+    sent_at TEXT,
+    FOREIGN KEY (provider_id) REFERENCES sms_providers(id) ON DELETE SET NULL,
+    FOREIGN KEY (message_id) REFERENCES communication_messages(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_sms_messages_status ON sms_messages(status, created_at);
+
+CREATE TABLE IF NOT EXISTS sms_delivery_logs (
+    id SERIAL PRIMARY KEY,
+    log_key TEXT NOT NULL UNIQUE,
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    sms_message_id INTEGER,
+    delivery_status TEXT NOT NULL DEFAULT 'pending',
+    provider_response TEXT NOT NULL DEFAULT '',
+    logged_at TEXT NOT NULL,
+    FOREIGN KEY (sms_message_id) REFERENCES sms_messages(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_sms_delivery_logs_status ON sms_delivery_logs(status, created_at);
+
 CREATE TABLE IF NOT EXISTS sms_queue (
     id SERIAL PRIMARY KEY,
     queue_key TEXT NOT NULL UNIQUE,
@@ -3810,7 +3810,7 @@ CREATE TABLE IF NOT EXISTS sms_queue (
     priority TEXT NOT NULL DEFAULT 'normal',
     queue_status TEXT NOT NULL DEFAULT 'pending',
     scheduled_at TEXT,
-    sms_message_id INTEGER REFERENCES sms_messages(id) ON DELETE CASCADE
+    FOREIGN KEY (sms_message_id) REFERENCES sms_messages(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_sms_queue_status ON sms_queue(status, created_at);
@@ -3858,8 +3858,8 @@ CREATE TABLE IF NOT EXISTS whatsapp_messages (
     body TEXT NOT NULL DEFAULT '',
     whatsapp_status TEXT NOT NULL DEFAULT 'draft',
     sent_at TEXT,
-    account_id INTEGER REFERENCES whatsapp_accounts(id) ON DELETE SET NULL,
-    message_id INTEGER REFERENCES communication_messages(id) ON DELETE SET NULL
+    FOREIGN KEY (account_id) REFERENCES whatsapp_accounts(id) ON DELETE SET NULL,
+    FOREIGN KEY (message_id) REFERENCES communication_messages(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_status ON whatsapp_messages(status, created_at);
@@ -3874,7 +3874,7 @@ CREATE TABLE IF NOT EXISTS whatsapp_media (
     media_type TEXT NOT NULL DEFAULT 'document',
     filename TEXT NOT NULL DEFAULT '',
     storage_ref TEXT NOT NULL DEFAULT '',
-    whatsapp_message_id INTEGER REFERENCES whatsapp_messages(id) ON DELETE CASCADE
+    FOREIGN KEY (whatsapp_message_id) REFERENCES whatsapp_messages(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_whatsapp_media_status ON whatsapp_media(status, created_at);
@@ -3889,7 +3889,7 @@ CREATE TABLE IF NOT EXISTS whatsapp_sessions (
     session_status TEXT NOT NULL DEFAULT 'open',
     opened_at TEXT NOT NULL,
     closed_at TEXT,
-    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
+    FOREIGN KEY (contact_id) REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_whatsapp_sessions_status ON whatsapp_sessions(status, created_at);
@@ -3904,7 +3904,7 @@ CREATE TABLE IF NOT EXISTS whatsapp_delivery_logs (
     delivery_status TEXT NOT NULL DEFAULT 'pending',
     provider_response TEXT NOT NULL DEFAULT '',
     logged_at TEXT NOT NULL,
-    whatsapp_message_id INTEGER REFERENCES whatsapp_messages(id) ON DELETE CASCADE
+    FOREIGN KEY (whatsapp_message_id) REFERENCES whatsapp_messages(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_whatsapp_delivery_logs_status ON whatsapp_delivery_logs(status, created_at);
@@ -3948,8 +3948,8 @@ CREATE TABLE IF NOT EXISTS telegram_messages (
     body TEXT NOT NULL DEFAULT '',
     telegram_status TEXT NOT NULL DEFAULT 'draft',
     sent_at TEXT,
-    bot_id INTEGER REFERENCES telegram_bots(id) ON DELETE SET NULL,
-    message_id INTEGER REFERENCES communication_messages(id) ON DELETE SET NULL
+    FOREIGN KEY (bot_id) REFERENCES telegram_bots(id) ON DELETE SET NULL,
+    FOREIGN KEY (message_id) REFERENCES communication_messages(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_telegram_messages_status ON telegram_messages(status, created_at);
@@ -3964,7 +3964,7 @@ CREATE TABLE IF NOT EXISTS telegram_updates (
     update_type TEXT NOT NULL DEFAULT 'message',
     payload_json TEXT NOT NULL DEFAULT '{}',
     received_at TEXT NOT NULL,
-    bot_id INTEGER REFERENCES telegram_bots(id) ON DELETE CASCADE
+    FOREIGN KEY (bot_id) REFERENCES telegram_bots(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_telegram_updates_status ON telegram_updates(status, created_at);
@@ -3992,7 +3992,7 @@ CREATE TABLE IF NOT EXISTS push_devices (
     platform TEXT NOT NULL DEFAULT 'web',
     device_token TEXT NOT NULL DEFAULT '',
     updated_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_push_devices_status ON push_devices(status, created_at);
@@ -4009,8 +4009,8 @@ CREATE TABLE IF NOT EXISTS push_notifications (
     body TEXT NOT NULL DEFAULT '',
     push_status TEXT NOT NULL DEFAULT 'draft',
     sent_at TEXT,
-    device_id INTEGER REFERENCES push_devices(id) ON DELETE SET NULL,
-    message_id INTEGER REFERENCES communication_messages(id) ON DELETE SET NULL
+    FOREIGN KEY (device_id) REFERENCES push_devices(id) ON DELETE SET NULL,
+    FOREIGN KEY (message_id) REFERENCES communication_messages(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_push_notifications_status ON push_notifications(status, created_at);
@@ -4025,7 +4025,7 @@ CREATE TABLE IF NOT EXISTS push_delivery_logs (
     delivery_status TEXT NOT NULL DEFAULT 'pending',
     provider_response TEXT NOT NULL DEFAULT '',
     logged_at TEXT NOT NULL,
-    push_notification_id INTEGER REFERENCES push_notifications(id) ON DELETE CASCADE
+    FOREIGN KEY (push_notification_id) REFERENCES push_notifications(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_push_delivery_logs_status ON push_delivery_logs(status, created_at);
@@ -4040,7 +4040,7 @@ CREATE TABLE IF NOT EXISTS push_subscriptions (
     topic TEXT NOT NULL DEFAULT '',
     subscription_json TEXT NOT NULL DEFAULT '{}',
     updated_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_push_subscriptions_status ON push_subscriptions(status, created_at);
@@ -4058,24 +4058,6 @@ CREATE TABLE IF NOT EXISTS push_statistics (
 
 CREATE INDEX IF NOT EXISTS idx_push_statistics_status ON push_statistics(status, created_at);
 
-CREATE TABLE IF NOT EXISTS inapp_notifications (
-    id SERIAL PRIMARY KEY,
-    notification_key TEXT NOT NULL UNIQUE,
-    status TEXT NOT NULL DEFAULT 'active',
-    metadata_json TEXT NOT NULL DEFAULT '{}',
-    created_at TEXT NOT NULL,
-    user_id INTEGER,
-    category_id INTEGER,
-    title TEXT NOT NULL DEFAULT '',
-    body TEXT NOT NULL DEFAULT '',
-    action_json TEXT NOT NULL DEFAULT '{}',
-    read_at TEXT,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    category_id INTEGER REFERENCES inapp_categories(id) ON DELETE SET NULL
-);
-
-CREATE INDEX IF NOT EXISTS idx_inapp_notifications_status ON inapp_notifications(status, created_at);
-
 CREATE TABLE IF NOT EXISTS inapp_categories (
     id SERIAL PRIMARY KEY,
     category_key TEXT NOT NULL UNIQUE,
@@ -4089,6 +4071,24 @@ CREATE TABLE IF NOT EXISTS inapp_categories (
 
 CREATE INDEX IF NOT EXISTS idx_inapp_categories_status ON inapp_categories(status, created_at);
 
+CREATE TABLE IF NOT EXISTS inapp_notifications (
+    id SERIAL PRIMARY KEY,
+    notification_key TEXT NOT NULL UNIQUE,
+    status TEXT NOT NULL DEFAULT 'active',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    user_id INTEGER,
+    category_id INTEGER,
+    title TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    action_json TEXT NOT NULL DEFAULT '{}',
+    read_at TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES inapp_categories(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_inapp_notifications_status ON inapp_notifications(status, created_at);
+
 CREATE TABLE IF NOT EXISTS inapp_read_status (
     id SERIAL PRIMARY KEY,
     read_key TEXT NOT NULL UNIQUE,
@@ -4098,8 +4098,8 @@ CREATE TABLE IF NOT EXISTS inapp_read_status (
     notification_id INTEGER,
     user_id INTEGER,
     read_at TEXT NOT NULL,
-    notification_id INTEGER REFERENCES inapp_notifications(id) ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (notification_id) REFERENCES inapp_notifications(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_inapp_read_status_status ON inapp_read_status(status, created_at);
@@ -4131,7 +4131,7 @@ CREATE TABLE IF NOT EXISTS campaigns (
     started_at TEXT,
     completed_at TEXT,
     updated_at TEXT NOT NULL,
-    organization_id INTEGER REFERENCES organizations(id) ON DELETE SET NULL
+    FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_campaigns_status ON campaigns(status, created_at);
@@ -4145,7 +4145,7 @@ CREATE TABLE IF NOT EXISTS campaign_channels (
     campaign_id INTEGER,
     channel_type TEXT NOT NULL DEFAULT 'email',
     config_json TEXT NOT NULL DEFAULT '{}',
-    campaign_id INTEGER REFERENCES campaigns(id) ON DELETE CASCADE
+    FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_campaign_channels_status ON campaign_channels(status, created_at);
@@ -4159,7 +4159,7 @@ CREATE TABLE IF NOT EXISTS campaign_audiences (
     campaign_id INTEGER,
     name TEXT NOT NULL DEFAULT '',
     audience_json TEXT NOT NULL DEFAULT '{}',
-    campaign_id INTEGER REFERENCES campaigns(id) ON DELETE CASCADE
+    FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_campaign_audiences_status ON campaign_audiences(status, created_at);
@@ -4173,7 +4173,7 @@ CREATE TABLE IF NOT EXISTS campaign_segments (
     campaign_id INTEGER,
     name TEXT NOT NULL DEFAULT '',
     criteria_json TEXT NOT NULL DEFAULT '{}',
-    campaign_id INTEGER REFERENCES campaigns(id) ON DELETE CASCADE
+    FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_campaign_segments_status ON campaign_segments(status, created_at);
@@ -4188,7 +4188,7 @@ CREATE TABLE IF NOT EXISTS campaign_executions (
     execution_status TEXT NOT NULL DEFAULT 'pending',
     started_at TEXT,
     completed_at TEXT,
-    campaign_id INTEGER REFERENCES campaigns(id) ON DELETE CASCADE
+    FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_campaign_executions_status ON campaign_executions(status, created_at);
@@ -4202,7 +4202,7 @@ CREATE TABLE IF NOT EXISTS campaign_statistics (
     campaign_id INTEGER,
     metrics_json TEXT NOT NULL DEFAULT '{}',
     computed_at TEXT NOT NULL,
-    campaign_id INTEGER REFERENCES campaigns(id) ON DELETE CASCADE
+    FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_campaign_statistics_status ON campaign_statistics(status, created_at);
@@ -4217,7 +4217,7 @@ CREATE TABLE IF NOT EXISTS campaign_results (
     result_type TEXT NOT NULL DEFAULT 'summary',
     result_json TEXT NOT NULL DEFAULT '{}',
     recorded_at TEXT NOT NULL,
-    campaign_id INTEGER REFERENCES campaigns(id) ON DELETE CASCADE
+    FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_campaign_results_status ON campaign_results(status, created_at);
@@ -4232,7 +4232,7 @@ CREATE TABLE IF NOT EXISTS campaign_logs (
     level TEXT NOT NULL DEFAULT 'info',
     message TEXT NOT NULL DEFAULT '',
     logged_at TEXT NOT NULL,
-    campaign_id INTEGER REFERENCES campaigns(id) ON DELETE CASCADE
+    FOREIGN KEY (campaign_id) REFERENCES campaigns(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_campaign_logs_status ON campaign_logs(status, created_at);
@@ -4281,7 +4281,7 @@ CREATE TABLE IF NOT EXISTS queue_failures (
     error_code TEXT NOT NULL DEFAULT '',
     error_message TEXT NOT NULL DEFAULT '',
     failed_at TEXT NOT NULL,
-    job_id INTEGER REFERENCES queue_jobs(id) ON DELETE CASCADE
+    FOREIGN KEY (job_id) REFERENCES queue_jobs(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_queue_failures_status ON queue_failures(status, created_at);
@@ -4296,7 +4296,7 @@ CREATE TABLE IF NOT EXISTS queue_retry_history (
     attempt_number INTEGER NOT NULL DEFAULT 1,
     retry_at TEXT NOT NULL,
     result TEXT NOT NULL DEFAULT '',
-    job_id INTEGER REFERENCES queue_jobs(id) ON DELETE CASCADE
+    FOREIGN KEY (job_id) REFERENCES queue_jobs(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_queue_retry_history_status ON queue_retry_history(status, created_at);
@@ -4339,7 +4339,7 @@ CREATE TABLE IF NOT EXISTS template_versions (
     version_number INTEGER NOT NULL DEFAULT 1,
     content_json TEXT NOT NULL DEFAULT '{}',
     published_at TEXT,
-    category_id INTEGER REFERENCES template_categories(id) ON DELETE SET NULL
+    FOREIGN KEY (category_id) REFERENCES template_categories(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_template_versions_status ON template_versions(status, created_at);
@@ -4353,7 +4353,7 @@ CREATE TABLE IF NOT EXISTS template_variables (
     template_version_id INTEGER,
     variable_name TEXT NOT NULL DEFAULT '',
     default_value TEXT NOT NULL DEFAULT '',
-    template_version_id INTEGER REFERENCES template_versions(id) ON DELETE CASCADE
+    FOREIGN KEY (template_version_id) REFERENCES template_versions(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_template_variables_status ON template_variables(status, created_at);
@@ -4367,7 +4367,7 @@ CREATE TABLE IF NOT EXISTS template_translations (
     template_version_id INTEGER,
     locale TEXT NOT NULL DEFAULT 'fr',
     content_json TEXT NOT NULL DEFAULT '{}',
-    template_version_id INTEGER REFERENCES template_versions(id) ON DELETE CASCADE
+    FOREIGN KEY (template_version_id) REFERENCES template_versions(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_template_translations_status ON template_translations(status, created_at);
@@ -4384,8 +4384,8 @@ CREATE TABLE IF NOT EXISTS communication_preferences (
     enabled INTEGER NOT NULL DEFAULT 1,
     settings_json TEXT NOT NULL DEFAULT '{}',
     updated_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (contact_id) REFERENCES crm_contact_profiles(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_preferences_status ON communication_preferences(status, created_at);
@@ -4401,8 +4401,8 @@ CREATE TABLE IF NOT EXISTS communication_consent_history (
     consent_type TEXT NOT NULL DEFAULT 'marketing',
     consent_status TEXT NOT NULL DEFAULT 'granted',
     recorded_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (contact_id) REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_consent_history_status ON communication_consent_history(status, created_at);
@@ -4447,7 +4447,7 @@ CREATE TABLE IF NOT EXISTS communication_quiet_hours (
     end_time TEXT NOT NULL DEFAULT '07:00',
     days_json TEXT NOT NULL DEFAULT '[]',
     updated_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_quiet_hours_status ON communication_quiet_hours(status, created_at);
@@ -4491,8 +4491,8 @@ CREATE TABLE IF NOT EXISTS communication_ai_recommendations (
     recommendation_json TEXT NOT NULL DEFAULT '{}',
     score REAL NOT NULL DEFAULT 0,
     generated_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    contact_id INTEGER REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (contact_id) REFERENCES crm_contact_profiles(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_communication_ai_recommendations_status ON communication_ai_recommendations(status, created_at);
@@ -4504,7 +4504,10 @@ CREATE TABLE IF NOT EXISTS analytics_events (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    event_type TEXT NOT NULL DEFAULT 'generic', source_program TEXT NOT NULL DEFAULT 'global', payload_json TEXT NOT NULL DEFAULT '{}', occurred_at TEXT NOT NULL
+    event_type TEXT NOT NULL DEFAULT 'generic',
+    source_program TEXT NOT NULL DEFAULT 'global',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    occurred_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_events_status ON analytics_events(status, created_at);
@@ -4516,7 +4519,10 @@ CREATE TABLE IF NOT EXISTS analytics_event_sources (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    program_code TEXT NOT NULL DEFAULT 'global', source_type TEXT NOT NULL DEFAULT 'metrics', config_json TEXT NOT NULL DEFAULT '{}', enabled INTEGER NOT NULL DEFAULT 1
+    program_code TEXT NOT NULL DEFAULT 'global',
+    source_type TEXT NOT NULL DEFAULT 'metrics',
+    config_json TEXT NOT NULL DEFAULT '{}',
+    enabled INTEGER NOT NULL DEFAULT 1
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_event_sources_status ON analytics_event_sources(status, created_at);
@@ -4528,7 +4534,11 @@ CREATE TABLE IF NOT EXISTS analytics_metrics (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', category TEXT NOT NULL DEFAULT 'general', unit TEXT NOT NULL DEFAULT 'count', source_program TEXT NOT NULL DEFAULT 'global', definition_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    category TEXT NOT NULL DEFAULT 'general',
+    unit TEXT NOT NULL DEFAULT 'count',
+    source_program TEXT NOT NULL DEFAULT 'global',
+    definition_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_metrics_status ON analytics_metrics(status, created_at);
@@ -4540,7 +4550,10 @@ CREATE TABLE IF NOT EXISTS analytics_metric_values (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    metric_id INTEGER, value REAL NOT NULL DEFAULT 0, dimensions_json TEXT NOT NULL DEFAULT '{}', recorded_at TEXT NOT NULL
+    metric_id INTEGER,
+    value REAL NOT NULL DEFAULT 0,
+    dimensions_json TEXT NOT NULL DEFAULT '{}',
+    recorded_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_metric_values_status ON analytics_metric_values(status, created_at);
@@ -4552,7 +4565,9 @@ CREATE TABLE IF NOT EXISTS analytics_metric_snapshots (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    scope TEXT NOT NULL DEFAULT 'global', metrics_json TEXT NOT NULL DEFAULT '{}', snapshot_at TEXT NOT NULL
+    scope TEXT NOT NULL DEFAULT 'global',
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    snapshot_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_metric_snapshots_status ON analytics_metric_snapshots(status, created_at);
@@ -4564,7 +4579,9 @@ CREATE TABLE IF NOT EXISTS analytics_aggregations (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', aggregation_type TEXT NOT NULL DEFAULT 'sum', config_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    aggregation_type TEXT NOT NULL DEFAULT 'sum',
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_aggregations_status ON analytics_aggregations(status, created_at);
@@ -4576,7 +4593,9 @@ CREATE TABLE IF NOT EXISTS analytics_aggregation_results (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    aggregation_id INTEGER, result_json TEXT NOT NULL DEFAULT '{}', computed_at TEXT NOT NULL
+    aggregation_id INTEGER,
+    result_json TEXT NOT NULL DEFAULT '{}',
+    computed_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_aggregation_results_status ON analytics_aggregation_results(status, created_at);
@@ -4588,7 +4607,9 @@ CREATE TABLE IF NOT EXISTS analytics_dimensions (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', dimension_type TEXT NOT NULL DEFAULT 'string', config_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    dimension_type TEXT NOT NULL DEFAULT 'string',
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_dimensions_status ON analytics_dimensions(status, created_at);
@@ -4600,7 +4621,9 @@ CREATE TABLE IF NOT EXISTS analytics_measures (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', measure_type TEXT NOT NULL DEFAULT 'count', expression TEXT NOT NULL DEFAULT ''
+    name TEXT NOT NULL DEFAULT '',
+    measure_type TEXT NOT NULL DEFAULT 'count',
+    expression TEXT NOT NULL DEFAULT ''
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_measures_status ON analytics_measures(status, created_at);
@@ -4612,7 +4635,9 @@ CREATE TABLE IF NOT EXISTS analytics_filters (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', filter_type TEXT NOT NULL DEFAULT 'equals', expression_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    filter_type TEXT NOT NULL DEFAULT 'equals',
+    expression_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_filters_status ON analytics_filters(status, created_at);
@@ -4624,7 +4649,9 @@ CREATE TABLE IF NOT EXISTS analytics_queries (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', query_type TEXT NOT NULL DEFAULT 'aggregate', query_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    query_type TEXT NOT NULL DEFAULT 'aggregate',
+    query_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_queries_status ON analytics_queries(status, created_at);
@@ -4636,7 +4663,10 @@ CREATE TABLE IF NOT EXISTS analytics_query_results (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    query_id INTEGER, result_json TEXT NOT NULL DEFAULT '{}', executed_at TEXT NOT NULL, duration_ms REAL NOT NULL DEFAULT 0
+    query_id INTEGER,
+    result_json TEXT NOT NULL DEFAULT '{}',
+    executed_at TEXT NOT NULL,
+    duration_ms REAL NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_query_results_status ON analytics_query_results(status, created_at);
@@ -4648,7 +4678,10 @@ CREATE TABLE IF NOT EXISTS analytics_kpi_definitions (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', category TEXT NOT NULL DEFAULT 'general', formula_json TEXT NOT NULL DEFAULT '{}', source_program TEXT NOT NULL DEFAULT 'global'
+    name TEXT NOT NULL DEFAULT '',
+    category TEXT NOT NULL DEFAULT 'general',
+    formula_json TEXT NOT NULL DEFAULT '{}',
+    source_program TEXT NOT NULL DEFAULT 'global'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_kpi_definitions_status ON analytics_kpi_definitions(status, created_at);
@@ -4660,7 +4693,10 @@ CREATE TABLE IF NOT EXISTS analytics_kpi_values (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    kpi_id INTEGER, value REAL NOT NULL DEFAULT 0, period TEXT NOT NULL DEFAULT 'daily', computed_at TEXT NOT NULL
+    kpi_id INTEGER,
+    value REAL NOT NULL DEFAULT 0,
+    period TEXT NOT NULL DEFAULT 'daily',
+    computed_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_kpi_values_status ON analytics_kpi_values(status, created_at);
@@ -4672,7 +4708,10 @@ CREATE TABLE IF NOT EXISTS analytics_kpi_targets (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    kpi_id INTEGER, target_value REAL NOT NULL DEFAULT 0, period TEXT NOT NULL DEFAULT 'monthly', effective_from TEXT NOT NULL
+    kpi_id INTEGER,
+    target_value REAL NOT NULL DEFAULT 0,
+    period TEXT NOT NULL DEFAULT 'monthly',
+    effective_from TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_kpi_targets_status ON analytics_kpi_targets(status, created_at);
@@ -4684,7 +4723,11 @@ CREATE TABLE IF NOT EXISTS analytics_kpi_thresholds (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    kpi_id INTEGER, threshold_type TEXT NOT NULL DEFAULT 'warning', min_value REAL, max_value REAL, config_json TEXT NOT NULL DEFAULT '{}'
+    kpi_id INTEGER,
+    threshold_type TEXT NOT NULL DEFAULT 'warning',
+    min_value REAL,
+    max_value REAL,
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_kpi_thresholds_status ON analytics_kpi_thresholds(status, created_at);
@@ -4696,7 +4739,11 @@ CREATE TABLE IF NOT EXISTS analytics_kpi_alerts (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    kpi_id INTEGER, alert_type TEXT NOT NULL DEFAULT 'threshold', severity TEXT NOT NULL DEFAULT 'warning', message TEXT NOT NULL DEFAULT '', triggered_at TEXT NOT NULL
+    kpi_id INTEGER,
+    alert_type TEXT NOT NULL DEFAULT 'threshold',
+    severity TEXT NOT NULL DEFAULT 'warning',
+    message TEXT NOT NULL DEFAULT '',
+    triggered_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_kpi_alerts_status ON analytics_kpi_alerts(status, created_at);
@@ -4708,7 +4755,10 @@ CREATE TABLE IF NOT EXISTS analytics_kpi_history (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    kpi_id INTEGER, value REAL NOT NULL DEFAULT 0, period TEXT NOT NULL DEFAULT 'daily', recorded_at TEXT NOT NULL
+    kpi_id INTEGER,
+    value REAL NOT NULL DEFAULT 0,
+    period TEXT NOT NULL DEFAULT 'daily',
+    recorded_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_kpi_history_status ON analytics_kpi_history(status, created_at);
@@ -4720,7 +4770,9 @@ CREATE TABLE IF NOT EXISTS analytics_kpi_categories (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', description TEXT NOT NULL DEFAULT '', parent_key TEXT NOT NULL DEFAULT ''
+    name TEXT NOT NULL DEFAULT '',
+    description TEXT NOT NULL DEFAULT '',
+    parent_key TEXT NOT NULL DEFAULT ''
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_kpi_categories_status ON analytics_kpi_categories(status, created_at);
@@ -4732,7 +4784,10 @@ CREATE TABLE IF NOT EXISTS analytics_dashboards (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', dashboard_type TEXT NOT NULL DEFAULT 'custom', layout_json TEXT NOT NULL DEFAULT '{}', owner_user_id INTEGER,
+    name TEXT NOT NULL DEFAULT '',
+    dashboard_type TEXT NOT NULL DEFAULT 'custom',
+    layout_json TEXT NOT NULL DEFAULT '{}',
+    owner_user_id INTEGER,
     user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
 );
 
@@ -4745,7 +4800,10 @@ CREATE TABLE IF NOT EXISTS analytics_dashboard_widgets (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    dashboard_id INTEGER, widget_type TEXT NOT NULL DEFAULT 'metric', config_json TEXT NOT NULL DEFAULT '{}', position_json TEXT NOT NULL DEFAULT '{}'
+    dashboard_id INTEGER,
+    widget_type TEXT NOT NULL DEFAULT 'metric',
+    config_json TEXT NOT NULL DEFAULT '{}',
+    position_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_dashboard_widgets_status ON analytics_dashboard_widgets(status, created_at);
@@ -4757,7 +4815,9 @@ CREATE TABLE IF NOT EXISTS analytics_dashboard_layouts (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    dashboard_id INTEGER, layout_json TEXT NOT NULL DEFAULT '{}', version INTEGER NOT NULL DEFAULT 1
+    dashboard_id INTEGER,
+    layout_json TEXT NOT NULL DEFAULT '{}',
+    version INTEGER NOT NULL DEFAULT 1
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_dashboard_layouts_status ON analytics_dashboard_layouts(status, created_at);
@@ -4769,7 +4829,8 @@ CREATE TABLE IF NOT EXISTS analytics_dashboard_filters (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    dashboard_id INTEGER, filter_json TEXT NOT NULL DEFAULT '{}'
+    dashboard_id INTEGER,
+    filter_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_dashboard_filters_status ON analytics_dashboard_filters(status, created_at);
@@ -4781,8 +4842,11 @@ CREATE TABLE IF NOT EXISTS analytics_dashboard_permissions (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    dashboard_id INTEGER, user_id INTEGER, role TEXT NOT NULL DEFAULT 'viewer', granted_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+    dashboard_id INTEGER,
+    user_id INTEGER,
+    role TEXT NOT NULL DEFAULT 'viewer',
+    granted_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_dashboard_permissions_status ON analytics_dashboard_permissions(status, created_at);
@@ -4794,7 +4858,9 @@ CREATE TABLE IF NOT EXISTS analytics_dashboard_snapshots (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    dashboard_id INTEGER, snapshot_json TEXT NOT NULL DEFAULT '{}', snapshot_at TEXT NOT NULL
+    dashboard_id INTEGER,
+    snapshot_json TEXT NOT NULL DEFAULT '{}',
+    snapshot_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_dashboard_snapshots_status ON analytics_dashboard_snapshots(status, created_at);
@@ -4806,7 +4872,10 @@ CREATE TABLE IF NOT EXISTS analytics_dashboard_exports (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    dashboard_id INTEGER, format TEXT NOT NULL DEFAULT 'json', file_path TEXT NOT NULL DEFAULT '', exported_at TEXT NOT NULL
+    dashboard_id INTEGER,
+    format TEXT NOT NULL DEFAULT 'json',
+    file_path TEXT NOT NULL DEFAULT '',
+    exported_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_dashboard_exports_status ON analytics_dashboard_exports(status, created_at);
@@ -4818,7 +4887,9 @@ CREATE TABLE IF NOT EXISTS analytics_reports (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', report_type TEXT NOT NULL DEFAULT 'standard', config_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    report_type TEXT NOT NULL DEFAULT 'standard',
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_reports_status ON analytics_reports(status, created_at);
@@ -4830,7 +4901,9 @@ CREATE TABLE IF NOT EXISTS analytics_report_templates (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', format TEXT NOT NULL DEFAULT 'html', template_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    format TEXT NOT NULL DEFAULT 'html',
+    template_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_report_templates_status ON analytics_report_templates(status, created_at);
@@ -4842,7 +4915,10 @@ CREATE TABLE IF NOT EXISTS analytics_report_sections (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    report_id INTEGER, section_type TEXT NOT NULL DEFAULT 'summary', content_json TEXT NOT NULL DEFAULT '{}', sort_order INTEGER NOT NULL DEFAULT 0
+    report_id INTEGER,
+    section_type TEXT NOT NULL DEFAULT 'summary',
+    content_json TEXT NOT NULL DEFAULT '{}',
+    sort_order INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_report_sections_status ON analytics_report_sections(status, created_at);
@@ -4854,7 +4930,10 @@ CREATE TABLE IF NOT EXISTS analytics_report_runs (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    report_id INTEGER, run_status TEXT NOT NULL DEFAULT 'pending', started_at TEXT NOT NULL, completed_at TEXT
+    report_id INTEGER,
+    run_status TEXT NOT NULL DEFAULT 'pending',
+    started_at TEXT NOT NULL,
+    completed_at TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_report_runs_status ON analytics_report_runs(status, created_at);
@@ -4866,7 +4945,10 @@ CREATE TABLE IF NOT EXISTS analytics_report_outputs (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    run_id INTEGER, format TEXT NOT NULL DEFAULT 'json', output_json TEXT NOT NULL DEFAULT '{}', generated_at TEXT NOT NULL
+    run_id INTEGER,
+    format TEXT NOT NULL DEFAULT 'json',
+    output_json TEXT NOT NULL DEFAULT '{}',
+    generated_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_report_outputs_status ON analytics_report_outputs(status, created_at);
@@ -4878,7 +4960,10 @@ CREATE TABLE IF NOT EXISTS analytics_report_schedules (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    report_id INTEGER, cron_expression TEXT NOT NULL DEFAULT '0 0 * * *', next_run_at TEXT, enabled INTEGER NOT NULL DEFAULT 1
+    report_id INTEGER,
+    cron_expression TEXT NOT NULL DEFAULT '0 0 * * *',
+    next_run_at TEXT,
+    enabled INTEGER NOT NULL DEFAULT 1
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_report_schedules_status ON analytics_report_schedules(status, created_at);
@@ -4890,8 +4975,11 @@ CREATE TABLE IF NOT EXISTS analytics_report_recipients (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    schedule_id INTEGER, user_id INTEGER, email TEXT NOT NULL DEFAULT '', delivery_format TEXT NOT NULL DEFAULT 'json',
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+    schedule_id INTEGER,
+    user_id INTEGER,
+    email TEXT NOT NULL DEFAULT '',
+    delivery_format TEXT NOT NULL DEFAULT 'json',
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_report_recipients_status ON analytics_report_recipients(status, created_at);
@@ -4903,7 +4991,10 @@ CREATE TABLE IF NOT EXISTS analytics_report_history (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    report_id INTEGER, run_id INTEGER, summary_json TEXT NOT NULL DEFAULT '{}', recorded_at TEXT NOT NULL
+    report_id INTEGER,
+    run_id INTEGER,
+    summary_json TEXT NOT NULL DEFAULT '{}',
+    recorded_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_report_history_status ON analytics_report_history(status, created_at);
@@ -4915,7 +5006,8 @@ CREATE TABLE IF NOT EXISTS bi_dimensions (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', hierarchy_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    hierarchy_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_dimensions_status ON bi_dimensions(status, created_at);
@@ -4927,7 +5019,9 @@ CREATE TABLE IF NOT EXISTS bi_measures (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', aggregation TEXT NOT NULL DEFAULT 'sum', expression TEXT NOT NULL DEFAULT ''
+    name TEXT NOT NULL DEFAULT '',
+    aggregation TEXT NOT NULL DEFAULT 'sum',
+    expression TEXT NOT NULL DEFAULT ''
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_measures_status ON bi_measures(status, created_at);
@@ -4939,7 +5033,8 @@ CREATE TABLE IF NOT EXISTS bi_cubes (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', config_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_cubes_status ON bi_cubes(status, created_at);
@@ -4951,7 +5046,9 @@ CREATE TABLE IF NOT EXISTS bi_cube_dimensions (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    cube_id INTEGER, dimension_id INTEGER, sort_order INTEGER NOT NULL DEFAULT 0
+    cube_id INTEGER,
+    dimension_id INTEGER,
+    sort_order INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_cube_dimensions_status ON bi_cube_dimensions(status, created_at);
@@ -4963,7 +5060,9 @@ CREATE TABLE IF NOT EXISTS bi_cube_measures (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    cube_id INTEGER, measure_id INTEGER, sort_order INTEGER NOT NULL DEFAULT 0
+    cube_id INTEGER,
+    measure_id INTEGER,
+    sort_order INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_cube_measures_status ON bi_cube_measures(status, created_at);
@@ -4975,7 +5074,8 @@ CREATE TABLE IF NOT EXISTS bi_segments (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', filter_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    filter_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_segments_status ON bi_segments(status, created_at);
@@ -4987,7 +5087,9 @@ CREATE TABLE IF NOT EXISTS bi_segment_members (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    segment_id INTEGER, entity_type TEXT NOT NULL DEFAULT 'user', entity_id INTEGER NOT NULL DEFAULT 0
+    segment_id INTEGER,
+    entity_type TEXT NOT NULL DEFAULT 'user',
+    entity_id INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_segment_members_status ON bi_segment_members(status, created_at);
@@ -4999,7 +5101,9 @@ CREATE TABLE IF NOT EXISTS bi_benchmarks (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', benchmark_type TEXT NOT NULL DEFAULT 'industry', value REAL NOT NULL DEFAULT 0
+    name TEXT NOT NULL DEFAULT '',
+    benchmark_type TEXT NOT NULL DEFAULT 'industry',
+    value REAL NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_benchmarks_status ON bi_benchmarks(status, created_at);
@@ -5011,7 +5115,8 @@ CREATE TABLE IF NOT EXISTS bi_drill_paths (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    cube_id INTEGER, path_json TEXT NOT NULL DEFAULT '{}'
+    cube_id INTEGER,
+    path_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_drill_paths_status ON bi_drill_paths(status, created_at);
@@ -5023,7 +5128,9 @@ CREATE TABLE IF NOT EXISTS bi_comparisons (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', comparison_type TEXT NOT NULL DEFAULT 'period', config_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    comparison_type TEXT NOT NULL DEFAULT 'period',
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_bi_comparisons_status ON bi_comparisons(status, created_at);
@@ -5035,7 +5142,9 @@ CREATE TABLE IF NOT EXISTS analytics_data_marts (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', mart_type TEXT NOT NULL DEFAULT 'crm', config_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    mart_type TEXT NOT NULL DEFAULT 'crm',
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_data_marts_status ON analytics_data_marts(status, created_at);
@@ -5047,7 +5156,10 @@ CREATE TABLE IF NOT EXISTS analytics_data_mart_sources (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    mart_id INTEGER, source_program TEXT NOT NULL DEFAULT 'crm', source_table TEXT NOT NULL DEFAULT '', mapping_json TEXT NOT NULL DEFAULT '{}'
+    mart_id INTEGER,
+    source_program TEXT NOT NULL DEFAULT 'crm',
+    source_table TEXT NOT NULL DEFAULT '',
+    mapping_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_data_mart_sources_status ON analytics_data_mart_sources(status, created_at);
@@ -5059,7 +5171,10 @@ CREATE TABLE IF NOT EXISTS analytics_data_mart_fields (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    mart_id INTEGER, field_name TEXT NOT NULL DEFAULT '', field_type TEXT NOT NULL DEFAULT 'string', expression TEXT NOT NULL DEFAULT ''
+    mart_id INTEGER,
+    field_name TEXT NOT NULL DEFAULT '',
+    field_type TEXT NOT NULL DEFAULT 'string',
+    expression TEXT NOT NULL DEFAULT ''
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_data_mart_fields_status ON analytics_data_mart_fields(status, created_at);
@@ -5071,7 +5186,9 @@ CREATE TABLE IF NOT EXISTS analytics_data_mart_views (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    mart_id INTEGER, view_json TEXT NOT NULL DEFAULT '{}', refreshed_at TEXT NOT NULL
+    mart_id INTEGER,
+    view_json TEXT NOT NULL DEFAULT '{}',
+    refreshed_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_data_mart_views_status ON analytics_data_mart_views(status, created_at);
@@ -5083,7 +5200,10 @@ CREATE TABLE IF NOT EXISTS analytics_data_mart_refreshes (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    mart_id INTEGER, refresh_status TEXT NOT NULL DEFAULT 'completed', started_at TEXT NOT NULL, completed_at TEXT
+    mart_id INTEGER,
+    refresh_status TEXT NOT NULL DEFAULT 'completed',
+    started_at TEXT NOT NULL,
+    completed_at TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_data_mart_refreshes_status ON analytics_data_mart_refreshes(status, created_at);
@@ -5095,8 +5215,11 @@ CREATE TABLE IF NOT EXISTS analytics_data_mart_permissions (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    mart_id INTEGER, user_id INTEGER, role TEXT NOT NULL DEFAULT 'viewer', granted_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+    mart_id INTEGER,
+    user_id INTEGER,
+    role TEXT NOT NULL DEFAULT 'viewer',
+    granted_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_data_mart_permissions_status ON analytics_data_mart_permissions(status, created_at);
@@ -5108,7 +5231,10 @@ CREATE TABLE IF NOT EXISTS analytics_trends (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', metric_key TEXT NOT NULL DEFAULT '', trend_type TEXT NOT NULL DEFAULT 'linear', config_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    metric_key TEXT NOT NULL DEFAULT '',
+    trend_type TEXT NOT NULL DEFAULT 'linear',
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_trends_status ON analytics_trends(status, created_at);
@@ -5120,7 +5246,9 @@ CREATE TABLE IF NOT EXISTS analytics_trend_points (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    trend_id INTEGER, value REAL NOT NULL DEFAULT 0, recorded_at TEXT NOT NULL
+    trend_id INTEGER,
+    value REAL NOT NULL DEFAULT 0,
+    recorded_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_trend_points_status ON analytics_trend_points(status, created_at);
@@ -5132,7 +5260,11 @@ CREATE TABLE IF NOT EXISTS analytics_anomalies (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    trend_id INTEGER, anomaly_type TEXT NOT NULL DEFAULT 'spike', severity TEXT NOT NULL DEFAULT 'warning', detected_at TEXT NOT NULL, details_json TEXT NOT NULL DEFAULT '{}'
+    trend_id INTEGER,
+    anomaly_type TEXT NOT NULL DEFAULT 'spike',
+    severity TEXT NOT NULL DEFAULT 'warning',
+    detected_at TEXT NOT NULL,
+    details_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_anomalies_status ON analytics_anomalies(status, created_at);
@@ -5144,7 +5276,10 @@ CREATE TABLE IF NOT EXISTS analytics_forecasts (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    trend_id INTEGER, horizon_days INTEGER NOT NULL DEFAULT 30, model TEXT NOT NULL DEFAULT 'simple', config_json TEXT NOT NULL DEFAULT '{}'
+    trend_id INTEGER,
+    horizon_days INTEGER NOT NULL DEFAULT 30,
+    model TEXT NOT NULL DEFAULT 'simple',
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_forecasts_status ON analytics_forecasts(status, created_at);
@@ -5156,7 +5291,9 @@ CREATE TABLE IF NOT EXISTS analytics_forecast_points (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    forecast_id INTEGER, value REAL NOT NULL DEFAULT 0, forecast_at TEXT NOT NULL
+    forecast_id INTEGER,
+    value REAL NOT NULL DEFAULT 0,
+    forecast_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_forecast_points_status ON analytics_forecast_points(status, created_at);
@@ -5168,7 +5305,9 @@ CREATE TABLE IF NOT EXISTS analytics_seasonality_profiles (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    trend_id INTEGER, profile_json TEXT NOT NULL DEFAULT '{}', computed_at TEXT NOT NULL
+    trend_id INTEGER,
+    profile_json TEXT NOT NULL DEFAULT '{}',
+    computed_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_seasonality_profiles_status ON analytics_seasonality_profiles(status, created_at);
@@ -5180,7 +5319,10 @@ CREATE TABLE IF NOT EXISTS analytics_score_definitions (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', score_type TEXT NOT NULL DEFAULT 'customer', formula_json TEXT NOT NULL DEFAULT '{}', source_program TEXT NOT NULL DEFAULT 'global'
+    name TEXT NOT NULL DEFAULT '',
+    score_type TEXT NOT NULL DEFAULT 'customer',
+    formula_json TEXT NOT NULL DEFAULT '{}',
+    source_program TEXT NOT NULL DEFAULT 'global'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_score_definitions_status ON analytics_score_definitions(status, created_at);
@@ -5192,7 +5334,11 @@ CREATE TABLE IF NOT EXISTS analytics_score_values (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    score_id INTEGER, entity_type TEXT NOT NULL DEFAULT 'contact', entity_id INTEGER NOT NULL DEFAULT 0, value REAL NOT NULL DEFAULT 0, computed_at TEXT NOT NULL
+    score_id INTEGER,
+    entity_type TEXT NOT NULL DEFAULT 'contact',
+    entity_id INTEGER NOT NULL DEFAULT 0,
+    value REAL NOT NULL DEFAULT 0,
+    computed_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_score_values_status ON analytics_score_values(status, created_at);
@@ -5204,7 +5350,10 @@ CREATE TABLE IF NOT EXISTS analytics_score_components (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    score_id INTEGER, component_name TEXT NOT NULL DEFAULT '', weight REAL NOT NULL DEFAULT 1, value REAL NOT NULL DEFAULT 0
+    score_id INTEGER,
+    component_name TEXT NOT NULL DEFAULT '',
+    weight REAL NOT NULL DEFAULT 1,
+    value REAL NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_score_components_status ON analytics_score_components(status, created_at);
@@ -5216,7 +5365,10 @@ CREATE TABLE IF NOT EXISTS analytics_score_history (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    score_id INTEGER, entity_id INTEGER NOT NULL DEFAULT 0, value REAL NOT NULL DEFAULT 0, recorded_at TEXT NOT NULL
+    score_id INTEGER,
+    entity_id INTEGER NOT NULL DEFAULT 0,
+    value REAL NOT NULL DEFAULT 0,
+    recorded_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_score_history_status ON analytics_score_history(status, created_at);
@@ -5228,7 +5380,9 @@ CREATE TABLE IF NOT EXISTS analytics_score_rules (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    score_id INTEGER, rule_type TEXT NOT NULL DEFAULT 'threshold', rule_json TEXT NOT NULL DEFAULT '{}'
+    score_id INTEGER,
+    rule_type TEXT NOT NULL DEFAULT 'threshold',
+    rule_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_score_rules_status ON analytics_score_rules(status, created_at);
@@ -5240,7 +5394,9 @@ CREATE TABLE IF NOT EXISTS executive_dashboard_snapshots (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    scope TEXT NOT NULL DEFAULT 'global', snapshot_json TEXT NOT NULL DEFAULT '{}', snapshot_at TEXT NOT NULL
+    scope TEXT NOT NULL DEFAULT 'global',
+    snapshot_json TEXT NOT NULL DEFAULT '{}',
+    snapshot_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_executive_dashboard_snapshots_status ON executive_dashboard_snapshots(status, created_at);
@@ -5252,7 +5408,10 @@ CREATE TABLE IF NOT EXISTS executive_dashboard_kpis (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    kpi_id INTEGER, display_name TEXT NOT NULL DEFAULT '', value REAL NOT NULL DEFAULT 0, trend TEXT NOT NULL DEFAULT 'stable'
+    kpi_id INTEGER,
+    display_name TEXT NOT NULL DEFAULT '',
+    value REAL NOT NULL DEFAULT 0,
+    trend TEXT NOT NULL DEFAULT 'stable'
 );
 
 CREATE INDEX IF NOT EXISTS idx_executive_dashboard_kpis_status ON executive_dashboard_kpis(status, created_at);
@@ -5264,7 +5423,10 @@ CREATE TABLE IF NOT EXISTS executive_dashboard_alerts (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    alert_type TEXT NOT NULL DEFAULT 'info', severity TEXT NOT NULL DEFAULT 'info', message TEXT NOT NULL DEFAULT '', triggered_at TEXT NOT NULL
+    alert_type TEXT NOT NULL DEFAULT 'info',
+    severity TEXT NOT NULL DEFAULT 'info',
+    message TEXT NOT NULL DEFAULT '',
+    triggered_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_executive_dashboard_alerts_status ON executive_dashboard_alerts(status, created_at);
@@ -5276,7 +5438,10 @@ CREATE TABLE IF NOT EXISTS executive_dashboard_sections (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', section_type TEXT NOT NULL DEFAULT 'overview', content_json TEXT NOT NULL DEFAULT '{}', sort_order INTEGER NOT NULL DEFAULT 0
+    name TEXT NOT NULL DEFAULT '',
+    section_type TEXT NOT NULL DEFAULT 'overview',
+    content_json TEXT NOT NULL DEFAULT '{}',
+    sort_order INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_executive_dashboard_sections_status ON executive_dashboard_sections(status, created_at);
@@ -5288,7 +5453,9 @@ CREATE TABLE IF NOT EXISTS realtime_event_streams (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', source_program TEXT NOT NULL DEFAULT 'global', config_json TEXT NOT NULL DEFAULT '{}'
+    name TEXT NOT NULL DEFAULT '',
+    source_program TEXT NOT NULL DEFAULT 'global',
+    config_json TEXT NOT NULL DEFAULT '{}'
 );
 
 CREATE INDEX IF NOT EXISTS idx_realtime_event_streams_status ON realtime_event_streams(status, created_at);
@@ -5300,7 +5467,9 @@ CREATE TABLE IF NOT EXISTS realtime_counters (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    stream_id INTEGER, counter_name TEXT NOT NULL DEFAULT '', value INTEGER NOT NULL DEFAULT 0
+    stream_id INTEGER,
+    counter_name TEXT NOT NULL DEFAULT '',
+    value INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_realtime_counters_status ON realtime_counters(status, created_at);
@@ -5312,7 +5481,10 @@ CREATE TABLE IF NOT EXISTS realtime_activity_logs (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    stream_id INTEGER, activity_type TEXT NOT NULL DEFAULT 'event', payload_json TEXT NOT NULL DEFAULT '{}', logged_at TEXT NOT NULL
+    stream_id INTEGER,
+    activity_type TEXT NOT NULL DEFAULT 'event',
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    logged_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_realtime_activity_logs_status ON realtime_activity_logs(status, created_at);
@@ -5324,7 +5496,11 @@ CREATE TABLE IF NOT EXISTS realtime_alerts (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    stream_id INTEGER, alert_type TEXT NOT NULL DEFAULT 'threshold', severity TEXT NOT NULL DEFAULT 'warning', message TEXT NOT NULL DEFAULT '', triggered_at TEXT NOT NULL
+    stream_id INTEGER,
+    alert_type TEXT NOT NULL DEFAULT 'threshold',
+    severity TEXT NOT NULL DEFAULT 'warning',
+    message TEXT NOT NULL DEFAULT '',
+    triggered_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_realtime_alerts_status ON realtime_alerts(status, created_at);
@@ -5336,8 +5512,10 @@ CREATE TABLE IF NOT EXISTS realtime_sessions (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    user_id INTEGER, started_at TEXT NOT NULL, last_activity_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+    user_id INTEGER,
+    started_at TEXT NOT NULL,
+    last_activity_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_realtime_sessions_status ON realtime_sessions(status, created_at);
@@ -5349,7 +5527,10 @@ CREATE TABLE IF NOT EXISTS realtime_processing_stats (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    stream_id INTEGER, events_processed INTEGER NOT NULL DEFAULT 0, avg_latency_ms REAL NOT NULL DEFAULT 0, recorded_at TEXT NOT NULL
+    stream_id INTEGER,
+    events_processed INTEGER NOT NULL DEFAULT 0,
+    avg_latency_ms REAL NOT NULL DEFAULT 0,
+    recorded_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_realtime_processing_stats_status ON realtime_processing_stats(status, created_at);
@@ -5361,8 +5542,11 @@ CREATE TABLE IF NOT EXISTS analytics_exports (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    name TEXT NOT NULL DEFAULT '', export_type TEXT NOT NULL DEFAULT 'csv', config_json TEXT NOT NULL DEFAULT '{}', requested_by INTEGER,
-    requested_by INTEGER REFERENCES users(id) ON DELETE SET NULL
+    name TEXT NOT NULL DEFAULT '',
+    export_type TEXT NOT NULL DEFAULT 'csv',
+    config_json TEXT NOT NULL DEFAULT '{}',
+    requested_by INTEGER,
+    FOREIGN KEY (requested_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_exports_status ON analytics_exports(status, created_at);
@@ -5374,7 +5558,11 @@ CREATE TABLE IF NOT EXISTS analytics_export_files (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    export_id INTEGER, format TEXT NOT NULL DEFAULT 'csv', file_path TEXT NOT NULL DEFAULT '', size_bytes INTEGER NOT NULL DEFAULT 0, created_at_file TEXT NOT NULL
+    export_id INTEGER,
+    format TEXT NOT NULL DEFAULT 'csv',
+    file_path TEXT NOT NULL DEFAULT '',
+    size_bytes INTEGER NOT NULL DEFAULT 0,
+    created_at_file TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_export_files_status ON analytics_export_files(status, created_at);
@@ -5386,7 +5574,10 @@ CREATE TABLE IF NOT EXISTS analytics_export_jobs (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    export_id INTEGER, job_status TEXT NOT NULL DEFAULT 'pending', started_at TEXT NOT NULL, completed_at TEXT
+    export_id INTEGER,
+    job_status TEXT NOT NULL DEFAULT 'pending',
+    started_at TEXT NOT NULL,
+    completed_at TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_export_jobs_status ON analytics_export_jobs(status, created_at);
@@ -5398,8 +5589,11 @@ CREATE TABLE IF NOT EXISTS analytics_export_permissions (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    export_id INTEGER, user_id INTEGER, role TEXT NOT NULL DEFAULT 'viewer', granted_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+    export_id INTEGER,
+    user_id INTEGER,
+    role TEXT NOT NULL DEFAULT 'viewer',
+    granted_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_export_permissions_status ON analytics_export_permissions(status, created_at);
@@ -5411,7 +5605,10 @@ CREATE TABLE IF NOT EXISTS analytics_export_logs (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    export_id INTEGER, action TEXT NOT NULL DEFAULT 'create', details_json TEXT NOT NULL DEFAULT '{}', logged_at TEXT NOT NULL
+    export_id INTEGER,
+    action TEXT NOT NULL DEFAULT 'create',
+    details_json TEXT NOT NULL DEFAULT '{}',
+    logged_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_export_logs_status ON analytics_export_logs(status, created_at);
@@ -5423,7 +5620,11 @@ CREATE TABLE IF NOT EXISTS analytics_ai_insights (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    insight_type TEXT NOT NULL DEFAULT 'trend', title TEXT NOT NULL DEFAULT '', content_json TEXT NOT NULL DEFAULT '{}', confidence REAL NOT NULL DEFAULT 0, generated_at TEXT NOT NULL
+    insight_type TEXT NOT NULL DEFAULT 'trend',
+    title TEXT NOT NULL DEFAULT '',
+    content_json TEXT NOT NULL DEFAULT '{}',
+    confidence REAL NOT NULL DEFAULT 0,
+    generated_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_ai_insights_status ON analytics_ai_insights(status, created_at);
@@ -5435,8 +5636,13 @@ CREATE TABLE IF NOT EXISTS analytics_ai_recommendations (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    recommendation_type TEXT NOT NULL DEFAULT 'action', title TEXT NOT NULL DEFAULT '', content_json TEXT NOT NULL DEFAULT '{}', score REAL NOT NULL DEFAULT 0, generated_at TEXT NOT NULL, user_id INTEGER,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+    recommendation_type TEXT NOT NULL DEFAULT 'action',
+    title TEXT NOT NULL DEFAULT '',
+    content_json TEXT NOT NULL DEFAULT '{}',
+    score REAL NOT NULL DEFAULT 0,
+    generated_at TEXT NOT NULL,
+    user_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_ai_recommendations_status ON analytics_ai_recommendations(status, created_at);
@@ -5448,7 +5654,11 @@ CREATE TABLE IF NOT EXISTS analytics_ai_anomaly_reviews (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    anomaly_id INTEGER, review_status TEXT NOT NULL DEFAULT 'pending', reviewer_user_id INTEGER, notes TEXT NOT NULL DEFAULT '', reviewed_at TEXT,
+    anomaly_id INTEGER,
+    review_status TEXT NOT NULL DEFAULT 'pending',
+    reviewer_user_id INTEGER,
+    notes TEXT NOT NULL DEFAULT '',
+    reviewed_at TEXT,
     user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
 );
 
@@ -5461,7 +5671,10 @@ CREATE TABLE IF NOT EXISTS analytics_ai_forecasts (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    metric_key TEXT NOT NULL DEFAULT '', horizon_days INTEGER NOT NULL DEFAULT 30, forecast_json TEXT NOT NULL DEFAULT '{}', generated_at TEXT NOT NULL
+    metric_key TEXT NOT NULL DEFAULT '',
+    horizon_days INTEGER NOT NULL DEFAULT 30,
+    forecast_json TEXT NOT NULL DEFAULT '{}',
+    generated_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_ai_forecasts_status ON analytics_ai_forecasts(status, created_at);
@@ -5473,7 +5686,9 @@ CREATE TABLE IF NOT EXISTS analytics_ai_explanations (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    kpi_id INTEGER, explanation_text TEXT NOT NULL DEFAULT '', generated_at TEXT NOT NULL
+    kpi_id INTEGER,
+    explanation_text TEXT NOT NULL DEFAULT '',
+    generated_at TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_ai_explanations_status ON analytics_ai_explanations(status, created_at);
@@ -5485,8 +5700,12 @@ CREATE TABLE IF NOT EXISTS analytics_ai_feedback (
     metadata_json TEXT NOT NULL DEFAULT '{}',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
-    insight_id INTEGER, user_id INTEGER, rating INTEGER NOT NULL DEFAULT 0, comment TEXT NOT NULL DEFAULT '', submitted_at TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
+    insight_id INTEGER,
+    user_id INTEGER,
+    rating INTEGER NOT NULL DEFAULT 0,
+    comment TEXT NOT NULL DEFAULT '',
+    submitted_at TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_analytics_ai_feedback_status ON analytics_ai_feedback(status, created_at);
@@ -5967,119 +6186,119 @@ CREATE INDEX IF NOT EXISTS idx_financial_audit_events_status ON financial_audit_
 CREATE INDEX IF NOT EXISTS idx_financial_audit_events_record_key ON financial_audit_events(record_key);
 
 CREATE TABLE IF NOT EXISTS source_intelligence_source_contexts (
-        id SERIAL PRIMARY KEY,
-        source_id INTEGER NOT NULL UNIQUE REFERENCES crm_lead_sources(id) ON DELETE CASCADE,
-        network TEXT NOT NULL DEFAULT '',
-        publication_url TEXT NOT NULL DEFAULT '',
-        publication_title TEXT NOT NULL DEFAULT '',
-        publication_text TEXT NOT NULL DEFAULT '',
-        publication_author TEXT NOT NULL DEFAULT '',
-        campaign TEXT NOT NULL DEFAULT '',
-        city TEXT NOT NULL DEFAULT '',
-        district TEXT NOT NULL DEFAULT '',
-        property_type TEXT NOT NULL DEFAULT '',
-        target_audience TEXT NOT NULL DEFAULT '',
-        format TEXT NOT NULL DEFAULT '',
-        language TEXT NOT NULL DEFAULT '',
-        tags_json TEXT NOT NULL DEFAULT '[]',
-        ai_classification TEXT NOT NULL DEFAULT '',
-        ai_confidence DOUBLE PRECISION NOT NULL DEFAULT 0,
-        analysis_json TEXT NOT NULL DEFAULT '{}',
-        notes TEXT NOT NULL DEFAULT '',
-        whatsapp_link TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    source_id INTEGER NOT NULL UNIQUE REFERENCES crm_lead_sources(id) ON DELETE CASCADE,
+    network TEXT NOT NULL DEFAULT '',
+    publication_url TEXT NOT NULL DEFAULT '',
+    publication_title TEXT NOT NULL DEFAULT '',
+    publication_text TEXT NOT NULL DEFAULT '',
+    publication_author TEXT NOT NULL DEFAULT '',
+    campaign TEXT NOT NULL DEFAULT '',
+    city TEXT NOT NULL DEFAULT '',
+    district TEXT NOT NULL DEFAULT '',
+    property_type TEXT NOT NULL DEFAULT '',
+    target_audience TEXT NOT NULL DEFAULT '',
+    format TEXT NOT NULL DEFAULT '',
+    language TEXT NOT NULL DEFAULT '',
+    tags_json TEXT NOT NULL DEFAULT '[]',
+    ai_classification TEXT NOT NULL DEFAULT '',
+    ai_confidence DOUBLE PRECISION NOT NULL DEFAULT 0,
+    analysis_json TEXT NOT NULL DEFAULT '{}',
+    notes TEXT NOT NULL DEFAULT '',
+    whatsapp_link TEXT NOT NULL DEFAULT '',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_source_intelligence_contexts_source ON source_intelligence_source_contexts(source_id, updated_at);
 
 CREATE TABLE IF NOT EXISTS source_intelligence_imports (
-        id SERIAL PRIMARY KEY,
-        import_key TEXT NOT NULL UNIQUE,
-        source_id INTEGER NOT NULL REFERENCES crm_lead_sources(id) ON DELETE CASCADE,
-        source_url TEXT NOT NULL DEFAULT '',
-        import_status TEXT NOT NULL DEFAULT 'pending',
-        source_channel TEXT NOT NULL DEFAULT '',
-        imported_at TEXT NOT NULL,
-        analyzed_at TEXT,
-        payload_json TEXT NOT NULL DEFAULT '{}',
-        result_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    import_key TEXT NOT NULL UNIQUE,
+    source_id INTEGER NOT NULL REFERENCES crm_lead_sources(id) ON DELETE CASCADE,
+    source_url TEXT NOT NULL DEFAULT '',
+    import_status TEXT NOT NULL DEFAULT 'pending',
+    source_channel TEXT NOT NULL DEFAULT '',
+    imported_at TEXT NOT NULL,
+    analyzed_at TEXT,
+    payload_json TEXT NOT NULL DEFAULT '{}',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_source ON source_intelligence_imports(source_id, imported_at);
 
 CREATE INDEX IF NOT EXISTS idx_source_intelligence_imports_status ON source_intelligence_imports(import_status, imported_at);
 
 CREATE TABLE IF NOT EXISTS brain_intents (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
-        source_message_id INTEGER REFERENCES assistant_messages(id) ON DELETE SET NULL,
-        intent_type TEXT NOT NULL,
-        entities_json TEXT NOT NULL DEFAULT '{}',
-        language TEXT NOT NULL DEFAULT 'fr',
-        confidence INTEGER NOT NULL DEFAULT 50,
-        status TEXT NOT NULL DEFAULT 'hypothesis' CHECK (status IN ('hypothesis', 'confirmed', 'rejected')),
-        engine_version TEXT NOT NULL DEFAULT '1.0.0',
-        origin TEXT NOT NULL DEFAULT 'conversation',
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    session_id INTEGER REFERENCES assistant_sessions(id) ON DELETE SET NULL,
+    source_message_id INTEGER REFERENCES assistant_messages(id) ON DELETE SET NULL,
+    intent_type TEXT NOT NULL,
+    entities_json TEXT NOT NULL DEFAULT '{}',
+    language TEXT NOT NULL DEFAULT 'fr',
+    confidence INTEGER NOT NULL DEFAULT 50,
+    status TEXT NOT NULL DEFAULT 'hypothesis' CHECK (status IN ('hypothesis', 'confirmed', 'rejected')),
+    engine_version TEXT NOT NULL DEFAULT '1.0.0',
+    origin TEXT NOT NULL DEFAULT 'conversation',
+    created_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS brain_memory_items (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        memory_key TEXT NOT NULL,
-        kind TEXT NOT NULL CHECK (kind IN ('confirmed_fact', 'preference', 'constraint', 'decision', 'hypothesis', 'temporary')),
-        label TEXT NOT NULL,
-        value TEXT NOT NULL,
-        source_table TEXT,
-        source_id INTEGER,
-        confidence INTEGER NOT NULL DEFAULT 50,
-        status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'pending_confirmation', 'expired', 'superseded')),
-        is_global INTEGER NOT NULL DEFAULT 0,
-        field_key TEXT,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, memory_key)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    memory_key TEXT NOT NULL,
+    kind TEXT NOT NULL CHECK (kind IN ('confirmed_fact', 'preference', 'constraint', 'decision', 'hypothesis', 'temporary')),
+    label TEXT NOT NULL,
+    value TEXT NOT NULL,
+    source_table TEXT,
+    source_id INTEGER,
+    confidence INTEGER NOT NULL DEFAULT 50,
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'pending_confirmation', 'expired', 'superseded')),
+    is_global INTEGER NOT NULL DEFAULT 0,
+    field_key TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, memory_key)
+);
 
 CREATE TABLE IF NOT EXISTS brain_progression_state (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        intent_type TEXT NOT NULL,
-        current_step INTEGER NOT NULL DEFAULT 0,
-        total_steps INTEGER NOT NULL DEFAULT 0,
-        asked_questions_json TEXT NOT NULL DEFAULT '[]',
-        answers_json TEXT NOT NULL DEFAULT '{}',
-        missing_fields_json TEXT NOT NULL DEFAULT '[]',
-        next_question TEXT,
-        next_question_key TEXT,
-        status TEXT NOT NULL DEFAULT 'in_progress' CHECK (status IN ('not_started', 'in_progress', 'complete', 'stuck')),
-        schema_version TEXT NOT NULL DEFAULT '1.0.0',
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        UNIQUE (project_id, intent_type)
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    intent_type TEXT NOT NULL,
+    current_step INTEGER NOT NULL DEFAULT 0,
+    total_steps INTEGER NOT NULL DEFAULT 0,
+    asked_questions_json TEXT NOT NULL DEFAULT '[]',
+    answers_json TEXT NOT NULL DEFAULT '{}',
+    missing_fields_json TEXT NOT NULL DEFAULT '[]',
+    next_question TEXT,
+    next_question_key TEXT,
+    status TEXT NOT NULL DEFAULT 'in_progress' CHECK (status IN ('not_started', 'in_progress', 'complete', 'stuck')),
+    schema_version TEXT NOT NULL DEFAULT '1.0.0',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE (project_id, intent_type)
+);
 
 CREATE TABLE IF NOT EXISTS brain_suggestions (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        suggestion_type TEXT NOT NULL,
-        content TEXT NOT NULL,
-        justification TEXT NOT NULL DEFAULT '',
-        priority TEXT NOT NULL DEFAULT 'medium' CHECK (priority IN ('high', 'medium', 'low')),
-        status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'accepted', 'rejected', 'ignored', 'deferred')),
-        target_action TEXT,
-        target_partner TEXT,
-        language TEXT NOT NULL DEFAULT 'fr',
-        expires_at TEXT,
-        accepted_at TEXT,
-        rejected_at TEXT,
-        created_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    suggestion_type TEXT NOT NULL,
+    content TEXT NOT NULL,
+    justification TEXT NOT NULL DEFAULT '',
+    priority TEXT NOT NULL DEFAULT 'medium' CHECK (priority IN ('high', 'medium', 'low')),
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'accepted', 'rejected', 'ignored', 'deferred')),
+    target_action TEXT,
+    target_partner TEXT,
+    language TEXT NOT NULL DEFAULT 'fr',
+    expires_at TEXT,
+    accepted_at TEXT,
+    rejected_at TEXT,
+    created_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_brain_intents_project ON brain_intents(project_id, intent_type, status);
 
@@ -6092,38 +6311,38 @@ CREATE INDEX IF NOT EXISTS idx_brain_progression_project ON brain_progression_st
 CREATE INDEX IF NOT EXISTS idx_brain_suggestions_project ON brain_suggestions(project_id, status, priority);
 
 CREATE TABLE IF NOT EXISTS brain_relation_proposals (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        relation_type TEXT NOT NULL CHECK (relation_type IN ('person_to_property', 'person_to_person', 'person_to_partner', 'project_to_project', 'property_to_partner', 'partner_to_partner')),
-        target_type TEXT NOT NULL,
-        target_id INTEGER NOT NULL,
-        score INTEGER NOT NULL DEFAULT 50,
-        justification TEXT NOT NULL,
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        status TEXT NOT NULL DEFAULT 'detected' CHECK (status IN ('detected', 'proposed', 'consulted', 'accepted', 'rejected', 'deferred', 'consent_pending', 'relation_established', 'contact_made', 'appointment_scheduled', 'in_progress', 'completed', 'no_follow_up', 'expired', 'cancelled')),
-        proposed_at TEXT,
-        accepted_at TEXT,
-        rejected_at TEXT,
-        consent_requested_at TEXT,
-        consent_granted_at TEXT,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    relation_type TEXT NOT NULL CHECK (relation_type IN ('person_to_property', 'person_to_person', 'person_to_partner', 'project_to_project', 'property_to_partner', 'partner_to_partner')),
+    target_type TEXT NOT NULL,
+    target_id INTEGER NOT NULL,
+    score INTEGER NOT NULL DEFAULT 50,
+    justification TEXT NOT NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'detected' CHECK (status IN ('detected', 'proposed', 'consulted', 'accepted', 'rejected', 'deferred', 'consent_pending', 'relation_established', 'contact_made', 'appointment_scheduled', 'in_progress', 'completed', 'no_follow_up', 'expired', 'cancelled')),
+    proposed_at TEXT,
+    accepted_at TEXT,
+    rejected_at TEXT,
+    consent_requested_at TEXT,
+    consent_granted_at TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS brain_relations (
-        id SERIAL PRIMARY KEY,
-        project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-        relation_type TEXT NOT NULL CHECK (relation_type IN ('person_to_property', 'person_to_person', 'person_to_partner', 'project_to_project', 'property_to_partner', 'partner_to_partner')),
-        source_type TEXT NOT NULL,
-        source_id INTEGER,
-        target_type TEXT NOT NULL,
-        target_id INTEGER NOT NULL,
-        status TEXT NOT NULL DEFAULT 'established',
-        metadata_json TEXT NOT NULL DEFAULT '{}',
-        established_at TEXT NOT NULL,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
-    );
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    relation_type TEXT NOT NULL CHECK (relation_type IN ('person_to_property', 'person_to_person', 'person_to_partner', 'project_to_project', 'property_to_partner', 'partner_to_partner')),
+    source_type TEXT NOT NULL,
+    source_id INTEGER,
+    target_type TEXT NOT NULL,
+    target_id INTEGER NOT NULL,
+    status TEXT NOT NULL DEFAULT 'established',
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    established_at TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
 
 CREATE INDEX IF NOT EXISTS idx_brain_proposals_project ON brain_relation_proposals(project_id, status);
 

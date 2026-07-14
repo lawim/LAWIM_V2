@@ -43,6 +43,7 @@ class SellerJourneyTest(LawimTestHarness):
             },
         )
         self.assertEqual(created.status, HTTPStatus.CREATED)
+        self.assertEqual(created.body_json()["property"]["ownership"]["organization_id"], organization_id)
         property_id = int(created.body_json()["property"]["id"])
         version = int(created.body_json()["property"]["version"])
 
@@ -114,6 +115,45 @@ class SellerJourneyTest(LawimTestHarness):
         persisted = self.invoke(f"/api/properties/{property_id}", token=seller_token)
         self.assertEqual(persisted.status, HTTPStatus.OK)
         self.assertEqual(persisted.body_json()["property"]["status"], "archived")
+
+    def test_seller_journey_rejects_cross_organization_property_assignment(self) -> None:
+        admin_token = self.login(email="admin@lawim.local")
+        seller_org = self.invoke(
+            "/api/organizations",
+            method="POST",
+            token=admin_token,
+            body={"name": "Seller Journey Org", "slug": "seller-journey-org", "kind": "agency", "city": "Douala"},
+        )
+        target_org = self.invoke(
+            "/api/organizations",
+            method="POST",
+            token=admin_token,
+            body={"name": "Target Org", "slug": "seller-target-org", "kind": "agency", "city": "Yaounde"},
+        )
+        seller_org_id = int(seller_org.body_json()["organization"]["id"])
+        target_org_id = int(target_org.body_json()["organization"]["id"])
+        seller_token = self.register(
+            email="seller.journey.cross@lawim.local",
+            full_name="Seller Journey Cross",
+            role="agent",
+            organization_id=seller_org_id,
+        )
+
+        denied = self.invoke(
+            "/api/properties",
+            method="POST",
+            token=seller_token,
+            body={
+                "title": "Cross org property",
+                "summary": "Must stay in the seller org.",
+                "city": "Douala",
+                "country": "Cameroon",
+                "property_type": "house",
+                "status": "draft",
+                "owner_organization_id": target_org_id,
+            },
+        )
+        self.assertEqual(denied.status, HTTPStatus.FORBIDDEN)
 
 
 class BuyerJourneyTest(LawimTestHarness):

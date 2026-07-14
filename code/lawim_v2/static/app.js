@@ -4131,6 +4131,7 @@ async function handleRegister(event) {
     applyModule("dashboard");
     const resolvedRole = resolveAccessRole(payload.user?.role || "user");
     applyJourney(journeyForRole(resolvedRole));
+    // applyJourney(journeyForRole(form.get("role")));
     setNotice(noticeCopy("registerSuccess", payload.user?.email || String(form.get("email") || "")), "success");
     if (refs.registerForm) {
       refs.registerForm.reset();

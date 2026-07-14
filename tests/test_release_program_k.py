@@ -53,7 +53,7 @@ from lawim_v2.communication.engines import (
     TemplateEngine,
     WhatsappEngine,
 )
-from lawim_v2.communication.schema_v17_ddl import V17_TABLE_NAMES
+from lawim_v2.communication.schema_v17_ddl import POSTGRESQL_V17_STATEMENTS, V17_TABLE_NAMES
 from lawim_v2.crm.schema_v14_ddl import V14_TABLE_NAMES
 from lawim_v2.knowledge_platform.schema_v11_ddl import V11_TABLE_NAMES
 from lawim_v2.marketplace.schema_v15_ddl import V15_TABLE_NAMES
@@ -1207,6 +1207,41 @@ class ReleaseProgramKV17TableTests(LawimTestHarness):
 
     def test_v17_table_communication_messages(self) -> None:
         self.assertIn('communication_messages', self._table_names())
+
+    def test_v17_postgresql_tables_have_unique_column_definitions(self) -> None:
+        for statement in POSTGRESQL_V17_STATEMENTS:
+            stripped = statement.strip()
+            if not stripped.startswith('CREATE TABLE IF NOT EXISTS'):
+                continue
+            table_name = stripped.split()[5]
+            body = stripped.split('(', 1)[1].rsplit(')', 1)[0]
+            seen_columns: set[str] = set()
+            for raw_line in body.splitlines():
+                line = raw_line.strip().rstrip(',')
+                if not line or line.startswith(('FOREIGN KEY', 'UNIQUE', 'CHECK', 'CONSTRAINT')):
+                    continue
+                column_name = line.split()[0]
+                self.assertNotIn(column_name, seen_columns, msg=f'duplicate column {column_name} in {table_name}')
+                seen_columns.add(column_name)
+
+    def test_v17_postgresql_dependency_order(self) -> None:
+        migration_sql = "\n".join(POSTGRESQL_V17_STATEMENTS)
+        self.assertLess(
+            migration_sql.index('CREATE TABLE IF NOT EXISTS communication_channels'),
+            migration_sql.index('CREATE TABLE IF NOT EXISTS communication_threads'),
+        )
+        self.assertLess(
+            migration_sql.index('CREATE TABLE IF NOT EXISTS communication_threads'),
+            migration_sql.index('CREATE TABLE IF NOT EXISTS communication_messages'),
+        )
+        self.assertLess(
+            migration_sql.index('CREATE TABLE IF NOT EXISTS sms_providers'),
+            migration_sql.index('CREATE TABLE IF NOT EXISTS sms_messages'),
+        )
+        self.assertLess(
+            migration_sql.index('CREATE TABLE IF NOT EXISTS inapp_categories'),
+            migration_sql.index('CREATE TABLE IF NOT EXISTS inapp_notifications'),
+        )
 
     def test_v17_table_communication_threads(self) -> None:
         self.assertIn('communication_threads', self._table_names())

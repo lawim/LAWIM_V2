@@ -13,7 +13,7 @@ if command -v node >/dev/null 2>&1; then
 fi
 
 echo "Running LAWIM_V2 unit tests..."
-python3 -m unittest discover -s tests -v "$@"
+python3 -m unittest discover -s tests -t . -v "$@"
 
 echo "Validating Prisma manifest..."
 python3 "${ROOT}/scripts/validate_prisma_manifest.py"

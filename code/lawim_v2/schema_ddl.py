@@ -512,6 +512,156 @@ POSTGRESQL_INIT_STATEMENTS = POSTGRESQL_INIT_STATEMENTS + tuple(
 POSTGRESQL_INIT_STATEMENTS = tuple(statement.replace("__USER_ROLE_VALUES__", USER_ROLE_VALUES_SQL) for statement in POSTGRESQL_INIT_STATEMENTS)
 
 
+def _split_sql_items(body: str) -> list[str]:
+    items: list[str] = []
+    current: list[str] = []
+    depth = 0
+    in_single = False
+    in_double = False
+    index = 0
+    while index < len(body):
+        char = body[index]
+        next_char = body[index + 1] if index + 1 < len(body) else ""
+        if char == "'" and not in_double:
+            current.append(char)
+            if in_single and next_char == "'":
+                current.append(next_char)
+                index += 1
+            else:
+                in_single = not in_single
+        elif char == '"' and not in_single:
+            current.append(char)
+            in_double = not in_double
+        elif not in_single and not in_double:
+            if char == "(":
+                depth += 1
+                current.append(char)
+            elif char == ")":
+                depth -= 1
+                current.append(char)
+            elif char == "," and depth == 0:
+                item = "".join(current).strip()
+                if item:
+                    items.append(item)
+                current = []
+            else:
+                current.append(char)
+        else:
+            current.append(char)
+        index += 1
+    item = "".join(current).strip()
+    if item:
+        items.append(item)
+    return items
+
+
+def _normalize_postgresql_create_table(statement: str) -> str:
+    text = statement.strip()
+    match = re.match(r"^CREATE TABLE IF NOT EXISTS\s+([a-zA-Z0-9_]+)\s*\((.*)\)$", text, flags=re.S)
+    if not match:
+        return text
+
+    table = match.group(1)
+    body = match.group(2).strip()
+    items = _split_sql_items(body)
+    seen_columns: set[str] = set()
+    normalized_items: list[str] = []
+
+    for item in items:
+        stripped = item.strip()
+        upper = stripped.upper()
+        if upper.startswith(("FOREIGN KEY", "UNIQUE", "CHECK", "CONSTRAINT")):
+            normalized_items.append(stripped)
+            continue
+
+        column_name = stripped.split()[0]
+        if "REFERENCES" in upper:
+            if column_name in seen_columns:
+                reference_clause = stripped.split("REFERENCES", 1)[1].strip()
+                normalized_items.append(f"FOREIGN KEY ({column_name}) REFERENCES {reference_clause}")
+            else:
+                seen_columns.add(column_name)
+                normalized_items.append(stripped)
+            continue
+
+        if column_name in seen_columns:
+            continue
+
+        seen_columns.add(column_name)
+        normalized_items.append(stripped)
+
+    normalized_body = ",\n".join(f"    {item}" for item in normalized_items)
+    return "\n".join([f"CREATE TABLE IF NOT EXISTS {table} (", normalized_body, ")"])
+
+
+def _postgresql_statement_table_name(statement: str) -> str | None:
+    first_line = statement.lstrip().splitlines()[0].strip()
+    match = re.match(r"CREATE TABLE IF NOT EXISTS\s+([a-zA-Z0-9_]+)\s*\($", first_line)
+    if match:
+        return match.group(1)
+    return None
+
+
+def _normalize_postgresql_statements(statements: tuple[str, ...]) -> tuple[str, ...]:
+    blocks: list[tuple[str | None, list[str]]] = []
+    current_block: list[str] = []
+    current_name: str | None = None
+
+    for statement in statements:
+        normalized = _normalize_postgresql_create_table(statement)
+        table_name = _postgresql_statement_table_name(normalized)
+        if table_name is not None:
+            if current_block:
+                blocks.append((current_name, current_block))
+            current_block = [normalized]
+            current_name = table_name
+        else:
+            if not current_block:
+                current_block = [normalized]
+                current_name = None
+            else:
+                current_block.append(normalized)
+
+    if current_block:
+        blocks.append((current_name, current_block))
+
+    known_tables = {name for name, _ in blocks if name is not None}
+    annotated_blocks: list[tuple[str | None, list[str], set[str]]] = []
+    for name, block in blocks:
+        dependencies: set[str] = set()
+        if name is not None and block:
+            dependencies = {
+                reference
+                for reference in re.findall(r"REFERENCES\s+([a-zA-Z0-9_]+)\s*\(", block[0])
+                if reference in known_tables and reference != name
+            }
+        annotated_blocks.append((name, block, dependencies))
+
+    ordered_blocks: list[tuple[str | None, list[str]]] = []
+    remaining = annotated_blocks[:]
+    placed_tables: set[str] = set()
+
+    while remaining:
+        for index, (name, block, dependencies) in enumerate(remaining):
+            if dependencies.issubset(placed_tables):
+                ordered_blocks.append((name, block))
+                if name is not None:
+                    placed_tables.add(name)
+                remaining.pop(index)
+                break
+        else:
+            ordered_blocks.extend((name, block) for name, block, _ in remaining)
+            break
+
+    flattened: list[str] = []
+    for _, block in ordered_blocks:
+        flattened.extend(block)
+    return tuple(flattened)
+
+
+POSTGRESQL_INIT_STATEMENTS = _normalize_postgresql_statements(POSTGRESQL_INIT_STATEMENTS)
+
+
 def manifest_table_names() -> tuple[str, ...]:
     from .persistence import APPLICATION_SCHEMA
 

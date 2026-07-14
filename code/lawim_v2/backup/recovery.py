@@ -555,7 +555,6 @@ class DisasterRecoveryService:
         backup_configuration = self.backup.configuration()
         state_root = Path(str(backup_configuration.get("state_root") or self.config.media_storage_path.parent))
         self.bundle_root = state_root / "recovery-bundles"
-        self.bundle_root.mkdir(parents=True, exist_ok=True)
 
     def _safe_bundle_identifier(self, bundle_id: str) -> str:
         identifier = bundle_id.strip()

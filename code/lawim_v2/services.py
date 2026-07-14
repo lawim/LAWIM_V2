@@ -313,10 +313,13 @@ class LawimServices:
         email: str | None = None,
         password: str,
     ) -> dict[str, object] | None:
-        lookup = identifier if identifier is not None else email
-        user = self.repository.authenticate(identifier=lookup, email=email, password=password)
+        if identifier is not None:
+            user = self.repository.authenticate(identifier=identifier, password=password)
+        else:
+            user = self.repository.authenticate(email=email, password=password)
         if user is not None:
             return user
+        lookup = identifier if identifier is not None else email
         if self.aad_authenticator.is_enabled() and lookup is not None and "@" in lookup:
             self.aad_authenticator.authenticate(email=lookup, password=password)
         return None
