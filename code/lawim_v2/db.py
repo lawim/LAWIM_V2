@@ -5,7 +5,7 @@ import re
 import sqlite3
 import threading
 from contextlib import contextmanager
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from pathlib import Path
@@ -32,7 +32,6 @@ from .property_domain import (
     validate_status_transition,
 )
 from .conversation_domain import validate_stage_transition, validate_status_transition as validate_conversation_status
-from .matching import MatchCriteria, rank_partners, rank_properties
 from .notification_domain import build_notification_payload, normalize_kind as normalize_notification_kind
 from .security import create_session_token, hash_password, verify_password
 from .schema_ddl import SQLITE_INIT_SCRIPT
@@ -49,15 +48,13 @@ from .analytics.repository import AnalyticsRepositoryMixin
 from .communication.repository import CommunicationRepositoryMixin
 from .security.repository import SecurityRepositoryMixin
 from .real_estate_intelligence.repository import RealEstateIntelligenceRepositoryMixin
-from .assistant.repository import AssistantRepositoryMixin
-from .brain.repository import BrainRepositoryMixin
-from .brain.relation_repository import BrainRelationRepositoryMixin
 from .cognition.repository import CognitionRepositoryMixin
 from .ecosystem.repository import EcosystemRepositoryMixin
 from .program_m_support import ProgramMRepositoryMixinBase
 from .backup.repository import BackupRepositoryMixin
 from .financial.repository import FinancialRepositoryMixin
 from .ai.repository import AIRepositoryMixin
+from .maintenance_repository import MaintenanceRepositoryMixin
 
 
 SCHEMA = SQLITE_INIT_SCRIPT
@@ -111,7 +108,7 @@ __all__ = [
 ]
 
 
-class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, AIRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, FinancialRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, AssistantRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase, BackupRepositoryMixin, BrainRepositoryMixin, BrainRelationRepositoryMixin):
+class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, MaintenanceRepositoryMixin, AIRepositoryMixin, SecurityRepositoryMixin, SourceIntelligenceRepositoryMixin, MarketplaceRepositoryMixin, FinancialRepositoryMixin, CrmRepositoryMixin, RealEstateIntelligenceRepositoryMixin, WorkflowAutomationRepositoryMixin, KnowledgePlatformRepositoryMixin, CognitionRepositoryMixin, EcosystemRepositoryMixin, IntelligentRepositoryMixin, ProjectRepositoryMixin, ProgramMRepositoryMixinBase, BackupRepositoryMixin):
     driver = "sqlite"
 
     def __init__(self, db_path: Path, seed: DemoSeed | None = None) -> None:
@@ -176,10 +173,6 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, AI
                 self.bootstrap_project_ecosystem(int(project["id"]))
             if project and hasattr(self, "bootstrap_project_cognition"):
                 self.bootstrap_project_cognition(int(project["id"]))
-            if project and hasattr(self, "seed_assistant_catalog"):
-                self.seed_assistant_catalog()
-            if project and hasattr(self, "bootstrap_project_assistant"):
-                self.bootstrap_project_assistant(int(project["id"]))
         if hasattr(self, "seed_expert_knowledge_catalog"):
             self.seed_expert_knowledge_catalog()
         if hasattr(self, "seed_automation_catalog"):
@@ -1962,28 +1955,7 @@ class LawimRepository(AnalyticsRepositoryMixin, CommunicationRepositoryMixin, AI
             "properties": self.list_properties(limit=10)["items"],
             "media": self.list_media(limit=10)["items"],
             "conversations": conversations,
-            "matches": self.recommendations(MatchCriteria(limit=5)),
         }
-
-    def recommendations(self, criteria: MatchCriteria) -> list[dict[str, object]]:
-        status = criteria.status or "published"
-        properties = self.list_properties(status=status, limit=100)["items"]
-        return rank_properties(properties, criteria)
-
-    def matched_properties(self, criteria: MatchCriteria) -> list[dict[str, object]]:
-        return self.recommendations(criteria)
-
-    def matched_partners(self, criteria: MatchCriteria) -> list[dict[str, object]]:
-        status = criteria.status if criteria.status and criteria.status.lower() != "published" else "active"
-        partner_criteria = replace(criteria, status=status)
-        partners = self.list_partner_profiles(status=status, limit=100)["partners"]
-        return rank_partners(partners, partner_criteria)
-
-    def matched_entities(self, criteria: MatchCriteria) -> list[dict[str, object]]:
-        target_type = str(criteria.target_type or "property").strip().lower()
-        if target_type == "partner":
-            return self.matched_partners(criteria)
-        return self.matched_properties(criteria)
 
     def _public_user(self, user: dict[str, object] | None) -> dict[str, object] | None:
         from .dto import user_dto

@@ -13,7 +13,8 @@ import uuid
 from ..complexity import classify_text
 from ..contracts import AIMessage, AIProvider, AIRequest, AIResponse, CostEstimate, ProviderHealth, UsageStatus
 from ..safety import ResponseQuality, estimate_simple_token_count, validate_response
-from ..prompts.system import SYSTEM_PROMPT
+
+SYSTEM_PROMPT = "You are a neutral language processing capability. Do not decide LAWIM business actions."
 
 
 def _utcnow() -> str:

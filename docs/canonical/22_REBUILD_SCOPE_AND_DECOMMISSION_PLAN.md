@@ -27,3 +27,17 @@ Mission 1 ne supprime pas le runtime metier. Mission 2 executera la demolition c
 
 ## Documents associes supprimes en Mission 1
 Les anciennes constitutions, Product Bible, directives, specifications conversationnelles, platform readiness, matrices de qualification, strategies IA, references matching/relation et rapports produit trompeurs sont remplaces par `docs/canonical/` et supprimes du depot actif lorsque leur maintien cree une confusion.
+
+## Statut Apres Mission 2
+
+Date: 2026-07-14
+
+| Domaine | Statut apres Mission 2 | Preuve locale | Entrée Mission 3 |
+| --- | --- | --- | --- |
+| Conversation | DECOMMISSIONED / REBUILD_PENDING | `code/lawim_v2/conversation_core/` supprime, routes `/api/v2/assistant/*` supprimees | Reconstruire un nouveau runtime cible. |
+| Qualification conversationnelle | DECOMMISSIONED / REBUILD_PENDING | Progression, next question et memoire Brain supprimees | Construire matrices executables. |
+| Search orchestration | DECOMMISSIONED / REBUILD_PENDING | `/api/matches`, `/api/v2/properties/search` et orchestration de matching retirees | Construire Search v2. |
+| Matching | DECOMMISSIONED / REBUILD_PENDING | `code/lawim_v2/matching.py`, MatchingEngine2, RequestMatchingEngine et MatchingEngine supprimes | Construire Matching v2 explicable. |
+| Relationship | DECOMMISSIONED / REBUILD_PENDING | `code/lawim_v2/brain/relation.py` et routes consent/proposal/relations supprimees | Construire Relationship v2 avec consentements. |
+
+Mode maintenance actif via `lawim_core_rebuild_maintenance_mode=true`; les sous-flags Conversation, Qualification, Search, Matching et Relationship restent `false`.

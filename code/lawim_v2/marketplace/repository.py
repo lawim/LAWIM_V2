@@ -148,18 +148,6 @@ class MarketplaceRepositoryMixin:
                 price_max=int(service.get("indicative_price_max") or 0) or None,
                 status="active",
             )
-        if providers:
-            request = self.create_marketplace_request(
-                title="Demande démo inspection bien",
-                description="Inspection avant achat — marketplace demo",
-                category="inspection",
-                city="Douala",
-                region="Littoral",
-                budget_min=150000,
-                budget_max=350000,
-                status="submitted",
-            )
-            self.run_marketplace_matching(int(request["id"]))
         self.snapshot_marketplace_analytics()
 
     # --- Integration hooks ---
@@ -1237,84 +1225,6 @@ class MarketplaceRepositoryMixin:
         else:
             rows = self.all("SELECT * FROM marketplace_payment_preparations ORDER BY id DESC LIMIT 50")
         return [dict(r) for r in rows]
-
-    # --- Matching ---
-
-    def run_marketplace_matching(self, request_id: int, *, limit: int = 10) -> dict[str, object]:
-        engine = MarketplacePlatformEngine()
-        request = self.get_marketplace_request(request_id)
-        providers = self.list_marketplace_providers(status="active", limit=100)
-        partner_ids = [int(p["partner_profile_id"]) for p in providers]
-        partners: list[dict[str, object]] = []
-        if partner_ids:
-            placeholders = ",".join("?" for _ in partner_ids)
-            partners = [
-                dict(r)
-                for r in self.all(
-                    f"SELECT * FROM partner_profiles WHERE id IN ({placeholders}) AND status = 'active'",
-                    tuple(partner_ids),
-                )
-            ]
-        matches = engine.matching.match_providers(request=request, providers=providers, partners=partners, limit=limit)
-        now = _utcnow()
-        key = f"match-{uuid.uuid4().hex[:10]}"
-        with self._transaction() as conn:
-            conn.execute(
-                """
-                INSERT INTO marketplace_matching_sessions (
-                    session_key, request_id, status, criteria_json, result_count, started_at, completed_at, created_at
-                ) VALUES (?, ?, 'completed', ?, ?, ?, ?, ?)
-                """,
-                (key, request_id, request.get("criteria_json") or "{}", len(matches), now, now, now),
-            )
-            session = self.one("SELECT id FROM marketplace_matching_sessions WHERE session_key = ?", (key,))
-            session_id = int(session["id"])
-            for match in matches:
-                conn.execute(
-                    """
-                    INSERT INTO marketplace_matching_results (
-                        session_id, provider_profile_id, partner_profile_id, score, rank,
-                        reasons_json, breakdown_json, created_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    (
-                        session_id,
-                        match["provider_profile_id"],
-                        match["partner_profile_id"],
-                        match["score"],
-                        match["rank"],
-                        _json(match.get("reasons") or []),
-                        _json(match.get("breakdown") or {}),
-                        now,
-                    ),
-                )
-        self.update_marketplace_request(request_id, status="matching")
-        recs = engine.recommendations.build_recommendations(matches=matches, request=request, sources=engine.integration_sources())
-        for rec in recs:
-            self.store_marketplace_ai_recommendation(
-                request_id=request_id,
-                provider_profile_id=rec.get("provider_profile_id"),
-                recommendation_type=str(rec.get("recommendation_type") or "provider"),
-                title=str(rec.get("title") or ""),
-                rationale=str(rec.get("rationale") or ""),
-                score=float(rec.get("score") or 0),
-                sources=list(rec.get("sources") or []),
-            )
-        return {
-            "session": dict(self.one("SELECT * FROM marketplace_matching_sessions WHERE id = ?", (session_id,))),
-            "results": matches,
-        }
-
-    def get_marketplace_matching_session(self, session_id: int) -> dict[str, object]:
-        session = self.one("SELECT * FROM marketplace_matching_sessions WHERE id = ?", (session_id,))
-        if session is None:
-            from ..errors import NotFoundError
-            raise NotFoundError("matching session not found")
-        results = self.all(
-            "SELECT * FROM marketplace_matching_results WHERE session_id = ? ORDER BY rank ASC",
-            (session_id,),
-        )
-        return {"session": dict(session), "results": [dict(r) for r in results]}
 
     # --- Portfolio ---
 

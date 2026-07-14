@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Navigate, NavLink, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { apiSdk, type MatchQuery, type ProjectSummary } from '@api-sdk';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { apiSdk, type ProjectSummary } from '@api-sdk';
 import {
   Badge,
   BrandMark,
@@ -19,8 +19,6 @@ import {
   useLanguage
 } from '@ui';
 import { resolveDashboardPath, resolvePrimaryRole, useAuthStore } from '@auth';
-import { AdvisorPanel, AdvisorWidget } from './AdvisorPanel';
-import { MatchSummaryWidget } from './MatchResultsPanel';
 
 type MissionRole = 'admin' | 'manager' | 'agent' | 'partner' | 'user' | 'investor';
 type Lang = 'fr' | 'en' | 'pcm';
@@ -509,34 +507,6 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
   const activeProject = projects[0] ?? null;
   const projectTheme = describeProjectTheme(activeProject?.objective);
 
-  const matchQuery = useMemo<MatchQuery | undefined>(() => {
-    if (role === 'admin' || role === 'manager') return undefined;
-    return {
-      target_type: role === 'agent' || role === 'partner' ? 'partner' : 'property',
-      city: activeProject?.location_city ?? 'Douala',
-      country: 'Cameroon',
-      partner_type: role === 'agent' ? 'architect' : role === 'partner' ? 'bank' : undefined,
-      budget_max: activeProject?.budget_max ?? undefined,
-      limit: 2
-    };
-  }, [activeProject?.budget_max, activeProject?.location_city, role]);
-
-  const { data: matchData } = useQuery({
-    queryKey: ['cockpit-matches', role, activeProject?.id],
-    queryFn: () => apiSdk.getMatches(matchQuery),
-    enabled: Boolean(matchQuery)
-  });
-  const matches = matchData?.data ?? [];
-
-  const { data: brainProposalsData } = useQuery({
-    queryKey: ['cockpit-brain-proposals', activeProject?.id],
-    queryFn: () => apiSdk.brainProposals(activeProject!.id),
-    enabled: Boolean(activeProject?.id),
-    staleTime: 15_000,
-  });
-  const brainProposals = brainProposalsData?.data ?? [];
-  const hasBrainMatches = brainProposals.length > 0;
-
   const roleConfig = (() => {
     switch (role) {
       case 'admin':
@@ -655,7 +625,14 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
 
       <div className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
         <div className="space-y-4">
-          <AdvisorWidget onOpenConversation={() => navigate('/conversation')} />
+          <Surface className="p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">LAWIM AI</p>
+            <p className="mt-2 text-sm text-slate-600">
+              Le service intelligent de LAWIM est en reconstruction. Les messages sont enregistrés sans recherche,
+              matching ni mise en relation automatique.
+            </p>
+            <Button className="mt-3" onClick={() => navigate('/conversation')}>{t('assistant.title')}</Button>
+          </Surface>
 
           <div className="flex flex-wrap items-center gap-3">
             <PrimaryAction {...roleConfig.primaryAction} tooltip={roleConfig.primaryAction.label} />
@@ -688,46 +665,6 @@ function RoleCockpitBody({ role, projects, summary }: { role: MissionRole; proje
             </div>
           </Surface>
 
-          {matches.length > 0 ? (
-            <Surface className="p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">✨ {t('dashboard.stats.opportunities')}</p>
-                <button type="button" onClick={() => navigate('/search')} className="text-xs text-slate-400 hover:text-slate-700">{t('match.why_title')} →</button>
-              </div>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                {matches.slice(0, 2).map((match, index) => {
-                  const title = match.property?.title || (match.partner && typeof match.partner === 'object' ? String((match.partner as Record<string, unknown>).display_name ?? '') : '') || `✨ ${index + 1}`;
-                  const reasons = match.reasons.length > 0 ? match.reasons.map((r: string) => {
-                    const parts = r.split(':');
-                    if (parts.length === 2) return `${parts[0] === 'city' ? '📍' : parts[0] === 'budget' ? '💰' : parts[0] === 'property_type' ? '🏠' : '✓'} ${parts[1]}`;
-                    return r;
-                  }).join(' · ') : null;
-                  return (
-                    <button key={index} type="button" data-tooltip={reasons || ''} onClick={() => navigate('/search')}
-                      className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 text-left transition hover:border-slate-300"
-                    >
-                      <span className="text-xl">{match.target_type === 'partner' ? '🤝' : role === 'investor' ? '💰' : '🏠'}</span>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-slate-900">{title}</p>
-                        {reasons ? <p className="truncate text-xs text-slate-500">{reasons}</p> : null}
-                      </div>
-                      <Badge variant={match.eligible ? 'success' : 'info'}>{match.eligible ? '✓' : '?'}</Badge>
-                    </button>
-                  );
-                })}
-              </div>
-            </Surface>
-          ) : role !== 'admin' && role !== 'manager' ? (
-            <Surface className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">✨ {t('dashboard.stats.opportunities')}</p>
-              <p className="mt-2 text-sm text-slate-500">{t('match.empty')}</p>
-            </Surface>
-          ) : null}
-
-          {/* Brain proposals in cockpit */}
-          {hasBrainMatches && activeProject && (
-            <MatchSummaryWidget projectId={activeProject.id} />
-          )}
         </div>
 
         <div className="space-y-4">
@@ -879,18 +816,60 @@ export function RoleCockpitPage() {
 
 export function ConversationStudioPage() {
   const { t } = useTranslator();
-  const user = useAuthStore((state) => state.user);
-  const roles = useAuthStore((state) => state.roles);
-  const role = missionRoleFromAccessRole(resolvePrimaryRole(user?.role, roles));
+  const [message, setMessage] = useState('');
+  const [handoverRequested, setHandoverRequested] = useState(false);
+  const maintenanceMutation = useMutation({
+    mutationFn: () => apiSdk.submitMaintenanceMessage({
+      channel: 'web',
+      message,
+      handover_requested: handoverRequested,
+    }),
+    onSuccess: () => {
+      setMessage('');
+    }
+  });
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!message.trim() || maintenanceMutation.isPending) return;
+    maintenanceMutation.mutate();
+  };
 
   return (
     <CockpitFrame title={`💬 ${t('assistant.title')}`}>
       <div className="mx-auto max-w-4xl">
-        <Surface className="overflow-hidden">
-          <AdvisorPanel
-            userName={(user as unknown as Record<string, string | undefined>)?.full_name || (user as unknown as Record<string, string | undefined>)?.username || user?.email || ''}
-            roleLabel={t(ROLE_LABEL_BY_MISSION_ROLE[role])}
-          />
+        <Surface className="p-5">
+          <div className="space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">LAWIM AI</p>
+            <h1 className="text-xl font-semibold text-slate-900">Service intelligent en reconstruction</h1>
+            <p className="text-sm text-slate-600">
+              Votre message sera enregistré. Aucune recherche, qualification, mise en relation ou action automatique
+              ne sera lancée pendant cette période.
+            </p>
+          </div>
+          <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
+            <Textarea
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+              placeholder="Votre message"
+              rows={5}
+            />
+            <label className="flex items-center gap-2 text-sm text-slate-600">
+              <input
+                type="checkbox"
+                checked={handoverRequested}
+                onChange={(event) => setHandoverRequested(event.target.checked)}
+              />
+              Demander une reprise par l’équipe LAWIM
+            </label>
+            <div className="flex items-center gap-3">
+              <Button type="submit" disabled={!message.trim() || maintenanceMutation.isPending}>
+                {maintenanceMutation.isPending ? 'Enregistrement…' : 'Enregistrer le message'}
+              </Button>
+              {maintenanceMutation.isSuccess ? <Badge variant="success">Message enregistré</Badge> : null}
+              {maintenanceMutation.isError ? <Badge variant="warning">Enregistrement impossible</Badge> : null}
+            </div>
+          </form>
         </Surface>
       </div>
     </CockpitFrame>

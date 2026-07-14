@@ -22,7 +22,7 @@ from .db import LawimRepository
 from .bootstrap import build_runtime
 from .ecosystem.engines import normalize_partner_type
 from .dto import error_dto
-from .matching import MatchCriteria, MatchWeights
+from .maintenance import MaintenanceSubmission
 from .media_domain import THUMBNAIL_CONTRACT
 from .multipart import parse_multipart_form_data
 from .observability import METRICS
@@ -438,12 +438,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"conversation": self.services.get_conversation(actor=actor, conversation_id=conversation_id)})
             return
 
-        if path == "/api/matches":
-            criteria = self._build_match_criteria(query)
-            actor = self._require_user(optional=True)
-            self._send_json(self.services.list_matches(criteria, actor=actor))
-            return
-
         if path == "/api/media":
             property_id = self._first_int(query, "property_id", minimum=1)
             self._send_json(
@@ -464,11 +458,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json({"media": self.services.get_media(media_id)})
             return
 
-        if path.startswith("/api/v2/assistant"):
-            if "/brain/" in path:
-                self._handle_v2_brain_get(path, query)
-                return
-            self._handle_v2_assistant_get(path, query)
+        if path.startswith("/api/v2/maintenance"):
+            self._handle_v2_maintenance_get(path, query)
             return
 
         if path.startswith("/api/v2/knowledge/"):
@@ -543,13 +534,12 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             path.startswith("/api/v2/partners")
             or path.startswith("/api/v2/services")
             or path == "/api/v2/workflows"
-            or path.startswith("/api/v2/matching")
             or path.startswith("/api/v2/reputation")
             or path.startswith("/api/v2/notifications/ecosystem")
             or path.startswith("/api/v2/resources")
             or (
                 path.startswith("/api/v2/projects/")
-                and ("/orchestration" in path or "/matching" in path or "/workflows" in path)
+                and ("/orchestration" in path or "/workflows" in path)
             )
         ):
             self._handle_v2_ecosystem_get(path, query)
@@ -593,9 +583,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 return
             if path == "/api/admin/ai/alerts":
                 self._send_json({"alerts": self.services.ai.list_alerts(status=self._first(query, "status"))})
-                return
-            if path == "/api/admin/ai/fallback":
-                self._send_json({"fallback": self.services.ai.list_fallback_entries(status=self._first(query, "status"))})
                 return
             if path == "/api/admin/ai/learning/candidates":
                 self._send_json({"candidates": self.services.ai.list_learning_candidates(status=self._first(query, "status"))})
@@ -658,6 +645,11 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/auth/logout":
             token = self._bearer_token(optional=True)
             self._send_json(self.services.logout(token=token))
+            return
+
+        if path.startswith("/api/v2/maintenance"):
+            actor = self._require_user(optional=True)
+            self._handle_v2_maintenance_post(path, body, actor)
             return
 
         actor = self._require_user()
@@ -794,13 +786,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             )
             return
 
-        if path.startswith("/api/v2/assistant"):
-            if "/brain/" in path:
-                self._handle_v2_brain_post(path, body, actor)
-                return
-            self._handle_v2_assistant_post(path, body, actor)
-            return
-
         if path.startswith("/api/v2/knowledge/"):
             self._handle_v2_knowledge_subroutes_post(path, body, actor)
             return
@@ -849,7 +834,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._handle_v2_cognition_post(path, body, actor)
             return
 
-        if path.startswith("/api/v2/partners") or path == "/api/v2/matching" or (path.startswith("/api/v2/projects/") and path.endswith("/matching/run")):
+        if path.startswith("/api/v2/partners"):
             self._handle_v2_ecosystem_post(path, body, actor)
             return
 
@@ -1425,88 +1410,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if value > 100:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'limit' must not exceed 100")
         return value
-
-    def _build_match_criteria(self, query: dict[str, list[str]]) -> MatchCriteria:
-        budget_min = self._first_int(query, "budget_min", minimum=0)
-        budget_max = self._first_int(query, "budget_max", minimum=0)
-        budget = self._first_int(query, "budget", minimum=0)
-        if budget_max is None and budget is not None:
-            budget_max = budget
-        if budget_min is None and budget is not None and budget_max is not None:
-            budget_min = 0
-        if budget_min is not None and budget_max is not None and budget_min > budget_max:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'budget_min' cannot exceed 'budget_max'")
-        query_min_score = self._first_float(query, "min_score")
-        min_score = query_min_score if query_min_score is not None else self.config.match_min_score
-        if min_score < 0:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'min_score' must be non-negative")
-        city = self._first(query, "city")
-        region = self._first(query, "region")
-        country = self._first(query, "country")
-        property_type = self._first(query, "property_type")
-        availability = self._first(query, "availability")
-        status = self._first(query, "status")
-        target_type = self._first(query, "target_type") or self._first(query, "match_type") or self._first(query, "target")
-        need = self._first(query, "need")
-        need_type = self._first(query, "need_type")
-        partner_type = self._first(query, "partner_type")
-        project_type = self._first(query, "project_type")
-        specialty = self._first(query, "specialty")
-        language = self._first(query, "language")
-        subject_type = self._first(query, "subject_type")
-        rating_min = self._first_float(query, "rating_min")
-        deadline_days = self._first_int(query, "deadline_days", minimum=0)
-        if target_type is None:
-            if any(value for value in (need, need_type, partner_type, project_type, specialty, language, rating_min, deadline_days)):
-                target_type = "partner"
-            else:
-                target_type = "property"
-        target_type = str(target_type).strip().lower()
-        if target_type not in {"property", "partner"}:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_query", "Query 'target_type' must be 'property' or 'partner'")
-        if target_type == "partner":
-            inferred_partner_type = self._infer_partner_type(partner_type, need, need_type, specialty, project_type)
-            partner_type = inferred_partner_type or partner_type
-            if status is None:
-                status = "active"
-        elif status is None:
-            status = "published"
-        default_weights = MatchWeights()
-        weights = MatchWeights(
-            status=self._first_float(query, "weight_status") or default_weights.status,
-            city=self._first_float(query, "weight_city") or default_weights.city,
-            region=self._first_float(query, "weight_region") or default_weights.region,
-            budget=self._first_float(query, "weight_budget") or default_weights.budget,
-            proximity=self._first_float(query, "weight_proximity") or default_weights.proximity,
-            attributes=self._first_float(query, "weight_attributes") or default_weights.attributes,
-            availability=self._first_float(query, "weight_availability") or default_weights.availability,
-        )
-        return MatchCriteria(
-            target_type=target_type,
-            city=city.lower() if city else None,
-            region=region.lower() if region else None,
-            country=country.lower() if country else None,
-            budget_min=budget_min,
-            budget_max=budget_max,
-            latitude=self._optional_float(self._first(query, "latitude")),
-            longitude=self._optional_float(self._first(query, "longitude")),
-            property_type=property_type.lower() if property_type else None,
-            bedrooms_min=self._first_int(query, "bedrooms_min", minimum=0),
-            availability=availability.lower() if availability else None,
-            need=need.lower() if need else None,
-            need_type=need_type.lower() if need_type else None,
-            partner_type=partner_type.lower() if partner_type else None,
-            project_type=project_type.lower() if project_type else None,
-            specialty=specialty.lower() if specialty else None,
-            language=language.lower() if language else None,
-            rating_min=rating_min,
-            deadline_days=deadline_days,
-            subject_type=subject_type.lower() if subject_type else None,
-            status=(status.lower() if status else ("active" if target_type == "partner" else "published")),
-            limit=self._query_limit(query),
-            min_score=min_score,
-            weights=weights.normalized(),
-        )
 
     def _infer_partner_type(self, *values: str | None) -> str | None:
         for value in values:
@@ -2682,10 +2585,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             provider_id = self._extract_path_id(path, marker="/api/v2/marketplace/providers/", suffix="/reputation", resource="Provider")
             self._send_json(mp.provider_reputation(actor=actor, provider_id=provider_id))
             return
-        if path.startswith("/api/v2/marketplace/matching/"):
-            session_id = self._extract_path_id(path, marker="/api/v2/marketplace/matching/", resource="Session")
-            self._send_json(mp.get_matching_session(actor=actor, session_id=session_id))
-            return
         if path.startswith("/api/v2/marketplace/catalog/") and path.count("/") == 5:
             item_id = self._extract_path_id(path, marker="/api/v2/marketplace/catalog/", resource="CatalogItem")
             self._send_json(mp.get_catalog_item(actor=actor, item_id=item_id))
@@ -2762,14 +2661,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/api/v2/marketplace/contracts/") and path.endswith("/activate"):
             contract_id = self._extract_path_id(path, marker="/api/v2/marketplace/contracts/", suffix="/activate", resource="Contract")
             self._send_json(mp.activate_contract(actor=actor, contract_id=contract_id))
-            return
-        if path.startswith("/api/v2/marketplace/requests/") and path.endswith("/matching"):
-            request_id = self._extract_path_id(path, marker="/api/v2/marketplace/requests/", suffix="/matching", resource="Request")
-            self._send_json(mp.run_matching(actor=actor, request_id=request_id))
-            return
-        if path.startswith("/api/v2/marketplace/requests/") and path.endswith("/recommendations"):
-            request_id = self._extract_path_id(path, marker="/api/v2/marketplace/requests/", suffix="/recommendations", resource="Request")
-            self._send_json(mp.generate_recommendations(actor=actor, request_id=request_id))
             return
         if path.startswith("/api/v2/marketplace/disputes/") and path.endswith("/resolve"):
             dispute_id = self._extract_path_id(path, marker="/api/v2/marketplace/disputes/", suffix="/resolve", resource="Dispute")
@@ -2981,9 +2872,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/v2/properties/listings":
             self._send_json(rei.list_listings(actor=actor, status=self._first(query, "status")))
             return
-        if path == "/api/v2/properties/recommendations":
-            self._send_json(rei.list_recommendations(actor=actor))
-            return
         if path == "/api/v2/properties/visits":
             property_id = self._optional_int(self._first(query, "property_id"), minimum=1)
             self._send_json(rei.visits(actor=actor, property_id=property_id))
@@ -2995,10 +2883,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/v2/properties/transactions":
             property_id = self._optional_int(self._first(query, "property_id"), minimum=1)
             self._send_json(rei.transactions(actor=actor, property_id=property_id))
-            return
-        if path == "/api/v2/properties/search":
-            query_text = self._first(query, "q") or self._first(query, "query") or ""
-            self._send_json(rei.search(actor=actor, query=query_text, limit=self._query_limit(query)))
             return
         if path == "/api/v2/properties/map":
             self._send_json(rei.map_view(actor=actor, city=self._first(query, "city")))
@@ -3064,12 +2948,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         rei = self.services.real_estate
         if path == "/api/v2/properties/listings":
             self._send_json(rei.create_listing(actor=actor, body=body), status=HTTPStatus.CREATED)
-            return
-        if path == "/api/v2/properties/matching":
-            self._send_json(rei.matching(actor=actor, body=body))
-            return
-        if path == "/api/v2/properties/recommendations":
-            self._send_json(rei.recommendations(actor=actor, body=body))
             return
         if path == "/api/v2/properties/visits":
             self._send_json(rei.schedule_visit(actor=actor, body=body), status=HTTPStatus.CREATED)
@@ -3357,205 +3235,43 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown cognition API route")
 
-    def _handle_v2_brain_get(self, path: str, query: dict[str, list[str]]) -> None:
-        actor = self._require_user()
-        brain = self.services.brain
-        if path == "/api/v2/assistant/brain/dossiers":
+    def _handle_v2_maintenance_get(self, path: str, query: dict[str, list[str]]) -> None:
+        if path == "/api/v2/maintenance/status":
+            self._send_json(self.services.maintenance.status())
+            return
+        if path == "/api/v2/maintenance/messages":
+            actor = self._require_user()
+            if not self.services.policy.is_admin(actor):
+                raise ApiError(HTTPStatus.FORBIDDEN, "forbidden", "Admin required")
+            handover_value = self._first(query, "handover_requested")
+            handover_requested = None if handover_value is None else handover_value.lower() in {"1", "true", "yes"}
             self._send_json(
-                brain.list_dossiers(
-                    actor=actor,
-                    status=self._first(query, "status"),
-                    limit=self._query_limit(query),
-                )
+                {
+                    "messages": self.repository.list_maintenance_messages(
+                        channel=self._first(query, "channel"),
+                        handover_requested=handover_requested,
+                        limit=self._query_limit(query),
+                    )
+                }
             )
             return
-        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/resume"):
-            project_id = self._extract_path_id(
-                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/resume", resource="Project"
-            )
-            lang = self._first(query, "language") or "fr"
-            self._send_json(brain.get_resumption(actor=actor, project_id=project_id, language=lang))
-            return
-        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/memory"):
-            project_id = self._extract_path_id(
-                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/memory", resource="Project"
-            )
-            self._send_json(brain.get_memory_summary(actor=actor, project_id=project_id))
-            return
-        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/suggestions"):
-            project_id = self._extract_path_id(
-                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/suggestions", resource="Project"
-            )
-            self._send_json(
-                brain.get_suggestions(
-                    actor=actor,
-                    project_id=project_id,
-                    status=self._first(query, "status") or "active",
-                )
-            )
-            return
-        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/matches"):
-            project_id = self._extract_path_id(
-                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/matches", resource="Project"
-            )
-            status = self._first(query, "status")
-            self._send_json(brain.get_proposals(actor=actor, project_id=project_id, status=status))
-            return
-        if path.startswith("/api/v2/assistant/brain/dossiers/") and path.endswith("/relations"):
-            project_id = self._extract_path_id(
-                path, marker="/api/v2/assistant/brain/dossiers/", suffix="/relations", resource="Project"
-            )
-            self._send_json({"relations": brain.list_established_relations(actor=actor, project_id=project_id)})
-            return
-        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown brain API route")
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown maintenance API route")
 
-    def _handle_v2_brain_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
-        brain = self.services.brain
-        if path == "/api/v2/assistant/brain/matching":
-            project_id = self._require_int(body, "project_id", minimum=1)
-            partner_type = self._optional_text(body.get("partner_type"))
-            result = brain.find_matches(
-                actor=actor,
-                project_id=project_id,
-                partner_type=partner_type,
-            )
-            self._send_json(result, status=HTTPStatus.CREATED)
-            return
-        if path == "/api/v2/assistant/brain/proposals/accept":
-            proposal_id = self._require_int(body, "proposal_id", minimum=1)
-            self._send_json(brain.accept_proposal(actor=actor, proposal_id=proposal_id))
-            return
-        if path == "/api/v2/assistant/brain/proposals/reject":
-            proposal_id = self._require_int(body, "proposal_id", minimum=1)
-            self._send_json(brain.reject_proposal(actor=actor, proposal_id=proposal_id))
-            return
-        if path == "/api/v2/assistant/brain/consent/request":
-            proposal_id = self._require_int(body, "proposal_id", minimum=1)
-            self._send_json(brain.request_consent(actor=actor, proposal_id=proposal_id))
-            return
-        if path == "/api/v2/assistant/brain/consent/grant":
-            proposal_id = self._require_int(body, "proposal_id", minimum=1)
-            self._send_json(brain.grant_consent(actor=actor, proposal_id=proposal_id))
-            return
-        if path == "/api/v2/assistant/brain/chat":
-            project_id = self._assistant_project_id({}, body)
-            session_id = self._optional_int(body.get("session_id"), minimum=1)
-            message = self._require_text(body, "message")
-            language = self._optional_text(body.get("language")) or "fr"
-            channel = self._optional_text(body.get("channel")) or "web"
-            processing = brain.process_chat(
-                actor=actor,
-                project_id=project_id,
-                message=message,
-                session_id=session_id,
-                language=language,
-                channel=channel,
-            )
-            self._send_json({"brain": processing}, status=HTTPStatus.CREATED)
-            return
-        if path == "/api/v2/assistant/brain/dossiers":
-            # Create a new project/dossier from the conversation
-            title = self._require_text(body, "title")
-            project_type = self._require_text(body, "project_type")
-            objective = self._require_text(body, "objective")
-            project = self.services.projects.create_project(
-                actor=actor,
-                title=title,
-                project_type=project_type,
-                objective=objective,
-                budget_min=self._optional_int(body.get("budget_min"), minimum=0),
-                budget_max=self._optional_int(body.get("budget_max"), minimum=0),
-                currency=self._optional_text(body.get("currency")) or "XAF",
-                location_city=self._optional_text(body.get("location_city")),
-                location_region=self._optional_text(body.get("location_region")),
-                location_country=self._optional_text(body.get("location_country")) or "Cameroon",
-                timeline_horizon=self._optional_text(body.get("timeline_horizon")),
-                status=self._optional_text(body.get("status")) or "draft",
-                priority=self._optional_text(body.get("priority")) or "normal",
-            )
-            self._send_json({"project": project}, status=HTTPStatus.CREATED)
-            return
-        if path == "/api/v2/assistant/brain/confirm":
-            project_id = self._assistant_project_id({}, body)
-            message = self._require_text(body, "message")
-            language = self._optional_text(body.get("language")) or "fr"
-            result = brain.handle_confirmation(
-                actor=actor,
-                project_id=project_id,
-                message=message,
-                language=language,
-            )
-            self._send_json({"confirmation": result})
-            return
-        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown brain API route")
-
-    def _assistant_project_id(self, query: dict[str, list[str]], body: dict[str, Any] | None = None) -> int:
-        if body is not None and body.get("project_id") is not None:
-            project_id = self._optional_int(body.get("project_id"), minimum=1)
-            if project_id is not None:
-                return project_id
-        return self._first_int(query, "project_id", minimum=1)
-
-    def _handle_v2_assistant_get(self, path: str, query: dict[str, list[str]]) -> None:
-        actor = self._require_user()
-        assistant = self.services.assistant
-        if path == "/api/v2/assistant/agents":
-            self._send_json(assistant.list_agents(actor=actor))
-            return
-        if path == "/api/v2/assistant/prompts":
-            self._send_json(assistant.list_prompts(actor=actor))
-            return
-        project_id = self._assistant_project_id(query)
-        if path == "/api/v2/assistant/sessions":
-            self._send_json(assistant.list_sessions(actor=actor, project_id=project_id))
-            return
-        if path.startswith("/api/v2/assistant/sessions/"):
-            session_id = self._extract_path_id(path, marker="/api/v2/assistant/sessions/", resource="AssistantSession")
-            self._send_json(assistant.get_session(actor=actor, project_id=project_id, session_id=session_id))
-            return
-        if path == "/api/v2/assistant/messages":
-            session_id = self._first_int(query, "session_id", minimum=1)
-            self._send_json(assistant.list_messages(actor=actor, project_id=project_id, session_id=session_id))
-            return
-        if path == "/api/v2/assistant/context":
-            session_id = self._optional_int(self._first(query, "session_id"), minimum=1)
-            self._send_json(assistant.get_context(actor=actor, project_id=project_id, session_id=session_id))
-            return
-        if path == "/api/v2/assistant/rag":
-            query_text = self._first(query, "query") or ""
-            self._send_json(assistant.retrieve_rag(actor=actor, project_id=project_id, query=query_text))
-            return
-        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown assistant API route")
-
-    def _handle_v2_assistant_post(self, path: str, body: dict[str, Any], actor: dict[str, object]) -> None:
-        assistant = self.services.assistant
-        project_id = self._assistant_project_id({}, body)
-        if path == "/api/v2/assistant/sessions":
-            self._send_json(
-                assistant.create_session(
-                    actor=actor,
-                    project_id=project_id,
-                    agent_key=self._optional_text(body.get("agent_key")) or "project_advisor",
-                ),
-                status=HTTPStatus.CREATED,
-            )
-            return
-        if path == "/api/v2/assistant/rag/refresh":
-            self._send_json(assistant.refresh_rag(actor=actor, project_id=project_id))
-            return
-        if path == "/api/v2/assistant/chat" or path == "/api/v2/assistant":
-            self._send_json(
-                assistant.chat(
-                    actor=actor,
-                    project_id=project_id,
-                    message=self._require_text(body, "message"),
-                    session_id=self._optional_int(body.get("session_id"), minimum=1),
-                    agent_key=self._optional_text(body.get("agent_key")),
-                ),
-                status=HTTPStatus.CREATED,
-            )
-            return
-        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown assistant API route")
+    def _handle_v2_maintenance_post(self, path: str, body: dict[str, Any], actor: dict[str, object] | None) -> None:
+        if path not in {"/api/v2/maintenance/messages", "/api/v2/maintenance/handover"}:
+            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown maintenance API route")
+        raw_message = self._require_text(body, "message")
+        channel = self._optional_text(body.get("channel")) or "web"
+        submission = MaintenanceSubmission(
+            channel=channel,
+            raw_message=raw_message,
+            user_id=int(actor["id"]) if actor and actor.get("id") is not None else None,
+            channel_identity_id=self._optional_int(body.get("channel_identity_id"), minimum=1),
+            delivery_metadata=body.get("delivery_metadata") if isinstance(body.get("delivery_metadata"), dict) else {},
+            handover_requested=path.endswith("/handover") or self._coerce_bool(body.get("handover_requested")),
+        )
+        result = self.services.maintenance.submit_message(submission)
+        self._send_json(result, status=HTTPStatus.CREATED)
 
     def _handle_v2_project_get(self, path: str, query: dict[str, list[str]]) -> None:
         actor = self._require_user()
@@ -3793,12 +3509,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path == "/api/v2/workflows":
             self._send_json(eco.list_workflows(actor=actor))
             return
-        if path == "/api/v2/matching":
-            project_id = self._first_int(query, "project_id", minimum=1)
-            if project_id is None:
-                raise ApiError(HTTPStatus.BAD_REQUEST, "validation_error", "project_id is required")
-            self._send_json(eco.list_project_matching(actor=actor, project_id=project_id))
-            return
         if path == "/api/v2/reputation":
             subject_type = self._require_text_query(query, "subject_type")
             subject_id = self._first_int(query, "subject_id", minimum=1)
@@ -3814,10 +3524,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             if project_id is None:
                 raise ApiError(HTTPStatus.BAD_REQUEST, "validation_error", "project_id is required")
             self._send_json(eco.list_project_resources_ecosystem(actor=actor, project_id=project_id))
-            return
-        if path.endswith("/matching") and path.startswith("/api/v2/projects/"):
-            project_id = self._extract_project_id(path, suffix="/matching")
-            self._send_json(eco.list_project_matching(actor=actor, project_id=project_id))
             return
         if path.endswith("/orchestration") and path.startswith("/api/v2/projects/"):
             project_id = self._extract_project_id(path, suffix="/orchestration")
@@ -3842,14 +3548,6 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 region=self._optional_text(body.get("region")),
             )
             self._send_json(partner, status=HTTPStatus.CREATED)
-            return
-        if path == "/api/v2/matching":
-            project_id = self._require_int(body, "project_id", minimum=1)
-            self._send_json(eco.run_matching(actor=actor, project_id=project_id))
-            return
-        if path.endswith("/matching/run") and path.startswith("/api/v2/projects/"):
-            project_id = self._extract_project_id(path, suffix="/matching/run")
-            self._send_json(eco.run_matching(actor=actor, project_id=project_id))
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown ecosystem route")
 

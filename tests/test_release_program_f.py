@@ -223,9 +223,9 @@ class ReleaseProgramFEngineTests(LawimTestHarness):
         self.assertEqual(ctx["hook_type"], "knowledge_rag")
         self.assertIn("knowledge_platform", ctx["sources"])
 
-    def test_ai_bridge_resolve_assistant(self) -> None:
-        endpoint = AIIntegrationBridge().resolve_hook_action("assistant_chat")
-        self.assertIn("/api/v2/assistant/chat", endpoint)
+    def test_ai_bridge_resolve_maintenance(self) -> None:
+        endpoint = AIIntegrationBridge().resolve_hook_action("maintenance_message")
+        self.assertIn("/api/v2/maintenance/messages", endpoint)
 
     def test_ai_bridge_resolve_rag(self) -> None:
         endpoint = AIIntegrationBridge().resolve_hook_action("knowledge_rag")
@@ -233,7 +233,7 @@ class ReleaseProgramFEngineTests(LawimTestHarness):
 
     def test_ai_bridge_default_hook(self) -> None:
         endpoint = AIIntegrationBridge().resolve_hook_action("unknown_hook")
-        self.assertIn("/api/v2/assistant/chat", endpoint)
+        self.assertIn("/api/v2/maintenance/messages", endpoint)
 
 
 class ReleaseProgramFRepositoryTests(LawimTestHarness):

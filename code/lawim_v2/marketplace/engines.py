@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from ..matching import MatchCriteria, rank_properties
 from .constants import COMMISSION_TYPES, REPUTATION_SCORE_KEYS, SERVICE_CATEGORIES
 
 
@@ -62,83 +61,6 @@ class CatalogEngine:
             }
         enriched["category"] = self.normalize_category(str(item.get("category") or "other"))
         return enriched
-
-
-class RequestMatchingEngine:
-    def match_providers(
-        self,
-        *,
-        request: dict[str, object],
-        providers: list[dict[str, object]],
-        partners: list[dict[str, object]],
-        limit: int = 10,
-    ) -> list[dict[str, object]]:
-        partner_by_id = {int(p["id"]): p for p in partners}
-        criteria = {
-            "city": request.get("city"),
-            "region": request.get("region"),
-            "country": request.get("country"),
-            "budget_min": request.get("budget_min"),
-            "budget_max": request.get("budget_max"),
-            "category": request.get("category"),
-        }
-        candidates: list[dict[str, object]] = []
-        for provider in providers:
-            partner_id = int(provider.get("partner_profile_id") or 0)
-            partner = partner_by_id.get(partner_id, {})
-            trust = int(partner.get("trust_score") or 0)
-            quality = int(partner.get("quality_score") or 0)
-            completion = float(partner.get("completion_rate") or 0)
-            score = min(100.0, trust * 0.4 + quality * 0.35 + completion * 25)
-            reasons: list[str] = []
-            if trust >= 70:
-                reasons.append("trust_score_high")
-            if str(provider.get("status")) == "active":
-                reasons.append("provider_active")
-            category = str(request.get("category") or "")
-            if category and category in str(provider.get("headline") or "").lower():
-                reasons.append("category_match")
-            candidates.append(
-                {
-                    "provider_profile_id": provider.get("id"),
-                    "partner_profile_id": partner_id,
-                    "provider": provider,
-                    "partner": partner,
-                    "score": round(score, 2),
-                    "reasons": reasons,
-                    "breakdown": {"trust": trust, "quality": quality, "completion": completion},
-                }
-            )
-        ranked = sorted(candidates, key=lambda c: c["score"], reverse=True)[:limit]
-        for idx, row in enumerate(ranked, start=1):
-            row["rank"] = idx
-        return ranked
-
-    def match_properties_for_request(
-        self,
-        *,
-        request: dict[str, object],
-        properties: list[dict[str, object]],
-        limit: int = 5,
-    ) -> list[dict[str, object]]:
-        mc = MatchCriteria(
-            city=str(request.get("city") or "") or None,
-            region=str(request.get("region") or "") or None,
-            country=str(request.get("country") or "") or None,
-            budget_min=int(request["budget_min"]) if request.get("budget_min") is not None else None,
-            budget_max=int(request["budget_max"]) if request.get("budget_max") is not None else None,
-            limit=limit,
-        )
-        ranked = rank_properties(properties, criteria=mc)
-        return [
-            {
-                "property_id": r["property"]["id"],
-                "score": r["score"],
-                "reasons": r.get("reasons", []),
-                "breakdown": r.get("breakdown", {}),
-            }
-            for r in ranked
-        ]
 
 
 class QuoteEngine:
@@ -311,7 +233,6 @@ class MarketplacePlatformEngine:
     def __init__(self) -> None:
         self.partner_qualification = PartnerQualificationEngine()
         self.catalog = CatalogEngine()
-        self.matching = RequestMatchingEngine()
         self.quotes = QuoteEngine()
         self.reputation = ReputationEngine()
         self.commission = CommissionEngine()

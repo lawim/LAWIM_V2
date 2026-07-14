@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from http import HTTPStatus
 
 from .config import AppConfig
@@ -9,8 +9,6 @@ from .dto import (
     PaginationMeta,
     conversation_dto,
     geo_location_dto,
-    match_dto,
-    partner_match_dto,
     media_dto,
     message_dto,
     notification_dto,
@@ -20,7 +18,7 @@ from .dto import (
 )
 from .geo_reference import search_reference_locations
 from .geocoding_provider import resolve_geocoding_provider
-from .matching import MatchCriteria, MatchWeights
+from .maintenance import MaintenanceService
 from .media_domain import (
     LocalMediaStorage,
     MediaRegistry,
@@ -147,18 +145,7 @@ class LawimServices:
         from .ai import AIOrchestrator
 
         self.ai = AIOrchestrator(repository, config)
-        from .conversation_core import ConversationCoreService
-
-        self.conversation_core = ConversationCoreService(
-            repository,
-            self.projects,
-            self.policy,
-            config,
-            ai_orchestrator=self.ai,
-        )
-        from .assistant.service import AssistantService
-
-        self.assistant = AssistantService(repository, self.projects, conversation_core=self.conversation_core)
+        self.maintenance = MaintenanceService(repository)
         from .knowledge_platform.service import KnowledgePlatformService
 
         self.knowledge_platform = KnowledgePlatformService(repository, self.projects, self.policy)
@@ -186,7 +173,7 @@ class LawimServices:
             self.projects,
             self.policy,
             config=config,
-            conversation_core=self.conversation_core,
+            maintenance=self.maintenance,
         )
         from .analytics.service import AnalyticsService
 
@@ -194,9 +181,6 @@ class LawimServices:
         from .source_intelligence.service import SourceIntelligenceService
 
         self.source_intelligence = SourceIntelligenceService(repository, self.projects, self.policy)
-        from .brain.service import BrainService
-
-        self.brain = BrainService(repository, self.projects, conversation_core=self.conversation_core)
 
     def health(self, *, actor: dict[str, object] | None = None) -> dict[str, object]:
         profile = self.repository.backend_profile()
@@ -302,7 +286,6 @@ class LawimServices:
             "properties": [property_dto(item) for item in payload["properties"]],
             "media": [media_dto(item) for item in payload["media"]],
             "conversations": [conversation_dto(item) for item in payload["conversations"]],
-            "matches": [match_dto(item) for item in payload["matches"]],
             "notifications": notifications,
         }
 
@@ -1062,74 +1045,6 @@ class LawimServices:
         message = self.repository.add_message(conversation_id, sender_user_id, body)
         self._notify_message_received(current, message)
         return message_dto(message)
-
-    def list_matches(self, criteria: MatchCriteria, *, actor: dict[str, object] | None = None) -> dict[str, object]:
-        target_type = str(criteria.target_type or "property").strip().lower()
-        ranked = self.repository.matched_entities(criteria)
-        METRICS.increment("matches")
-        if target_type == "partner":
-            matches = [partner_match_dto(item) for item in ranked]
-        else:
-            matches = [match_dto(item) for item in ranked]
-        if actor is not None and matches and target_type == "property":
-            top = matches[0]
-            if top.get("eligible", True):
-                property_payload = top.get("property")
-                if isinstance(property_payload, dict):
-                    title = str(property_payload.get("title") or "Property")
-                    property_id = property_payload.get("id")
-                else:
-                    title = "Property"
-                    property_id = None
-                if property_id is not None and not self.repository.has_match_notification(
-                    user_id=int(actor["id"]),
-                    property_id=int(property_id),
-                ):
-                    self.repository.create_notification(
-                        user_id=int(actor["id"]),
-                        kind="match_found",
-                        title="Correspondance trouvée",
-                        body=f"{title} — score {top.get('score')} ({top.get('grade')})",
-                        payload={"property_id": property_id, "score": top.get("score"), "summary": top.get("summary")},
-                    )
-        return {
-            "matches": matches,
-            "criteria": {
-                "target_type": target_type,
-                "city": criteria.city,
-                "region": criteria.region,
-                "country": criteria.country,
-                "budget_min": criteria.budget_min,
-                "budget_max": criteria.budget_max,
-                "latitude": criteria.latitude,
-                "longitude": criteria.longitude,
-                "property_type": criteria.property_type,
-                "bedrooms_min": criteria.bedrooms_min,
-                "availability": criteria.availability,
-                "need": criteria.need,
-                "need_type": criteria.need_type,
-                "partner_type": criteria.partner_type,
-                "project_type": criteria.project_type,
-                "specialty": criteria.specialty,
-                "language": criteria.language,
-                "rating_min": criteria.rating_min,
-                "deadline_days": criteria.deadline_days,
-                "subject_type": criteria.subject_type,
-                "status": criteria.status,
-                "limit": criteria.limit,
-                "min_score": criteria.min_score,
-                "weights": asdict(criteria.weights.normalized()),
-            },
-            "explanation": {
-                "target_type": target_type,
-                "need": criteria.need,
-                "partner_type": criteria.partner_type,
-                "project_type": criteria.project_type,
-                "language": criteria.language,
-                "limit": criteria.limit,
-                "min_score": criteria.min_score,
-            },
-        }
 
     def list_notifications(
         self,

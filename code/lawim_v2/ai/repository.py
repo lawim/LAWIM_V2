@@ -5,7 +5,6 @@ from typing import Any
 import json
 import uuid
 
-from ..persona import assistant_fallback_message, assistant_start_message
 from ..repository_introspection import table_exists
 from .schema_ddl import AI_TABLE_NAMES, POSTGRESQL_AI_STATEMENTS, SQLITE_AI_TABLES_SCRIPT
 
@@ -102,105 +101,6 @@ class AIRepositoryMixin:
                 "status": "active",
                 "notes": "Secondary Gemini fallback.",
             },
-            {
-                "provider_key": "internal",
-                "provider_name": "LAWIM Internal Fallback",
-                "credential_alias": "INTERNAL_FALLBACK",
-                "secret_reference": "INTERNAL_FALLBACK",
-                "enabled": 1,
-                "priority": 5,
-                "model": "internal-fallback",
-                "base_url": "",
-                "provider_role": "internal",
-                "status": "active",
-                "notes": "Local deterministic fallback provider.",
-            },
-        )
-        fallback_entries = (
-            {
-                "fallback_key": "greeting-fr",
-                "intent": "greeting",
-                "question": "bonjour salut hello",
-                "variants_json": _json(["bonjour", "salut", "hello", "bonsoir"]),
-                "keywords_json": _json(["bonjour", "salut", "accueil"]),
-                "category": "presentation",
-                "language": "fr",
-                "channel": "all",
-                "response_text": assistant_start_message("fr"),
-                "confidence": 0.98,
-                "validated_at": now,
-                "validated_by": "system",
-                "version_number": 1,
-                "status": "published",
-                "expires_at": None,
-                "usage_count": 0,
-                "satisfaction_rate": 1.0,
-                "risk_level": "low",
-                "source_type": "manual",
-            },
-            {
-                "fallback_key": "contact-fr",
-                "intent": "contact",
-                "question": "contact telephone whatsapp telegram",
-                "variants_json": _json(["contact", "numero", "whatsapp", "telegram", "telephone"]),
-                "keywords_json": _json(["contact", "whatsapp", "telegram", "support"]),
-                "category": "contact",
-                "language": "fr",
-                "channel": "all",
-                "response_text": "Je suis LAWIM AI. Vous pouvez contacter LAWIM via WhatsApp ou Telegram. Merci de préciser votre demande pour une prise en charge rapide.",
-                "confidence": 0.95,
-                "validated_at": now,
-                "validated_by": "system",
-                "version_number": 1,
-                "status": "published",
-                "expires_at": None,
-                "usage_count": 0,
-                "satisfaction_rate": 1.0,
-                "risk_level": "low",
-                "source_type": "manual",
-            },
-            {
-                "fallback_key": "hours-fr",
-                "intent": "hours",
-                "question": "horaires ouverture fermeture",
-                "variants_json": _json(["horaires", "ouvert", "ouverture", "fermeture"]),
-                "keywords_json": _json(["horaires", "ouverture", "fermeture"]),
-                "category": "services",
-                "language": "fr",
-                "channel": "all",
-                "response_text": "Je suis LAWIM AI. Les horaires d'assistance peuvent varier selon l'équipe de service. Merci de préciser votre besoin pour être orienté correctement.",
-                "confidence": 0.9,
-                "validated_at": now,
-                "validated_by": "system",
-                "version_number": 1,
-                "status": "published",
-                "expires_at": None,
-                "usage_count": 0,
-                "satisfaction_rate": 1.0,
-                "risk_level": "low",
-                "source_type": "manual",
-            },
-            {
-                "fallback_key": "fallback-unavailable-fr",
-                "intent": "fallback_unavailable",
-                "question": "assistant indisponible",
-                "variants_json": _json(["indisponible", "ne repond pas", "fallback"]),
-                "keywords_json": _json(["fallback", "indisponible", "assistant"]),
-                "category": "support",
-                "language": "fr",
-                "channel": "all",
-                "response_text": assistant_fallback_message("fr"),
-                "confidence": 0.85,
-                "validated_at": now,
-                "validated_by": "system",
-                "version_number": 1,
-                "status": "published",
-                "expires_at": None,
-                "usage_count": 0,
-                "satisfaction_rate": 1.0,
-                "risk_level": "low",
-                "source_type": "manual",
-            },
         )
         if self.scalar("SELECT COUNT(*) FROM ai_providers") == 0:
             for provider in providers:
@@ -220,13 +120,11 @@ class AIRepositoryMixin:
                     last_checked_at=now,
                     metadata_json={},
                 )
-        for entry in fallback_entries:
-            self.upsert_ai_fallback_entry(**entry, created_at=now, updated_at=now)
         if self.scalar("SELECT COUNT(*) FROM ai_knowledge_versions") == 0:
             self.create_ai_knowledge_version(
                 version_number=1,
                 status="published",
-                summary="Initial LAWIM AI fallback knowledge base.",
+                summary="Initial LAWIM AI provider governance baseline.",
             )
 
     def _upsert_ai_row(self, table: str, key_column: str, key_value: object, values: dict[str, object]) -> dict[str, object]:

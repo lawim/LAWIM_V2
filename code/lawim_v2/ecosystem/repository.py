@@ -8,7 +8,6 @@ from ..errors import NotFoundError, ValidationError
 from ..repository_introspection import table_exists
 from .constants import DEFAULT_SERVICE_CATALOG, WORKFLOW_STEP_TEMPLATES, WORKFLOW_TYPES
 from .engines import (
-    MatchingEngine2,
     NotificationEventEngine,
     ResourceOrchestrationEngine,
     TrustReputationEngine,
@@ -550,46 +549,6 @@ class EcosystemRepositoryMixin:
             return None
         return self.get_workflow_instance(int(row["id"]))
 
-    def run_project_matching(self, project_id: int) -> dict[str, object]:
-        project = self.get_project(project_id)
-        goals = self.list_project_goals(project_id)
-        constraints = self.list_project_constraints(project_id)
-        journey_state = self.journey_engine_state(project_id)
-        partners_payload = self.list_partner_profiles(limit=100, page=1)
-        partners = partners_payload["partners"]
-        services_payload = self.list_service_catalog(limit=100, page=1)
-        services = services_payload["services"]
-        engine = MatchingEngine2()
-        result = engine.match(
-            project=project,
-            goals=goals,
-            constraints=constraints,
-            journey_state=journey_state,
-            partners=partners,
-            services=services,
-        )
-        now = _utcnow()
-        with self._transaction() as conn:
-            conn.execute(
-                "UPDATE project_match_results SET status = 'expired', updated_at = ? WHERE project_id = ? AND status = 'active'",
-                (now, project_id),
-            )
-        for match in result["partner_matches"]:
-            self._store_match(project_id, match, now)
-        for match in result["service_matches"]:
-            self._store_match(project_id, match, now)
-        self._update_ecosystem_state(project_id, result, now)
-        event = self.create_ecosystem_event(
-            project_id=project_id,
-            user_id=int(project["user_id"]),
-            event_type="match_refreshed",
-            title="Matching ecosystem recalculé",
-            payload={"partner_count": len(result["partner_matches"]), "service_count": len(result["service_matches"])},
-        )
-        self._deliver_ecosystem_notifications(event, int(project["user_id"]))
-        self.record_event("project_matching_run", {"project_id": project_id})
-        return result
-
     def _store_match(self, project_id: int, match: dict[str, object], now: str) -> None:
         with self._transaction() as conn:
             conn.execute(
@@ -860,4 +819,3 @@ class EcosystemRepositoryMixin:
         self.seed_ecosystem_catalog()
         self.seed_demo_partners()
         self.ensure_project_workflow(project_id)
-        self.run_project_matching(project_id)

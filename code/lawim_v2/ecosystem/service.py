@@ -91,17 +91,6 @@ class EcosystemService:
         METRICS.increment("ecosystem_workflows")
         return {"workflow_instance": edto.workflow_instance_dto(instance)}
 
-    def run_matching(self, *, actor: dict[str, object], project_id: int) -> dict[str, object]:
-        self.projects._require_manage(actor, project_id)
-        result = self.repository.run_project_matching(project_id)
-        METRICS.increment("ecosystem_matching")
-        return {"matching": edto.matching_payload_dto(result)}
-
-    def list_project_matching(self, *, actor: dict[str, object], project_id: int, match_type: str | None = None) -> dict[str, object]:
-        self.projects._require_access(actor, project_id)
-        matches = self.repository.list_project_matches(project_id, match_type=match_type)
-        return {"matches": [edto.match_result_dto(row) for row in matches]}
-
     def get_reputation(self, *, actor: dict[str, object], subject_type: str, subject_id: int) -> dict[str, object]:
         self._require_authenticated(actor)
         if subject_type == "partner":

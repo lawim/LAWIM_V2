@@ -214,16 +214,16 @@ class AIIntegrationBridge:
             "hook_type": hook_type,
             "query": query,
             "project_id": project_id,
-            "sources": ["assistant", "knowledge_platform", "cognition", "source_intelligence"],
+            "sources": ["maintenance", "knowledge_platform", "cognition", "source_intelligence"],
         }
 
     def resolve_hook_action(self, hook_type: str) -> str:
         mapping = {
-            "assistant_chat": "/api/v2/assistant/chat",
+            "maintenance_message": "/api/v2/maintenance/messages",
             "knowledge_rag": "/api/v2/knowledge/rag",
             "cognition_decision": "/api/v2/decisions",
             "expert_search": "/api/v2/knowledge/search",
             "enrichment": "/api/v2/knowledge/import",
             "recommendation": "/api/v2/next-actions",
         }
-        return mapping.get(hook_type, "/api/v2/assistant/chat")
+        return mapping.get(hook_type, "/api/v2/maintenance/messages")

@@ -175,17 +175,6 @@ class ReviewService:
         return self.repository.get_marketplace_reputation(provider_id)
 
 
-class MatchingService:
-    def __init__(self, repository) -> None:
-        self.repository = repository
-
-    def run(self, request_id: int, *, limit: int = 10) -> dict[str, object]:
-        return self.repository.run_marketplace_matching(request_id, limit=limit)
-
-    def get_session(self, session_id: int) -> dict[str, object]:
-        return self.repository.get_marketplace_matching_session(session_id)
-
-
 class RecommendationService:
     def __init__(self, repository) -> None:
         self.repository = repository
@@ -193,10 +182,6 @@ class RecommendationService:
 
     def list_recommendations(self, **kwargs: object) -> list[dict[str, object]]:
         return self.repository.list_marketplace_ai_recommendations(**kwargs)
-
-    def generate_for_request(self, request_id: int) -> list[dict[str, object]]:
-        payload = self.repository.run_marketplace_matching(request_id)
-        return self.repository.list_marketplace_ai_recommendations(request_id=request_id)
 
 
 class CommissionService:
@@ -272,7 +257,6 @@ class MarketplaceService:
         self.contracts = ContractService(repository)
         self.missions = MissionService(repository)
         self.reviews = ReviewService(repository)
-        self.matching = MatchingService(repository)
         self.recommendations = RecommendationService(repository)
         self.commissions = CommissionService(repository)
         self.subscriptions = SubscriptionService(repository)
@@ -560,27 +544,6 @@ class MarketplaceService:
         METRICS.increment("reputation_computed")
         return mdto.reputation_dto(scores)
 
-    # --- Matching ---
-
-    def run_matching(self, *, actor: dict[str, object], request_id: int) -> dict[str, object]:
-        self._require_auth(actor)
-        payload = self.matching.run(request_id)
-        METRICS.increment("marketplace_matching_run")
-        METRICS.increment("matching_run")
-        return {
-            "session": mdto.matching_session_dto(payload["session"]),
-            "results": [mdto.matching_result_dto(r) if isinstance(r, dict) and r.get("id") else r for r in payload["results"]],
-        }
-
-    def get_matching_session(self, *, actor: dict[str, object], session_id: int) -> dict[str, object]:
-        self._require_auth(actor)
-        payload = self.matching.get_session(session_id)
-        METRICS.increment("matching_session_detail")
-        return {
-            "session": mdto.matching_session_dto(payload["session"]),
-            "results": [mdto.matching_result_dto(r) for r in payload["results"]],
-        }
-
     # --- Recommendations ---
 
     def list_recommendations(self, *, actor: dict[str, object], request_id: int | None = None) -> dict[str, object]:
@@ -591,13 +554,6 @@ class MarketplaceService:
                 mdto.ai_recommendation_dto(r) for r in self.recommendations.list_recommendations(request_id=request_id)
             ]
         }
-
-    def generate_recommendations(self, *, actor: dict[str, object], request_id: int) -> dict[str, object]:
-        self._require_auth(actor)
-        recs = self.recommendations.generate_for_request(request_id)
-        METRICS.increment("marketplace_recommendation_generated")
-        METRICS.increment("recommendation_generated")
-        return {"recommendations": [mdto.ai_recommendation_dto(r) for r in recs]}
 
     # --- Commissions ---
 

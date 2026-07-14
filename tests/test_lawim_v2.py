@@ -79,8 +79,8 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         )
         self.assertEqual(invalid_content_length.status, HTTPStatus.BAD_REQUEST)
 
-        invalid_match_range = self.invoke("/api/matches?budget_min=10&budget_max=5")
-        self.assertEqual(invalid_match_range.status, HTTPStatus.BAD_REQUEST)
+        legacy_matches = self.invoke("/api/matches?budget_min=10&budget_max=5")
+        self.assertEqual(legacy_matches.status, HTTPStatus.NOT_FOUND)
 
     def test_login_accepts_email_username_and_phone(self) -> None:
         credentials = {
@@ -600,11 +600,9 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
         me_payload = me.body_json()
         self.assertEqual(me_payload["user"]["email"], "admin@lawim.local")
 
-        matches = self.invoke("/api/matches?city=Douala&budget_max=320000&limit=1", token=token)
-        self.assertEqual(matches.status, HTTPStatus.OK)
-        matches_payload = matches.body_json()
-        self.assertEqual(len(matches_payload["matches"]), 1)
-        self.assertEqual(matches_payload["matches"][0]["property"]["geo"]["city"], "Douala")
+        maintenance = self.invoke("/api/v2/maintenance/status", token=token)
+        self.assertEqual(maintenance.status, HTTPStatus.OK)
+        self.assertTrue(maintenance.body_json()["maintenance_mode"])
 
     def test_authenticated_writes_persist(self) -> None:
         login = self.invoke(
@@ -880,21 +878,13 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
     def test_schema_version_is_five(self) -> None:
         self.assertEqual(self.repository.schema_version(), 19)
 
-    def test_advanced_matching_breakdown_and_weights(self) -> None:
-        matches = self.invoke(
+    def test_legacy_property_matching_route_is_removed(self) -> None:
+        response = self.invoke(
             "/api/matches?city=Douala&budget_max=320000&bedrooms_min=2&property_type=apartment&limit=3"
         )
-        self.assertEqual(matches.status, HTTPStatus.OK)
-        payload = matches.body_json()
-        self.assertIn("criteria", payload)
-        self.assertIn("weights", payload["criteria"])
-        first = payload["matches"][0]
-        self.assertIn("breakdown", first)
-        self.assertIn("reasons", first)
-        self.assertIn("score", first)
-        self.assertIn("property", first)
+        self.assertEqual(response.status, HTTPStatus.NOT_FOUND)
 
-    def test_partner_matching_api_explains_recommendations(self) -> None:
+    def test_legacy_partner_matching_route_is_removed(self) -> None:
         cases = (
             ("photographe", "photographer", "Douala", None),
             ("architecte", "architect", "Yaounde", "build"),
@@ -907,18 +897,7 @@ class LawimV2ExecutableBaselineTest(LawimTestHarness):
                 if project_type:
                     query += f"&project_type={project_type}"
                 response = self.invoke(query)
-                self.assertEqual(response.status, HTTPStatus.OK, msg=response.body_text())
-                payload = response.body_json()
-                self.assertEqual(payload["criteria"]["target_type"], "partner")
-                self.assertEqual(payload["criteria"]["partner_type"], expected_partner_type)
-                self.assertEqual(payload["explanation"]["target_type"], "partner")
-                self.assertEqual(payload["explanation"]["need"], need)
-                self.assertGreaterEqual(len(payload["matches"]), 1)
-                top = payload["matches"][0]
-                self.assertEqual(top["target_type"], "partner")
-                self.assertEqual(top["partner"]["partner_type"], expected_partner_type)
-                self.assertTrue(top["summary"])
-                self.assertTrue(top["reasons"])
+                self.assertEqual(response.status, HTTPStatus.NOT_FOUND, msg=response.body_text())
 
     def test_notifications_created_on_conversation_and_message(self) -> None:
         owner_login = self.invoke(

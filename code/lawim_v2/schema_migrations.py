@@ -421,9 +421,6 @@ def apply_sqlite_legacy_migrations(conn: sqlite3.Connection) -> None:
     from .cognition.schema_v9_ddl import SQLITE_V9_TABLES_SCRIPT
 
     conn.executescript(SQLITE_V9_TABLES_SCRIPT)
-    from .assistant.schema_v10_ddl import SQLITE_V10_TABLES_SCRIPT
-
-    conn.executescript(SQLITE_V10_TABLES_SCRIPT)
     from .knowledge_platform.schema_v11_ddl import SQLITE_V11_TABLES_SCRIPT
 
     conn.executescript(SQLITE_V11_TABLES_SCRIPT)

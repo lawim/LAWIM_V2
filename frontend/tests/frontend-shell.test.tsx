@@ -142,10 +142,6 @@ beforeEach(() => {
     },
     message: 'mock'
   }));
-  vi.spyOn(apiSdk, 'getMatches').mockImplementation(async (query) => {
-    if (query?.target_type === 'property') return defaultPropertyMatches as never;
-    return defaultPartnerMatches as never;
-  });
   vi.spyOn(apiSdk, 'logout').mockResolvedValue({ data: { success: true }, message: 'mock' });
 });
 

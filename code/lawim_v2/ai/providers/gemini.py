@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from urllib import error as urlerror
 
-from .base import BaseAIProvider, ProviderHTTPConfig, _json_request
-from ..prompts.system import SYSTEM_PROMPT
+from .base import BaseAIProvider, ProviderHTTPConfig, SYSTEM_PROMPT, _json_request
 
 
 class GeminiProvider(BaseAIProvider):

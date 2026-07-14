@@ -6,7 +6,6 @@ import math
 import re
 from typing import Any
 
-from ..matching import MatchCriteria, rank_properties
 from .constants import INTELLIGENCE_SCORE_KEYS
 
 
@@ -41,30 +40,6 @@ class VerificationEngine:
         anomalies = sum(len(c.get("anomalies") or []) for c in checks)
         consistency = max(0, 100 - anomalies * 15)
         return {"trust_score": trust, "consistency_score": consistency, "details": {"verified_checks": verified, "total_checks": len(checks)}}
-
-
-class MatchingEngine:
-    def match(
-        self,
-        *,
-        properties: list[dict[str, object]],
-        criteria: dict[str, Any],
-        limit: int = 20,
-    ) -> list[dict[str, object]]:
-        mc = MatchCriteria(
-            city=criteria.get("city"),
-            region=criteria.get("region"),
-            country=criteria.get("country"),
-            budget_min=criteria.get("budget_min"),
-            budget_max=criteria.get("budget_max"),
-            bedrooms_min=criteria.get("bedrooms_min"),
-            property_type=criteria.get("property_type"),
-            latitude=criteria.get("latitude"),
-            longitude=criteria.get("longitude"),
-            limit=limit,
-        )
-        ranked = rank_properties(properties, criteria=mc)
-        return [{"property_id": r["property"]["id"], "score": r["score"], "reasons": r.get("reasons", []), "breakdown": r.get("breakdown", {})} for r in ranked]
 
 
 class ValuationEngine:
@@ -192,7 +167,6 @@ class SearchEngine:
 class RealEstatePlatformEngine:
     def __init__(self) -> None:
         self.verification = VerificationEngine()
-        self.matching = MatchingEngine()
         self.valuation = ValuationEngine()
         self.intelligence = IntelligenceEngine()
         self.recommendations = RecommendationEngine()

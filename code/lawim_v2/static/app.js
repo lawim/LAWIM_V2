@@ -2396,10 +2396,9 @@ async function selectProject(projectId) {
   }
   state.selectedProjectId = projectId;
   try {
-    const [payload, orchPayload, matchPayload, wfPayload, graphPayload, intelPayload, nbaPayload, risksPayload, oppPayload] = await Promise.all([
+    const [payload, orchPayload, wfPayload, graphPayload, intelPayload, nbaPayload, risksPayload, oppPayload] = await Promise.all([
       api(`/api/v2/projects/${projectId}/workspace`, { auth: true }),
       api(`/api/v2/projects/${projectId}/orchestration`, { auth: true }),
-      api(`/api/v2/matching?project_id=${projectId}`, { auth: true }),
       api(`/api/v2/projects/${projectId}/workflows`, { auth: true }),
       api("/api/v2/knowledge/graph", { auth: true, query: { project_id: projectId } }),
       api("/api/v2/intelligence", { auth: true, query: { project_id: projectId } }),
@@ -2409,7 +2408,7 @@ async function selectProject(projectId) {
     ]);
     const workspace = payload.workspace || payload;
     const orchestration = orchPayload.orchestration || {};
-    const matches = matchPayload.matches || [];
+    const matches = [];
     const workflow = wfPayload.workflow_instance || {};
     const graph = graphPayload.graph || {};
     const cognitionIntel = intelPayload.intelligence || {};
@@ -2595,37 +2594,12 @@ async function refreshAssistant(projectId) {
     return;
   }
   try {
-    const [agentsPayload, messagesPayload] = await Promise.all([
-      api("/api/v2/assistant/agents", { auth: true }),
-      api(`/api/v2/assistant/sessions?project_id=${projectId}`, { auth: true }),
-    ]);
-    const sessions = messagesPayload.sessions || [];
-    const session = sessions[0];
-    state.assistantSessionId = session?.id || null;
-    refs.assistantSummary.innerHTML = `
-      <p class="muted">${(agentsPayload.agents || []).length} agents · session ${session?.session_key || "new"}</p>
-    `;
+    const statusPayload = await api("/api/v2/maintenance/status", { auth: true });
+    state.assistantSessionId = null;
+    refs.assistantSummary.innerHTML = `<p class="muted">${escapeHtml(statusPayload.message || "Service intelligent en reconstruction.")}</p>`;
     refs.assistantForm?.classList.remove("hidden");
-    if (session?.id) {
-      const msgPayload = await api(
-        `/api/v2/assistant/messages?project_id=${projectId}&session_id=${session.id}`,
-        { auth: true },
-      );
-      const messages = msgPayload.messages || [];
-      if (refs.assistantChat) {
-        refs.assistantChat.innerHTML = messages
-          .map(
-            (msg) => `
-              <article class="message">
-                <div class="message__meta"><strong>${escapeHtml(msg.role)}</strong></div>
-                <p>${escapeHtml(msg.content)}</p>
-              </article>
-            `,
-          )
-          .join("") || "<p class='muted'>No assistant messages yet.</p>";
-      }
-    } else if (refs.assistantChat) {
-      refs.assistantChat.innerHTML = "<p class='muted'>No assistant messages yet.</p>";
+    if (refs.assistantChat) {
+      refs.assistantChat.innerHTML = "<p class='muted'>Mode maintenance actif. Les messages sont enregistrés sans automatisation.</p>";
     }
   } catch (error) {
     refs.assistantSummary.innerHTML = `<p class="muted">${escapeHtml(error.message)}</p>`;
@@ -2643,11 +2617,8 @@ async function handleAssistantChat(event) {
     return;
   }
   try {
-    const body = { project_id: state.selectedProjectId, message };
-    if (state.assistantSessionId) {
-      body.session_id = state.assistantSessionId;
-    }
-    await api("/api/v2/assistant/chat", { auth: true, method: "POST", body });
+    const body = { channel: "web", message, delivery_metadata: { project_id: state.selectedProjectId } };
+    await api("/api/v2/maintenance/messages", { auth: true, method: "POST", body });
     refs.assistantForm.reset();
     await refreshAssistant(state.selectedProjectId);
   } catch (error) {
@@ -3971,21 +3942,8 @@ async function handleProjectCreate(event) {
 async function handleMatchSearch(event) {
   event.preventDefault();
   try {
-    const form = new FormData(refs.matchForm);
-    const payload = await api("/api/matches", {
-      auth: Boolean(state.token),
-      query: {
-        city: form.get("city"),
-        budget_min: parseNumber(form.get("budget_min")),
-        budget_max: parseNumber(form.get("budget_max")),
-        latitude: parseNumber(form.get("latitude")),
-        longitude: parseNumber(form.get("longitude")),
-        limit: parseNumber(form.get("limit")),
-        min_score: parseNumber(form.get("min_score")),
-      },
-    });
-    renderMatches(payload.matches || []);
-    setNotice(noticeCopy("matchReturned", payload.matches?.length || 0, payload.criteria?.min_score ?? "n/a"), "success");
+    renderMatches([]);
+    setNotice("Le matching est désactivé pendant la reconstruction LAWIM.", "info");
     if (state.token) {
       await refreshNotifications();
     }

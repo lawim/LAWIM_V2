@@ -14,7 +14,12 @@ def dedupe_chain(chain: list[str] | tuple[str, ...]) -> tuple[str, ...]:
 
 
 def build_provider_chain(*, complexity: str, primary_provider: str, complex_provider: str, fallback_chain: tuple[str, ...]) -> tuple[str, ...]:
-    chain = list(fallback_chain) if fallback_chain else [primary_provider, complex_provider, "gemini_primary", "gemini_secondary", "internal"]
+    chain = [provider for provider in fallback_chain if provider != "internal"] if fallback_chain else [
+        primary_provider,
+        complex_provider,
+        "gemini_primary",
+        "gemini_secondary",
+    ]
     if complexity == "complex":
         ordered = [complex_provider, primary_provider, *chain]
     else:

@@ -9,7 +9,6 @@ from .persistence import APPLICATION_SCHEMA_VERSION
 from .intelligent.schema_v7_ddl import POSTGRESQL_V7_STATEMENTS, SQLITE_V7_TABLES_SCRIPT
 from .ecosystem.schema_v8_ddl import POSTGRESQL_V8_STATEMENTS, SQLITE_V8_TABLES_SCRIPT
 from .cognition.schema_v9_ddl import POSTGRESQL_V9_STATEMENTS, SQLITE_V9_TABLES_SCRIPT
-from .assistant.schema_v10_ddl import POSTGRESQL_V10_STATEMENTS, SQLITE_V10_TABLES_SCRIPT
 from .knowledge_platform.schema_v11_ddl import POSTGRESQL_V11_STATEMENTS, SQLITE_V11_TABLES_SCRIPT
 from .workflow_automation.schema_v12_ddl import POSTGRESQL_V12_STATEMENTS, SQLITE_V12_TABLES_SCRIPT
 from .real_estate_intelligence.schema_v13_ddl import POSTGRESQL_V13_STATEMENTS, SQLITE_V13_TABLES_SCRIPT
@@ -20,7 +19,6 @@ from .communication.schema_v17_ddl import POSTGRESQL_V17_STATEMENTS, SQLITE_V17_
 from .analytics.schema_v18_ddl import POSTGRESQL_V18_STATEMENTS, SQLITE_V18_TABLES_SCRIPT
 from .financial.schema_v20_ddl import POSTGRESQL_V20_STATEMENTS, SQLITE_V20_TABLES_SCRIPT
 from .source_intelligence.schema_ddl import POSTGRESQL_SIE_STATEMENTS, SQLITE_SIE_TABLES_SCRIPT
-from .brain.schema_ddl import POSTGRESQL_BRAIN_STATEMENTS, SQLITE_BRAIN_TABLES_SCRIPT
 from .backup.schema_v19_ddl import POSTGRESQL_BACKUP_STATEMENTS, SQLITE_BACKUP_TABLES_SCRIPT
 from .program_m_support import build_postgresql_statements, build_sqlite_tables_script
 from .user_roles import USER_ROLE_VALUES
@@ -161,6 +159,20 @@ POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     )
     """,
     """
+    CREATE TABLE IF NOT EXISTS maintenance_messages (
+        id SERIAL PRIMARY KEY,
+        message_key TEXT NOT NULL UNIQUE,
+        user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+        channel_identity_id INTEGER,
+        channel TEXT NOT NULL,
+        raw_message TEXT NOT NULL,
+        received_at TEXT NOT NULL,
+        delivery_metadata_json TEXT NOT NULL DEFAULT '{}',
+        maintenance_status TEXT NOT NULL DEFAULT 'received',
+        handover_requested BOOLEAN NOT NULL DEFAULT FALSE
+    )
+    """,
+    """
     CREATE TABLE IF NOT EXISTS schema_meta (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
@@ -178,6 +190,8 @@ POSTGRESQL_INIT_STATEMENTS: tuple[str, ...] = (
     "CREATE INDEX IF NOT EXISTS idx_conversations_organization_updated ON conversations(organization_id, updated_at, id)",
     "CREATE INDEX IF NOT EXISTS idx_conversations_property_updated ON conversations(property_id, updated_at, id)",
     "CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at)",
+    "CREATE INDEX IF NOT EXISTS idx_maintenance_messages_channel ON maintenance_messages(channel, received_at)",
+    "CREATE INDEX IF NOT EXISTS idx_maintenance_messages_handover ON maintenance_messages(handover_requested, received_at)",
     "CREATE INDEX IF NOT EXISTS idx_organizations_created_at ON organizations(created_at, id)",
     "CREATE INDEX IF NOT EXISTS idx_users_organization ON users(organization_id, id)",
     "CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at, id)",
@@ -398,6 +412,20 @@ CREATE TABLE IF NOT EXISTS notifications (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS maintenance_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    message_key TEXT NOT NULL UNIQUE,
+    user_id INTEGER,
+    channel_identity_id INTEGER,
+    channel TEXT NOT NULL,
+    raw_message TEXT NOT NULL,
+    received_at TEXT NOT NULL,
+    delivery_metadata_json TEXT NOT NULL DEFAULT '{}',
+    maintenance_status TEXT NOT NULL DEFAULT 'received',
+    handover_requested INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
 CREATE TABLE IF NOT EXISTS schema_meta (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL
@@ -415,6 +443,8 @@ CREATE INDEX IF NOT EXISTS idx_conversations_updated_at ON conversations(updated
 CREATE INDEX IF NOT EXISTS idx_conversations_organization_updated ON conversations(organization_id, updated_at, id);
 CREATE INDEX IF NOT EXISTS idx_conversations_property_updated ON conversations(property_id, updated_at, id);
 CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read_at, created_at);
+CREATE INDEX IF NOT EXISTS idx_maintenance_messages_channel ON maintenance_messages(channel, received_at);
+CREATE INDEX IF NOT EXISTS idx_maintenance_messages_handover ON maintenance_messages(handover_requested, received_at);
 CREATE INDEX IF NOT EXISTS idx_organizations_created_at ON organizations(created_at, id);
 CREATE INDEX IF NOT EXISTS idx_users_organization ON users(organization_id, id);
 CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at, id);
@@ -501,13 +531,13 @@ CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at, id);
 CREATE INDEX IF NOT EXISTS idx_project_steps_project_position ON project_steps(project_id, position);
 CREATE INDEX IF NOT EXISTS idx_project_checklist_project ON project_checklist_items(project_id, step_id, position);
 CREATE INDEX IF NOT EXISTS idx_project_step_history_project ON project_step_history(project_id, created_at, id);
-""" + SQLITE_V7_TABLES_SCRIPT + SQLITE_V8_TABLES_SCRIPT + SQLITE_V9_TABLES_SCRIPT + SQLITE_V10_TABLES_SCRIPT + SQLITE_V11_TABLES_SCRIPT + SQLITE_V12_TABLES_SCRIPT + SQLITE_V13_TABLES_SCRIPT + SQLITE_V14_TABLES_SCRIPT + SQLITE_V15_TABLES_SCRIPT + SQLITE_V16_TABLES_SCRIPT + SQLITE_V17_TABLES_SCRIPT + SQLITE_V18_TABLES_SCRIPT + SQLITE_V20_TABLES_SCRIPT + SQLITE_SIE_TABLES_SCRIPT + SQLITE_BRAIN_TABLES_SCRIPT + build_sqlite_tables_script(("operations", "deployment", "installer", "releases")) + SQLITE_BACKUP_TABLES_SCRIPT
+""" + SQLITE_V7_TABLES_SCRIPT + SQLITE_V8_TABLES_SCRIPT + SQLITE_V9_TABLES_SCRIPT + SQLITE_V11_TABLES_SCRIPT + SQLITE_V12_TABLES_SCRIPT + SQLITE_V13_TABLES_SCRIPT + SQLITE_V14_TABLES_SCRIPT + SQLITE_V15_TABLES_SCRIPT + SQLITE_V16_TABLES_SCRIPT + SQLITE_V17_TABLES_SCRIPT + SQLITE_V18_TABLES_SCRIPT + SQLITE_V20_TABLES_SCRIPT + SQLITE_SIE_TABLES_SCRIPT + build_sqlite_tables_script(("operations", "deployment", "installer", "releases")) + SQLITE_BACKUP_TABLES_SCRIPT
 
 SQLITE_INIT_SCRIPT = SQLITE_INIT_SCRIPT.replace("__USER_ROLE_VALUES__", USER_ROLE_VALUES_SQL)
 
 POSTGRESQL_INIT_STATEMENTS = POSTGRESQL_INIT_STATEMENTS + tuple(
     statement for statement in POSTGRESQL_V7_STATEMENTS if "ALTER TABLE" not in statement
-) + POSTGRESQL_V8_STATEMENTS + POSTGRESQL_V9_STATEMENTS + POSTGRESQL_V10_STATEMENTS + POSTGRESQL_V11_STATEMENTS + POSTGRESQL_V12_STATEMENTS + POSTGRESQL_V13_STATEMENTS + POSTGRESQL_V14_STATEMENTS + POSTGRESQL_V15_STATEMENTS + POSTGRESQL_V16_STATEMENTS + POSTGRESQL_V17_STATEMENTS + POSTGRESQL_V18_STATEMENTS + POSTGRESQL_V20_STATEMENTS + POSTGRESQL_SIE_STATEMENTS + POSTGRESQL_BRAIN_STATEMENTS + build_postgresql_statements(("operations", "deployment", "installer", "releases")) + POSTGRESQL_BACKUP_STATEMENTS
+) + POSTGRESQL_V8_STATEMENTS + POSTGRESQL_V9_STATEMENTS + POSTGRESQL_V11_STATEMENTS + POSTGRESQL_V12_STATEMENTS + POSTGRESQL_V13_STATEMENTS + POSTGRESQL_V14_STATEMENTS + POSTGRESQL_V15_STATEMENTS + POSTGRESQL_V16_STATEMENTS + POSTGRESQL_V17_STATEMENTS + POSTGRESQL_V18_STATEMENTS + POSTGRESQL_V20_STATEMENTS + POSTGRESQL_SIE_STATEMENTS + build_postgresql_statements(("operations", "deployment", "installer", "releases")) + POSTGRESQL_BACKUP_STATEMENTS
 
 POSTGRESQL_INIT_STATEMENTS = tuple(statement.replace("__USER_ROLE_VALUES__", USER_ROLE_VALUES_SQL) for statement in POSTGRESQL_INIT_STATEMENTS)
 

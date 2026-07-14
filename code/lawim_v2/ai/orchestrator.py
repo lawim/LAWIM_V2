@@ -9,14 +9,12 @@ import uuid
 from ..contact import COMPANY_NAME
 from .complexity import ComplexityReport, classify_text
 from .contracts import AIMessage, AIProvider, AIRequest, AIResponse
-from .fallback import FallbackEngine
 from .learning import LearningEngine
-from .models import FallbackResolution, RoutingDecision
+from .models import RoutingDecision
 from .monitoring import CircuitBreakerManager
-from .providers import DeepSeekProvider, GeminiProvider, InternalFallbackProvider, OpenAIProvider
+from .providers import DeepSeekProvider, GeminiProvider, OpenAIProvider
 from .router import build_provider_chain, dedupe_chain
 from .safety import estimate_simple_token_count, looks_like_prompt_injection, redact_sensitive_object, redact_sensitive_text, stable_hash
-from ..persona import assistant_system_prompt
 
 
 def _utcnow() -> str:
@@ -38,7 +36,6 @@ class OrchestrationOutcome:
     response: AIResponse
     attempts: tuple[AIResponse, ...] = ()
     provider_chain: tuple[str, ...] = ()
-    fallback_resolution: FallbackResolution | None = None
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -47,7 +44,6 @@ class OrchestrationOutcome:
             "response": self.response.to_dict(),
             "attempts": [attempt.to_dict() for attempt in self.attempts],
             "provider_chain": list(self.provider_chain),
-            "fallback_resolution": self.fallback_resolution.to_dict() if self.fallback_resolution else None,
         }
 
 
@@ -58,13 +54,11 @@ class AIOrchestrator:
         config,
         *,
         providers: dict[str, AIProvider] | None = None,
-        fallback_engine: FallbackEngine | None = None,
         learning_engine: LearningEngine | None = None,
         circuit_breakers: CircuitBreakerManager | None = None,
     ) -> None:
         self.repository = repository
         self.config = config
-        self.fallback_engine = fallback_engine or FallbackEngine(repository, config)
         self.learning_engine = learning_engine or LearningEngine(repository, config)
         self.circuit_breakers = circuit_breakers or CircuitBreakerManager(repository, config)
         self.providers = providers or self._build_default_providers()
@@ -99,10 +93,6 @@ class AIOrchestrator:
                 timeout_seconds=self.config.ai_request_timeout_seconds,
             ),
         }
-        providers["internal"] = InternalFallbackProvider(
-            enabled=True,
-            resolver=self.fallback_engine,
-        )
         return providers
 
     def classify(self, text: str | None, *, context_messages: int = 0) -> ComplexityReport:
@@ -133,7 +123,6 @@ class AIOrchestrator:
         max_output_tokens: int = 512,
     ) -> AIRequest:
         messages = self._limit_context_messages(tuple(context_messages))
-        requested_language = (language or self.config.fallback_default_language or "fr").strip().lower() or "fr"
         report = self.classify(text, context_messages=len(messages))
         sanitized_text = redact_sensitive_text(text) if self.config.ai_context_redaction_enabled else str(text or "")
         filtered_metadata = redact_sensitive_object(metadata or {})
@@ -141,7 +130,6 @@ class AIOrchestrator:
             filtered_metadata = {}
         filtered_metadata.update(
             {
-                "system_prompt": assistant_system_prompt(requested_language),
                 "prompt_injection_suspected": looks_like_prompt_injection(text),
                 "company_name": COMPANY_NAME,
             }
@@ -186,10 +174,9 @@ class AIOrchestrator:
             status="pending",
         )
         attempts: list[AIResponse] = []
-        fallback_resolution: FallbackResolution | None = None
         selected_response: AIResponse | None = None
         selected_provider = ""
-        reason = "fallback"
+        reason = "provider_unavailable"
         routing_started = time.perf_counter()
         time_budget = float(self.config.ai_total_timeout_seconds)
         deadline = routing_started + time_budget
@@ -204,7 +191,7 @@ class AIOrchestrator:
             if not provider.is_enabled():
                 self._record_provider_skip(provider_key, request, "provider_disabled")
                 continue
-            if provider_key != "internal" and not self.circuit_breakers.can_attempt(provider_key):
+            if not self.circuit_breakers.can_attempt(provider_key):
                 self._record_provider_skip(provider_key, request, "circuit_open")
                 self._record_alert(
                     provider_key,
@@ -222,13 +209,11 @@ class AIOrchestrator:
                 selected_response = response
                 selected_provider = provider_key
                 reason = "provider_response"
-                if provider_key != "internal":
-                    self.circuit_breakers.record_success(provider_key)
+                self.circuit_breakers.record_success(provider_key)
                 break
 
-            if provider_key != "internal":
-                self.circuit_breakers.record_failure(provider_key)
-                self._record_response_alert(provider_key, request, response)
+            self.circuit_breakers.record_failure(provider_key)
+            self._record_response_alert(provider_key, request, response)
             if response.success and not self._response_is_acceptable(response):
                 self._record_alert(
                     provider_key,
@@ -239,78 +224,41 @@ class AIOrchestrator:
                 )
 
         if selected_response is None:
-            internal_provider = self.providers.get("internal")
-            if internal_provider is not None and selected_provider != "internal":
-                selected_response = self._call_provider(internal_provider, request)
-                attempts.append(selected_response)
-                self._persist_attempt(request, selected_response, provider_key="internal")
-                fallback_resolution = self.fallback_engine.resolve(request)
-                selected_provider = "internal"
-                reason = "internal_fallback"
-            elif attempts:
+            if attempts:
                 selected_response = attempts[-1]
+                selected_provider = selected_response.provider
+                reason = "provider_failed"
             else:
-                fallback_resolution = self.fallback_engine.resolve(request)
                 selected_response = AIResponse(
-                    provider="internal",
-                    model="internal-fallback",
-                    success=True,
-                    content=fallback_resolution.content,
+                    provider="none",
+                    model="none",
+                    success=False,
+                    content="",
                     latency_ms=0,
                     input_tokens=0,
                     output_tokens=0,
                     estimated_cost=0.0,
-                    finish_reason="fallback",
-                    error_type=None,
-                    error_code=None,
+                    finish_reason="unavailable",
+                    error_type="provider_unavailable",
+                    error_code="provider_unavailable",
                     retryable=False,
                     fallback_required=False,
                     request_id=request.request_id,
-                    provider_request_id=f"fallback-{uuid.uuid4().hex[:12]}",
-                    valid=True,
-                    complete=True,
-                    relevant=True,
+                    provider_request_id=None,
+                    valid=False,
+                    complete=False,
+                    relevant=False,
                     safe=True,
-                    well_formed=True,
-                    confidence_score=fallback_resolution.confidence or 0.55,
-                    metadata=fallback_resolution.to_dict(),
+                    well_formed=False,
+                    confidence_score=0.0,
+                    metadata={"maintenance_mode": True},
                 )
                 attempts.append(selected_response)
-                self._persist_attempt(request, selected_response, provider_key="internal")
-                selected_provider = "internal"
-                reason = "generated_internal_fallback"
-
-        if fallback_resolution is None and selected_provider == "internal" and selected_response is not None:
-            fallback_resolution = self.fallback_engine.resolve(request)
-
-        if selected_response is None:
-            selected_response = AIResponse(
-                provider="internal",
-                model="internal-fallback",
-                success=True,
-                content=fallback_resolution.content if fallback_resolution else self.config.fallback_message,
-                latency_ms=0,
-                input_tokens=0,
-                output_tokens=0,
-                estimated_cost=0.0,
-                finish_reason="fallback",
-                error_type=None,
-                error_code=None,
-                retryable=False,
-                fallback_required=False,
-                request_id=request.request_id,
-                provider_request_id=f"fallback-{uuid.uuid4().hex[:12]}",
-                valid=True,
-                complete=True,
-                relevant=True,
-                safe=True,
-                well_formed=True,
-                confidence_score=(fallback_resolution.confidence if fallback_resolution else 0.55),
-                metadata=(fallback_resolution.to_dict() if fallback_resolution else {}),
-            )
+                self._persist_attempt(request, selected_response, provider_key="none")
+                selected_provider = "none"
 
         final_response = selected_response
-        fallback_used = selected_provider == "internal"
+        fallback_used = False
         self._persist_request_completion(
             request_row=request_row,
             request=request,
@@ -354,7 +302,6 @@ class AIOrchestrator:
             response=final_response,
             attempts=tuple(attempts),
             provider_chain=provider_chain,
-            fallback_resolution=fallback_resolution,
         )
 
     def list_providers(self) -> list[dict[str, object]]:
@@ -444,8 +391,6 @@ class AIOrchestrator:
         for provider_key in chain:
             if provider_key in self.providers:
                 filtered.append(provider_key)
-        if "internal" not in filtered and "internal" in self.providers:
-            filtered.append("internal")
         return dedupe_chain(filtered)
 
     def _limit_context_messages(self, messages: tuple[AIMessage, ...]) -> tuple[AIMessage, ...]:
@@ -525,7 +470,7 @@ class AIOrchestrator:
             "requests_total": 1,
             "requests_success": 1 if response.success else 0,
             "requests_failed": 0 if response.success else 1,
-            "fallbacks_triggered": 1 if provider_key == "internal" else 0,
+            "fallbacks_triggered": 0,
             "input_tokens": response.input_tokens,
             "output_tokens": response.output_tokens,
             "estimated_cost": response.estimated_cost,

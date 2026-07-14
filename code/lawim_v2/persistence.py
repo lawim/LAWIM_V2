@@ -409,55 +409,15 @@ def _knowledge_platform_table_specs() -> tuple[TableSpec, ...]:
     )
 
 
-def _brain_table_specs() -> tuple[TableSpec, ...]:
-    from .brain.schema_ddl import BRAIN_TABLE_NAMES
-    from .brain.relation_ddl import RELATION_TABLE_NAMES
-
-    return tuple(
+def _maintenance_table_specs() -> tuple[TableSpec, ...]:
+    return (
         TableSpec(
-            name=name,
-            purpose=f"LAWIM 2.x brain/memory entity ({name}).",
+            name="maintenance_messages",
+            purpose="Mission 2 maintenance intake for raw inbound messages during domain rebuild.",
             primary_key="id",
-            columns=("id", "created_at"),
-            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="cascade"),),
-        )
-        for name in BRAIN_TABLE_NAMES
-    ) + tuple(
-        TableSpec(
-            name=name,
-            purpose=f"LAWIM 2.x brain/relation entity ({name}).",
-            primary_key="id",
-            columns=("id", "created_at"),
-            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="cascade"),),
-        )
-        for name in RELATION_TABLE_NAMES
-    )
-
-
-def _assistant_table_specs() -> tuple[TableSpec, ...]:
-    from .assistant.schema_v10_ddl import V10_TABLE_NAMES
-
-    global_tables = {"assistant_agents", "assistant_prompt_versions"}
-    return tuple(
-        TableSpec(
-            name=name,
-            purpose=f"LAWIM 2.x assistant platform entity ({name}).",
-            primary_key="id",
-            columns=("id", "created_at"),
-            foreign_keys=(),
-        )
-        for name in V10_TABLE_NAMES
-        if name in global_tables
-    ) + tuple(
-        TableSpec(
-            name=name,
-            purpose=f"LAWIM 2.x assistant platform entity ({name}).",
-            primary_key="id",
-            columns=("id", "created_at"),
-            foreign_keys=(ForeignKeySpec("project_id", "projects.id", on_delete="cascade"),),
-        )
-        for name in V10_TABLE_NAMES
-        if name not in global_tables
+            columns=("id", "message_key", "channel", "raw_message", "received_at"),
+            foreign_keys=(ForeignKeySpec("user_id", "users.id", on_delete="set null"),),
+        ),
     )
 
 
@@ -795,8 +755,7 @@ APPLICATION_SCHEMA = SchemaManifest(
     + _intelligent_table_specs()
     + _ecosystem_table_specs()
     + _cognition_table_specs()
-    + _assistant_table_specs()
-    + _brain_table_specs()
+    + _maintenance_table_specs()
     + _knowledge_platform_table_specs()
     + _workflow_automation_table_specs()
     + _real_estate_intelligence_table_specs()

@@ -22,3 +22,14 @@ Exigence cible != code actuel != preuve actuelle. Un element de code sans exigen
 | REQ-FEAT-001 | Feature Management | Tout module majeur est desactivable. | 16_FEATURE_MANAGEMENT.md | FeatureFlag | /api/v2/features-target | feature_management | feature_flag.changed | all major flags | unit/integration/audit | PARTIAL | CLEAN |
 | REQ-TEST-001 | Testing | Validation metier exige corpus, integration, live et preuve de version. | 20_TESTING_AND_ACCEPTANCE_STANDARD.md | AuditEvent | n/a | tests | acceptance.proven | none | full acceptance suite | PARTIAL | BUILD |
 | REQ-OPS-001 | Backup and Disaster Recovery | Fondations operations et recovery conservees. | 21_DEPLOYMENT_OPERATIONS_AND_RECOVERY.md | AuditEvent | /api/v2/backup/* | backup | backup.completed | backup flags | restore tests | IMPLEMENTED_UNVERIFIED | KEEP_AND_CLEAN |
+
+## Mise A Jour Mission 2
+
+| Domaine canonique | Statut actuel apres Mission 2 | Decision future | Preuve |
+| --- | --- | --- | --- |
+| Conversation | TO_REBUILD / DECOMMISSIONED | REBUILD | Modules Conversation Core, Assistant, Brain conversationnel et routes associees supprimes; maintenance deterministe active. |
+| Qualification | TO_REBUILD / DECOMMISSIONED | REBUILD | Progression, known_fields, missing_fields et next_question legacy supprimes avec les tests historiques. |
+| Search | TO_REBUILD / DECOMMISSIONED | REBUILD | Routes Search legacy et SDK matching supprimes. |
+| Matching | TO_REBUILD / DECOMMISSIONED | REBUILD | Moteurs `matching.py`, `MatchingEngine2`, `MatchingEngine` et `RequestMatchingEngine` supprimes. |
+| Relationship | TO_REBUILD / DECOMMISSIONED | REBUILD | Proposals, consentements automatiques et RelationEngine supprimes. |
+| Channels and Communication | PARTIAL / MAINTENANCE_MODE | CLEAN | Web, WhatsApp et Telegram conservent la reception et reponse maintenance sans LLM. |

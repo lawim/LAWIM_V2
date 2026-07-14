@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 
 from ..observability import METRICS
+from ..maintenance import MAINTENANCE_RESPONSE, MaintenanceService, MaintenanceSubmission
 from ..project_service import ProjectPermissionDenied, ProjectService
 from ..financial.engines import normalize_mobile_money_number
 from . import dto as cdto
@@ -246,13 +247,13 @@ class CommunicationService:
         project_service: ProjectService,
         policy,
         config=None,
-        conversation_core=None,
+        maintenance: MaintenanceService | None = None,
     ) -> None:
         self.repository = repository
         self.projects = project_service
         self.policy = policy
         self.config = config
-        self.conversation_core = conversation_core
+        self.maintenance = maintenance or MaintenanceService(repository)
         self.engine = CommunicationPlatformEngine()
         self.notifications = NotificationService(repository)
         self.email = EmailService(repository)
@@ -551,9 +552,6 @@ class CommunicationService:
         METRICS.increment("communication_event_processed")
         return {"result": result}
 
-    def _ai_enabled(self) -> bool:
-        return bool(getattr(self.config, "ai_orchestrator_enabled", False))
-
     def _normalize_whatsapp_number(self, value: str) -> str:
         raw = re.sub(r"[^0-9+]", "", value or "")
         if not raw:
@@ -570,67 +568,47 @@ class CommunicationService:
                 return f"+{digits}"
             return ""
 
-    def _dispatch_ai_reply(
+    def _dispatch_maintenance_reply(
         self,
         *,
         channel: str,
         normalized: dict[str, object],
         message_row: dict[str, object],
     ) -> dict[str, object] | None:
-        conversation_key = f"{channel}:{normalized.get('chat_id') or normalized.get('sender') or normalized.get('user_id') or message_row.get('message_key')}"
-        chat_id_value = normalized.get("chat_id_raw")
-        conversation_core = self.conversation_core
-        if conversation_core is None:
-            error_payload = {
-                "channel": channel,
-                "conversation_key": conversation_key,
-                "message_id": int(message_row["id"]),
-                "reason": "conversation_core_missing",
-            }
-            self.repository.create_communication_log(
-                level="error",
-                message=f"Conversation Core missing for {channel}",
-                payload=error_payload,
-            )
-            return {"status": "error", "reason": "conversation_core_missing", **error_payload}
-        if not self._ai_enabled():
-            return None
-        processing = conversation_core.process_message(
-            channel=channel,
-            message=str(message_row.get("body") or normalized.get("message_body") or ""),
-            normalized=normalized,
-            message_row=message_row,
-            language=str(normalized.get("language") or getattr(self.config, "fallback_default_language", "fr")),
-            external_chat_id=str(normalized.get("chat_id") or normalized.get("sender") or ""),
-            external_user_id=str(normalized.get("user_id") or ""),
-            message_id=str(message_row.get("message_key") or message_row.get("id") or ""),
-            sender_name=str(normalized.get("sender_name") or normalized.get("full_name") or normalized.get("username") or ""),
+        raw_message = str(message_row.get("body") or normalized.get("message_body") or "")
+        handover_requested = any(
+            marker in raw_message.lower()
+            for marker in ("parler à une personne", "parler a une personne", "humain", "conseiller", "équipe", "equipe")
         )
-        conversation_key = str(processing.plan.conversation_key or conversation_key)
-        response_text = str(processing.final_text or "").strip()
-        outcome = processing.outcome
-        thread_id = processing.plan.thread_id
-        contact = processing.plan.contact
-        if not response_text:
-            return {"status": "skipped", "reason": "empty_response"}
+        maintenance = self.maintenance.submit_message(
+            MaintenanceSubmission(
+                channel=channel,
+                raw_message=raw_message,
+                delivery_metadata={
+                    "source_message_id": message_row.get("id"),
+                    "message_key": message_row.get("message_key"),
+                    "external_chat_id": normalized.get("chat_id") or normalized.get("sender"),
+                    "external_user_id": normalized.get("user_id"),
+                },
+                handover_requested=handover_requested,
+            )
+        )
+        response_text = MAINTENANCE_RESPONSE
+        chat_id_value = normalized.get("chat_id_raw")
         recipient_masked = mask_delivery_recipient(
             str(normalized.get("chat_id") or normalized.get("sender") or normalized.get("user_id") or "")
         )
         self.repository.create_communication_log(
             level="info",
-            message=f"AI outbound delivery started on {channel}",
+            message=f"Maintenance reply delivery started on {channel}",
             payload={
                 "channel": channel,
-                "conversation_key": conversation_key,
-                "request_id": outcome.request.request_id,
+                "maintenance_message_id": maintenance["message"]["id"],
                 "message_id": int(message_row["id"]),
                 "recipient": recipient_masked,
                 "telegram_chat_id": normalized.get("chat_id_raw") if channel == "telegram" else None,
                 "telegram_username": normalized.get("username") if channel == "telegram" else None,
                 "response_length": len(response_text),
-                "provider": outcome.response.provider,
-                "selected_provider": outcome.decision.selected_provider,
-                "fallback_used": outcome.decision.fallback_used,
             },
         )
         if channel == "whatsapp":
@@ -641,44 +619,30 @@ class CommunicationService:
                 delivery = self.repository.send_whatsapp(
                     to_number=normalized_number,
                     body=response_text,
-                    thread_id=thread_id,
-                    contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+                    thread_id=None,
+                    contact_id=None,
                     external_chat_id=str(normalized.get("chat_id") or normalized.get("sender") or ""),
                     external_user_id=str(normalized.get("user_id") or ""),
-                    provider_message_id=outcome.response.provider_request_id,
+                    provider_message_id=None,
                     metadata={
-                        "ai_request_id": outcome.request.request_id,
-                        "ai_provider": outcome.response.provider,
-                        "ai_fallback_used": outcome.decision.fallback_used,
-                        "ai_selected_provider": outcome.decision.selected_provider,
+                        "maintenance_mode": True,
+                        "maintenance_message_id": maintenance["message"]["id"],
                     },
                 )
             except Exception as exc:
                 self.repository.create_communication_log(
                     level="error",
-                    message=f"AI outbound delivery raised on {channel}",
+                    message=f"Maintenance reply delivery raised on {channel}",
                     payload={
                         "channel": channel,
-                        "conversation_key": conversation_key,
-                        "request_id": outcome.request.request_id,
                         "message_id": int(message_row["id"]),
                         "recipient": recipient_masked,
                         "response_length": len(response_text),
-                        "provider": outcome.response.provider,
-                        "selected_provider": outcome.decision.selected_provider,
-                        "fallback_used": outcome.decision.fallback_used,
                         "error_type": exc.__class__.__name__,
                         "error_message": str(exc),
                     },
                 )
-                return {
-                    "status": "failed",
-                    "provider": outcome.response.provider,
-                    "selected_provider": outcome.decision.selected_provider,
-                    "fallback_used": outcome.decision.fallback_used,
-                    "request_id": outcome.request.request_id,
-                    "error_type": exc.__class__.__name__,
-                }
+                return {"status": "failed", "maintenance": maintenance, "error_type": exc.__class__.__name__}
         else:
             chat_id_value = normalized.get("chat_id_raw")
             chat_id = str(chat_id_value or normalized.get("chat_id") or "")
@@ -688,63 +652,45 @@ class CommunicationService:
                 delivery = self.repository.send_telegram(
                     chat_id=chat_id_value if chat_id_value is not None else chat_id,
                     body=response_text,
-                    thread_id=thread_id,
-                    contact_id=int(contact["id"]) if contact and contact.get("id") is not None else None,
+                    thread_id=None,
+                    contact_id=None,
                     external_chat_id=chat_id,
                     external_user_id=str(normalized.get("user_id") or ""),
-                    provider_message_id=outcome.response.provider_request_id,
+                    provider_message_id=None,
                     metadata={
-                        "ai_request_id": outcome.request.request_id,
-                        "ai_provider": outcome.response.provider,
-                        "ai_fallback_used": outcome.decision.fallback_used,
-                        "ai_selected_provider": outcome.decision.selected_provider,
+                        "maintenance_mode": True,
+                        "maintenance_message_id": maintenance["message"]["id"],
                     },
                 )
             except Exception as exc:
                 self.repository.create_communication_log(
                     level="error",
-                    message=f"AI outbound delivery raised on {channel}",
+                    message=f"Maintenance reply delivery raised on {channel}",
                     payload={
                         "channel": channel,
-                        "conversation_key": conversation_key,
-                        "request_id": outcome.request.request_id,
                         "message_id": int(message_row["id"]),
                         "recipient": recipient_masked,
                         "telegram_chat_id": chat_id_value,
                         "telegram_username": normalized.get("username"),
                         "response_length": len(response_text),
-                        "provider": outcome.response.provider,
-                        "selected_provider": outcome.decision.selected_provider,
-                        "fallback_used": outcome.decision.fallback_used,
                         "error_type": exc.__class__.__name__,
                         "error_message": str(exc),
                     },
                 )
-                return {
-                    "status": "failed",
-                    "provider": outcome.response.provider,
-                    "selected_provider": outcome.decision.selected_provider,
-                    "fallback_used": outcome.decision.fallback_used,
-                    "request_id": outcome.request.request_id,
-                    "error_type": exc.__class__.__name__,
-                }
+                return {"status": "failed", "maintenance": maintenance, "error_type": exc.__class__.__name__}
         delivery_status = str(delivery.get("delivery_status") or (delivery.get("delivery") or {}).get("delivery_status") or "failed")
         delivery_payload = delivery.get("delivery") if isinstance(delivery, dict) else {}
         self.repository.create_communication_log(
             level="info" if delivery_status == "sent" else "warning",
-            message=f"AI outbound delivery finished on {channel}",
+            message=f"Maintenance reply delivery finished on {channel}",
             payload={
                 "channel": channel,
-                "conversation_key": conversation_key,
-                "request_id": outcome.request.request_id,
+                "maintenance_message_id": maintenance["message"]["id"],
                 "message_id": int(message_row["id"]),
                 "recipient": recipient_masked,
                 "telegram_chat_id": chat_id_value if channel == "telegram" else None,
                 "telegram_username": normalized.get("username") if channel == "telegram" else None,
                 "response_length": len(response_text),
-                "provider": outcome.response.provider,
-                "selected_provider": outcome.decision.selected_provider,
-                "fallback_used": outcome.decision.fallback_used,
                 "delivery_status": delivery_status,
                 "http_status": delivery_payload.get("http_status") if isinstance(delivery_payload, dict) else None,
                 "provider_message_id": delivery_payload.get("provider_message_id") if isinstance(delivery_payload, dict) else None,
@@ -762,23 +708,16 @@ class CommunicationService:
         )
         self.repository.create_communication_log(
             level="info" if delivery_status == "sent" else "warning",
-            message=f"AI reply {delivery_status} on {channel}",
+            message=f"Maintenance reply {delivery_status} on {channel}",
             payload={
                 "channel": channel,
-                "conversation_key": conversation_key,
-                "provider": outcome.response.provider,
-                "selected_provider": outcome.decision.selected_provider,
-                "fallback_used": outcome.decision.fallback_used,
-                "request_id": outcome.request.request_id,
+                "maintenance_message_id": maintenance["message"]["id"],
                 "delivery_id": delivery.get("id") if isinstance(delivery, dict) else None,
             },
         )
         return {
             "status": delivery_status,
-            "provider": outcome.response.provider,
-            "selected_provider": outcome.decision.selected_provider,
-            "fallback_used": outcome.decision.fallback_used,
-            "request_id": outcome.request.request_id,
+            "maintenance": maintenance,
             "delivery_status": delivery_status,
             "provider_message_id": delivery_payload.get("provider_message_id") if isinstance(delivery_payload, dict) else None,
         }
@@ -863,9 +802,9 @@ class CommunicationService:
         METRICS.increment(
             "communication_green_api_webhook_duplicate_total" if duplicate else "communication_green_api_webhook_received_total"
         )
-        ai_reply = None
+        maintenance_reply = None
         if not duplicate and type_webhook == "incomingMessageReceived" and message_row is not None:
-            ai_reply = self._dispatch_ai_reply(channel="whatsapp", normalized=normalized, message_row=message_row)
+            maintenance_reply = self._dispatch_maintenance_reply(channel="whatsapp", normalized=normalized, message_row=message_row)
         return {
             "status": "ok",
             "accepted": True,
@@ -873,7 +812,7 @@ class CommunicationService:
             "typeWebhook": type_webhook,
             "event_id": int(event_row["id"]),
             "message_id": int(message_row["id"]) if message_row else None,
-            "ai_reply": ai_reply,
+            "maintenance_reply": maintenance_reply,
         }
 
     def process_telegram_webhook(
@@ -989,9 +928,9 @@ class CommunicationService:
             if duplicate
             else "communication_telegram_webhook_received_total"
         )
-        ai_reply = None
+        maintenance_reply = None
         if not duplicate and update_type in {"message", "business_message", "guest_message"} and message_row is not None:
-            ai_reply = self._dispatch_ai_reply(channel="telegram", normalized=normalized, message_row=message_row)
+            maintenance_reply = self._dispatch_maintenance_reply(channel="telegram", normalized=normalized, message_row=message_row)
         return {
             "status": "ok",
             "accepted": True,
@@ -1000,7 +939,7 @@ class CommunicationService:
             "event_id": int(event_row["id"]),
             "update_id": normalized.get("update_id"),
             "message_id": int(message_row["id"]) if message_row else None,
-            "ai_reply": ai_reply,
+            "maintenance_reply": maintenance_reply,
         }
 
     def _upsert_green_api_message(

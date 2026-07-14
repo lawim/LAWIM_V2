@@ -1494,10 +1494,10 @@ class ReleaseProgramKIntegrationTests(LawimTestHarness):
         response = self.invoke('/api/v2/partners', token=token)
         self.assertIn(response.status, {HTTPStatus.OK, HTTPStatus.CREATED})
 
-    def test_program_d_assistant_route_still_works(self) -> None:
+    def test_program_d_assistant_route_is_decommissioned(self) -> None:
         token = self.login(email='agent@lawim.local')
         response = self.invoke('/api/v2/assistant/agents', token=token)
-        self.assertIn(response.status, {HTTPStatus.OK, HTTPStatus.CREATED})
+        self.assertEqual(response.status, HTTPStatus.NOT_FOUND)
 
     def test_program_e_knowledge_route_still_works(self) -> None:
         token = self.login(email='agent@lawim.local')
