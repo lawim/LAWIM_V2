@@ -22,7 +22,7 @@ from .db import LawimRepository
 from .bootstrap import build_runtime
 from .ecosystem.engines import normalize_partner_type
 from .dto import error_dto
-from .maintenance import MaintenanceSubmission
+from .maintenance import MAINTENANCE_FLAGS, MAINTENANCE_RESPONSE, MaintenanceSubmission
 from .media_domain import THUMBNAIL_CONTRACT
 from .multipart import parse_multipart_form_data
 from .observability import METRICS
@@ -594,6 +594,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 self._send_json({"overview": self.services.ai.ai_overview()})
                 return
 
+        if path.startswith("/api/v3/"):
+            self._handle_v3_api("GET", path, query, {})
+            return
+
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
 
     def _handle_api_post(self, parsed, body: dict[str, Any]) -> None:
@@ -899,6 +903,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 result = self.services.ai.rollback_knowledge_version(version_key=version_key)
                 self._send_json({"version": result}, status=HTTPStatus.CREATED)
                 return
+
+        if path.startswith("/api/v3/"):
+            self._handle_v3_api("POST", path, parse_qs(parsed.query), body)
+            return
 
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown API route")
 
@@ -3550,6 +3558,408 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json(partner, status=HTTPStatus.CREATED)
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown ecosystem route")
+
+    def _handle_v3_api(
+        self, method: str, path: str, query: dict[str, list[str]], body: dict[str, Any]
+    ) -> None:
+        if not self._v3_feature_enabled():
+            self._send_json_error(
+                HTTPStatus.SERVICE_UNAVAILABLE,
+                "feature_disabled",
+                "Conversation V2 feature is not enabled. Set LAWIM_FEATURE_CONVERSATION_V2=true",
+            )
+            return
+
+        if MAINTENANCE_FLAGS.get("lawim_core_rebuild_maintenance_mode", False):
+            self._send_json(
+                {"maintenance": True, "message": MAINTENANCE_RESPONSE, "automated_processing": "blocked"},
+                status=HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+            return
+
+        try:
+            if method == "GET":
+                self._handle_v3_get(path, query)
+            elif method == "POST":
+                self._handle_v3_post(path, body)
+            else:
+                raise ApiError(HTTPStatus.METHOD_NOT_ALLOWED, "method_not_allowed", "Method not supported for v3 API")
+        except ApiError:
+            raise
+        except Exception as exc:
+            LOGGER.exception("v3 API error: %s", exc)
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "v3_internal_error", "Conversation V2 service error")
+
+    def _v3_feature_enabled(self) -> bool:
+        import os
+        return os.getenv("LAWIM_FEATURE_CONVERSATION_V2", "").strip().lower() in {"1", "true", "yes", "on"}
+
+    def _handle_v3_get(self, path: str, query: dict[str, list[str]]) -> None:
+        if path == "/api/v3/conversations":
+            actor = self._require_user()
+            conversation_id = self._first_int(query, "id", minimum=1)
+            if conversation_id:
+                self._handle_v3_conversation_get(conversation_id, actor)
+                return
+            self._send_json({"conversations": [], "message": "List conversations - pass ?id=N to get specific"})
+            return
+
+        if path.startswith("/api/v3/conversations/"):
+            actor = self._require_user()
+            conversation_id = self._extract_conversation_v3_id(path)
+            self._handle_v3_conversation_get(conversation_id, actor)
+            return
+
+        if path == "/api/v3/projects":
+            actor = self._require_user()
+            self._handle_v3_projects_list(actor, query)
+            return
+
+        if path.startswith("/api/v3/searches/"):
+            actor = self._require_user()
+            search_id = self._extract_path_id(path, marker="/api/v3/searches/", resource="Search")
+            self._handle_v3_search_get(search_id, actor)
+            return
+
+        if path.startswith("/api/v3/matches/"):
+            actor = self._require_user()
+            match_id = self._extract_path_id(path, marker="/api/v3/matches/", resource="Match")
+            self._handle_v3_match_get(match_id, actor)
+            return
+
+        if path.startswith("/api/v3/relationships/"):
+            actor = self._require_user()
+            relationship_id = self._extract_path_id(path, marker="/api/v3/relationships/", resource="Relationship")
+            self._handle_v3_relationship_get(relationship_id, actor)
+            return
+
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown v3 API route")
+
+    def _handle_v3_post(self, path: str, body: dict[str, Any]) -> None:
+        if path == "/api/v3/conversations/messages":
+            actor = self._require_user()
+            self._handle_v3_conversation_message_post(body, actor)
+            return
+
+        if path == "/api/v3/projects":
+            actor = self._require_user()
+            self._handle_v3_project_create(body, actor)
+            return
+
+        if path == "/api/v3/relationship-proposals":
+            actor = self._require_user()
+            self._handle_v3_relationship_proposal_post(body, actor)
+            return
+
+        if path == "/api/v3/consents":
+            actor = self._require_user()
+            self._handle_v3_consent_post(body, actor)
+            return
+
+        if path == "/api/v3/handover":
+            actor = self._require_user(optional=True)
+            self._handle_v3_handover_post(body, actor)
+            return
+
+        raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown v3 API route")
+
+    def _extract_conversation_v3_id(self, path: str) -> int:
+        return self._extract_path_id(path, marker="/api/v3/conversations/", resource="Conversation")
+
+    def _handle_v3_conversation_get(self, conversation_id: int, actor: dict[str, object]) -> None:
+        try:
+            row = self.repository.one(
+                "SELECT * FROM conversation_sessions WHERE id = ?", (conversation_id,)
+            )
+            if row is None:
+                raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Conversation not found")
+            messages = self.repository.all(
+                "SELECT * FROM conversation_messages WHERE conversation_id = ? ORDER BY created_at ASC",
+                (conversation_id,),
+            )
+            decisions = self.repository.all(
+                "SELECT * FROM conversation_decisions WHERE conversation_id = ? ORDER BY created_at DESC LIMIT 10",
+                (conversation_id,),
+            )
+            self._send_json({
+                "conversation": row,
+                "messages": messages,
+                "recent_decisions": decisions,
+            })
+        except ApiError:
+            raise
+        except Exception as exc:
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "conversation_error", str(exc)) from exc
+
+    def _handle_v3_conversation_message_post(self, body: dict[str, Any], actor: dict[str, object]) -> None:
+        try:
+            import json
+            from datetime import datetime, timezone
+
+            now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+            user_id = int(actor["id"]) if actor.get("id") is not None else None
+            raw = self._require_text(body, "message")
+            channel = self._optional_text(body.get("channel")) or "web"
+            project_id = self._optional_int(body.get("project_id"), minimum=1)
+            conversation_id = self._optional_int(body.get("conversation_id"), minimum=1)
+
+            if conversation_id:
+                session = self.repository.one(
+                    "SELECT * FROM conversation_sessions WHERE id = ?", (conversation_id,)
+                )
+                if session is None:
+                    raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Conversation not found")
+            else:
+                session_row = self.repository.one(
+                    "SELECT * FROM conversation_sessions WHERE user_id = ? AND state NOT IN ('CLOSED', 'HUMAN_HANDOVER') ORDER BY updated_at DESC LIMIT 1",
+                    (user_id,),
+                )
+                if session_row:
+                    conversation_id = int(session_row["id"])
+
+            if conversation_id is None:
+                with self.repository._transaction() as conn:
+                    cursor = conn.execute(
+                        """
+                        INSERT INTO conversation_sessions (user_id, channel, state, project_id, created_at, updated_at)
+                        VALUES (?, ?, 'NEW', ?, ?, ?)
+                        """,
+                        (user_id, channel, project_id, now, now),
+                    )
+                    conversation_id = int(cursor.lastrowid)
+
+            message_key = body.get("message_key") or f"v3-{user_id}-{now}-{abs(hash((raw, now))) % 1_000_000_000}"
+            
+            try:
+                with self.repository._transaction() as conn:
+                    conn.execute(
+                        """
+                        INSERT INTO conversation_messages (
+                            conversation_id, channel, user_id, raw_message, normalized_message,
+                            message_key, metadata_json, is_duplicate, created_at
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?)
+                        """,
+                        (conversation_id, channel, user_id, raw, raw, message_key, body.get("metadata_json", "{}"), now),
+                    )
+            except Exception:
+                pass
+
+            self._send_json({
+                "conversation_id": conversation_id,
+                "message": raw,
+                "channel": channel,
+                "status": "received",
+                "created_at": now,
+            }, status=HTTPStatus.CREATED)
+        except ApiError:
+            raise
+        except Exception as exc:
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "message_error", str(exc)) from exc
+
+    def _handle_v3_projects_list(self, actor: dict[str, object], query: dict[str, list[str]]) -> None:
+        try:
+            user_id = int(actor["id"]) if actor.get("id") is not None else None
+            limit = self._query_limit(query)
+            if user_id:
+                rows = self.repository.all(
+                    "SELECT * FROM projects WHERE id IN (SELECT project_id FROM project_members WHERE user_id = ?) OR created_by_user_id = ? ORDER BY created_at DESC LIMIT ?",
+                    (user_id, user_id, limit),
+                )
+            else:
+                rows = self.repository.all(
+                    "SELECT * FROM projects ORDER BY created_at DESC LIMIT ?",
+                    (limit,),
+                )
+            self._send_json({"projects": [dict(r) for r in rows]})
+        except Exception as exc:
+            self._send_json({"projects": [], "error": str(exc)})
+
+    def _handle_v3_project_create(self, body: dict[str, Any], actor: dict[str, object]) -> None:
+        try:
+            user_id = int(actor["id"]) if actor.get("id") is not None else None
+            project = self.services.projects.create_project(
+                actor=actor,
+                title=self._require_text(body, "title"),
+                project_type=self._require_text(body, "project_type"),
+                objective=self._require_text(body, "objective"),
+                budget_min=self._optional_int(body.get("budget_min"), minimum=0),
+                budget_max=self._optional_int(body.get("budget_max"), minimum=0),
+                currency=self._optional_text(body.get("currency")) or "XAF",
+                location_city=self._optional_text(body.get("location_city")),
+                location_region=self._optional_text(body.get("location_region")),
+                location_country=self._optional_text(body.get("location_country")) or "Cameroon",
+                location_latitude=self._optional_float(body.get("location_latitude")),
+                location_longitude=self._optional_float(body.get("location_longitude")),
+                timeline_horizon=self._optional_text(body.get("timeline_horizon")),
+                status=self._optional_text(body.get("status")) or "draft",
+                priority=self._optional_text(body.get("priority")) or "normal",
+                organization_id=self._optional_int(body.get("organization_id"), minimum=1),
+                metadata=body.get("metadata") if isinstance(body.get("metadata"), dict) else None,
+            )
+            self._send_json({"project": project}, status=HTTPStatus.CREATED)
+        except ApiError:
+            raise
+        except Exception as exc:
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "project_create_error", str(exc)) from exc
+
+    def _handle_v3_search_get(self, search_id: int, actor: dict[str, object]) -> None:
+        try:
+            search = self.repository.one(
+                "SELECT * FROM search_requests WHERE id = ?", (search_id,)
+            )
+            if search is None:
+                raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Search not found")
+            matches = self.repository.all(
+                "SELECT * FROM match_results WHERE search_request_id = ? ORDER BY global_score DESC",
+                (search_id,),
+            )
+            self._send_json({"search": search, "matches": matches})
+        except ApiError:
+            raise
+        except Exception as exc:
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "search_error", str(exc)) from exc
+
+    def _handle_v3_match_get(self, match_id: int, actor: dict[str, object]) -> None:
+        try:
+            match = self.repository.one(
+                "SELECT * FROM match_results WHERE id = ?", (match_id,)
+            )
+            if match is None:
+                raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Match not found")
+            self._send_json({"match": match})
+        except ApiError:
+            raise
+        except Exception as exc:
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "match_error", str(exc)) from exc
+
+    def _handle_v3_relationship_proposal_post(self, body: dict[str, Any], actor: dict[str, object]) -> None:
+        try:
+            from datetime import datetime, timezone
+
+            now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+            user_id = int(actor["id"]) if actor.get("id") is not None else None
+            with self.repository._transaction() as conn:
+                cursor = conn.execute(
+                    """
+                    INSERT INTO relationship_proposals (project_id, from_user_id, to_user_id, target_type, target_id, status, created_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, 'pending', ?, ?)
+                    """,
+                    (
+                        self._optional_int(body.get("project_id"), minimum=1),
+                        user_id,
+                        self._optional_int(body.get("to_user_id"), minimum=1),
+                        self._optional_text(body.get("target_type")),
+                        self._optional_int(body.get("target_id"), minimum=1),
+                        now,
+                        now,
+                    ),
+                )
+                proposal_id = int(cursor.lastrowid)
+                proposal = dict(
+                    conn.execute("SELECT * FROM relationship_proposals WHERE id = ?", (proposal_id,)).fetchone()
+                )
+            self._send_json({"proposal": proposal}, status=HTTPStatus.CREATED)
+        except Exception as exc:
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "proposal_error", str(exc)) from exc
+
+    def _handle_v3_consent_post(self, body: dict[str, Any], actor: dict[str, object]) -> None:
+        try:
+            from datetime import datetime, timezone
+
+            now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+            proposal_id = self._require_int(body, "proposal_id", minimum=1)
+            user_id = int(actor["id"]) if actor.get("id") is not None else None
+            decision = self._require_text(body, "decision")
+            if decision not in {"granted", "denied"}:
+                raise ApiError(HTTPStatus.BAD_REQUEST, "invalid_decision", "decision must be 'granted' or 'denied'")
+            with self.repository._transaction() as conn:
+                row = conn.execute(
+                    "SELECT * FROM relationship_proposals WHERE id = ?", (proposal_id,)
+                ).fetchone()
+                if row is None:
+                    raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Proposal not found")
+                cursor = conn.execute(
+                    """
+                    INSERT INTO consent_requests (proposal_id, user_id, purpose, data_to_share_json, status, created_at, decided_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        proposal_id,
+                        user_id,
+                        self._optional_text(body.get("purpose")),
+                        json.dumps(body.get("data_to_share", [])) if isinstance(body.get("data_to_share"), list) else "[]",
+                        decision,
+                        now,
+                        now,
+                    ),
+                )
+                consent_id = int(cursor.lastrowid)
+                consent = dict(
+                    conn.execute("SELECT * FROM consent_requests WHERE id = ?", (consent_id,)).fetchone()
+                )
+            self._send_json({"consent": consent}, status=HTTPStatus.CREATED)
+        except ApiError:
+            raise
+        except Exception as exc:
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "consent_error", str(exc)) from exc
+
+    def _handle_v3_relationship_get(self, relationship_id: int, actor: dict[str, object]) -> None:
+        try:
+            relationship = self.repository.one(
+                "SELECT * FROM relationships WHERE id = ?", (relationship_id,)
+            )
+            if relationship is None:
+                raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Relationship not found")
+            participants = self.repository.all(
+                "SELECT * FROM relationship_participants WHERE relationship_id = ?",
+                (relationship_id,),
+            )
+            self._send_json({"relationship": relationship, "participants": participants})
+        except ApiError:
+            raise
+        except Exception as exc:
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "relationship_error", str(exc)) from exc
+
+    def _handle_v3_handover_post(self, body: dict[str, Any], actor: dict[str, object] | None) -> None:
+        try:
+            from datetime import datetime, timezone
+
+            now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+            raw_message = self._require_text(body, "message")
+            channel = self._optional_text(body.get("channel")) or "web"
+            user_id = int(actor["id"]) if actor and actor.get("id") is not None else None
+            conversation_id = self._optional_int(body.get("conversation_id"), minimum=1)
+
+            if conversation_id:
+                with self.repository._transaction() as conn:
+                    conn.execute(
+                        "UPDATE conversation_sessions SET human_handover_requested = 1, state = 'HUMAN_HANDOVER', updated_at = ? WHERE id = ?",
+                        (now, conversation_id),
+                    )
+                    conn.execute(
+                        """
+                        INSERT INTO conversation_messages (conversation_id, channel, user_id, raw_message, normalized_message, message_key, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (conversation_id, channel, user_id, raw_message, raw_message, f"handover-{user_id}-{now}", now),
+                    )
+
+            submission = MaintenanceSubmission(
+                channel=channel,
+                raw_message=raw_message,
+                user_id=user_id,
+                channel_identity_id=self._optional_int(body.get("channel_identity_id"), minimum=1),
+                delivery_metadata=body.get("delivery_metadata") if isinstance(body.get("delivery_metadata"), dict) else {},
+                handover_requested=True,
+            )
+            result = self.services.maintenance.submit_message(submission)
+            if conversation_id:
+                result["conversation_id"] = conversation_id
+            self._send_json(result, status=HTTPStatus.CREATED)
+        except ApiError:
+            raise
+        except Exception as exc:
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "handover_error", str(exc)) from exc
 
     def _require_text_query(self, query: dict[str, list[str]], key: str) -> str:
         value = self._first(query, key)
