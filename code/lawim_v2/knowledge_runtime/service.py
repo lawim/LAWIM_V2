@@ -52,6 +52,7 @@ class KnowledgeService:
         self.schema_validator = SchemaValidator()
         self.reference_validator = ReferenceValidator()
         self.startup_validator = StartupValidator()
+        self._engine: Any = None
 
     def load_all(self) -> ValidationReport:
         if not self._config.runtime_enabled:
@@ -138,6 +139,26 @@ class KnowledgeService:
                 "internal_api_enabled": self._config.internal_api_enabled,
             },
         }
+
+    @property
+    def engine(self) -> Any:
+        if self._engine is None and self._status == STATUS_READY:
+            from .engine import QualificationEngine
+            self._engine = QualificationEngine(self)
+        return self._engine
+
+    def evaluate(
+        self,
+        known_fields: dict[str, Any],
+        *,
+        property_type: str | None = None,
+        family: str | None = None,
+        matrix_id: str | None = None,
+    ) -> dict[str, Any] | None:
+        eng = self.engine
+        if eng is None:
+            return None
+        return eng.evaluate(known_fields, property_type=property_type, family=family, matrix_id=matrix_id)
 
     def registry_summaries(self) -> dict[str, Any]:
         return {
