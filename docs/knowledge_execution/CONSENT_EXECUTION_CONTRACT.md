@@ -8,7 +8,60 @@
 
 ---
 
-## 1. Consent Model Overview
+## 0. H0.5 Integration — Consent & Privacy Field Alignment
+
+### 0.1 H0.5 Privacy Levels → Consent Requirements
+
+The H0.5 qualification matrices assign privacy levels to every field (from `PRIVACY_AND_SENSITIVE_FIELDS.md`). These levels determine when consent is required:
+
+| H0.5 Privacy Level | Consent Required Before | Consent Type (This Contract) |
+|--------------------|------------------------|------------------------------|
+| **PUBLIC** | Never | No consent required |
+| **PRIVATE** | Sharing with counterparty | `data_sharing` (§6) |
+| **SENSITIVE** | Collection + sharing | Explicit opt-in per field |
+| **CONFIDENTIAL** | Collection (with legal basis) + sharing (with NDA) | Legal basis + `data_sharing` + NDA |
+
+### 0.2 H0.5 Per-Matrix Consent-Aware Fields
+
+Each matrix in `qualification_matrices.json` defines `sensitive_fields`. The Consent Engine must check these before consent requests:
+
+```typescript
+function get_consent_requirements(matrix_id: string): ConsentRequirement[] {
+  const matrix = loadMatrix(matrix_id);
+  return matrix.sensitive_fields.map(field => ({
+    field_id: field,
+    privacy_level: fieldDictionary.fields[field].privacy_level,
+    required_for: "sharing",
+    consent_type: mapPrivacyToConsentType(fieldDictionary.fields[field].privacy_level)
+  }));
+}
+```
+
+### 0.3 H0.5 Privacy Alignment with Consent Types
+
+| This Contract Consent Type | Corresponding H0.5 Privacy Level | Required For |
+|---------------------------|----------------------------------|--------------|
+| `demandeur_consent` (§3) | PRIVATE (identity) | Reveal demandeur identity to holder |
+| `holder_consent` (§4) | PRIVATE (property/identity) | Reveal holder identity to demandeur |
+| `agent_optin` (§5) | PRIVATE (contact) | Share contact with agent |
+| `data_sharing` (§6) | PRIVATE + SENSITIVE | Share phone, email, financial data |
+| `gdpr_deletion` (§7) | ALL | Anonymize personal data |
+
+Alignment is verified: consent collection timing matches H0.5 privacy levels — PUBLIC fields never require consent, PRIVATE fields require sharing consent, SENSITIVE fields require explicit collection + sharing consent, CONFIDENTIAL fields require legal basis.
+
+### 0.4 H0.5 Sensitive Field Handling During Consent
+
+From `PRIVACY_AND_SENSITIVE_FIELDS.md` §6 (Consent Management):
+
+> For SENSITIVE fields: "Nous avons besoin de votre consentement explicite pour collecter [field]. Ceci est nécessaire pour [purpose]."
+>
+> For CONFIDENTIAL fields: "Ces informations seront partagées uniquement avec [professional] sous accord de confidentialité."
+
+The Consent Engine implements these templates for consent requests involving H0.5 sensitive/confidential fields.
+
+---
+
+## 1. H1 Heritage Layer — Consent Model Overview
 
 Consent is the foundational permission mechanism in LAWIM. No relationship, no data sharing, and no agent introduction occurs without explicit, recorded, and auditable consent from the relevant party.
 

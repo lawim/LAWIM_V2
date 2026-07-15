@@ -7,7 +7,116 @@
 
 ---
 
-## 1. Purpose
+## 0. H0.5 Integration — Matching Score Semantics
+
+### 0.1 H0.5 Data Sources
+
+This contract extends the H1 heritage score computation with H0.5 matching semantics:
+
+| H0.5 Source | Fields Used | Contract Section |
+|-------------|-------------|-----------------|
+| `matching_semantics.json` | Field roles, weights, tolerances, boosts, penalties, thresholds | §0.2–§0.7 |
+| `field_dictionary.json` | Per-field type, validation, normalization | Input Contract §2 |
+| `MATCHING_FIELD_SEMANTICS.md` | Role behavior documentation, per-type mapping, scoring examples | Reference |
+
+### 0.2 H0.5 Role → Dimension Score Mapping
+
+Each field in the Input Contract carries a `matching_role` from H0.5. The following table maps H0.5 roles to the dimension in which they are evaluated:
+
+| Input Field | H0.5 Matching Role | Evaluated In | Scoring Behavior |
+|-------------|--------------------|-------------|------------------|
+| `intent` | informational_only | Behavioral (context) | No score contribution |
+| `transaction_type` | hard_constraint | Constraint Enforcer | Excludes incompatible operations |
+| `property_type` | hard_constraint | Property Score | Pass/fail before scoring |
+| `city` | hard_constraint | Geographical Score | Excludes wrong cities |
+| `neighborhood` | soft_constraint | Geographical Score | Weighted 0-100%, nearby = 70% |
+| `budget_min` | soft_constraint | Budget Score | Weighted 0-100% |
+| `budget_max` | hard_constraint (±tolerance) | Budget Score | Pass/fail with tolerance |
+| `chambres` | soft_constraint | Property Score | Weighted, tolerance 1 |
+| `douches` | soft_constraint | Property Score | Weighted, tolerance 1 |
+| `cuisine` | soft_constraint | Property Score | Weighted 0-100% |
+| `meuble` | soft_constraint | Property Score | Weighted 0-100% |
+| `parking` | soft_constraint | Property Score | Weighted 0-100% |
+| `etage` | ranking_preference | Property Score | +5 bonus |
+| `surface` | ranking_preference | Property Score | +5 to +10 bonus |
+| `financing` | transaction_blocker | Audit/Transaction | Blocks TRANSACTION_READY |
+
+### 0.3 H0.5 Weight Distribution Override
+
+When the request transaction type is known, the H0.5 weight distribution from `matching_semantics.json` `weight_distribution` overrides the H1 fixed weights:
+
+```
+function get_weight_distribution(transaction_type):
+    weights = matching_semantics.weight_distribution[transaction_type]
+    return {
+        geographical: weights.geographical,
+        budget: weights.budget,
+        property: weights.property,
+        behavioral: 0.10,  // H1 fixed, not in H0.5
+        other: 1 - weights.geographical - weights.budget
+              - weights.property - 0.10  // remaining is amenity + legal
+    }
+```
+
+### 0.4 H0.5 Boost Rules → Score Calculation
+
+The `boosts` section of the output contract (§3.5) is enriched with H0.5 boost rules from `matching_semantics.json` `boost_rules`:
+
+| Boost Rule | Value | Condition | Source |
+|-----------|-------|-----------|--------|
+| exact_neighborhood_match | +25 | Property in exact requested neighborhood | matching_semantics.json boost_rules[0] |
+| exact_city_match | +20 | Property in exact requested city | matching_semantics.json boost_rules[1] |
+| budget_within_range | +15 | Price within budget tolerance | matching_semantics.json boost_rules[2] |
+| title_foncier | +10 | Valid land title | matching_semantics.json boost_rules[3] |
+| diaspora | +20 | Diaspora investor | matching_semantics.json boost_rules[4] |
+| cash_purchase | +15 | Cash buyer | matching_semantics.json boost_rules[6] |
+
+Boost cap: **+50** (from `matching_semantics.json` `boost_cap`).
+
+### 0.5 H0.5 Penalty Rules
+
+From `matching_semantics.json` `penalty` role definition and `readiness_rules.json` `penalty_factors_by_level`:
+
+| Penalty | Value | Trigger |
+|---------|-------|---------|
+| missing_budget | -10 | No budget captured |
+| unclear_location | -10 | No city/neighborhood captured |
+| spam_like | -50 | Spam patterns detected |
+| missing_neighborhood | -5 | No neighborhood (post-MINIMUM_INTAKE_READY) |
+
+### 0.6 H0.5 Budget Tolerance Application
+
+From `matching_semantics.json` `field_mappings.budget_max.tolerance`:
+
+```
+is_within_tolerance(request, property):
+    tolerance = matching_semantics.field_mappings.budget_max.tolerance[request.transaction_type]
+    ratio = property.price / request.budget_max
+
+    if ratio <= (1 + tolerance): return true  // Within or below max + tolerance
+    // Above tolerance → linear decrease to 0 at 2× tolerance
+    score_ratio = max(0, 1 - (ratio - (1 + tolerance)) / tolerance)
+    return score_ratio  // Partial score
+```
+
+### 0.7 H0.5 Per-Field Matching Context
+
+From `matching_semantics.json` `field_mappings`, each field's context (weight, tolerance, boost_value) is available for dynamic scoring:
+
+```json
+// Example: matching_semantics.json field_mappings for budget_max
+{
+  "default_role": "hard_constraint",
+  "tolerance": { "RENT": 0.2, "BUY": 0.15, "INVEST": 0.25 },
+  "weight": 0.25
+}
+```
+
+The Score Calculator uses these per-field definitions rather than H1 hardcoded weights, enabling the matching engine to adapt to each matrix family's field set.
+
+---
+
+## 1. H1 Heritage Layer — Purpose
 
 Defines the formal input/output contract for the Matching Engine scoring pipeline. Every matching execution produces a standardized `MatchScore` result that is consumed by the Ranker, Explanation Builder, Decision Engine, and Audit system.
 

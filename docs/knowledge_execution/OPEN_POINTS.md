@@ -65,7 +65,7 @@
 | OP-503 | Phone masking pattern | ARCHITECTURE_DECISION |
 | OP-504 | Data retention durations | LEGAL_VALIDATION_REQUIRED |
 | OP-505 | Commercial scripts | HUMAN_VALIDATION_REQUIRED |
-| OP-506 | Qualification matrices | DEPENDENCY_H05 |
+| OP-506 | Qualification matrices | **RESOLVED** — Integrated from `docs/lawim_heritage_gold/qualification_matrices/`. Matrices loaded from `qualification_matrices.json`, fields from `field_dictionary.json`, readiness from `readiness_rules.json`, questions from `question_rules.json`, matching from `matching_semantics.json`. See QUALIFICATION_MATRIX_CONTRACT.md §0, READINESS_MODEL.md §0 |
 
 ---
 

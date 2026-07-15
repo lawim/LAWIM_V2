@@ -6,7 +6,88 @@
 
 ---
 
-## 1. Pipeline de conversation (11 étapes)
+## 0. H0.5 Integration Points — Qualification Pipeline
+
+The H0.5 qualification matrices integrate into the conversation pipeline between Fact Extraction (step 4) and Decision Engine (step 7). The following 7-step integration adds matrix-driven qualification logic:
+
+```
+Extract Facts (step 4)
+    │
+    ▼
+┌──────────────────────────────────────────────────────────────────┐
+│ 1. DETECT REQUEST FAMILY    │ Resolve intent + property_type to  │
+│                              │ request_family (RESIDENTIAL_SEARCH,│
+│                              │ LAND_SEARCH, COMMERCIAL_SEARCH,    │
+│                              │ FINANCING_REQUEST, etc.)           │
+├──────────────────────────────────────────────────────────────────┤
+│ 2. SELECT H0.5 MATRIX       │ Load matrix from                   │
+│                              │ qualification_matrices.json by     │
+│                              │ (family, transaction_type,         │
+│                              │ property_type) triple              │
+├──────────────────────────────────────────────────────────────────┤
+│ 3. EXTRACT FIELDS           │ Extract all field values from      │
+│                              │ message per field_dictionary.json  │
+│                              │ validation & normalization rules    │
+├──────────────────────────────────────────────────────────────────┤
+│ 4. CALCULATE MISSING FIELDS │ Compare extracted fields against   │
+│                              │ matrix field requirements per      │
+│                              │ current readiness level            │
+├──────────────────────────────────────────────────────────────────┤
+│ 5. COMPUTE READINESS LEVEL  │ Using readiness_rules.json +       │
+│                              │ matrix field lists → determine    │
+│                              │ INTENT_IDENTIFIED → TRANSACTION_READY│
+├──────────────────────────────────────────────────────────────────┤
+│ 6. SELECT NEXT QUESTION     │ Using question_rules.json priority │
+│                              │ rules + matching_semantics.json   │
+│                              │ → build priority queue            │
+├──────────────────────────────────────────────────────────────────┤
+│ 7. CHECK STOP CONDITION     │ Stop questioning when target       │
+│                              │ action is allowed per readiness   │
+│                              │ level (e.g., LAUNCH_FIRST_SEARCH  │
+│                              │ at MINIMUM_SEARCH_READY)          │
+└──────────────────────────────────────────────────────────────────┘
+    │
+    ▼
+Query Decision Engine (step 7)
+```
+
+### 0.1 Integration Data Flow
+
+```typescript
+interface H0_5IntegrationInput {
+  raw_message: string;
+  extracted_entities: Map<string, any>;   // From Fact Extractor
+  detected_intent: IntentResult;          // From Intent Detector
+  session_context: SessionContext;        // From Context Loader
+}
+
+interface H0_5IntegrationOutput {
+  matrix: SelectedMatrix;                 // From step 2
+  fields: ExtractedFields;                // From step 3
+  missing: MissingFieldsByLevel;          // From step 4
+  readiness: ReadinessLevel;              // From step 5
+  next_question: Question | null;         // From step 6
+  stop_reason: "SEARCH_LAUNCH" | "INTRODUCTION" | "TRANSACTION" | null;  // From step 7
+}
+```
+
+### 0.2 Source H0.5 Files
+
+| Integration Step | H0.5 Source Files |
+|-----------------|-------------------|
+| 1. Detect request family | `field_dictionary.json` (appears_in per field) |
+| 2. Select matrix | `qualification_matrices.json` (75 matrices) |
+| 3. Extract fields | `field_dictionary.json` (validation, normalization, templates) |
+| 4. Calculate missing | `qualification_matrices.json` (minimum_* field lists) |
+| 5. Compute readiness | `readiness_rules.json`, `READINESS_LEVELS.md` |
+| 6. Select next question | `question_rules.json`, `matching_semantics.json` |
+| 7. Check stop condition | `readiness_rules.json` (allowed_actions per level) |
+
+The H0.5 integration is non-invasive — it operates between existing pipeline components without modifying them. The 7-step sub-pipeline runs synchronously after Fact Extraction and before the Decision Engine query.
+
+---
+
+## 1. H1 Heritage Layer — Pipeline de conversation (11 étapes)
 
 ```
 Message entrant

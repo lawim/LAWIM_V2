@@ -230,6 +230,20 @@ Every Heritage Gold rule is classified by business criticality, determining mini
 
 ---
 
+### 2.11 H0.5 Qualification Matrix Domain (NEW)
+
+| Rule ID | Description | Criticality | Nominal | Negative | Idempotence | Audit | State Transition |
+|---------|-------------|-------------|---------|----------|-------------|-------|------------------|
+| H05-ATM-001 | Matrix selection by intent + property_type + transaction_type | HIGH | 2 tests | 1 test | 1 test | 1 test | 1 test |
+| H05-ATM-002 | Readiness calculation matching H0.5 7 levels | HIGH | 2 tests | 1 test | 1 test | 1 test | 1 test |
+| H05-ATM-003 | Next question selection matching question_priority | HIGH | 2 tests | 1 test | 1 test | 1 test | — |
+| H05-ATM-004 | Forbidden question enforcement | HIGH | 2 tests | 1 test | 1 test | 1 test | — |
+| H05-ATM-005 | Sensitive field protection (privacy gating) | HIGH | 2 tests | 1 test | 1 test | 1 test | — |
+| H05-ATM-006 | Search readiness gating (cardinal rule) | HIGH | 2 tests | 1 test | 1 test | 1 test | 1 test |
+| H05-ATM-007 | Matching semantics application (9 roles) | HIGH | 2 tests | 1 test | 1 test | 1 test | — |
+
+---
+
 ## 3. Summary Statistics
 
 | Domain | Total Rules | HIGH | MEDIUM | LOW | Total Nominal | Total Negative | Total Idempotence | Total Audit | State Transition | Grand Total |
@@ -244,7 +258,8 @@ Every Heritage Gold rule is classified by business criticality, determining mini
 | CRM | 15 | 15 | 0 | 0 | 30 | 15 | 15 | 15 | 3 | 78 |
 | Language | 14 | 11 | 1 | 2 | 25 | 12 | 11 | 11 | 0 | 59 |
 | Security | 7 | 7 | 0 | 0 | 14 | 7 | 7 | 7 | 3 | 38 |
-| **TOTAL** | **158** | **145** | **9** | **4** | **303** | **154** | **145** | **145** | **19** | **766** |
+| H0.5 Matrices | 7 | 7 | 0 | 0 | 14 | 7 | 7 | 7 | 3 | 38 |
+| **TOTAL** | **165** | **152** | **9** | **4** | **317** | **161** | **152** | **152** | **22** | **804** |
 
 ---
 
@@ -451,6 +466,18 @@ Every Heritage Gold rule is classified by business criticality, determining mini
 | Trust levels assigned correctly | SEC-006 level assignment test |
 | All 25 fraud signals detected | SEC-007 signal completeness test |
 
+### 4.11 H0.5 Qualification Matrices
+
+| Criterion | Verification |
+|-----------|-------------|
+| Matrix selected matches user intent + property_type + transaction_type | H05-ATM-001: Verify that for RESIDENTIAL_SEARCH + studio + RENT, matrix MATRIX-RES-SEARCH-003 is selected |
+| Readiness progression follows 7-level model with correct transitions | H05-ATM-002: Verify each of the 7 levels transitions correctly with the right field conditions |
+| Next question selected by priority within current readiness level | H05-ATM-003: Verify question priority formula: `priority = base - (impact×10) + (sensitivity×5) - (ambiguity×3)` |
+| Forbidden questions suppressed per matrix and cross-matrix | H05-ATM-004: Verify nombre_de_pieces not asked for any matrix; chambres not asked for studio |
+| Sensitive fields protected by consent gate | H05-ATM-005: Verify PRIVATE fields require consent before sharing; SENSITIVE/CONFIDENTIAL require explicit opt-in |
+| Search launched immediately at MINIMUM_SEARCH_READY | H05-ATM-006: Verify that once city+neighborhood+budget+property_type+transaction collected, search launches without further questions |
+| Matching semantics applied correctly for all 9 roles | H05-ATM-007: Verify hard_constraint excludes, soft_constraint scores, boost adds, penalty subtracts, transaction_blocker gates |
+
 ---
 
 ## 5. Traceability to Heritage Gold Documents
@@ -467,6 +494,7 @@ Every Heritage Gold rule is classified by business criticality, determining mini
 | CRM | `implement_all.sql`, `user_roles.json`, `USER_STATES.json`, `identity_resolution.py` | `RULE_INDEX.md §CRM`, `CRM_MODEL.md` |
 | Language | `language_handler.py`, `language_detector_ia.py`, `multilingual_responses.py`, `entity_linking.json` | `RULE_INDEX.md §Language`, `LANGUAGE_MODEL.md` |
 | Security | `anti_spam.py`, `Directive/15-SECURITY-REFERENCE.md`, `fraud-signals-and-verification.md` | `RULE_INDEX.md §Security` |
+| H0.5 Matrices | `docs/lawim_heritage_gold/qualification_matrices/` (29 files) | `reports/knowledge_execution/H0.5_INVENTORY_REPORT.md` |
 
 ---
 

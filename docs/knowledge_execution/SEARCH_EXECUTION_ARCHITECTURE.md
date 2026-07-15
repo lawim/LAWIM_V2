@@ -7,7 +7,116 @@
 
 ---
 
-## 1. Overview
+## 0. H0.5 Integration — Search Readiness Constraints
+
+### 0.1 Search Activation Gate
+
+Search must NOT be launched before `MINIMUM_SEARCH_READY` is reached. This is enforced by `readiness_rules.json`:
+
+```
+can_launch_search(context, matrix):
+  // Verify MINIMUM_SEARCH_READY required fields per matrix
+  search_fields = matrix.fields.minimum_search
+  base_ok = all(f in context.collected for f in search_fields)
+
+  // Verify conditional requirements from readiness_rules.json
+  conditional_ok = true
+  for cond in readiness_rules.levels.MINIMUM_SEARCH_READY.conditional_requirements:
+    if context.request_family == cond.family:
+      conditional_ok = all(f in context.collected for f in cond.fields)
+      break
+
+  // Verify no blocking conditions from readiness_rules.json
+  blockers_ok = true
+  for blocker in readiness_rules.levels.MINIMUM_SEARCH_READY.blocking_conditions:
+    if is_blocker_triggered(blocker, context):
+      blockers_ok = false
+      break
+
+  return base_ok && conditional_ok && blockers_ok
+```
+
+### 0.2 Search Input Contract (H0.5-Enhanced)
+
+Search receives structured fields from the H0.5-qualified context:
+
+```typescript
+interface H0_5SearchInput {
+  matrix_id: string;                        // From qualification_matrices.json
+  readiness_level: string;                  // Must be ≥ MINIMUM_SEARCH_READY
+  hard_constraints: {                       // From matching_semantics.json hard_constraint fields
+    transaction_type: string;
+    property_types: string[];
+    cities: string[];
+    budget_min: number;
+    budget_max: number;
+    budgets: { type: string; tolerance: number }[];
+    surface_min: number | null;
+    usage_prevu: string | null;
+    activite_prevue: string | null;
+  };
+  soft_constraints: {                       // From matching_semantics.json soft_constraint fields
+    neighborhoods: string[];
+    chambres: number | null;
+    douches: number | null;
+    cuisine: string | null;
+    meuble: string | null;
+    parking: boolean | null;
+    securite: boolean | null;
+  };
+  ranking_preferences: {                    // From matching_semantics.json ranking_preference fields
+    etage: string | null;
+    balcon: boolean | null;
+    climatisation: boolean | null;
+    internet: boolean | null;
+    [key: string]: any;
+  };
+  boost_triggers: {                         // From matching_semantics.json boost_rules
+    exact_neighborhood: boolean;
+    diaspora: boolean;
+    urgency: boolean;
+    [key: string]: boolean;
+  };
+}
+```
+
+### 0.3 Forbidden Early Search Constraints
+
+From `readiness_rules.json`, SEARCH must not require `INTRODUCTION_READY` or higher fields:
+
+| Forbidden Pre-Search Requirement | Reason |
+|----------------------------------|--------|
+| Contact info (nom, téléphone, email) | Collected at INTRODUCTION_READY |
+| Visit logistics (visit_date, visit_time) | Collected at VISIT_READY |
+| Financial/legal docs (num_titre, caution) | Collected at TRANSACTION_READY |
+| Recommended/optional amenities (balcon, jardin, piscine) | Deferred per question_rules.json |
+
+### 0.4 H0.5 Matching Semantics → Search Query Mapping
+
+From `matching_semantics.json`:
+
+| Matching Role | Maps To Search | Behavior |
+|---------------|----------------|----------|
+| hard_constraint | `hardFilters` | Pre-filter — exact match or exclude |
+| soft_constraint | `softFilters` + scoring weight | Score penalty for mismatch, no exclusion |
+| ranking_preference | `softFilters` (low weight) | Rank boost if matched |
+| boost | `Score boost` (post-query) | Fixed additive bonus (+10 to +25) |
+| informational_only | Not in search query | Ignored by search engine |
+
+### 0.5 H0.5 Field Dictionaries Applied
+
+Each search field uses validation and normalization from `field_dictionary.json`:
+
+| Field | H0.5 Source | Validation | Normalization |
+|-------|-------------|------------|---------------|
+| city | `field_dictionary.json` | `known_city` | lowercase, strip accents, map aliases |
+| property_type | `field_dictionary.json` | 18 residential, 7 land, 16 commercial types | normalize synonyms |
+| budget_max | `field_dictionary.json` | `> 0; integer; currency-aware` | monthly for rent, total for buy |
+| neighborhood | `field_dictionary.json` | `in neighborhood list for city` | normalize case, map aliases |
+
+---
+
+## 1. H1 Heritage Layer — Overview
 
 The Search Engine is the core property-finding subsystem of LAWIM. It consumes the structured query produced by Qualification, executes multi-phase matching against the property inventory, scores and ranks results, and produces a results payload consumable by the Decision Engine and NBA resolver.
 

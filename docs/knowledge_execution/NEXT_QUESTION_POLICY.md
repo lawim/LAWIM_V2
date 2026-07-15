@@ -6,7 +6,121 @@
 
 ---
 
-## 1. Algorithme de sélection
+## 0. H0.5 Integration Layer — Data-Driven Question Selection
+
+### 0.1 H0.5 Data Sources
+
+The Next Question Policy is driven by four H0.5 data sources:
+
+| Source | Usage | Location |
+|--------|-------|----------|
+| `field_dictionary.json` | Field definitions, validation rules, question templates, matching roles, privacy levels | `docs/lawim_heritage_gold/qualification_matrices/field_dictionary.json` |
+| `readiness_rules.json` | Current readiness level, blocking conditions, allowed/forbidden actions per level | `docs/lawim_heritage_gold/qualification_matrices/readiness_rules.json` |
+| `question_rules.json` | Conditional ask rules, never-ask list, deduce-from-context, defer-to rules, channel adaptations | `docs/lawim_heritage_gold/qualification_matrices/question_rules.json` |
+| `matching_semantics.json` | Matching role per field (hard_constraint/soft_constraint/ranking_preference), weights, tolerances | `docs/lawim_heritage_gold/qualification_matrices/matching_semantics.json` |
+| `qualification_matrices.json` | Matrix-specific field lists per readiness level (minimum_intake, minimum_search, etc.) | `docs/lawim_heritage_gold/qualification_matrices/qualification_matrices.json` |
+
+### 0.2 H0.5 Question Selection Rules
+
+The following rules from `question_rules.json` govern question selection:
+
+**Rule 1 — Never re-ask confirmed facts** (`question_rules.json` RULE-001):
+Once a field is collected and confirmed, it must never be asked again in the same qualification session.
+
+**Rule 2 — Extract multiple fields from same message** (`question_rules.json` RULE-002):
+When a user provides information containing multiple extractable fields, ALL must be extracted simultaneously.
+
+**Rule 3 — One main question at a time** (`question_rules.json` RULE-003):
+On WhatsApp, one question per message; on Telegram, 2-3 grouped fields; on Dashboard, full form.
+
+**Rule 4 — Prioritize highest filtering power** (`question_rules.json` RULE-004):
+Among missing fields, the one that most reduces search space is asked first. Priority is calculated as:
+```
+priority = base_priority - (impact_filtering * 10) + (sensitivity * 5) - (ambiguity * 3)
+```
+
+**Rule 5 — Launch search at MINIMUM_SEARCH_READY** (`question_rules.json` RULE-005):
+As soon as minimum search fields are collected, launch search immediately. Do not continue asking.
+
+**Rule 6 — Collect secondary preferences AFTER first search** (`question_rules.json` RULE-006):
+Fields marked `defer_ask` in `question_rules.json` (balcon, jardin, climatisation, etc.) are collected post-search.
+
+**Rule 7 — Ask confirmation only for real ambiguity** (`question_rules.json` RULE-007):
+Never ask "is this correct?" for information the user explicitly provided. Only clarify when confidence < 0.70.
+
+**Rule 8 — Never ask what can be deduced** (`question_rules.json` RULE-008):
+Fields in `deduce_from_context` (e.g., chambres=0 for studio) are never asked directly.
+
+### 0.3 H0.5 Priority Queue Construction
+
+```
+build_priority_queue(context, matrix):
+  queue = []
+
+  // 1. Determine current readiness level
+  level = compute_readiness_level(context, matrix)
+
+  // 2. Get matrix-specified fields for current and next level
+  current_fields = matrix.fields["minimum_" + level.suffix]
+  next_fields = matrix.fields["minimum_" + next_level(level).suffix]
+
+  // 3. Add missing current-level fields first
+  for field in current_fields:
+    if field not in context.collected:
+      queue.push(field, urgency="CRITICAL")
+
+  // 4. Add missing next-level fields (lower priority)
+  for field in next_fields:
+    if field not in context.collected:
+      queue.push(field, urgency="NORMAL")
+
+  // 5. Add recommended fields (lowest priority, only post-search)
+  if level >= MINIMUM_SEARCH_READY:
+    for field in matrix.fields.recommended:
+      if field not in context.collected:
+        queue.push(field, urgency="LOW")
+
+  // 6. Apply question_rules.json constraints
+  queue = filter_never_ask(question_rules.never_ask, queue)
+  queue = filter_deduced(question_rules.deduce_from_context, queue)
+  queue = apply_defer(question_rules.defer_ask, queue, context)
+
+  // 7. Apply conditional ask rules
+  for rule in question_rules.conditional_ask:
+    if eval_condition(rule.condition, context):
+      if rule.field not in context.collected:
+        queue.push(rule.field, priority=rule.priority)
+
+  return sort_by_priority(queue)
+```
+
+### 0.4 Readiness-Gated Actions
+
+From `readiness_rules.json` levels, each readiness level defines allowed and forbidden actions:
+
+| Readiness Level | Allowed | Forbidden |
+|-----------------|---------|-----------|
+| INTENT_IDENTIFIED | detect_intent, confirm_intent, detect_property_type | launch_search, ask_contact_details, ask_detailed_criteria |
+| MINIMUM_INTAKE_READY | confirm_city, confirm_budget, ask_neighborhood | launch_full_search, ask_contact_details, introduce_to_holders |
+| MINIMUM_SEARCH_READY | **LAUNCH_FIRST_SEARCH**, present_top_results, ask_refinement | continue_asking_recommended_fields_before_search, withhold_results, ask_contact_before_results |
+| MINIMUM_MATCHING_READY | rerank_results, filter_results, show_match_scores, ask_top_results, collect_introduction_fields | block_search_results, replace_results_without_user_request |
+| INTRODUCTION_READY | **INTRODUCE_PARTIES**, share_property_details, contact_holder, schedule_introduction_call | share_contact_without_double_consent, force_introduction |
+| VISIT_READY | schedule_and_confirm_visit, send_visit_confirmation, ask_feedback | share_exact_address_without_consent |
+| TRANSACTION_READY | proceed_to_formal_transaction, engage_notary, facilitate_document_exchange, coordinate_payment | proceed_without_resolving_blockers, skip_legal_verification |
+
+### 0.5 H0.5 Channel Adaptations
+
+From `question_rules.json` `channel_adaptations`:
+
+| Channel | Rules |
+|---------|-------|
+| WhatsApp | one_question_per_message=true, max_question_length=150, avoid_lists=true, defer_free_text=true, use_quick_replies=true |
+| Telegram | batch_2_3_fields=true, use_formatting=true |
+| Dashboard | full_form_one_page=true, group_by_category=true, inline_validation=true, save_draft=true |
+
+---
+
+## 1. H1 Heritage Layer — Algorithme de sélection
 
 ```
 next_question(context):

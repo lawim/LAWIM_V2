@@ -6,9 +6,159 @@
 
 ---
 
-> **DEPENDENCY_H05:** Detailed field matrices per property type and transaction type require H0.5 qualification deliverables. The contracts defined here specify the EXPECTED INTERFACE for H0.5 integration. Actual field lists, priorities, and validation rules must be sourced from H0.5.
+## 0. H0.5 Integration Layer — Qualification Matrix Contract
 
-## 1. Champs par type de transaction
+### 0.1 Loading Contract — Matrix Selection
+
+Matrices are sourced from H0.5 qualification data. The loading process resolves the correct matrix for a given request:
+
+```
+Source Files:
+  ┌─────────────────────────────────────────────────────────────┐
+  │ qualification_matrices.json  75 canonical matrices          │
+  │ field_dictionary.json      150+ field definitions           │
+  │ readiness_rules.json        7-level readiness model         │
+  │ question_rules.json         Question priority rules         │
+  │ matching_semantics.json     Matching role semantics         │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+**Matrix Selection** (`docs/lawim_heritage_gold/qualification_matrices/qualification_matrices.json`):
+
+The resolver selects a matrix using the triple `(request_family, transaction_type, property_type)`:
+
+```
+select_matrix(request):
+  family = resolve_request_family(request.intent, request.property_type)
+  candidates = filter(matrices,
+    m.request_family == family &&
+    m.transaction_type contains request.transaction_type &&
+    m.property_type == request.property_type)
+  if len(candidates) == 0:
+    return FALLBACK_GENERIC_MATRIX
+  if len(candidates) > 1:
+    return pick_by_journey_stage(candidates, request.journey_stage)
+  return candidates[0]
+```
+
+**Request Families** (from `field_dictionary.json` appears_in):
+- `RESIDENTIAL_SEARCH` — 18 property types (chambre_simple → colocation)
+- `LAND_SEARCH` — 7 land types (terrain_titre → terrain_sous_morcellement)
+- `COMMERCIAL_SEARCH` — 21 commercial types (boutique → entrepôt)
+- `FINANCING_REQUEST` — financing/loan qualifications
+- `PROFESSIONAL_SEARCH` — professional service matching
+- `REAL_ESTATE_SERVICES` — real estate service matching
+
+### 0.2 Result Contract — Matrix Selection Output
+
+Selecting a matrix produces a structured result consumed by the qualification engine:
+
+```typescript
+interface SelectedMatrix {
+  matrix_id: string;                       // e.g. "MATRIX-RES-SEARCH-001"
+  canonical_name: string;                  // e.g. "Chambre Simple — Basic Room"
+  request_family: string;                  // e.g. "RESIDENTIAL_SEARCH"
+  fields: {
+    minimum_intake: string[];              // Fields for INTENT_IDENTIFIED → MINIMUM_INTAKE_READY
+    minimum_search: string[];              // Fields for MINIMUM_SEARCH_READY
+    minimum_matching: string[];            // Fields for MINIMUM_MATCHING_READY
+    minimum_introduction: string[];        // Fields for INTRODUCTION_READY
+    minimum_visit: string[];               // Fields for VISIT_READY
+    minimum_transaction: string[];         // Fields for TRANSACTION_READY
+    recommended: string[];                 // Recommended (non-blocking, post-search)
+    optional: string[];                    // Optional (collect if volunteered)
+  };
+  conditional_fields: Array<{              // Field with conditional trigger
+    field: string;
+    condition: string;
+    matching_role: string;
+  }>;
+  sensitive_fields: string[];              // PRIVATE/SENSITIVE/CONFIDENTIAL fields
+  forbidden_questions: string[];           // Never-ask fields for this matrix
+}
+```
+
+### 0.3 Field Selection Contract
+
+Field definitions are sourced from `field_dictionary.json` (`docs/lawim_heritage_gold/qualification_matrices/field_dictionary.json`):
+
+```typescript
+interface FieldDefinition {
+  field_id: string;
+  label: string;
+  description: string;
+  data_type: "string" | "integer" | "enum" | "boolean" | "float" | "array";
+  validation_rules: string;
+  normalization_rules: string;
+  question_template: string;
+  matching_role: "hard_constraint" | "soft_constraint" | "ranking_preference"
+                   | "boost" | "penalty" | "informational_only"
+                   | "verification_only" | "transaction_blocker";
+  privacy_level: "public" | "private" | "sensitive" | "confidential";
+  appears_in: string[];                    // Which request families use this field
+}
+```
+
+**Field Resolution Order**:
+1. Load matrix → get field lists for each readiness level
+2. Load field definitions → get validation, normalization, templates
+3. Load matching semantics → get scoring role and weight
+4. Apply conditional field logic (field only needed if condition is met)
+5. Apply removal if field appears in `forbidden_questions`
+
+### 0.4 Readiness Computation Contract
+
+Readiness is computed using `readiness_rules.json` (`docs/lawim_heritage_gold/qualification_matrices/readiness_rules.json`) together with matrix field specifications:
+
+```
+compute_readiness(context, matrix):
+  // Check each level from highest to lowest
+  for level in [TRANSACTION_READY → INTENT_IDENTIFIED]:
+    required = matrix.fields["minimum_" + level.suffix]
+    conditional = level.conditional_requirements for this family
+    all_present = all(f in context.collected for f in required)
+    conditions_ok = all(f in context.collected for cond in conditional for f in cond.fields)
+    blockers_cleared = no blocking_conditions[level] triggered
+    if all_present && conditions_ok && blockers_cleared:
+      return level
+  return INTENT_IDENTIFIED
+```
+
+### 0.5 Question Priority Contract
+
+Question selection uses `question_rules.json` (`docs/lawim_heritage_gold/qualification_matrices/question_rules.json`) which defines:
+
+- **always_ask** — Fields asked of every user (intent, transaction_type, city)
+- **conditional_ask** — Fields asked only when condition is met (e.g., chambres for apartments)
+- **never_ask** — Fields never asked (e.g., standing, ethnie, religion)
+- **deduce_from_context** — Fields derived automatically (e.g., chambres=0 for studio)
+- **defer_ask** — Fields postponed to post-search or introduction stage
+- **priority_calculation_formula** — `priority = base_priority - (impact_filtering * 10) + (sensitivity * 5) - (ambiguity * 3)`
+
+### 0.6 Matching Semantics Contract
+
+Matching roles per field are defined in `matching_semantics.json` (`docs/lawim_heritage_gold/qualification_matrices/matching_semantics.json`) and documented in `MATCHING_FIELD_SEMANTICS.md`:
+
+- **hard_constraint** — Binary filter (exact match required, else exclude)
+- **soft_constraint** — Weighted scoring (0-100% of field weight)
+- **ranking_preference** — Tie-breaker bonus (+5 to +15)
+- **boost** — Fixed additive boost (+10 to +25, capped at +50 total)
+- **penalty** — Fixed subtractive penalty (-5 to -50)
+- **informational_only** — No scoring impact
+- **verification_only** — Transaction verification, no matching impact
+- **transaction_blocker** — Must resolve before TRANSACTION_READY
+
+### 0.7 H0.5 → H1 Contradiction Resolution
+
+| H0.5 Rule | H1 Rule | Resolution |
+|-----------|---------|------------|
+| 7 readiness levels (INTENT_IDENTIFIED → TRANSACTION_READY) | 4 readiness levels (SEARCH → RELATIONSHIP) | **RESOLVED_BY_H05** — H0.5 granularity replaces 4-level model. See READINESS_MODEL.md §0 |
+| Matrix-driven field selection per (family, transaction, type) | Static field tables per transaction type | **RESOLVED_BY_H05** — Static tables replaced by dynamic matrix selection |
+| weighted completeness formula per readiness level | uniform completeness formula | **RESOLVED_BY_H05** — H0.5 per-level weighting replaces uniform calculation |
+
+---
+
+## 1. H1 Heritage Layer — Champs par type de transaction
 
 ### 1.1 Achat (buy)
 

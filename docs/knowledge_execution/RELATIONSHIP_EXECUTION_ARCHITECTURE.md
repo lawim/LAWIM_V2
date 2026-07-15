@@ -8,7 +8,63 @@
 
 ---
 
-## 1. Relationship Engine Overview
+## 0. H0.5 Integration — Sensitive/Confidential Field Handling & Alignment
+
+### 0.1 H0.5 Privacy-Aware Relationship Flow
+
+The H0.5 qualification matrices classify fields by privacy level (`PRIVACY_AND_SENSITIVE_FIELDS.md`). The Relationship Engine enforces these classifications throughout the relationship lifecycle:
+
+| Relationship Phase | H0.5 Fields Active | Privacy Constraint |
+|--------------------|-------------------|--------------------|
+| Proposition | PUBLIC fields only (city, property_type, neighborhood) | No identity/budget exposed to holder |
+| Demandeur Consent | PRIVATE fields revealed with consent (nom, téléphone) | Consent required from demandeur |
+| Introduction (post-double-consent) | PRIVATE fields (nom, téléphone, email) shared bidirectionally | Both parties consented |
+| Visit | PRIVATE fields (adresse_exacte, coordonnees_gps) shared | Visit consent obtained |
+| Transaction | SENSITIVE + CONFIDENTIAL fields (financing, num_titre, litiges) | Legal basis + NDA required |
+
+### 0.2 H0.5 Per-Matrix Sensitive Field Enforcement
+
+Each matrix in `qualification_matrices.json` has a `sensitive_fields` array. The Relationship Engine must:
+
+1. Load the active matrix for the relationship's dossier
+2. Identify all sensitive/confidential fields
+3. Enforce consent gates before sharing each field
+4. Never share CONFIDENTIAL fields through the platform
+
+```typescript
+function enforcePrivacy(relationship: Relationship): PrivacyGate[] {
+  const matrix = loadMatrix(relationship.dossier.matrix_id);
+  return matrix.sensitive_fields.map(field => ({
+    field_id: field,
+    privacy_level: fieldDictionary.fields[field].privacy_level,
+    sharing_allowed: canShareField(relationship, field),
+    consent_required: fieldDictionary.fields[field].privacy_level !== "public",
+    consent_obtained: hasConsent(relationship, field)
+  }));
+}
+```
+
+### 0.3 H0.5 Privacy Level → Data Visibility Alignment
+
+Comparison of this contract's anonymity phases with H0.5 privacy levels:
+
+| This Contract §4 Phase | H0.5 Max Privacy Level Exposed | Alignment |
+|------------------------|-------------------------------|-----------|
+| Before Double Consent (§4.1) | PUBLIC only | ✅ Aligned — See §2.1 Data Visibility |
+| After Double Consent (§4.2) | PRIVATE (with consent) | ✅ Aligned — See §2.3 Data Visibility |
+| Agent Opt-In (§4.3) | PRIVATE (with consent) | ✅ Aligned — See §2.4 Agent Opt-In |
+
+### 0.4 H0.5 → H1 Contradiction Resolution
+
+| H0.5 Rule | H1 Rule | Resolution |
+|-----------|---------|------------|
+| per-matrix sensitive_fields | Fixed field sensitivity in DATA_SHARING_POLICY.md | **ARCHITECTURE_DECISION_RETAINED** — H1 fixed visibility tables apply at policy level; per-matrix sensitive_fields add an additional enforcement layer |
+| CONFIDENTIAL fields never shared via platform | Coordinate unlock via paid service (500 FCFA) | **ARCHITECTURE_DECISION_RETAINED** — Paid coordinate unlock applies to PRIVATE fields only; CONFIDENTIAL fields remain excluded |
+| INTRODUCTION_READY as readiness level | Relationship created post-consent | **RESOLVED_BY_H05** — The INTRODUCTION_READY readiness level (from READINESS_MODEL.md) acts as the gate before relationship creation |
+
+---
+
+## 1. H1 Heritage Layer — Relationship Engine Overview
 
 The Relationship Engine is the domain engine responsible for orchestrating the Mise en Relation lifecycle — from match selection through relationship creation, active management, and eventual closure. It enforces the double consent model, anonymity principle, and all SLA/NBA rules governing demandeur-holder interactions.
 

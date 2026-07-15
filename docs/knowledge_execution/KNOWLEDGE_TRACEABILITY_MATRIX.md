@@ -209,10 +209,33 @@ The traceability chain flows: **Heritage Gold knowledge** → **Execution Archit
 | WF-020 | WORKFLOW_EXTRACTION.md §21 | PROGRESSIVE_SEARCH_EXPANSION.md | §2 | Search Engine | no.match | Search expansion | 6-stage auto-expansion | Search state | — | — | KEI §2.12 |
 | WF-021 | WORKFLOW_EXTRACTION.md §22 | TRANSITION_CONTRACTS.md | §2 | Event Engine | market.event | Silent monitoring | Monitor publications/prices/availability | Surveillance state | — | — | KEI §2.12 |
 
-### 1.13 Knowledge & Configuration Domain
+### 1.13 H0.5 Qualification Matrix Domain
 
 | Knowledge ID | Heritage Doc | Execution Architecture | Section | Engine | Trigger Event | Decision | Action | State Change | Audit Event | Test Coverage | Inventory Ref |
-|---|---|---|---|---|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| H05-TR-001 | qualification_matrices.json | QUALIFICATION_EXECUTION_ARCHITECTURE.md | §1 | Qualification Engine | matrix.selected | Field enumeration | Load matrix fields by readiness level (1→7) | Field queue | audit.matrix.loaded | — | H0.5_INVENTORY_REPORT.md §1 |
+| H05-TR-002 | qualification_matrices.json | READINESS_MODEL.md | §2 | Readiness Calculator | field.collected | Readiness evaluation | Check if all required fields at current level are present | Readiness level | audit.readiness.transitioned | — | H0.5_INVENTORY_REPORT.md §5 |
+| H05-TR-003 | READINESS_LEVELS.md (§2) | READINESS_MODEL.md | §3 | Readiness Calculator | MINIMUM_SEARCH_READY | Search gate | Unlock search; forbid continued pre-search questions | Search state | audit.search.launched | — | H0.5_INVENTORY_REPORT.md §5 |
+| H05-TR-004 | READINESS_LEVELS.md (§4) | QUALIFICATION_MATRIX_CONTRACT.md | §1 | Qualification Engine | cardinal.rule.check | Early search enforcement | Launch search immediately at minimum criteria | Search state | audit.search.forced | — | H0.5_INVENTORY_REPORT.md §5 |
+| H05-TR-005 | QUESTION_PRIORITY_POLICY.md | NEXT_QUESTION_POLICY.md | §2 | Question Selector | field.needed | Priority calc | priority=base-(impact×10)+(sensitivity×5)-(ambiguity×3) | Question queue | audit.question.ordered | — | H0.5_INVENTORY_REPORT.md §7 |
+| H05-TR-006 | COMMON_FIELD_DICTIONARY.md | QUALIFICATION_MATRIX_CONTRACT.md | §1 | Entity Extractor | message.received | Field extraction | Extract fields per dictionary (120+ templates) | Extracted fields | audit.field.extracted | — | H0.5_INVENTORY_REPORT.md §6 |
+| H05-TR-007 | MATCHING_FIELD_SEMANTICS.md (§1) | MATCHING_SCORE_CONTRACT.md | §2 | Matching Engine | field.mapped | Role assignment | Assign 1 of 9 matching roles to each field | Match components | audit.match.role_assigned | — | H0.5_INVENTORY_REPORT.md §10 |
+| H05-TR-008 | MATCHING_FIELD_SEMANTICS.md (§2) | MATCHING_SCORE_CONTRACT.md | §3 | Matching Engine | score.calc | Role-based scoring | hard_constraint→filter, soft_constraint→score, boost→+N, etc. | Match score | audit.match.scored | — | H0.5_INVENTORY_REPORT.md §10 |
+| H05-TR-009 | PRIVACY_AND_SENSITIVE_FIELDS.md (§1) | DATA_SHARING_POLICY.md | §2 | Data Sharing / Consent | field.collected | Privacy classification | PUBLIC(0)/PRIVATE(1)/SENSITIVE(2)/CONFIDENTIAL(3) | Privacy state | audit.privacy.classified | — | H0.5_INVENTORY_REPORT.md §11 |
+| H05-TR-010 | PRIVACY_AND_SENSITIVE_FIELDS.md (§5) | CONSENT_EXECUTION_CONTRACT.md | §2 | Data Sharing / Consent | sensitive.field.collected | Consent gate | Request explicit opt-in; log consent record | Consent state | audit.consent.obtained | — | H0.5_INVENTORY_REPORT.md §11 |
+| H05-TR-011 | CONDITIONAL_QUESTION_RULES.md (§3) | NEXT_QUESTION_POLICY.md | §2 | Question Selector | context.evaluated | Conditional filtering | Apply 100+ conditional rules (property-type-dependant, channel, etc.) | Question applicability | audit.conditional.evaluated | — | H0.5_INVENTORY_REPORT.md §8 |
+| H05-TR-012 | CONDITIONAL_QUESTION_RULES.md (§6) | QUALIFICATION_MATRIX_CONTRACT.md | §1 | Qualification Engine | forbidden.check | Question suppression | Suppress 18 cross-matrix + per-type forbidden questions | Question filter | audit.forbidden.suppressed | — | H0.5_INVENTORY_REPORT.md §9 |
+| H05-TR-013 | qualification_matrices.json ($.matrices[].forbidden_questions) | QUALIFICATION_MATRIX_CONTRACT.md | §1 | Qualification Engine | matrix.loaded | Per-matrix forbidden check | Suppress matrix-specific forbidden questions | Question filter | audit.matrix.questions_filtered | — | H0.5_INVENTORY_REPORT.md §9 |
+| H05-TR-014 | COMMON_FIELD_DICTIONARY.md (§3) | QUALIFICATION_MATRIX_CONTRACT.md | §1 | Qualification Engine | financial.field.collected | Sensitivity handling | Apply ±15-25% budget tolerance per transaction type | Budget tolerance | — | — | H0.5_INVENTORY_REPORT.md §6 |
+| H05-TR-015 | QUALIFICATION_SCENARIOS.md | QUALIFICATION_MATRIX_CONTRACT.md | §2 | Qualification Engine | scenario.test | Expectation validation | Validate against 100+ documented scenarios | Scenario result | audit.scenario.validated | — | H0.5_INVENTORY_REPORT.md §12 |
+| H05-TR-016 | SOURCE_TRACEABILITY.md (§3) | KNOWLEDGE_EXECUTION_INVENTORY.md | §1 | All Engines | knowledge.audit | Source tracing | Trace every field/rule/matrix to heritage source | Knowledge state | audit.knowledge.traced | — | H0.5_INVENTORY_REPORT.md §13 |
+| H05-TR-017 | MATCHING_FIELD_SEMANTICS.md (§3) | MATCHING_SCORE_CONTRACT.md | §2 | Matching Engine | privacy.role.constraint | Role restriction per privacy level | public→all roles, private→info/soft, sensitive→info only, confidential→verify/blocker | Role constraints | — | — | H0.5_INVENTORY_REPORT.md §10-11 |
+| H05-TR-018 | READINESS_LEVELS.md (§3) | QUALIFICATION_MATRIX_CONTRACT.md | §1 | Qualification Engine | transition.guard | Transition validation | Check required fields + blocking conditions + user consent | Readiness level | audit.readiness.transition_guarded | — | H0.5_INVENTORY_REPORT.md §5 |
+
+### 1.14 Knowledge & Configuration Domain
+
+| Knowledge ID | Heritage Doc | Execution Architecture | Section | Engine | Trigger Event | Decision | Action | State Change | Audit Event | Test Coverage | Inventory Ref |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | G-KNOW-001 | TRACEABILITY_MATRIX.md | DECISION_ENGINE_ARCHITECTURE.md | §2 | Decision Engine | feature.check | Flag resolution | Enable/disable feature | Feature state | — | — | KEI §2.13 |
 | G-KNOW-002-005 | TRACEABILITY_MATRIX.md | GLOBAL_EXECUTION_ARCHITECTURE.md | §2.2 | All Engines | knowledge.lookup | Reference | Knowledge registry query | Knowledge state | — | — | KEI §2.13 |
 | G-KNOW-007 | TRACEABILITY_MATRIX.md | CONSENT_EXECUTION_CONTRACT.md | §2 | Security Engine | fraud.detect | Signal reference | 25 fraud signals | Fraud detection | — | — | KEI §2.13 |
@@ -256,6 +279,21 @@ Every knowledge item that produces an event generates a corresponding audit trai
 | audit.diaspora.detected | Qualification Engine | QUAL-016 | Qualification Engine |
 | audit.qualification.stopped | Decision Engine | QUAL-015 | Decision Engine |
 | audit.nba.updated | NBA Engine | WF-019 | NBA Engine |
+| audit.matrix.loaded | Qualification Engine | H05-TR-001 | Qualification Engine |
+| audit.readiness.transitioned | Readiness Calculator | H05-TR-002, H05-TR-018 | Readiness Calculator |
+| audit.search.launched | Readiness Calculator | H05-TR-003 | Readiness Calculator |
+| audit.search.forced | Qualification Engine | H05-TR-004 | Qualification Engine |
+| audit.question.ordered | Question Selector | H05-TR-005 | Question Selector |
+| audit.field.extracted | Entity Extractor | H05-TR-006 | Entity Extractor |
+| audit.match.role_assigned | Matching Engine | H05-TR-007 | Matching Engine |
+| audit.match.scored | Matching Engine | H05-TR-008 | Matching Engine |
+| audit.privacy.classified | Data Sharing / Consent | H05-TR-009 | Data Sharing / Consent |
+| audit.consent.obtained | Data Sharing / Consent | H05-TR-010 | Data Sharing / Consent |
+| audit.conditional.evaluated | Question Selector | H05-TR-011 | Question Selector |
+| audit.forbidden.suppressed | Qualification Engine | H05-TR-012 | Qualification Engine |
+| audit.matrix.questions_filtered | Qualification Engine | H05-TR-013 | Qualification Engine |
+| audit.scenario.validated | Qualification Engine | H05-TR-015 | Qualification Engine |
+| audit.knowledge.traced | All Engines | H05-TR-016 | All Engines |
 
 ---
 
@@ -273,9 +311,9 @@ Cross-reference: KNOWLEDGE_EXECUTION_INVENTORY.md (§3)
 |--------|------------------------:|:------------------:|
 | Decision Engine | 178 | ✅ |
 | Conversation Engine | 92 | ✅ |
-| Qualification Engine | 128 | ✅ |
+| Qualification Engine | 146 | ✅ |
 | Search Engine | 63 | ✅ |
-| Matching Engine | 145 | ✅ |
+| Matching Engine | 162 | ✅ |
 | Geography Engine | 52 | ✅ |
 | CRM Engine | 168 | ✅ |
 | Relationship Engine | 34 | ✅ |
@@ -285,8 +323,12 @@ Cross-reference: KNOWLEDGE_EXECUTION_INVENTORY.md (§3)
 | Event Engine | 31 | ✅ |
 | Security Engine | 24 | ✅ |
 | Workflow Engine | 21 | ✅ |
+| Readiness Calculator | 6 | ✅ |
+| Question Selector | 3 | ✅ |
+| Entity Extractor | 2 | ✅ |
+| Data Sharing / Consent | 4 | ✅ |
 
-**TOTAL: All ~1500+ knowledge items have at least one consuming engine.** No knowledge item lacks a consuming engine.
+**TOTAL: All ~1520+ knowledge items have at least one consuming engine.** No knowledge item lacks a consuming engine.
 
 ---
 

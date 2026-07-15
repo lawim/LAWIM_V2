@@ -24,6 +24,10 @@
 | Workflow Engine | WORKFLOW_EXECUTION_ARCHITECTURE.md | STATE_MACHINE_CATALOG.md, TRANSITION_CONTRACTS.md | — |
 | Event Engine | WORKFLOW_EXECUTION_ARCHITECTURE.md | TRANSITION_CONTRACTS.md | — |
 | Search Engine | SEARCH_EXECUTION_ARCHITECTURE.md | SEARCH_QUERY_CONTRACT.md, PROGRESSIVE_SEARCH_EXPANSION.md | — |
+| Readiness Calculator | READINESS_MODEL.md | READINESS_MODEL.md | — |
+| Question Selector | NEXT_QUESTION_POLICY.md | NEXT_QUESTION_POLICY.md | — |
+| Entity Extractor | QUALIFICATION_EXECUTION_ARCHITECTURE.md | QUALIFICATION_MATRIX_CONTRACT.md | — |
+| Data Sharing / Consent | DATA_SHARING_POLICY.md | CONSENT_EXECUTION_CONTRACT.md | — |
 | All Engines | GLOBAL_EXECUTION_ARCHITECTURE.md | — | — |
 
 ---
@@ -352,10 +356,29 @@
 | MATCH-010 | — | RULE_INDEX.md (Matching) | SEARCH_QUERY_CONTRACT.md | Search Engine | Result generation | Count cap | Max 10 results, max 5 first match | Search results | — | — |
 | GE-MATCH-025 | — | MATCHING_MODEL.md §21 | PROGRESSIVE_SEARCH_EXPANSION.md | Search Engine | Search expansion | Mobility radius | STRICT=0, FLEXIBLE=0.5, VERY_FLEXIBLE=1.0 | Search radius | — | — |
 
-## Group 15: All Engines (Cross-Cutting Knowledge)
+## Group 15: H0.5 Qualification Matrix Knowledge (NEW)
 
 | Knowledge ID | Rule ID | Heritage Doc | Execution Contract | Engine | Trigger | Decision | Action | State Change | Event | Test |
 |---|---|---|---|---|---|---|---|---|---|---|
+| H05-QM-001 | — | qualification_matrices.json ($.matrices) | QUALIFICATION_MATRIX_CONTRACT.md | Qualification Engine | intent + property_type detected | Matrix selection | Select matrix by request_family + property_type + transaction_type | Matrix assigned | matrix.selected | — |
+| H05-QM-002 | — | READINESS_LEVELS.md (§2) | READINESS_MODEL.md | Readiness Calculator | Field collected | Readiness transition | Evaluate 7-level readiness progression | Readiness level | readiness.transitioned | — |
+| H05-QM-003 | — | QUESTION_PRIORITY_POLICY.md (§3) | NEXT_QUESTION_POLICY.md | Question Selector | Next field needed | Priority calculation | Select highest-priority unanswered field | Question queue | question.selected | — |
+| H05-QM-004 | — | COMMON_FIELD_DICTIONARY.md (§1-12) | QUALIFICATION_MATRIX_CONTRACT.md | Entity Extractor | User message | Field extraction | Extract and normalize field values per dictionary | Extracted fields | field.extracted | — |
+| H05-QM-005 | — | MATCHING_FIELD_SEMANTICS.md (§1) | MATCHING_SCORE_CONTRACT.md | Matching Engine | Field mapped | Role assignment | Assign matching_role (9 types) per field | Match scoring | match.scored | — |
+| H05-QM-006 | — | PRIVACY_AND_SENSITIVE_FIELDS.md (§1) | DATA_SHARING_POLICY.md | Data Sharing / Consent | Field collected | Privacy classification | Classify as PUBLIC/PRIVATE/SENSITIVE/CONFIDENTIAL; apply consent gate | Privacy state | privacy.consent_gated | — |
+| H05-QM-007 | — | CONDITIONAL_QUESTION_RULES.md (§3) | NEXT_QUESTION_POLICY.md | Question Selector | Context check | Conditional evaluation | Apply 100+ conditional rules (property-type/transaction/channel/context) | Question applicability | conditional.evaluated | — |
+| H05-QM-008 | — | CONDITIONAL_QUESTION_RULES.md (§6) | QUALIFICATION_MATRIX_CONTRACT.md | Qualification Engine | Forbidden check | Question suppression | Suppress 18 cross-matrix + per-type forbidden questions | Question filter | forbidden.suppressed | — |
+| H05-QM-009 | — | MATCHING_FIELD_SEMANTICS.md (§1.1-1.9) | MATCHING_SCORE_CONTRACT.md | Matching Engine | Match scoring | Role-based scoring | Apply 9 matching roles: hard_constraint, soft_constraint, ranking_preference, exclusion, boost, penalty, informational_only, verification_only, transaction_blocker | Score components | matching.roles_applied | — |
+| H05-QM-010 | — | READINESS_LEVELS.md (§4) | READINESS_MODEL.md | Readiness Calculator | MINIMUM_SEARCH_READY reached | Search gating | Unlock search launch; forbid continued pre-search questions | Search state | search.launched | — |
+| H05-QM-011 | — | PRIVACY_AND_SENSITIVE_FIELDS.md (§5) | CONSENT_EXECUTION_CONTRACT.md | Data Sharing / Consent | Sensitive field collected | Consent collection | Request explicit sharing consent; log consent record | Consent state | consent.obtained | — |
+| H05-QM-012 | — | qualification_matrices.json ($.matrices[].forbidden_questions) | QUALIFICATION_MATRIX_CONTRACT.md | Qualification Engine | Matrix loaded | Forbidden field suppression | Suppress matrix-specific forbidden questions (e.g., bedroom_count for studio) | Question filter | matrix.questions_filtered | — |
+| H05-QM-013 | — | QUALIFICATION_SCENARIOS.md | QUALIFICATION_MATRIX_CONTRACT.md | Qualification Engine | Scenario test | Expectation matching | Validate qualification flow against 100+ documented scenarios | Scenario state | scenario.validated | — |
+| H05-QM-014 | — | SOURCE_TRACEABILITY.md (§3) | KNOWLEDGE_EXECUTION_INVENTORY.md | All Engines | Knowledge audit | Source verification | Trace every field/rule/matrix to heritage source | Knowledge state | knowledge.traced | — |
+
+## Group 16: All Engines (Cross-Cutting Knowledge)
+
+| Knowledge ID | Rule ID | Heritage Doc | Execution Contract | Engine | Trigger | Decision | Action | State Change | Event | Test |
+|---|---|---|---|---|---|---|---|---|---|---|---|
 | G-KNOW-002 | — | TRACEABILITY_MATRIX.md (Knowledge) | GLOBAL_EXECUTION_ARCHITECTURE.md | All Engines | Knowledge lookup | Knowledge reference | Consolidated knowledge store | Knowledge state | — | — |
 | G-KNOW-003 | — | TRACEABILITY_MATRIX.md (Knowledge) | GLOBAL_EXECUTION_ARCHITECTURE.md | All Engines | Source lookup | Source inventory | ~220 legacy files indexed | Source inventory | — | — |
 | G-KNOW-004 | — | TRACEABILITY_MATRIX.md (Knowledge) | GLOBAL_EXECUTION_ARCHITECTURE.md | All Engines | Traceability | Trace reference | 73 legacy entries traced | Traceability | — | — |
@@ -369,8 +392,8 @@
 | Engine | Items in Matrix | Items from KNOWLEDGE_EXECUTION_INVENTORY | Match |
 |--------|----------------:|----------------------------------------:|:-----:|
 | Decision Engine | 42 | 178 (unique) | ✅ |
-| Qualification Engine | 29 | 128 (unique) | ✅ |
-| Matching Engine | 35 | 145 (unique) | ✅ |
+| Qualification Engine | 36 | 128 (unique) | ✅ |
+| Matching Engine | 37 | 145 (unique) | ✅ |
 | Conversation Engine | 27 | 92 (unique) | ✅ |
 | Geography Engine | 20 | 52 (unique) | ✅ |
 | Language Engine | 21 | 55 (unique) | ✅ |
@@ -383,6 +406,10 @@
 | Event Engine | 8 | 31 (unique) | ✅ |
 | Search Engine | 4 | 63 (unique) | ✅ |
 | All Engines | 5 | 9 (Knowledge) | ✅ |
+| Readiness Calculator | 2 | — (NEW H0.5) | ✅ |
+| Question Selector | 2 | — (NEW H0.5) | ✅ |
+| Entity Extractor | 1 | — (NEW H0.5) | ✅ |
+| Data Sharing / Consent | 2 | — (NEW H0.5) | ✅ |
 
 **Note:** Each row represents one or more knowledge items sharing the same engine/trigger/action pattern. Individual items can be expanded from KNOWLEDGE_EXECUTION_INVENTORY.md. All ~1500+ knowledge items are covered.
 

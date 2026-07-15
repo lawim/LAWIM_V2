@@ -8,7 +8,73 @@
 
 ---
 
-## 1. Policy Principles
+## 0. H0.5 Integration — Privacy & Sensitive Field Alignment
+
+### 0.1 H0.5 Privacy Level Mapping
+
+The H0.5 qualification matrices classify all fields into four privacy levels (from `PRIVACY_AND_SENSITIVE_FIELDS.md`). This policy aligns its data sharing rules with those classifications:
+
+| H0.5 Privacy Level | Code | This Policy's Visibility | Examples |
+|--------------------|------|--------------------------|----------|
+| **Public** | 0 | Shared freely with any party | city, property_type, neighborhood, chambres, cuisine |
+| **Private** | 1 | Shared only after consent with matched counterparty | nom, telephone, budget_max, email |
+| **Sensitive** | 2 | Explicit consent required before collection or sharing | revenus, financing, apport, garanties |
+| **Confidential** | 3 | Never shared without legal basis; strict need-to-know | num_titre, litiges_connus, hypotheque |
+
+Source: `docs/lawim_heritage_gold/qualification_matrices/PRIVACY_AND_SENSITIVE_FIELDS.md`
+
+### 0.2 H0.5 Sensitive/Confidential Fields Alignment
+
+The lifecycle stages in this policy (§2) are aligned with H0.5 privacy levels:
+
+| Lifecycle Stage | H0.5 Privacy Level Limit | Enforcement |
+|-----------------|-------------------------|-------------|
+| Pre-Proposition | PUBLIC only | SENSITIVE and CONFIDENTIAL fields never shared pre-consent |
+| Demandeur Consent (pending) | PUBLIC + PRIVATE (with consent) | PRIVATE fields shared per-field consent |
+| Double Consent (active) | PUBLIC + PRIVATE + SENSITIVE (with explicit consent) | SENSITIVE fields require explicit opt-in per sharing event |
+| Transaction/Notary | CONFIDENTIAL (with NDA/legal basis) | CONFIDENTIAL fields only shared with legal professionals under NDA |
+
+### 0.3 H0.5 Field-Level Privacy → Data Sharing Rules
+
+Each data field in §2 (Data Visibility by Lifecycle Stage) maps to an H0.5 privacy classification:
+
+| Data Field | H0.5 Privacy Level | Sharing Rule |
+|------------|-------------------|--------------|
+| Property address (exact) | PRIVATE | Shared post-consent per §2.2 |
+| Property address (approximate) | PUBLIC | Always shared per §2.1 |
+| Holder identity | PUBLIC (role) / PRIVATE (name) | Masked pre-consent, revealed post-consent |
+| Holder phone | PRIVATE | Conditional per §2.3 |
+| Demandeur identity | PRIVATE | Masked pre-consent, revealed post-consent |
+| Demandeur phone | PRIVATE | Conditional per §2.3 |
+| Budget info | PRIVATE | Post-consent (§2.3) |
+
+### 0.4 H0.5 Per-Matrix Sensitive Fields
+
+Each matrix in `qualification_matrices.json` defines its own `sensitive_fields` array. For example:
+
+| Matrix | Sensitive Fields |
+|--------|-----------------|
+| MATRIX-RES-SEARCH-001 (Chambre Simple) | telephone, nom, budget_max, email |
+| MATRIX-RES-SEARCH-006 (Appartement Non Meublé) | telephone, nom, budget_max, financing |
+| LAND_SEARCH_TERRAIN_TITRE_001 (Titled Land) | num_titre, litiges_connus, hypotheque_charge |
+
+The Data Sharing Policy's `max_visibility` per lifecycle stage must respect the most restrictive field in the active matrix.
+
+### 0.5 Alignment Verification
+
+| This Policy Section | H0.5 Alignment | Notes |
+|--------------------|----------------|-------|
+| §1 Policy Principles | ✅ Aligned | Data Minimization, Progressive Disclosure, Consent-Based all match H0.5 PRIVACY_AND_SENSITIVE_FIELDS §3 |
+| §2 Data Visibility by Lifecycle | ✅ Aligned | Pre-proposition = PUBLIC only, matches H0.5 §3 Rule 1 |
+| §3 Masked Data Rules | ✅ Aligned | Masking for PRIVATE/contact fields per H0.5 §3 Rule 2 |
+| §4 Authorized Data Sharing | ✅ Aligned | Sharing triggers match H0.5 §6 consent management |
+| §5 Data Retention | ✅ Aligned | Retention periods per H0.5 §5 (90d qual, 5yr transaction) |
+| §6 Anonymization | ✅ Aligned | Methods match H0.5 §9.3 anonymization for matching engine |
+| §9 Role-Based Access | ✅ Aligned | Access matrix matches H0.5 §5.3 access control matrix |
+
+---
+
+## 1. H1 Heritage Layer — Policy Principles
 
 | Principle | Description |
 |---|---|

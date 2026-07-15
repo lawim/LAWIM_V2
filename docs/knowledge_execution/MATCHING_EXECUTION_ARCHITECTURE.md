@@ -7,7 +7,121 @@
 
 ---
 
-## 1. Overview
+## 0. H0.5 Integration — Matching Semantics & Field Roles
+
+### 0.1 H0.5 Data Sources
+
+The Matching Engine consumes two H0.5 sources for field-level semantics:
+
+| Source | Content | Usage |
+|--------|---------|-------|
+| `matching_semantics.json` | Nine matching roles, per-field weight/tolerance/role, boost rules, exclusion rules, scoring formula | Dynamic scoring role assignment per field, weight distribution, boost/penalty logic |
+| `MATCHING_FIELD_SEMANTICS.md` | Full documentation of matching roles with examples, per-property-type semantics, budget tolerances | Reference for implementation, edge-case handling |
+
+### 0.2 H0.5 Matching Roles → Matching Engine Input
+
+Each field from the qualification matrices carries a `matching_role` (from `field_dictionary.json`) that maps directly to matching engine components:
+
+| H0.5 Matching Role | Matching Engine Component | Behavior |
+|---------------------|--------------------------|----------|
+| `hard_constraint` | Constraint Enforcer (exclusion) | Binary pass/fail before scoring |
+| `soft_constraint` | Dimension Evaluator (weighted scoring) | Score contribution 0-100% of field weight |
+| `ranking_preference` | Score Calculator (bonus) | +5 to +15 additive bonus |
+| `boost` | Boost Applier | Fixed additive +10 to +25 (capped at +50 total) |
+| `penalty` | Penalty Applier | Fixed subtractive -5 to -50 |
+| `informational_only` | Explanation Builder only | No scoring impact |
+| `verification_only` | Audit / Transaction Engine | No scoring, verified at transaction |
+| `transaction_blocker` | Transaction readiness gate | Blocks TRANSACTION_READY if unresolved |
+
+### 0.3 H0.5 Weight Distribution → Score Families
+
+From `matching_semantics.json` `weight_distribution`:
+
+| Transaction Type | Geographical | Budget | Property | Amenities | Legal |
+|-----------------|-------------|--------|----------|-----------|-------|
+| RENT | 35% | 30% | 25% | 10% | 0% |
+| BUY | 30% | 25% | 25% | 10% | 10% |
+| INVEST | 25% | 30% | 20% | 10% | 15% |
+| LAND_BUY | 30% | 25% | 15% | 5% | 25% |
+| FINANCE | 20% | 35% | 20% | 0% | 25% |
+
+For the Matching Engine's 5 score families, map as:
+
+```
+Geographical Score  ← Geographical weight (35% RENT)
+Budget Score         ← Budget weight (30% RENT)
+Property Score       ← Property weight (25% RENT)
+Behavioral Score     ← Derived from urgency + visit intent (not in H0.5 weights)
+Other Score          ← Amenities + Legal weight (10% + 0% RENT)
+```
+
+### 0.4 H0.5 Budget Tolerances → Constraint Enforcer
+
+From `matching_semantics.json` field_mappings budget_max tolerance:
+
+| Transaction Type | Tolerance | Source |
+|-----------------|-----------|--------|
+| RENT | ±20% | `matching_semantics.json` field_mappings.budget_max.tolerance.RENT |
+| BUY | ±15% | Same source |
+| INVEST | ±25% | Same source |
+| LAND_BUY | ±15% | Same source |
+| FINANCE | ±10% | Same source |
+
+### 0.5 H0.5 Boost Rules → Boost Applier
+
+From `matching_semantics.json` `boost_rules`:
+
+| Condition | Value | Applies To |
+|-----------|-------|------------|
+| exact_neighborhood_match | +25 | RESIDENTIAL_SEARCH, LAND_SEARCH |
+| exact_city_match | +20 | ALL |
+| budget_within_range | +15 | ALL |
+| title_foncier_available | +10 | LAND_SEARCH, RESIDENTIAL_BUY |
+| diaspora_investor | +20 | INVESTMENT |
+| cash_purchase | +15 | BUY |
+| visit_intent_confirmed | +20 | ALL |
+| Construction-ready land | +15 | LAND_SEARCH |
+| High visibility (commercial) | +10 | COMMERCIAL_SEARCH |
+
+Boost cap: **+50 total** (from `matching_semantics.json` `boost_cap`).
+
+### 0.6 H0.5 Matching Semantics → Scoring Formula
+
+From `matching_semantics.json` `scoring_formula`:
+
+```
+total_score = match_score + boost_total - penalty_total
+match_score = Σ(field_weight_i × field_match_i) for all matching fields
+boost_total = min(Σ boost_values, 50)
+penalty_total = max(Σ penalty_values, 0)
+final_score = clamp(total_score, 0, 100)
+```
+
+### 0.7 H0.5 Thresholds → Ranker
+
+From `matching_semantics.json` `thresholds`:
+
+| Threshold | Value | Usage |
+|-----------|-------|-------|
+| show_in_results | 40/100 | Properties with score ≥ 40 can appear in results |
+| show_in_top_10 | 50/100 | Properties with score ≥ 50 can rank in top 10 |
+| recommend_for_visit | 70/100 | Properties with score ≥ 70 qualify for visit recommendation |
+| recommend_for_transaction | 85/100 | Properties with score ≥ 85 qualify for transaction recommendation |
+
+(Note: These H0.5 thresholds differ from H1's minimum 60/100. See §0.8.)
+
+### 0.8 H0.5 → H1 Contradiction Resolution
+
+| H0.5 Rule | H1 Rule | Resolution |
+|-----------|---------|------------|
+| Score threshold: show at 40, recommend visit at 70 | Minimum threshold: 60/100 | **ARCHITECTURE_DECISION_RETAINED** — The 60/100 minimum applies for user-facing propositions; H0.5 >40 thresholds apply for internal ranking |
+| Per-transaction-type weight distribution | Fixed 26/20/15/10/29 distribution | **RESOLVED_BY_H05** — H0.5 dynamic weights supersede fixed DE weights |
+| Boost cap: +50 from boost_rules | Boost stacking: neighborhood+city+budget = +60 → clamp to 100 | **RESOLVED_BY_H05** — H0.5 +50 cap applies |
+| 9 matching roles | 5 score families | **ARCHITECTURE_DECISION_RETAINED** — H1 families are aggregation layer; H0.5 roles drive per-field behavior within each family |
+
+---
+
+## 1. H1 Heritage Layer — Overview
 
 The Matching Engine is the domain engine responsible for scoring, ranking, and selecting properties against a qualified dossier. It consumes all 34 MATCH rules from Heritage Gold and produces scored, ranked, explainable matching results with Next Best Action output.
 

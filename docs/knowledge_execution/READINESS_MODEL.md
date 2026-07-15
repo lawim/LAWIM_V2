@@ -6,6 +6,8 @@
 
 ---
 
+> **ARCHITECTURE_DECISION_RETAINED:** The sections below (§1–§8) document the H1 heritage 4-level readiness model. This model is retained as an architectural reference but is **superseded by the H0.5 7-level model** defined in §0 above. H1 concepts still valid (completeness formula structure, readiness transitions, dynamical recalculation) are preserved; H0.5 contradictions are marked **RESOLVED_BY_H05** in §0.7.
+
 ## 1. Principe
 
 Le Readiness Model mesure le niveau de complétude de la qualification d'un lead. Il détermine quelles actions sont disponibles et guide le NextQuestionSelector sur la prochaine question à poser.
@@ -285,7 +287,112 @@ Correspondance entre les 10 étapes (QUAL-007) et les niveaux de readiness :
 | 9. Confirmation | Validation | 100% | RELATIONSHIP_READY |
 | 10. Escalade | — | 100% | RELATIONSHIP_READY |
 
-> **DEPENDENCY_H05:** Detailed readiness thresholds per property type and transaction type require H0.5 qualification matrices. The 4-level staging model (SEARCH → MATCHING → VISIT → RELATIONSHIP) is an `ARCHITECTURE_DECISION` awaiting refinement from H0.5.
+## 0. H0.5 Integration Layer — 7-Level Readiness Model
+
+### 0.1 RESOLVED_BY_H05 — 4-Level to 7-Level Migration
+
+The H1 4-level model (SEARCH_READY → MATCHING_READY → VISIT_READY → RELATIONSHIP_READY) is **replaced** by the H0.5 7-level model. All H1 content below this section is retained as an `ARCHITECTURE_DECISION_RETAINED` reference but the canonical model is now the H0.5 7-level readiness system.
+
+**Source Files:**
+- `docs/lawim_heritage_gold/qualification_matrices/readiness_rules.json` — Canonical readiness definitions per level
+- `docs/lawim_heritage_gold/qualification_matrices/READINESS_LEVELS.md` — Full documentation with examples
+
+### 0.2 The 7 H0.5 Readiness Levels
+
+```
+Level 1: INTENT_IDENTIFIED
+    ↓ (transaction + property_type known)
+Level 2: MINIMUM_INTAKE_READY
+    ↓ (city + budget known)
+Level 3: MINIMUM_SEARCH_READY  ← FIRST SEARCH LAUNCHED HERE
+    ↓ (neighborhood + basic criteria)
+Level 4: MINIMUM_MATCHING_READY
+    ↓ (field-specific criteria for ranking)
+Level 5: INTRODUCTION_READY
+    ↓ (contact info + willingness to connect)
+Level 6: VISIT_READY
+    ↓ (visit logistics confirmed)
+Level 7: TRANSACTION_READY
+    ↓ (legal/financial requirements met)
+```
+
+### 0.3 Mapping from H1 4-Level to H0.5 7-Level
+
+| H1 Level | H0.5 Equivalent | Notes |
+|----------|-----------------|-------|
+| SEARCH_READY (40%) | MINIMUM_SEARCH_READY | Same threshold concept, H0.5 adds precise field requirements per matrix |
+| MATCHING_READY (65%) | MINIMUM_MATCHING_READY | H0.5 requires property-type-specific criteria (chambres, douches, cuisine) |
+| VISIT_READY (85%) | VISIT_READY | H0.5 adds visit logistics fields (date, time, participants) |
+| RELATIONSHIP_READY (100%) | INTRODUCTION_READY → TRANSACTION_READY | H0.5 splits into introduction + visit + transaction stages |
+| — | INTENT_IDENTIFIED | New: explicit intent + property type detection stage |
+| — | MINIMUM_INTAKE_READY | New: city + budget collection stage |
+
+### 0.4 H0.5 Completeness Weighted Formula
+
+From `readiness_rules.json` and `READINESS_LEVELS.md`, the completeness calculation is level-aware with matrix-specific field requirements:
+
+```
+completeness(context, matrix):
+  level = current_readiness_level(context, matrix)
+  required = matrix.fields["minimum_" + level.suffix]
+  conditional = readiness_rules.levels[level].conditional_requirements
+  collected_required = count(f in context.collected for f in required)
+  total_required = len(required) + len(conditional fields)
+
+  recommended = matrix.fields.recommended
+  collected_recommended = count(f in context.collected for f in recommended)
+  total_recommended = len(recommended)
+
+  // Weighted formula per H0.5 readiness_rules.json
+  pct = (collected_required + collected_recommended * 0.5) /
+        (total_required + total_recommended * 0.5) * 100
+
+  // Apply penalty factors from readiness_rules.json penalty_factors_by_level
+  for penalty in readiness_rules.penalty_factors_by_level[level]:
+    if penalty_condition_met(context, penalty):
+      pct -= penalty_value(penalty)
+
+  return clamp(pct, 0, 100)
+```
+
+**Transition Rules** (from `readiness_rules.json transitions`):
+
+| From | To | Trigger | Type |
+|------|----|---------|------|
+| INTENT_IDENTIFIED | MINIMUM_INTAKE_READY | Collect city + budget | auto |
+| MINIMUM_INTAKE_READY | MINIMUM_SEARCH_READY | Collect neighborhood + validate | auto |
+| MINIMUM_SEARCH_READY | MINIMUM_MATCHING_READY | Collect property-specific criteria | auto |
+| MINIMUM_MATCHING_READY | INTRODUCTION_READY | Collect contact + confirm interest | semi_auto |
+| INTRODUCTION_READY | VISIT_READY | Schedule visit + confirm access | manual |
+| VISIT_READY | TRANSACTION_READY | Verify documents + legal + financing | manual |
+
+### 0.5 H0.5 Boost and Penalty Factors by Level
+
+From `readiness_rules.json`:
+
+| Level | Boosts | Penalties |
+|-------|--------|-----------|
+| INTENT_IDENTIFIED | None | None |
+| MINIMUM_INTAKE_READY | city_match +20, budget_within_range +15 | missing_budget -10, unclear_location -10 |
+| MINIMUM_SEARCH_READY | exact_neighborhood +25, diaspora +20 | missing_neighborhood -5, spam_like -50 |
+| MINIMUM_MATCHING_READY | property_type_match +15, amenities_match +10 | contradictory_criteria -15 |
+| INTRODUCTION_READY | urgency +15, trust_signal +10 | refused_contact -20 |
+| VISIT_READY | visit_intent +20 | missed_visit -25 |
+| TRANSACTION_READY | financing_secured +15, documents_ready +10 | incomplete_documents -30 |
+
+### 0.6 Cardinal Rule (from READINESS_LEVELS.md §4)
+
+> **As soon as MINIMUM_SEARCH_READY is reached, LAWIM can launch a first search. It is forbidden to continue collecting recommended or optional fields before presenting initial results.**
+
+### 0.7 H0.5 → H1 Contradiction Resolution
+
+| H0.5 Rule | H1 (Heritage) | Resolution |
+|-----------|---------------|------------|
+| 7 readiness levels | 4 readiness levels | **RESOLVED_BY_H05** — 7-level model replaces 4-level |
+| Matrix-specific field requirements per level | Static field lists per role | **RESOLVED_BY_H05** — Dynamic per-matrix field resolution |
+| No regression allowed | Regressions possible (intent change) | **ARCHITECTURE_DECISION_RETAINED** — H1 regression handling kept for intent-change scenarios |
+| TRANSACTION_READY as terminal | RELATIONSHIP_READY as terminal | **RESOLVED_BY_H05** — Transaction replaces relationship as terminal stage |
+| Weighted formula per readiness level | Uniform formula | **RESOLVED_BY_H05** — H0.5 per-level weighting supersedes
 
 ---
 
@@ -293,82 +400,127 @@ Correspondance entre les 10 étapes (QUAL-007) et les niveaux de readiness :
 
 ### 7.1 Buyer — Jean cherche un appartement à Douala
 
-| Message | Champs collectés | Completeness | Readiness | Action |
-|---------|-----------------|:-----------:|-----------|--------|
-| "Je cherche un appartement à Douala" | intent=buy, property_type=apartment, city=douala | 3/4 req = 75% of req = 50% overall | SEARCH_READY | Démarrer matching précoce |
-| "Entre 30 et 50 millions" | + budget_max=50M, budget_min=30M | 4/4 req = 100% of req = 66.7% overall | MATCHING_READY | Envoyer premiers résultats |
-| "Urgent, je veux visiter cette semaine" | + timeline=urgent | 4/4 + 1/4 rec = 4.5/6 = 75% | MATCHING_READY | Affiner matching |
-| "3 pièces, premier étage si possible" | + rooms=3, floor=1 | 4/4 + 2/4 rec = 5.0/6 = 83% | VISIT_READY | Proposer visite |
-| "Résidence principale" | + usage=primary | 4/4 + 3/4 rec = 5.5/6 = 91.7% | VISIT_READY | Qualification quasi-complète |
-| Confirmation | intent confirmé | 100% | RELATIONSHIP_READY | Escalade agent |
+| Message | Champs collectés | Readiness (H0.5) | Action |
+|---------|-----------------|-------------------|--------|
+| "Je cherche un appartement à Douala" | transaction=rent, property_type=apartment, city=douala | INTENT_IDENTIFIED | Confirmer intention |
+| "Entre 30 et 50 millions" | + budget_max=50M, budget_min=30M | MINIMUM_INTAKE_READY | Demander quartier |
+| "Bonapriso, urgent" | + neighborhood=bonapriso | MINIMUM_SEARCH_READY | **Lancer recherche** |
+| Résultats présentés | — | MINIMUM_MATCHING_READY | Collecter chambres, douches |
+| "3 pièces, 1 douche" | + chambres=3, douches=1 | INTRODUCTION_READY | Demander contact |
+| "Jean, 691234567" | + nom=Jean, téléphone=691234567 | VISIT_READY | Proposer visite |
+| "Vendredi à 10h" | + visit_date=vendredi | TRANSACTION_READY | Caution + charges |
 
 ### 7.2 Tenant — Marie cherche un studio à Yaoundé
 
-| Message | Champs collectés | Completeness | Readiness | Action |
-|---------|-----------------|:-----------:|-----------|--------|
-| "Je cherche un studio à Yaoundé" | intent=rent, property_type=studio, city=yaoundé | 3/4 req = 75% of req | SEARCH_READY | Préparer recherche |
-| "Budget max 100k par mois" | + monthly_budget=100k | 4/4 req = 100% of req = 72.7% | MATCHING_READY | Envoyer studios disponibles |
-| "Au quartier Mfandena" | + neighborhood=mfandena | 4/4 + 1/3 rec = 4.5/5.5 = 81.8% | VISIT_READY | Filtrer par quartier |
-| "Je préfère meublé" | + furnished=true | 4/4 + 1/3 rec = 4.5/5.5 = 81.8% | VISIT_READY | Proposer visite |
-| Confirmation | | 100% | RELATIONSHIP_READY | Mise en relation |
+| Message | Champs collectés | Readiness (H0.5) | Action |
+|---------|-----------------|-------------------|--------|
+| "Je cherche un studio à Yaoundé" | transaction=rent, property_type=studio, city=yaoundé | INTENT_IDENTIFIED | Confirmer |
+| "Budget max 100k par mois" | + budget_max=100k | MINIMUM_INTAKE_READY | Demander quartier |
+| "Au quartier Mfandena" | + neighborhood=mfandena | MINIMUM_SEARCH_READY | **Lancer recherche** |
+| Résultats présentés | — | MINIMUM_MATCHING_READY | Cuisine, meublé |
+| "Cuisine interne, meublé" | + cuisine=interne, meuble=oui | INTRODUCTION_READY | Demander contact |
+| "Marie, 698765432" | + nom=Marie, téléphone=698765432 | VISIT_READY | Planifier visite |
+| Confirmation | + visit_date | TRANSACTION_READY | Caution + charges |
 
 ### 7.3 Seller — Paul veut vendre sa villa à Buea
 
-| Message | Champs collectés | Completeness | Readiness | Action |
-|---------|-----------------|:-----------:|-----------|--------|
-| "Je veux vendre ma villa à Buea" | intent=sell, property_type=villa, city=buea | 3/4 req | SEARCH_READY | Préparer estimation |
-| "Prix 150 millions" | + desired_price=150M | 4/4 req = 66.7% | MATCHING_READY | Proposer mise en ligne |
-| "J'ai le titre foncier" | + title_deed=true | 4/4 + 1/4 rec = 4.5/6 = 75% | MATCHING_READY | Accélérer publication |
-| "Surface 200m2, 4 chambres" | + surface=200, bedrooms=4 | 4/4 + 2/4 rec = 5.0/6 = 83% | VISIT_READY | Proposer accompagnement |
-| Confirmation + photos | + photos | 100% | RELATIONSHIP_READY | Publier + agent |
+| Message | Champs collectés | Readiness (H0.5) | Action |
+|---------|-----------------|-------------------|--------|
+| "Je veux vendre ma villa à Buea" | transaction=sell, property_type=villa, city=buea | INTENT_IDENTIFIED | Confirmer |
+| "Prix 150 millions" | + desired_price=150M | MINIMUM_INTAKE_READY | Quartier, surface |
+| "Molyko, 200m2, 4 chambres" | + neighborhood=molyko, surface=200, chambres=4 | MINIMUM_SEARCH_READY | **Estimation + publication** |
+| Résultats — estimation faite | + titre_foncier=oui | MINIMUM_MATCHING_READY | Affiner critères |
+| "Paul, 695432198" | + nom=Paul, téléphone=695432198 | INTRODUCTION_READY | Proposer accompagnement |
+| "Oui, accompagnement" | + accompagnement=oui | VISIT_READY | Planifier visites acheteurs |
+| Photos + titre fournis | + photos, documents | TRANSACTION_READY | Publier + notaire |
 
 ### 7.4 Investor — Kwame veut investir depuis Paris
 
-| Message | Champs collectés | Completeness | Readiness | Action |
-|---------|-----------------|:-----------:|-----------|--------|
-| "Je veux investir dans l'immobilier au Cameroun" | intent=invest, diaspora_flag=true | 1/4 req | — | Détecter diaspora, qualifier |
-| "Je suis à Paris" | diaspora confirmé | 1/4 req | — | Booster diaspora |
-| "Terrain à Douala" | + city=douala, property_type=land | 2/4 req = 50% req = 36.4% | SEARCH_READY | Recherche terrains |
-| "Budget 100 millions" | + budget=100M | 3/4 req = 75% req = 54.5% | SEARCH_READY | Matching précoce |
-| "Pour construire et revendre" | + investment_type=revente | 4/4 req = 100% req = 72.7% | MATCHING_READY | Envoyer résultats terrains |
-| "Rendement 15% attendu" | + expected_yield=15 | 4/4 + 1/3 rec = 4.5/5.5 = 81.8% | VISIT_READY | Proposer visite terrain |
-| Confirmation | | 100% | RELATIONSHIP_READY | Agent + services diaspora |
+| Message | Champs collectés | Readiness (H0.5) | Action |
+|---------|-----------------|-------------------|--------|
+| "Je veux investir dans l'immobilier au Cameroun" | transaction=buy, property_type=land, diaspora=true | INTENT_IDENTIFIED | Détecter diaspora, qualifier |
+| "Terrain à Douala" | + city=douala | MINIMUM_INTAKE_READY | Budget, surface |
+| "Budget 100M, 500m2, usage prévu construction" | + budget_max=100M, surface=500, usage_prevu=construction | MINIMUM_SEARCH_READY | **Lancer recherche terrains** |
+| Résultats terrains titrés | — | MINIMUM_MATCHING_READY | Type document, accessibilité |
+| "Titre foncier requis" | + type_document=titre_foncier | INTRODUCTION_READY | Contact info |
+| "Kwame, +33712345678" | + nom=Kwame, téléphone=+33712345678 | VISIT_READY | Proposer visite terrain |
+| "Oui visite la semaine prochaine" | + visite_souhaitee=oui, disponibilite | TRANSACTION_READY | Notaire + financement |
 
 ---
 
-## 8. Implémentation — ReadinessCalculator
+## 8. Implémentation — ReadinessCalculator (H0.5)
+
+The H0.5 ReadinessCalculator uses matrix-driven field resolution instead of hardcoded profiles:
 
 ```
 class ReadinessCalculator:
-    PROFILES = {
-        "buyer": {"required": 4, "recommended": 4},
-        "tenant": {"required": 4, "recommended": 3},
-        "seller": {"required": 4, "recommended": 4},
-        "investor": {"required": 4, "recommended": 3},
-    }
+    def __init__(self):
+        self.matrices = load_json("qualification_matrices.json")
+        self.rules = load_json("readiness_rules.json")
+        self.fields = load_json("field_dictionary.json")
 
     def compute(self, context: QualificationContext) -> ReadinessResult:
-        profile = self._get_profile(context.role)
-        required_collected = self._count_required_collected(context, profile)
-        recommended_collected = self._count_recommended_collected(context, profile)
+        matrix = self._resolve_matrix(context)
+        level = self._compute_level(context, matrix)
 
-        numerator = required_collected + recommended_collected * 0.5
-        denominator = profile.required + profile.recommended * 0.5
-        completeness = (numerator / denominator) * 100 if denominator > 0 else 0
+        required_fields = matrix.fields["minimum_" + level.suffix]
+        collected_required = sum(1 for f in required_fields if f in context.collected)
+        total_required = len(required_fields)
+
+        recommended = matrix.fields.recommended
+        collected_recommended = sum(1 for f in recommended if f in context.collected)
+        total_recommended = len(recommended)
+
+        numerator = collected_required + collected_recommended * 0.5
+        denominator = total_required + total_recommended * 0.5
+        completeness = (numerator / denominator * 100) if denominator > 0 else 0
+
+        # Apply penalties from readiness_rules.json
+        for penalty_def in self.rules.penalty_factors_by_level[level]:
+            if self._penalty_applies(context, penalty_def):
+                completeness -= self._penalty_value(penalty_def)
 
         return ReadinessResult(
-            completeness_pct=round(completeness, 1),
-            stage=self._map_stage(completeness),
-            missing_required=self._missing_required(context, profile),
-            missing_recommended=self._missing_recommended(context, profile),
+            completeness_pct=round(max(0, completeness), 1),
+            stage=level,
+            matrix_id=matrix.matrix_id,
+            collected=self._field_counts(context, matrix),
+            missing=self._missing_by_level(context, matrix),
         )
 
-    def _map_stage(self, pct: float) -> ReadinessStage:
-        if pct >= 100: return RELATIONSHIP_READY
-        if pct >= 85:  return VISIT_READY
-        if pct >= 65:  return MATCHING_READY
-        if pct >= 40:  return SEARCH_READY
-        return NOT_READY
+    def _compute_level(self, context, matrix):
+        levels = ["TRANSACTION_READY", "VISIT_READY", "INTRODUCTION_READY",
+                  "MINIMUM_MATCHING_READY", "MINIMUM_SEARCH_READY",
+                  "MINIMUM_INTAKE_READY", "INTENT_IDENTIFIED"]
+        for level in levels:
+            required = matrix.fields["minimum_" + self._level_suffix(level)]
+            if all(f in context.collected for f in required):
+                return level
+        return "INTENT_IDENTIFIED"
+
+    def _resolve_matrix(self, context):
+        family = self._resolve_family(context)
+        candidates = [m for m in self.matrices.matrices
+                      if m.request_family == family
+                      and context.transaction_type in m.transaction_type
+                      and m.property_type == context.property_type]
+        return candidates[0] if candidates else self.FALLBACK_MATRIX
+```
+
+**H1 compatibility shim** (maps H0.5 levels to legacy H1 stages for backward compatibility):
+
+```
+    def _legacy_stage(self, h05_level):
+        mapping = {
+            "INTENT_IDENTIFIED": "NOT_READY",
+            "MINIMUM_INTAKE_READY": "NOT_READY",
+            "MINIMUM_SEARCH_READY": "SEARCH_READY",
+            "MINIMUM_MATCHING_READY": "MATCHING_READY",
+            "INTRODUCTION_READY": "VISIT_READY",
+            "VISIT_READY": "VISIT_READY",
+            "TRANSACTION_READY": "RELATIONSHIP_READY",
+        }
+        return mapping.get(h05_level, "NOT_READY")
 ```
 
 ---
