@@ -1,0 +1,558 @@
+{
+  "conversation_count": 1910,
+  "claimed_conversation_count": 1910,
+  "conversation_count_match": true,
+  "message_count": 10037,
+  "claimed_message_count": 10037,
+  "message_count_match": true,
+  "message_length": {
+    "min": 2,
+    "max": 196,
+    "avg": 16.03,
+    "per_conversation": {
+      "min_avg": 4.33,
+      "max_avg": 99.5,
+      "overall_avg": 16.22
+    }
+  },
+  "conversation_length_distribution": {
+    "histogram": {
+      "1": 1,
+      "2": 52,
+      "3": 488,
+      "4": 399,
+      "5": 343,
+      "6": 287,
+      "7": 118,
+      "8": 64,
+      "9": 15,
+      "10": 21,
+      "12": 9,
+      "13": 3,
+      "14": 60,
+      "15": 39,
+      "16": 7,
+      "17": 4
+    },
+    "buckets": {
+      "1-2 msgs": 53,
+      "3-4 msgs": 887,
+      "5-6 msgs": 630,
+      "7-8 msgs": 182,
+      "9+ msgs": 158
+    },
+    "min_messages": 1,
+    "max_messages": 17,
+    "avg_messages": 5.25
+  },
+  "category_breakdown": {
+    "rent": 499,
+    "achat": 491,
+    "edge": 170,
+    "sell": 150,
+    "professional": 130,
+    "linguistic": 120,
+    "construct": 115,
+    "multi": 80,
+    "full": 80,
+    "multichannel": 75
+  },
+  "intent_keywords_detected": {
+    "buy": 803,
+    "rent": 632,
+    "construct": 118,
+    "professional": 23
+  },
+  "city_references": {
+    "Douala": 809,
+    "Yaoundé": 645,
+    "Kribi": 34,
+    "Bafoussam": 28,
+    "Bali": 28,
+    "Buea": 27,
+    "Limbe": 25,
+    "Garoua": 21,
+    "Maroua": 19,
+    "Ngaoundéré": 19,
+    "Mbanga": 17,
+    "Kumbo": 16,
+    "Mbouda": 16,
+    "Sangmelima": 14,
+    "Foumban": 13,
+    "Muyuka": 13,
+    "Ebolowa": 12,
+    "Kousseri": 12,
+    "Bertoua": 12,
+    "Dschang": 11,
+    "Nkongsamba": 11,
+    "Mbandjoun": 9,
+    "Yaounde": 9,
+    "Bamenda": 2
+  },
+  "neighborhood_references": {
+    "Quartier": 203,
+    "Bonamoussadi": 64,
+    "Mokolo": 55,
+    "Makepe": 47,
+    "Akwa": 44,
+    "Odza": 40,
+    "Bonapriso": 39,
+    "Mvog-Mbi": 37,
+    "Bonanjo": 36,
+    "Biyem-Assi": 35,
+    "Deido": 26,
+    "Essos": 26,
+    "Mfoundi": 24,
+    "Bassa": 24,
+    "Mendong": 23,
+    "Efoulan": 15,
+    "Cite Verte": 9,
+    "Roumde-Adje": 2,
+    "Roumde": 2
+  },
+  "cities_covered": 24,
+  "property_type_mentions": {
+    "HOUSE": 405,
+    "VILLA": 317,
+    "STUDIO": 298,
+    "APARTMENT": 254,
+    "LAND": 153,
+    "BUILDING": 85,
+    "COMMERCIAL": 50,
+    "OFFICE": 1
+  },
+  "channel_references": {
+    "web": 244,
+    "telegram": 34,
+    "whatsapp": 28
+  },
+  "duplicate_conversations": {
+    "count": 32,
+    "total_duplicate_instances": 140,
+    "examples": [
+      {
+        "ids": [
+          "full-journey-001",
+          "full-journey-007",
+          "full-journey-013",
+          "full-journey-019",
+          "full-journey-025",
+          "full-journey-031",
+          "full-journey-037",
+          "full-journey-043",
+          "full-journey-049"
+        ],
+        "seq": [
+          "Bonjour",
+          "Je cherche une villa à acheter à Douala",
+          "100,000,000",
+          "Oui, lancez la recherche",
+          "Je suis prêt",
+          "Montrez moi",
+          "Je veux le premier",
+          "Oui je suis d'accord",
+          "Oui je confirme",
+          "Je veux visiter",
+          "Oui confirmez la visite",
+          "La visite était bien",
+          "Tout est bon",
+          "Merci"
+        ]
+      },
+      {
+        "ids": [
+          "full-journey-002",
+          "full-journey-008",
+          "full-journey-014",
+          "full-journey-020",
+          "full-journey-026",
+          "full-journey-032",
+          "full-journey-038",
+          "full-journey-044",
+          "full-journey-050"
+        ],
+        "seq": [
+          "Bonjour",
+          "Je cherche une apartment à louer à Yaoundé",
+          "200,000",
+          "Oui, lancez la recherche",
+          "Je suis prêt",
+          "Montrez moi",
+          "Je veux le premier",
+          "Oui je suis d'accord",
+          "Oui je confirme",
+          "Je veux visiter",
+          "Oui confirmez la visite",
+          "La visite était bien",
+          "Tout est bon",
+          "Merci"
+        ]
+      },
+      {
+        "ids": [
+          "full-journey-003",
+          "full-journey-009",
+          "full-journey-015",
+          "full-journey-021",
+          "full-journey-027",
+          "full-journey-033",
+          "full-journey-039",
+          "full-journey-045"
+        ],
+        "seq": [
+          "Bonjour",
+          "Je cherche une house à acheter à Douala",
+          "100,000,000",
+          "Oui, lancez la recherche",
+          "Je suis prêt",
+          "Montrez moi",
+          "Je veux le premier",
+          "Oui je suis d'accord",
+          "Oui je confirme",
+          "Je veux visiter",
+          "Oui confirmez la visite",
+          "La visite était bien",
+          "Tout est bon",
+          "Merci"
+        ]
+      },
+      {
+        "ids": [
+          "full-journey-004",
+          "full-journey-010",
+          "full-journey-016",
+          "full-journey-022",
+          "full-journey-028",
+          "full-journey-034",
+          "full-journey-040",
+          "full-journey-046"
+        ],
+        "seq": [
+          "Bonjour",
+          "Je cherche une villa à louer à Yaoundé",
+          "200,000",
+          "Oui, lancez la recherche",
+          "Je suis prêt",
+          "Montrez moi",
+          "Je veux le premier",
+          "Oui je suis d'accord",
+          "Oui je confirme",
+          "Je veux visiter",
+          "Oui confirmez la visite",
+          "La visite était bien",
+          "Tout est bon",
+          "Merci"
+        ]
+      },
+      {
+        "ids": [
+          "full-journey-005",
+          "full-journey-011",
+          "full-journey-017",
+          "full-journey-023",
+          "full-journey-029",
+          "full-journey-035",
+          "full-journey-041",
+          "full-journey-047"
+        ],
+        "seq": [
+          "Bonjour",
+          "Je cherche une apartment à acheter à Douala",
+          "100,000,000",
+          "Oui, lancez la recherche",
+          "Je suis prêt",
+          "Montrez moi",
+          "Je veux le premier",
+          "Oui je suis d'accord",
+          "Oui je confirme",
+          "Je veux visiter",
+          "Oui confirmez la visite",
+          "La visite était bien",
+          "Tout est bon",
+          "Merci"
+        ]
+      },
+      {
+        "ids": [
+          "full-journey-006",
+          "full-journey-012",
+          "full-journey-018",
+          "full-journey-024",
+          "full-journey-030",
+          "full-journey-036",
+          "full-journey-042",
+          "full-journey-048"
+        ],
+        "seq": [
+          "Bonjour",
+          "Je cherche une house à louer à Yaoundé",
+          "200,000",
+          "Oui, lancez la recherche",
+          "Je suis prêt",
+          "Montrez moi",
+          "Je veux le premier",
+          "Oui je suis d'accord",
+          "Oui je confirme",
+          "Je veux visiter",
+          "Oui confirmez la visite",
+          "La visite était bien",
+          "Tout est bon",
+          "Merci"
+        ]
+      },
+      {
+        "ids": [
+          "multichannel-web2wa-001",
+          "multichannel-web2wa-002",
+          "multichannel-web2wa-003",
+          "multichannel-web2wa-004",
+          "multichannel-web2wa-005",
+          "multichannel-web2wa-006",
+          "multichannel-web2wa-007",
+          "multichannel-web2wa-008",
+          "multichannel-web2wa-009",
+          "multichannel-web2wa-010"
+        ],
+        "seq": [
+          "Bonjour je cherche un studio à louer",
+          "Douala Bonamoussadi",
+          "45 mille",
+          "Oui",
+          "[canal:WhatsApp] Je suis sur WhatsApp maintenant",
+          "Oui je continue"
+        ]
+      },
+      {
+        "ids": [
+          "multichannel-wa2tg-001",
+          "multichannel-wa2tg-002",
+          "multichannel-wa2tg-003",
+          "multichannel-wa2tg-004",
+          "multichannel-wa2tg-005",
+          "multichannel-wa2tg-006",
+          "multichannel-wa2tg-007",
+          "multichannel-wa2tg-008",
+          "multichannel-wa2tg-009",
+          "multichannel-wa2tg-010"
+        ],
+        "seq": [
+          "Salut je cherche une maison",
+          "Acheter Yaoundé",
+          "70 millions",
+          "Oui",
+          "[canal:Telegram] Je continue sur Telegram",
+          "Oui je suis là"
+        ]
+      },
+      {
+        "ids": [
+          "pro-extra-0003",
+          "pro-extra-0013",
+          "pro-extra-0020"
+        ],
+        "seq": [
+          "Bonjour je cherche un Ingénieur à Douala",
+          "Ingénieur",
+          "Oui je veux"
+        ]
+      },
+      {
+        "ids": [
+          "pro-extra-0007",
+          "pro-extra-0018"
+        ],
+        "seq": [
+          "Bonjour je cherche un Avocat à Douala",
+          "Avocat",
+          "Quels sont vos tarifs?",
+          "Oui je veux"
+        ]
+      }
+    ]
+  },
+  "short_replies": {
+    "total": 1361,
+    "percentage": 13.56,
+    "breakdown": {
+      "oui": 728,
+      "ok": 248,
+      "d'accord": 150,
+      "go": 141,
+      "merci": 83,
+      "yes": 7,
+      "parfait": 4
+    }
+  },
+  "ambiguity_detection": {
+    "total": 646,
+    "percentage": 6.44,
+    "examples": [
+      {
+        "scenario": "achat-change-avis-001",
+        "message": "50 mille"
+      },
+      {
+        "scenario": "achat-change-avis-003",
+        "message": "200 mille par mois"
+      },
+      {
+        "scenario": "achat-budget-ambig-001",
+        "message": "109 mil"
+      },
+      {
+        "scenario": "achat-budget-ambig-002",
+        "message": "50 mille"
+      },
+      {
+        "scenario": "achat-budget-ambig-003",
+        "message": "100"
+      },
+      {
+        "scenario": "achat-budget-clair-003",
+        "message": "200 mille dollars"
+      },
+      {
+        "scenario": "rent-studio-douala-002",
+        "message": "80 mille"
+      },
+      {
+        "scenario": "rent-appart-2ch-001",
+        "message": "Makepe 200 mille"
+      },
+      {
+        "scenario": "rent-appart-2ch-002",
+        "message": "150 mille"
+      },
+      {
+        "scenario": "rent-villa-meublee-001",
+        "message": "Douala Bonapriso 500 mille"
+      }
+    ]
+  },
+  "budget_mentions": {
+    "total": 1713,
+    "percentage": 17.07
+  },
+  "handover_requests": {
+    "total": 7,
+    "examples": [
+      {
+        "scenario": "slang-svp-001",
+        "message": "appart svp"
+      },
+      {
+        "scenario": "edge-extra-0008",
+        "message": "Oui vite svp"
+      },
+      {
+        "scenario": "edge-extra-0015",
+        "message": "Oui vite svp"
+      },
+      {
+        "scenario": "edge-extra-0024",
+        "message": "Oui vite svp"
+      },
+      {
+        "scenario": "edge-extra-0034",
+        "message": "Oui vite svp"
+      },
+      {
+        "scenario": "edge-variety-0044",
+        "message": "Oui vite svp"
+      },
+      {
+        "scenario": "edge-variety-0045",
+        "message": "Oui vite svp"
+      }
+    ]
+  },
+  "greetings": {
+    "total": 487,
+    "percentage": 4.85,
+    "examples": [
+      {
+        "scenario": "achat-maison-yaounde-001",
+        "message": "Bonjour"
+      },
+      {
+        "scenario": "achat-appart-douala-001",
+        "message": "Salut"
+      },
+      {
+        "scenario": "achat-terrain-garoua-001",
+        "message": "Bonjour"
+      },
+      {
+        "scenario": "achat-studio-meuble-001",
+        "message": "Bonjour"
+      },
+      {
+        "scenario": "rent-appart-2ch-001",
+        "message": "Bonjour"
+      },
+      {
+        "scenario": "interrupt-reprend",
+        "message": "Bonjour"
+      },
+      {
+        "scenario": "full-journey-001",
+        "message": "Bonjour"
+      },
+      {
+        "scenario": "full-journey-002",
+        "message": "Bonjour"
+      },
+      {
+        "scenario": "full-journey-003",
+        "message": "Bonjour"
+      },
+      {
+        "scenario": "full-journey-004",
+        "message": "Bonjour"
+      }
+    ]
+  },
+  "expected_assertions": {
+    "messages_with_state_after": 2238,
+    "messages_with_action": 2238,
+    "total_fact_checks": 1879,
+    "total_behavioral_checks": 44,
+    "total_checks_all": 1923,
+    "messages_missing_expected": 7799
+  },
+  "state_coverage": {
+    "QUALIFYING": 1139,
+    "READY_FOR_SEARCH": 514,
+    "AWAITING_INTENT": 65,
+    "CLOSED": 54,
+    "RESULTS_AVAILABLE": 52,
+    "SEARCHING": 51,
+    "AWAITING_RELATIONSHIP_CONSENT": 51,
+    "RELATIONSHIP_PROPOSED": 50,
+    "RELATIONSHIP_ACTIVE": 50,
+    "VISIT_PENDING": 50,
+    "VISIT_CONFIRMED": 50,
+    "VISIT_COMPLETED": 50,
+    "FOLLOW_UP": 50,
+    "AWAITING_CLARIFICATION": 7,
+    "HUMAN_HANDOVER": 3,
+    "AWAITING_RESULT_SELECTION": 1,
+    "ERROR": 1
+  },
+  "action_coverage": {
+    "UPDATE_FACT": 1679,
+    "REQUEST_CLARIFICATION": 125,
+    "GREETING": 66,
+    "CLOSE_PROJECT": 52,
+    "PRESENT_RESULTS": 52,
+    "START_SEARCH": 51,
+    "REQUEST_CONSENT": 50,
+    "CREATE_RELATIONSHIP_PROPOSAL": 50,
+    "CREATE_RELATIONSHIP": 50,
+    "REQUEST_VISIT": 50,
+    "PROVIDE_INFORMATION": 6,
+    "HANDOVER_TO_HUMAN": 4,
+    "NOTHING": 2,
+    "RECORD_CONSENT": 1
+  }
+}

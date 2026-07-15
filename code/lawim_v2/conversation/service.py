@@ -20,6 +20,8 @@ from .generation.validator import ContentValidator
 from .memory.service import MemoryService
 from .planning.planner import Planner
 from .qualification.evaluator import QualificationEvaluator
+from .understanding.extractor import extract_all
+from .understanding.short_replies import classify_short_reply
 
 
 class ConversationService:
@@ -73,11 +75,18 @@ class ConversationService:
             )
             conversation.known_fields = set(known_facts.keys())
 
+            intent_candidates = self._build_intent_candidates(message, known_facts)
+
+            extracted = extract_all(message.normalized_text)
+            message.metadata["extracted_facts"] = extracted.get("facts", [])
+            message.metadata["ambiguous_facts"] = extracted.get("ambiguous", [])
+
             decision = self._planner.plan(
                 message=message,
                 conversation=conversation,
                 active_projects=active_projects,
                 active_dossiers=active_dossiers,
+                intent_candidates=intent_candidates,
                 known_facts=known_facts,
             )
 
@@ -422,6 +431,43 @@ class ConversationService:
             "errors": errors,
             "shadow": shadow_mode,
         }
+
+    def _build_intent_candidates(
+        self,
+        message: NormalizedMessage,
+        known_facts: dict[str, Any],
+    ) -> list[dict[str, Any]]:
+        candidates: list[dict[str, Any]] = []
+        extracted = extract_all(message.normalized_text)
+        for fact in extracted.get("facts", []):
+            field = fact.get("field")
+            if field == "property_type":
+                candidates.append({
+                    "intent": fact.get("normalized_value", ""),
+                    "confidence": fact.get("confidence", 0.8),
+                    "source": "extracted",
+                    "raw_trigger": fact.get("raw_value", ""),
+                })
+            if field == "transaction_type":
+                candidates.append({
+                    "intent": fact.get("normalized_value", ""),
+                    "confidence": fact.get("confidence", 0.8),
+                    "source": "extracted",
+                    "raw_trigger": fact.get("raw_value", ""),
+                })
+        if message.is_greeting():
+            candidates.append({
+                "intent": "GREETING",
+                "confidence": 1.0,
+                "source": "detected",
+            })
+        if message.is_handover_request():
+            candidates.append({
+                "intent": "HANDOVER",
+                "confidence": 1.0,
+                "source": "detected",
+            })
+        return candidates
 
     def _row_to_conversation(self, row: dict[str, Any]) -> Conversation:
         state_value = row.get("state", "NEW")

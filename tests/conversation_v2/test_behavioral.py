@@ -163,25 +163,45 @@ class TestNeighborhoodImpliesCityWithTraceableConfidence(unittest.TestCase):
 
     def test_extractor_creates_city_fact_from_neighborhood(self):
         extracted = extract_all("Makepe")
-        fields = {f["field"] for f in extracted["facts"]}
+        facts = extracted["facts"]
+        fields = {f["field"] for f in facts}
         self.assertIn("neighborhood", fields)
         self.assertIn("city", fields)
+        nf = [f for f in facts if f["field"] == "neighborhood"][0]
+        self.assertEqual(nf["normalized_value"], "Makepe")
+        self.assertEqual(nf["confidence"], 0.9)
+        self.assertEqual(nf["source_type"], "inferred")
+        cf = [f for f in facts if f["field"] == "city"][0]
+        self.assertEqual(cf["normalized_value"], "Douala")
+        self.assertEqual(cf["confidence"], 0.9)
+        self.assertEqual(cf["source_type"], "inferred")
 
 
 class TestMultipleInfoInOneMessageAllExtracted(unittest.TestCase):
     def test_message_with_location_budget_and_type(self):
         text = "Je cherche un appartement 3 chambres à Douala pour 50 millions"
         extracted = extract_all(text)
-        fields = {f["field"] for f in extracted["facts"]}
+        facts = extracted["facts"]
+        fields = {f["field"] for f in facts}
         self.assertIn("property_type", fields)
         self.assertIn("city", fields)
         self.assertIn("budget_max", fields)
         self.assertIn("bedroom_count", fields)
+        for f in facts:
+            if f["field"] == "property_type":
+                self.assertEqual(f["normalized_value"], "APARTMENT")
+            elif f["field"] == "city":
+                self.assertEqual(f["normalized_value"], "Douala")
+            elif f["field"] == "budget_max":
+                self.assertEqual(f["normalized_value"], 50000000)
+            elif f["field"] == "bedroom_count":
+                self.assertEqual(f["normalized_value"], 3)
 
     def test_message_with_all_possible_entities(self):
         text = "Je cherche une maison 4 chambres 2 sdb 150m2 à Makepe Douala pour 100 millions dans 3 mois"
         extracted = extract_all(text)
-        fields = {f["field"] for f in extracted["facts"]}
+        facts = extracted["facts"]
+        fields = {f["field"] for f in facts}
         self.assertIn("property_type", fields)
         self.assertIn("city", fields)
         self.assertIn("neighborhood", fields)
@@ -190,6 +210,25 @@ class TestMultipleInfoInOneMessageAllExtracted(unittest.TestCase):
         self.assertIn("bathroom_count", fields)
         self.assertIn("surface_sqm", fields)
         self.assertIn("deadline", fields)
+        for f in facts:
+            if f["field"] == "property_type":
+                self.assertEqual(f["normalized_value"], "HOUSE")
+            elif f["field"] == "city":
+                self.assertEqual(f["normalized_value"], "Douala")
+            elif f["field"] == "neighborhood":
+                self.assertEqual(f["normalized_value"], "Makepe")
+            elif f["field"] == "budget_max":
+                self.assertEqual(f["normalized_value"], 150000000)
+            elif f["field"] == "bedroom_count":
+                self.assertEqual(f["normalized_value"], 4)
+            elif f["field"] == "bathroom_count":
+                self.assertEqual(f["normalized_value"], 2)
+            elif f["field"] == "surface_sqm":
+                self.assertEqual(f["normalized_value"], 150)
+            elif f["field"] == "deadline":
+                self.assertIsInstance(f["normalized_value"], str)
+                self.assertTrue(f["normalized_value"])
+                datetime.fromisoformat(f["normalized_value"])
 
 
 class TestAnnouncedActionIsActuallyExecuted(unittest.TestCase):
@@ -429,9 +468,15 @@ class TestLLMFailureDoesNotBlockDeterministicPath(unittest.TestCase):
     def test_deterministic_extraction_works_without_llm(self):
         text = "3 chambres à Douala"
         extracted = extract_all(text)
-        fields = {f["field"] for f in extracted["facts"]}
+        facts = extracted["facts"]
+        fields = {f["field"] for f in facts}
         self.assertIn("city", fields)
         self.assertIn("bedroom_count", fields)
+        for f in facts:
+            if f["field"] == "city":
+                self.assertEqual(f["normalized_value"], "Douala")
+            elif f["field"] == "bedroom_count":
+                self.assertEqual(f["normalized_value"], 3)
 
     def test_state_transition_works_without_llm(self):
         conv = Conversation(state=ConversationState.AWAITING_INTENT)

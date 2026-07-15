@@ -1,0 +1,1686 @@
+{
+  "corpus": {
+    "total_messages_in_corpus": 10037,
+    "messages_with_state_assertion": 2238,
+    "messages_with_action_assertion": 2238,
+    "messages_with_both_state_and_action": 2238,
+    "messages_with_state_only": 0,
+    "messages_with_action_only": 0,
+    "missing_expected_dict": 7799,
+    "fact_checks_count": 1879,
+    "behavioral_checks_count": 44,
+    "total_checks": 1923
+  },
+  "test_behavioral": {
+    "total_assertions_found": 107,
+    "strength_counts": {
+      "STRONG": 13,
+      "MEDIUM": 73,
+      "WEAK": 21
+    },
+    "classes_found": {
+      "TestConfirmedFactNeverReAsked": [
+        "test_confirmed_city_not_asked_again",
+        "test_confirmed_budget_not_asked_again",
+        "test_multiple_confirmed_fields_skipped"
+      ],
+      "TestAmbiguityNeverAutoResolved": [
+        "test_ambiguous_fact_requires_clarification",
+        "test_ambiguous_not_treated_as_confirmed"
+      ],
+      "TestSimpleOkDoesNotSelectProject": [
+        "test_ok_with_multiple_projects_is_ambiguous",
+        "test_ok_with_one_project_requires_confirmation",
+        "test_oui_with_multiple_projects_is_ambiguous"
+      ],
+      "TestVillaDoesNotAssumeBuyOrRent": [
+        "test_villa_alone_does_not_imply_transaction",
+        "test_villa_with_acheter_implies_buy",
+        "test_villa_with_louer_implies_rent",
+        "test_villa_recognized_as_property_type"
+      ],
+      "TestExplicitCityImmediatelyPersisted": [
+        "test_explicit_douala_captured",
+        "test_explicit_yaounde_captured"
+      ],
+      "TestNeighborhoodImpliesCityWithTraceableConfidence": [
+        "test_neighborhood_makepe_implies_douala",
+        "test_neighborhood_odza_implies_yaounde",
+        "test_neighborhood_bastos_implies_yaounde",
+        "test_extractor_creates_city_fact_from_neighborhood"
+      ],
+      "TestMultipleInfoInOneMessageAllExtracted": [
+        "test_message_with_location_budget_and_type",
+        "test_message_with_all_possible_entities"
+      ],
+      "TestAnnouncedActionIsActuallyExecuted": [
+        "test_search_action_after_readiness"
+      ],
+      "TestSearchNotLaunchedWithoutMinimumQualification": [
+        "test_no_search_without_city",
+        "test_no_search_without_budget",
+        "test_search_possible_with_minimum_facts",
+        "test_ready_for_search_state_required_for_search"
+      ],
+      "TestQuestionNotRepeatedAfterValidAnswer": [
+        "test_valid_answer_resets_loop",
+        "test_known_field_not_in_next_field"
+      ],
+      "TestLoopDetectedAndInterrupted": [
+        "test_loop_escalates_to_handover",
+        "test_loop_updates_conversation_state",
+        "test_loop_triggers_human_handover_on_exceed"
+      ],
+      "TestClosedProjectNotAutoReopened": [
+        "test_closed_state_does_not_transition_on_message",
+        "test_closed_state_requires_explicit_reopen"
+      ],
+      "TestHumanRequestDoesNotCreatePartnerRelationship": [
+        "test_handover_request_goes_to_human_not_relationship",
+        "test_handover_from_qualifying_does_not_create_relationship"
+      ],
+      "TestSameIncomingMessageOnlyProcessedOnce": [
+        "test_decision_id_should_be_unique",
+        "test_duplicate_flag"
+      ],
+      "TestIdenticalDecisionInIdenticalContextRemainsDeterministic": [
+        "test_same_input_produces_same_amount_normalization",
+        "test_same_input_produces_same_location_normalization",
+        "test_same_state_produces_same_transition",
+        "test_same_facts_produce_same_readiness_score",
+        "test_same_matrix_returns_same_next_field"
+      ],
+      "TestMatchingNotCreatedWithoutRealResults": [
+        "test_no_results_state_before_matching"
+      ],
+      "TestRelationshipNotCreatedWithoutConsent": [
+        "test_consent_required_for_relationship",
+        "test_cannot_skip_consent_state"
+      ],
+      "TestPrivateCoordinatesNeverSharedBeforeAuthorization": [
+        "test_coordinates_not_in_standard_extraction",
+        "test_coordinates_not_in_decision_facts"
+      ],
+      "TestChannelChangeDoesNotLoseProjectDossierFacts": [
+        "test_conversation_preserves_project_id",
+        "test_conversation_preserves_facts_across_channel",
+        "test_conversation_preserves_state_across_channel"
+      ],
+      "TestLLMFailureDoesNotBlockDeterministicPath": [
+        "test_deterministic_extraction_works_without_llm",
+        "test_state_transition_works_without_llm",
+        "test_normalize_amount_works_without_llm"
+      ]
+    },
+    "weak_assertions": [
+      {
+        "line": 167,
+        "method": "test_extractor_creates_city_fact_from_neighborhood",
+        "assert_call": "assertIn",
+        "args": [
+          "\"neighborhood\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"neighborhood\", fields)"
+      },
+      {
+        "line": 168,
+        "method": "test_extractor_creates_city_fact_from_neighborhood",
+        "assert_call": "assertIn",
+        "args": [
+          "\"city\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"city\", fields)"
+      },
+      {
+        "line": 176,
+        "method": "test_message_with_location_budget_and_type",
+        "assert_call": "assertIn",
+        "args": [
+          "\"property_type\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"property_type\", fields)"
+      },
+      {
+        "line": 177,
+        "method": "test_message_with_location_budget_and_type",
+        "assert_call": "assertIn",
+        "args": [
+          "\"city\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"city\", fields)"
+      },
+      {
+        "line": 178,
+        "method": "test_message_with_location_budget_and_type",
+        "assert_call": "assertIn",
+        "args": [
+          "\"budget_max\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"budget_max\", fields)"
+      },
+      {
+        "line": 179,
+        "method": "test_message_with_location_budget_and_type",
+        "assert_call": "assertIn",
+        "args": [
+          "\"bedroom_count\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"bedroom_count\", fields)"
+      },
+      {
+        "line": 185,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"property_type\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"property_type\", fields)"
+      },
+      {
+        "line": 186,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"city\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"city\", fields)"
+      },
+      {
+        "line": 187,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"neighborhood\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"neighborhood\", fields)"
+      },
+      {
+        "line": 188,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"budget_max\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"budget_max\", fields)"
+      },
+      {
+        "line": 189,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"bedroom_count\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"bedroom_count\", fields)"
+      },
+      {
+        "line": 190,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"bathroom_count\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"bathroom_count\", fields)"
+      },
+      {
+        "line": 191,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"surface_sqm\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"surface_sqm\", fields)"
+      },
+      {
+        "line": 192,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"deadline\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"deadline\", fields)"
+      },
+      {
+        "line": 206,
+        "method": "test_search_action_after_readiness",
+        "assert_call": "assertIn",
+        "args": [
+          "\"SEARCH\"",
+          "allowed_actions"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"SEARCH\", allowed_actions)"
+      },
+      {
+        "line": 384,
+        "method": "test_coordinates_not_in_standard_extraction",
+        "assert_call": "assertNotIn",
+        "args": [
+          "\"coordinates\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertNotIn(\"coordinates\", fields)"
+      },
+      {
+        "line": 385,
+        "method": "test_coordinates_not_in_standard_extraction",
+        "assert_call": "assertNotIn",
+        "args": [
+          "\"latitude\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertNotIn(\"latitude\", fields)"
+      },
+      {
+        "line": 386,
+        "method": "test_coordinates_not_in_standard_extraction",
+        "assert_call": "assertNotIn",
+        "args": [
+          "\"longitude\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertNotIn(\"longitude\", fields)"
+      },
+      {
+        "line": 396,
+        "method": "test_coordinates_not_in_decision_facts",
+        "assert_call": "assertNotIn",
+        "args": [
+          "\"coordinates\"",
+          "known"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertNotIn(\"coordinates\", known)"
+      },
+      {
+        "line": 433,
+        "method": "test_deterministic_extraction_works_without_llm",
+        "assert_call": "assertIn",
+        "args": [
+          "\"city\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"city\", fields)"
+      }
+    ],
+    "all_assertions": [
+      {
+        "line": 31,
+        "method": "test_confirmed_city_not_asked_again",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "next_field",
+          "\"city\"",
+          "\"CONFIRMED city should not be asked again\""
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(next_field, \"city\", \"CONFIRMED city should not be asked again\")"
+      },
+      {
+        "line": 42,
+        "method": "test_confirmed_budget_not_asked_again",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "next_field",
+          "\"budget_max\""
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(next_field, \"budget_max\")"
+      },
+      {
+        "line": 61,
+        "method": "test_multiple_confirmed_fields_skipped",
+        "assert_call": "assertIsNotNone",
+        "args": [
+          "next_field"
+        ],
+        "strength": "MEDIUM",
+        "reason": "assertIsNotNone - structural existence check",
+        "full_text": "self.assertIsNotNone(next_field)"
+      },
+      {
+        "line": 62,
+        "method": "test_multiple_confirmed_fields_skipped",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "next_field",
+          "\"city\""
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(next_field, \"city\")"
+      },
+      {
+        "line": 63,
+        "method": "test_multiple_confirmed_fields_skipped",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "next_field",
+          "\"budget_max\""
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(next_field, \"budget_max\")"
+      },
+      {
+        "line": 64,
+        "method": "test_multiple_confirmed_fields_skipped",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "next_field",
+          "\"bedroom_count\""
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(next_field, \"bedroom_count\")"
+      },
+      {
+        "line": 74,
+        "method": "test_ambiguous_fact_requires_clarification",
+        "assert_call": "assertEqual",
+        "args": [
+          "len(ambiguous)",
+          "1"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(len(ambiguous), 1)"
+      },
+      {
+        "line": 78,
+        "method": "test_ambiguous_fact_requires_clarification",
+        "assert_call": "assertTrue",
+        "args": [
+          "decision.requires_clarification"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(decision.requires_clarification)"
+      },
+      {
+        "line": 85,
+        "method": "test_ambiguous_not_treated_as_confirmed",
+        "assert_call": "assertFalse",
+        "args": [
+          "fc.has_field(\"budget\")"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(fc.has_field(\"budget\"))"
+      },
+      {
+        "line": 95,
+        "method": "test_ok_with_multiple_projects_is_ambiguous",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.action",
+          "\"ambiguous\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.action, \"ambiguous\")"
+      },
+      {
+        "line": 100,
+        "method": "test_ok_with_one_project_requires_confirmation",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.action",
+          "\"select_existing\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.action, \"select_existing\")"
+      },
+      {
+        "line": 101,
+        "method": "test_ok_with_one_project_requires_confirmation",
+        "assert_call": "assertTrue",
+        "args": [
+          "result.requires_confirmation"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(result.requires_confirmation)"
+      },
+      {
+        "line": 109,
+        "method": "test_oui_with_multiple_projects_is_ambiguous",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.action",
+          "\"ambiguous\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.action, \"ambiguous\")"
+      },
+      {
+        "line": 115,
+        "method": "test_villa_alone_does_not_imply_transaction",
+        "assert_call": "assertIsNone",
+        "args": [
+          "result.normalized_type"
+        ],
+        "strength": "STRONG",
+        "reason": "assertIsNone - specific null check",
+        "full_text": "self.assertIsNone(result.normalized_type)"
+      },
+      {
+        "line": 116,
+        "method": "test_villa_alone_does_not_imply_transaction",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.confidence",
+          "0.0"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.confidence, 0.0)"
+      },
+      {
+        "line": 120,
+        "method": "test_villa_with_acheter_implies_buy",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.normalized_type",
+          "\"BUY\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.normalized_type, \"BUY\")"
+      },
+      {
+        "line": 124,
+        "method": "test_villa_with_louer_implies_rent",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.normalized_type",
+          "\"RENT\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.normalized_type, \"RENT\")"
+      },
+      {
+        "line": 128,
+        "method": "test_villa_recognized_as_property_type",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.normalized_type",
+          "\"VILLA\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.normalized_type, \"VILLA\")"
+      },
+      {
+        "line": 129,
+        "method": "test_villa_recognized_as_property_type",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.confidence",
+          "1.0"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.confidence, 1.0)"
+      },
+      {
+        "line": 135,
+        "method": "test_explicit_douala_captured",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.match_type",
+          "\"city\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.match_type, \"city\")"
+      },
+      {
+        "line": 136,
+        "method": "test_explicit_douala_captured",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.normalized_value",
+          "\"Douala\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.normalized_value, \"Douala\")"
+      },
+      {
+        "line": 137,
+        "method": "test_explicit_douala_captured",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.confidence",
+          "1.0"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.confidence, 1.0)"
+      },
+      {
+        "line": 138,
+        "method": "test_explicit_douala_captured",
+        "assert_call": "assertFalse",
+        "args": [
+          "result.ambiguity"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(result.ambiguity)"
+      },
+      {
+        "line": 142,
+        "method": "test_explicit_yaounde_captured",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.match_type",
+          "\"city\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.match_type, \"city\")"
+      },
+      {
+        "line": 143,
+        "method": "test_explicit_yaounde_captured",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.confidence",
+          "1.0"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.confidence, 1.0)"
+      },
+      {
+        "line": 149,
+        "method": "test_neighborhood_makepe_implies_douala",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.match_type",
+          "\"neighborhood\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.match_type, \"neighborhood\")"
+      },
+      {
+        "line": 150,
+        "method": "test_neighborhood_makepe_implies_douala",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.city",
+          "\"Douala\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.city, \"Douala\")"
+      },
+      {
+        "line": 151,
+        "method": "test_neighborhood_makepe_implies_douala",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.confidence",
+          "0.9"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.confidence, 0.9)"
+      },
+      {
+        "line": 155,
+        "method": "test_neighborhood_odza_implies_yaounde",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.match_type",
+          "\"neighborhood\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.match_type, \"neighborhood\")"
+      },
+      {
+        "line": 156,
+        "method": "test_neighborhood_odza_implies_yaounde",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.city",
+          "\"Yaoundé\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.city, \"Yaoundé\")"
+      },
+      {
+        "line": 157,
+        "method": "test_neighborhood_odza_implies_yaounde",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.confidence",
+          "0.9"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.confidence, 0.9)"
+      },
+      {
+        "line": 161,
+        "method": "test_neighborhood_bastos_implies_yaounde",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.match_type",
+          "\"neighborhood\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.match_type, \"neighborhood\")"
+      },
+      {
+        "line": 162,
+        "method": "test_neighborhood_bastos_implies_yaounde",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.city",
+          "\"Yaoundé\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.city, \"Yaoundé\")"
+      },
+      {
+        "line": 167,
+        "method": "test_extractor_creates_city_fact_from_neighborhood",
+        "assert_call": "assertIn",
+        "args": [
+          "\"neighborhood\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"neighborhood\", fields)"
+      },
+      {
+        "line": 168,
+        "method": "test_extractor_creates_city_fact_from_neighborhood",
+        "assert_call": "assertIn",
+        "args": [
+          "\"city\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"city\", fields)"
+      },
+      {
+        "line": 176,
+        "method": "test_message_with_location_budget_and_type",
+        "assert_call": "assertIn",
+        "args": [
+          "\"property_type\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"property_type\", fields)"
+      },
+      {
+        "line": 177,
+        "method": "test_message_with_location_budget_and_type",
+        "assert_call": "assertIn",
+        "args": [
+          "\"city\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"city\", fields)"
+      },
+      {
+        "line": 178,
+        "method": "test_message_with_location_budget_and_type",
+        "assert_call": "assertIn",
+        "args": [
+          "\"budget_max\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"budget_max\", fields)"
+      },
+      {
+        "line": 179,
+        "method": "test_message_with_location_budget_and_type",
+        "assert_call": "assertIn",
+        "args": [
+          "\"bedroom_count\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"bedroom_count\", fields)"
+      },
+      {
+        "line": 185,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"property_type\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"property_type\", fields)"
+      },
+      {
+        "line": 186,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"city\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"city\", fields)"
+      },
+      {
+        "line": 187,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"neighborhood\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"neighborhood\", fields)"
+      },
+      {
+        "line": 188,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"budget_max\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"budget_max\", fields)"
+      },
+      {
+        "line": 189,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"bedroom_count\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"bedroom_count\", fields)"
+      },
+      {
+        "line": 190,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"bathroom_count\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"bathroom_count\", fields)"
+      },
+      {
+        "line": 191,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"surface_sqm\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"surface_sqm\", fields)"
+      },
+      {
+        "line": 192,
+        "method": "test_message_with_all_possible_entities",
+        "assert_call": "assertIn",
+        "args": [
+          "\"deadline\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"deadline\", fields)"
+      },
+      {
+        "line": 206,
+        "method": "test_search_action_after_readiness",
+        "assert_call": "assertIn",
+        "args": [
+          "\"SEARCH\"",
+          "allowed_actions"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"SEARCH\", allowed_actions)"
+      },
+      {
+        "line": 213,
+        "method": "test_no_search_without_city",
+        "assert_call": "assertLess",
+        "args": [
+          "score",
+          "matrix.readiness_threshold"
+        ],
+        "strength": "STRONG",
+        "reason": "assertLess with specific comparison",
+        "full_text": "self.assertLess(score, matrix.readiness_threshold)"
+      },
+      {
+        "line": 218,
+        "method": "test_no_search_without_budget",
+        "assert_call": "assertLess",
+        "args": [
+          "score",
+          "matrix.readiness_threshold"
+        ],
+        "strength": "STRONG",
+        "reason": "assertLess with specific comparison",
+        "full_text": "self.assertLess(score, matrix.readiness_threshold)"
+      },
+      {
+        "line": 223,
+        "method": "test_search_possible_with_minimum_facts",
+        "assert_call": "assertGreater",
+        "args": [
+          "score",
+          "0.0"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertGreater",
+        "full_text": "self.assertGreater(score, 0.0)"
+      },
+      {
+        "line": 227,
+        "method": "test_ready_for_search_state_required_for_search",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "conv.state",
+          "ConversationState.READY_FOR_SEARCH"
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(conv.state, ConversationState.READY_FOR_SEARCH)"
+      },
+      {
+        "line": 228,
+        "method": "test_ready_for_search_state_required_for_search",
+        "assert_call": "assertFalse",
+        "args": [
+          "conv.can_transition(\"search_requested\")"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(conv.can_transition(\"search_requested\"))"
+      },
+      {
+        "line": 237,
+        "method": "test_valid_answer_resets_loop",
+        "assert_call": "assertFalse",
+        "args": [
+          "result.loop_detected"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(result.loop_detected)"
+      },
+      {
+        "line": 238,
+        "method": "test_valid_answer_resets_loop",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.repeat_count",
+          "0"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.repeat_count, 0)"
+      },
+      {
+        "line": 244,
+        "method": "test_known_field_not_in_next_field",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "next_field",
+          "\"city\""
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(next_field, \"city\")"
+      },
+      {
+        "line": 245,
+        "method": "test_known_field_not_in_next_field",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "next_field",
+          "\"budget_max\""
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(next_field, \"budget_max\")"
+      },
+      {
+        "line": 254,
+        "method": "test_loop_escalates_to_handover",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.action",
+          "\"handover\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.action, \"handover\")"
+      },
+      {
+        "line": 255,
+        "method": "test_loop_escalates_to_handover",
+        "assert_call": "assertTrue",
+        "args": [
+          "result.loop_detected"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(result.loop_detected)"
+      },
+      {
+        "line": 263,
+        "method": "test_loop_updates_conversation_state",
+        "assert_call": "assertTrue",
+        "args": [
+          "conv.loop_detected"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(conv.loop_detected)"
+      },
+      {
+        "line": 264,
+        "method": "test_loop_updates_conversation_state",
+        "assert_call": "assertGreater",
+        "args": [
+          "conv.loop_score",
+          "0"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertGreater",
+        "full_text": "self.assertGreater(conv.loop_score, 0)"
+      },
+      {
+        "line": 272,
+        "method": "test_loop_triggers_human_handover_on_exceed",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.action",
+          "\"handover\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.action, \"handover\")"
+      },
+      {
+        "line": 274,
+        "method": "test_loop_triggers_human_handover_on_exceed",
+        "assert_call": "assertTrue",
+        "args": [
+          "conv.human_handover_requested"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(conv.human_handover_requested)"
+      },
+      {
+        "line": 281,
+        "method": "test_closed_state_does_not_transition_on_message",
+        "assert_call": "assertFalse",
+        "args": [
+          "ok"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(ok)"
+      },
+      {
+        "line": 282,
+        "method": "test_closed_state_does_not_transition_on_message",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.state",
+          "ConversationState.CLOSED"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.state, ConversationState.CLOSED)"
+      },
+      {
+        "line": 287,
+        "method": "test_closed_state_requires_explicit_reopen",
+        "assert_call": "assertTrue",
+        "args": [
+          "ok"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(ok)"
+      },
+      {
+        "line": 288,
+        "method": "test_closed_state_requires_explicit_reopen",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.state",
+          "ConversationState.AWAITING_INTENT"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.state, ConversationState.AWAITING_INTENT)"
+      },
+      {
+        "line": 295,
+        "method": "test_handover_request_goes_to_human_not_relationship",
+        "assert_call": "assertTrue",
+        "args": [
+          "ok"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(ok)"
+      },
+      {
+        "line": 296,
+        "method": "test_handover_request_goes_to_human_not_relationship",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.state",
+          "ConversationState.HUMAN_HANDOVER"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.state, ConversationState.HUMAN_HANDOVER)"
+      },
+      {
+        "line": 297,
+        "method": "test_handover_request_goes_to_human_not_relationship",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "conv.state",
+          "ConversationState.AWAITING_RELATIONSHIP_CONSENT"
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(conv.state, ConversationState.AWAITING_RELATIONSHIP_CONSENT)"
+      },
+      {
+        "line": 302,
+        "method": "test_handover_from_qualifying_does_not_create_relationship",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.state",
+          "ConversationState.HUMAN_HANDOVER"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.state, ConversationState.HUMAN_HANDOVER)"
+      },
+      {
+        "line": 309,
+        "method": "test_decision_id_should_be_unique",
+        "assert_call": "assertNotEqual",
+        "args": [
+          "d1.decision_id",
+          "d2.decision_id"
+        ],
+        "strength": "STRONG",
+        "reason": "assertNotEqual - specific inequality",
+        "full_text": "self.assertNotEqual(d1.decision_id, d2.decision_id)"
+      },
+      {
+        "line": 313,
+        "method": "test_duplicate_flag",
+        "assert_call": "assertTrue",
+        "args": [
+          "msg.is_duplicate"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(msg.is_duplicate)"
+      },
+      {
+        "line": 315,
+        "method": "test_duplicate_flag",
+        "assert_call": "assertFalse",
+        "args": [
+          "msg2.is_duplicate"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(msg2.is_duplicate)"
+      },
+      {
+        "line": 322,
+        "method": "test_same_input_produces_same_amount_normalization",
+        "assert_call": "assertEqual",
+        "args": [
+          "r1.normalized_amount",
+          "r2.normalized_amount"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(r1.normalized_amount, r2.normalized_amount)"
+      },
+      {
+        "line": 323,
+        "method": "test_same_input_produces_same_amount_normalization",
+        "assert_call": "assertEqual",
+        "args": [
+          "r1.currency",
+          "r2.currency"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(r1.currency, r2.currency)"
+      },
+      {
+        "line": 328,
+        "method": "test_same_input_produces_same_location_normalization",
+        "assert_call": "assertEqual",
+        "args": [
+          "r1.normalized_value",
+          "r2.normalized_value"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(r1.normalized_value, r2.normalized_value)"
+      },
+      {
+        "line": 329,
+        "method": "test_same_input_produces_same_location_normalization",
+        "assert_call": "assertEqual",
+        "args": [
+          "r1.match_type",
+          "r2.match_type"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(r1.match_type, r2.match_type)"
+      },
+      {
+        "line": 336,
+        "method": "test_same_state_produces_same_transition",
+        "assert_call": "assertEqual",
+        "args": [
+          "ok1",
+          "ok2"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(ok1, ok2)"
+      },
+      {
+        "line": 337,
+        "method": "test_same_state_produces_same_transition",
+        "assert_call": "assertEqual",
+        "args": [
+          "ev1",
+          "ev2"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(ev1, ev2)"
+      },
+      {
+        "line": 338,
+        "method": "test_same_state_produces_same_transition",
+        "assert_call": "assertEqual",
+        "args": [
+          "c1.state",
+          "c2.state"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(c1.state, c2.state)"
+      },
+      {
+        "line": 345,
+        "method": "test_same_facts_produce_same_readiness_score",
+        "assert_call": "assertEqual",
+        "args": [
+          "s1",
+          "s2"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(s1, s2)"
+      },
+      {
+        "line": 352,
+        "method": "test_same_matrix_returns_same_next_field",
+        "assert_call": "assertEqual",
+        "args": [
+          "f1",
+          "f2"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(f1, f2)"
+      },
+      {
+        "line": 358,
+        "method": "test_no_results_state_before_matching",
+        "assert_call": "assertFalse",
+        "args": [
+          "conv.can_transition(\"result_selected\")"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(conv.can_transition(\"result_selected\"))"
+      },
+      {
+        "line": 359,
+        "method": "test_no_results_state_before_matching",
+        "assert_call": "assertFalse",
+        "args": [
+          "conv.can_transition(\"proposal_accepted\")"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(conv.can_transition(\"proposal_accepted\"))"
+      },
+      {
+        "line": 366,
+        "method": "test_consent_required_for_relationship",
+        "assert_call": "assertTrue",
+        "args": [
+          "ok_yes"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(ok_yes)"
+      },
+      {
+        "line": 367,
+        "method": "test_consent_required_for_relationship",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.state",
+          "ConversationState.RELATIONSHIP_PROPOSED"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.state, ConversationState.RELATIONSHIP_PROPOSED)"
+      },
+      {
+        "line": 370,
+        "method": "test_consent_required_for_relationship",
+        "assert_call": "assertTrue",
+        "args": [
+          "ok_no"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(ok_no)"
+      },
+      {
+        "line": 371,
+        "method": "test_consent_required_for_relationship",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv2.state",
+          "ConversationState.QUALIFYING"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv2.state, ConversationState.QUALIFYING)"
+      },
+      {
+        "line": 375,
+        "method": "test_cannot_skip_consent_state",
+        "assert_call": "assertFalse",
+        "args": [
+          "conv.can_transition(\"proposal_accepted\")"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(conv.can_transition(\"proposal_accepted\"))"
+      },
+      {
+        "line": 376,
+        "method": "test_cannot_skip_consent_state",
+        "assert_call": "assertFalse",
+        "args": [
+          "conv.can_transition(\"consent_denied\")"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(conv.can_transition(\"consent_denied\"))"
+      },
+      {
+        "line": 384,
+        "method": "test_coordinates_not_in_standard_extraction",
+        "assert_call": "assertNotIn",
+        "args": [
+          "\"coordinates\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertNotIn(\"coordinates\", fields)"
+      },
+      {
+        "line": 385,
+        "method": "test_coordinates_not_in_standard_extraction",
+        "assert_call": "assertNotIn",
+        "args": [
+          "\"latitude\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertNotIn(\"latitude\", fields)"
+      },
+      {
+        "line": 386,
+        "method": "test_coordinates_not_in_standard_extraction",
+        "assert_call": "assertNotIn",
+        "args": [
+          "\"longitude\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertNotIn(\"longitude\", fields)"
+      },
+      {
+        "line": 395,
+        "method": "test_coordinates_not_in_decision_facts",
+        "assert_call": "assertEqual",
+        "args": [
+          "len(new)",
+          "0"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(len(new), 0)"
+      },
+      {
+        "line": 396,
+        "method": "test_coordinates_not_in_decision_facts",
+        "assert_call": "assertNotIn",
+        "args": [
+          "\"coordinates\"",
+          "known"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertNotIn(\"coordinates\", known)"
+      },
+      {
+        "line": 408,
+        "method": "test_conversation_preserves_project_id",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.project_id",
+          "42"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.project_id, 42)"
+      },
+      {
+        "line": 409,
+        "method": "test_conversation_preserves_project_id",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.dossier_id",
+          "7"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.dossier_id, 7)"
+      },
+      {
+        "line": 419,
+        "method": "test_conversation_preserves_facts_across_channel",
+        "assert_call": "assertTrue",
+        "args": [
+          "conv.facts.has_field(\"city\")"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(conv.facts.has_field(\"city\"))"
+      },
+      {
+        "line": 420,
+        "method": "test_conversation_preserves_facts_across_channel",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.facts.get_confirmed(\"city\")[0].normalized_value",
+          "\"Douala\""
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.facts.get_confirmed(\"city\")[0].normalized_value, \"Douala\")"
+      },
+      {
+        "line": 425,
+        "method": "test_conversation_preserves_state_across_channel",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.state",
+          "ConversationState.QUALIFYING"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.state, ConversationState.QUALIFYING)"
+      },
+      {
+        "line": 433,
+        "method": "test_deterministic_extraction_works_without_llm",
+        "assert_call": "assertIn",
+        "args": [
+          "\"city\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"city\", fields)"
+      },
+      {
+        "line": 434,
+        "method": "test_deterministic_extraction_works_without_llm",
+        "assert_call": "assertIn",
+        "args": [
+          "\"bedroom_count\"",
+          "fields"
+        ],
+        "strength": "WEAK",
+        "reason": "assertIn/NotIn - existence check in collection",
+        "full_text": "self.assertIn(\"bedroom_count\", fields)"
+      },
+      {
+        "line": 439,
+        "method": "test_state_transition_works_without_llm",
+        "assert_call": "assertTrue",
+        "args": [
+          "ok"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertTrue",
+        "full_text": "self.assertTrue(ok)"
+      },
+      {
+        "line": 440,
+        "method": "test_state_transition_works_without_llm",
+        "assert_call": "assertEqual",
+        "args": [
+          "conv.state",
+          "ConversationState.QUALIFYING"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(conv.state, ConversationState.QUALIFYING)"
+      },
+      {
+        "line": 444,
+        "method": "test_normalize_amount_works_without_llm",
+        "assert_call": "assertEqual",
+        "args": [
+          "result.normalized_amount",
+          "50000"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual(result.normalized_amount, 50000)"
+      },
+      {
+        "line": 445,
+        "method": "test_normalize_amount_works_without_llm",
+        "assert_call": "assertFalse",
+        "args": [
+          "result.ambiguity"
+        ],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertFalse",
+        "full_text": "self.assertFalse(result.ambiguity)"
+      }
+    ]
+  },
+  "harness": {
+    "total_assertions_in_harness": 5,
+    "strength_counts": {
+      "MEDIUM": 5
+    },
+    "check_methods_found": [
+      "run_behavioral_tests",
+      "run_scenario",
+      "_run_step_check",
+      "run_conversation",
+      "run_check",
+      "_run_all_and_report"
+    ],
+    "weak_assertions": [],
+    "all_assertions": [
+      {
+        "line": 845,
+        "method": "test_all_conversations",
+        "assert_call": "assertGreater",
+        "args": [],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertGreater",
+        "full_text": "self.assertGreater( passed / total, 0.5, f\"Less than 50% of conversations passed ({passed}/{total})\","
+      },
+      {
+        "line": 862,
+        "method": "test_no_confirmed_fact_ever_reasked",
+        "assert_call": "assertEqual",
+        "args": [],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual( len(violations), 0,"
+      },
+      {
+        "line": 875,
+        "method": "test_no_loops",
+        "assert_call": "assertEqual",
+        "args": [],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual( loops_found, 0, f\"Found {loops_found} conversations with loop violations\", )"
+      },
+      {
+        "line": 896,
+        "method": "test_no_external_recommendations",
+        "assert_call": "assertEqual",
+        "args": [],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual( len(violations), 0,"
+      },
+      {
+        "line": 935,
+        "method": "test_state_transition_validity",
+        "assert_call": "assertEqual",
+        "args": [],
+        "strength": "MEDIUM",
+        "reason": "uncategorized: assertEqual",
+        "full_text": "self.assertEqual( len(violations), 0,"
+      }
+    ]
+  },
+  "summary": {
+    "total_assertions": 112,
+    "corpus_messages_with_assertions": 2238
+  }
+}
