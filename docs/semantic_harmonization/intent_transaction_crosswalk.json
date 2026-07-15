@@ -1,0 +1,435 @@
+{
+  "schema_version": "1.0",
+  "document_id": "LAWIM-HARM-INTENT-TRX-CROSSWALK-V1",
+  "title": "Heritage Gold ↔ LAWIM_V2 Intent & Transaction Crosswalk",
+  "generated_at": "2026-07-15",
+  "status": "DRAFT",
+  "mapping_statuses": {
+    "EXACT_MATCH": "Identical semantics and representation",
+    "NORMALIZED_MATCH": "Same concept, different representation (case, format, naming convention)",
+    "ONE_TO_MANY": "One source entity maps to multiple target entities",
+    "MANY_TO_ONE": "Multiple source entities map to one target entity",
+    "PARTIAL_MATCH": "Partial semantic overlap; some aspects covered, others missing",
+    "EXTENSION_REQUIRED": "Concept does not exist in target; requires new development",
+    "OBSOLETE": "Concept no longer relevant or deliberately removed",
+    "CONFLICT": "Semantics conflict between source and target",
+    "HUMAN_DECISION_REQUIRED": "Mapping requires domain expert judgment",
+    "UNMAPPED": "No equivalent concept identified"
+  },
+
+  "intent_model_comparison": [
+    {
+      "gold_intent_id": "BUY_PROPERTY",
+      "gold_label_fr": "Achat",
+      "gold_label_en": "Buy",
+      "gold_priority": "VERY_HIGH",
+      "gold_lead_score_weight": 50,
+      "current_equivalent": "project_type = 'buy'",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "NORMALIZED_MATCH",
+      "rationale": "Same semantics; Heritage Gold uses INTENT model (UPPER_SNAKE_CASE with priority/weight), current LAWIM_V2 uses project_type string field (lowercase). The 'buy' project_type encompasses the same acquisition intent."
+    },
+    {
+      "gold_intent_id": "RENT_PROPERTY",
+      "gold_label_fr": "Location",
+      "gold_label_en": "Rent",
+      "gold_priority": "HIGH",
+      "gold_lead_score_weight": 30,
+      "current_equivalent": "project_type = 'rent'",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "NORMALIZED_MATCH",
+      "rationale": "Same semantics; Heritage Gold RENT_PROPERTY maps cleanly to project_type 'rent'. Both represent tenant-side rental intent."
+    },
+    {
+      "gold_intent_id": "SELL_PROPERTY",
+      "gold_label_fr": "Vente",
+      "gold_label_en": "Sell",
+      "gold_priority": "VERY_HIGH",
+      "gold_lead_score_weight": 60,
+      "current_equivalent": "project_type = 'sell'",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "NORMALIZED_MATCH",
+      "rationale": "Same semantics; Heritage Gold SELL_PROPERTY maps to project_type 'sell'. Both represent owner-side sales intent."
+    },
+    {
+      "gold_intent_id": "INVESTOR_INTENT",
+      "gold_label_fr": "Investissement",
+      "gold_label_en": "Invest",
+      "gold_priority": "P0",
+      "gold_lead_score_weight": 100,
+      "current_equivalent": "project_type = 'invest'",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "NORMALIZED_MATCH",
+      "rationale": "Same semantics; Heritage Gold INVESTOR_INTENT maps to project_type 'invest'. Note: Heritage Gold priority 'P0' (top-tier) differs from current 'VERY_HIGH' label convention."
+    },
+    {
+      "gold_intent_id": "SEARCH_PROPERTY",
+      "gold_label_fr": "Recherche",
+      "gold_label_en": "Search",
+      "gold_priority": "NORMAL",
+      "gold_lead_score_weight": 25,
+      "current_equivalent": "project_type = 'other'",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "PARTIAL_MATCH",
+      "rationale": "Heritage Gold has explicit SEARCH_PROPERTY intent as a low-priority fallback for unqualified exploration. Current LAWIM_V2 handles this via 'other' catch-all project type but lacks the intentionality, fallback semantics, and confidence threshold logic specific to Search intent."
+    }
+  ],
+
+  "transaction_type_comparison": [
+    {
+      "gold_transaction": "rent",
+      "gold_description": "Location d'un bien immobilier",
+      "gold_matrices": ["RESIDENTIAL_SEARCH"],
+      "current_equivalent": "project_type = 'rent'",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "EXACT_MATCH",
+      "rationale": "Identical semantics and string value. Both represent property rental."
+    },
+    {
+      "gold_transaction": "buy",
+      "gold_description": "Acquisition d'un bien immobilier",
+      "gold_matrices": ["RESIDENTIAL_SEARCH", "LAND_SEARCH", "COMMERCIAL_SEARCH"],
+      "current_equivalent": "project_type = 'buy'",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "EXACT_MATCH",
+      "rationale": "Identical semantics and string value. Both represent property acquisition."
+    },
+    {
+      "gold_transaction": "sell",
+      "gold_description": "Mise en vente d'un bien immobilier",
+      "current_equivalent": "project_type = 'sell'",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "EXACT_MATCH",
+      "rationale": "Identical semantics and string value. Both represent property sale listing."
+    },
+    {
+      "gold_transaction": "short_stay",
+      "gold_description": "Séjour de courte durée",
+      "gold_matrices": ["RESIDENTIAL_SEARCH (duree_courte)"],
+      "current_equivalent": "project_type = 'rent' (sub-differentiated via metadata or objective)",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "PARTIAL_MATCH",
+      "rationale": "Heritage Gold treats short_stay as a distinct transaction type with specific qualification matrices (chambre_hotel, appartement_courte_duree). Current LAWIM_V2 has no dedicated short_stay project type; short-term rental falls under 'rent' with no formal sub-type differentiation. Extension or metadata-based sub-typing recommended."
+    },
+    {
+      "gold_transaction": "invest",
+      "gold_description": "Investissement immobilier",
+      "gold_matrices": ["COMMERCIAL_SEARCH (Investment)"],
+      "current_equivalent": "project_type = 'invest'",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "EXACT_MATCH",
+      "rationale": "Identical semantics and string value. Both represent real estate investment."
+    },
+    {
+      "gold_transaction": "lease",
+      "gold_description": "Location longue durée (bail 3+ ans)",
+      "current_equivalent": "project_type = 'rent' (sub-differentiated via timeline_horizon or metadata)",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "PARTIAL_MATCH",
+      "rationale": "Heritage Gold distinguishes lease (bail commercial / longue durée 3+ ans) from standard rent. Current LAWIM_V2 has no dedicated lease type; long-term rental falls under 'rent'. The timeline_horizon field (3_months, 6_months, 1_year, 2_years) partially covers duration but does not reach 3+ years. Extension or metadata-based sub-typing needed."
+    },
+    {
+      "gold_transaction": "cession_bail",
+      "gold_description": "Cession de bail commercial",
+      "gold_matrices": ["COMMERCIAL_SEARCH"],
+      "current_equivalent": "project_type = 'other' (unmapped)",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Heritage Gold matrices include CESSION_BAIL transaction type for commercial lease transfers (bail commercial cession). Current LAWIM_V2 has no equivalent project type. Could be mapped to 'other' with metadata differentiation, but formal extension recommended."
+    },
+    {
+      "gold_transaction": "bail_commercial",
+      "gold_description": "Bail commercial (3-9 ans)",
+      "gold_matrices": ["COMMERCIAL_SEARCH"],
+      "current_equivalent": "project_type = 'rent' (insufficient; lease extension suggested)",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "PARTIAL_MATCH",
+      "rationale": "Heritage Gold treats bail_commercial as a distinct transaction type in COMMERCIAL_SEARCH matrices. Current LAWIM_V2 only has generic 'rent'. Bail commercial has unique legal and qualification requirements (3-9 year terms, commercial usage rights) not captured by current model."
+    },
+    {
+      "gold_transaction": "cession",
+      "gold_description": "Cession de fonds de commerce",
+      "gold_matrices": ["COMMERCIAL_SEARCH"],
+      "current_equivalent": "project_type = 'other' (unmapped)",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Heritage Gold matrices include CESSION transaction type for business asset transfers (fonds de commerce). Current LAWIM_V2 has no equivalent type. Not a pure real estate transaction but an integral part of the Heritage Gold commercial domain."
+    },
+    {
+      "gold_transaction": "finance",
+      "gold_description": "Demande de financement immobilier",
+      "gold_matrices": ["FINANCING_REQUEST"],
+      "current_equivalent": "project_type = 'buy' or 'invest' (funding intent via objective/metadata)",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Heritage Gold has FINANCE as a distinct transaction family with 10 qualification matrices (credit_immobilier, financement_acquisition, etc.). Current LAWIM_V2 has no finance/funding project type. Financing is implicitly bundled into buy/invest projects but not modeled as a standalone request type."
+    },
+    {
+      "gold_transaction": "find",
+      "gold_description": "Recherche de professionnel de l'immobilier",
+      "gold_matrices": ["PROFESSIONAL_SEARCH"],
+      "current_equivalent": "project_type = 'other' (unmapped)",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Heritage Gold has FIND transaction type for professional service searches (27 matrices: agents, notaires, architects, etc.). Current LAWIM_V2 has no equivalent. This is a distinct service-discovery intent beyond property transactions."
+    },
+    {
+      "gold_transaction": "service",
+      "gold_description": "Prestation de service immobilier",
+      "gold_matrices": ["REAL_ESTATE_SERVICES"],
+      "current_equivalent": "project_type = 'other' (unmapped)",
+      "current_location": "project_domain.py:8",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Heritage Gold has SERVICE transaction type for 24 real estate service matrices (estimation, expertise, home staging, renovation, etc.). Current LAWIM_V2 has no equivalent. These are service-procurement intents distinct from property transactions."
+    }
+  ],
+
+  "intent_to_role_mapping_comparison": [
+    {
+      "gold_intent": "BUY_PROPERTY",
+      "gold_role": "buyer",
+      "gold_role_type": "Demandeur",
+      "current_equivalent": "No formal role mapping in current model",
+      "current_location": "N/A",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Heritage Gold defines explicit role (buyer) and role type (Demandeur) per intent. Current LAWIM_V2 has no Intent model, no role mapping, and no user role abstraction tied to project_type. Roles are implicit in the project_type choice."
+    },
+    {
+      "gold_intent": "RENT_PROPERTY",
+      "gold_role": "tenant",
+      "gold_role_type": "Demandeur",
+      "current_equivalent": "No formal role mapping in current model",
+      "current_location": "N/A",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Same as above; tenant role not formally modeled."
+    },
+    {
+      "gold_intent": "SELL_PROPERTY",
+      "gold_role": "seller",
+      "gold_role_type": "Propriétaire",
+      "current_equivalent": "No formal role mapping in current model",
+      "current_location": "N/A",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Same as above; seller role not formally modeled. Note: Heritage Gold distinguishes seller (Propriétaire) from buyer (Demandeur), reflecting supply vs demand side."
+    },
+    {
+      "gold_intent": "INVESTOR_INTENT",
+      "gold_role": "investor",
+      "gold_role_type": "Demandeur / Investisseur",
+      "current_equivalent": "No formal role mapping in current model",
+      "current_location": "N/A",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Same as above; investor role not formally modeled."
+    },
+    {
+      "gold_intent": "SEARCH_PROPERTY",
+      "gold_role": "visitor",
+      "gold_role_type": "Demandeur (unqualified)",
+      "current_equivalent": "No formal role mapping in current model",
+      "current_location": "N/A",
+      "mapping_status": "EXTENSION_REQUIRED",
+      "rationale": "Heritage Gold explicitly models unqualified visitor role as fallback. Current system has no equivalent."
+    }
+  ],
+
+  "intent_detection_comparison": {
+    "gold": {
+      "method": "Keyword scoring with confidence threshold",
+      "confidence_threshold": 0.70,
+      "languages": ["FR", "EN", "PID"],
+      "algorithm_type": "Rule-based keyword scoring",
+      "detection_features": [
+        "Multi-intent detection (user can express multiple intents)",
+        "Urgency detection",
+        "Entity extraction per intent",
+        "Fallback to SEARCH_PROPERTY below threshold"
+      ],
+      "score_weights": {
+        "BUY_PROPERTY": 50,
+        "RENT_PROPERTY": 30,
+        "SELL_PROPERTY": 60,
+        "INVESTOR_INTENT": 100,
+        "SEARCH_PROPERTY": 25
+      }
+    },
+    "current": {
+      "method": "None (explicit project_type selection by user)",
+      "confidence_threshold": null,
+      "languages": null,
+      "algorithm_type": "None",
+      "detection_features": [],
+      "score_weights": null
+    },
+    "mapping_status": "EXTENSION_REQUIRED",
+    "rationale": "Current LAWIM_V2 has no intent detection mechanism. Users explicitly select a project_type from a predefined list (buy/rent/sell/invest/build/other). Heritage Gold's keyword scoring, confidence threshold, multi-intent detection, entity extraction, and fallback semantics are entirely absent and require new development.",
+    "recommendation": "Implement intent detection module with keyword scoring, configurable confidence threshold (target 0.70), FR/EN/PID language support, multi-intent detection, urgency scoring, entity extraction per intent, and fallback to a general search/other intent below threshold."
+  },
+
+  "journey_workflow_stage_mapping": [
+    {
+      "gold_stage": "SEARCH",
+      "gold_description": "Phase de recherche initiale",
+      "current_journey_steps": ["search"],
+      "applicable_project_types": ["buy", "rent", "invest"],
+      "mapping_status": "EXACT_MATCH",
+      "rationale": "Heritage Gold SEARCH stage maps directly to LAWIM_V2 'search' step in buy, rent, and invest journey templates."
+    },
+    {
+      "gold_stage": "QUALIFICATION",
+      "gold_description": "Qualification du besoin",
+      "current_journey_steps": ["qualification"],
+      "applicable_project_types": ["buy", "rent", "sell", "invest", "build", "other"],
+      "mapping_status": "EXACT_MATCH",
+      "rationale": "Heritage Gold qualification order (step 1 of 10: Intention → Type bien → ...) maps directly to LAWIM_V2 'qualification' step, which exists in ALL journey templates."
+    },
+    {
+      "gold_stage": "MATCHING",
+      "gold_description": "Mise en correspondance offre/demande",
+      "current_journey_steps": ["search", "promotion"],
+      "applicable_project_types": ["buy→search", "rent→search", "sell→promotion"],
+      "mapping_status": "PARTIAL_MATCH",
+      "rationale": "Heritage Gold MATCHING stage (offre/demande matching) is split across LAWIM_V2 search (buyer/tenant side) and promotion (seller side). No dedicated 'matching' step exists in current journey templates."
+    },
+    {
+      "gold_stage": "VISIT",
+      "gold_description": "Visites de biens",
+      "current_journey_steps": ["visit"],
+      "applicable_project_types": ["buy", "rent"],
+      "mapping_status": "EXACT_MATCH",
+      "rationale": "Heritage Gold VISIT maps directly to LAWIM_V2 'visit' step in buy and rent journeys. Note: sell, invest, build journeys do not include a visit step in current model."
+    },
+    {
+      "gold_stage": "NEGOTIATION",
+      "gold_description": "Négociation des conditions",
+      "current_journey_steps": ["negotiation"],
+      "current_negotiation_stages": ["inquiry", "offer", "counter", "accepted", "declined", "closed"],
+      "mapping_status": "PARTIAL_MATCH",
+      "rationale": "Heritage Gold NEGOTIATION stage maps to LAWIM_V2 'negotiation' journey step AND the conversation-domain negotiation stages (inquiry → offer → counter → accepted/declined → closed). Current system has richer negotiation substate modeling than Heritage Gold. The journey step exists in buy/rent/sell but not invest (uses 'analysis','due_diligence') and build (no negotiation)."
+    },
+    {
+      "gold_stage": "TRANSACTION",
+      "gold_description": "Exécution de la transaction",
+      "current_journey_steps": ["due_diligence", "closing (partial)"],
+      "applicable_project_types": ["invest→due_diligence", "all→closing"],
+      "mapping_status": "PARTIAL_MATCH",
+      "rationale": "Heritage Gold TRANSACTION (execution) spans qualification du besoin → budget → délai → critères → confirmation → escalade. This partially maps to due_diligence (invest) and closing phases but is distributed across multiple LAWIM_V2 steps."
+    },
+    {
+      "gold_stage": "CLOSURE",
+      "gold_description": "Finalisation et clôture",
+      "current_journey_steps": ["closing"],
+      "applicable_project_types": ["buy", "rent", "sell", "invest", "build", "other"],
+      "mapping_status": "EXACT_MATCH",
+      "rationale": "Heritage Gold CLOSURE maps directly to LAWIM_V2 'closing' step, which exists in ALL journey templates."
+    },
+    {
+      "gold_stage": "ARCHIVING",
+      "gold_description": "Archivage du dossier",
+      "current_equivalent": "project status = 'archived'",
+      "current_location": "project_domain.py:9",
+      "mapping_status": "EXACT_MATCH",
+      "rationale": "Heritage Gold ARCHIVING maps to LAWIM_V2 'archived' project status. Both represent terminal dossier state."
+    }
+  ],
+
+  "gap_analysis": {
+    "summary": "The Heritage Gold model is significantly richer in intent semantics, role abstraction, and transaction type diversity. Current LAWIM_V2 provides a simplified project-centric model that covers the core property transaction types (buy/rent/sell/invest) but lacks several critical dimensions.",
+    "gaps": [
+      {
+        "gap_id": "GAP-001",
+        "priority": "CRITICAL",
+        "domain": "Intent Detection",
+        "description": "No intent detection system exists in current LAWIM_V2",
+        "impact": "Cannot automatically route users based on natural language input; relies on explicit project_type selection",
+        "recommendation": "Implement intent detection module with keyword scoring, 0.70 confidence threshold, FR/EN/PID support, multi-intent detection, and fallback to SEARCH_PROPERTY/other",
+        "effort_estimate": "HIGH (2-4 weeks)"
+      },
+      {
+        "gap_id": "GAP-002",
+        "priority": "HIGH",
+        "domain": "Intent Model / Priority Weights",
+        "description": "No formal Intent model with priority and lead score weights",
+        "impact": "No lead scoring or intelligent routing based on user intent priority",
+        "recommendation": "Introduce Intent model with priority levels (VERY_HIGH, HIGH, NORMAL, LOW), lead score weights, and intent-to-project_type mapping layer",
+        "effort_estimate": "MEDIUM (1-2 weeks)"
+      },
+      {
+        "gap_id": "GAP-003",
+        "priority": "HIGH",
+        "domain": "Transaction Type Coverage",
+        "description": "Missing transaction types: short_stay, lease, cession_bail, bail_commercial, cession, finance, find, service",
+        "impact": "Cannot represent commercial lease transfers, financing requests, professional searches, or service procurement as distinct project types",
+        "recommendation": "Extend PROJECT_TYPES to include lease, short_stay, finance, find, service; handle cession_bail, bail_commercial, cession as sub-types or via metadata",
+        "effort_estimate": "MEDIUM (1-2 weeks)"
+      },
+      {
+        "gap_id": "GAP-004",
+        "priority": "HIGH",
+        "domain": "Intent-to-Role Mapping",
+        "description": "No formal role abstraction or role mapping per intent",
+        "impact": "Cannot distinguish demand-side (buyer/tenant) from supply-side (seller) roles; no role-based permissions or workflows",
+        "recommendation": "Implement Role model with intent-to-role mapping, role types (Demandeur, Propriétaire, Investisseur), and role-based access control",
+        "effort_estimate": "MEDIUM (1-2 weeks)"
+      },
+      {
+        "gap_id": "GAP-005",
+        "priority": "MEDIUM",
+        "domain": "Urgency Detection",
+        "description": "No urgency detection from user input",
+        "impact": "Cannot prioritize leads or projects based on expressed urgency",
+        "recommendation": "Add urgency scoring to intent detection, store urgency level on Project model",
+        "effort_estimate": "LOW (3-5 days)"
+      },
+      {
+        "gap_id": "GAP-006",
+        "priority": "MEDIUM",
+        "domain": "Entity Extraction per Intent",
+        "description": "No intent-specific entity extraction",
+        "impact": "Cannot auto-populate qualification fields from natural language input",
+        "recommendation": "Implement per-intent entity extraction (budget, location, property type, timeline) integrated with intent detection",
+        "effort_estimate": "MEDIUM (1-2 weeks)"
+      },
+      {
+        "gap_id": "GAP-007",
+        "priority": "MEDIUM",
+        "domain": "Multi-Intent Detection",
+        "description": "Current model is single-project_type, single-journey",
+        "impact": "Cannot handle users with multiple parallel intents (e.g., buy AND sell simultaneously)",
+        "recommendation": "Support multi-intent detection and parallel project creation for users expressing multiple intents",
+        "effort_estimate": "MEDIUM (1-2 weeks)"
+      },
+      {
+        "gap_id": "GAP-008",
+        "priority": "MEDIUM",
+        "domain": "Qualification Order",
+        "description": "Heritage Gold defines a strict 10-step qualification order; current model has flat journey steps",
+        "impact": "No structured progressive disclosure for qualification fields",
+        "recommendation": "Implement ordered qualification sequence (Intention → Type bien → Ville → Quartier → Budget → Délai → Critères → Préférences → Confirmation → Escalade) with step-by-step wizard",
+        "effort_estimate": "MEDIUM (1-2 weeks)"
+      },
+      {
+        "gap_id": "GAP-009",
+        "priority": "LOW",
+        "domain": "Search Intent Fallback",
+        "description": "Heritage Gold SEARCH_PROPERTY acts as fallback below 0.70 confidence; current 'other' project type has no fallback semantics",
+        "impact": "Unclassified user queries are routed to generic 'other' without confidence-based escalation logic",
+        "recommendation": "Add confidence-based fallback logic with SEARCH_PROPERTY semantics, escalation triggers, and human intervention when confidence is borderline",
+        "effort_estimate": "LOW (3-5 days)"
+      },
+      {
+        "gap_id": "GAP-010",
+        "priority": "LOW",
+        "domain": "Lead Score Weight Integration",
+        "description": "Lead score weights (50/30/60/100/25) exist in Heritage Gold but not in current model",
+        "impact": "No automated lead prioritization or routing based on intent weight",
+        "recommendation": "Integrate lead score weights into Project model or a separate LeadScoring service; use for agent routing and prioritization dashboards",
+        "effort_estimate": "LOW (3-5 days)"
+      }
+    ],
+    "total_gaps": 10,
+    "critical_gaps": 1,
+    "high_gaps": 4,
+    "medium_gaps": 3,
+    "low_gaps": 2
+  }
+}

@@ -1,0 +1,634 @@
+{
+  "document_id": "LAWIM-H05-MATRIX-COMPATIBILITY-V1",
+  "title": "H05 — Matrix Compatibility: Qualification Matrices × Current LAWIM V2 Model",
+  "date": "2026-07-15",
+  "status": "CANONICAL",
+
+  "summary": {
+    "total_matrices": 107,
+    "implemented_in_code": 0,
+    "percentage_implemented": 0.0,
+    "h1_architecture_mapped": 107,
+    "h2_extensions_required": 107,
+    "current_model_fields_usable": 6,
+    "current_model_fields_partial": 4,
+    "fields_without_model_target": 690,
+    "matching_roles_defined": 9,
+    "matching_roles_implemented": 0,
+    "intent_family_x_property_type_combinations": 107
+  },
+
+  "family_overview": [
+    {
+      "family": "RESIDENTIAL_SEARCH",
+      "file": "residential_search_matrices.md",
+      "total_matrices": 18,
+      "transaction_types": ["RENT", "BUY"],
+      "current_code_support": "project_domain — project_type: rent/buy",
+      "extensions_required": 18,
+      "matrix_ids": [
+        "MATRIX-RES-SEARCH-001", "MATRIX-RES-SEARCH-002", "MATRIX-RES-SEARCH-003",
+        "MATRIX-RES-SEARCH-004", "MATRIX-RES-SEARCH-005", "MATRIX-RES-SEARCH-006",
+        "MATRIX-RES-SEARCH-007", "MATRIX-RES-SEARCH-008", "MATRIX-RES-SEARCH-009",
+        "MATRIX-RES-SEARCH-010", "MATRIX-RES-SEARCH-011", "MATRIX-RES-SEARCH-012",
+        "MATRIX-RES-SEARCH-013", "MATRIX-RES-SEARCH-014", "MATRIX-RES-SEARCH-015",
+        "MATRIX-RES-SEARCH-016", "MATRIX-RES-SEARCH-017", "MATRIX-RES-SEARCH-018"
+      ],
+      "unique_fields_count": 70,
+      "fields_without_model_target": 60,
+      "consumer_engine": "QualificationEngine → MatchingEngine (Residential)"
+    },
+    {
+      "family": "LAND_SEARCH",
+      "file": "land_search_matrices.md",
+      "total_matrices": 7,
+      "transaction_types": ["BUY"],
+      "current_code_support": "project_domain — project_type: buy",
+      "extensions_required": 7,
+      "matrix_ids": [
+        "LAND_SEARCH_TERRAIN_TITRE_001",
+        "LAND_SEARCH_TERRAIN_NON_TITRE_001",
+        "LAND_SEARCH_TERRAIN_LOTI_001",
+        "LAND_SEARCH_TERRAIN_NON_LOTI_001",
+        "LAND_SEARCH_TERRAIN_TITRE_COLLECTIF_001",
+        "LAND_SEARCH_TERRAIN_TITRE_INDIVIDUEL_001",
+        "LAND_SEARCH_TERRAIN_SOUS_MORCELLEMENT_001"
+      ],
+      "unique_fields_count": 50,
+      "fields_without_model_target": 45,
+      "consumer_engine": "QualificationEngine → MatchingEngine (Land)"
+    },
+    {
+      "family": "COMMERCIAL_SEARCH",
+      "file": "commercial_property_matrices.md",
+      "total_matrices": 16,
+      "transaction_types": ["RENT", "BUY", "CESSION_BAIL"],
+      "current_code_support": "project_domain — project_type: buy/rent",
+      "extensions_required": 16,
+      "matrix_ids": [
+        "COM-MATRIX-001", "COM-MATRIX-002", "COM-MATRIX-003", "COM-MATRIX-004",
+        "COM-MATRIX-005", "COM-MATRIX-006", "COM-MATRIX-007", "COM-MATRIX-008",
+        "COM-MATRIX-009", "COM-MATRIX-010", "COM-MATRIX-011", "COM-MATRIX-012",
+        "COM-MATRIX-013", "COM-MATRIX-014", "COM-MATRIX-015", "COM-MATRIX-016"
+      ],
+      "unique_fields_count": 45,
+      "fields_without_model_target": 40,
+      "consumer_engine": "QualificationEngine → MatchingEngine (Commercial)"
+    },
+    {
+      "family": "COMMERCIAL_SEARCH (INVEST)",
+      "file": "commercial_property_matrices.md",
+      "total_matrices": 5,
+      "transaction_types": ["INVEST"],
+      "current_code_support": "project_domain — project_type: invest",
+      "extensions_required": 5,
+      "matrix_ids": [
+        "COM-MATRIX-017", "COM-MATRIX-018", "COM-MATRIX-019",
+        "COM-MATRIX-020", "COM-MATRIX-021"
+      ],
+      "unique_fields_count": 18,
+      "fields_without_model_target": 16,
+      "consumer_engine": "QualificationEngine → MatchingEngine (Investment)"
+    },
+    {
+      "family": "FINANCING_REQUEST",
+      "file": "financing_request_matrices.md",
+      "total_matrices": 10,
+      "transaction_types": ["FINANCE"],
+      "current_code_support": "project_domain — project_type: buy (closest, no FINANCE type)",
+      "extensions_required": 10,
+      "matrix_ids": [
+        "MATRIX-FIN-001", "MATRIX-FIN-002", "MATRIX-FIN-003", "MATRIX-FIN-004",
+        "MATRIX-FIN-005", "MATRIX-FIN-006", "MATRIX-FIN-007", "MATRIX-FIN-008",
+        "MATRIX-FIN-009", "MATRIX-FIN-010"
+      ],
+      "unique_fields_count": 80,
+      "fields_without_model_target": 75,
+      "consumer_engine": "QualificationEngine → FinancingMatchingEngine"
+    },
+    {
+      "family": "PROFESSIONAL_SEARCH",
+      "file": "professional_service_matrices.md",
+      "total_matrices": 27,
+      "transaction_types": ["FIND"],
+      "current_code_support": "project_domain — project_type: other (no FIND type)",
+      "extensions_required": 27,
+      "matrix_ids": [
+        "PRO-AGENT-001", "PRO-AGENC-002", "PRO-NOTAI-003", "PRO-GEOME-004",
+        "PRO-ARCHI-005", "PRO-INGEN-006", "PRO-TECHN-007", "PRO-MACON-008",
+        "PRO-ELECT-009", "PRO-PLOMB-010", "PRO-MENUI-011", "PRO-PEINT-012",
+        "PRO-CARRE-013", "PRO-COUVR-014", "PRO-EXPIM-015", "PRO-EVALU-016",
+        "PRO-GESTI-017", "PRO-SYNDI-018", "PRO-PHOTO-019", "PRO-VIDEO-020",
+        "PRO-DEMEN-021", "PRO-NETTO-022", "PRO-GARDI-023", "PRO-ASSUR-024",
+        "PRO-BANQU-025", "PRO-COURT-026", "PRO-PREST-027"
+      ],
+      "unique_fields_count": 40,
+      "fields_without_model_target": 35,
+      "consumer_engine": "QualificationEngine → ProfessionalMatchingEngine"
+    },
+    {
+      "family": "REAL_ESTATE_SERVICES",
+      "file": "real_estate_service_matrices.md",
+      "total_matrices": 24,
+      "transaction_types": ["SERVICE"],
+      "current_code_support": "project_domain — project_type: other (no SERVICE type)",
+      "extensions_required": 24,
+      "matrix_ids": [
+        "SVC-ESTI-001", "SVC-EXPE-002", "SVC-VERI-003", "SVC-VISI-004",
+        "SVC-CONT-005", "SVC-GEST-006", "SVC-MISE-007", "SVC-MISE-008",
+        "SVC-PUBL-009", "SVC-PHOT-010", "SVC-VIDE-011", "SVC-DRON-012",
+        "SVC-HOME-013", "SVC-RENO-014", "SVC-CONS-015", "SVC-ENTR-016",
+        "SVC-NETT-017", "SVC-SECU-018", "SVC-DEME-019", "SVC-ASSU-020",
+        "SVC-CONS-021", "SVC-CONS-022", "SVC-GEST-023", "SVC-RECO-024"
+      ],
+      "unique_fields_count": 200,
+      "fields_without_model_target": 190,
+      "consumer_engine": "QualificationEngine → ServiceMatchingEngine"
+    }
+  ],
+
+  "field_compatibility": {
+    "directly_compatible": [
+      {"field_id": "FLD-CITY", "label": "Ville", "current_model": "project_domain.location_city", "compatible": true, "notes": "Direct 1:1 mapping"},
+      {"field_id": "FLD-BUDGET_MAX", "label": "Budget maximum", "current_model": "project_domain.budget_max", "compatible": true, "notes": "Direct 1:1 mapping"},
+      {"field_id": "FLD-BUDGET_MIN", "label": "Budget minimum", "current_model": "project_domain.budget_min", "compatible": true, "notes": "Direct 1:1 mapping"},
+      {"field_id": "FLD-BUDGET_CURRENCY", "label": "Devise", "current_model": "project_domain.currency", "compatible": true, "notes": "Direct 1:1 mapping"},
+      {"field_id": "FLD-CHAMBRES", "label": "Chambres", "current_model": "property_domain.bedrooms", "compatible": true, "notes": "Bedroom count maps directly"},
+      {"field_id": "FLD-SURFACE", "label": "Surface habitable", "current_model": "property_domain.area_sqm", "compatible": true, "notes": "Direct 1:1 mapping"}
+    ],
+    "partially_compatible": [
+      {"field_id": "FLD-TRANSACTION", "label": "Transaction", "current_model": "project_domain.project_type", "compatible": false, "notes": "Matrix values: RENT/BUY/FINANCE/FIND/SERVICE; model: buy/rent/sell/invest/build/other. Missing FINANCE, FIND, SERVICE"},
+      {"field_id": "FLD-PROPERTY_TYPE", "label": "Type de bien", "current_model": "property_domain.property_type", "compatible": false, "notes": "Matrix has 18 residential + 7 land + 16 commercial canonical types; model is free-text string"},
+      {"field_id": "FLD-DELAI", "label": "Délai", "current_model": "project_domain.timeline_horizon", "compatible": false, "notes": "Similar concept but different enum values between matrix and model"},
+      {"field_id": "FIN-COMMON-002", "label": "montant_recherche", "current_model": "project_domain.budget_max", "compatible": false, "notes": "Financing amount ≠ purchase budget; semantically distinct"}
+    ],
+    "storage_to_metadata_json": {
+      "total_fields": 690,
+      "categories": {
+        "residential_amenities": {"count": 20, "example_fields": ["FLD-DOUCHES", "FLD-CUISINE", "FLD-MEUBLE", "FLD-PARKING", "FLD-CLIMATISATION", "FLD-SECURITE", "FLD-INTERNET", "FLD-BALCON", "FLD-JARDIN", "FLD-PISCINE", "FLD-GROUPE_ELECTROGENE", "FLD-FORAGE", "FLD-GARDIENNAGE", "FLD-EAU", "FLD-ELECTRICITE", "FLD-COUR", "FLD-CLOTURE", "FLD-DEPENDANCES", "FLD-ASCENSEUR"]},
+        "residential_matching": {"count": 6, "example_fields": ["FLD-SALONS", "FLD-SURFACE_TERRAIN", "FLD-ETAGE", "FLD-PROXIMITY_PREFERENCES", "FLD-MOBILITY", "FLD-USAGE"]},
+        "contact_introduction": {"count": 5, "example_fields": ["FLD-NOM", "FLD-TELEPHONE", "FLD-EMAIL", "FLD-CANAL_PREFERE", "FLD-LANGUE"]},
+        "transaction": {"count": 5, "example_fields": ["FLD-CAUTION", "FLD-CHARGES", "FLD-FINANCING", "FLD-DUREE_LOCATION", "FLD-DUREE_SEJOUR"]},
+        "colocation": {"count": 5, "example_fields": ["FLD-NOMBRE_COLOCATAIRES", "FLD-ESPACES_PARTAGES", "FLD-GENRE_PREFERENCE", "FLD-AGE_RANGE", "FLD-REGLEMENT_INTERIEUR"]},
+        "university": {"count": 5, "example_fields": ["FLD-UNIVERSITE", "FLD-TYPE_CHAMBRE_UNIV", "FLD-ANNEE_ETUDES", "FLD-RESTAURATION", "FLD-BOURSE"]},
+        "short_stay": {"count": 7, "example_fields": ["FLD-NOMBRE_PERSONNES", "FLD-PETIT_DEJEUNER", "FLD-MENAGE", "FLD-SERVICES_INCLUS", "FLD-LINGE", "FLD-DATE_ARRIVEE", "FLD-DATE_DEPART"]},
+        "land_specific": {"count": 30, "example_fields": ["quartier", "axe", "village", "surface", "budget_par_m2", "usage_prevu", "titre_requis", "type_titre", "num_titre", "type_document", "accessibilite", "viabilisation_eau", "topographie", "inondable", "litiges_connus", "hypotheque", "bornage", "certificat_urbanisme"]},
+        "commercial_common": {"count": 45, "example_fields": ["COM-COMMON-001", "COM-COMMON-003", "COM-COMMON-009", "COM-COMMON-010", "COM-COMMON-011", "COM-COMMON-013", "COM-COMMON-014", "COM-COMMON-021", "COM-COMMON-024", "COM-COMMON-025", "COM-COMMON-028", "COM-COMMON-031"]},
+        "investment_specific": {"count": 18, "example_fields": ["INV-COMMON-001", "INV-COMMON-002", "INV-COMMON-003", "INV-COMMON-004", "INV-COMMON-005", "INV-COMMON-008", "INV-COMMON-009", "INV-COMMON-011", "INV-COMMON-015", "INV-COMMON-016"]},
+        "financing_core": {"count": 25, "example_fields": ["FIN-COMMON-001", "FIN-COMMON-002", "FIN-COMMON-003", "FIN-COMMON-004", "FIN-COMMON-008", "FIN-COMMON-010", "FIN-COMMON-013", "FIN-COMMON-018", "FIN-COMMON-019"]},
+        "financing_salaried": {"count": 8, "example_fields": ["FIN-SAL-001", "FIN-SAL-002", "FIN-SAL-003", "FIN-SAL-004", "FIN-SAL-005"]},
+        "financing_self_employed": {"count": 12, "example_fields": ["FIN-SE-001", "FIN-SE-002", "FIN-SE-003", "FIN-SE-004", "FIN-SE-005", "FIN-SE-006", "FIN-SE-009"]},
+        "financing_construction": {"count": 20, "example_fields": ["FIN-CONS-001", "FIN-CONS-002", "FIN-CONS-003", "FIN-CONS-005", "FIN-CONS-007", "FIN-CONS-009", "FIN-CONS-013", "FIN-CONS-015"]},
+        "financing_diaspora": {"count": 6, "example_fields": ["FIN-DIA-001", "FIN-DIA-002", "FIN-DIA-003", "FIN-DIA-004", "FIN-DIA-005", "FIN-DIA-006"]},
+        "professional_base": {"count": 15, "example_fields": ["type_prestation", "description_besoin", "budget_fourchette", "date_souhaitee", "type_bien_concerne", "qualification_requise", "certifications"]},
+        "professional_per_type": {"count": 50, "note": "Per-profession specific fields across 27 professional types"},
+        "real_estate_service": {"count": 190, "note": "Service-specific fields across 24 service types"},
+        "derived_fields": {"count": 8, "example_fields": ["FLD-DERIVED-STANDING", "FLD-DERIVED-BUDGET_COHERENCE", "FLD-DERIVED-URGENCE_REELLE", "FLD-DERIVED-PROFIL_ACHETEUR", "FLD-DERIVED-PRIX_M2_ESTIME", "FLD-DERIVED-COMPATIBILITE", "FLD-DERIVED-URBANISATION", "FLD-DERIVED-PROFIL"]}
+      }
+    }
+  },
+
+  "matching_role_compatibility": [
+    {
+      "matrix_role": "hard_constraint",
+      "h1_component": "Constraint Enforcer",
+      "h1_status": "ARCHITECTURE_DEFINED",
+      "code_status": "NOT_IMPLEMENTED",
+      "implementation_gap": "No constraint enforcement in current codebase"
+    },
+    {
+      "matrix_role": "soft_constraint",
+      "h1_component": "Dimension Evaluator",
+      "h1_status": "ARCHITECTURE_DEFINED",
+      "code_status": "NOT_IMPLEMENTED",
+      "implementation_gap": "No weighted scoring in current codebase"
+    },
+    {
+      "matrix_role": "ranking_preference",
+      "h1_component": "Score Calculator",
+      "h1_status": "ARCHITECTURE_DEFINED",
+      "code_status": "NOT_IMPLEMENTED",
+      "implementation_gap": "No ranking bonuses in current codebase"
+    },
+    {
+      "matrix_role": "boost",
+      "h1_component": "Boost Applier",
+      "h1_status": "ARCHITECTURE_DEFINED",
+      "code_status": "NOT_IMPLEMENTED",
+      "implementation_gap": "Boost rules defined in matching_semantics.json, not coded"
+    },
+    {
+      "matrix_role": "penalty",
+      "h1_component": "Penalty Applier",
+      "h1_status": "ARCHITECTURE_DEFINED",
+      "code_status": "NOT_IMPLEMENTED",
+      "implementation_gap": "Penalty rules defined in matching_semantics.json, not coded"
+    },
+    {
+      "matrix_role": "exclusion",
+      "h1_component": "Exclusion Engine",
+      "h1_status": "ARCHITECTURE_DEFINED",
+      "code_status": "NOT_IMPLEMENTED",
+      "implementation_gap": "Exclusion logic not implemented"
+    },
+    {
+      "matrix_role": "informational_only",
+      "h1_component": "Explanation Builder",
+      "h1_status": "ARCHITECTURE_DEFINED",
+      "code_status": "NOT_IMPLEMENTED",
+      "implementation_gap": "No explanation layer in codebase"
+    },
+    {
+      "matrix_role": "verification_only",
+      "h1_component": "Audit / Transaction Engine",
+      "h1_status": "ARCHITECTURE_DEFINED",
+      "code_status": "NOT_IMPLEMENTED",
+      "implementation_gap": "No verification engine in codebase"
+    },
+    {
+      "matrix_role": "transaction_blocker",
+      "h1_component": "Transaction Readiness Gate",
+      "h1_status": "ARCHITECTURE_DEFINED",
+      "code_status": "NOT_IMPLEMENTED",
+      "implementation_gap": "No readiness gate in codebase"
+    }
+  ],
+
+  "incompatible_values": [
+    {
+      "matrix_concept": "transaction: RENT, BUY, FINANCE, FIND, SERVICE",
+      "current_model": "project_type: buy, rent, sell, invest, build, other",
+      "incompatibility": "Model missing FINANCE, FIND, SERVICE types",
+      "action": "Add project_type values or use metadata_json"
+    },
+    {
+      "matrix_concept": "transaction: CESSION_BAIL",
+      "current_model": "project_type: buy (mapped)",
+      "incompatibility": "No cession/concession concept in model",
+      "action": "Add CESSION type or store in metadata_json"
+    },
+    {
+      "matrix_concept": "property_type: 18 residential canonical types",
+      "current_model": "property_type: free-text string",
+      "incompatibility": "Matrix uses strict enum; model accepts arbitrary strings",
+      "action": "Add canonical enum to property_domain.py"
+    },
+    {
+      "matrix_concept": "property_type: 7 land types",
+      "current_model": "property_type: free-text string",
+      "incompatibility": "Land types not distinguished in model",
+      "action": "Add land type enum values"
+    },
+    {
+      "matrix_concept": "property_type: 16 commercial types",
+      "current_model": "property_type: free-text string",
+      "incompatibility": "Commercial types not distinguished in model",
+      "action": "Add commercial type enum values"
+    },
+    {
+      "matrix_concept": "budget_type: MONTHLY_RENT vs TOTAL_PRICE",
+      "current_model": "Not modeled",
+      "incompatibility": "No distinction between rent budget (monthly) and buy budget (total)",
+      "action": "Add budget_type field to project_domain.py"
+    },
+    {
+      "matrix_concept": "matching_role: 9 roles",
+      "current_model": "No matching engine",
+      "incompatibility": "No scoring, ranking, or matching logic exists",
+      "action": "Implement H1 Matching Engine"
+    },
+    {
+      "matrix_concept": "question_priority: 10-97",
+      "current_model": "No question selector",
+      "incompatibility": "No dynamic question ordering exists",
+      "action": "Implement NextQuestionSelector"
+    },
+    {
+      "matrix_concept": "readiness_level: 7 levels",
+      "current_model": "No readiness calculator",
+      "incompatibility": "No field completion tracking exists",
+      "action": "Implement ReadinessCalculator"
+    },
+    {
+      "matrix_concept": "FLD-DOUCHES (douche count)",
+      "current_model": "property_domain.bathrooms",
+      "incompatibility": "Matrix differentiates douches (shower rooms) from salles de bain; model has only bathrooms",
+      "action": "Add douches field or map to metadata_json"
+    }
+  ],
+
+  "engine_consumers": [
+    {
+      "family": "RESIDENTIAL_SEARCH",
+      "primary_engine": "QualificationEngine → MatchingEngine (Residential Variant)",
+      "h1_contract": "QUALIFICATION_EXECUTION_ARCHITECTURE.md, MATCHING_EXECUTION_ARCHITECTURE.md",
+      "secondary_consumers": [
+        "CRM_EXECUTION_ARCHITECTURE.md — lead scoring/routing",
+        "DECISION_ENGINE_ARCHITECTURE.md — NBA selection",
+        "CONVERSATION_EXECUTION_ARCHITECTURE.md — next question selection"
+      ],
+      "code_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "family": "LAND_SEARCH",
+      "primary_engine": "QualificationEngine → MatchingEngine (Land Variant)",
+      "h1_contract": "QUALIFICATION_EXECUTION_ARCHITECTURE.md, MATCHING_EXECUTION_ARCHITECTURE.md",
+      "secondary_consumers": [
+        "CRM_EXECUTION_ARCHITECTURE.md",
+        "DECISION_ENGINE_ARCHITECTURE.md",
+        "CONVERSATION_EXECUTION_ARCHITECTURE.md"
+      ],
+      "code_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "family": "COMMERCIAL_SEARCH",
+      "primary_engine": "QualificationEngine → MatchingEngine (Commercial Variant)",
+      "h1_contract": "COMMERCIAL_EXECUTION_ARCHITECTURE.md, MATCHING_EXECUTION_ARCHITECTURE.md",
+      "secondary_consumers": [
+        "CRM_EXECUTION_ARCHITECTURE.md",
+        "DECISION_ENGINE_ARCHITECTURE.md",
+        "CONVERSATION_EXECUTION_ARCHITECTURE.md"
+      ],
+      "code_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "family": "COMMERCIAL_SEARCH (INVEST)",
+      "primary_engine": "QualificationEngine → MatchingEngine (Investment Variant)",
+      "h1_contract": "COMMERCIAL_EXECUTION_ARCHITECTURE.md, MATCHING_EXECUTION_ARCHITECTURE.md",
+      "secondary_consumers": [
+        "CRM_EXECUTION_ARCHITECTURE.md",
+        "DECISION_ENGINE_ARCHITECTURE.md",
+        "CONVERSATION_EXECUTION_ARCHITECTURE.md"
+      ],
+      "code_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "family": "FINANCING_REQUEST",
+      "primary_engine": "QualificationEngine → FinancingMatchingEngine",
+      "h1_contract": "QUALIFICATION_MATRIX_CONTRACT.md",
+      "secondary_consumers": [
+        "CRM_EXECUTION_ARCHITECTURE.md",
+        "DECISION_ENGINE_ARCHITECTURE.md",
+        "CONVERSATION_EXECUTION_ARCHITECTURE.md"
+      ],
+      "code_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "family": "PROFESSIONAL_SEARCH",
+      "primary_engine": "QualificationEngine → ProfessionalMatchingEngine",
+      "h1_contract": "QUALIFICATION_MATRIX_CONTRACT.md",
+      "secondary_consumers": [
+        "CRM_EXECUTION_ARCHITECTURE.md",
+        "DECISION_ENGINE_ARCHITECTURE.md",
+        "CONVERSATION_EXECUTION_ARCHITECTURE.md"
+      ],
+      "code_status": "NOT_IMPLEMENTED"
+    },
+    {
+      "family": "REAL_ESTATE_SERVICES",
+      "primary_engine": "QualificationEngine → ServiceMatchingEngine",
+      "h1_contract": "QUALIFICATION_MATRIX_CONTRACT.md",
+      "secondary_consumers": [
+        "CRM_EXECUTION_ARCHITECTURE.md",
+        "DECISION_ENGINE_ARCHITECTURE.md",
+        "CONVERSATION_EXECUTION_ARCHITECTURE.md"
+      ],
+      "code_status": "NOT_IMPLEMENTED"
+    }
+  ],
+
+  "extensions_required": {
+    "core_engine_extensions": [
+      {
+        "id": "EXT-CORE-001",
+        "name": "Qualification Engine (8-step pipeline)",
+        "h1_reference": "QUALIFICATION_EXECUTION_ARCHITECTURE.md",
+        "priority": "CRITICAL",
+        "required_by_families": ["ALL"],
+        "description": "Incoming message → normalize → extract entities → detect intent → context enrichment → lead scoring → lead classification → CRM routing"
+      },
+      {
+        "id": "EXT-CORE-002",
+        "name": "Matrix Selector",
+        "h1_reference": "QUALIFICATION_MATRIX_CONTRACT.md §0.1",
+        "priority": "CRITICAL",
+        "required_by_families": ["ALL"],
+        "description": "Resolve correct matrix using triple (request_family, transaction_type, property_type)"
+      },
+      {
+        "id": "EXT-CORE-003",
+        "name": "Field Dictionary Registry",
+        "h1_reference": "QUALIFICATION_MATRIX_CONTRACT.md §0.3",
+        "priority": "CRITICAL",
+        "required_by_families": ["ALL"],
+        "description": "Load and serve field definitions with validation, normalization rules, question templates"
+      },
+      {
+        "id": "EXT-CORE-004",
+        "name": "Matching Engine (9-step pipeline)",
+        "h1_reference": "MATCHING_EXECUTION_ARCHITECTURE.md",
+        "priority": "CRITICAL",
+        "required_by_families": ["ALL"],
+        "description": "Constraint enforcement → dimension evaluation → score calculation → boost/penalty → ranking → explanation → result assembly"
+      },
+      {
+        "id": "EXT-CORE-005",
+        "name": "Matching Role Evaluator",
+        "h1_reference": "MATCHING_EXECUTION_ARCHITECTURE.md §0.2",
+        "priority": "CRITICAL",
+        "required_by_families": ["ALL"],
+        "description": "Evaluate all 9 matching roles: hard_constraint, soft_constraint, ranking_preference, boost, penalty, exclusion, informational_only, verification_only, transaction_blocker"
+      },
+      {
+        "id": "EXT-CORE-006",
+        "name": "Next Question Selector",
+        "h1_reference": "QUALIFICATION_MATRIX_CONTRACT.md §0.5, QUESTION_PRIORITY_POLICY.md",
+        "priority": "HIGH",
+        "required_by_families": ["ALL"],
+        "description": "Dynamic question ordering per matrix with context-aware priority formula"
+      },
+      {
+        "id": "EXT-CORE-007",
+        "name": "Readiness Calculator",
+        "h1_reference": "QUALIFICATION_MATRIX_CONTRACT.md §0.4",
+        "priority": "HIGH",
+        "required_by_families": ["ALL"],
+        "description": "7-level readiness computation: INTENT_IDENTIFIED → MINIMUM_INTAKE_READY → MINIMUM_SEARCH_READY → MINIMUM_MATCHING_READY → INTRODUCTION_READY → VISIT_READY → TRANSACTION_READY"
+      },
+      {
+        "id": "EXT-CORE-008",
+        "name": "Question Priority Engine",
+        "h1_reference": "QUESTION_PRIORITY_POLICY.md §4",
+        "priority": "HIGH",
+        "required_by_families": ["ALL"],
+        "description": "Priority = base_priority - (impact_filtering * 10) + (sensitivity * 5) - (ambiguity * 3)"
+      }
+    ],
+    "family_specific_extensions": [
+      {
+        "id": "EXT-RES-001",
+        "name": "Residential Property Type Taxonomy",
+        "family": "RESIDENTIAL_SEARCH",
+        "priority": "HIGH",
+        "description": "18 canonical residential property types with hierarchical relationships and field inheritance"
+      },
+      {
+        "id": "EXT-RES-002",
+        "name": "Amenity Matching Model",
+        "family": "RESIDENTIAL_SEARCH",
+        "priority": "HIGH",
+        "description": "Douches, cuisine, meuble, parking, climatisation, etc. matching semantics with scoring rules"
+      },
+      {
+        "id": "EXT-LAND-001",
+        "name": "Land Legal Verification Engine",
+        "family": "LAND_SEARCH",
+        "priority": "HIGH",
+        "description": "Title verification, document validation, Cameroon-specific land rules (LAND-R01 through LAND-R10)"
+      },
+      {
+        "id": "EXT-LAND-002",
+        "name": "Land Matching Semantics",
+        "family": "LAND_SEARCH",
+        "priority": "HIGH",
+        "description": "Surface tolerance (±30%), usage hard_constraint, access ranking, viabilisation soft_constraint"
+      },
+      {
+        "id": "EXT-COM-001",
+        "name": "Commercial Activity Taxonomy",
+        "family": "COMMERCIAL_SEARCH",
+        "priority": "HIGH",
+        "description": "Activity type matching, zoning constraints, license requirement validation"
+      },
+      {
+        "id": "EXT-COM-002",
+        "name": "Commercial Matching Semantics",
+        "family": "COMMERCIAL_SEARCH",
+        "priority": "HIGH",
+        "description": "Surface hard_constraint, flux/visibilité ranking, licence matching, fonds_commerce handling"
+      },
+      {
+        "id": "EXT-INV-001",
+        "name": "Investment Profile Engine",
+        "family": "COMMERCIAL_SEARCH (INVEST)",
+        "priority": "HIGH",
+        "description": "Yield calculation, risk assessment, horizon matching, strategy alignment"
+      },
+      {
+        "id": "EXT-INV-002",
+        "name": "Diaspora Investor Module",
+        "family": "COMMERCIAL_SEARCH (INVEST)",
+        "priority": "MEDIUM",
+        "description": "Diaspora detection (QUAL-016), local representative handling, specific document needs"
+      },
+      {
+        "id": "EXT-FIN-001",
+        "name": "Financial Profile Engine",
+        "family": "FINANCING_REQUEST",
+        "priority": "HIGH",
+        "description": "Income verification, repayment capacity calculation, guarantee assessment"
+      },
+      {
+        "id": "EXT-FIN-002",
+        "name": "Lender Matching Engine",
+        "family": "FINANCING_REQUEST",
+        "priority": "HIGH",
+        "description": "Match financing requests to lender products by financial profile"
+      },
+      {
+        "id": "EXT-FIN-003",
+        "name": "Document Collection Pipeline",
+        "family": "FINANCING_REQUEST",
+        "priority": "MEDIUM",
+        "description": "Collect, verify, and store financial documents (pay slips, tax returns, bank statements)"
+      },
+      {
+        "id": "EXT-FIN-004",
+        "name": "Construction Financing Module",
+        "family": "FINANCING_REQUEST",
+        "priority": "MEDIUM",
+        "description": "Construction-specific fields: plans, permits, tranches, calendrier travaux"
+      },
+      {
+        "id": "EXT-FIN-005",
+        "name": "Diaspora Financing Module",
+        "family": "FINANCING_REQUEST",
+        "priority": "MEDIUM",
+        "description": "Diaspora-specific fields: pays_résidence, relay_local, compte_bancaire_cameroun"
+      },
+      {
+        "id": "EXT-PRO-001",
+        "name": "Professional Profile Engine",
+        "family": "PROFESSIONAL_SEARCH",
+        "priority": "HIGH",
+        "description": "Qualification matching, certification verification, experience assessment"
+      },
+      {
+        "id": "EXT-PRO-002",
+        "name": "Professional Matching Semantics",
+        "family": "PROFESSIONAL_SEARCH",
+        "priority": "HIGH",
+        "description": "Service type matching, location radius, urgency handling, budget matching"
+      },
+      {
+        "id": "EXT-PRO-003",
+        "name": "Per-Profession-Specific Matrices",
+        "family": "PROFESSIONAL_SEARCH",
+        "priority": "MEDIUM",
+        "description": "27 distinct qualification profiles with profession-specific required fields"
+      },
+      {
+        "id": "EXT-SVC-001",
+        "name": "Service Profile Engine",
+        "family": "REAL_ESTATE_SERVICES",
+        "priority": "HIGH",
+        "description": "Service offering matching to provider capabilities with qualification verification"
+      },
+      {
+        "id": "EXT-SVC-002",
+        "name": "Service Progression Model",
+        "family": "REAL_ESTATE_SERVICES",
+        "priority": "MEDIUM",
+        "description": "4-stage progression: service_ready → provider_matching_ready → quote_ready → execution_ready"
+      },
+      {
+        "id": "EXT-SVC-003",
+        "name": "Per-Service-Specific Matrices",
+        "family": "REAL_ESTATE_SERVICES",
+        "priority": "MEDIUM",
+        "description": "24 distinct service matrices each with unique field sets and validation rules"
+      }
+    ]
+  },
+
+  "source_confidence_statistics": {
+    "heritage_validated": {"count": 75, "percentage": 70},
+    "expert_proposal": {"count": 21, "percentage": 20},
+    "heritage_normalized": {"count": 11, "percentage": 10},
+    "human_validation_required": {"count": 0, "percentage": 0},
+    "high_confidence": {"count": 80, "percentage": 75},
+    "medium_confidence": {"count": 21, "percentage": 20},
+    "low_confidence": {"count": 6, "percentage": 5}
+  },
+
+  "current_code_model_snapshot": {
+    "project_domain_fields": [
+      "title", "objective", "project_type", "user_id", "organization_id",
+      "budget_min", "budget_max", "currency", "location_city", "location_region",
+      "location_country", "location_latitude", "location_longitude",
+      "timeline_horizon", "status", "priority", "metadata_json"
+    ],
+    "property_domain_fields": [
+      "title", "summary", "city", "country", "region", "address_line",
+      "postal_code", "latitude", "longitude", "search_key",
+      "price_min", "price_max", "currency", "status", "property_type",
+      "availability", "metadata_json", "bedrooms", "bathrooms", "area_sqm"
+    ],
+    "qualification_engine": "NOT_IMPLEMENTED",
+    "matching_engine": "NOT_IMPLEMENTED",
+    "field_dictionary": "NOT_IMPLEMENTED",
+    "question_priority_system": "NOT_IMPLEMENTED",
+    "readiness_calculator": "NOT_IMPLEMENTED",
+    "matrix_selector": "NOT_IMPLEMENTED"
+  }
+}

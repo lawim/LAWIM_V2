@@ -1,0 +1,1058 @@
+{
+  "meta": {
+    "title": "Workflow State Crosswalk — Heritage Gold → LAWIM_V2",
+    "version": "1.0",
+    "date": "2026-07-15",
+    "gold_source": "STATE_MACHINE_CATALOG.md (21 workflows)",
+    "v2_sources": [
+      "code/lawim_v2/property_domain.py",
+      "code/lawim_v2/project_domain.py",
+      "code/lawim_v2/conversation_domain.py",
+      "prisma/schema.prisma"
+    ],
+    "mapping_status_legend": {
+      "EXACT_MATCH": "States map 1:1 with identical semantics",
+      "NORMALIZED_MATCH": "States map 1:1 with naming/scope differences",
+      "ONE_TO_MANY": "One Gold state maps to multiple V2 states",
+      "MANY_TO_ONE": "Multiple Gold states collapse into one V2 state",
+      "PARTIAL_MATCH": "Partial overlap, significant gaps on both sides",
+      "EXTENSION_REQUIRED": "No V2 equivalent; new state machine needed",
+      "OBSOLETE": "Gold state no longer relevant",
+      "CONFLICT": "Incompatible transition/guard semantics",
+      "HUMAN_DECISION_REQUIRED": "Cannot auto-resolve; human architect decision needed",
+      "UNMAPPED": "No analysis performed yet"
+    }
+  },
+  "overview": {
+    "total_gold_workflows": 21,
+    "total_v2_state_machines": 3,
+    "mapping_summary": {
+      "EXACT_MATCH": 0,
+      "NORMALIZED_MATCH": 1,
+      "ONE_TO_MANY": 0,
+      "MANY_TO_ONE": 1,
+      "PARTIAL_MATCH": 5,
+      "EXTENSION_REQUIRED": 14,
+      "OBSOLETE": 0,
+      "CONFLICT": 0,
+      "HUMAN_DECISION_REQUIRED": 0,
+      "UNMAPPED": 0
+    },
+    "workflow_status_summary": [
+      { "id": 1, "workflow": "Property Lifecycle", "gold_states": 13, "v2_states": 5, "status": "PARTIAL_MATCH", "severity": "HIGH" },
+      { "id": 2, "workflow": "Dossier/Case Lifecycle", "gold_states": 14, "v2_states": 5, "status": "PARTIAL_MATCH", "severity": "HIGH" },
+      { "id": 3, "workflow": "Matching Lifecycle", "gold_states": 10, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "CRITICAL" },
+      { "id": 4, "workflow": "Mise en Relation (Contact)", "gold_states": 6, "v2_states": 0, "status": "PARTIAL_MATCH", "severity": "HIGH" },
+      { "id": 5, "workflow": "Visit Lifecycle", "gold_states": 9, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "CRITICAL" },
+      { "id": 6, "workflow": "Negotiation Lifecycle", "gold_states": 8, "v2_states": 6, "status": "PARTIAL_MATCH", "severity": "MEDIUM" },
+      { "id": 7, "workflow": "Transaction Lifecycle", "gold_states": 10, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "CRITICAL" },
+      { "id": 8, "workflow": "Paid Services & Payment", "gold_states": 8, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "CRITICAL" },
+      { "id": 9, "workflow": "Disputes, Claims & Incidents", "gold_states": 8, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "HIGH" },
+      { "id": 10, "workflow": "Closure, Archiving & Retention", "gold_states": 4, "v2_states": 1, "status": "MANY_TO_ONE", "severity": "MEDIUM" },
+      { "id": 11, "workflow": "Mediation Workflow", "gold_states": 8, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "HIGH" },
+      { "id": 12, "workflow": "User Identity Lifecycle", "gold_states": 7, "v2_states": 1, "status": "PARTIAL_MATCH", "severity": "MEDIUM" },
+      { "id": 13, "workflow": "Organization/Agency Lifecycle", "gold_states": 8, "v2_states": 1, "status": "NORMALIZED_MATCH", "severity": "LOW" },
+      { "id": 14, "workflow": "Agent Invitation Workflow", "gold_states": 7, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "HIGH" },
+      { "id": 15, "workflow": "Publication (SIE-Enriched)", "gold_states": 11, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "HIGH" },
+      { "id": 16, "workflow": "Redirection (SIE-Enriched)", "gold_states": 12, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "HIGH" },
+      { "id": 17, "workflow": "Conversion & Attribution", "gold_states": 12, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "HIGH" },
+      { "id": 18, "workflow": "CRM Pipeline", "gold_states": 8, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "CRITICAL" },
+      { "id": 19, "workflow": "Agent Opt-In Workflow", "gold_states": 4, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "MEDIUM" },
+      { "id": 20, "workflow": "Identity Resolution Workflow", "gold_states": 5, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "MEDIUM" },
+      { "id": 21, "workflow": "Main Cross-cutting Workflow", "gold_states": 9, "v2_states": 0, "status": "EXTENSION_REQUIRED", "severity": "CRITICAL" }
+    ]
+  },
+  "workflows": [
+    {
+      "id": 1,
+      "name": "Property Lifecycle",
+      "entity": "property",
+      "overall_status": "PARTIAL_MATCH",
+      "gold": {
+        "initial_state": "Création",
+        "terminal_states": ["Archivé"],
+        "state_count": 13,
+        "states": [
+          "Création", "Qualification", "Validation", "Publié", "Disponible",
+          "Matching", "Visites", "Négociation", "Réservé", "Transaction",
+          "Indisponible", "Réactivation éventuelle", "Archivé"
+        ],
+        "transitions": [
+          { "from": "Création", "to": "Qualification", "event": "field_completion", "guard": "Required fields present" },
+          { "from": "Qualification", "to": "Validation", "event": "enrichment_complete", "guard": "Property Health Score calculated" },
+          { "from": "Validation", "to": "Publié", "event": "validation_success", "guard": "Coherence, conformity, uniqueness, availability checks pass" },
+          { "from": "Publié", "to": "Disponible", "event": "availability_declared", "guard": "Status explicitly set" },
+          { "from": "Disponible", "to": "Matching", "event": "matching_triggered", "guard": "Dossier exists for matching" },
+          { "from": "Matching", "to": "Visites", "event": "demandeur_accepts", "guard": "Double consent obtained" },
+          { "from": "Visites", "to": "Négociation", "event": "positive_visit", "guard": "Visitor satisfaction recorded" },
+          { "from": "Négociation", "to": "Réservé", "event": "agreement_in_principle", "guard": "Price/terms agreed" },
+          { "from": "Réservé", "to": "Transaction", "event": "finalization", "guard": "Sale/rental finalized" },
+          { "from": "Transaction", "to": "Indisponible", "event": "sold_or_rented", "guard": "Transaction completed" },
+          { "from": "Indisponible", "to": "Disponible", "event": "reactivation", "guard": "End of lease, cancellation, withdrawal of compromise" },
+          { "from": "Indisponible", "to": "Archivé", "event": "archival_request", "guard": "Owner request, obsolescence, archival rules reached" }
+        ],
+        "audit_events": [
+          "property.qualified", "property.validation_started", "property.published",
+          "property.available", "property.matching", "property.visit_scheduled",
+          "property.negotiation_open", "property.reserved", "property.in_transaction",
+          "property.unavailable", "property.reactivated", "property.archived"
+        ],
+        "sla_rules": [
+          { "state": "Disponible", "metric": "time_in_state", "threshold": "Per property type", "action": "Diagnostic" },
+          { "state": "Création", "metric": "time_to_qualification", "threshold": "24h", "action": "Reminder" },
+          { "state": "Indisponible", "metric": "auto_archival", "threshold": "90 days inactivity", "action": "Automatic archival" }
+        ],
+        "nba_per_state": {
+          "Création": "Complete required fields",
+          "Qualification": "Enrich property data, request photos",
+          "Publié": "Confirm availability",
+          "Disponible": "Suggest price reduction, recommend new photos, broaden matching, propose premium visibility",
+          "Matching": "None (system computes)",
+          "Visites": "Follow up after visit",
+          "Négociation": "Support negotiation process",
+          "Réservé": "Prepare transaction documents",
+          "Transaction": "Track payment, verify identity",
+          "Indisponible": "Propose reactivation if applicable",
+          "Réactivation éventuelle": "Confirm availability status",
+          "Archivé": "None (terminal)"
+        }
+      },
+      "v2": {
+        "initial_state": "draft",
+        "terminal_states": ["archived"],
+        "state_count": 5,
+        "states": ["draft", "open", "closed", "published", "archived"],
+        "availability_states": ["available", "reserved", "sold", "rented", "unavailable"],
+        "transitions": {
+          "draft": ["draft", "open", "closed", "published", "archived"],
+          "open": ["open", "published", "closed", "archived"],
+          "published": ["published", "closed", "archived"],
+          "closed": ["closed", "archived"],
+          "archived": ["archived"]
+        },
+        "guards": { "can_publish": "title, city, price_min/max required, not deleted" },
+        "events": "Generic Event model (kind, payload) — no property-specific audit events"
+      },
+      "state_mapping": [
+        { "gold_state": "Création", "v2_state": "draft", "status": "PARTIAL_MATCH", "rationale": "Draft covers creation but lacks qualification sub-states" },
+        { "gold_state": "Qualification", "v2_state": "(embedded in draft→open)", "status": "MANY_TO_ONE", "rationale": "No dedicated qualification state" },
+        { "gold_state": "Validation", "v2_state": "(embedded in open→published)", "status": "MANY_TO_ONE", "rationale": "No dedicated validation state" },
+        { "gold_state": "Publié", "v2_state": "published", "status": "NORMALIZED_MATCH", "rationale": "Direct match, naming differs" },
+        { "gold_state": "Disponible", "v2_state": "available", "status": "NORMALIZED_MATCH", "rationale": "Direct match via availability field" },
+        { "gold_state": "Matching", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No matching state machine" },
+        { "gold_state": "Visites", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No visit lifecycle" },
+        { "gold_state": "Négociation", "v2_state": "(via conversation negotiation_stage)", "status": "PARTIAL_MATCH", "rationale": "Delegated to conversation model" },
+        { "gold_state": "Réservé", "v2_state": "reserved", "status": "NORMALIZED_MATCH", "rationale": "Direct match via availability field" },
+        { "gold_state": "Transaction", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No transaction state machine" },
+        { "gold_state": "Indisponible", "v2_state": "unavailable/sold/rented", "status": "NORMALIZED_MATCH", "rationale": "Split across 3 availability values" },
+        { "gold_state": "Réactivation éventuelle", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No reactivation workflow" },
+        { "gold_state": "Archivé", "v2_state": "archived", "status": "EXACT_MATCH", "rationale": "Direct match" }
+      ],
+      "gaps": {
+        "transitions_preserved": ["draft → published (Création→Publié)", "published → closed/archived (Publié→Indisponible/Archivé)", "available → reserved"],
+        "transitions_lost": ["Création→Qualification→Validation→Publié (enrichment pipeline)", "Disponible→Matching→Visites→Négociation", "Réservé→Transaction", "Indisponible→Disponible (reactivation)"],
+        "transitions_new_v2": ["draft ↔ open", "draft ↔ closed", "open → closed"],
+        "guards_missing": ["Property Health Score", "coherence checks", "conformity checks", "uniqueness checks", "availability checks", "double consent"],
+        "sla_missing": true,
+        "nba_missing": true,
+        "events_missing": true
+      }
+    },
+    {
+      "id": 2,
+      "name": "Dossier/Case Lifecycle",
+      "entity": "dossier",
+      "v2_entity": "project",
+      "overall_status": "PARTIAL_MATCH",
+      "gold": {
+        "initial_state": "Création",
+        "terminal_states": ["Archivage"],
+        "state_count": 14,
+        "states": [
+          "Création", "Qualification", "Matching", "Présentation",
+          "Attente décision demandeur", "Contact détenteur", "Attente décision détenteur",
+          "Mise en relation", "Visite", "Négociation", "Accord", "Transaction",
+          "Clôture", "Archivage"
+        ],
+        "transitions": [
+          { "from": "Création", "to": "Qualification", "event": "criteria_initiated", "guard": "Minimum fields present" },
+          { "from": "Qualification", "to": "Matching", "event": "critical_fields_known", "guard": "Type, budget, location known" },
+          { "from": "Matching", "to": "Présentation", "event": "match_complete", "guard": "Score >= 60%" },
+          { "from": "Présentation", "to": "Attente décision demandeur", "event": "properties_presented", "guard": "Properties shown" },
+          { "from": "Attente décision demandeur", "to": "Contact détenteur", "event": "demandeur_interested", "guard": "Demandeur confirms interest" },
+          { "from": "Attente décision demandeur", "to": "Matching", "event": "demandeur_refuses", "guard": "All presented refused" },
+          { "from": "Contact détenteur", "to": "Attente décision détenteur", "event": "holder_contacted", "guard": "Contact initiated" },
+          { "from": "Attente décision détenteur", "to": "Mise en relation", "event": "double_consent", "guard": "Demandeur interested AND holder favorable" },
+          { "from": "Attente décision détenteur", "to": "Matching", "event": "holder_refuses", "guard": "Holder refuses" },
+          { "from": "Mise en relation", "to": "Visite", "event": "visit_scheduled", "guard": "Both parties agree on date" },
+          { "from": "Visite", "to": "Négociation", "event": "positive_visit", "guard": "Visitor satisfied" },
+          { "from": "Négociation", "to": "Accord", "event": "agreement_reached", "guard": "Final agreement" },
+          { "from": "Accord", "to": "Transaction", "event": "transaction_initiated", "guard": "Parties confirm intention" },
+          { "from": "Transaction", "to": "Clôture", "event": "transaction_complete", "guard": "Transaction finalized" },
+          { "from": "Clôture", "to": "Archivage", "event": "archival_triggered", "guard": "Cleanup verified" }
+        ],
+        "audit_events": [
+          "dossier.qualifying", "dossier.matching", "dossier.presented",
+          "dossier.awaiting_decision", "dossier.contacting_holder", "dossier.awaiting_holder",
+          "dossier.contact_established", "dossier.visit_scheduled", "dossier.negotiating",
+          "dossier.agreement", "dossier.in_transaction", "dossier.closed", "dossier.archived"
+        ],
+        "sla_rules": [
+          { "state": "Matching", "metric": "Processing time", "threshold": "Immediate", "action": "None (system)" },
+          { "state": "Attente décision demandeur", "metric": "Response time", "threshold": "Based on urgency level", "action": "Follow-up reminder" },
+          { "state": "Attente décision détenteur", "metric": "Response time", "threshold": "Based on property type", "action": "Holder silence workflow" },
+          { "state": "Visite", "metric": "Realization", "threshold": "Until visit occurs", "action": "Automatic follow-up" }
+        ],
+        "nba_per_state": {
+          "Création": "Ask qualifying questions",
+          "Qualification": "Complete critical fields",
+          "Matching": "Launch matching",
+          "Présentation": "Present properties",
+          "Attente décision demandeur": "Wait for response / Follow up",
+          "Contact détenteur": "Contact holder",
+          "Attente décision détenteur": "Wait for response / Follow up",
+          "Mise en relation": "Organize a visit",
+          "Visite": "Register result / Propose negotiation",
+          "Négociation": "Open negotiation / Follow up",
+          "Accord": "Launch transaction",
+          "Transaction": "Close dossier",
+          "Clôture": "Close",
+          "Archivage": "None (terminal)"
+        }
+      },
+      "v2": {
+        "initial_state": "draft",
+        "terminal_states": ["archived"],
+        "state_count": 5,
+        "states": ["draft", "active", "paused", "completed", "archived"],
+        "step_states": ["pending", "in_progress", "completed", "skipped", "blocked"],
+        "transitions": {
+          "draft": ["draft", "active", "archived"],
+          "active": ["active", "paused", "completed", "archived"],
+          "paused": ["paused", "active", "archived"],
+          "completed": ["completed", "archived"],
+          "archived": ["archived"]
+        },
+        "step_transitions": {
+          "pending": ["pending", "in_progress", "completed", "skipped", "blocked"],
+          "in_progress": ["in_progress", "completed", "blocked", "skipped"],
+          "blocked": ["blocked", "in_progress", "skipped"],
+          "completed": ["completed"],
+          "skipped": ["skipped"]
+        },
+        "journey_templates": ["buy", "rent", "sell", "invest", "build", "other"],
+        "guards": "None (step transitions are free-form)"
+      },
+      "state_mapping": [
+        { "gold_state": "Création", "v2_state": "draft", "status": "PARTIAL_MATCH", "rationale": "Project creation maps to dossier creation" },
+        { "gold_state": "Qualification", "v2_state": "active + step:qualification", "status": "MANY_TO_ONE", "rationale": "Qualification is a step in the journey" },
+        { "gold_state": "Matching", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No matching lifecycle" },
+        { "gold_state": "Présentation", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No presentation concept" },
+        { "gold_state": "Attente décision demandeur", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No wait states" },
+        { "gold_state": "Contact détenteur", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No contact workflow" },
+        { "gold_state": "Attente décision détenteur", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No wait states" },
+        { "gold_state": "Mise en relation", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No mise en relation" },
+        { "gold_state": "Visite", "v2_state": "active + step:visit", "status": "PARTIAL_MATCH", "rationale": "Visit step exists but no visit state machine" },
+        { "gold_state": "Négociation", "v2_state": "active + step:negotiation", "status": "PARTIAL_MATCH", "rationale": "Negotiation step exists but no negotiation state machine" },
+        { "gold_state": "Accord", "v2_state": "active + step:closing", "status": "MANY_TO_ONE", "rationale": "Agreement maps to closing step" },
+        { "gold_state": "Transaction", "v2_state": "active + step:closing", "status": "MANY_TO_ONE", "rationale": "Transaction maps to closing step" },
+        { "gold_state": "Clôture", "v2_state": "completed", "status": "NORMALIZED_MATCH", "rationale": "Direct match" },
+        { "gold_state": "Archivage", "v2_state": "archived", "status": "EXACT_MATCH", "rationale": "Direct match" }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Matching Lifecycle",
+      "entity": "match",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Load Dossier",
+        "terminal_states": ["Learn & Recalculate"],
+        "state_count": 10,
+        "states": [
+          "Load Dossier", "Check Critical Fields", "Select Compatible Properties",
+          "Eliminate Incompatible", "Calculate Scores", "Rank Properties",
+          "Propose Best", "Wait for Decision", "Learn", "Recalculate if Necessary"
+        ],
+        "transitions": [
+          { "from": "Load Dossier", "to": "Check Critical Fields", "event": "dossier_loaded", "guard": "Dossier exists" },
+          { "from": "Check Critical Fields", "to": "Select Compatible Properties", "event": "critical_fields_ok", "guard": "Type, budget, location, operation present" },
+          { "from": "Select Compatible Properties", "to": "Eliminate Incompatible", "event": "pool_selected", "guard": "Pool non-empty" },
+          { "from": "Eliminate Incompatible", "to": "Calculate Scores", "event": "incompatibles_removed", "guard": "Remaining properties > 0" },
+          { "from": "Calculate Scores", "to": "Rank Properties", "event": "scores_calculated", "guard": "Scores computed" },
+          { "from": "Rank Properties", "to": "Propose Best", "event": "ranking_done", "guard": "Ranked list non-empty" },
+          { "from": "Propose Best", "to": "Wait for Decision", "event": "proposals_sent", "guard": "Properties presented" },
+          { "from": "Wait for Decision", "to": "Learn", "event": "decision_received", "guard": "Accept or refuse" },
+          { "from": "Learn", "to": "Recalculate if Necessary", "event": "learning_done", "guard": "Acceptance rate < threshold" }
+        ],
+        "score_dimensions": ["Real Estate (25/20/15/15/15/10)", "Availability", "Document", "Holder Reliability", "Transaction Success"],
+        "trigger_events": [
+          "Dossier creation", "Correction", "Budget modification", "City change",
+          "Property type change", "New property publication", "Property becomes available",
+          "Refusal", "Visit", "Failed negotiation"
+        ],
+        "sla": "Immediate — matching is computed synchronously upon trigger",
+        "nba": "Matching itself IS the NBA for a dossier. Once matching completes, NBA transitions to PRESENT_PROPERTY."
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 10 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No matching engine or state machine exists" }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Mise en Relation / Contact Lifecycle",
+      "entity": "contact",
+      "overall_status": "PARTIAL_MATCH",
+      "gold": {
+        "initial_state": "Matching Complete",
+        "terminal_states": ["Mise en relation established", "Refused", "Abandoned"],
+        "state_count": 6,
+        "states": [
+          "Matching Complete", "Demandeur Interested", "Holder Contacted",
+          "Holder Decision", "Double Consent Obtained", "Mise en Relation Established"
+        ],
+        "transitions": [
+          { "from": "Matching Complete", "to": "Demandeur Interested", "event": "demandeur_confirms_interest", "guard": "Dossier active, property available" },
+          { "from": "Demandeur Interested", "to": "Holder Contacted", "event": "interest_recorded", "guard": "None" },
+          { "from": "Holder Contacted", "to": "Holder Decision", "event": "holder_responds", "guard": "Response received within SLA" },
+          { "from": "Holder Decision", "to": "Double Consent Obtained", "event": "holder_accepts", "guard": "Holder favorable" },
+          { "from": "Double Consent Obtained", "to": "Mise en Relation Established", "event": "consent_confirmed", "guard": "Both consents valid" },
+          { "from": "Holder Decision", "to": "Matching", "event": "holder_refuses", "guard": "Holder refuses" },
+          { "from": "Demandeur Interested", "to": "Matching", "event": "demandeur_abandons", "guard": "Demandeur changes mind" }
+        ],
+        "guard": "Double consent is MANDATORY — demandeur interested AND holder favorable. No exceptions.",
+        "holder_silence_escalation": ["First reminder", "Second reminder", "Last reminder", "Property marked to confirm", "Rematching"],
+        "sla": "Holder response time based on property type",
+        "interlocutor_shift": "After Mise en Relation, interlocutor changes from LAWIM AI to Propriétaire/Agence/Introduceur"
+      },
+      "v2": {
+        "states": [],
+        "partial_via": "conversation model (status: open/closed/archived, negotiation_stage: inquiry/offer/counter/accepted/declined/closed)",
+        "status": "No dedicated contact workflow"
+      },
+      "state_mapping": [
+        { "gold_state": "Matching Complete", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No matching lifecycle" },
+        { "gold_state": "Demandeur Interested", "v2_state": "conversation:open", "status": "PARTIAL_MATCH", "rationale": "Conversation creation implies interest" },
+        { "gold_state": "Holder Contacted", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No holder contact workflow" },
+        { "gold_state": "Holder Decision", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No holder decision tracking" },
+        { "gold_state": "Double Consent Obtained", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No consent mechanism" },
+        { "gold_state": "Mise en Relation Established", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No contact establishment" }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Visit Lifecycle",
+      "entity": "visit",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Demandée",
+        "terminal_states": ["Réalisée", "Refusée", "Annulée"],
+        "state_count": 9,
+        "states": [
+          "Demandée", "En attente de confirmation", "Confirmée", "Reportée",
+          "Réalisée", "Refusée", "Annulée", "Absence du demandeur", "Absence du détenteur"
+        ],
+        "transitions": [
+          { "from": "Demandée", "to": "En attente de confirmation", "event": "visit_requested", "guard": "Property available, dossier active" },
+          { "from": "En attente de confirmation", "to": "Confirmée", "event": "holder_confirms", "guard": "Holder accepts" },
+          { "from": "En attente de confirmation", "to": "Refusée", "event": "holder_refuses", "guard": "Holder declines" },
+          { "from": "Confirmée", "to": "Reportée", "event": "postponement_requested", "guard": "Valid reason" },
+          { "from": "Confirmée", "to": "Réalisée", "event": "visit_realized", "guard": "Visit occurred" },
+          { "from": "Confirmée", "to": "Annulée", "event": "cancellation", "guard": "Party cancels" },
+          { "from": "Confirmée", "to": "Absence du demandeur", "event": "demandeur_no_show", "guard": "Demandeur absent" },
+          { "from": "Confirmée", "to": "Absence du détenteur", "event": "holder_no_show", "guard": "Holder absent" }
+        ],
+        "sla": { "reminder_before_visit_24h": true, "reminder_before_visit_2h": true, "configurable_reminders": true },
+        "nba_post_visit": {
+          "Très satisfait / Satisfait": "Open negotiation",
+          "Mitigé": "Schedule second visit",
+          "Insatisfait": "Propose another property / Launch rematching"
+        },
+        "indicators": ["Time before first visit", "Confirmation rate", "Cancellation rate", "Absence rate", "Satisfaction rate", "Transformation rate to negotiation"]
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED", "partial_via": "project step:visit (label only, no state machine)" },
+      "state_mapping": [
+        { "gold_state": "All 9 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No visit entity or state machine" }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Negotiation Lifecycle",
+      "entity": "negotiation",
+      "overall_status": "PARTIAL_MATCH",
+      "gold": {
+        "initial_state": "Ouverte",
+        "terminal_states": ["Transaction", "Échec"],
+        "state_count": 8,
+        "states": ["Ouverte", "En discussion", "Offre", "Contre-offre", "Accord de principe", "Accord final", "Transaction", "Échec"],
+        "transitions": [
+          { "from": "Ouverte", "to": "En discussion", "event": "discussion_started", "guard": "Both parties present" },
+          { "from": "En discussion", "to": "Offre", "event": "offer_made", "guard": "Valid offer" },
+          { "from": "Offre", "to": "Contre-offre", "event": "counter_offer_made", "guard": "Valid counter-offer" },
+          { "from": "Contre-offre", "to": "Offre", "event": "new_offer", "guard": "Iteration continues" },
+          { "from": "Contre-offre", "to": "Accord de principe", "event": "agreement_in_principle", "guard": "Key terms agreed" },
+          { "from": "Accord de principe", "to": "Accord final", "event": "final_agreement", "guard": "All terms finalized" },
+          { "from": "Accord final", "to": "Transaction", "event": "transaction_initiated", "guard": "Both parties confirm" },
+          { "from": "Any", "to": "Échec", "event": "negotiation_failed", "guard": "Max delay, party withdrawal, property unavailable" }
+        ],
+        "negotiable_elements": {
+          "sale": ["Price", "Payment terms", "Deadlines", "Included furniture", "Equipment", "Release date"],
+          "rental": ["Rent", "Deposit", "Advance", "Lease duration", "Entry date", "Possible works"],
+          "land": ["Price", "Boundary marking", "Documents", "Deadlines"],
+          "commercial": ["Rent", "Key money", "Equipment", "Duration"]
+        },
+        "silence_escalation": ["First reminder", "Second reminder", "Last reminder", "Automatic closure", "Possible rematching"],
+        "sla": "Follow-up intervals J1, J7, J30, J90",
+        "indicators": ["Average duration", "Number of offers", "Number of counter-offers", "Agreement rate", "Failure rate", "Average gap between initial and final price"]
+      },
+      "v2": {
+        "states": ["inquiry", "offer", "counter", "accepted", "declined", "closed"],
+        "transitions": {
+          "inquiry": ["inquiry", "offer", "declined", "closed"],
+          "offer": ["offer", "counter", "accepted", "declined", "closed"],
+          "counter": ["counter", "offer", "accepted", "declined", "closed"],
+          "accepted": ["accepted", "closed"],
+          "declined": ["declined", "closed"],
+          "closed": ["closed"]
+        }
+      },
+      "state_mapping": [
+        { "gold_state": "Ouverte", "v2_state": "inquiry", "status": "NORMALIZED_MATCH", "rationale": "Both represent negotiation initiation" },
+        { "gold_state": "En discussion", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No discussion state" },
+        { "gold_state": "Offre", "v2_state": "offer", "status": "EXACT_MATCH", "rationale": "Direct match" },
+        { "gold_state": "Contre-offre", "v2_state": "counter", "status": "EXACT_MATCH", "rationale": "Direct match" },
+        { "gold_state": "Accord de principe", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No agreement-in-principle stage" },
+        { "gold_state": "Accord final", "v2_state": "accepted", "status": "PARTIAL_MATCH", "rationale": "Gold has 2-tier agreement" },
+        { "gold_state": "Transaction", "v2_state": "closed", "status": "MANY_TO_ONE", "rationale": "Gold separates transaction from negotiation end" },
+        { "gold_state": "Échec", "v2_state": "declined/closed", "status": "PARTIAL_MATCH", "rationale": "Gold has explicit failure terminal" }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Transaction Lifecycle",
+      "entity": "transaction",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Accord",
+        "terminal_states": ["Transaction terminée", "Échec"],
+        "state_count": 10,
+        "states": ["Accord", "Préparation", "Documents", "Paiement", "Signature", "Remise des clés", "Confirmation", "Transaction terminée", "Archivage", "Échec"],
+        "transitions": [
+          { "from": "Accord", "to": "Préparation", "event": "transaction_kickoff", "guard": "Agreement exists, property available, parties confirm" },
+          { "from": "Préparation", "to": "Documents", "event": "documents_ready", "guard": "Documents collected" },
+          { "from": "Documents", "to": "Paiement", "event": "documents_verified", "guard": "All docs valid" },
+          { "from": "Paiement", "to": "Signature", "event": "payment_confirmed", "guard": "Payment successful" },
+          { "from": "Signature", "to": "Remise des clés", "event": "signature_complete", "guard": "All signatures obtained" },
+          { "from": "Remise des clés", "to": "Confirmation", "event": "keys_handed", "guard": "Keys transferred" },
+          { "from": "Confirmation", "to": "Transaction terminée", "event": "satisfaction_confirmed", "guard": "Both parties satisfied" },
+          { "from": "Transaction terminée", "to": "Archivage", "event": "archival_triggered", "guard": "Post-transaction follow-up complete" },
+          { "from": "Any", "to": "Échec", "event": "transaction_failed", "guard": "Payment abandoned, docs impossible, party withdrawal" }
+        ],
+        "transaction_types": ["Location (Rental)", "Vente (Sale)", "Achat (Purchase)", "Bail professionnel", "Bail commercial", "Location saisonnière"],
+        "document_requirements": {
+          "sale": ["Land title", "ID", "Power of attorney"],
+          "rental": ["Contract", "Deposit", "Inventory of fixtures"]
+        },
+        "post_transaction": ["Satisfaction confirmation", "Remaining commitments follow-up", "Statistics update", "Reliability score improvement"]
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 10 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No transaction entity exists" }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Paid Services & Payment Lifecycle",
+      "entity": "paid_service",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Création",
+        "terminal_states": ["Archivage", "Expiration"],
+        "service_states": ["Création", "Proposition", "Acceptation", "Paiement", "Activation", "Utilisation", "Expiration", "Archivage"],
+        "payment_sub_states": [
+          "PAYMENT_CREATED", "PAYMENT_INITIATED", "PAYMENT_PENDING", "PAYMENT_CONFIRMED",
+          "PAYMENT_FAILED", "PAYMENT_CANCELLED", "PAYMENT_EXPIRED", "PAYMENT_REFUNDED",
+          "PAYMENT_RECONCILED", "PAYMENT_DISPUTED"
+        ],
+        "service_transitions": [
+          { "from": "Création", "to": "Proposition", "event": "service_offered", "guard": "User eligible" },
+          { "from": "Proposition", "to": "Acceptation", "event": "user_accepts", "guard": "Terms accepted" },
+          { "from": "Acceptation", "to": "Paiement", "event": "payment_initiated", "guard": "Payment session created" },
+          { "from": "Paiement", "to": "Activation", "event": "payment.success", "guard": "Payment confirmed" },
+          { "from": "Paiement", "to": "Paiement", "event": "payment.failed", "guard": "Retry allowed" },
+          { "from": "Activation", "to": "Utilisation", "event": "service_started", "guard": "Service active" },
+          { "from": "Utilisation", "to": "Expiration", "event": "service_period_end", "guard": "Duration elapsed" },
+          { "from": "Expiration", "to": "Archivage", "event": "archival_triggered", "guard": "Cleanup done" }
+        ],
+        "monetized_services": ["Boost", "Premium", "Agent Pro", "Agent Business", "Leads", "Diaspora packages", "and more"],
+        "revenue_rule": "LAWIM never deducts a percentage from transactions — revenue comes exclusively from platform services"
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 18 states (8 service + 10 payment)", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No payment or service system" }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Disputes, Claims & Incidents Lifecycle",
+      "entity": "incident",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Signalement",
+        "terminal_states": ["Archivage"],
+        "state_count": 8,
+        "states": ["Signalement", "Qualification", "Analyse", "Collecte des informations", "Décision", "Résolution", "Clôture", "Archivage"],
+        "priority_levels": {
+          "Critique": "Immediate handling",
+          "Élevée": "< 24 hours",
+          "Normale": "< 72 hours",
+          "Faible": "Per support availability"
+        },
+        "incident_types": [
+          "Property unavailable", "Inaccurate info", "Visit cancellation", "Participant absence",
+          "Post-visit disagreement", "Non-respect of commitment", "Contested payment",
+          "Inappropriate behavior", "Identity theft", "Presumed fraud", "Fake documents", "Platform abuse"
+        ],
+        "fraud_actions": ["Temporarily suspend account", "Suspend property", "Suspend listing", "Suspend contact (all motivated, historized, reversible)"],
+        "user_actions": ["Send warning", "Request supporting docs", "Limit functionality", "Temporarily suspend", "Forward to administrator"],
+        "sla_by_priority": {
+          "Critique": "Immediate",
+          "Élevée": "< 24h",
+          "Normale": "< 72h",
+          "Faible": "Per support availability"
+        }
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 8 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No incident management system" }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Closure, Archiving & Retention Lifecycle",
+      "entity": "archived_object",
+      "overall_status": "MANY_TO_ONE",
+      "gold": {
+        "initial_state": "Active",
+        "terminal_states": ["Long-term Archiving"],
+        "state_count": 4,
+        "states": ["Active", "Closed", "Archived (Operational)", "Long-term Archiving"],
+        "transitions": [
+          { "from": "Active", "to": "Closed", "event": "closure_requested", "guard": "Objective achieved, abandoned, admin decision; no pending items" },
+          { "from": "Closed", "to": "Archived (Operational)", "event": "archival_requested", "guard": "Closure verified" },
+          { "from": "Archived (Operational)", "to": "Long-term Archiving", "event": "time_elapsed_3_years", "guard": "3 years since archival" }
+        ],
+        "principle": "No business data is ever deleted in LAWIM",
+        "objects_concerned": ["Dossiers", "Properties", "Conversations", "Visits", "Negotiations", "Transactions", "Service payments", "Incidents", "Notifications", "Workflows"],
+        "reopening_conditions": ["Cancelled sale", "End of lease", "New request", "Administrative decision"]
+      },
+      "v2": {
+        "states": ["archived (in each model)"],
+        "status": "Single archive level, no retention policies, no auto-archival"
+      },
+      "state_mapping": [
+        { "gold_state": "Active", "v2_state": "all non-archived", "status": "NORMALIZED_MATCH", "rationale": "Implicit — any non-archived state" },
+        { "gold_state": "Closed", "v2_state": "closed/completed", "status": "PARTIAL_MATCH", "rationale": "V2 has entity-specific closed" },
+        { "gold_state": "Archived (Operational)", "v2_state": "archived", "status": "PARTIAL_MATCH", "rationale": "Single archive level only" },
+        { "gold_state": "Long-term Archiving", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No multi-tier archiving" }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Mediation Workflow",
+      "entity": "mediation",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Incident",
+        "terminal_states": ["Clôture"],
+        "state_count": 8,
+        "states": ["Incident", "Proposition de médiation", "Acceptation des parties", "Nomination du Médiateur LAWIM", "Échanges", "Proposition de solution", "Acceptation", "Clôture"],
+        "mediator_role": "Listen, facilitate, explain procedures, seek amicable solution, document exchanges. NEVER: impose decision, represent a party, modify dossier history, render legal judgment.",
+        "possible_endings": ["Amicable agreement", "Disagreement", "Abandonment", "Referral to competent authority"]
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 8 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No mediation system" }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "User Identity Lifecycle",
+      "entity": "user",
+      "overall_status": "PARTIAL_MATCH",
+      "gold": {
+        "initial_state": "NEW_USER",
+        "terminal_states": ["INACTIVE"],
+        "state_count": 7,
+        "states": ["NEW_USER", "SEARCHING_PROPERTY", "PROPERTY_OWNER", "AGENT", "PREMIUM_AGENT", "LEAD_CREATED", "INACTIVE"],
+        "transitions": [
+          { "from": "NEW_USER", "to": "SEARCHING_PROPERTY", "event": "intent_to_search", "guard": "Minimum fields complete" },
+          { "from": "NEW_USER", "to": "PROPERTY_OWNER", "event": "property_registered", "guard": "Valid property" },
+          { "from": "NEW_USER", "to": "AGENT", "event": "agent_registration", "guard": "Professional docs validated" },
+          { "from": "NEW_USER", "to": "INACTIVE", "event": "inactivity_timeout", "guard": "No activity for threshold" },
+          { "from": "SEARCHING_PROPERTY", "to": "LEAD_CREATED", "event": "lead_qualified", "guard": "Lead score >= threshold" },
+          { "from": "SEARCHING_PROPERTY", "to": "INACTIVE", "event": "inactivity_timeout", "guard": null },
+          { "from": "PROPERTY_OWNER", "to": "LEAD_CREATED", "event": "lead_qualified", "guard": null },
+          { "from": "PROPERTY_OWNER", "to": "INACTIVE", "event": "inactivity_timeout", "guard": null },
+          { "from": "AGENT", "to": "PREMIUM_AGENT", "event": "subscription_activated", "guard": "Payment successful" },
+          { "from": "AGENT", "to": "INACTIVE", "event": "inactivity_timeout", "guard": null },
+          { "from": "PREMIUM_AGENT", "to": "AGENT", "event": "subscription_expired", "guard": "Subscription period ends" },
+          { "from": "INACTIVE", "to": "NEW_USER", "event": "reactivation", "guard": "User returns" }
+        ],
+        "registration_minimum_fields": ["Full name", "Unique email", "Unique username", "WhatsApp number (mandatory)", "Password + confirmation", "Preferred language", "Terms acceptance"],
+        "identity_verification_documents": ["National ID Card (CNI)", "Passport", "Residence permit"],
+        "trust_score_levels": [
+          "New account", "Phone verified", "Identity verified",
+          "Professional docs validated", "Verified professional/partner", "Reference account"
+        ],
+        "automatic_evolution_paths": [
+          "Demandeur → Publication of property → Propriétaire",
+          "Demandeur → Property management declaration → Détenteur",
+          "Détenteur → Professional validation → Agent immobilier",
+          "Agent → Creation of validated agency → Responsable d'agence"
+        ]
+      },
+      "v2": {
+        "states": [],
+        "partial_via": "Prisma User model with role string (free text), no lifecycle state machine"
+      },
+      "state_mapping": [
+        { "gold_state": "NEW_USER", "v2_state": "user.role='user'", "status": "PARTIAL_MATCH", "rationale": "Basic user created, no lifecycle tracking" },
+        { "gold_state": "SEARCHING_PROPERTY", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No user intent tracking" },
+        { "gold_state": "PROPERTY_OWNER", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No owner role distinction" },
+        { "gold_state": "AGENT", "v2_state": "user.role='agent'", "status": "NORMALIZED_MATCH", "rationale": "Matches naming" },
+        { "gold_state": "PREMIUM_AGENT", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No subscription/premium system" },
+        { "gold_state": "LEAD_CREATED", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No CRM lead system" },
+        { "gold_state": "INACTIVE", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No user inactivity lifecycle" }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Organization/Agency Lifecycle",
+      "entity": "organization",
+      "overall_status": "NORMALIZED_MATCH",
+      "gold": {
+        "initial_state": "Demande",
+        "terminal_states": ["Organisation active", "Dissoute"],
+        "state_count": 8,
+        "states": ["Demande", "Saisie des informations", "Téléversement des justificatifs", "Contrôle automatique", "Contrôle LAWIM", "Validation", "Organisation active", "Dissoute"],
+        "transitions": [
+          { "from": "Demande", "to": "Saisie des informations", "event": "request_submitted", "guard": "Valid request" },
+          { "from": "Saisie des informations", "to": "Téléversement des justificatifs", "event": "info_complete", "guard": "All fields filled" },
+          { "from": "Téléversement des justificatifs", "to": "Contrôle automatique", "event": "docs_uploaded", "guard": "Required docs present" },
+          { "from": "Contrôle automatique", "to": "Contrôle LAWIM", "event": "auto_check_passed", "guard": "Auto-checks pass" },
+          { "from": "Contrôle automatique", "to": "Saisie des informations", "event": "auto_check_failed", "guard": "Issues found" },
+          { "from": "Contrôle LAWIM", "to": "Validation", "event": "manual_approval", "guard": "LAWIM approves" },
+          { "from": "Contrôle LAWIM", "to": "Saisie des informations", "event": "manual_rejection", "guard": "Issues found" },
+          { "from": "Validation", "to": "Organisation active", "event": "activation", "guard": "Minimum 3 agents" }
+        ],
+        "minimum_requirements": ["CNI of responsible person", "Verified phone number", "Email", "Physical address"],
+        "optional_documents": ["RCCM", "Tax ID", "Business license", "Logo", "Headquarters proof"],
+        "minimum_effective": "3 active agents for fully operational status",
+        "dissolution_checks": ["Open dossiers", "Managed properties", "Services in progress", "Payments", "Legal obligations"]
+      },
+      "v2": {
+        "states": [],
+        "partial_via": "Prisma Organization model (id, name, slug, kind, city), kind is free string, no lifecycle states"
+      },
+      "state_mapping": [
+        { "gold_state": "All 8 states", "v2_state": "Organization model exists (no lifecycle)", "status": "NORMALIZED_MATCH", "rationale": "Organization model exists but no validation/activation workflow" }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Agent Invitation Workflow",
+      "entity": "agent_invitation",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Invitation",
+        "terminal_states": ["Agent actif"],
+        "state_count": 7,
+        "states": ["Invitation", "Secure Link", "Account Creation", "Phone Verified", "CNI Uploaded", "LAWIM Validation", "Agent actif"],
+        "member_departure_rules": "Remove org permissions, keep personal history and audit traces, transfer open dossiers per defined rules, user account remains active"
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 7 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No agent invitation/onboarding workflow" }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Publication (SIE-Enriched)",
+      "entity": "publication",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Création de la publication",
+        "terminal_states": ["Disponibilité des dashboards"],
+        "state_count": 11,
+        "states": [
+          "Création de la publication", "Validation", "Génération Reference Code",
+          "Association Campagne", "Association Acteur", "Association Biens",
+          "Association Services", "Publication sur le canal", "Journalisation",
+          "Mise à jour des statistiques", "Disponibilité des dashboards"
+        ],
+        "sie_integration": "Reference code generation is a SIE (Système d'Information Externalisé) call",
+        "transition_style": "Strictly sequential"
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 11 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No SIE publication pipeline" }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Redirection (SIE-Enriched)",
+      "entity": "redirection",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Utilisateur",
+        "terminal_states": ["Événement envoyé au Continuous Learning"],
+        "state_count": 12,
+        "states": [
+          "Utilisateur", "Clic sur le lien", "Validation du Reference Code",
+          "Contrôle d'intégrité", "Détection bot", "Détection doublon",
+          "Journalisation", "Création éventuelle d'une session", "Redirection",
+          "Mise à jour des statistiques", "Événement envoyé au Reporting",
+          "Événement envoyé au Continuous Learning"
+        ],
+        "transition_style": "Strictly sequential"
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 12 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No redirection/click tracking pipeline" }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Conversion & Attribution (SIE-Enriched)",
+      "entity": "conversion",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Publication",
+        "terminal_states": ["Historisation"],
+        "state_count": 12,
+        "states": [
+          "Publication", "Clic", "Redirection", "Visite",
+          "Création éventuelle du compte", "Conversation", "Matching",
+          "Visite terrain", "Service LAWIM", "Paiement Campay confirmé",
+          "Conversion", "Historisation"
+        ],
+        "attribution_model": "Last-touch (final conversion step before Historisation is the attributed source)",
+        "transition_style": "Strictly sequential"
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 12 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No conversion attribution pipeline" }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "CRM Pipeline (8 Stages)",
+      "entity": "lead",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "incoming_message",
+        "terminal_state": "crm_routing",
+        "stage_count": 8,
+        "stages": [
+          "incoming_message", "normalize_text", "extract_entities",
+          "detect_intent", "context_enrichment", "lead_scoring",
+          "lead_classification", "crm_routing"
+        ],
+        "lead_types": {
+          "tenant": 40,
+          "buyer": 60,
+          "seller": 50,
+          "investor": 80,
+          "diaspora_investor": 95
+        },
+        "score_boosters": {
+          "budget_detected": 15,
+          "city_detected": 10,
+          "neighborhood_detected": 10,
+          "urgency": 20,
+          "diaspora": 25,
+          "cash_purchase": 15
+        },
+        "score_penalties": {
+          "missing_budget": -10,
+          "unclear_location": -10,
+          "spam_like": -50,
+          "too_short": -20,
+          "external_links": -30
+        },
+        "classification": {
+          "HOT": { "min_score": 80, "sla": "< 1h", "action": "call_immediately (Phone + WhatsApp)" },
+          "WARM": { "min_score": 60, "sla": "< 24h", "action": "send_listings (WhatsApp)" },
+          "COLD": { "min_score": 40, "sla": "< 48h", "action": "request_budget (WhatsApp)" },
+          "LOW": { "min_score": 0, "sla": "J+7 / J+30 / J+90", "action": "follow_up (WhatsApp)" },
+          "SPAM": { "min_score": -999, "sla": "Immediate", "action": "ignore + block if persistent" }
+        },
+        "priority_slas": {
+          "P0": { "types": ["diaspora_investor", "buyer > 50M FCFA"], "threshold": "< 30 min" },
+          "P1": { "types": ["seller", "land_buyer"], "threshold": "< 2h" },
+          "P2": { "types": ["standard buyer", "standard investor"], "threshold": "< 24h" },
+          "P3": { "types": ["tenant", "non-qualified prospect"], "threshold": "J+1 to J+7" }
+        }
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 8 stages", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No CRM pipeline" }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Agent Opt-In Workflow",
+      "entity": "agent_opt_in",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Detection",
+        "terminal_state": "Sharing Active",
+        "state_count": 4,
+        "states": ["Detection", "Opt-In Request", "Opt-In Response Logged", "Sharing Active"],
+        "transitions": [
+          { "from": "Detection", "to": "Opt-In Request", "event": "agent_pattern_detected", "guard": "Confidence > threshold" },
+          { "from": "Opt-In Request", "to": "Opt-In Response Logged", "event": "agent_responds", "guard": "Valid response" },
+          { "from": "Opt-In Response Logged", "to": "Sharing Active", "event": "agent_accepted", "guard": "Acceptance" }
+        ],
+        "source": "CRM_MODEL.md — Sec 11"
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 4 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No opt-in mechanism" }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Identity Resolution Workflow",
+      "entity": "identity_resolution",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Potential Match Detected",
+        "terminal_states": ["Merged", "False Positive Discarded"],
+        "state_count": 5,
+        "states": ["Potential Match Detected", "Confidence Evaluation", "Human Review (if needed)", "Merged", "False Positive Discarded"],
+        "transitions": [
+          { "from": "Potential Match Detected", "to": "Confidence Evaluation", "event": "match_candidate", "guard": "Match found" },
+          { "from": "Confidence Evaluation", "to": "Merged", "event": "high_confidence", "guard": "Score > threshold" },
+          { "from": "Confidence Evaluation", "to": "Human Review", "event": "medium_confidence", "guard": "Score in gray zone" },
+          { "from": "Confidence Evaluation", "to": "False Positive Discarded", "event": "low_confidence", "guard": "Score < threshold" },
+          { "from": "Human Review", "to": "Merged", "event": "manual_merge", "guard": "Reviewer confirms" },
+          { "from": "Human Review", "to": "False Positive Discarded", "event": "manual_reject", "guard": "Reviewer rejects" }
+        ],
+        "matching_signals": ["Phone", "Email", "Name", "Device fingerprint"]
+      },
+      "v2": { "states": [], "status": "NOT_IMPLEMENTED" },
+      "state_mapping": [
+        { "gold_state": "All 5 states", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No identity resolution" }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Main Cross-cutting Workflow",
+      "entity": "real_estate_project",
+      "overall_status": "EXTENSION_REQUIRED",
+      "gold": {
+        "initial_state": "Projet immobilier",
+        "terminal_state": "Archivage",
+        "state_count": 9,
+        "states": ["Projet immobilier", "Création du dossier", "Qualification", "Matching", "Mise en relation", "Visite", "Négociation", "Transaction", "Clôture", "Archivage"],
+        "transitions": [
+          { "from": "Projet immobilier", "to": "Création du dossier", "event": "need_expressed", "delegated_to": "Dossier Lifecycle" },
+          { "from": "Création du dossier", "to": "Qualification", "event": "dossier.created", "delegated_to": "Dossier Lifecycle" },
+          { "from": "Qualification", "to": "Matching", "event": "dossier.qualified", "delegated_to": "Matching Lifecycle" },
+          { "from": "Matching", "to": "Mise en relation", "event": "match.accepted", "delegated_to": "Contact Lifecycle" },
+          { "from": "Mise en relation", "to": "Visite", "event": "contact.established", "delegated_to": "Visit Lifecycle" },
+          { "from": "Visite", "to": "Négociation", "event": "visit.positive", "delegated_to": "Negotiation Lifecycle" },
+          { "from": "Négociation", "to": "Transaction", "event": "negotiation.agreement", "delegated_to": "Transaction Lifecycle" },
+          { "from": "Transaction", "to": "Clôture", "event": "transaction.complete", "delegated_to": "Closure" },
+          { "from": "Clôture", "to": "Archivage", "event": "closure.verified", "delegated_to": "Archiving" }
+        ],
+        "orchestration_notes": "Top-level orchestrator spanning entire client journey. Delegates to sub-workflows. States run in parallel for Visit, Negotiation, Transaction. On failure: retry, skip to rematching, or close."
+      },
+      "v2": {
+        "states": [],
+        "partial_via": "distributed across project (status+steps), property, conversation — no orchestrator"
+      },
+      "state_mapping": [
+        { "gold_state": "Projet immobilier", "v2_state": "project:draft", "status": "PARTIAL_MATCH", "rationale": "Project creation" },
+        { "gold_state": "Création du dossier", "v2_state": "project:draft", "status": "PARTIAL_MATCH", "rationale": "Same entity" },
+        { "gold_state": "Qualification", "v2_state": "project step:qualification", "status": "PARTIAL_MATCH", "rationale": "Journey step" },
+        { "gold_state": "Matching", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No orchestrator" },
+        { "gold_state": "Mise en relation", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No orchestrator" },
+        { "gold_state": "Visite", "v2_state": "project step:visit", "status": "PARTIAL_MATCH", "rationale": "Journey step only" },
+        { "gold_state": "Négociation", "v2_state": "conversation stage", "status": "PARTIAL_MATCH", "rationale": "Delegated" },
+        { "gold_state": "Transaction", "v2_state": "(none)", "status": "EXTENSION_REQUIRED", "rationale": "No orchestrator" },
+        { "gold_state": "Clôture", "v2_state": "project:completed", "status": "PARTIAL_MATCH", "rationale": "Partial" },
+        { "gold_state": "Archivage", "v2_state": "project:archived", "status": "PARTIAL_MATCH", "rationale": "Partial" }
+      ]
+    }
+  ],
+  "cross_cutting_mapping": {
+    "event_sourcing": { "gold": "21 workflows emit typed audit events", "v2": "Generic Event model (kind, payload)", "status": "PARTIAL_MATCH" },
+    "sla_monitoring": { "gold": "Per-entity, per-state SLA registry with breach detection", "v2": "None", "status": "EXTENSION_REQUIRED" },
+    "nba_engine": { "gold": "9-level priority NBA per state", "v2": "derive_next_actions() only", "status": "EXTENSION_REQUIRED" },
+    "health_scoring": { "gold": "Property Health Score, Dossier Health SLA", "v2": "None", "status": "EXTENSION_REQUIRED" },
+    "double_consent": { "gold": "Mandatory for contact establishment", "v2": "None", "status": "EXTENSION_REQUIRED" },
+    "holder_silence_escalation": { "gold": "3-tier reminder → auto-close → rematch", "v2": "None", "status": "EXTENSION_REQUIRED" },
+    "rematching": { "gold": "Automatic on refusal, visit failure, negotiation failure", "v2": "None", "status": "EXTENSION_REQUIRED" },
+    "interlocutor_shift": { "gold": "AI → Human after Mise en Relation", "v2": "None", "status": "EXTENSION_REQUIRED" },
+    "retention_policies": { "gold": "2-tier archive (operational + long-term at 3y)", "v2": "Single archived state", "status": "EXTENSION_REQUIRED" },
+    "trust_score": { "gold": "6-level user trust", "v2": "None", "status": "EXTENSION_REQUIRED" },
+    "lead_scoring": { "gold": "Base + boosters - penalties = numeric score → class", "v2": "None", "status": "EXTENSION_REQUIRED" },
+    "sie_integration": { "gold": "Reference code, campaign, actor, property association", "v2": "None", "status": "EXTENSION_REQUIRED" },
+    "conversion_attribution": { "gold": "Last-touch attribution pipeline", "v2": "None", "status": "EXTENSION_REQUIRED" }
+  },
+  "sla_comparison": {
+    "property": { "gold": "13 SLA rules + per property type rotation (24h→1095d)", "v2": "None", "gap": "EXTENSION_REQUIRED" },
+    "dossier": { "gold": "8 SLA rules + per property type", "v2": "None", "gap": "EXTENSION_REQUIRED" },
+    "lead": { "gold": "5 classification SLAs + 4 priority SLAs (30min→7d)", "v2": "None", "gap": "EXTENSION_REQUIRED" },
+    "incident": { "gold": "4 priority SLAs (Immediate→72h)", "v2": "None", "gap": "EXTENSION_REQUIRED" },
+    "visit": { "gold": "Pre-visit (24h, 2h), post-visit (24h) reminders", "v2": "None", "gap": "EXTENSION_REQUIRED" },
+    "user_identity": { "gold": "New user (7d), inactivity (90d), verification (24h→7d)", "v2": "None", "gap": "EXTENSION_REQUIRED" },
+    "negotiation": { "gold": "Follow-up J1, J7, J30, J90", "v2": "None", "gap": "EXTENSION_REQUIRED" }
+  },
+  "sla_monitoring_infrastructure": {
+    "registry": "Configurable thresholds per entity type/state/property type",
+    "breach_detection": "Configurable check frequency (1min→24h)",
+    "escalation": "3-tier per SLA (NOTIFY → NBA_RECALCULATE → ESCALATE)",
+    "breach_history": "Dedicated sla_breach_history table",
+    "market_rotation": "14 property types with specific rotation durations",
+    "constitutional_rules": [
+      "No active dossier, no published property, no transaction shall remain without action beyond the applicable SLA",
+      "If exceeded, LAWIM MUST trigger an appropriate action",
+      "Inaction is considered an operational anomaly",
+      "A workflow without a next action is considered defective"
+    ]
+  },
+  "nba_comparison": {
+    "gold_priority_levels": [
+      { "priority": 1, "action": "CORRECT_INCOHERENCE" },
+      { "priority": 2, "action": "COMPLETE_CRITICAL_FIELD" },
+      { "priority": 3, "action": "LAUNCH_MATCHING" },
+      { "priority": 4, "action": "PRESENT_PROPERTY" },
+      { "priority": 5, "action": "CONTACT_HOLDER" },
+      { "priority": 6, "action": "ORGANIZE_VISIT" },
+      { "priority": 7, "action": "FOLLOW_UP" },
+      { "priority": 8, "action": "NOTIFICATIONS" },
+      { "priority": 9, "action": "HUMAN_ESCALATION" }
+    ],
+    "v2_capability": "derive_next_actions() lists pending steps only — no NBA engine",
+    "status": "EXTENSION_REQUIRED"
+  },
+  "gap_analysis": {
+    "critical": [
+      { "id": "G01", "gap": "No Matching Lifecycle", "impact": "Platform cannot algorithmically match demandeurs with properties", "workflows_affected": [2, 3, 4, 21] },
+      { "id": "G02", "gap": "No Visit Lifecycle", "impact": "Cannot schedule, confirm, track or follow up on visits", "workflows_affected": [1, 2, 5, 21] },
+      { "id": "G03", "gap": "No Transaction Lifecycle", "impact": "Cannot process sale/rental transactions end-to-end", "workflows_affected": [1, 2, 6, 7, 21] },
+      { "id": "G04", "gap": "No CRM Pipeline", "impact": "Cannot score, classify, or route leads", "workflows_affected": [12, 18, 19, 20] },
+      { "id": "G05", "gap": "No Cross-Cutting Orchestrator", "impact": "No master workflow to coordinate sub-workflows", "workflows_affected": [21] },
+      { "id": "G06", "gap": "No SLA Monitoring", "impact": "No enforcement of timing guarantees", "workflows_affected": "All 21 workflows" },
+      { "id": "G07", "gap": "No NBA Engine", "impact": "No intelligent next-action recommendation", "workflows_affected": "All 21 workflows" },
+      { "id": "G08", "gap": "No Payment Lifecycle", "impact": "Cannot process platform service payments", "workflows_affected": [8] }
+    ],
+    "high": [
+      { "id": "G09", "gap": "No Double Consent Workflow", "impact": "Cannot enforce consent before contact", "workflows_affected": [4] },
+      { "id": "G10", "gap": "No Disputes/Incidents System", "impact": "Cannot handle claims, fraud, or disputes", "workflows_affected": [9, 11] },
+      { "id": "G11", "gap": "No SIE Integration Pipeline", "impact": "No reference code generation or external system integration", "workflows_affected": [15, 16, 17] },
+      { "id": "G12", "gap": "No Conversion Attribution", "impact": "Cannot track marketing ROI", "workflows_affected": [17] },
+      { "id": "G13", "gap": "Incomplete Property States", "impact": "Missing qualification, validation, matching, reactivation states", "workflows_affected": [1] },
+      { "id": "G14", "gap": "Incomplete Dossier/Project States", "impact": "Missing presentation, wait states, double consent", "workflows_affected": [2] },
+      { "id": "G15", "gap": "No Agent Onboarding Workflow", "impact": "No structured agent invitation and validation", "workflows_affected": [14] }
+    ],
+    "medium": [
+      { "id": "G16", "gap": "No User Identity Lifecycle", "impact": "Cannot track user intent evolution or trust score", "workflows_affected": [12] },
+      { "id": "G17", "gap": "No Organization Validation Workflow", "impact": "No structured agency creation and validation", "workflows_affected": [13] },
+      { "id": "G18", "gap": "No Multi-tier Archiving", "impact": "No long-term retention policy enforcement", "workflows_affected": [10] },
+      { "id": "G19", "gap": "No Agent Opt-In", "impact": "Cannot manage agent lead-sharing preferences", "workflows_affected": [19] },
+      { "id": "G20", "gap": "No Identity Resolution", "impact": "Risk of duplicate user records", "workflows_affected": [20] },
+      { "id": "G21", "gap": "No Premium/Subscription Model", "impact": "Cannot monetize agent services", "workflows_affected": [12] }
+    ]
+  },
+  "implementation_priority": {
+    "phase_1_foundation": {
+      "workflows": [3, 5, 18],
+      "name": "Matching, Visit, CRM Pipeline",
+      "effort": "High",
+      "dependencies": "Domain model extensions"
+    },
+    "phase_2_core_business": {
+      "workflows": [1, 2, 6, 7],
+      "name": "Property enrichment, Dossier, Negotiation, Transaction",
+      "effort": "High",
+      "dependencies": "Phase 1 matching + visit"
+    },
+    "phase_3_cross_cutting": {
+      "workflows": [21],
+      "name": "Orchestrator, SLA, NBA",
+      "effort": "High",
+      "dependencies": "Phase 1 + 2"
+    },
+    "phase_4_monetization": {
+      "workflows": [8, 12, 19],
+      "name": "Paid Services, User Identity, Opt-In",
+      "effort": "Medium",
+      "dependencies": "Phase 2 transactions"
+    },
+    "phase_5_trust_safety": {
+      "workflows": [9, 11, 20],
+      "name": "Incidents, Mediation, Identity Resolution",
+      "effort": "Medium",
+      "dependencies": "Phase 1 + 2"
+    },
+    "phase_6_operations": {
+      "workflows": [10, 13, 14],
+      "name": "Archiving, Org Lifecycle, Agent Invitation",
+      "effort": "Low",
+      "dependencies": "Phase 2"
+    },
+    "phase_7_analytics": {
+      "workflows": [15, 16, 17],
+      "name": "Publication, Redirection, Conversion",
+      "effort": "Medium",
+      "dependencies": "SIE integration"
+    }
+  },
+  "v2_state_machine_definitions": {
+    "property_statuses": {
+      "states": ["draft", "open", "closed", "published", "archived"],
+      "availability_statuses": ["available", "reserved", "sold", "rented", "unavailable"],
+      "transitions": {
+        "draft": ["draft", "open", "closed", "published", "archived"],
+        "open": ["open", "published", "closed", "archived"],
+        "published": ["published", "closed", "archived"],
+        "closed": ["closed", "archived"],
+        "archived": ["archived"]
+      }
+    },
+    "project_statuses": {
+      "states": ["draft", "active", "paused", "completed", "archived"],
+      "step_statuses": ["pending", "in_progress", "completed", "skipped", "blocked"],
+      "transitions": {
+        "draft": ["draft", "active", "archived"],
+        "active": ["active", "paused", "completed", "archived"],
+        "paused": ["paused", "active", "archived"],
+        "completed": ["completed", "archived"],
+        "archived": ["archived"]
+      }
+    },
+    "conversation_statuses": {
+      "states": ["open", "closed", "archived"],
+      "negotiation_stages": ["inquiry", "offer", "counter", "accepted", "declined", "closed"],
+      "status_transitions": {
+        "open": ["open", "closed", "archived"],
+        "closed": ["closed", "archived", "open"],
+        "archived": ["archived"]
+      },
+      "stage_transitions": {
+        "inquiry": ["inquiry", "offer", "declined", "closed"],
+        "offer": ["offer", "counter", "accepted", "declined", "closed"],
+        "counter": ["counter", "offer", "accepted", "declined", "closed"],
+        "accepted": ["accepted", "closed"],
+        "declined": ["declined", "closed"],
+        "closed": ["closed"]
+      }
+    }
+  }
+}
