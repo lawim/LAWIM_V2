@@ -70,6 +70,10 @@ def extract_all(text: str) -> dict[str, Any]:
     for fact in location_facts:
         results["facts"].append(fact)
 
+    surface = _extract_surface(text)
+    if surface:
+        results["facts"].append(surface)
+
     amount = normalize_amount(text)
     if amount.confidence > 0 and not amount.ambiguity:
         results["facts"].append({
@@ -135,10 +139,6 @@ def extract_all(text: str) -> dict[str, Any]:
     bathroom = _extract_bathrooms(text)
     if bathroom:
         results["facts"].append(bathroom)
-
-    surface = _extract_surface(text)
-    if surface:
-        results["facts"].append(surface)
 
     return results
 
