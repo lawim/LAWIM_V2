@@ -179,7 +179,14 @@ def main() -> int:
             if ids:
                 check(f"'{name}' no empty IDs", "" not in ids, errors)
 
-    # 15. Summary
+    # 15. Engine validation (module file check)
+    print("\n--- Runtime engines ---")
+    engine_dir = _PROJECT_ROOT / "code/lawim_v2/knowledge_runtime/engine"
+    check("Engine directory exists", engine_dir.is_dir(), errors)
+    for fname in ("__init__.py", "readiness.py", "resolver.py", "evaluator.py"):
+        check(f"Engine module {fname} exists", (engine_dir / fname).is_file(), errors)
+
+    # 16. Summary
     print(f"\n{'=' * 70}")
     print(f"RESULTS: {_PASS} passed, {_FAIL} failed")
     if errors:
