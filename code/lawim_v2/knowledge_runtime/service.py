@@ -53,6 +53,7 @@ class KnowledgeService:
         self.reference_validator = ReferenceValidator()
         self.startup_validator = StartupValidator()
         self._engine: Any = None
+        self._wizard: Any = None
 
     def load_all(self) -> ValidationReport:
         if not self._config.runtime_enabled:
@@ -146,6 +147,18 @@ class KnowledgeService:
             from .engine import QualificationEngine
             self._engine = QualificationEngine(self)
         return self._engine
+
+    @property
+    def wizard(self) -> Any:
+        if self._wizard is None and self._status == STATUS_READY:
+            from .engine import ProgressiveWizard
+            from .engine.readiness import ReadinessEvaluator
+            from .engine.resolver import NextQuestionResolver
+            self._wizard = ProgressiveWizard(
+                ReadinessEvaluator(self.readiness_registry),
+                NextQuestionResolver(self.question_rule_registry, self.matrix_registry),
+            )
+        return self._wizard
 
     def evaluate(
         self,
