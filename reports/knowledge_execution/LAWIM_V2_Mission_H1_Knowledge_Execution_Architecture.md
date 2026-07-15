@@ -21,13 +21,13 @@ La mission H1 a conçu le contrat d'exécution officiel entre le référentiel m
 | Règles avec contrat de test | 158 (145 HIGH, 9 MEDIUM, 4 LOW) |
 | Connaissances inutilisées | 0 |
 | Règles moteur non sourcées | 0 (8 items architecturaux marqués `ARCHITECTURE_DECISION`) |
-| Dépendances H0.5 | 2 (`DEPENDENCY_H05`) |
-| Points ouverts | 13 (OP-001 à OP-506) |
+| Dépendances H0.5 | 0 (`DEPENDENCY_H05` résolues H1.1) |
+| Points ouverts | 12 (OP-001 à OP-505) |
 | Événements d'audit | 74 types |
 | Fichiers de spécification | 57 |
 | Lignes totales | 26 470 |
 
-**Verdict :** `KNOWLEDGE EXECUTION ARCHITECTURE READY`
+**Verdict :** `KNOWLEDGE EXECUTION ARCHITECTURE READY — H1.1 H05 INTEGRATION COMPLETE`
 
 ---
 
@@ -124,10 +124,10 @@ L'Event Engine assure la traçabilité complète avec 74 types d'événements.
 |------|--------|-------------------|
 | `HERITAGE_RULE` (sourcée Heritage Gold) | 99+ | Tous domaines |
 | `ARCHITECTURE_DECISION` | 8+ | NBA, SLA, Consent, Privacy, Event retention |
-| `DEPENDENCY_H05` | 2 | Qualification matrices, Readiness thresholds |
+| `DEPENDENCY_H05` | 0 (résolues H1.1) | Qualification matrices, Readiness thresholds |
 | `LEGAL_VALIDATION_REQUIRED` | 2 | GDPR retention, Data sharing compliance |
 | `HUMAN_VALIDATION_REQUIRED` | 2 | Commercial scripts, Escalation responses |
-| `OPEN_POINT` | 13 | Divergences, risques, décisions |
+| `OPEN_POINT` | 12 | Divergences, risques, décisions |
 
 ### Métriques par moteur consommateur
 
@@ -623,7 +623,7 @@ Tag H1 : lawim-v2-knowledge-execution-architecture-h1
 | 16 | Decision Engine 10 composants | ✅ | DECISION_ENGINE_ARCHITECTURE.md |
 | 17 | 21 machines à états | ✅ | STATE_MACHINE_CATALOG.md |
 | 18 | Conversation sans règles métier autonomes | ✅ | Toutes les règles CONV-* sourcées Heritage Gold |
-| 19 | Dépendance H0.5 signalée | ✅ | `DEPENDENCY_H05` sur QUALIFICATION_MATRIX_CONTRACT.md, READINESS_MODEL.md |
+| 19 | Dépendance H0.5 résolue | ✅ | `DEPENDENCY_H05` résolues H1.1 — matrices intégrées, readiness 7 niveaux |
 | 20 | Exigences juridiques marquées | ✅ | `LEGAL_VALIDATION_REQUIRED` sur DATA_SHARING_POLICY.md, EVENT_EXECUTION_ARCHITECTURE.md |
 | 21 | Règles architecturales marquées | ✅ | `ARCHITECTURE_DECISION` sur 8+ items |
 | 22 | Validateur vert | ✅ | PASSED WITH WARNINGS (duplicate IDs = cross-refs attendus) |
@@ -655,6 +655,118 @@ Points d'entrée recommandés :
 4. `docs/knowledge_execution/KNOWLEDGE_EXECUTION_INVENTORY.md` — Inventaire complet
 5. `docs/knowledge_execution/KNOWLEDGE_TO_ENGINE_MATRIX.md` — Mapping knowledge → moteurs
 6. `docs/knowledge_execution/STATE_MACHINE_CATALOG.md` — 21 machines à états
+
+---
+
+---
+
+## 45. Consolidation H1.1 — Intégration H0.5
+
+### 45.1 Dépendances H0.5 intégrées
+
+Les deux dépendances `DEPENDENCY_H05` identifiées dans H1 sont résolues :
+
+| Dépendance | Fichier H1 | Résolution | Statut |
+|------------|-----------|------------|--------|
+| `DEPENDENCY_H05` — Matrices de qualification | `QUALIFICATION_MATRIX_CONTRACT.md` | §0 H0.5 Integration Layer : sélection par (family, transaction_type, property_type), chargement depuis `qualification_matrices.json`, `field_dictionary.json` | ✅ `DEPENDENCY_H05 = 0 remaining` |
+| `DEPENDENCY_H05` — Seuils de readiness | `READINESS_MODEL.md` | §0 H0.5 Readiness Model : 7 niveaux (INTENT_IDENTIFIED → TRANSACTION_READY) depuis `readiness_rules.json` | ✅ `DEPENDENCY_H05 = 0 remaining` |
+
+### 45.2 Matrices H0.5 inventoriées
+
+| Métrique | Valeur |
+|----------|--------|
+| Matrices cataloguées | 107 (56 JSON + 51 Markdown) |
+| Familles de requête | 6 (RESIDENTIAL_SEARCH, LAND_SEARCH, COMMERCIAL_SEARCH, FINANCING_REQUEST, PROFESSIONAL_SEARCH, REAL_ESTATE_SERVICES) |
+| Types de propriété/service | 56 (JSON) + types professionnels et services |
+| Fichiers source H0.5 | 29 (5 JSON + 24 Markdown) |
+| Champs documentés | 120+ (field dictionary) |
+| Scénarios de qualification | 100+ |
+
+### 45.3 Readiness final — 7 niveaux depuis H0.5
+
+Le modèle H1 historique (4 niveaux) est **supersedé** par le modèle H0.5 (7 niveaux) :
+
+| Niveau | Label | Seuil |
+|--------|-------|-------|
+| 1 | INTENT_IDENTIFIED | Transaction + property type connus |
+| 2 | MINIMUM_INTAKE_READY | City + budget établis |
+| 3 | MINIMUM_SEARCH_READY | Critères minimum pour première recherche |
+| 4 | MINIMUM_MATCHING_READY | Critères de ranking spécifiques |
+| 5 | INTRODUCTION_READY | Contact + consentement |
+| 6 | VISIT_READY | Logistique visite confirmée |
+| 7 | TRANSACTION_READY | Prérequis légaux/financiers |
+
+### 45.4 Question Policy — 8 règles depuis H0.5
+
+| # | Règle | Source H0.5 |
+|---|-------|-------------|
+| 1 | Always-asked fields (3) | `question_rules.json` |
+| 2 | Conditional rules (38) | `question_rules.json` |
+| 3 | Never-ask forbidden (36) | `question_rules.json` |
+| 4 | Deduce-from-context (16) | `question_rules.json` |
+| 5 | Defer-to-later-stage (26) | `question_rules.json` |
+| 6 | Behavioral rules (12) | `question_rules.json` |
+| 7 | Cross-matrix forbidden (18) | `CONDITIONAL_QUESTION_RULES.md` |
+| 8 | Property-type-specific forbidden | Per-matrix definitions |
+
+### 45.5 Consommateurs H0.5
+
+7 moteurs consommateurs des données H0.5 :
+
+| Moteur | Contrat H1 | Données H0.5 consommées |
+|--------|-----------|------------------------|
+| Qualification Engine | `QUALIFICATION_MATRIX_CONTRACT.md` | Matrices 107, field dictionary, forbidden questions |
+| Readiness Calculator | `READINESS_MODEL.md` | 7-level readiness, thresholds, transitions |
+| Question Selector | `NEXT_QUESTION_POLICY.md` | Question priority, conditional rules |
+| Search Engine | `SEARCH_EXECUTION_ARCHITECTURE.md` | Readiness gating (MINIMUM_SEARCH_READY) |
+| Matching Engine | `MATCHING_SCORE_CONTRACT.md` | 9 matching roles, semantics |
+| Privacy / Consent | `DATA_SHARING_POLICY.md` / `CONSENT_EXECUTION_CONTRACT.md` | 4 privacy levels, sensitive/confidential fields |
+| Relationship Engine | `RELATIONSHIP_EXECUTION_ARCHITECTURE.md` | Privacy-aware flow, consent gating |
+
+### 45.6 Traçabilité
+
+3 matrices de traçabilité mises à jour :
+
+| Matrice | Mise à jour |
+|---------|-------------|
+| `KNOWLEDGE_TO_ENGINE_MATRIX.md` | Groupe 15 : 14 mappings H0.5 → moteurs ; 4 nouveaux moteurs dans la légende |
+| `KNOWLEDGE_TRACEABILITY_MATRIX.md` | Section 1.13 : 18 chaînes de traçabilité H0.5 ; 16 nouveaux événements d'audit |
+| `ACCEPTANCE_TEST_MATRIX.md` | Section 2.11 : 7 règles de test H0.5 ; Section 4.11 : critères d'acceptation |
+
+### 45.7 Validateur
+
+| Validateur | Résultat |
+|------------|----------|
+| `validate_knowledge_execution_architecture.py` (H1) | **PASSED** (0 errors, warnings résolus) |
+| `validate_qualification_matrices.py` (H0.5) | **PASSED** (0 errors) |
+| Audit des artefacts non versionnés (H11) | **PASSED** (57 files audités, 56 versionnés, secrets redacted dans 2 fichiers) |
+| **Total** | **3/3 PASS — 0 erreur** |
+
+### 45.8 Points résolus
+
+| ID | Sujet | Résolution |
+|----|-------|------------|
+| OP-506 | Qualification matrices (`DEPENDENCY_H05`) | **RESOLVED** — Intégration complète depuis `docs/lawim_heritage_gold/qualification_matrices/`. Matrices chargées depuis `qualification_matrices.json`, champs depuis `field_dictionary.json`, readiness depuis `readiness_rules.json`, questions depuis `question_rules.json`, matching depuis `matching_semantics.json`. |
+
+### 45.9 Points ouverts
+
+Les points suivants restent ouverts pour H2 et missions ultérieures :
+
+| ID | Sujet | Type |
+|----|-------|------|
+| OP-501 | NBA priority matrix weights | `ARCHITECTURE_DECISION` |
+| OP-502 | Consent SLA defaults | `ARCHITECTURE_DECISION` |
+| OP-503 | Phone masking pattern | `ARCHITECTURE_DECISION` |
+| OP-504 | Data retention durations | `LEGAL_VALIDATION_REQUIRED` |
+| OP-505 | Commercial scripts | `HUMAN_VALIDATION_REQUIRED` |
+
+### 45.10 Commit et tag
+
+```
+Commit : f2ca8bd5 docs(knowledge-execution): integrate H0.5 qualification matrices
+Tag    : lawim-v2-canonical-qualification-matrices-h05 (H0.5)
+Tag H1 : lawim-v2-knowledge-execution-architecture-h1
+```
 
 ---
 
