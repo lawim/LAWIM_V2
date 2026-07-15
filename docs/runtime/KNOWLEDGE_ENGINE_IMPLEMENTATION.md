@@ -43,3 +43,30 @@ engine = QualificationEngine(knowledge_service)
 result = engine.evaluate(known_fields, property_type="apartment")
 # -> {"readiness": {...}, "next_question": {...}, "known_field_count": N}
 ```
+
+### ProgressiveWizard
+
+Implements the 10-step progressive qualification order (H2-W2-010):
+
+| Step | Name | Mandatory Fields |
+|------|------|-----------------|
+| 1 | Intention | intent, transaction_type |
+| 2 | Type | property_type |
+| 3 | Ville | city |
+| 4 | Quartier | neighborhood |
+| 5 | Budget | budget_max |
+| 6 | Delai | (none) |
+| 7 | Criteres | surface, chambres |
+| 8 | Preferences | (none) |
+| 9 | Confirmation | confirmation |
+| 10 | Escalade | (none) |
+
+Manages sessions, step transitions, retry limits (max 3 per field), and escalation.
+
+```python
+wizard = ProgressiveWizard(readiness_evaluator, question_resolver)
+session = wizard.create_session("sess-1", channel="whatsapp")
+result = wizard.submit_answer("sess-1", "intent", "buy")
+info = wizard.get_current_step_info("sess-1")
+# -> {"step": 2, "name": "Type", "readiness": {...}, ...}
+```
