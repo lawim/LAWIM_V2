@@ -30,6 +30,7 @@ class ActionType(str, Enum):
 class ActionStatus(str, Enum):
     PENDING = "PENDING"
     EXECUTING = "EXECUTING"
+    EXECUTED = "EXECUTED"
     COMPLETED = "COMPLETED"
     FAILED = "FAILED"
     BLOCKED = "BLOCKED"

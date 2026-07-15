@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..domain.actions import Action
+from ..domain.actions import Action, ActionType
 from ..domain.conversation import Conversation
 from ..domain.decisions import ConversationDecision
 from ..domain.message import NormalizedMessage
