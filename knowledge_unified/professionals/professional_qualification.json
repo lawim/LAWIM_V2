@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/roles-matrix.md + KNOWLEDGE/runtime-gap-remediation-plan.md"
+  },
+  "qualification_requirements": {
+    "AGENT_IMMOBILIER": {
+      "required_documents": [
+        "carte_nationale",
+        "certificat_agent_immobilier",
+        "registre_de_commerce",
+        "casier_judiciaire",
+        "attestation_de_residence"
+      ],
+      "minimum_experience_years": 0,
+      "verification_steps": [
+        "identity_check",
+        "professional_certificate_validation",
+        "background_check",
+        "reference_check",
+        "platform_training"
+      ],
+      "training_required": true,
+      "training_modules": [
+        "LAWIM_platform_basics",
+        "property_publication_standards",
+        "lead_management",
+        "negociation_ethics",
+        "fraud_prevention"
+      ],
+      "criteria": {
+        "trust_score_minimum": 3.0,
+        "reactivity_max_hours": 24,
+        "completion_rate_minimum": 80
+      }
+    },
+    "PROPRIETAIRE": {
+      "required_documents": [
+        "carte_nationale",
+        "titre_foncier",
+        "justificatif_de_propriete"
+      ],
+      "minimum_experience_years": 0,
+      "verification_steps": [
+        "identity_check",
+        "property_title_verification",
+        "proof_of_ownership"
+      ],
+      "training_required": false,
+      "criteria": {
+        "trust_score_minimum": 2.0,
+        "reactivity_max_hours": 48
+      }
+    },
+    "PROMOTEUR": {
+      "required_documents": [
+        "carte_nationale",
+        "registre_de_commerce",
+        "agrement_promoteur",
+        "casier_judiciaire",
+        "attestation_fiscale"
+      ],
+      "minimum_experience_years": 3,
+      "verification_steps": [
+        "identity_check",
+        "company_registration_validation",
+        "developer_license_validation",
+        "financial_check",
+        "reference_projects_review",
+        "site_visit_verification"
+      ],
+      "training_required": true,
+      "training_modules": [
+        "LAWIM_platform_basics",
+        "project_management_tools",
+        "client_communication_standards",
+        "legal_compliance"
+      ],
+      "criteria": {
+        "trust_score_minimum": 3.5,
+        "reactivity_max_hours": 24,
+        "completion_rate_minimum": 90,
+        "minimum_completed_projects": 2
+      }
+    },
+    "NOTAIRE": {
+      "required_documents": [
+        "carte_professionnelle_notaire",
+        "inscription_ordre_notaires",
+        "casier_judiciaire",
+        "attestation_fiscale"
+      ],
+      "minimum_experience_years": 5,
+      "verification_steps": [
+        "professional_order_validation",
+        "license_verification",
+        "background_check"
+      ],
+      "training_required": false,
+      "criteria": {
+        "trust_score_minimum": 4.0
+      }
+    },
+    "EXPERT_FONCIER": {
+      "required_documents": [
+        "certificat_expert_foncier",
+        "carte_professionnelle",
+        "casier_judiciaire"
+      ],
+      "minimum_experience_years": 3,
+      "verification_steps": [
+        "certification_validation",
+        "reference_check",
+        "sample_report_review"
+      ],
+      "training_required": false,
+      "criteria": {
+        "trust_score_minimum": 3.5
+      }
+    },
+    "ARCHITECTE": {
+      "required_documents": [
+        "diplome_architecte",
+        "inscription_ordre_architectes",
+        "carte_professionnelle",
+        "casier_judiciaire"
+      ],
+      "minimum_experience_years": 2,
+      "verification_steps": [
+        "diploma_validation",
+        "professional_order_validation",
+        "portfolio_review",
+        "reference_check"
+      ],
+      "training_required": false,
+      "criteria": {
+        "trust_score_minimum": 3.0
+      }
+    },
+    "OPERATEUR": {
+      "required_documents": [
+        "carte_nationale",
+        "contrat_de_travail",
+        "casier_judiciaire"
+      ],
+      "minimum_experience_years": 1,
+      "verification_steps": [
+        "identity_check",
+        "employment_verification",
+        "background_check",
+        "platform_training",
+        "probation_period"
+      ],
+      "training_required": true,
+      "training_modules": [
+        "LAWIM_platform_administration",
+        "triage_and_assignment",
+        "quality_control",
+        "fraud_detection",
+        "client_communication",
+        "crisis_management"
+      ],
+      "criteria": {
+        "trust_score_minimum": 3.5,
+        "reactivity_max_minutes": 15,
+        "accuracy_minimum": 95
+      }
+    }
+  }
+}

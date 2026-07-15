@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM location-segmentation-canonical.md + matching engine docs"
+  },
+  "proximity_rules": {
+    "geographic_scoring_levels": {
+      "level_1": { "label": "Exact neighborhood", "score": "maximal", "description": "Property is in the exact requested neighborhood" },
+      "level_2": { "label": "Accepted alternative", "score": "high", "description": "Property is in an explicitly accepted alternative neighborhood" },
+      "level_3": { "label": "Neighboring district", "score": "medium", "description": "Property is in a neighboring district within same city" },
+      "level_4": { "label": "Same city distant", "score": "low", "description": "Property is in same city but far from requested zone" },
+      "level_5": { "label": "Incompatible zone", "score": "minimal", "description": "Property is in an incompatible zone" }
+    },
+    "priority_order": "Ville exacte -> Quartier exact -> Quartiers compatibles autorisés -> WAITLISTED",
+    "forbidden": "Ville exacte -> Ville voisine (never propose a different city)",
+    "handling_uncovered_city": {
+      "action": "WAITLISTED",
+      "message": "Nous n'avons pas encore d'offres actives à [VILLE]. Je garde votre recherche en veille et je vous préviens dès qu'un bien correspondant arrive."
+    },
+    "handling_covered_no_inventory": {
+      "action": "WAITLISTED / NO_ACTIVE_MATCH / PAUSED"
+    },
+    "mobility_modes": {
+      "STRICT": "Requested neighborhood only",
+      "FLEXIBLE": "Alternative neighborhoods accepted",
+      "VERY_FLEXIBLE": "Expanded zone"
+    }
+  }
+}

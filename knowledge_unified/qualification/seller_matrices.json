@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM conversation-qualification-questions.md + intents/sell_property.json"
+  },
+  "seller_qualification": {
+    "required_fields": ["property_type", "city", "neighborhood", "price", "documents"],
+    "optional_fields": ["surface", "availability", "condition", "contact", "title_status"],
+    "qualification_questions": [
+      "Quel est le type de bien ?",
+      "Dans quelle ville et quel quartier ?",
+      "Quel prix demandez-vous ?",
+      "Quels documents sont disponibles ?",
+      "Quelle surface ou quels volumes ?",
+      "Le bien est vide, occupé ou libre ?"
+    ],
+    "seller_signals": ["proprio", "titre foncier", "vente urgente", "dernier prix", "prix négociable"],
+    "status_flow": [
+      "Property details collected",
+      "Documents verified",
+      "Published",
+      "Matched with buyers"
+    ]
+  }
+}

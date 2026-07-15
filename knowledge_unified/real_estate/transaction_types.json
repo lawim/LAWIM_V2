@@ -1,0 +1,113 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/intents/ + conversation-patterns.md"
+  },
+  "transaction_types": [
+    {
+      "id": "BUY",
+      "label_fr": "Achat",
+      "label_en": "Purchase/Buy",
+      "description_fr": "Acquisition d'un bien immobilier (résidence principale, investissement, terrain)",
+      "description_en": "Acquisition of real estate (primary residence, investment, land)",
+      "intent_ids": ["BUY_PROPERTY"],
+      "budget_type": "global_price",
+      "document_requirements": ["titre_foncier", "acte_de_vente", "certificat_de_propriété"],
+      "typical_duration_days": 90,
+      "fees": {
+        "notaire": "variable (5-15%)",
+        "taxes": "Droits d'enregistrement ~15%"
+      }
+    },
+    {
+      "id": "RENT",
+      "label_fr": "Location",
+      "label_en": "Rent/Lease",
+      "description_fr": "Location d'un bien immobilier (logement, local commercial, bureau)",
+      "description_en": "Rental of a property (housing, commercial space, office)",
+      "intent_ids": ["RENT_PROPERTY"],
+      "budget_type": "monthly_rent",
+      "document_requirements": ["bail", "contrat_de_location", "carte_nationale"],
+      "typical_duration_days": 30,
+      "fees": {
+        "deposit": "1-3 mois de loyer",
+        "agency": "gratuit du côté demandeur (LAWIM)",
+        "advance": "1-6 mois selon propriétaire"
+      }
+    },
+    {
+      "id": "SELL",
+      "label_fr": "Vente",
+      "label_en": "Sell",
+      "description_fr": "Mise en vente d'un bien immobilier",
+      "description_en": "Listing a property for sale",
+      "intent_ids": ["SELL_PROPERTY"],
+      "budget_type": "asking_price",
+      "document_requirements": ["titre_foncier", "acte_de_vente", "permis_de_construire"],
+      "typical_duration_days": 90,
+      "fees": {
+        "commission": "Variable selon accord"
+      }
+    },
+    {
+      "id": "INVEST",
+      "label_fr": "Investissement",
+      "label_en": "Investment",
+      "description_fr": "Investissement immobilier (rental, land banking, development)",
+      "description_en": "Real estate investment (rental, land banking, development)",
+      "intent_ids": ["INVESTOR_INTENT"],
+      "budget_type": "global_price",
+      "document_requirements": ["titre_foncier", "etude_de_faisabilite", "permis_de_construire"],
+      "typical_duration_days": 180,
+      "fees": {
+        "notaire": "5-15%",
+        "taxes": "Variables selon type de projet"
+      }
+    },
+    {
+      "id": "LEASE",
+      "label_fr": "Location longue durée",
+      "label_en": "Long-term Lease",
+      "description_fr": "Location de longue durée (bail commercial ou résidentiel 3+ ans)",
+      "description_en": "Long-term lease (commercial or residential 3+ years)",
+      "intent_ids": ["RENT_PROPERTY"],
+      "budget_type": "monthly_rent",
+      "document_requirements": ["bail_notarie", "garantie_bancaire"],
+      "typical_duration_days": 30
+    },
+    {
+      "id": "EXCHANGE",
+      "label_fr": "Échange",
+      "label_en": "Exchange",
+      "description_fr": "Échange de biens immobiliers",
+      "description_en": "Property exchange",
+      "intent_ids": [],
+      "budget_type": "global_price",
+      "document_requirements": ["acte_dechange"],
+      "typical_duration_days": 90
+    }
+  ],
+  "budget_types": {
+    "global_price": {
+      "label_fr": "Prix global",
+      "label_en": "Total price",
+      "format": "XOF",
+      "description_fr": "Prix total d'achat ou de vente",
+      "description_en": "Total purchase or sale price"
+    },
+    "monthly_rent": {
+      "label_fr": "Loyer mensuel",
+      "label_en": "Monthly rent",
+      "format": "XOF/month",
+      "description_fr": "Loyer mensuel hors charges ou charges comprises",
+      "description_en": "Monthly rent excluding or including utilities"
+    },
+    "asking_price": {
+      "label_fr": "Prix de vente demandé",
+      "label_en": "Asking price",
+      "format": "XOF",
+      "description_fr": "Prix demandé par le vendeur",
+      "description_en": "Price asked by the seller"
+    }
+  }
+}

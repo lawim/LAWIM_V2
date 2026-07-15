@@ -1,0 +1,163 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/fraud-signals-and-verification.md + KNOWLEDGE/property-qualification-reference.md"
+  },
+  "legal_information_topics": [
+    {
+      "id": "TITLE_PROCESS",
+      "label_fr": "Processus d'obtention d'un titre foncier",
+      "label_en": "Land Title Acquisition Process",
+      "description_fr": "Étapes pour obtenir un titre foncier au Cameroun",
+      "description_en": "Steps to obtain a land title in Cameroon",
+      "provided_by": ["NOTAIRE", "EXPERT_FONCIER"],
+      "regulation_reference": "Loi foncière de 1974, Décret 76-165",
+      "can_lawim_provide": false,
+      "disclaimer_required": true,
+      "subtopics": [
+        "Enquête de commodo et incommodo",
+        "Bornage et délimitation",
+        "Dépôt à la Conservation Foncière",
+        "Publication et opposition",
+        "Délivrance du titre"
+      ]
+    },
+    {
+      "id": "TRANSFER_TAXES",
+      "label_fr": "Frais et taxes de mutation",
+      "label_en": "Transfer Fees and Taxes",
+      "description_fr": "Frais applicables lors d'un transfert de propriété",
+      "description_en": "Fees applicable during property transfer",
+      "provided_by": ["NOTAIRE"],
+      "regulation_reference": "Code Général des Impôts",
+      "can_lawim_provide": true,
+      "disclaimer_required": true,
+      "details": {
+        "droits_enregistrement": "~15% du prix de vente",
+        "frais_notaire": "5-15% (variable)",
+        "taxe_fonciere": "Annuelle (variable par commune)"
+      }
+    },
+    {
+      "id": "RENTAL_REGULATION",
+      "label_fr": "Réglementation locative",
+      "label_en": "Rental Regulations",
+      "description_fr": "Règles applicables aux locations au Cameroun",
+      "description_en": "Rules applicable to rentals in Cameroon",
+      "provided_by": ["NOTAIRE"],
+      "regulation_reference": "Code Civil (bail)",
+      "can_lawim_provide": true,
+      "disclaimer_required": true,
+      "details": {
+        "depot_garantie": "Maximum 3 mois",
+        "preavis": "1-3 mois selon type de bail",
+        "etat_des_lieux": "Obligatoire à l'entrée et sortie",
+        "congé": "Donné par lettre recommandée ou acte d'huissier"
+      }
+    },
+    {
+      "id": "FRAUD_INDICATORS",
+      "label_fr": "Indicateurs de fraude immobilière",
+      "label_en": "Real Estate Fraud Indicators",
+      "description_fr": "Signaux d'alerte pour détecter des tentatives de fraude",
+      "description_en": "Warning signals to detect fraud attempts",
+      "provided_by": ["LAWIM"],
+      "regulation_reference": "Code Pénal (escroquerie)",
+      "can_lawim_provide": true,
+      "disclaimer_required": false,
+      "fraud_types": [
+        {
+          "type": "FAUX_TITRE",
+          "label_fr": "Faux titre foncier",
+          "label_en": "Fake land title",
+          "signals_fr": ["Numéro non standard", "Dates incohérentes", "Sceau manquant"],
+          "signals_en": ["Non-standard number", "Inconsistent dates", "Missing seal"]
+        },
+        {
+          "type": "DOUBLE_VENTE",
+          "label_fr": "Double vente (même bien vendu à plusieurs)",
+          "label_en": "Double sale (same property sold multiple times)",
+          "signals_fr": ["Propriétaire récent", "Historice flou", "Prix anormalement bas"],
+          "signals_en": ["Recent owner", "Unclear history", "Abnormally low price"]
+        },
+        {
+          "type": "AGENT_NON_AGREE",
+          "label_fr": "Agent non agréé",
+          "label_en": "Unregistered agent",
+          "signals_fr": ["Pas de registre de commerce", "Pas de carte professionnelle"],
+          "signals_en": ["No business registration", "No professional card"]
+        },
+        {
+          "type": "PRIX_ANORMAL",
+          "label_fr": "Prix anormalement bas",
+          "label_en": "Abnormally low price",
+          "signals_fr": ["En dessous du marché", "Pression temporelle", "Refus de visite"],
+          "signals_en": ["Below market price", "Time pressure", "No visit allowed"]
+        },
+        {
+          "type": "PROPRIO_ABSENT",
+          "label_fr": "Propriétaire absent",
+          "label_en": "Absent owner",
+          "signals_fr": ["Vente par mandataire sans preuve", "Propriétaire à l'étranger sans représentation"],
+          "signals_en": ["Sale by agent without proof", "Owner abroad without representation"]
+        }
+      ]
+    },
+    {
+      "id": "TITLE_VERIFICATION",
+      "label_fr": "Vérification de titre foncier",
+      "label_en": "Land Title Verification",
+      "description_fr": "Processus de vérification d'authenticité d'un titre foncier",
+      "description_en": "Process of verifying land title authenticity",
+      "provided_by": ["NOTAIRE", "EXPERT_FONCIER"],
+      "regulation_reference": "Loi foncière de 1974",
+      "can_lawim_provide": false,
+      "disclaimer_required": true,
+      "steps": [
+        "Vérification du numéro auprès de la Conservation Foncière",
+        "Vérification du nom du propriétaire",
+        "Vérification de la superficie et des limites",
+        "Vérification des charges et hypothèques",
+        "Vérification de l'historique des mutations"
+      ]
+    },
+    {
+      "id": "CO_OWNERSHIP",
+      "label_fr": "Indivision et copropriété",
+      "label_en": "Co-ownership and Joint Ownership",
+      "description_fr": "Règles applicables aux biens en indivision ou copropriété",
+      "description_en": "Rules for co-owned or jointly owned properties",
+      "provided_by": ["NOTAIRE"],
+      "regulation_reference": "Code Civil (indivision), Loi 2019-020",
+      "can_lawim_provide": false,
+      "disclaimer_required": true,
+      "details": {
+        "indivision": "Tous les propriétaires doivent consentir à la vente",
+        "copropriete": "Règlement de copropriété obligatoire",
+        "syndic": "Gestion par syndic professionnel recommandé"
+      }
+    },
+    {
+      "id": "CONSTRUCTION_REGULATION",
+      "label_fr": "Réglementation de la construction",
+      "label_en": "Construction Regulations",
+      "description_fr": "Règles d'urbanisme et de construction au Cameroun",
+      "description_en": "Urban planning and construction rules in Cameroon",
+      "provided_by": ["ARCHITECTE"],
+      "regulation_reference": "Code de l'Urbanisme, Lois communales",
+      "can_lawim_provide": false,
+      "disclaimer_required": true,
+      "details": {
+        "permis_construire": "Obligatoire pour toute construction",
+        "alignement": "Respect des marges de recul",
+        "hauteur_max": "Variable par zone",
+        "destination": "Usage conforme au plan d'occupation des sols"
+      }
+    }
+  ],
+  "can_lawim_provide_summary": {
+    "can_provide": ["transfer_taxes_general", "rental_regulations_general", "fraud_indicators", "property_valuation_guidelines"],
+    "cannot_provide": ["specific_legal_advice", "title_verification_results", "contract_drafting", "litigation_support", "tax_planning"],
+    "must_refer_to": ["NOTAIRE", "AVOCAT", "EXPERT_FONCIER", "ADMINISTRATION_FISCALE"]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM Matching Engine + Geographic Scoring docs"
+  },
+  "mobility_weight": 20,
+  "geographic_weight": 20,
+  "geographic_scoring": {
+    "exact_neighborhood": "maximal",
+    "alternative_neighborhood": "high",
+    "neighboring_district": "medium",
+    "same_city_distant": "low",
+    "incompatible_zone": "minimal"
+  },
+  "mobility_modes": {
+    "STRICT": { "radius_boost": 0, "description": "Requested neighborhood only" },
+    "FLEXIBLE": { "radius_boost": 0.5, "description": "Alternative neighborhoods accepted" },
+    "VERY_FLEXIBLE": { "radius_boost": 1.0, "description": "Expanded zone" }
+  }
+}

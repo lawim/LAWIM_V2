@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM conversation-humanization-rules.md + whatsapp_language/"
+  },
+  "cameroonian_specific": {
+    "social_validation_phrases": [
+      "Mon grand frère doit voir",
+      "Mon cousin va vérifier",
+      "Mon oncle est sur place",
+      "Ma femme doit valider",
+      "Mon mari doit regarder"
+    ],
+    "market_specific": {
+      "title_related": ["titre foncier", "titre", "papier", "document", "notaire", "proprio direct", "terrain titré"],
+      "measurement": ["m²", "mètre carré", "hectare", "are"],
+      "construction": ["parpaing", "dur", "semi-dur", "en tôle", "poto-poto"],
+      "negotiation": ["dernier prix", "prix négociable", "à débattre", "on peut s'entendre", "combien dernier ?"],
+      "accessibility": ["bordure de route", "route goudronnée", "piste", "motopiste", "véhicule"],
+      "services": ["forage", "groupe électrogène", "climatisation", "parking", "gardien", "caméra"]
+    },
+    "languages": ["fr", "en", "pidgin", "camfranglais"],
+    "language_switch_rule": "Switch language without restarting the conversation"
+  }
+}

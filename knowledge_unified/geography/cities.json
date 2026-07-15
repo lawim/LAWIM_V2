@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "version": "3.0",
+    "country": "Cameroon",
+    "generated_at": "2026-07-15",
+    "source": "LAWIM KNOWLEDGE/geography/cameroon_geography.json + KNOWLEDGE/cities/cameroon_cities.json"
+  },
+  "priority_cities": [
+    {
+      "city_id": "CM-YAO",
+      "official_name": "Yaoundé",
+      "region": "Centre",
+      "priority_rank": 1,
+      "lat": 3.848032,
+      "lng": 11.502075,
+      "aliases": ["Yaounde", "Ydé", "YDE", "Yaoundé Ville", "Yaounde Ville", "Yaounde Centre", "Yaounde City"],
+      "typos": ["yaound", "yaoundee", "yaoundeee", "yaounde1", "yaonde", "yaond", "yaoundéé", "yaounder", "yyaounde"],
+      "social_variants": ["yde", "yaounde", "yaounde237", "yaoundecity"]
+    },
+    {
+      "city_id": "CM-DLA",
+      "official_name": "Douala",
+      "region": "Littoral",
+      "priority_rank": 2,
+      "lat": 4.051056,
+      "lng": 9.767868,
+      "aliases": ["Douala Ville", "Douala Centre", "DLA", "Douala City"],
+      "typos": ["doula", "doualaa", "doual", "doulala", "ddouala", "doulla", "doualaa237"],
+      "social_variants": ["dla", "douala237", "doualacity"]
+    },
+    {
+      "city_id": "CM-BDA",
+      "official_name": "Bamenda",
+      "region": "North West",
+      "priority_rank": 3,
+      "aliases": ["Bamenda Town", "Bamenda City"],
+      "typos": ["bamnda", "bameda", "bamendah", "bamender"],
+      "social_variants": ["bamcity", "bamenda237"]
+    },
+    {
+      "city_id": "CM-BFS",
+      "official_name": "Bafoussam",
+      "region": "West",
+      "priority_rank": 4,
+      "aliases": ["Bafoussam Ville", "Bafoussam Centre"],
+      "typos": ["bafousam", "bafossam", "bafoussamm", "bafousan"],
+      "social_variants": ["baf237"]
+    },
+    {
+      "city_id": "CM-BUE",
+      "official_name": "Buea",
+      "region": "South West",
+      "priority_rank": 5,
+      "aliases": ["Buea Town", "UB City"],
+      "typos": ["bueaa", "bua", "bueah", "bue"],
+      "social_variants": ["ub", "ubtown"]
+    },
+    {
+      "city_id": "CM-KRI",
+      "official_name": "Kribi",
+      "region": "South",
+      "priority_rank": 6,
+      "aliases": ["Kribi Beach", "Kribi Port", "Kribi Centre"],
+      "typos": ["kriby", "kribbi", "kribie", "kiribi"],
+      "social_variants": ["kribi237"]
+    },
+    {
+      "city_id": "CM-NKS",
+      "official_name": "Nkongsamba",
+      "region": "Littoral",
+      "priority_rank": 7,
+      "aliases": ["Nkongsamba Centre", "Nkongsamba Ville"],
+      "typos": ["nkonsamba", "nkongsmba", "nkongsambaa"],
+      "social_variants": ["nksa"]
+    },
+    {
+      "city_id": "CM-MRA",
+      "official_name": "Maroua",
+      "region": "Far North",
+      "priority_rank": 8,
+      "aliases": ["Maroua Ville", "Maroua Centre"],
+      "typos": ["maroa", "marouah", "marouaa"],
+      "social_variants": ["maroua237"]
+    },
+    {
+      "city_id": "CM-LIM",
+      "official_name": "Limbe",
+      "region": "South West",
+      "priority_rank": 9,
+      "aliases": ["Limbé", "Limbe Town"],
+      "typos": ["limbee", "limbéé", "limbeh", "limbae"],
+      "social_variants": ["limbe237"]
+    },
+    {
+      "city_id": "CM-GAR",
+      "official_name": "Garoua",
+      "region": "North",
+      "priority_rank": 10,
+      "aliases": ["Garoua Centre", "Garoua Ville"],
+      "typos": ["garoa", "garouah", "garouaa"],
+      "social_variants": ["garoua237"]
+    }
+  ],
+  "secondary_cities": [
+    "Ebolowa", "Mbalmayo", "Ngaoundéré", "Dschang", "Foumban",
+    "Mbouda", "Bertoua", "Kumba", "Edéa", "Meiganga",
+    "Batouri", "Ambam", "Kousseri", "Mora", "Kaélé",
+    "Guider", "Tiko", "Mutengene"
+  ]
+}

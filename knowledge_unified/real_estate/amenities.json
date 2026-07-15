@@ -1,0 +1,84 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/conversation-humanization-rules.md + KNOWLEDGE/vocabulary/real_estate_vocabulary.json"
+  },
+  "amenity_categories": {
+    "water_electricity": {
+      "label_fr": "Eau et Électricité",
+      "label_en": "Water and Electricity",
+      "description_fr": "Accès et qualité des services de base",
+      "description_en": "Access and quality of basic utilities",
+      "amenities": [
+        { "id": "WTR_CONNECTED", "label_fr": "Eau courante", "label_en": "Running water", "priority": "essential" },
+        { "id": "WTR_FORAGE", "label_fr": "Forage", "label_en": "Borehole/Well", "priority": "important" },
+        { "id": "ELEC_CONNECTED", "label_fr": "Électricité", "label_en": "Electricity", "priority": "essential" },
+        { "id": "ELEC_GENERATOR", "label_fr": "Groupe électrogène", "label_en": "Generator", "priority": "nice_to_have" },
+        { "id": "ELEC_SOLAR", "label_fr": "Panneaux solaires", "label_en": "Solar panels", "priority": "nice_to_have" },
+        { "id": "ELEC_INVERTER", "label_fr": "Onduleur", "label_en": "Inverter", "priority": "nice_to_have" }
+      ]
+    },
+    "security": {
+      "label_fr": "Sécurité",
+      "label_en": "Security",
+      "description_fr": "Équipements et services de sécurité",
+      "description_en": "Security equipment and services",
+      "amenities": [
+        { "id": "SEC_GUARD", "label_fr": "Gardien", "label_en": "Guard", "priority": "important" },
+        { "id": "SEC_CAMERA", "label_fr": "Caméra de surveillance", "label_en": "Surveillance camera", "priority": "nice_to_have" },
+        { "id": "SEC_FENCE", "label_fr": "Clôture", "label_en": "Fence", "priority": "important" },
+        { "id": "SEC_ALARM", "label_fr": "Alarme", "label_en": "Alarm system", "priority": "nice_to_have" },
+        { "id": "SEC_GATED", "label_fr": "Résidence fermée", "label_en": "Gated community", "priority": "nice_to_have" }
+      ]
+    },
+    "comfort": {
+      "label_fr": "Confort",
+      "label_en": "Comfort",
+      "description_fr": "Éléments de confort du logement",
+      "description_en": "Home comfort features",
+      "amenities": [
+        { "id": "AC", "label_fr": "Climatisation", "label_en": "Air conditioning", "priority": "important" },
+        { "id": "FAN", "label_fr": "Ventilateur", "label_en": "Ceiling fan", "priority": "standard" },
+        { "id": "HOT_WATER", "label_fr": "Eau chaude", "label_en": "Hot water", "priority": "nice_to_have" },
+        { "id": "FURNISHED", "label_fr": "Meublé", "label_en": "Furnished", "priority": "important" },
+        { "id": "TERRACE", "label_fr": "Terrasse", "label_en": "Terrace", "priority": "nice_to_have" },
+        { "id": "BALCONY", "label_fr": "Balcon", "label_en": "Balcony", "priority": "nice_to_have" },
+        { "id": "GARDEN", "label_fr": "Jardin", "label_en": "Garden", "priority": "nice_to_have" },
+        { "id": "POOL", "label_fr": "Piscine", "label_en": "Swimming pool", "priority": "luxury" },
+        { "id": "PARKING", "label_fr": "Parking", "label_en": "Parking", "priority": "important" },
+        { "id": "GARAGE", "label_fr": "Garage", "label_en": "Garage", "priority": "nice_to_have" }
+      ]
+    },
+    "accessibility": {
+      "label_fr": "Accessibilité",
+      "label_en": "Accessibility",
+      "description_fr": "Accès et situation du bien",
+      "description_en": "Property access and location",
+      "amenities": [
+        { "id": "ROAD_PAVED", "label_fr": "Route goudronnée", "label_en": "Paved road", "priority": "important" },
+        { "id": "ROAD_FRONTAGE", "label_fr": "Bordure de route", "label_en": "Road frontage", "priority": "important" },
+        { "id": "ROAD_DIRT", "label_fr": "Piste", "label_en": "Dirt road", "priority": "standard" },
+        { "id": "ACCESS_MOTO", "label_fr": "Motopiste", "label_en": "Motorcycle path", "priority": "acceptable" },
+        { "id": "ACCESS_VEHICLE", "label_fr": "Accès véhicule", "label_en": "Vehicle accessible", "priority": "important" },
+        { "id": "PUBLIC_TRANSPORT", "label_fr": "Transport en commun à proximité", "label_en": "Public transport nearby", "priority": "nice_to_have" }
+      ]
+    },
+    "services": {
+      "label_fr": "Services à proximité",
+      "label_en": "Nearby Services",
+      "description_fr": "Commerces et services disponibles à proximité",
+      "description_en": "Nearby shops and services",
+      "amenities": [
+        { "id": "SVC_MARKET", "label_fr": "Marché", "label_en": "Market", "priority": "important" },
+        { "id": "SVC_SUPERMARKET", "label_fr": "Supermarché", "label_en": "Supermarket", "priority": "nice_to_have" },
+        { "id": "SVC_SCHOOL", "label_fr": "École", "label_en": "School", "priority": "nice_to_have" },
+        { "id": "SVC_HOSPITAL", "label_fr": "Hôpital", "label_en": "Hospital", "priority": "nice_to_have" },
+        { "id": "SVC_PHARMACY", "label_fr": "Pharmacie", "label_en": "Pharmacy", "priority": "nice_to_have" },
+        { "id": "SVC_CHURCH", "label_fr": "Église", "label_en": "Church", "priority": "nice_to_have" },
+        { "id": "SVC_MOSQUE", "label_fr": "Mosquée", "label_en": "Mosque", "priority": "nice_to_have" },
+        { "id": "SVC_RESTAURANT", "label_fr": "Restaurant", "label_en": "Restaurant", "priority": "nice_to_have" },
+        { "id": "SVC_BANK", "label_fr": "Banque", "label_en": "Bank", "priority": "nice_to_have" }
+      ]
+    }
+  }
+}

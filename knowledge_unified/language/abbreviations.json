@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM whatsapp_language/ + search_aliases/ + typo_database/"
+  },
+  "city_abbreviations": {
+    "YDE": "Yaoundé",
+    "DLA": "Douala",
+    "BDA": "Bamenda",
+    "BFS": "Bafoussam",
+    "BUE": "Buea",
+    "KRI": "Kribi",
+    "NKS": "Nkongsamba",
+    "MRA": "Maroua",
+    "LIM": "Limbe",
+    "GAR": "Garoua"
+  },
+  "real_estate_abbreviations": {
+    "M": "million (XAF)",
+    "k": "thousand (XAF)",
+    "FCFA": "Franc CFA (XAF)",
+    "T.F.": "Titre Foncier (land title)",
+    "TF": "Titre Foncier",
+    "SIC": "Société Immobilière du Cameroun",
+    "CC": "Centre Commercial",
+    "CBA": "Caisse de Base d'Appui",
+    "CIP": "Certificat d'Inscription au Propriétaire",
+    "PU": "Permis d'Urbanisme",
+    "CU": "Certificat d'Urbanisme"
+  },
+  "social_abbreviations": {
+    "m2": "mètre carré",
+    "m²": "mètre carré",
+    "ha": "hectare",
+    "chbres": "chambres",
+    "appt": "appartement",
+    "appart": "appartement",
+    "meubl": "meublé",
+    "négoc": "négociable",
+    "dispo": "disponible"
+  }
+}

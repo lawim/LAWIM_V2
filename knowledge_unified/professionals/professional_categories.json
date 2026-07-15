@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/roles-matrix.md + KNOWLEDGE/conversation-patterns.md"
+  },
+  "professional_categories": [
+    {
+      "id": "AGENT_IMMOBILIER",
+      "label_fr": "Agent Immobilier",
+      "label_en": "Real Estate Agent",
+      "description_fr": "Professionnel facilitant les transactions immobilières pour le compte de clients",
+      "description_en": "Professional facilitating real estate transactions for clients",
+      "roles": ["INTRODUCER"],
+      "capabilities": [
+        "publish_property",
+        "update_property",
+        "manage_leads",
+        "respond_to_clients",
+        "schedule_visits",
+        "negotiate",
+        "earn_commission"
+      ],
+      "verification_required": true,
+      "commission_model": "variable",
+      "max_leads_per_batch": 5
+    },
+    {
+      "id": "PROPRIETAIRE",
+      "label_fr": "Propriétaire Direct",
+      "label_en": "Direct Owner",
+      "description_fr": "Propriétaire publiant directement son bien sans intermédiaire",
+      "description_en": "Owner listing their property directly without intermediary",
+      "roles": ["OWNER"],
+      "capabilities": [
+        "publish_property",
+        "update_availability",
+        "share_documents",
+        "respond_to_buyers"
+      ],
+      "verification_required": true,
+      "commission_model": "none",
+      "max_listings": 10
+    },
+    {
+      "id": "PROMOTEUR",
+      "label_fr": "Promoteur Immobilier",
+      "label_en": "Real Estate Developer",
+      "description_fr": "Professionnel développant et vendant des programmes immobiliers",
+      "description_en": "Professional developing and selling real estate projects",
+      "roles": ["DEVELOPER"],
+      "capabilities": [
+        "publish_project",
+        "manage_multi_unit",
+        "share_project_documents",
+        "manage_payments",
+        "schedule_delivery"
+      ],
+      "verification_required": true,
+      "commission_model": "none",
+      "max_listings": 100
+    },
+    {
+      "id": "NOTAIRE",
+      "label_fr": "Notaire",
+      "label_en": "Notary",
+      "description_fr": "Officier public instrumentant les actes juridiques immobiliers",
+      "description_en": "Public officer authenticating real estate legal acts",
+      "roles": ["PARTNER"],
+      "capabilities": [
+        "verify_title",
+        "authenticate_acts",
+        "provide_legal_advice",
+        "handle_transfer"
+      ],
+      "verification_required": true,
+      "commission_model": "regulated_fees"
+    },
+    {
+      "id": "EXPERT_FONCIER",
+      "label_fr": "Expert Foncier",
+      "label_en": "Land Expert",
+      "description_fr": "Expert en évaluation et expertise foncière",
+      "description_en": "Land valuation and expertise professional",
+      "roles": ["PARTNER"],
+      "capabilities": [
+        "land_survey",
+        "valuation",
+        "title_verification",
+        "feasibility_study"
+      ],
+      "verification_required": true,
+      "commission_model": "fee_per_service"
+    },
+    {
+      "id": "ARCHITECTE",
+      "label_fr": "Architecte",
+      "label_en": "Architect",
+      "description_fr": "Professionnel de la conception architecturale",
+      "description_en": "Architectural design professional",
+      "roles": ["PARTNER"],
+      "capabilities": [
+        "design_plans",
+        "permit_assistance",
+        "project_supervision",
+        "cost_estimation"
+      ],
+      "verification_required": true,
+      "commission_model": "fee_per_service"
+    },
+    {
+      "id": "OPERATEUR",
+      "label_fr": "Opérateur LAWIM",
+      "label_en": "LAWIM Operator",
+      "description_fr": "Personnel interne de la plateforme LAWIM",
+      "description_en": "Internal LAWIM platform staff",
+      "roles": ["MANAGER", "VICE_MANAGER"],
+      "capabilities": [
+        "triage_requests",
+        "assign_agents",
+        "review_content",
+        "manage_queue",
+        "handle_escalations",
+        "monitor_kpis"
+      ],
+      "verification_required": true,
+      "commission_model": "salary"
+    }
+  ],
+  "professional_statuses": {
+    "PENDING_VERIFICATION": "Account created, verification in progress",
+    "ACTIVE": "Verified and active on platform",
+    "SUSPENDED": "Temporarily suspended (compliance or quality)",
+    "BANNED": "Permanently removed from platform",
+    "INACTIVE": "No recent activity"
+  }
+}

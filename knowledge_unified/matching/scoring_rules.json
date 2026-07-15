@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM 4-Matching Engine LAWIM.docx + lead_scoring_rules.json"
+  },
+  "match_scoring": {
+    "freshness_bonus": {
+      "0-3_days": 15,
+      "4-7_days": 12,
+      "8-15_days": 8,
+      "16-30_days": 4,
+      "over_30_days": 0
+    },
+    "availability": {
+      "confirmed_bonus": 10,
+      "unconfirmed_malus": -20,
+      "rationale": "A great property that is already taken has zero operational value"
+    }
+  },
+  "lead_scoring_weights": {
+    "budget": 20,
+    "location": 15,
+    "urgency": 20,
+    "diaspora": 10,
+    "phone": 5,
+    "property_type": 15,
+    "investment_profile": 10
+  },
+  "intent_lead_weights": {
+    "BUY_PROPERTY": 50,
+    "SELL_PROPERTY": 60,
+    "RENT_PROPERTY": 30,
+    "INVESTOR_INTENT": 100,
+    "SEARCH_PROPERTY": 25
+  },
+  "scoring_rules": {
+    "budget_is_preference": true,
+    "budget_rule": "Budget is a preference, not an absolute constraint. Slightly above/below is acceptable with penalty.",
+    "priority_not_match_score": true,
+    "priority_rule": "Urgency level must NOT influence match score directly (users overestimate urgency)"
+  }
+}

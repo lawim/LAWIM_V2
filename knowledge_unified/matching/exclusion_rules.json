@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM 4-Matching Engine LAWIM.docx"
+  },
+  "exclusion_criteria": {
+    "property_status": ["ARCHIVED", "SOLD", "RENTED", "INACTIVE"],
+    "rejection": {
+      "description": "Property explicitly rejected by the requester",
+      "action": "Blacklisted for this Request (never re-propose)"
+    }
+  },
+  "request_status_transitions": {
+    "Request -> Match -> Lead -> Insatisfaction -> REOPENED": {
+      "consequence": "Rejected property is blacklisted for this Request"
+    }
+  },
+  "non_excludable": {
+    "description": "Never exclude solely because property is not perfect",
+    "principle": "Rank, don't filter"
+  }
+}

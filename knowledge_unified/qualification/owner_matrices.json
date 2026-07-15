@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM conversation-qualification-questions.md + roles-matrix.md"
+  },
+  "owner_qualification": {
+    "rental_listing": {
+      "required_fields": ["city", "neighborhood", "price", "availability_date", "contact"],
+      "optional_fields": ["furnished", "fees", "property_type", "bedrooms"],
+      "qualification_questions": [
+        "Le bien est situé dans quelle ville et quel quartier ?",
+        "Quel prix souhaitez-vous ?",
+        "C'est meublé ou non meublé ?",
+        "Le bien est disponible à partir de quand ?",
+        "Quels frais doivent être mentionnés ?",
+        "Qui est le contact de suivi ?"
+      ]
+    },
+    "sale_listing": {
+      "required_fields": ["property_type", "city", "neighborhood", "price", "documents"],
+      "optional_fields": ["surface", "availability", "condition"],
+      "qualification_questions": [
+        "Quel est le type de bien ?",
+        "Dans quelle ville et quel quartier ?",
+        "Quel prix demandez-vous ?",
+        "Quels documents sont disponibles ?"
+      ]
+    }
+  }
+}

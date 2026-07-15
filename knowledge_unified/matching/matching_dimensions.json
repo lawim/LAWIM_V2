@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM 4-Matching Engine LAWIM.docx + MATCHING_ENGINE docs",
+    "philosophy": "LAWIM is a ranking engine, not a filtering engine. Never hide a property just because it's not perfect."
+  },
+  "match_score": {
+    "range": "0-100",
+    "meaning": "Estimated compatibility (NOT absolute property quality)"
+  },
+  "dimensions": [
+    {
+      "id": "GEOGRAPHIC",
+      "name": "Geographic Compatibility",
+      "weight": 20,
+      "description": "Is the property where the client wants to live?"
+    },
+    {
+      "id": "MOBILITY",
+      "name": "Mobility",
+      "weight": 20,
+      "description": "Measures acceptance of travel distance"
+    },
+    {
+      "id": "PROPERTY_TYPE",
+      "name": "Property Type",
+      "weight": 15,
+      "description": "Compatibility of property type with request"
+    },
+    {
+      "id": "BUDGET",
+      "name": "Budget",
+      "weight": 10,
+      "description": "Budget gap measurement (preference, not absolute constraint)"
+    },
+    {
+      "id": "STANDING",
+      "name": "Standing/Quality Level",
+      "weight": 10,
+      "description": "Quality level compatibility"
+    },
+    {
+      "id": "SERVICES",
+      "name": "Services & Equipment",
+      "weight": 10,
+      "description": "Presence of requested amenities"
+    },
+    {
+      "id": "FRESHNESS",
+      "name": "Freshness",
+      "weight": 15,
+      "description": "Recency and activity of the listing"
+    }
+  ],
+  "bonus_malus": {
+    "availability_confirmed": { "type": "bonus", "value": 10, "description": "Availability verified" },
+    "availability_not_confirmed": { "type": "malus", "value": -20, "description": "Availability not confirmed" }
+  },
+  "badges": {
+    "VERIFIED": "bonus",
+    "RELIABLE": "bonus",
+    "FAST_RESPONDER": "bonus",
+    "TRUSTED_OWNER": "bonus",
+    "TOP_AGENT": "bonus",
+    "rule": "Badges improve ranking but never replace compatibility"
+  }
+}

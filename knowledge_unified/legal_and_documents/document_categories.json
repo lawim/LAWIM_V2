@@ -1,0 +1,161 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/minimum-fields-property.md + KNOWLEDGE/fraud-signals-and-verification.md"
+  },
+  "document_categories": [
+    {
+      "id": "TITLE_FONCIER",
+      "label_fr": "Titre Foncier",
+      "label_en": "Land Title",
+      "description_fr": "Document officiel attestant la propriété foncière",
+      "description_en": "Official document certifying land ownership",
+      "required_for": ["BUY", "SELL", "INVEST"],
+      "verification_method": "Check with Conservation Foncière",
+      "risk_if_missing": "HIGH - Cannot verify ownership",
+      "fraud_signals": [
+        "document_number_non_standard",
+        "signature_mismatch",
+        "inconsistent_dates",
+        "altered_or_erased_fields",
+        "watermark_absent_or_incorrect",
+        "issuing_authority_unknown"
+      ]
+    },
+    {
+      "id": "ACTE_DE_VENTE",
+      "label_fr": "Acte de Vente",
+      "label_en": "Sales Deed",
+      "description_fr": "Acte authentique de transfert de propriété",
+      "description_en": "Authentic deed of property transfer",
+      "required_for": ["BUY", "SELL"],
+      "verification_method": "Verify with notary who authenticated",
+      "risk_if_missing": "HIGH - No proof of transaction",
+      "fraud_signals": [
+        "notary_not_registered",
+        "signature_does_not_match_parties",
+        "date_inconsistencies",
+        "amount_differs_from_declared",
+        "witness_signatures_missing"
+      ]
+    },
+    {
+      "id": "CERTIFICAT_PROPRIETE",
+      "label_fr": "Certificat de Propriété",
+      "label_en": "Certificate of Ownership",
+      "description_fr": "Certificat prouvant le droit de propriété",
+      "description_en": "Certificate proving ownership rights",
+      "required_for": ["BUY", "SELL", "RENT"],
+      "verification_method": "Cross-reference with land registry",
+      "risk_if_missing": "HIGH",
+      "fraud_signals": [
+        "expired_certificate",
+        "owner_name_mismatch",
+        "parcel_number_invalid",
+        "issuing_date_suspicious"
+      ]
+    },
+    {
+      "id": "BAIL",
+      "label_fr": "Contrat de Bail",
+      "label_en": "Lease Agreement",
+      "description_fr": "Contrat de location entre propriétaire et locataire",
+      "description_en": "Rental contract between owner and tenant",
+      "required_for": ["RENT"],
+      "verification_method": "Verify terms and signatures",
+      "risk_if_missing": "MEDIUM",
+      "fraud_signals": [
+        "terms_unusually_favorable",
+        "deposit_amount_excessive",
+        "owner_identity_unverified",
+        "property_description_vague"
+      ]
+    },
+    {
+      "id": "CARTE_NATIONALE",
+      "label_fr": "Carte Nationale d'Identité",
+      "label_en": "National ID Card",
+      "description_fr": "Pièce d'identité officielle camerounaise",
+      "description_en": "Official Cameroonian identity document",
+      "required_for": ["all"],
+      "verification_method": "Visual check + number format validation",
+      "risk_if_missing": "HIGH",
+      "fraud_signals": [
+        "number_does_not_match_format",
+        "photo_does_not_match_person",
+        "expiry_date_passed",
+        "issued_by_unauthorized_authority"
+      ]
+    },
+    {
+      "id": "REGISTRE_COMMERCE",
+      "label_fr": "Registre de Commerce",
+      "label_en": "Business Registration",
+      "description_fr": "Immatriculation au registre du commerce et du crédit mobilier (RCCM)",
+      "description_en": "Registration at the trade and credit register",
+      "required_for": ["AGENT_IMMOBILIER", "PROMOTEUR"],
+      "verification_method": "Check with CFCE",
+      "risk_if_missing": "HIGH - Cannot operate as professional",
+      "fraud_signals": [
+        "registration_number_format_invalid",
+        "company_name_mismatch",
+        "status_not_active",
+        "address_does_not_match"
+      ]
+    },
+    {
+      "id": "PERMIS_CONSTRUIRE",
+      "label_fr": "Permis de Construire",
+      "label_en": "Building Permit",
+      "description_fr": "Autorisation administrative de construire",
+      "description_en": "Administrative authorization to build",
+      "required_for": ["CONSTRUCTION", "TER_CONST"],
+      "verification_method": "Verify with municipal authorities",
+      "risk_if_missing": "HIGH - Construction may be illegal",
+      "fraud_signals": [
+        "permit_number_invalid",
+        "issuing_authority_not_competent",
+        "dates_inconsistent",
+        "property_description_does_not_match"
+      ]
+    },
+    {
+      "id": "CASIER_JUDICIAIRE",
+      "label_fr": "Casier Judiciaire",
+      "label_en": "Criminal Record",
+      "description_fr": "Extrait de casier judiciaire (bulletin n°3)",
+      "description_en": "Criminal record extract",
+      "required_for": ["professional_verification"],
+      "verification_method": "Cross-reference with court records",
+      "risk_if_missing": "MEDIUM",
+      "fraud_signals": [
+        "document_number_invalid",
+        "issuing_date_recent_but_number_old",
+        "seal_absent_or_incorrect"
+      ]
+    },
+    {
+      "id": "ATTESTATION_FISCALE",
+      "label_fr": "Attestation Fiscale",
+      "label_en": "Tax Clearance",
+      "description_fr": "Attestation de situation fiscale",
+      "description_en": "Tax clearance certificate",
+      "required_for": ["professional_verification"],
+      "verification_method": "Verify with tax authorities",
+      "risk_if_missing": "MEDIUM",
+      "fraud_signals": [
+        "certificate_number_invalid",
+        "period_covered_inconsistent",
+        "amounts_do_not_match_declared_revenue"
+      ]
+    }
+  ],
+  "document_statuses": {
+    "NOT_PROVIDED": "Document not yet provided",
+    "PENDING_VERIFICATION": "Document provided, awaiting verification",
+    "VERIFIED": "Document verified and authentic",
+    "FLAGGED": "Document flagged for potential fraud",
+    "REJECTED": "Document rejected as fraudulent or invalid",
+    "EXPIRED": "Document has expired"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "version": "3.0",
+    "source": "LAWIM KNOWLEDGE/geography/district_aliases.json + v2 + v3 + typo_database/"
+  },
+  "district_aliases": {
+    "Bependa Omnisport": "Bepanda Omnisports",
+    "Bonamoussadi Cité": "Bonamoussadi",
+    "Bonamouti-Akwa 2": "Bonamouti",
+    "Centre Ville": "Centre",
+    "Messa Administratif": "Messa",
+    "Messa Doumassi": "Messa",
+    "Messa Ekoazon": "Messa",
+    "Messa Plateau": "Messa",
+    "Messa-Carrière": "Messa",
+    "Nkomkana I, II": "Nkomkana",
+    "Nsimeyong I, II": "Nsimeyong",
+    "Nouvelle zone d'Akwa Nord": "Akwa Nord",
+    "Nouvelle zone de New-Deido": "New Deido",
+    "Centre-ville": "Centre",
+    "Small Soppo-Wonganga": "Small Soppo",
+    "Small Soppo-Woteke": "Small Soppo",
+    "Small Soppo-Wovila": "Small Soppo",
+    "Lower Bolifamba": "Bolifamba",
+    "Upper Muea": "Muea",
+    "Lower Bokova": "Bokova",
+    "Federal Quarters": "Government Residential Area",
+    "Old-Government Station": "Government Residential Area",
+    "Clerk's Quarter": "Government Residential Area",
+    "Bonakeke Akwa": "Akwa",
+    "New-Bell Bandjoun": "New-Bell",
+    "Nkomkana I, II,": "Nkomkana I",
+    "Nsimeyong I, II,": "Nsimeyong I"
+  },
+  "district_hierarchy": {
+    "Muea": ["Lower Muea", "Upper Muea"],
+    "Great Soppo": ["Small Soppo-Wonganga", "Small Soppo-Woteke", "Small Soppo-Wovila"],
+    "Government Residential Area": ["Federal Quarters", "Clerk's Quarter", "Old-Government Station"],
+    "Bolifamba": ["Lower Bolifamba"]
+  },
+  "neighborhood_affinities": {
+    "$schema": "Neighborhood Affinity (affinité résidentielle)",
+    "description": "Compatibilité métier entre quartiers basée sur standing, usage, et logique métier",
+    "compatible": {
+      "Bastos Haut": ["Golf", "Santa Barbara", "Omnisports Haut Bastos"],
+      "Soa": ["Nkoabang", "Mbankomo", "Mbankomo Proche"]
+    },
+    "incompatible": {
+      "Bastos Haut": ["Omnisports Popular", "Mokolo Marché"],
+      "Golf": ["Omnisports Popular"]
+    }
+  }
+}

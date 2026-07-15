@@ -1,0 +1,169 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/property_types/property_types.json + KNOWLEDGE/real_estate/property_taxonomy_v2.json"
+  },
+  "property_types": [
+    {
+      "id": "APT",
+      "label_fr": "Appartement",
+      "label_en": "Apartment",
+      "description_fr": "Logement dans un immeuble collectif",
+      "description_en": "Dwelling in a multi-unit building",
+      "typical_sizes_m2": [30, 50, 70, 90, 120, 150],
+      "aliases": ["appart", "appt", "flat", "apartment"],
+      "bedroom_range": "0-4",
+      "furnished_available": true,
+      "property_category": "residential"
+    },
+    {
+      "id": "STU",
+      "label_fr": "Studio",
+      "label_en": "Studio",
+      "description_fr": "Logement tout-en-un (pièce unique + kitchenette + douche)",
+      "description_en": "Open-plan unit (single room + kitchenette + bathroom)",
+      "typical_sizes_m2": [15, 20, 25, 30, 35],
+      "aliases": ["studio", "flat", "efficiency", "chambre meublée"],
+      "bedroom_range": "0-1",
+      "furnished_available": true,
+      "property_category": "residential"
+    },
+    {
+      "id": "CHB",
+      "label_fr": "Chambre",
+      "label_en": "Room",
+      "description_fr": "Chambre individuelle (souvent meublée)",
+      "description_en": "Single room (often furnished)",
+      "typical_sizes_m2": [8, 10, 12, 15, 20],
+      "aliases": ["chambre", "room", "chb", "cham", "single room"],
+      "bedroom_range": "1",
+      "furnished_available": true,
+      "property_category": "residential"
+    },
+    {
+      "id": "CHB_MEUBLEE",
+      "label_fr": "Chambre Meublée",
+      "label_en": "Furnished Room",
+      "description_fr": "Chambre individuelle entièrement meublée",
+      "description_en": "Fully furnished single room",
+      "typical_sizes_m2": [10, 12, 15, 18, 20],
+      "aliases": ["chambre meublée", "furnished room", "chambre meublé", "furnished"],
+      "bedroom_range": "1",
+      "furnished_available": true,
+      "property_category": "residential"
+    },
+    {
+      "id": "MSN",
+      "label_fr": "Maison",
+      "label_en": "House",
+      "description_fr": "Maison individuelle",
+      "description_en": "Detached house",
+      "typical_sizes_m2": [80, 100, 120, 150, 200, 300, 500],
+      "aliases": ["maison", "house", "home", "villa", "msn"],
+      "bedroom_range": "1-6",
+      "furnished_available": true,
+      "property_category": "residential"
+    },
+    {
+      "id": "VIL",
+      "label_fr": "Villa",
+      "label_en": "Villa",
+      "description_fr": "Maison de standing haut de gamme",
+      "description_en": "High-end luxury house",
+      "typical_sizes_m2": [150, 200, 300, 400, 500, 800],
+      "aliases": ["villa", "luxury house", "villa de luxe", "luxury home"],
+      "bedroom_range": "2-8",
+      "furnished_available": true,
+      "property_category": "residential"
+    },
+    {
+      "id": "TER",
+      "label_fr": "Terrain",
+      "label_en": "Land",
+      "description_fr": "Terrain nu ou constructible",
+      "description_en": "Raw or buildable land",
+      "typical_sizes_m2": [100, 200, 300, 400, 500, 1000, 2000, 5000],
+      "aliases": ["terrain", "land", "plot", "parcel", "lot", "ground", "ter"],
+      "bedroom_range": null,
+      "furnished_available": false,
+      "property_category": "land"
+    },
+    {
+      "id": "TER_CONST",
+      "label_fr": "Terrain Constructible",
+      "label_en": "Buildable Land",
+      "description_fr": "Terrain avec permis de construire",
+      "description_en": "Land with building permit",
+      "typical_sizes_m2": [100, 200, 300, 400, 500, 1000],
+      "aliases": ["terrain constructible", "buildable land", "building plot"],
+      "bedroom_range": null,
+      "furnished_available": false,
+      "property_category": "land"
+    },
+    {
+      "id": "COM",
+      "label_fr": "Local Commercial",
+      "label_en": "Commercial Space",
+      "description_fr": "Local pour activité commerciale (boutique, magasin)",
+      "description_en": "Space for retail/commercial activity",
+      "typical_sizes_m2": [20, 30, 50, 80, 100, 150, 200, 500],
+      "aliases": ["local commercial", "boutique", "shop", "magasin", "commerce", "store"],
+      "bedroom_range": null,
+      "furnished_available": false,
+      "property_category": "commercial"
+    },
+    {
+      "id": "BUR",
+      "label_fr": "Bureau",
+      "label_en": "Office",
+      "description_fr": "Espace de travail professionnel",
+      "description_en": "Professional workspace",
+      "typical_sizes_m2": [10, 15, 20, 30, 50, 100, 200, 500],
+      "aliases": ["bureau", "office", "buro", "espace de travail", "workspace", "cabinet"],
+      "bedroom_range": null,
+      "furnished_available": true,
+      "property_category": "commercial"
+    },
+    {
+      "id": "IMM",
+      "label_fr": "Immeuble",
+      "label_en": "Apartment Building",
+      "description_fr": "Immeuble de rapport (plusieurs logements)",
+      "description_en": "Multi-unit income property",
+      "typical_sizes_m2": [200, 300, 500, 800, 1000],
+      "aliases": ["immeuble", "building", "apartment building", "immeuble de rapport", "income property"],
+      "bedroom_range": "variable",
+      "furnished_available": true,
+      "property_category": "commercial"
+    },
+    {
+      "id": "DEP",
+      "label_fr": "Dépôt / Entrepôt",
+      "label_en": "Warehouse",
+      "description_fr": "Espace de stockage ou entrepôt",
+      "description_en": "Storage or warehouse space",
+      "typical_sizes_m2": [50, 100, 200, 500, 1000, 2000],
+      "aliases": ["dépôt", "entrepôt", "warehouse", "storage", "magasin général", "hangar"],
+      "bedroom_range": null,
+      "furnished_available": false,
+      "property_category": "commercial"
+    }
+  ],
+  "property_categories": {
+    "residential": {
+      "label_fr": "Résidentiel",
+      "label_en": "Residential",
+      "types": ["APT", "STU", "CHB", "CHB_MEUBLEE", "MSN", "VIL"]
+    },
+    "land": {
+      "label_fr": "Terrain",
+      "label_en": "Land",
+      "types": ["TER", "TER_CONST"]
+    },
+    "commercial": {
+      "label_fr": "Commercial",
+      "label_en": "Commercial",
+      "types": ["COM", "BUR", "IMM", "DEP"]
+    }
+  }
+}

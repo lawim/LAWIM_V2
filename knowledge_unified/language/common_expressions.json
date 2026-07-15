@@ -1,0 +1,129 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM KNOWLEDGE/whatsapp_language/ + intents/ + conversation-patterns.md"
+  },
+  "french_expressions": {
+    "buy": [
+      "je veux acheter",
+      "terrain à vendre",
+      "je cherche une maison à acheter",
+      "je veux devenir propriétaire",
+      "je cherche un immeuble"
+    ],
+    "rent": [
+      "je veux louer",
+      "je cherche une maison",
+      "besoin d'un appartement",
+      "location urgente",
+      "qui a une maison disponible"
+    ],
+    "sell": [
+      "je vends",
+      "maison à vendre",
+      "terrain à vendre",
+      "vente urgente",
+      "propriétaire direct",
+      "je cherche acheteur"
+    ],
+    "invest": [
+      "je veux investir",
+      "je cherche un projet rentable",
+      "je veux construire",
+      "je suis en france",
+      "je veux acheter à distance",
+      "je cherche un immeuble locatif"
+    ],
+    "negotiate": [
+      "dernier prix",
+      "prix ferme",
+      "prix négociable",
+      "à débattre",
+      "on peut s'entendre",
+      "nego possible",
+      "combien dernier ?"
+    ],
+    "diaspora": [
+      "je suis en france",
+      "je suis au canada",
+      "je suis en belgique",
+      "je veux acheter à distance",
+      "je veux construire au pays"
+    ]
+  },
+  "english_expressions": {
+    "buy": [
+      "i want to buy",
+      "looking to purchase",
+      "house for sale",
+      "land for sale",
+      "looking for land"
+    ],
+    "rent": [
+      "looking for apartment",
+      "need house urgently",
+      "want to rent"
+    ],
+    "sell": [
+      "house for sale",
+      "land for sale",
+      "selling property",
+      "looking for buyer"
+    ],
+    "invest": [
+      "looking for investment",
+      "looking for ROI",
+      "real estate investment",
+      "buying remotely"
+    ]
+  },
+  "pidgin_expressions": {
+    "buy": [
+      "i wan buy house",
+      "i wan buy land",
+      "which land dey available",
+      "i di find land",
+      "i dey search land"
+    ],
+    "rent": [
+      "i di find house",
+      "i wan rent house",
+      "house dey ?"
+    ],
+    "sell": [
+      "i di sell house",
+      "i get land for sale",
+      "buyer dey ?"
+    ],
+    "invest": [
+      "i wan invest",
+      "which project fine",
+      "i get money for build"
+    ]
+  },
+  "camfranglais_expressions": {
+    "buy": [
+      "je need un terrain",
+      "je cherche un land",
+      "je want acheter terrain",
+      "j'ai budget 10M pour land"
+    ],
+    "sell": [
+      "je vends terrain",
+      "terrain à vendre prix ngociable"
+    ],
+    "rent": [
+      "je cherche appartement à louer"
+    ]
+  },
+  "urgency_signals": [
+    "urgent",
+    "très urgent",
+    "asap",
+    "immédiatement",
+    "aujourd'hui",
+    "avant fin semaine",
+    "je déménage demain",
+    "need now"
+  ]
+}

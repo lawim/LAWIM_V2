@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM 18_QUALIFICATION_MATRIX_IMPLEMENTATION.md + conversation-qualification-questions.md"
+  },
+  "matrices": {
+    "rent": {
+      "required_fields": ["city", "neighborhood", "budget_monthly", "property_type"],
+      "optional_fields": ["bedrooms", "bathrooms", "furnished", "move_in_date", "charges_included"],
+      "qualification_questions": [
+        "Dans quelle ville et quel quartier cherchez-vous ?",
+        "Quel budget mensuel maximum ?",
+        "Combien de chambres vous faut-il ?",
+        "Combien de douches si c'est important ?",
+        "C'est meublé ou non meublé ?",
+        "A partir de quand vous voulez emménager ?",
+        "Les charges doivent être incluses ou non ?"
+      ],
+      "stop_conditions": ["city_not_covered", "inventory_empty"],
+      "status_transitions": ["MISSING_CORE_FIELDS", "DRAFT_CREATED", "QUALIFIED", "MATCH_READY", "WAITLISTED"]
+    },
+    "buy": {
+      "required_fields": ["city", "neighborhood", "budget_total", "property_type"],
+      "optional_fields": ["bedrooms", "bathrooms", "title_status", "condition", "purpose"],
+      "qualification_questions": [
+        "Vous achetez pour habiter ou pour investir ?",
+        "Quel budget total ?",
+        "Quel quartier vous intéresse le plus ?",
+        "Vous voulez combien de chambres, de douches ou de salons ?",
+        "Vous avez besoin d'un titre foncier ou d'autres documents ?",
+        "L'état du bien peut demander des travaux ou pas ?"
+      ]
+    },
+    "land": {
+      "required_fields": ["city_or_axis", "surface", "budget"],
+      "optional_fields": ["titled", "serviced", "usage", "road_distance"],
+      "qualification_questions": [
+        "Dans quelle ville ou sur quel axe cherchez-vous ?",
+        "Quelle surface souhaitez-vous ?",
+        "Quel budget ?",
+        "Le terrain doit être titré et loti ?",
+        "A quelle distance de la route principale peut-il se trouver ?",
+        "Vous voulez quel usage : habitation, commerce, investissement ?"
+      ]
+    },
+    "commercial": {
+      "required_fields": ["activity_type", "surface", "budget", "neighborhood"],
+      "optional_fields": ["road_visibility", "parking", "water_electricity", "permitted_use"],
+      "qualification_questions": [
+        "Quel type d'activité va occuper le local ?",
+        "Quelle surface minimale ?",
+        "Quel budget ?",
+        "Le local doit être visible depuis la route ?",
+        "Il faut du parking, de l'eau ou de l'électricité ?",
+        "L'usage autorisé doit-il être confirmé avant la suite ?"
+      ]
+    }
+  },
+  "qualification_statuses": {
+    "MISSING_CORE_FIELDS": "Core fields not yet collected",
+    "DRAFT_CREATED": "Request draft created",
+    "QUALIFIED": "All required fields collected",
+    "MATCH_READY": "Ready for matching engine",
+    "WAITLISTED": "City not covered or no active inventory",
+    "NO_ACTIVE_MATCH": "No active matches found"
+  }
+}

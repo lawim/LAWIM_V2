@@ -1,0 +1,53 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/roles-matrix.md + KNOWLEDGE/conversation-patterns.md"
+  },
+  "required_fields": {
+    "identity": [
+      { "field": "full_name", "type": "string", "required": true, "description": "Full legal name" },
+      { "field": "phone", "type": "string", "required": true, "description": "Primary phone number (Cameroon format)" },
+      { "field": "secondary_phone", "type": "string", "required": false, "description": "Alternative phone number" },
+      { "field": "email", "type": "string", "required": true, "description": "Email address" },
+      { "field": "national_id", "type": "string", "required": true, "description": "Carte Nationale d'Identité number" },
+      { "field": "date_of_birth", "type": "date", "required": true, "description": "Date of birth" },
+      { "field": "nationality", "type": "string", "required": true, "description": "Nationality" }
+    ],
+    "address": [
+      { "field": "city", "type": "string", "required": true, "description": "City of residence" },
+      { "field": "neighborhood", "type": "string", "required": false, "description": "Neighborhood" },
+      { "field": "address_line", "type": "string", "required": false, "description": "Street address" }
+    ],
+    "professional": [
+      { "field": "professional_category", "type": "enum", "required": true, "values": ["AGENT_IMMOBILIER", "PROPRIETAIRE", "PROMOTEUR", "NOTAIRE", "EXPERT_FONCIER", "ARCHITECTE", "OPERATEUR"], "description": "Professional category" },
+      { "field": "license_number", "type": "string", "required": false, "description": "Professional license number (if applicable)" },
+      { "field": "years_experience", "type": "integer", "required": false, "description": "Years of professional experience" },
+      { "field": "specialization_areas", "type": "string[]", "required": false, "description": "Areas of specialization" },
+      { "field": "service_cities", "type": "string[]", "required": true, "description": "Cities where services are offered" },
+      { "field": "property_type_specialties", "type": "string[]", "required": false, "values": ["APT", "STU", "CHB", "MSN", "VIL", "TER", "COM", "BUR", "IMM", "DEP"], "description": "Property type specialties" }
+    ],
+    "business": [
+      { "field": "company_name", "type": "string", "required": false, "description": "Business/company name" },
+      { "field": "business_registration", "type": "string", "required": false, "description": "Registre de Commerce number" },
+      { "field": "tax_id", "type": "string", "required": false, "description": "Tax identification number" },
+      { "field": "insurance_proof", "type": "boolean", "required": false, "description": "Professional liability insurance" }
+    ],
+    "verification": [
+      { "field": "identity_verified", "type": "boolean", "required": true, "default": false, "description": "Identity has been verified" },
+      { "field": "documents_verified", "type": "boolean", "required": true, "default": false, "description": "Professional documents verified" },
+      { "field": "background_check_passed", "type": "boolean", "required": true, "default": false, "description": "Background check completed" },
+      { "field": "trust_score", "type": "number", "required": true, "default": 2.5, "min": 1.0, "max": 5.0, "description": "Trust score (1-5)" },
+      { "field": "reactivity_score", "type": "number", "required": true, "default": 3.0, "min": 1.0, "max": 5.0, "description": "Reactivity score (1-5)" },
+      { "field": "completion_rate", "type": "number", "required": true, "default": 0, "min": 0, "max": 100, "description": "Lead completion rate percentage" }
+    ],
+    "preferences": [
+      { "field": "lead_preferences", "type": "object", "required": false, "properties": {
+        "max_daily_leads": { "type": "integer", "default": 10 },
+        "notification_channels": { "type": "string[]", "default": ["whatsapp", "telegram"] },
+        "auto_accept": { "type": "boolean", "default": false },
+        "working_hours": { "type": "object", "description": "Preferred working hours" }
+      }, "description": "Lead management preferences" },
+      { "field": "languages", "type": "string[]", "required": true, "values": ["fr", "en", "pidgin"], "description": "Languages spoken" }
+    ]
+  }
+}

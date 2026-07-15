@@ -1,0 +1,40 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/vocabulary/real_estate_vocabulary.json + property_types_typo.json + KNOWLEDGE/property_types/property_types.json"
+  },
+  "aliases": {
+    "appartement": ["appart", "appt", "apartment", "flat", "apart", "apparte", "appartement meublé", "appartement non meublé"],
+    "studio": ["studio", "flat", "efficiency", "chambre meublée", "stud", "studeo", "studyo", "studios"],
+    "chambre": ["chambre", "room", "chb", "cham", "chambre meublée", "chambre à louer", "chambre seule", "chambre simple", "chambre à coucher", "bedroom", "single room", "chamb"],
+    "maison": ["maison", "house", "home", "msn", "maisonnette", "maison individuelle", "maison basse", "family house", "mason", "maison entière", "villa"],
+    "villa": ["villa", "luxury house", "villa de luxe", "luxury home", "super villa", "mini villa", "villa haut standing", "villa meublée", "villa duplex"],
+    "terrain": ["terrain", "land", "plot", "parcel", "lot", "ground", "ter", "terrain nu", "terrain constructible", "terrain à bâtir", "terrain viabilisé", "terrain mitoyen", "ter", "land for sale", "building plot", "piece of land", "land property", "terrain agricole", "terrain à usage commercial"],
+    "local commercial": ["local commercial", "boutique", "shop", "magasin", "commerce", "store", "local", "commercial space", "retail space", "boutique commerce", "space commercial", "local à usage commercial"],
+    "bureau": ["bureau", "office", "buro", "espace de travail", "workspace", "cabinet", "bureaux", "office space", "desk", "espace bureau", "bureau professionnel", "cabinet professionnel"],
+    "immeuble": ["immeuble", "building", "apartment building", "immeuble de rapport", "income property", "immeuble locatif", "immeuble résidentiel", "building complex", "immeuble commercial", "résidence"],
+    "dépôt": ["dépôt", "entrepôt", "warehouse", "storage", "magasin général", "hangar", "dépôt de marchandises", "entrepôt de stockage", "warehouse space", "go down", "godown"],
+    "terrain constructible": ["terrain constructible", "buildable land", "building plot", "terrain à bâtir", "terrain viabilisé", "constructible plot"]
+  },
+  "typo_mappings": {
+    "appartemant": "appartement",
+    "appartementt": "appartement",
+    "appart": "appartement",
+    "maisn": "maison",
+    "maisoon": "maison",
+    "terin": "terrain",
+    "terrian": "terrain",
+    "terain": "terrain",
+    "teraine": "terrain",
+    "teraine": "terrain",
+    "villa": "villa",
+    "vilaa": "villa",
+    "vilage": "maison",
+    "studeo": "studio",
+    "studyo": "studio",
+    "bureau": "bureau",
+    "bereau": "bureau",
+    "immeuble": "immeuble",
+    "immuble": "immeuble"
+  }
+}

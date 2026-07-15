@@ -1,0 +1,71 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM roles-matrix.md + conversation-patterns.md + intents/"
+  },
+  "user_typologies": [
+    {
+      "id": "DEMANDEUR",
+      "label": "Demandeur (Requester)",
+      "description": "Person looking for a property (buy, rent, invest)",
+      "roles": ["VISITOR", "USER", "BUYER", "RENTER"],
+      "journey": ["Create request", "Qualify", "Match", "Follow-up"],
+      "priority": "P1",
+      "decision": "FUSIONNER"
+    },
+    {
+      "id": "PROPRIETAIRE",
+      "label": "Propriétaire (Owner)",
+      "description": "Property owner listing a property",
+      "roles": ["OWNER"],
+      "journey": ["Publish property", "Update availability", "Documents", "Follow-up"],
+      "priority": "P1",
+      "decision": "FUSIONNER"
+    },
+    {
+      "id": "AGENT_IMMOBILIER",
+      "label": "Agent Immobilier (Real Estate Agent)",
+      "description": "Professional agent facilitating transactions",
+      "roles": ["INTRODUCER"],
+      "journey": ["Queue", "Assignment", "Follow-up", "Performance"],
+      "priority": "P1",
+      "decision": "ADAPTER"
+    },
+    {
+      "id": "OPERATEUR",
+      "label": "Opérateur LAWIM (LAWIM Operator)",
+      "description": "Internal platform operator",
+      "roles": ["MANAGER"],
+      "journey": ["Triage", "Review", "Assignment", "Queue management"],
+      "priority": "P0/P1",
+      "decision": "CONSERVER + ADAPTER"
+    },
+    {
+      "id": "SUPERVISEUR",
+      "label": "Superviseur (Supervisor)",
+      "description": "Oversight and audit role",
+      "roles": ["VICE_MANAGER", "ADMIN"],
+      "journey": ["KPIs", "Exceptions", "Contestations", "Audit"],
+      "priority": "P0/P1",
+      "decision": "FUSIONNER"
+    },
+    {
+      "id": "ADMINISTRATEUR",
+      "label": "Administrateur (Administrator)",
+      "description": "Platform administration",
+      "roles": ["ADMIN"],
+      "journey": ["Users", "Permissions", "System health", "Roles"],
+      "priority": "P0",
+      "decision": "CONSERVER"
+    },
+    {
+      "id": "INVESTISSEUR",
+      "label": "Investisseur (Investor)",
+      "description": "Investment-focused requester",
+      "roles": ["persona"],
+      "journey": ["Investment-oriented request view"],
+      "priority": "P2",
+      "decision": "ADAPTER"
+    }
+  ]
+}

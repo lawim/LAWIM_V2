@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM KNOWLEDGE/typo_database/typo_database.json + cities_typo.json + neighborhoods_typo.json + property_types_typo.json"
+  },
+  "city_typos": {
+    "yaounde": ["yaound", "yaoundee", "yaoundeee", "yaounde1", "yaonde", "yaond", "yaoundéé", "yaounder", "yyaounde", "yaund", "yaundee", "yaounde_", "yaounde3", "yaound3", "yaounde3", "yand", "yde3", "yaounde3"],
+    "douala": ["duala", "dla", "douala3", "doualaa", "doual", "doulala", "doual3", "dual", "douall", "doula"],
+    "buea": ["buea3", "bueaa", "bueah", "bue", "buea town", "bueatown", "buea-town", "buea_"],
+    "bafoussam": ["bafousam", "bafoussam3", "bafoussan", "bafousan", "bafoussamm", "bafoussama"],
+    "bamenda": ["bamenda3", "bamend", "bamendaa", "bamenda_", "bamend3", "bamenda town"],
+    "limbe": ["limb", "limbee"],
+    "kribi": ["kribi3", "kribi_", "krib", "kribii"],
+    "garoua": ["garoua3", "garouaa", "garoua_"],
+    "maroua": ["maroua3", "marouaa", "maroua_", "marou"],
+    "ngaoundere": ["ngaoundr", "ngaounderee", "ngaoundere3", "ngaoundr3", "ngaound", "ngaound3"]
+  },
+  "neighborhood_typos": {
+    "odza": ["odza3", "odzaa", "odza_", "odaz"],
+    "makepe": ["makepe3", "makepea", "makepe_", "makep", "makpe"],
+    "bonapriso": ["bonapriso3", "bonaprisoo", "bonapriso_", "bonapreso"],
+    "akwa": ["akwa3", "akwa_", "akwaa", "akw"],
+    "bastos": ["bastos3", "bastosa", "bastos_", "basto"],
+    "mendong": ["mendong3", "mendonga", "mendong_", "mendng"]
+  },
+  "property_type_typos": {
+    "appartement": ["appartement3", "appart", "appartment", "apartement"],
+    "villa": ["villa3", "villaa", "villa_", "vlla", "villla"],
+    "terrain": ["terrain3", "terrains", "terraing", "terrain_", "terain", "terraine"],
+    "maison": ["maison3", "maisons", "maizo", "maison_", "maizone"],
+    "duplex": ["duplex3", "dup1ex", "dupelx", "duplx", "dupex"],
+    "bureau": ["bureau3", "bureaux", "burau", "bureau_", "breaux"],
+    "commerce": ["commerce3", "comerce", "commerces", "commerce_", "commercia"],
+    "studio": ["studio3", "studios", "studio_", "studioo"],
+    "immeuble": ["immeuble3", "immeubles", "imuble", "immeuble_", "immuble"]
+  },
+  "general_typos": {
+    "meuble": ["meuble3", "meubles", "meuble_", "meubl", "meublee"],
+    "negociable": ["negociable", "negociable3", "ngociable_", "negociabl", "negociablee"],
+    "budget": ["budget3", "budgets", "budget_", "budjet"],
+    "urgent": ["urgent3", "urgents", "urgemt", "urgent_"],
+    "climatisation": ["climatisation3", "climatization", "climatis", "climat"]
+  }
+}

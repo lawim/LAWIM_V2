@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM intents/investor_intent.json + conversation-qualification-questions.md + diaspora-behavior-model.md"
+  },
+  "investor_qualification": {
+    "required_fields": ["expected_return", "budget", "city", "risk_tolerance"],
+    "optional_fields": ["strategy", "timeline", "diaspora_country", "exit_strategy", "property_type"],
+    "diaspora_countries": ["France", "Canada", "Belgique", "USA", "Allemagne", "Italie", "Royaume-Uni"],
+    "investment_types": ["land banking", "rental property", "commercial property", "development project", "student housing", "airbnb"],
+    "qualification_questions": [
+      "Vous cherchez du rendement ou une plus-value ?",
+      "Quel budget total ?",
+      "Dans quelle ville ou zone ?",
+      "Quel niveau de risque acceptez-vous ?",
+      "Vous visez la location, la revente ou un mix ?",
+      "Vous voulez une estimation humaine avant d'avancer ?"
+    ],
+    "diaspora_contextual_questions": [
+      "Avez-vous un proche sur place pour visiter ou vérifier ?",
+      "Souhaitez-vous recevoir des documents complémentaires ?",
+      "Souhaitez-vous organiser une visite ou une vérification ?"
+    ],
+    "capital_signals": ["10M", "20M", "50M", "100M", "200M", "500M"],
+    "priority": "P0",
+    "lead_score_weight": 100
+  }
+}

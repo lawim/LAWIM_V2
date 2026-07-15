@@ -1,0 +1,74 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM KNOWLEDGE/intents/ + conversation-patterns.md"
+  },
+  "intent_indicators": {
+    "BUY_PROPERTY": {
+      "description": "User wants to purchase property",
+      "primary_keywords": ["acheter", "achat", "buy", "purchase", "i wan buy"],
+      "secondary_signals": ["titre foncier", "notaire", "proprio direct", "terrain titré"],
+      "examples": ["je cherche un terrain à odza", "i want to buy land in Buea", "i wan buy house"]
+    },
+    "RENT_PROPERTY": {
+      "description": "User wants to rent property",
+      "primary_keywords": ["louer", "location", "rent", "i wan rent", "i di find house"],
+      "secondary_signals": ["meublé", "non meublé", "caution", "charges incluses"],
+      "examples": ["je cherche appartement à louer makepe", "looking for apartment Buea", "house dey ?"]
+    },
+    "SELL_PROPERTY": {
+      "description": "User wants to sell property",
+      "primary_keywords": ["vendre", "vente", "sell", "i di sell", "for sale"],
+      "secondary_signals": ["proprio", "titre foncier", "vente urgente", "dernier prix"],
+      "examples": ["je vends un terrain", "land for sale Buea", "i di sell house"]
+    },
+    "INVESTOR_INTENT": {
+      "description": "User wants to invest in real estate",
+      "primary_keywords": ["investir", "investissement", "investment", "ROI", "rentabilité", "i wan invest"],
+      "secondary_signals": ["diaspora", "en france", "au canada", "à distance", "immeuble locatif", "cashflow"],
+      "examples": ["je veux investir dans terrain yaound", "looking for investment Cameroon", "i get money for build"]
+    },
+    "NEGOTIATE": {
+      "description": "User wants to negotiate price",
+      "primary_keywords": ["dernier prix", "négociable", "best price", "nego"],
+      "examples": ["prix négociable 20 millions", "price negotiable 20M", "I fit pay 18M insaid 20M"]
+    },
+    "URGENT": {
+      "description": "User signals urgency",
+      "primary_keywords": ["urgent", "asap", "immédiatement", "need now", "today"],
+      "action": "Raise priority, compress follow-up interval"
+    }
+  },
+  "pattern_matching_rules": {
+    "search_buy": {
+      "pattern_type": "Search/Buy",
+      "typical_signals": "je cherche, need house, budget, city, district, type",
+      "user_need": "Find a property",
+      "system_move": "Create or refine Request, then search and rank matches"
+    },
+    "rent": {
+      "pattern_type": "Rent",
+      "typical_signals": "Rent language, duration, household size, budget, neighborhood",
+      "user_need": "Find a rental",
+      "system_move": "Qualify duration, location, budget, and service needs"
+    },
+    "sell_listing": {
+      "pattern_type": "Sell/Listing",
+      "typical_signals": "je vends, property details, title status, availability",
+      "user_need": "Publish or qualify an asset",
+      "system_move": "Create Property view, validate ownership and status"
+    },
+    "investor": {
+      "pattern_type": "Investor",
+      "typical_signals": "ROI, cashflow, yield, return, project rentable",
+      "user_need": "Evaluate investment value",
+      "system_move": "Switch to investor questions, prioritize return, risk, exit"
+    },
+    "diaspora": {
+      "pattern_type": "Diaspora",
+      "typical_signals": "en france, au canada, buying remotely, overseas buyer",
+      "user_need": "Remote purchase with trust",
+      "system_move": "Reassuring tone, documents, videos, structured follow-up"
+    }
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM KNOWLEDGE/conversation-humanization-rules.md + KNOWLEDGE/minimum-fields-property.md"
+  },
+  "constraint_categories": {
+    "title_status": {
+      "label_fr": "Statut du titre foncier",
+      "label_en": "Land Title Status",
+      "constraints": [
+        {
+          "id": "TITLED",
+          "label_fr": "Titré (titre foncier)",
+          "label_en": "Titled",
+          "description_fr": "Le bien dispose d'un titre foncier valide",
+          "description_en": "Property has a valid land title",
+          "searchable": true,
+          "priority": "essential"
+        },
+        {
+          "id": "UNTITLED",
+          "label_fr": "Non titré",
+          "label_en": "Untitled",
+          "description_fr": "Le bien n'a pas de titre foncier",
+          "description_en": "Property has no land title",
+          "searchable": true,
+          "priority": "information"
+        },
+        {
+          "id": "IN_PROGRESS",
+          "label_fr": "En cours de titrage",
+          "label_en": "Title in progress",
+          "description_fr": "La procédure d'obtention du titre foncier est en cours",
+          "description_en": "Land title procedure is in progress",
+          "searchable": true,
+          "priority": "important"
+        },
+        {
+          "id": "NOT_SPECIFIED",
+          "label_fr": "Non spécifié",
+          "label_en": "Not specified",
+          "description_fr": "Statut du titre non communiqué",
+          "description_en": "Title status not provided",
+          "searchable": false,
+          "priority": "information"
+        }
+      ]
+    },
+    "land_status": {
+      "label_fr": "Statut du terrain",
+      "label_en": "Land Status",
+      "constraints": [
+        {
+          "id": "SERVICED",
+          "label_fr": "Loti (viabilisé)",
+          "label_en": "Serviced",
+          "description_fr": "Terrain viabilisé (eau, électricité, voirie)",
+          "description_en": "Serviced land (water, electricity, road access)",
+          "searchable": true,
+          "priority": "important"
+        },
+        {
+          "id": "UNSERVICED",
+          "label_fr": "Non loti",
+          "label_en": "Unserviced",
+          "description_fr": "Terrain non viabilisé",
+          "description_en": "Unserviced land",
+          "searchable": true,
+          "priority": "information"
+        },
+        {
+          "id": "BUILDABLE",
+          "label_fr": "Constructible",
+          "label_en": "Buildable",
+          "description_fr": "Terrain avec permis de construire disponible",
+          "description_en": "Land with building permit available",
+          "searchable": true,
+          "priority": "essential"
+        }
+      ]
+    },
+    "construction_type": {
+      "label_fr": "Type de construction",
+      "label_en": "Construction Type",
+      "constraints": [
+        {
+          "id": "HARD",
+          "label_fr": "Dur (parpaing/béton)",
+          "label_en": "Hard (concrete block)",
+          "description_fr": "Construction en parpaings ou béton",
+          "description_en": "Concrete block construction",
+          "searchable": true,
+          "priority": "standard"
+        },
+        {
+          "id": "SEMI_HARD",
+          "label_fr": "Semi-dur",
+          "label_en": "Semi-hard",
+          "description_fr": "Construction mixte (parpaing + tôle)",
+          "description_en": "Mixed construction (block + corrugated iron)",
+          "searchable": true,
+          "priority": "standard"
+        },
+        {
+          "id": "TEMPORARY",
+          "label_fr": "En tôle / provisoire",
+          "label_en": "Corrugated iron / Temporary",
+          "description_fr": "Construction légère en tôle ou matériaux provisoires",
+          "description_en": "Light construction in corrugated iron or temporary materials",
+          "searchable": true,
+          "priority": "information"
+        }
+      ]
+    },
+    "condition": {
+      "label_fr": "État du bien",
+      "label_en": "Property Condition",
+      "constraints": [
+        {
+          "id": "NEW",
+          "label_fr": "Neuf",
+          "label_en": "New",
+          "description_fr": "Jamais habité, construction récente",
+          "description_en": "Never occupied, recent construction",
+          "searchable": true,
+          "priority": "standard"
+        },
+        {
+          "id": "GOOD",
+          "label_fr": "Bon état",
+          "label_en": "Good condition",
+          "description_fr": "Bien entretenu, prêt à habiter",
+          "description_en": "Well-maintained, move-in ready",
+          "searchable": true,
+          "priority": "standard"
+        },
+        {
+          "id": "NEEDS_WORK",
+          "label_fr": "À rénover",
+          "label_en": "Needs renovation",
+          "description_fr": "Nécessite des travaux",
+          "description_en": "Requires renovation work",
+          "searchable": true,
+          "priority": "standard"
+        },
+        {
+          "id": "UNDER_CONSTRUCTION",
+          "label_fr": "En construction",
+          "label_en": "Under construction",
+          "description_fr": "Bien en cours de construction",
+          "description_en": "Property under construction",
+          "searchable": true,
+          "priority": "standard"
+        }
+      ]
+    },
+    "furnished": {
+      "label_fr": "Meublé / Non meublé",
+      "label_en": "Furnished / Unfurnished",
+      "constraints": [
+        {
+          "id": "FURNISHED",
+          "label_fr": "Meublé",
+          "label_en": "Furnished",
+          "description_fr": "Bien entièrement meublé",
+          "description_en": "Fully furnished",
+          "searchable": true,
+          "priority": "important"
+        },
+        {
+          "id": "SEMI_FURNISHED",
+          "label_fr": "Semi-meublé",
+          "label_en": "Semi-furnished",
+          "description_fr": "Partiellement meublé (cuisine équipée, etc.)",
+          "description_en": "Partially furnished (fitted kitchen, etc.)",
+          "searchable": true,
+          "priority": "nice_to_have"
+        },
+        {
+          "id": "UNFURNISHED",
+          "label_fr": "Non meublé",
+          "label_en": "Unfurnished",
+          "description_fr": "Bien vide, sans meubles",
+          "description_en": "Empty, no furniture",
+          "searchable": true,
+          "priority": "standard"
+        }
+      ]
+    },
+    "other": {
+      "label_fr": "Autres contraintes",
+      "label_en": "Other Constraints",
+      "constraints": [
+        {
+          "id": "EXCLUSIVITY",
+          "label_fr": "Mandat exclusif",
+          "label_en": "Exclusive mandate",
+          "description_fr": "Le propriétaire a donné un mandat exclusif à LAWIM",
+          "description_en": "Owner has granted an exclusive mandate to LAWIM",
+          "searchable": true,
+          "priority": "essential"
+        },
+        {
+          "id": "VISIT_POSSIBLE",
+          "label_fr": "Visite possible",
+          "label_en": "Visit possible",
+          "description_fr": "Le bien peut être visité",
+          "description_en": "Property can be visited",
+          "searchable": true,
+          "priority": "essential"
+        },
+        {
+          "id": "AVAILABLE_NOW",
+          "label_fr": "Disponible immédiatement",
+          "label_en": "Available immediately",
+          "description_fr": "Le bien est disponible sans délai",
+          "description_en": "Property is available without delay",
+          "searchable": true,
+          "priority": "important"
+        },
+        {
+          "id": "WITH_CHARGES",
+          "label_fr": "Charges incluses",
+          "label_en": "Utilities included",
+          "description_fr": "Les charges (eau, électricité) sont incluses dans le loyer",
+          "description_en": "Utilities (water, electricity) included in rent",
+          "searchable": true,
+          "priority": "important"
+        }
+      ]
+    }
+  }
+}

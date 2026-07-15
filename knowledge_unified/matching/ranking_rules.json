@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM 4-Matching Engine LAWIM.docx"
+  },
+  "ranking_methodology": {
+    "general_formula": "match_score = geo_score + mobility_score + property_type_score + budget_score + standing_score + services_score + freshness_score + availability_bonus + badges_bonus",
+    "ranking_principle": "Score measures estimated compatibility, not absolute property quality",
+    "example": {
+      "exceptional_property_bastos_low_score": "Request = Odza -> score is low (wrong location)",
+      "average_property_odza_high_score": "Request = Odza -> score is high (correct location)"
+    }
+  },
+  "agent_distribution": {
+    "default_max_agents": 3,
+    "rationale": "Let the client choose",
+    "exclusivity_cases": ["Premium subscription", "Exclusive boost", "Exclusive mandate"],
+    "exclusive_action": "1 agent receives the lead"
+  },
+  "agent_matching_criteria": ["zone", "specialty", "reactivity", "trust_score", "history"]
+}

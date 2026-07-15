@@ -1,0 +1,39 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM KNOWLEDGE/pricing_expressions/pricing_expressions.json + whatsapp_language/"
+  },
+  "amount_patterns": [
+    { "pattern": "5M", "min_value": 5000000, "max_value": 5000000, "currency": "XAF", "type": "price" },
+    { "pattern": "10M", "min_value": 10000000, "max_value": 10000000, "currency": "XAF", "type": "price" },
+    { "pattern": "20M", "min_value": 20000000, "max_value": 20000000, "currency": "XAF", "type": "price" },
+    { "pattern": "50M", "min_value": 50000000, "max_value": 50000000, "currency": "XAF", "type": "price" },
+    { "pattern": "100M", "min_value": 100000000, "max_value": 100000000, "currency": "XAF", "type": "investment" },
+    { "pattern": "200M", "min_value": 200000000, "max_value": 200000000, "currency": "XAF", "type": "investment" },
+    { "pattern": "300k/month", "min_value": 300000, "max_value": 300000, "currency": "XAF", "type": "rent_monthly" },
+    { "pattern": "150k", "min_value": 150000, "max_value": 150000, "currency": "XAF", "type": "rent_monthly" },
+    { "pattern": "100k par mois", "min_value": 100000, "max_value": 100000, "currency": "XAF", "type": "rent_monthly" },
+    { "pattern": "8 000 000 FCFA", "min_value": 8000000, "max_value": 8000000, "currency": "XAF", "type": "price" },
+    { "pattern": "12 millions FCFA", "min_value": 12000000, "max_value": 12000000, "currency": "XAF", "type": "price" },
+    { "pattern": "10-15M", "min_value": 10000000, "max_value": 15000000, "currency": "XAF", "type": "price_range" },
+    { "pattern": "20-30 millions", "min_value": 20000000, "max_value": 30000000, "currency": "XAF", "type": "price_range" }
+  ],
+  "price_modifiers": {
+    "prix ferme": "price_fixed",
+    "prix négociable": "negotiable",
+    "à débattre": "negotiable",
+    "dernier prix": "final_price",
+    "ngociable": "negotiable",
+    "pas de commission": "commission_free",
+    "gratuit commission": "commission_free",
+    "caution 1 mois": "deposit_1month",
+    "2 mois caution": "deposit_2months",
+    "avance 6 mois": "advance_6months"
+  },
+  "budget_types": {
+    "buy": "global_price",
+    "rent": "monthly_rent",
+    "land": "global_price_or_per_sqm",
+    "commercial": "monthly_rent_and_entry_fee"
+  }
+}

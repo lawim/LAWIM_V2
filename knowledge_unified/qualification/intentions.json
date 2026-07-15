@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "source": "LAWIM KNOWLEDGE/intents/ + Request Engine Module 3 + conversation-qualification-questions.md"
+  },
+  "intents": [
+    {
+      "intent_id": "BUY_PROPERTY",
+      "label": "Achat (Buy)",
+      "priority": "VERY_HIGH",
+      "lead_score_weight": 50,
+      "keywords_fr": ["acheter", "achat", "propriétaire", "terrain", "villa", "immeuble"],
+      "keywords_en": ["buy", "purchase", "house for sale", "land for sale"],
+      "keywords_pidgin": ["i wan buy house", "i wan buy land"],
+      "budget_type": "global_price",
+      "qualification_fields": ["city", "neighborhood", "budget", "property_type", "bedrooms", "title_status", "condition"]
+    },
+    {
+      "intent_id": "RENT_PROPERTY",
+      "label": "Location (Rent)",
+      "priority": "HIGH",
+      "lead_score_weight": 30,
+      "keywords_fr": ["louer", "location", "logement", "appartement", "maison", "studio"],
+      "keywords_en": ["rent", "apartment", "house for rent"],
+      "keywords_pidgin": ["i di find house", "i wan rent house"],
+      "budget_type": "monthly_rent",
+      "qualification_fields": ["city", "neighborhood", "budget", "property_type", "bedrooms", "furnished", "move_in_date"]
+    },
+    {
+      "intent_id": "SELL_PROPERTY",
+      "label": "Vente (Sell)",
+      "priority": "VERY_HIGH",
+      "lead_score_weight": 60,
+      "keywords_fr": ["vendre", "vente", "céder", "terrain", "maison", "villa"],
+      "keywords_en": ["sell", "for sale", "selling property"],
+      "keywords_pidgin": ["i di sell house", "i get land for sale"],
+      "budget_type": "asking_price",
+      "qualification_fields": ["property_type", "city", "neighborhood", "price", "documents", "availability", "contact"]
+    },
+    {
+      "intent_id": "INVESTOR_INTENT",
+      "label": "Investissement (Invest)",
+      "priority": "P0",
+      "lead_score_weight": 100,
+      "diaspora_countries": ["France", "Canada", "Belgique", "USA", "Allemagne", "Italie", "Royaume-Uni"],
+      "investment_types": ["land banking", "rental property", "commercial property", "development project", "student housing", "airbnb"],
+      "keywords_fr": ["investir", "investissement", "roi", "rentabilité", "immeuble", "projet"],
+      "keywords_en": ["investment", "ROI", "real estate investment"],
+      "qualification_fields": ["expected_return", "budget", "city", "risk_tolerance", "strategy", "timeline"]
+    },
+    {
+      "intent_id": "SEARCH_PROPERTY",
+      "label": "Recherche (Search)",
+      "priority": "NORMAL",
+      "lead_score_weight": 25,
+      "confidence_threshold": 0.7,
+      "keywords_fr": ["cherche", "recherche", "besoin", "maison", "appartement"],
+      "description": "General search before intent is fully qualified"
+    }
+  ]
+}

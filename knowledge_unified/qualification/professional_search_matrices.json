@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "source": "LAWIM conversation-qualification-questions.md + roles-matrix.md"
+  },
+  "professional_search": {
+    "agent_search": {
+      "description": "Looking for a real estate agent",
+      "required_fields": ["city", "specialty", "zone"],
+      "optional_fields": ["reactivity", "trust_score", "language"],
+      "qualification_questions": [
+        "Dans quelle ville cherchez-vous un agent ?",
+        "Quel type de bien vous intéresse ?",
+        "Quelle zone spécifiquement ?"
+      ]
+    },
+    "agency_search": {
+      "description": "Looking for an agency",
+      "required_fields": ["city", "service_type"],
+      "optional_fields": ["reputation", "size", "specialization"],
+      "qualification_questions": [
+        "Dans quelle ville ?",
+        "Quel type de service recherchez-vous ?"
+      ]
+    },
+    "property_manager": {
+      "description": "Looking for a property manager",
+      "required_fields": ["city", "property_type", "service_scope"],
+      "qualification_questions": [
+        "De quel type de bien s'agit-il ?",
+        "Dans quelle ville ?",
+        "Quel type de gestion souhaitez-vous ?"
+      ]
+    }
+  }
+}
