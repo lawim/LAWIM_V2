@@ -8,6 +8,8 @@
 
 ## 0. H0.5 Integration Layer — Qualification Matrix Contract
 
+**DEPENDENCY_H05:** This contract depends on H0.5 qualification matrices and field dictionaries loaded from `docs/lawim_heritage_gold/qualification_matrices/`.
+
 ### 0.1 Loading Contract — Matrix Selection
 
 Matrices are sourced from H0.5 qualification data. The loading process resolves the correct matrix for a given request:

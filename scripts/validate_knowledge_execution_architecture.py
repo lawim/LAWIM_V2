@@ -196,10 +196,15 @@ def check_transition_guards(content):
 
 
 def check_duplicate_ids_across_files():
-    """Check no duplicate knowledge/rule IDs across files"""
+    """Check no duplicate knowledge/rule IDs across files.
+    KNOWLEDGE_EXECUTION_INVENTORY.md is the master index and intentionally
+    contains all IDs — it is exempted from the duplicate check."""
+    INVENTORY = "KNOWLEDGE_EXECUTION_INVENTORY.md"
     all_ids = {}
     issues = []
     for filename in REQUIRED_FILES:
+        if filename == INVENTORY:
+            continue
         filepath = os.path.join(KNOWLEDGE_EXECUTION_DIR, filename)
         content = get_file_content(filepath)
         ids = find_knowledge_ids(content) | find_rule_ids(content)
