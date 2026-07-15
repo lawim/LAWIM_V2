@@ -594,6 +594,10 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                 self._send_json({"overview": self.services.ai.ai_overview()})
                 return
 
+        if path.startswith("/api/v4/knowledge/"):
+            self._handle_v4_knowledge_get(path, query)
+            return
+
         if path.startswith("/api/v3/"):
             self._handle_v3_api("GET", path, query, {})
             return
@@ -1699,6 +1703,68 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
             self._send_json(kp.stats(actor=actor))
             return
         raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown knowledge API route")
+
+    def _handle_v4_knowledge_get(self, path: str, query: dict[str, list[str]]) -> None:
+        try:
+            from .knowledge_runtime.api import KnowledgeApiHandler
+            from .knowledge_runtime.config import KnowledgeConfig as KRC
+
+            kr = self.services.knowledge_runtime
+            handler = KnowledgeApiHandler(kr, self.config.knowledge_internal_api_enabled)
+
+            if path == "/api/v4/knowledge/health":
+                self._send_json(handler.handle_health())
+                return
+            if path == "/api/v4/knowledge/version":
+                self._send_json(handler.handle_version())
+                return
+            if path == "/api/v4/knowledge/registries":
+                self._send_json(handler.handle_registries())
+                return
+            if path == "/api/v4/knowledge/property-types":
+                self._send_json(handler.handle_property_types(query=self._first(query, "q")))
+                return
+            if path.startswith("/api/v4/knowledge/property-types/"):
+                type_id = path[len("/api/v4/knowledge/property-types/"):]
+                self._send_json(handler.handle_property_types(type_id=type_id))
+                return
+            if path == "/api/v4/knowledge/services":
+                self._send_json(handler.handle_services(query=self._first(query, "q")))
+                return
+            if path.startswith("/api/v4/knowledge/services/"):
+                service_id = path[len("/api/v4/knowledge/services/"):]
+                self._send_json(handler.handle_services(service_id=service_id))
+                return
+            if path == "/api/v4/knowledge/roles":
+                self._send_json(handler.handle_roles())
+                return
+            if path == "/api/v4/knowledge/intents":
+                self._send_json(handler.handle_intents())
+                return
+            if path == "/api/v4/knowledge/transactions":
+                self._send_json(handler.handle_transactions())
+                return
+            if path == "/api/v4/knowledge/matrices":
+                self._send_json(handler.handle_matrices())
+                return
+            if path.startswith("/api/v4/knowledge/matrices/"):
+                matrix_id = path[len("/api/v4/knowledge/matrices/"):]
+                self._send_json(handler.handle_matrices(matrix_id=matrix_id))
+                return
+            if path.startswith("/api/v4/knowledge/fields/"):
+                field_id = path[len("/api/v4/knowledge/fields/"):]
+                self._send_json(handler.handle_field(field_id))
+                return
+            if path.startswith("/api/v4/knowledge/source-trace/"):
+                concept_id = path[len("/api/v4/knowledge/source-trace/"):]
+                self._send_json(handler.handle_source_trace(concept_id))
+                return
+            raise ApiError(HTTPStatus.NOT_FOUND, "not_found", "Unknown knowledge v4 API route")
+        except ApiError:
+            raise
+        except Exception as exc:
+            LOGGER.exception("Knowledge v4 API error")
+            raise ApiError(HTTPStatus.INTERNAL_SERVER_ERROR, "knowledge_api_error", str(exc)) from exc
 
     def _extract_crm_id(self, path: str, *, resource: str, suffix: str = "") -> int:
         marker = f"/api/v2/crm/{resource}/"

@@ -236,6 +236,8 @@ class AppConfig:
     gemini_primary_model: str | None = "gemini-3.5-flash"
     gemini_secondary_api_key: str | None = None
     gemini_secondary_model: str | None = "gemini-2.5-flash"
+    knowledge_runtime_enabled: bool = False
+    knowledge_internal_api_enabled: bool = False
 
     @classmethod
     def legacy_construct(
@@ -450,6 +452,8 @@ class AppConfig:
             human_escalation_after_fallback_count=_int_env("HUMAN_ESCALATION_AFTER_FALLBACK_COUNT", 2),
             human_escalation_on_user_request=_bool_env("HUMAN_ESCALATION_ON_USER_REQUEST", True),
             human_escalation_on_all_providers_failed=_bool_env("HUMAN_ESCALATION_ON_ALL_PROVIDERS_FAILED", True),
+            knowledge_runtime_enabled=_bool_env("LAWIM_KNOWLEDGE_RUNTIME_ENABLED", False),
+            knowledge_internal_api_enabled=_bool_env("LAWIM_KNOWLEDGE_INTERNAL_API_ENABLED", False),
             deepseek_api_key=_text_env("DEEPSEEK_API_KEY"),
             deepseek_model=_text_env("DEEPSEEK_MODEL", "deepseek-v4-flash"),
             deepseek_base_url=_text_env("DEEPSEEK_BASE_URL", "https://api.deepseek.com"),
@@ -632,6 +636,8 @@ class AppConfig:
             auth_rate_limit_max=100,
             auth_rate_limit_window_seconds=300,
             public_media=True,
+            knowledge_runtime_enabled=False,
+            knowledge_internal_api_enabled=False,
         )
         if overrides:
             config = replace(config, **overrides)  # type: ignore[arg-type]

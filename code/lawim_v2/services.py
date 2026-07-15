@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from http import HTTPStatus
+from pathlib import Path
 
 from .config import AppConfig
 from .db import LawimRepository
@@ -149,6 +150,17 @@ class LawimServices:
         from .knowledge_platform.service import KnowledgePlatformService
 
         self.knowledge_platform = KnowledgePlatformService(repository, self.projects, self.policy)
+        from .knowledge_runtime.service import KnowledgeService as KnowledgeRuntimeService
+        from .knowledge_runtime.config import KnowledgeConfig as KnowledgeRuntimeConfig
+
+        self.knowledge_runtime = KnowledgeRuntimeService(
+            KnowledgeRuntimeConfig(
+                runtime_enabled=config.knowledge_runtime_enabled,
+                internal_api_enabled=config.knowledge_internal_api_enabled,
+                project_root=Path(__file__).resolve().parents[1],
+            ),
+            build_commit="76710d89",
+        )
         from .workflow_automation.service import WorkflowAutomationService
 
         self.workflow_automation = WorkflowAutomationService(repository, self.projects, self.policy)
