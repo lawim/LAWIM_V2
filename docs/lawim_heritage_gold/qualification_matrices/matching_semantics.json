@@ -1,0 +1,651 @@
+{
+  "roles": {
+    "hard_constraint": {
+      "description": "Field must match exactly for the result to be considered. Binary filter: pass or exclude.",
+      "score_contribution": "filter",
+      "evaluation_order": 1,
+      "examples": [
+        "city",
+        "transaction_type",
+        "property_type",
+        "usage_prevu",
+        "activite_prevue",
+        "surface_min"
+      ]
+    },
+    "soft_constraint": {
+      "description": "Strong preference but flexible. Properties that don't match are NOT excluded but receive a score penalty.",
+      "score_contribution": "weighted_scoring_0_to_100",
+      "evaluation_order": 2,
+      "examples": [
+        "neighborhood",
+        "budget",
+        "chambres",
+        "douches",
+        "cuisine",
+        "meuble",
+        "parking",
+        "securite",
+        "eau",
+        "electricite"
+      ]
+    },
+    "ranking_preference": {
+      "description": "Used ONLY to rank results, never to filter. Properties with this feature matching rank higher.",
+      "score_contribution": "bonus_+5_to_+15",
+      "evaluation_order": 3,
+      "examples": [
+        "etage",
+        "balcon",
+        "jardin",
+        "piscine",
+        "flux_passage",
+        "visibilite_route",
+        "duree_sejour",
+        "urgence"
+      ]
+    },
+    "exclusion": {
+      "description": "Properties matching this criterion are explicitly excluded from results.",
+      "score_contribution": "binary_exclude",
+      "evaluation_order": 0,
+      "examples": [
+        "previously_rejected_properties",
+        "user_declined_properties",
+        "neighborhoods_explicitly_ruled_out"
+      ]
+    },
+    "boost": {
+      "description": "When matched, applies a fixed score boost above the base matching score.",
+      "score_contribution": "fixed_additive_+10_to_+25_capped_at_+50",
+      "evaluation_order": 4,
+      "examples": [
+        "exact_neighborhood_match_+25",
+        "exact_city_match_+20",
+        "budget_within_range_+15",
+        "title_foncier_+10",
+        "diaspora_investor_+20"
+      ]
+    },
+    "penalty": {
+      "description": "When missing or mismatched, applies a fixed score penalty.",
+      "score_contribution": "fixed_subtractive_-5_to_-50_floored_at_0",
+      "evaluation_order": 5,
+      "examples": [
+        "missing_budget_-10",
+        "unclear_location_-10",
+        "spam_like_-50",
+        "missing_neighborhood_-5",
+        "missed_visit_-25",
+        "incomplete_documents_-30"
+      ]
+    },
+    "informational_only": {
+      "description": "Collected for display, context, or CRM purposes. Does NOT affect match score.",
+      "score_contribution": "none",
+      "evaluation_order": 6,
+      "examples": [
+        "nom",
+        "email",
+        "langue",
+        "zone",
+        "standing",
+        "derived_profil",
+        "commentaire"
+      ]
+    },
+    "verification_only": {
+      "description": "Used ONLY for verification purposes at transaction time. Does NOT affect matching.",
+      "score_contribution": "none_blocks_transaction_if_fail",
+      "evaluation_order": 7,
+      "examples": [
+        "telephone",
+        "num_titre",
+        "bornage",
+        "certificat_urbanisme",
+        "carte_professionnelle"
+      ]
+    },
+    "transaction_blocker": {
+      "description": "Must be resolved before a transaction can proceed. These are transaction-readiness gates.",
+      "score_contribution": "none_blocks_transaction_until_resolved",
+      "evaluation_order": 8,
+      "examples": [
+        "caution",
+        "financing",
+        "litiges_connus",
+        "hypotheque",
+        "documents_fiscaux"
+      ]
+    }
+  },
+  "field_mappings": {
+    "city": {
+      "default_role": "hard_constraint",
+      "tolerance": 0,
+      "weight": 0.3
+    },
+    "neighborhood": {
+      "default_role": "soft_constraint",
+      "tolerance": {
+        "nearby": 0.7,
+        "exact": 1.0
+      },
+      "weight": 0.25,
+      "boost_exact": 25
+    },
+    "budget_max": {
+      "default_role": "hard_constraint",
+      "tolerance": {
+        "RENT": 0.2,
+        "BUY": 0.15,
+        "INVEST": 0.25,
+        "LAND_BUY": 0.15,
+        "FINANCE": 0.1
+      },
+      "weight": 0.25
+    },
+    "budget_min": {
+      "default_role": "soft_constraint",
+      "tolerance": {
+        "RENT": 0.2,
+        "BUY": 0.15
+      },
+      "weight": 0.1
+    },
+    "budget_negotiable": {
+      "default_role": "soft_constraint",
+      "extra_tolerance": {
+        "RENT": 0.1,
+        "BUY": 0.05,
+        "INVEST": 0.15
+      },
+      "weight": 0.05
+    },
+    "property_type": {
+      "default_role": "hard_constraint",
+      "tolerance": 0,
+      "weight": 0.15
+    },
+    "chambres": {
+      "default_role": "soft_constraint",
+      "tolerance": 1,
+      "weight": 0.1
+    },
+    "douches": {
+      "default_role": "soft_constraint",
+      "tolerance": 1,
+      "weight": 0.08
+    },
+    "salons": {
+      "default_role": "ranking_preference",
+      "weight": 0.05
+    },
+    "cuisine": {
+      "default_role": "soft_constraint",
+      "weight": 0.08
+    },
+    "meuble": {
+      "default_role": "soft_constraint",
+      "weight": 0.08
+    },
+    "surface": {
+      "default_role": "ranking_preference",
+      "rent_weight": 0.05,
+      "buy_weight": 0.1
+    },
+    "surface_terrain": {
+      "default_role": "ranking_preference",
+      "land_weight": 0.1
+    },
+    "etage": {
+      "default_role": "ranking_preference",
+      "weight": 0.03
+    },
+    "ascenseur": {
+      "default_role": "ranking_preference",
+      "weight": 0.03
+    },
+    "parking": {
+      "default_role": "soft_constraint",
+      "weight": 0.08
+    },
+    "climatisation": {
+      "default_role": "ranking_preference",
+      "weight": 0.05
+    },
+    "internet": {
+      "default_role": "ranking_preference",
+      "weight": 0.04
+    },
+    "securite": {
+      "default_role": "soft_constraint",
+      "weight": 0.05
+    },
+    "groupe_electrogene": {
+      "default_role": "boost",
+      "value": 10
+    },
+    "forage": {
+      "default_role": "boost",
+      "value": 10
+    },
+    "gardiennage": {
+      "default_role": "boost",
+      "value": 10
+    },
+    "eau": {
+      "default_role": "soft_constraint",
+      "weight": 0.05
+    },
+    "electricite": {
+      "default_role": "soft_constraint",
+      "weight": 0.05
+    },
+    "acces_route": {
+      "default_role": "ranking_preference",
+      "weight": 0.04
+    },
+    "usage_prevu": {
+      "default_role": "hard_constraint",
+      "weight": 0.1
+    },
+    "titre_requis": {
+      "default_role": "hard_constraint",
+      "weight": 0.05
+    },
+    "type_document": {
+      "default_role": "soft_constraint",
+      "weight": 0.08
+    },
+    "num_titre": {
+      "default_role": "verification_only"
+    },
+    "accessibilite_route": {
+      "default_role": "ranking_preference",
+      "land_weight": 0.08
+    },
+    "topographie": {
+      "default_role": "soft_constraint",
+      "land_weight": 0.05
+    },
+    "inondable": {
+      "default_role": "soft_constraint",
+      "land_weight": 0.05
+    },
+    "viabilisation_eau": {
+      "default_role": "soft_constraint",
+      "land_weight": 0.05
+    },
+    "viabilisation_electricite": {
+      "default_role": "soft_constraint",
+      "land_weight": 0.05
+    },
+    "activite_prevue": {
+      "default_role": "hard_constraint",
+      "weight": 0.2
+    },
+    "surface_min": {
+      "default_role": "hard_constraint",
+      "weight": 0.15
+    },
+    "licence_exploitation": {
+      "default_role": "hard_constraint"
+    },
+    "hauteur_sous_plafond": {
+      "default_role": "soft_constraint",
+      "weight": 0.08
+    },
+    "flux_passage": {
+      "default_role": "ranking_preference",
+      "weight": 0.05
+    },
+    "visibilite_route": {
+      "default_role": "ranking_preference",
+      "weight": 0.05
+    },
+    "fonds_commerce": {
+      "default_role": "soft_constraint",
+      "weight": 0.08
+    },
+    "zone_commerciale": {
+      "default_role": "soft_constraint",
+      "weight": 0.08
+    },
+    "nombre_employes": {
+      "default_role": "ranking_preference",
+      "weight": 0.05
+    },
+    "montant_recherche": {
+      "default_role": "hard_constraint",
+      "tolerance": 0.1,
+      "weight": 0.25
+    },
+    "apport_disponible": {
+      "default_role": "hard_constraint",
+      "tolerance": 0.1,
+      "weight": 0.15
+    },
+    "duree_souhaitee": {
+      "default_role": "soft_constraint",
+      "weight": 0.1
+    },
+    "garanties_disponibles": {
+      "default_role": "soft_constraint",
+      "weight": 0.1
+    },
+    "revenus_mensuels": {
+      "default_role": "soft_constraint",
+      "weight": 0.15
+    },
+    "cout_total_projet": {
+      "default_role": "hard_constraint",
+      "weight": 0.1
+    },
+    "budget_investissement": {
+      "default_role": "hard_constraint",
+      "tolerance": 0.25,
+      "weight": 0.25
+    },
+    "rendement_cible": {
+      "default_role": "hard_constraint",
+      "tolerance": 0.02,
+      "weight": 0.2
+    },
+    "horizon_investissement": {
+      "default_role": "soft_constraint",
+      "weight": 0.1
+    },
+    "disponibilite": {
+      "default_role": "soft_constraint",
+      "weight": 0.05
+    },
+    "delai": {
+      "default_role": "ranking_preference",
+      "weight": 0.03
+    },
+    "urgence": {
+      "default_role": "ranking_preference",
+      "weight": 0.03
+    }
+  },
+  "boost_rules": [
+    {
+      "condition": "exact_neighborhood_match",
+      "value": 25,
+      "description": "Property in exact requested neighborhood",
+      "applies_to": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH"
+      ]
+    },
+    {
+      "condition": "exact_city_match",
+      "value": 20,
+      "description": "Property in exact requested city",
+      "applies_to": [
+        "ALL"
+      ]
+    },
+    {
+      "condition": "budget_within_range",
+      "value": 15,
+      "description": "Property price within budget tolerance",
+      "applies_to": [
+        "ALL"
+      ]
+    },
+    {
+      "condition": "title_foncier_available",
+      "value": 10,
+      "description": "Land has valid title foncier when required",
+      "applies_to": [
+        "LAND_SEARCH",
+        "RESIDENTIAL_BUY"
+      ]
+    },
+    {
+      "condition": "diaspora_investor",
+      "value": 20,
+      "description": "Requester is diaspora investor",
+      "applies_to": [
+        "INVESTMENT"
+      ]
+    },
+    {
+      "condition": "urgent_request",
+      "value": 15,
+      "description": "User has expressed high urgency",
+      "applies_to": [
+        "ALL"
+      ]
+    },
+    {
+      "condition": "cash_purchase",
+      "value": 15,
+      "description": "Buyer paying in cash",
+      "applies_to": [
+        "BUY"
+      ]
+    },
+    {
+      "condition": "matching_amenity_per_amenity",
+      "value": 5,
+      "description": "Per matching amenity (stackable up to +20)",
+      "applies_to": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    {
+      "condition": "visit_intent_confirmed",
+      "value": 20,
+      "description": "User confirmed intent to visit",
+      "applies_to": [
+        "ALL"
+      ]
+    },
+    {
+      "condition": "professional_recommendation",
+      "value": 15,
+      "description": "Professional recommendation available",
+      "applies_to": [
+        "PROFESSIONAL_SEARCH"
+      ]
+    },
+    {
+      "condition": "multiple_positive_feedback",
+      "value": 10,
+      "description": "User gave positive feedback on results",
+      "applies_to": [
+        "ALL"
+      ]
+    },
+    {
+      "condition": "construction_ready",
+      "value": 15,
+      "description": "Serviced land ready for construction",
+      "applies_to": [
+        "LAND_SEARCH"
+      ]
+    },
+    {
+      "condition": "subdivision_progress",
+      "value": 15,
+      "description": "Land subdivision in advanced stage",
+      "applies_to": [
+        "LAND_SEARCH"
+      ]
+    },
+    {
+      "condition": "high_visibility",
+      "value": 10,
+      "description": "Commercial property with high visibility",
+      "applies_to": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    {
+      "condition": "high_foot_traffic",
+      "value": 10,
+      "description": "Location with high pedestrian traffic",
+      "applies_to": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    {
+      "condition": "vehicle_access",
+      "value": 10,
+      "description": "Industrial property with vehicle access",
+      "applies_to": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    {
+      "condition": "quick_response_time",
+      "value": 10,
+      "description": "User responds quickly to questions",
+      "applies_to": [
+        "ALL"
+      ]
+    },
+    {
+      "condition": "budget_detected_early",
+      "value": 15,
+      "description": "Budget detected from first user message",
+      "applies_to": [
+        "ALL"
+      ]
+    },
+    {
+      "condition": "neighborhood_detected_early",
+      "value": 10,
+      "description": "Neighborhood detected from first user message",
+      "applies_to": [
+        "ALL"
+      ]
+    }
+  ],
+  "exclusion_rules": [
+    {
+      "condition": "status_archived",
+      "action": "exclude",
+      "description": "Property has been archived by owner"
+    },
+    {
+      "condition": "status_sold",
+      "action": "exclude",
+      "description": "Property has been sold or rented"
+    },
+    {
+      "condition": "status_withdrawn",
+      "action": "exclude",
+      "description": "Property listing has been withdrawn"
+    },
+    {
+      "condition": "budget_outside_tolerance",
+      "action": "exclude",
+      "description": "Property price exceeds budget tolerance for hard_constraint"
+    },
+    {
+      "condition": "city_mismatch",
+      "action": "exclude",
+      "description": "Property is in a different city (hard_constraint)"
+    },
+    {
+      "condition": "transaction_type_mismatch",
+      "action": "exclude",
+      "description": "Transaction type incompatible (rent vs buy)"
+    },
+    {
+      "condition": "property_type_mismatch",
+      "action": "exclude",
+      "description": "Property type incompatible"
+    },
+    {
+      "condition": "user_rejected_property",
+      "action": "exclude",
+      "description": "User explicitly rejected this property previously"
+    },
+    {
+      "condition": "litiges_non_resolus",
+      "action": "exclude_from_transaction",
+      "description": "Known legal disputes unresolved"
+    },
+    {
+      "condition": "hypotheque_non_clearee",
+      "action": "exclude_from_transaction",
+      "description": "Mortgage or charge not cleared"
+    },
+    {
+      "condition": "documents_manquants",
+      "action": "exclude_from_transaction",
+      "description": "Mandatory documents missing"
+    },
+    {
+      "condition": "user_inactive_30_days",
+      "action": "deprioritize",
+      "description": "User has been inactive for 30+ days"
+    }
+  ],
+  "scoring_formula": {
+    "base": "total_score = match_score + boost_total - penalty_total",
+    "match_score": "Sigma(field_weight_i * field_match_i) for all matching fields",
+    "boost_total": "Sigma(boost_values) capped at +50",
+    "penalty_total": "Sigma(penalty_values) floored at 0",
+    "normalized": "max(0, min(100, score))"
+  },
+  "weight_distribution": {
+    "RENT": {
+      "geographical": 0.35,
+      "budget": 0.3,
+      "property": 0.25,
+      "amenities": 0.1,
+      "legal": 0.0
+    },
+    "BUY": {
+      "geographical": 0.3,
+      "budget": 0.25,
+      "property": 0.25,
+      "amenities": 0.1,
+      "legal": 0.1
+    },
+    "INVEST": {
+      "geographical": 0.25,
+      "budget": 0.3,
+      "property": 0.2,
+      "amenities": 0.1,
+      "legal": 0.15
+    },
+    "LAND_BUY": {
+      "geographical": 0.3,
+      "budget": 0.25,
+      "property": 0.15,
+      "amenities": 0.05,
+      "legal": 0.25
+    },
+    "FINANCE": {
+      "geographical": 0.2,
+      "budget": 0.35,
+      "property": 0.2,
+      "amenities": 0.0,
+      "legal": 0.25
+    }
+  },
+  "thresholds": {
+    "show_in_results": 40,
+    "show_in_top_10": 50,
+    "recommend_for_visit": 70,
+    "recommend_for_transaction": 85
+  },
+  "boost_cap": 50,
+  "evaluation_order": [
+    "hard_constraint",
+    "soft_constraint",
+    "ranking_preference",
+    "boost",
+    "penalty",
+    "informational_only",
+    "verification_only",
+    "transaction_blocker"
+  ]
+}

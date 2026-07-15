@@ -1,0 +1,1615 @@
+{
+  "fields": {
+    "city": {
+      "field_id": "city",
+      "label": "Ville",
+      "description": "City where the property is located",
+      "data_type": "string",
+      "validation_rules": "known_city",
+      "normalization_rules": "lowercase, strip accents, map aliases (Dla->Douala, Yde->Yaounde)",
+      "question_template": "Dans quelle ville ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH",
+        "COMMERCIAL_SEARCH",
+        "FINANCING_REQUEST"
+      ]
+    },
+    "transaction": {
+      "field_id": "transaction",
+      "label": "Transaction",
+      "description": "Type of real estate transaction (rent, buy, sell, finance, find)",
+      "data_type": "enum",
+      "validation_rules": "RENT, BUY, SELL, FINANCE, FIND, SERVICE",
+      "normalization_rules": "Uppercase, normalize synonyms (louer->RENT, acheter->BUY)",
+      "question_template": "C'est pour louer, acheter, vendre ou investir ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH",
+        "COMMERCIAL_SEARCH",
+        "FINANCING_REQUEST",
+        "PROFESSIONAL_SEARCH",
+        "REAL_ESTATE_SERVICES"
+      ]
+    },
+    "property_type": {
+      "field_id": "property_type",
+      "label": "Type de bien",
+      "description": "The specific property type the user is looking for",
+      "data_type": "enum",
+      "validation_rules": "18 residential types, 7 land types, 16 commercial types",
+      "normalization_rules": "Normalize synonyms; appart->appartement, terrain->terrain",
+      "question_template": "Quel type de bien cherchez-vous ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "intent": {
+      "field_id": "intent",
+      "label": "Intention",
+      "description": "The specific user intention behind the transaction",
+      "data_type": "enum",
+      "validation_rules": "RENT_PROPERTY, BUY_PROPERTY, SELL_PROPERTY, INVESTOR_INTENT, FIND_PROFESSIONAL, GET_SERVICE",
+      "normalization_rules": "Map to canonical intents from user language",
+      "question_template": "Quel est votre projet exactement ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH",
+        "COMMERCIAL_SEARCH",
+        "FINANCING_REQUEST"
+      ]
+    },
+    "neighborhood": {
+      "field_id": "neighborhood",
+      "label": "Quartier",
+      "description": "Target neighborhood or district for the property search",
+      "data_type": "string",
+      "validation_rules": "Must be in neighborhood list for the city",
+      "normalization_rules": "Normalize case; map neighborhood aliases",
+      "question_template": "Quel quartier ou quelle zone ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "budget_max": {
+      "field_id": "budget_max",
+      "label": "Budget maximum",
+      "description": "Maximum budget the user is willing to spend",
+      "data_type": "integer",
+      "validation_rules": "> 0; integer; currency-aware",
+      "normalization_rules": "Normalize to monthly for rent, total for buy",
+      "question_template": "Quel budget maximum ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "budget_min": {
+      "field_id": "budget_min",
+      "label": "Budget minimum",
+      "description": "Minimum budget (for ranges)",
+      "data_type": "integer",
+      "validation_rules": "< BUDGET_MAX; > 0",
+      "normalization_rules": "Must be less than max",
+      "question_template": "Budget minimum ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "private",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "budget_type": {
+      "field_id": "budget_type",
+      "label": "Type de budget",
+      "description": "What the budget figure represents (monthly, total, per night, per sqm)",
+      "data_type": "enum",
+      "validation_rules": "MONTHLY_RENT, TOTAL_PRICE, PRICE_PER_NIGHT, PRICE_PER_SQM",
+      "normalization_rules": "Derived from transaction type",
+      "question_template": "(system-derived)",
+      "matching_role": "informational_only",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "budget_currency": {
+      "field_id": "budget_currency",
+      "label": "Devise",
+      "description": "Currency of the budget",
+      "data_type": "enum",
+      "validation_rules": "XAF, EUR, USD, GBP, XOF",
+      "normalization_rules": "Normalize to XAF for Cameroon operations",
+      "question_template": "Dans quelle devise ?",
+      "matching_role": "informational_only",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "ALL"
+      ]
+    },
+    "budget_negotiable": {
+      "field_id": "budget_negotiable",
+      "label": "Négociable",
+      "description": "Whether the budget is negotiable",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Default true for rent, false for buy",
+      "question_template": "Le budget est-il negociable ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "private",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "caution": {
+      "field_id": "caution",
+      "label": "Caution",
+      "description": "Security deposit amount",
+      "data_type": "integer",
+      "validation_rules": "> 0; typically 1-3 months rent",
+      "normalization_rules": "Normalize to monthly rent equivalent",
+      "question_template": "Depot de garantie ?",
+      "matching_role": "transaction_blocker",
+      "privacy_level": "confidential",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "charges": {
+      "field_id": "charges",
+      "label": "Charges",
+      "description": "Whether utilities are included in the rent",
+      "data_type": "enum",
+      "validation_rules": "INCLUSES, NON_INCLUSES, PARTIELLES",
+      "normalization_rules": "Map user description",
+      "question_template": "Les charges sont-elles incluses ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "financing": {
+      "field_id": "financing",
+      "label": "Financement",
+      "description": "How the user plans to finance the purchase",
+      "data_type": "enum",
+      "validation_rules": "CASH, LOAN, MORTGAGE, ASSISTANCE",
+      "normalization_rules": "Normalize comptant->CASH, credit->LOAN",
+      "question_template": "Comptant ou credit ?",
+      "matching_role": "transaction_blocker",
+      "privacy_level": "confidential",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH"
+      ]
+    },
+    "disponibilite": {
+      "field_id": "disponibilite",
+      "label": "Disponibilite",
+      "description": "When the user wants to move in or start",
+      "data_type": "date",
+      "validation_rules": "Must be future date or relative",
+      "normalization_rules": "Normalize relative dates (now->today, next week->+7d)",
+      "question_template": "A partir de quand ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "delai": {
+      "field_id": "delai",
+      "label": "Delai",
+      "description": "General time horizon for the search",
+      "data_type": "enum",
+      "validation_rules": "IMMEDIATE, <1_MONTH, 1-3_MONTHS, 3-6_MONTHS, NO_RUSH",
+      "normalization_rules": "Derived from user language",
+      "question_template": "Quel est votre delai ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "private",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "chambres": {
+      "field_id": "chambres",
+      "label": "Chambres",
+      "description": "Number of bedrooms",
+      "data_type": "integer",
+      "validation_rules": "1-10+",
+      "normalization_rules": "Must be integer; studio->0",
+      "question_template": "Combien de chambres ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "douches": {
+      "field_id": "douches",
+      "label": "Douches",
+      "description": "Number of bathrooms/shower rooms",
+      "data_type": "integer",
+      "validation_rules": "1-5+",
+      "normalization_rules": "Must be integer",
+      "question_template": "Combien de douches ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "salons": {
+      "field_id": "salons",
+      "label": "Salons",
+      "description": "Number of living rooms",
+      "data_type": "integer",
+      "validation_rules": "0-5",
+      "normalization_rules": "0 for studio",
+      "question_template": "Combien de salons ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "cuisine": {
+      "field_id": "cuisine",
+      "label": "Cuisine",
+      "description": "Type of kitchen",
+      "data_type": "enum",
+      "validation_rules": "INTERNE, EXTERNE, EQUIPEE, NON_EQUIPEE, INDIFFERENT",
+      "normalization_rules": "Map user preference",
+      "question_template": "Quel type de cuisine ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "meuble": {
+      "field_id": "meuble",
+      "label": "Meuble",
+      "description": "Whether the property is furnished",
+      "data_type": "enum",
+      "validation_rules": "MEUBLE, NON_MEUBLE, SEMI_MEUBLE, INDIFFERENT",
+      "normalization_rules": "Derived from property type for some types",
+      "question_template": "Meuble ou non meuble ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "surface": {
+      "field_id": "surface",
+      "label": "Surface habitable",
+      "description": "Usable living area in square meters",
+      "data_type": "integer",
+      "validation_rules": "10-1000 m2",
+      "normalization_rules": "Normalize units (sqft->m2)",
+      "question_template": "Quelle surface souhaitez-vous ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "surface_terrain": {
+      "field_id": "surface_terrain",
+      "label": "Surface terrain",
+      "description": "Land area in square meters",
+      "data_type": "integer",
+      "validation_rules": "50-10000 m2",
+      "normalization_rules": "Normalize units",
+      "question_template": "Quelle surface de terrain ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "LAND_SEARCH",
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "etage": {
+      "field_id": "etage",
+      "label": "Etage",
+      "description": "Preferred floor level",
+      "data_type": "enum",
+      "validation_rules": "REZ_DE_CHAUSSEE, BAS, MILIEU, HAUT, TOIT_TERRASSE, INDIFFERENT",
+      "normalization_rules": "Map rdc->REZ_DE_CHAUSSEE",
+      "question_template": "A quel etage ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "ascenseur": {
+      "field_id": "ascenseur",
+      "label": "Ascenseur",
+      "description": "Whether elevator is needed",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Conditional on etage",
+      "question_template": "Ascenseur necessaire ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "parking": {
+      "field_id": "parking",
+      "label": "Parking",
+      "description": "Whether parking is needed",
+      "data_type": "enum",
+      "validation_rules": "OUI, NON, INDIFFERENT, GARAGE",
+      "normalization_rules": "Map garage->GARAGE",
+      "question_template": "Besoin de parking ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "balcon": {
+      "field_id": "balcon",
+      "label": "Balcon",
+      "description": "Whether a balcony is desired",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Higher priority for apartments",
+      "question_template": "Balcon souhaite ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "jardin": {
+      "field_id": "jardin",
+      "label": "Jardin",
+      "description": "Whether a garden is desired",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Conditional on property type",
+      "question_template": "Jardin important ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "piscine": {
+      "field_id": "piscine",
+      "label": "Piscine",
+      "description": "Whether a swimming pool is desired",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "High-end properties",
+      "question_template": "Piscine ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "climatisation": {
+      "field_id": "climatisation",
+      "label": "Climatisation",
+      "description": "Whether air conditioning is needed",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Conditional on city climate",
+      "question_template": "Climatisation necessaire ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "internet": {
+      "field_id": "internet",
+      "label": "Internet",
+      "description": "Whether internet is needed",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Higher priority for professionals",
+      "question_template": "Besoin d'internet ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "securite": {
+      "field_id": "securite",
+      "label": "Securite",
+      "description": "Whether security is important",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Higher for certain neighborhoods",
+      "question_template": "Securite importante ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "eau": {
+      "field_id": "eau",
+      "label": "Eau",
+      "description": "Type of water supply",
+      "data_type": "enum",
+      "validation_rules": "PERMANENTE, INTERMITTENTE, FORAGE, INDIFFERENT",
+      "normalization_rules": "Conditional on city infrastructure",
+      "question_template": "Acces a l'eau important ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH"
+      ]
+    },
+    "electricite": {
+      "field_id": "electricite",
+      "label": "Electricite",
+      "description": "Type of electricity supply",
+      "data_type": "enum",
+      "validation_rules": "PERMANENTE, INTERMITTENTE, GROUPE, SOLAIRE, INDIFFERENT",
+      "normalization_rules": "Conditional on city infrastructure",
+      "question_template": "Electricite importante ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH"
+      ]
+    },
+    "groupe_electrogene": {
+      "field_id": "groupe_electrogene",
+      "label": "Groupe electrogene",
+      "description": "Whether a generator is needed",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Conditional on city infrastructure",
+      "question_template": "Groupe electrogene necessaire ?",
+      "matching_role": "boost",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH",
+        "LAND_SEARCH"
+      ]
+    },
+    "nom": {
+      "field_id": "nom",
+      "label": "Nom",
+      "description": "User's full name",
+      "data_type": "string",
+      "validation_rules": "Min 2 chars; no special chars",
+      "normalization_rules": "Capitalize properly",
+      "question_template": "Quel est votre nom ?",
+      "matching_role": "informational_only",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "telephone": {
+      "field_id": "telephone",
+      "label": "Telephone",
+      "description": "User's phone number",
+      "data_type": "string",
+      "validation_rules": "Valid phone regex; 8-15 digits",
+      "normalization_rules": "Normalize to international format (+237XXXXXXX)",
+      "question_template": "Quel est votre numero de telephone ?",
+      "matching_role": "verification_only",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "email": {
+      "field_id": "email",
+      "label": "Email",
+      "description": "User's email address",
+      "data_type": "string",
+      "validation_rules": "Valid email regex",
+      "normalization_rules": "Lowercase; remove spaces",
+      "question_template": "Quel est votre email ?",
+      "matching_role": "informational_only",
+      "privacy_level": "private",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH",
+        "FINANCING_REQUEST"
+      ]
+    },
+    "canal_prefere": {
+      "field_id": "canal_prefere",
+      "label": "Canal prefere",
+      "description": "User's preferred communication channel",
+      "data_type": "enum",
+      "validation_rules": "WHATSAPP, TELEGRAM, SMS, EMAIL, APPEL",
+      "normalization_rules": "Map user preference",
+      "question_template": "Quel canal preferez-vous ?",
+      "matching_role": "informational_only",
+      "privacy_level": "private",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "usage_prevu": {
+      "field_id": "usage_prevu",
+      "label": "Usage prevu",
+      "description": "Intended use for the land or property",
+      "data_type": "enum",
+      "validation_rules": "HABITATION, COMMERCE, INDUSTRIE, AGRICULTURE, MIXTE",
+      "normalization_rules": "Map user description",
+      "question_template": "Quel usage prevu ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "type_document": {
+      "field_id": "type_document",
+      "label": "Type de document",
+      "description": "Type of land documentation available",
+      "data_type": "enum",
+      "validation_rules": "TITRE_FONCIER, ATTESTATION, CONCESSION, CERTIFICAT_OCCUPATION, NON_DOCUMENTE",
+      "normalization_rules": "Map document types",
+      "question_template": "Quel type de document ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "sensitive",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "num_titre": {
+      "field_id": "num_titre",
+      "label": "Numero titre",
+      "description": "Land title registration number",
+      "data_type": "string",
+      "validation_rules": "Valid title format",
+      "normalization_rules": "Normalize; verify format",
+      "question_template": "Quel est le numero du titre foncier ?",
+      "matching_role": "verification_only",
+      "privacy_level": "confidential",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "litiges_connus": {
+      "field_id": "litiges_connus",
+      "label": "Litiges connus",
+      "description": "Whether there are known legal disputes",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Escalate to legal if true",
+      "question_template": "Existe-t-il des litiges connus ?",
+      "matching_role": "transaction_blocker",
+      "privacy_level": "confidential",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "accessibilite_route": {
+      "field_id": "accessibilite_route",
+      "label": "Accessibilite route",
+      "description": "Quality of road access to the land",
+      "data_type": "enum",
+      "validation_rules": "ROUTE_GOUDRONNEE, ROUTE_TERRE, SENTIER, ENCLAVE",
+      "normalization_rules": "Map to standard categories",
+      "question_template": "Comment est l'acces ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "topographie": {
+      "field_id": "topographie",
+      "label": "Topographie",
+      "description": "Land terrain type",
+      "data_type": "enum",
+      "validation_rules": "PLAT, LEGERE_PENTE, FORTE_PENTE, VALLEE, COLLINE",
+      "normalization_rules": "Map user description",
+      "question_template": "Quelle est la topographie ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "zone": {
+      "field_id": "zone",
+      "label": "Zone",
+      "description": "Broader zone or area description",
+      "data_type": "string",
+      "validation_rules": "Free text",
+      "normalization_rules": "Free text normalization",
+      "question_template": "Quelle zone plus precisement ?",
+      "matching_role": "informational_only",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "proximity_preferences": {
+      "field_id": "proximity_preferences",
+      "label": "Proximite",
+      "description": "What the user needs to be near (schools, markets, transport)",
+      "data_type": "string",
+      "validation_rules": "Free text",
+      "normalization_rules": "Extract key locations; geocode if possible",
+      "question_template": "Avez-vous besoin d'etre proche de quelque chose ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "LOW",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "mobility": {
+      "field_id": "mobility",
+      "label": "Mobilite",
+      "description": "How flexible the user is about location",
+      "data_type": "enum",
+      "validation_rules": "STRICT, FLEXIBLE, VERY_FLEXIBLE",
+      "normalization_rules": "Derived from user language about location",
+      "question_template": "Etes-vous flexible sur la localisation ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "private",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "usage": {
+      "field_id": "usage",
+      "label": "Usage",
+      "description": "Intended use of the property (residence or investment)",
+      "data_type": "enum",
+      "validation_rules": "RESIDENCE, INVESTISSEMENT, MIXTE",
+      "normalization_rules": "Normalize habiter->RESIDENCE, louer->INVESTISSEMENT",
+      "question_template": "Ce sera pour y habiter, investir ou les deux ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "duree_location": {
+      "field_id": "duree_location",
+      "label": "Duree location",
+      "description": "Intended rental duration",
+      "data_type": "enum",
+      "validation_rules": "COURT_TERME, MOYEN_TERME, LONG_TERME, INDIFFERENT",
+      "normalization_rules": "Derived from property type + user",
+      "question_template": "Pour quelle duree ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "private",
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "LOW",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "duree_sejour": {
+      "field_id": "duree_sejour",
+      "label": "Duree sejour",
+      "description": "Length of short-term stay",
+      "data_type": "enum",
+      "validation_rules": "NUIT, WEEKEND, SEMAINE, 2_SEMAINES, MOIS, LONG_SEJOUR",
+      "normalization_rules": "Derived from dates",
+      "question_template": "Combien de temps ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "nombre_personnes": {
+      "field_id": "nombre_personnes",
+      "label": "Nombre de personnes",
+      "description": "How many people will occupy the property",
+      "data_type": "integer",
+      "validation_rules": "1-20",
+      "normalization_rules": "Must be integer",
+      "question_template": "Combien de personnes ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "forage": {
+      "field_id": "forage",
+      "label": "Forage",
+      "description": "Whether a water well is needed or available",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Conditional on water infrastructure",
+      "question_template": "Forage disponible ?",
+      "matching_role": "boost",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH"
+      ]
+    },
+    "gardiennage": {
+      "field_id": "gardiennage",
+      "label": "Gardiennage",
+      "description": "Whether a guard is needed",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Higher for large properties",
+      "question_template": "Gardiennage ?",
+      "matching_role": "boost",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "LOW",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "cour": {
+      "field_id": "cour",
+      "label": "Cour",
+      "description": "Whether a courtyard is needed",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Conditional on property type",
+      "question_template": "Cour necessaire ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "cloture": {
+      "field_id": "cloture",
+      "label": "Cloture",
+      "description": "Whether fencing is needed",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Land or villa properties",
+      "question_template": "Cloture importante ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH"
+      ]
+    },
+    "acces_route": {
+      "field_id": "acces_route",
+      "label": "Acces route",
+      "description": "Type of road access",
+      "data_type": "enum",
+      "validation_rules": "GOUDRONNEE, PISTE, INDIFFERENT",
+      "normalization_rules": "Conditional on location",
+      "question_template": "Acces route ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "LAND_SEARCH"
+      ]
+    },
+    "urgence": {
+      "field_id": "urgence",
+      "label": "Urgence",
+      "description": "How urgent the request is",
+      "data_type": "enum",
+      "validation_rules": "URGENT, MODERATE, NOT_URGENT",
+      "normalization_rules": "Derived from language + delay",
+      "question_template": "Est-ce urgent ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "nombre_colocataires": {
+      "field_id": "nombre_colocataires",
+      "label": "Nombre colocataires",
+      "description": "Number of people in a colocation",
+      "data_type": "integer",
+      "validation_rules": "2-10",
+      "normalization_rules": "Must be integer",
+      "question_template": "Combien serez-vous ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "genre_preference": {
+      "field_id": "genre_preference",
+      "label": "Preference genre",
+      "description": "Preferred gender of co-tenants (sensitive)",
+      "data_type": "enum",
+      "validation_rules": "MIXTE, HOMMES, FEMMES, INDIFFERENT",
+      "normalization_rules": "Sensitive field; ask carefully",
+      "question_template": "Preference de genre pour la colocation ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "sensitive",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "universite": {
+      "field_id": "universite",
+      "label": "Universite",
+      "description": "Target university for student housing",
+      "data_type": "string",
+      "validation_rules": "Free text",
+      "normalization_rules": "Normalize university names",
+      "question_template": "Pour quelle universite ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "besoin_notaire": {
+      "field_id": "besoin_notaire",
+      "label": "Besoin notaire",
+      "description": "Whether notary services are needed",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Derived from transaction type",
+      "question_template": "Avez-vous besoin d'un notaire ?",
+      "matching_role": "informational_only",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "visite_souhaitee": {
+      "field_id": "visite_souhaitee",
+      "label": "Visite souhaitee",
+      "description": "Whether a visit is desired",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Binary",
+      "question_template": "Souhaitez-vous organiser une visite ?",
+      "matching_role": "informational_only",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "activite_prevue": {
+      "field_id": "activite_prevue",
+      "label": "Activite prevue",
+      "description": "Type of business planned for the location",
+      "data_type": "string",
+      "validation_rules": "Min 3 chars",
+      "normalization_rules": "Normalize activity categories",
+      "question_template": "Quel type d'activite ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "surface_min": {
+      "field_id": "surface_min",
+      "label": "Surface minimale",
+      "description": "Minimum required floor area in m2",
+      "data_type": "integer",
+      "validation_rules": "Min 5, max 50000",
+      "normalization_rules": "Normalize units",
+      "question_template": "Surface minimale ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "licence_exploitation": {
+      "field_id": "licence_exploitation",
+      "label": "Licence exploitation",
+      "description": "Type of operating license needed",
+      "data_type": "enum",
+      "validation_rules": "LICENCE_ALCOOL, LICENCE_RESTAURATION, PATENTE, AGREMENT, AUCUNE",
+      "normalization_rules": "Map to regulations",
+      "question_template": "Licence necessaire ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "flux_passage": {
+      "field_id": "flux_passage",
+      "label": "Flux passage",
+      "description": "Level of pedestrian traffic",
+      "data_type": "enum",
+      "validation_rules": "TRES_ELEVE, ELEVE, MOYEN, FAIBLE, AUCUN",
+      "normalization_rules": "Map to categories",
+      "question_template": "Flux pieton ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "visibilite_route": {
+      "field_id": "visibilite_route",
+      "label": "Visibilite route",
+      "description": "Whether the location is visible from the road",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Binary",
+      "question_template": "Visible depuis la route ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "hauteur_sous_plafond": {
+      "field_id": "hauteur_sous_plafond",
+      "label": "Hauteur sous plafond",
+      "description": "Minimum ceiling height in meters",
+      "data_type": "float",
+      "validation_rules": "2.0-20.0",
+      "normalization_rules": "Convert from feet if needed",
+      "question_template": "Hauteur sous plafond ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "acces_pmr": {
+      "field_id": "acces_pmr",
+      "label": "Acces PMR",
+      "description": "Whether the location is mobility-accessible",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Regulatory requirement",
+      "question_template": "Acces PMR ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "fonds_commerce": {
+      "field_id": "fonds_commerce",
+      "label": "Fonds commerce",
+      "description": "Whether the business goodwill is included",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Conditional on transfer",
+      "question_template": "Fonds de commerce inclus ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "sensitive",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "zone_commerciale": {
+      "field_id": "zone_commerciale",
+      "label": "Zone commerciale",
+      "description": "Type of commercial zone",
+      "data_type": "enum",
+      "validation_rules": "CENTRE_VILLE, ZONE_INDUSTRIELLE, PERIPHERIE, AXE_PRINCIPAL, RESIDENTIEL",
+      "normalization_rules": "Map to zone type",
+      "question_template": "Type de zone commerciale ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "nombre_employes": {
+      "field_id": "nombre_employes",
+      "label": "Nombre employes",
+      "description": "Number of employees to accommodate",
+      "data_type": "integer",
+      "validation_rules": "0-1000",
+      "normalization_rules": "Must be integer",
+      "question_template": "Combien d'employes ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "objet_financement": {
+      "field_id": "objet_financement",
+      "label": "Objet financement",
+      "description": "Purpose of the financing request",
+      "data_type": "enum",
+      "validation_rules": "ACHAT, CONSTRUCTION, RENOVATION, PROMOTION, FONDS_ROULEMENT, EQUIPEMENT, REFINANCEMENT, INVESTISSEMENT",
+      "normalization_rules": "Map to categories",
+      "question_template": "Quel est l'objet de votre demande ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "FINANCING_REQUEST"
+      ]
+    },
+    "montant_recherche": {
+      "field_id": "montant_recherche",
+      "label": "Montant recherche",
+      "description": "Amount of financing being sought",
+      "data_type": "integer",
+      "validation_rules": "> 0; <= total_project_cost",
+      "normalization_rules": "Must be less than or equal to cost",
+      "question_template": "Quel montant souhaitez-vous emprunter ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "FINANCING_REQUEST"
+      ]
+    },
+    "apport_disponible": {
+      "field_id": "apport_disponible",
+      "label": "Apport disponible",
+      "description": "Available down payment or equity contribution",
+      "data_type": "integer",
+      "validation_rules": "> 0; < total_cost",
+      "normalization_rules": "Percentage of total calculated",
+      "question_template": "Quel apport personnel pouvez-vous apporter ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "sensitive",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "FINANCING_REQUEST"
+      ]
+    },
+    "duree_souhaitee": {
+      "field_id": "duree_souhaitee",
+      "label": "Duree souhaitee",
+      "description": "Desired loan repayment period",
+      "data_type": "enum",
+      "validation_rules": "6M, 1Y, 2Y, 3Y, 5Y, 7Y, 10Y, 15Y, 20Y, 25Y",
+      "normalization_rules": "Normalize to months",
+      "question_template": "Sur quelle duree ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "FINANCING_REQUEST"
+      ]
+    },
+    "profil_demandeur": {
+      "field_id": "profil_demandeur",
+      "label": "Profil demandeur",
+      "description": "Type of financing requester profile",
+      "data_type": "enum",
+      "validation_rules": "SALARIE, INDEPENDANT, ENTREPRISE, INVESTISSEUR, DIASPORA, PROMOTEUR",
+      "normalization_rules": "Map from profile",
+      "question_template": "Quel est votre profil ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "FINANCING_REQUEST"
+      ]
+    },
+    "garanties_disponibles": {
+      "field_id": "garanties_disponibles",
+      "label": "Garanties disponibles",
+      "description": "Types of guarantees available",
+      "data_type": "array",
+      "validation_rules": "TITRE_FONCIER, HYPOTHEQUE, CAUTION, NANTISSEMENT, CAUTION_SOLIDAIRE, ASSURANCE, DEPOT_GARANTIE, PAS_DE_GARANTIE",
+      "normalization_rules": "Multi-select",
+      "question_template": "Quelles garanties pouvez-vous offrir ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "sensitive",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "FINANCING_REQUEST"
+      ]
+    },
+    "revenus_mensuels": {
+      "field_id": "revenus_mensuels",
+      "label": "Revenus mensuels",
+      "description": "Total monthly income",
+      "data_type": "number",
+      "validation_rules": "Min 0",
+      "normalization_rules": "Normalize to monthly",
+      "question_template": "Quels sont vos revenus mensuels ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "sensitive",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "FINANCING_REQUEST"
+      ]
+    },
+    "cout_total_projet": {
+      "field_id": "cout_total_projet",
+      "label": "Cout total projet",
+      "description": "Complete project cost",
+      "data_type": "integer",
+      "validation_rules": "> montant_recherche",
+      "normalization_rules": "Must include all costs",
+      "question_template": "Quel est le cout total du projet ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "FINANCING_REQUEST"
+      ]
+    },
+    "budget_investissement": {
+      "field_id": "budget_investissement",
+      "label": "Budget investissement",
+      "description": "Total investment budget in FCFA",
+      "data_type": "integer",
+      "validation_rules": "Min 100000, max 100000000000",
+      "normalization_rules": "Integer",
+      "question_template": "Budget total d'investissement ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "rendement_cible": {
+      "field_id": "rendement_cible",
+      "label": "Rendement cible",
+      "description": "Target annual yield percentage",
+      "data_type": "float",
+      "validation_rules": "Min 0, max 100",
+      "normalization_rules": "Percentage format",
+      "question_template": "Rendement annuel vise ?",
+      "matching_role": "hard_constraint",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "horizon_investissement": {
+      "field_id": "horizon_investissement",
+      "label": "Horizon investissement",
+      "description": "Investment time horizon",
+      "data_type": "enum",
+      "validation_rules": "COURT_1_3ANS, MOYEN_3_7ANS, LONG_7_15ANS, TRES_LONG_15ANS+",
+      "normalization_rules": "Map to periods",
+      "question_template": "Quel horizon d'investissement ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "terrain_loti": {
+      "field_id": "terrain_loti",
+      "label": "Terrain loti",
+      "description": "Whether land is serviced with roads and utilities",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Derived or asked explicitly",
+      "question_template": "Le terrain est-il loti ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "terrain_constructible": {
+      "field_id": "terrain_constructible",
+      "label": "Terrain constructible",
+      "description": "Whether the land is zoned for construction",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Check zoning rules for area",
+      "question_template": "Le terrain est-il constructible ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "lotissement_approuve": {
+      "field_id": "lotissement_approuve",
+      "label": "Lotissement approuve",
+      "description": "Whether subdivision is municipally approved",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Verify with municipal records",
+      "question_template": "Le lotissement est-il approuve ?",
+      "matching_role": "verification_only",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "inondable": {
+      "field_id": "inondable",
+      "label": "Zone inondable",
+      "description": "Whether land is in a flood-prone area",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Cross-check with known flood zones",
+      "question_template": "Le terrain est-il en zone inondable ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "hypotheque": {
+      "field_id": "hypotheque",
+      "label": "Hypotheque",
+      "description": "Whether there is a mortgage or charge on the property",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Check with conservatoire foncier",
+      "question_template": "Y a-t-il une hypotheque ?",
+      "matching_role": "transaction_blocker",
+      "privacy_level": "confidential",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "servitudes": {
+      "field_id": "servitudes",
+      "label": "Servitudes",
+      "description": "Existing easements or rights of way",
+      "data_type": "string",
+      "validation_rules": "Free text",
+      "normalization_rules": "Requires legal review",
+      "question_template": "Y a-t-il des servitudes ?",
+      "matching_role": "informational_only",
+      "privacy_level": "sensitive",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "coordonnees_gps": {
+      "field_id": "coordonnees_gps",
+      "label": "Coordonnees GPS",
+      "description": "Exact GPS coordinates of a property",
+      "data_type": "string",
+      "validation_rules": "Valid lat,lng format",
+      "normalization_rules": "Parse and validate coordinates",
+      "question_template": "Pouvez-vous partager les coordonnees GPS ?",
+      "matching_role": "verification_only",
+      "privacy_level": "private",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    },
+    "standing": {
+      "field_id": "standing",
+      "label": "Standing",
+      "description": "Deduced standing level (never asked directly)",
+      "data_type": "string",
+      "validation_rules": "Deduced from budget+neighborhood+property_type",
+      "normalization_rules": "Derived only",
+      "question_template": "(never ask — deduce from context)",
+      "matching_role": "informational_only",
+      "privacy_level": "public",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "dependances": {
+      "field_id": "dependances",
+      "label": "Dependances",
+      "description": "Additional structures on the property",
+      "data_type": "string",
+      "validation_rules": "Free text",
+      "normalization_rules": "Free text",
+      "question_template": "Y a-t-il des dependances ?",
+      "matching_role": "informational_only",
+      "privacy_level": "public",
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "LOW",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "source_financement": {
+      "field_id": "source_financement",
+      "label": "Source financement",
+      "description": "Origin of funds for purchase",
+      "data_type": "enum",
+      "validation_rules": "CASH, CREDIT_BANK, TONTINE, DIASPORA, FAMILY_LOAN",
+      "normalization_rules": "Normalize to standard categories",
+      "question_template": "Comment comptez-vous financer ?",
+      "matching_role": "informational_only",
+      "privacy_level": "sensitive",
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH",
+      "appears_in": [
+        "LAND_SEARCH",
+        "FINANCING_REQUEST"
+      ]
+    },
+    "petit_dejeuner": {
+      "field_id": "petit_dejeuner",
+      "label": "Petit-dejeuner",
+      "description": "Whether breakfast is included (short-term stays)",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Short-term only",
+      "question_template": "Petit-dejeuner inclus ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "menage": {
+      "field_id": "menage",
+      "label": "Menage",
+      "description": "Whether housekeeping is included",
+      "data_type": "boolean",
+      "validation_rules": "true, false, INDIFFERENT",
+      "normalization_rules": "Short term only",
+      "question_template": "Menage inclus ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "type_chambre_univ": {
+      "field_id": "type_chambre_univ",
+      "label": "Type chambre univ",
+      "description": "University room type preference",
+      "data_type": "enum",
+      "validation_rules": "INDIVIDUELLE, PARTAGEE_2, PARTAGEE_3_PLUS, INDIFFERENT",
+      "normalization_rules": "Map user preference",
+      "question_template": "Type de chambre ?",
+      "matching_role": "soft_constraint",
+      "privacy_level": "public",
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "HIGH",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH"
+      ]
+    },
+    "etat_propriete": {
+      "field_id": "etat_propriete",
+      "label": "Etat du bien",
+      "description": "Overall condition of the property",
+      "data_type": "enum",
+      "validation_rules": "NEUF, TRES_BON, BON, A_RENOVER, BRUT",
+      "normalization_rules": "Map user description",
+      "question_template": "Quel est l'etat du bien ?",
+      "matching_role": "ranking_preference",
+      "privacy_level": "public",
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "RESIDENTIAL_SEARCH",
+        "COMMERCIAL_SEARCH"
+      ]
+    },
+    "besoin_geometre": {
+      "field_id": "besoin_geometre",
+      "label": "Besoin geometre",
+      "description": "Whether surveyor services are needed",
+      "data_type": "boolean",
+      "validation_rules": "true, false",
+      "normalization_rules": "Binary",
+      "question_template": "Avez-vous besoin d'un geometre ?",
+      "matching_role": "informational_only",
+      "privacy_level": "public",
+      "source": "HERITAGE_NORMALIZED",
+      "confidence": "MEDIUM",
+      "appears_in": [
+        "LAND_SEARCH"
+      ]
+    }
+  }
+}

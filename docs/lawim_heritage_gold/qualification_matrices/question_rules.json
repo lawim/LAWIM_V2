@@ -1,0 +1,559 @@
+{
+  "always_ask": [
+    "intent",
+    "transaction_type",
+    "city"
+  ],
+  "conditional_ask": [
+    {
+      "field": "chambres",
+      "condition": "property_type in ['APARTMENT', 'HOUSE', 'VILLA', 'DUPLEX', 'TRIPLEX', 'MAISON_INDIVIDUELLE', 'MAISON_DE_VILLE']",
+      "priority": 5
+    },
+    {
+      "field": "salons",
+      "condition": "property_type in ['APARTMENT', 'HOUSE', 'VILLA', 'DUPLEX', 'TRIPLEX']",
+      "priority": 6
+    },
+    {
+      "field": "douches",
+      "condition": "property_type in residential types",
+      "priority": 4
+    },
+    {
+      "field": "cuisine",
+      "condition": "property_type in residential types with kitchen",
+      "priority": 7
+    },
+    {
+      "field": "surface_terrain",
+      "condition": "property_type in ['VILLA', 'VILLA_BASSE', 'MAISON_INDIVIDUELLE']",
+      "priority": 8
+    },
+    {
+      "field": "etage",
+      "condition": "property_type in building types",
+      "priority": 9
+    },
+    {
+      "field": "ascenseur",
+      "condition": "etage > 2",
+      "priority": 10
+    },
+    {
+      "field": "cour",
+      "condition": "property_type in ground-floor types",
+      "priority": 11
+    },
+    {
+      "field": "jardin",
+      "condition": "property_type in ['VILLA', 'VILLA_BASSE']",
+      "priority": 12
+    },
+    {
+      "field": "piscine",
+      "condition": "property_type in high-end villa types",
+      "priority": 13
+    },
+    {
+      "field": "caution",
+      "condition": "transaction == 'RENT'",
+      "priority": 3
+    },
+    {
+      "field": "charges",
+      "condition": "transaction == 'RENT'",
+      "priority": 3
+    },
+    {
+      "field": "financing",
+      "condition": "transaction == 'BUY'",
+      "priority": 3
+    },
+    {
+      "field": "usage",
+      "condition": "transaction == 'BUY'",
+      "priority": 4
+    },
+    {
+      "field": "climatisation",
+      "condition": "city in hot_cities_list",
+      "priority": 10
+    },
+    {
+      "field": "groupe_electrogene",
+      "condition": "city in high_power_cut_zones",
+      "priority": 11
+    },
+    {
+      "field": "forage",
+      "condition": "city in water_scarce_areas",
+      "priority": 12
+    },
+    {
+      "field": "internet",
+      "condition": "user mentions digital_work or student context",
+      "priority": 11
+    },
+    {
+      "field": "genre_preference",
+      "condition": "property_type == 'COLOCATION'",
+      "priority": 15
+    },
+    {
+      "field": "bourse",
+      "condition": "property_type == 'CITE_UNIVERSITAIRE'",
+      "priority": 15
+    },
+    {
+      "field": "universite",
+      "condition": "property_type == 'CITE_UNIVERSITAIRE'",
+      "priority": 5
+    },
+    {
+      "field": "nombre_colocataires",
+      "condition": "property_type == 'COLOCATION'",
+      "priority": 6
+    },
+    {
+      "field": "duree_sejour",
+      "condition": "property_type in short_term_types",
+      "priority": 7
+    },
+    {
+      "field": "petit_dejeuner",
+      "condition": "property_type == 'CHAMBRE_HOTEL'",
+      "priority": 10
+    },
+    {
+      "field": "menage",
+      "condition": "property_type in short_term_types",
+      "priority": 11
+    },
+    {
+      "field": "hauteur_sous_plafond",
+      "condition": "property_type in ['ENTREPOT', 'HANGAR', 'ATELIER']",
+      "priority": 5
+    },
+    {
+      "field": "acces_vehicules",
+      "condition": "property_type in ['ENTREPOT', 'HANGAR', 'SITE_INDUSTRIEL']",
+      "priority": 5
+    },
+    {
+      "field": "visibilite_route",
+      "condition": "property_type in ['BOUTIQUE', 'MAGASIN']",
+      "priority": 6
+    },
+    {
+      "field": "licence_exploitation",
+      "condition": "property_type in ['RESTAURANT', 'BAR', 'HOTEL']",
+      "priority": 4
+    },
+    {
+      "field": "acces_pmr",
+      "condition": "property_type in ['HOTEL', 'RESTAURANT', 'BUREAU']",
+      "priority": 8
+    },
+    {
+      "field": "fonds_commerce",
+      "condition": "transaction == 'CESSION'",
+      "priority": 7
+    },
+    {
+      "field": "num_titre",
+      "condition": "property_type in titled_land_types",
+      "priority": 3
+    },
+    {
+      "field": "type_document",
+      "condition": "property_type in untitled_land_types",
+      "priority": 4
+    },
+    {
+      "field": "signataires_nombre",
+      "condition": "property_type in collective_title_types",
+      "priority": 5
+    },
+    {
+      "field": "employeur",
+      "condition": "profil_demandeur == 'SALARIE'",
+      "priority": 6
+    },
+    {
+      "field": "anciennete_emploi",
+      "condition": "profil_demandeur == 'SALARIE'",
+      "priority": 7
+    },
+    {
+      "field": "activite_entreprise",
+      "condition": "profil_demandeur in ['INDEPENDANT', 'ENTREPRISE']",
+      "priority": 6
+    },
+    {
+      "field": "terrain_disponible",
+      "condition": "objet_financement in ['CONSTRUCTION', 'PROMOTION']",
+      "priority": 4
+    },
+    {
+      "field": "statut_juridique_terrain",
+      "condition": "terrain_disponible == true",
+      "priority": 5
+    },
+    {
+      "field": "plans_disponibles",
+      "condition": "objet_financement in ['CONSTRUCTION', 'RENOVATION']",
+      "priority": 6
+    },
+    {
+      "field": "permis_autorisations",
+      "condition": "objet_financement in ['CONSTRUCTION', 'RENOVATION']",
+      "priority": 5
+    },
+    {
+      "field": "carte_professionnelle",
+      "condition": "profession in regulated_professions",
+      "priority": 8
+    },
+    {
+      "field": "assurance_rc_pro",
+      "condition": "all professional services",
+      "priority": 7
+    },
+    {
+      "field": "portfolio_realisations",
+      "condition": "profession in ['ARCHITECTE', 'PHOTOGRAPHE', 'HOME_STAGER']",
+      "priority": 8
+    },
+    {
+      "field": "diplome_qualification",
+      "condition": "profession in ['NOTAIRE', 'GEOMETRE', 'ARCHITECTE']",
+      "priority": 7
+    }
+  ],
+  "never_ask": [
+    "standing",
+    "nombre_de_pieces",
+    "avez_vous_autre_chose_a_ajouter",
+    "comme_nombre_de_pieces_ou_standing",
+    "quel_est_votre_revenu_mensuel",
+    "pourquoi_cherchez_vous",
+    "avez_vous_deja_visite",
+    "quel_est_votre_quartier_actuel",
+    "quel_age_avez_vous",
+    "situation_matrimoniale",
+    "ethnie",
+    "religion",
+    "orientation_politique",
+    "avez_vous_des_enfants",
+    "quel_type_de_residence",
+    "preference_pour_proprietaire",
+    "fourchette_de_prix_exacte",
+    "criteres_supplementaires",
+    "avez_vous_un_agent_immobilier",
+    "etes_vous_pret_a_acheter",
+    "pret_approuve",
+    "taux_interet_garanti",
+    "code_bancaire",
+    "carte_identite_envoyez",
+    "construction_garantie",
+    "commencer_sans_permis",
+    "maison_mauvais_etat",
+    "moyens_rembourser",
+    "refus_bancaire",
+    "solde_bancaire",
+    "frais_dossier",
+    "combien_gagnez_vous",
+    "problemes_locataires",
+    "motif_vente",
+    "motif_location",
+    "combien_de_pieces"
+  ],
+  "deduce_from_context": [
+    {
+      "field": "standing",
+      "rule": "deduced from budget + quartier + property type"
+    },
+    {
+      "field": "chambres",
+      "rule": "= 0 for studio, studio_moderne, studio_meuble"
+    },
+    {
+      "field": "chambres",
+      "rule": "= 1 for chambre_simple, chambre_moderne"
+    },
+    {
+      "field": "salons",
+      "rule": "= 0 for studio, chambre (open plan)"
+    },
+    {
+      "field": "meuble",
+      "rule": "= MEUBLE for studio_meuble, appartement_meuble"
+    },
+    {
+      "field": "meuble",
+      "rule": "= NON_MEUBLE for appartement_non_meuble"
+    },
+    {
+      "field": "douches",
+      "rule": "= INTERNE for studio_moderne, appartement_moderne"
+    },
+    {
+      "field": "budget_type",
+      "rule": "= MONTHLY_RENT for RENT transaction"
+    },
+    {
+      "field": "budget_type",
+      "rule": "= TOTAL_PRICE for BUY transaction"
+    },
+    {
+      "field": "profil_demandeur",
+      "rule": "deduced from language + references + behavior"
+    },
+    {
+      "field": "urgence_reelle",
+      "rule": "deduced from delai + message language"
+    },
+    {
+      "field": "transaction_type",
+      "rule": "derived from FLD-TRANSACTION"
+    },
+    {
+      "field": "request_family",
+      "rule": "derived from intent + property_type"
+    },
+    {
+      "field": "journey_stage",
+      "rule": "progress tracking, system state"
+    }
+  ],
+  "defer_ask": [
+    {
+      "field": "balcon",
+      "reason": "low filtering impact",
+      "defer_to": "post_search"
+    },
+    {
+      "field": "jardin",
+      "reason": "low filtering impact",
+      "defer_to": "post_search"
+    },
+    {
+      "field": "climatisation",
+      "reason": "depends on property availability",
+      "defer_to": "post_search"
+    },
+    {
+      "field": "internet",
+      "reason": "conditionally important",
+      "defer_to": "post_search"
+    },
+    {
+      "field": "parking",
+      "reason": "medium impact",
+      "defer_to": "pre_search_if_high_need"
+    },
+    {
+      "field": "securite",
+      "reason": "usually desired, low differentiation",
+      "defer_to": "post_search"
+    },
+    {
+      "field": "gardiennage",
+      "reason": "very low impact",
+      "defer_to": "post_search"
+    },
+    {
+      "field": "groupe_electrogene",
+      "reason": "infrastructure-dependent",
+      "defer_to": "conditional_post_search"
+    },
+    {
+      "field": "etage",
+      "reason": "preference, not constraint",
+      "defer_to": "post_search"
+    },
+    {
+      "field": "ascenseur",
+      "reason": "conditionally relevant",
+      "defer_to": "post_search"
+    },
+    {
+      "field": "forage",
+      "reason": "very specific",
+      "defer_to": "conditional_post_search"
+    },
+    {
+      "field": "eau",
+      "reason": "most areas have water",
+      "defer_to": "post_search_if_concerned"
+    },
+    {
+      "field": "electricite",
+      "reason": "most areas have electricity",
+      "defer_to": "post_search_if_concerned"
+    },
+    {
+      "field": "nom",
+      "reason": "not needed for search",
+      "defer_to": "introduction"
+    },
+    {
+      "field": "telephone",
+      "reason": "privacy-sensitive",
+      "defer_to": "introduction"
+    },
+    {
+      "field": "email",
+      "reason": "not needed for search",
+      "defer_to": "introduction"
+    },
+    {
+      "field": "canal_prefere",
+      "reason": "not needed for search",
+      "defer_to": "introduction"
+    },
+    {
+      "field": "caution",
+      "reason": "rent-specific, at transaction",
+      "defer_to": "transaction"
+    },
+    {
+      "field": "charges",
+      "reason": "rent-specific",
+      "defer_to": "transaction"
+    },
+    {
+      "field": "financing",
+      "reason": "buy-specific",
+      "defer_to": "transaction"
+    },
+    {
+      "field": "num_titre",
+      "reason": "legal-sensitive",
+      "defer_to": "transaction"
+    },
+    {
+      "field": "signataires",
+      "reason": "land-specific",
+      "defer_to": "transaction"
+    },
+    {
+      "field": "litiges_connus",
+      "reason": "highly sensitive",
+      "defer_to": "transaction"
+    }
+  ],
+  "priority_order": [
+    "intent",
+    "transaction_type",
+    "property_type",
+    "city",
+    "neighborhood",
+    "budget",
+    "deadline",
+    "specific_criteria",
+    "preferences",
+    "confirmation"
+  ],
+  "rules": [
+    {
+      "id": "RULE-001",
+      "description": "Never re-ask a confirmed fact. Once a field has been collected and confirmed, it must never be asked again in the same qualification session."
+    },
+    {
+      "id": "RULE-002",
+      "description": "Extract multiple fields from same message. When a user provides information containing multiple fields, extract ALL of them."
+    },
+    {
+      "id": "RULE-003",
+      "description": "One main question at a time on WhatsApp, 2-3 on Telegram, full form on Dashboard."
+    },
+    {
+      "id": "RULE-004",
+      "description": "Prioritize highest filtering power missing field. Among all missing fields, the one that most reduces the search space should be asked first."
+    },
+    {
+      "id": "RULE-005",
+      "description": "Launch search as soon as MINIMUM_SEARCH_READY is reached. DO NOT continue asking questions."
+    },
+    {
+      "id": "RULE-006",
+      "description": "Collect secondary preferences AFTER first search launch. Never collect before first search."
+    },
+    {
+      "id": "RULE-007",
+      "description": "Ask confirmation only for real ambiguity. Never ask 'is this correct?' for information the user explicitly provided."
+    },
+    {
+      "id": "RULE-008",
+      "description": "Never ask what can be deduced. If a field can be derived from other known fields, do not ask the user."
+    },
+    {
+      "id": "RULE-009",
+      "description": "Urgent requests skip optional fields. If urgency >= 2, launch search on minimum criteria only."
+    },
+    {
+      "id": "RULE-010",
+      "description": "Correction overrides previous value. When a user corrects a field, accept the new value without referring to the old one."
+    },
+    {
+      "id": "RULE-011",
+      "description": "Maximum 3 attempts per field before offering to escalate to human."
+    },
+    {
+      "id": "RULE-012",
+      "description": "Never promise loan approval. LAWIM does matching only on apparent compatibility."
+    }
+  ],
+  "priority_calculation_formula": "priority = base_priority - (impact_filtering * 10) + (sensitivity * 5) - (ambiguity * 3)",
+  "priority_factors": {
+    "known_information": {
+      "type": "binary",
+      "description": "Whether this field is already confirmed"
+    },
+    "impact_filtering": {
+      "type": "float_0_1",
+      "description": "How much this field filters results (higher = ask earlier)"
+    },
+    "impact_matching": {
+      "type": "float_0_1",
+      "description": "How much this field affects matching score"
+    },
+    "sensitivity": {
+      "type": "int_0_3",
+      "description": "Privacy sensitivity (0=public, 3=confidential, higher = ask later)"
+    },
+    "ambiguity": {
+      "type": "float_0_1",
+      "description": "Whether the field needs clarification (higher = defer)"
+    },
+    "urgency": {
+      "type": "int_0_3",
+      "description": "User's expressed urgency level (higher = skip optional fields)"
+    },
+    "conversational_cost": {
+      "type": "int_1_5",
+      "description": "How complex the question is to ask (higher = more costly on WhatsApp)"
+    }
+  },
+  "channel_adaptations": {
+    "whatsapp": {
+      "one_question_per_message": true,
+      "max_question_length": 150,
+      "avoid_lists": true,
+      "defer_free_text": true,
+      "use_quick_replies": true
+    },
+    "telegram": {
+      "batch_2_3_fields": true,
+      "use_formatting": true
+    },
+    "dashboard": {
+      "full_form_one_page": true,
+      "group_by_category": true,
+      "inline_validation": true,
+      "save_draft": true
+    }
+  }
+}

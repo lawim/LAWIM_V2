@@ -1,0 +1,3595 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "generated": "2026-07-15",
+    "description": "Canonical qualification matrices for LAWIM — all 107 matrix types catalogued with complete field specifications for 75 entries",
+    "source": "HERITAGE_VALIDATED",
+    "total_matrices_included": 75
+  },
+  "matrices": [
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-001",
+      "canonical_name": "Chambre Simple — Basic Room",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "chambre_simple",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for a basic single room (chambre simple) rental search. A chambre simple is the most basic residential unit — a single room without internal private bathroom or kitchen.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "douches",
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere",
+        "meuble"
+      ],
+      "minimum_visit_fields": [
+        "cuisine",
+        "climatisation",
+        "eau"
+      ],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [
+        "securite",
+        "acces_route",
+        "proximity_preferences"
+      ],
+      "optional_fields": [
+        "zone",
+        "city_alternatives",
+        "neighborhood_alternatives",
+        "balcon",
+        "forage",
+        "email"
+      ],
+      "conditional_fields": [
+        {
+          "field": "surface",
+          "condition": "user mentions size",
+          "matching_role": "informational_only"
+        },
+        {
+          "field": "internet",
+          "condition": "user mentions digital work",
+          "matching_role": "boost"
+        },
+        {
+          "field": "groupe_electrogene",
+          "condition": "city in high power-cut zone",
+          "matching_role": "boost"
+        }
+      ],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max",
+        "email"
+      ],
+      "forbidden_questions": [
+        "bedroom_count",
+        "nombre_de_salons",
+        "etage",
+        "parking",
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-002",
+      "canonical_name": "Chambre Moderne — Modern Room with Private Shower",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "chambre_moderne",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for a modern room (chambre moderne) rental search with private internal shower and often a kitchenette.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "douches",
+        "cuisine",
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere",
+        "meuble"
+      ],
+      "minimum_visit_fields": [
+        "climatisation",
+        "eau",
+        "electricite"
+      ],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [
+        "internet",
+        "securite",
+        "acces_route",
+        "proximity_preferences",
+        "surface"
+      ],
+      "optional_fields": [
+        "zone",
+        "city_alternatives",
+        "neighborhood_alternatives",
+        "balcon",
+        "email"
+      ],
+      "conditional_fields": [
+        {
+          "field": "forage",
+          "condition": "water-scarce city",
+          "matching_role": "boost"
+        },
+        {
+          "field": "groupe_electrogene",
+          "condition": "frequent power cuts",
+          "matching_role": "boost"
+        },
+        {
+          "field": "etage",
+          "condition": "if building with floors",
+          "matching_role": "ranking_preference"
+        }
+      ],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max",
+        "email"
+      ],
+      "forbidden_questions": [
+        "bedroom_count",
+        "nombre_de_salons",
+        "parking",
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-003",
+      "canonical_name": "Studio — Basic Studio Apartment",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "studio",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for a basic studio apartment rental search. A self-contained unit combining bedroom, living area, and kitchenette.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "douches",
+        "cuisine",
+        "meuble",
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [
+        "etage",
+        "climatisation",
+        "securite"
+      ],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [
+        "parking",
+        "internet",
+        "eau",
+        "electricite",
+        "proximity_preferences",
+        "acces_route"
+      ],
+      "optional_fields": [
+        "surface",
+        "zone",
+        "city_alternatives",
+        "neighborhood_alternatives",
+        "balcon",
+        "ascenseur",
+        "email"
+      ],
+      "conditional_fields": [
+        {
+          "field": "groupe_electrogene",
+          "condition": "power-cut zone",
+          "matching_role": "boost"
+        },
+        {
+          "field": "forage",
+          "condition": "water issues area",
+          "matching_role": "boost"
+        }
+      ],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "bedroom_count",
+        "nombre_de_salons",
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-004",
+      "canonical_name": "Studio Moderne — Modern Studio",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "studio_moderne",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for a modern studio apartment with private internal shower.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "cuisine",
+        "meuble",
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere",
+        "etage"
+      ],
+      "minimum_visit_fields": [
+        "parking",
+        "climatisation",
+        "securite",
+        "internet"
+      ],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [
+        "eau",
+        "electricite",
+        "acces_route",
+        "proximity_preferences",
+        "surface",
+        "balcon"
+      ],
+      "optional_fields": [
+        "zone",
+        "city_alternatives",
+        "neighborhood_alternatives",
+        "ascenseur",
+        "groupe_electrogene",
+        "email"
+      ],
+      "conditional_fields": [
+        {
+          "field": "forage",
+          "condition": "water-scarce area",
+          "matching_role": "boost"
+        },
+        {
+          "field": "gardiennage",
+          "condition": "high-end studio",
+          "matching_role": "boost"
+        }
+      ],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "bedroom_count",
+        "douche_externe",
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-005",
+      "canonical_name": "Studio Meublé — Furnished Studio",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "studio_meuble",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for a furnished studio apartment rental search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "cuisine",
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere",
+        "etage",
+        "parking"
+      ],
+      "minimum_visit_fields": [
+        "climatisation",
+        "internet",
+        "securite",
+        "eau"
+      ],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [
+        "surface",
+        "balcon",
+        "acces_route",
+        "proximity_preferences",
+        "groupe_electrogene"
+      ],
+      "optional_fields": [
+        "zone",
+        "city_alternatives",
+        "neighborhood_alternatives",
+        "ascenseur",
+        "forage",
+        "email",
+        "gardiennage"
+      ],
+      "conditional_fields": [
+        {
+          "field": "linge",
+          "condition": "short-term context",
+          "matching_role": "informational_only"
+        },
+        {
+          "field": "electricite",
+          "condition": "not specified",
+          "matching_role": "ranking_preference"
+        }
+      ],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "bedroom_count",
+        "meuble_ou_non",
+        "douche_externe",
+        "standing"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-006",
+      "canonical_name": "Appartement Non Meublé — Unfurnished Apartment",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "appartement_non_meuble",
+      "requester_typology": "tenant, buyer",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for an unfurnished apartment rental or purchase search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max",
+        "chambres"
+      ],
+      "minimum_matching_fields": [
+        "douches",
+        "salons",
+        "cuisine",
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere",
+        "etage",
+        "parking"
+      ],
+      "minimum_visit_fields": [
+        "climatisation",
+        "internet",
+        "securite",
+        "ascenseur",
+        "surface"
+      ],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges",
+        "financing"
+      ],
+      "recommended_fields": [
+        "balcon",
+        "eau",
+        "electricite",
+        "acces_route",
+        "proximity_preferences",
+        "groupe_electrogene"
+      ],
+      "optional_fields": [
+        "zone",
+        "city_alternatives",
+        "neighborhood_alternatives",
+        "gardiennage",
+        "forage",
+        "email"
+      ],
+      "conditional_fields": [
+        {
+          "field": "jardin",
+          "condition": "ground floor apartment",
+          "matching_role": "ranking_preference"
+        },
+        {
+          "field": "cour",
+          "condition": "ground floor",
+          "matching_role": "ranking_preference"
+        },
+        {
+          "field": "usage",
+          "condition": "BUY only",
+          "matching_role": "informational_only"
+        }
+      ],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max",
+        "financing"
+      ],
+      "forbidden_questions": [
+        "meuble_ou_non",
+        "standing",
+        "nombre_de_pieces",
+        "autres_criteres"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-007",
+      "canonical_name": "Appartement Meublé — Furnished Apartment",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "appartement_meuble",
+      "requester_typology": "tenant, buyer",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for a furnished apartment rental or purchase search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max",
+        "chambres"
+      ],
+      "minimum_matching_fields": [
+        "douches",
+        "salons",
+        "cuisine",
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere",
+        "etage",
+        "parking"
+      ],
+      "minimum_visit_fields": [
+        "climatisation",
+        "internet",
+        "securite",
+        "eau"
+      ],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges",
+        "financing"
+      ],
+      "recommended_fields": [
+        "balcon",
+        "electricite",
+        "acces_route",
+        "proximity_preferences",
+        "surface"
+      ],
+      "optional_fields": [
+        "zone",
+        "city_alternatives",
+        "neighborhood_alternatives",
+        "ascenseur",
+        "groupe_electrogene",
+        "email"
+      ],
+      "conditional_fields": [
+        {
+          "field": "jardin",
+          "condition": "ground floor",
+          "matching_role": "ranking_preference"
+        },
+        {
+          "field": "cour",
+          "condition": "ground floor",
+          "matching_role": "ranking_preference"
+        }
+      ],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max",
+        "financing"
+      ],
+      "forbidden_questions": [
+        "meuble_ou_non",
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-008",
+      "canonical_name": "Villa",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "villa",
+      "requester_typology": "tenant, buyer",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for a villa rental or purchase search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max",
+        "chambres"
+      ],
+      "minimum_matching_fields": [
+        "douches",
+        "salons",
+        "cuisine",
+        "surface_terrain",
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere",
+        "parking"
+      ],
+      "minimum_visit_fields": [
+        "climatisation",
+        "securite",
+        "eau",
+        "electricite"
+      ],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges",
+        "financing"
+      ],
+      "recommended_fields": [
+        "cour",
+        "cloture",
+        "jardin",
+        "piscine",
+        "acces_route",
+        "groupe_electrogene",
+        "gardiennage"
+      ],
+      "optional_fields": [
+        "zone",
+        "city_alternatives",
+        "neighborhood_alternatives",
+        "balcon",
+        "forage",
+        "internet",
+        "email"
+      ],
+      "conditional_fields": [
+        {
+          "field": "dependances",
+          "condition": "if user mentions outbuildings",
+          "matching_role": "informational_only"
+        },
+        {
+          "field": "etage",
+          "condition": "if villa has upper floor",
+          "matching_role": "ranking_preference"
+        }
+      ],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max",
+        "financing"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces",
+        "ascenseur"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-009",
+      "canonical_name": "Villa Basse",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "villa_basse",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for villa basse search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-010",
+      "canonical_name": "Duplex",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "duplex",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for duplex search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-011",
+      "canonical_name": "Triplex",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "triplex",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for triplex search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-012",
+      "canonical_name": "Maison Individuelle",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "maison_individuelle",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for maison individuelle search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-013",
+      "canonical_name": "Maison de Ville",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "maison_de_ville",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for maison de ville search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-014",
+      "canonical_name": "Chambre d'Hôtel — Hotel Room",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "chambre_hotel",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for chambre d'hôtel — hotel room search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-015",
+      "canonical_name": "Appartement Courte Durée — Short Stay Apartment",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "appartement_courte_duree",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for appartement courte durée — short stay apartment search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-016",
+      "canonical_name": "Résidence Meublée — Furnished Residence",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "residence_meublee",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for résidence meublée — furnished residence search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-017",
+      "canonical_name": "Colocation — Shared Apartment",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "colocation",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for colocation — shared apartment search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-RES-SEARCH-018",
+      "canonical_name": "Cité Universitaire — University Residence",
+      "request_family": "RESIDENTIAL_SEARCH",
+      "transaction_type": "RENT",
+      "property_type": "cite_universitaire",
+      "requester_typology": "tenant",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for cité universitaire — university residence search.",
+      "minimum_intake_fields": [
+        "transaction",
+        "property_type",
+        "city"
+      ],
+      "minimum_search_fields": [
+        "neighborhood",
+        "budget_max"
+      ],
+      "minimum_matching_fields": [
+        "budget_type"
+      ],
+      "minimum_introduction_fields": [
+        "disponibilite",
+        "nom",
+        "telephone",
+        "canal_prefere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "caution",
+        "charges"
+      ],
+      "recommended_fields": [],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "telephone",
+        "nom",
+        "budget_max"
+      ],
+      "forbidden_questions": [
+        "standing",
+        "nombre_de_pieces"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "LAND_SEARCH_TERRAIN_TITRE_001",
+      "canonical_name": "Terrain avec titre foncier — Titled Land",
+      "request_family": "LAND_SEARCH",
+      "transaction_type": "BUY",
+      "property_type": "terrain_titre",
+      "requester_typology": "buyer",
+      "journey_stage": "SEARCH",
+      "description": "Land search matrix for terrain avec titre foncier — titled land.",
+      "minimum_intake_fields": [
+        "ville",
+        "quartier",
+        "surface",
+        "budget_total",
+        "usage_prevu"
+      ],
+      "minimum_search_fields": [
+        "ville",
+        "surface_min",
+        "budget_max",
+        "usage_prevu"
+      ],
+      "minimum_matching_fields": [
+        "ville",
+        "quartier",
+        "budget_total",
+        "usage_prevu",
+        "surface"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom",
+        "contact_telephone",
+        "ville",
+        "budget_total"
+      ],
+      "minimum_visit_fields": [
+        "visite_souhaitee",
+        "disponibilite"
+      ],
+      "minimum_transaction_fields": [
+        "besoin_notaire",
+        "source_financement"
+      ],
+      "recommended_fields": [
+        "accessibilite",
+        "viabilisation_eau",
+        "viabilisation_electricite",
+        "topographie",
+        "inondable"
+      ],
+      "optional_fields": [
+        "repere",
+        "photo_terrain",
+        "commentaire",
+        "delai_souhaite"
+      ],
+      "conditional_fields": [
+        {
+          "field": "litiges_connus",
+          "condition": "any legal concern",
+          "matching_role": "transaction_blocker"
+        }
+      ],
+      "sensitive_fields": [
+        "num_titre",
+        "litiges_connus",
+        "hypotheque_charge"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "douches",
+        "salon",
+        "pieces",
+        "standing"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "LAND_SEARCH_TERRAIN_NON_TITRE_001",
+      "canonical_name": "Terrain sans titre foncier — Untitled Land",
+      "request_family": "LAND_SEARCH",
+      "transaction_type": "BUY",
+      "property_type": "terrain_non_titre",
+      "requester_typology": "buyer",
+      "journey_stage": "SEARCH",
+      "description": "Land search matrix for terrain sans titre foncier — untitled land.",
+      "minimum_intake_fields": [
+        "ville",
+        "quartier",
+        "surface",
+        "budget_total",
+        "usage_prevu"
+      ],
+      "minimum_search_fields": [
+        "ville",
+        "surface_min",
+        "budget_max",
+        "usage_prevu"
+      ],
+      "minimum_matching_fields": [
+        "ville",
+        "quartier",
+        "budget_total",
+        "usage_prevu",
+        "surface"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom",
+        "contact_telephone",
+        "ville",
+        "budget_total"
+      ],
+      "minimum_visit_fields": [
+        "visite_souhaitee",
+        "disponibilite"
+      ],
+      "minimum_transaction_fields": [
+        "besoin_notaire",
+        "source_financement"
+      ],
+      "recommended_fields": [
+        "accessibilite",
+        "viabilisation_eau",
+        "viabilisation_electricite",
+        "topographie",
+        "inondable"
+      ],
+      "optional_fields": [
+        "repere",
+        "photo_terrain",
+        "commentaire",
+        "delai_souhaite"
+      ],
+      "conditional_fields": [
+        {
+          "field": "litiges_connus",
+          "condition": "any legal concern",
+          "matching_role": "transaction_blocker"
+        }
+      ],
+      "sensitive_fields": [
+        "num_titre",
+        "litiges_connus",
+        "hypotheque_charge"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "douches",
+        "salon",
+        "pieces",
+        "standing"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "LAND_SEARCH_TERRAIN_LOTI_001",
+      "canonical_name": "Terrain loti — Serviced Land",
+      "request_family": "LAND_SEARCH",
+      "transaction_type": "BUY",
+      "property_type": "terrain_loti",
+      "requester_typology": "buyer",
+      "journey_stage": "SEARCH",
+      "description": "Land search matrix for terrain loti — serviced land.",
+      "minimum_intake_fields": [
+        "ville",
+        "quartier",
+        "surface",
+        "budget_total",
+        "usage_prevu"
+      ],
+      "minimum_search_fields": [
+        "ville",
+        "surface_min",
+        "budget_max",
+        "usage_prevu"
+      ],
+      "minimum_matching_fields": [
+        "ville",
+        "quartier",
+        "budget_total",
+        "usage_prevu",
+        "surface"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom",
+        "contact_telephone",
+        "ville",
+        "budget_total"
+      ],
+      "minimum_visit_fields": [
+        "visite_souhaitee",
+        "disponibilite"
+      ],
+      "minimum_transaction_fields": [
+        "besoin_notaire",
+        "source_financement"
+      ],
+      "recommended_fields": [
+        "accessibilite",
+        "viabilisation_eau",
+        "viabilisation_electricite",
+        "topographie",
+        "inondable"
+      ],
+      "optional_fields": [
+        "repere",
+        "photo_terrain",
+        "commentaire",
+        "delai_souhaite"
+      ],
+      "conditional_fields": [
+        {
+          "field": "litiges_connus",
+          "condition": "any legal concern",
+          "matching_role": "transaction_blocker"
+        }
+      ],
+      "sensitive_fields": [
+        "num_titre",
+        "litiges_connus",
+        "hypotheque_charge"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "douches",
+        "salon",
+        "pieces",
+        "standing"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "LAND_SEARCH_TERRAIN_NON_LOTI_001",
+      "canonical_name": "Terrain non loti — Unserviced Land",
+      "request_family": "LAND_SEARCH",
+      "transaction_type": "BUY",
+      "property_type": "terrain_non_loti",
+      "requester_typology": "buyer",
+      "journey_stage": "SEARCH",
+      "description": "Land search matrix for terrain non loti — unserviced land.",
+      "minimum_intake_fields": [
+        "ville",
+        "quartier",
+        "surface",
+        "budget_total",
+        "usage_prevu"
+      ],
+      "minimum_search_fields": [
+        "ville",
+        "surface_min",
+        "budget_max",
+        "usage_prevu"
+      ],
+      "minimum_matching_fields": [
+        "ville",
+        "quartier",
+        "budget_total",
+        "usage_prevu",
+        "surface"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom",
+        "contact_telephone",
+        "ville",
+        "budget_total"
+      ],
+      "minimum_visit_fields": [
+        "visite_souhaitee",
+        "disponibilite"
+      ],
+      "minimum_transaction_fields": [
+        "besoin_notaire",
+        "source_financement"
+      ],
+      "recommended_fields": [
+        "accessibilite",
+        "viabilisation_eau",
+        "viabilisation_electricite",
+        "topographie",
+        "inondable"
+      ],
+      "optional_fields": [
+        "repere",
+        "photo_terrain",
+        "commentaire",
+        "delai_souhaite"
+      ],
+      "conditional_fields": [
+        {
+          "field": "litiges_connus",
+          "condition": "any legal concern",
+          "matching_role": "transaction_blocker"
+        }
+      ],
+      "sensitive_fields": [
+        "num_titre",
+        "litiges_connus",
+        "hypotheque_charge"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "douches",
+        "salon",
+        "pieces",
+        "standing"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "LAND_SEARCH_TERRAIN_TITRE_COLLECTIF_001",
+      "canonical_name": "Terrain avec titre collectif — Collective Title Land",
+      "request_family": "LAND_SEARCH",
+      "transaction_type": "BUY",
+      "property_type": "terrain_titre_collectif",
+      "requester_typology": "buyer",
+      "journey_stage": "SEARCH",
+      "description": "Land search matrix for terrain avec titre collectif — collective title land.",
+      "minimum_intake_fields": [
+        "ville",
+        "quartier",
+        "surface",
+        "budget_total",
+        "usage_prevu"
+      ],
+      "minimum_search_fields": [
+        "ville",
+        "surface_min",
+        "budget_max",
+        "usage_prevu"
+      ],
+      "minimum_matching_fields": [
+        "ville",
+        "quartier",
+        "budget_total",
+        "usage_prevu",
+        "surface"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom",
+        "contact_telephone",
+        "ville",
+        "budget_total"
+      ],
+      "minimum_visit_fields": [
+        "visite_souhaitee",
+        "disponibilite"
+      ],
+      "minimum_transaction_fields": [
+        "besoin_notaire",
+        "source_financement"
+      ],
+      "recommended_fields": [
+        "accessibilite",
+        "viabilisation_eau",
+        "viabilisation_electricite",
+        "topographie",
+        "inondable"
+      ],
+      "optional_fields": [
+        "repere",
+        "photo_terrain",
+        "commentaire",
+        "delai_souhaite"
+      ],
+      "conditional_fields": [
+        {
+          "field": "litiges_connus",
+          "condition": "any legal concern",
+          "matching_role": "transaction_blocker"
+        }
+      ],
+      "sensitive_fields": [
+        "num_titre",
+        "litiges_connus",
+        "hypotheque_charge"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "douches",
+        "salon",
+        "pieces",
+        "standing"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "LAND_SEARCH_TERRAIN_TITRE_INDIVIDUEL_001",
+      "canonical_name": "Terrain avec titre individuel — Individual Title Land",
+      "request_family": "LAND_SEARCH",
+      "transaction_type": "BUY",
+      "property_type": "terrain_titre_individuel",
+      "requester_typology": "buyer",
+      "journey_stage": "SEARCH",
+      "description": "Land search matrix for terrain avec titre individuel — individual title land.",
+      "minimum_intake_fields": [
+        "ville",
+        "quartier",
+        "surface",
+        "budget_total",
+        "usage_prevu"
+      ],
+      "minimum_search_fields": [
+        "ville",
+        "surface_min",
+        "budget_max",
+        "usage_prevu"
+      ],
+      "minimum_matching_fields": [
+        "ville",
+        "quartier",
+        "budget_total",
+        "usage_prevu",
+        "surface"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom",
+        "contact_telephone",
+        "ville",
+        "budget_total"
+      ],
+      "minimum_visit_fields": [
+        "visite_souhaitee",
+        "disponibilite"
+      ],
+      "minimum_transaction_fields": [
+        "besoin_notaire",
+        "source_financement"
+      ],
+      "recommended_fields": [
+        "accessibilite",
+        "viabilisation_eau",
+        "viabilisation_electricite",
+        "topographie",
+        "inondable"
+      ],
+      "optional_fields": [
+        "repere",
+        "photo_terrain",
+        "commentaire",
+        "delai_souhaite"
+      ],
+      "conditional_fields": [
+        {
+          "field": "litiges_connus",
+          "condition": "any legal concern",
+          "matching_role": "transaction_blocker"
+        }
+      ],
+      "sensitive_fields": [
+        "num_titre",
+        "litiges_connus",
+        "hypotheque_charge"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "douches",
+        "salon",
+        "pieces",
+        "standing"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "LAND_SEARCH_TERRAIN_SOUS_MORCELLEMENT_001",
+      "canonical_name": "Terrain en cours de morcellement — Land Undergoing Subdivision",
+      "request_family": "LAND_SEARCH",
+      "transaction_type": "BUY",
+      "property_type": "terrain_sous_morcellement",
+      "requester_typology": "buyer",
+      "journey_stage": "SEARCH",
+      "description": "Land search matrix for terrain en cours de morcellement — land undergoing subdivision.",
+      "minimum_intake_fields": [
+        "ville",
+        "quartier",
+        "surface",
+        "budget_total",
+        "usage_prevu"
+      ],
+      "minimum_search_fields": [
+        "ville",
+        "surface_min",
+        "budget_max",
+        "usage_prevu"
+      ],
+      "minimum_matching_fields": [
+        "ville",
+        "quartier",
+        "budget_total",
+        "usage_prevu",
+        "surface"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom",
+        "contact_telephone",
+        "ville",
+        "budget_total"
+      ],
+      "minimum_visit_fields": [
+        "visite_souhaitee",
+        "disponibilite"
+      ],
+      "minimum_transaction_fields": [
+        "besoin_notaire",
+        "source_financement"
+      ],
+      "recommended_fields": [
+        "accessibilite",
+        "viabilisation_eau",
+        "viabilisation_electricite",
+        "topographie",
+        "inondable"
+      ],
+      "optional_fields": [
+        "repere",
+        "photo_terrain",
+        "commentaire",
+        "delai_souhaite"
+      ],
+      "conditional_fields": [
+        {
+          "field": "litiges_connus",
+          "condition": "any legal concern",
+          "matching_role": "transaction_blocker"
+        }
+      ],
+      "sensitive_fields": [
+        "num_titre",
+        "litiges_connus",
+        "hypotheque_charge"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "douches",
+        "salon",
+        "pieces",
+        "standing"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-001",
+      "canonical_name": "Boutique — Shop",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY, CESSION_BAIL",
+      "property_type": "boutique",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for boutique — shop.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-002",
+      "canonical_name": "Bureau — Office",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "bureau",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for bureau — office.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-003",
+      "canonical_name": "Local Commercial — Commercial Space",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY, BAIL_COMMERCIAL",
+      "property_type": "local_commercial",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for local commercial — commercial space.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-004",
+      "canonical_name": "Magasin — Store",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "magasin",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for magasin — store.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-005",
+      "canonical_name": "Entrepôt — Warehouse",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "entrepot",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for entrepôt — warehouse.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-006",
+      "canonical_name": "Hangar — Shed",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "hangar",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for hangar — shed.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-007",
+      "canonical_name": "Atelier — Workshop",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "atelier",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for atelier — workshop.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-008",
+      "canonical_name": "Restaurant",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY, CESSION",
+      "property_type": "restaurant",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for restaurant.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-009",
+      "canonical_name": "Bar",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY, CESSION",
+      "property_type": "bar",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for bar.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-010",
+      "canonical_name": "Hôtel — Boutique Hotel",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY, CESSION",
+      "property_type": "hotel",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for hôtel — boutique hotel.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-011",
+      "canonical_name": "Auberge — Inn",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY, CESSION",
+      "property_type": "auberge",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for auberge — inn.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-012",
+      "canonical_name": "Immeuble de Rapport — Income Property",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "BUY",
+      "property_type": "immeuble_de_rapport",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for immeuble de rapport — income property.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-013",
+      "canonical_name": "Immeuble Commercial — Commercial Building",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "BUY, RENT",
+      "property_type": "immeuble_commercial",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for immeuble commercial — commercial building.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-014",
+      "canonical_name": "Station Service — Gas Station",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "BUY, RENT",
+      "property_type": "station_service",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for station service — gas station.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-015",
+      "canonical_name": "Site Industriel — Industrial Site",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "BUY, RENT",
+      "property_type": "site_industriel",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for site industriel — industrial site.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-016",
+      "canonical_name": "Espace Événementiel — Event Space",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "RENT, BUY",
+      "property_type": "espace_evenementiel",
+      "requester_typology": "professional",
+      "journey_stage": "SEARCH",
+      "description": "Qualification matrix for espace événementiel — event space.",
+      "minimum_intake_fields": [
+        "activite_prevue",
+        "surface_min",
+        "ville",
+        "quartier",
+        "transaction",
+        "budget"
+      ],
+      "minimum_search_fields": [
+        "zone_commerciale",
+        "etage"
+      ],
+      "minimum_matching_fields": [
+        "activite",
+        "surface",
+        "budget",
+        "ville",
+        "quartier"
+      ],
+      "minimum_introduction_fields": [
+        "projet",
+        "date_ouverture",
+        "experience"
+      ],
+      "minimum_visit_fields": [
+        "date_visite",
+        "accompagnement"
+      ],
+      "minimum_transaction_fields": [
+        "piece_identite",
+        "registre",
+        "garantie"
+      ],
+      "recommended_fields": [
+        "parking",
+        "electricite",
+        "eau",
+        "climatisation"
+      ],
+      "optional_fields": [
+        "enseigne",
+        "horaires"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "CA_previsionnel",
+        "bailleur"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "habiter",
+        "age"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-017",
+      "canonical_name": "Investissement Locatif — Rental Investment",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "INVEST",
+      "property_type": "investissement_locatif",
+      "requester_typology": "investor",
+      "journey_stage": "SEARCH",
+      "description": "Investment matrix for investissement locatif — rental investment.",
+      "minimum_intake_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "horizon_investissement",
+        "ville_investissement",
+        "strategie_investissement"
+      ],
+      "minimum_search_fields": [
+        "zone_preferee",
+        "risque_accepte"
+      ],
+      "minimum_matching_fields": [
+        "budget",
+        "rendement",
+        "ville",
+        "strategie",
+        "risque"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom_inv",
+        "contact_telephone_inv",
+        "experience_immobiliere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "source_financement",
+        "besoin_accompagnement"
+      ],
+      "recommended_fields": [
+        "autres_investissements"
+      ],
+      "optional_fields": [
+        "diaspora_flag",
+        "proche_sur_place"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "source_financement"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "salons",
+        "standing",
+        "age"
+      ],
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-018",
+      "canonical_name": "Investissement Terrain — Land Investment",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "INVEST",
+      "property_type": "investissement_terrain",
+      "requester_typology": "investor",
+      "journey_stage": "SEARCH",
+      "description": "Investment matrix for investissement terrain — land investment.",
+      "minimum_intake_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "horizon_investissement",
+        "ville_investissement",
+        "strategie_investissement"
+      ],
+      "minimum_search_fields": [
+        "zone_preferee",
+        "risque_accepte"
+      ],
+      "minimum_matching_fields": [
+        "budget",
+        "rendement",
+        "ville",
+        "strategie",
+        "risque"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom_inv",
+        "contact_telephone_inv",
+        "experience_immobiliere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "source_financement",
+        "besoin_accompagnement"
+      ],
+      "recommended_fields": [
+        "autres_investissements"
+      ],
+      "optional_fields": [
+        "diaspora_flag",
+        "proche_sur_place"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "source_financement"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "salons",
+        "standing",
+        "age"
+      ],
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-019",
+      "canonical_name": "Investissement Immobilier Commercial — Commercial RE Investment",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "INVEST",
+      "property_type": "investissement_immobilier_commercial",
+      "requester_typology": "investor",
+      "journey_stage": "SEARCH",
+      "description": "Investment matrix for investissement immobilier commercial — commercial re investment.",
+      "minimum_intake_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "horizon_investissement",
+        "ville_investissement",
+        "strategie_investissement"
+      ],
+      "minimum_search_fields": [
+        "zone_preferee",
+        "risque_accepte"
+      ],
+      "minimum_matching_fields": [
+        "budget",
+        "rendement",
+        "ville",
+        "strategie",
+        "risque"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom_inv",
+        "contact_telephone_inv",
+        "experience_immobiliere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "source_financement",
+        "besoin_accompagnement"
+      ],
+      "recommended_fields": [
+        "autres_investissements"
+      ],
+      "optional_fields": [
+        "diaspora_flag",
+        "proche_sur_place"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "source_financement"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "salons",
+        "standing",
+        "age"
+      ],
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-020",
+      "canonical_name": "Investissement Promotion — Development Investment",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "INVEST",
+      "property_type": "investissement_promotion",
+      "requester_typology": "investor",
+      "journey_stage": "SEARCH",
+      "description": "Investment matrix for investissement promotion — development investment.",
+      "minimum_intake_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "horizon_investissement",
+        "ville_investissement",
+        "strategie_investissement"
+      ],
+      "minimum_search_fields": [
+        "zone_preferee",
+        "risque_accepte"
+      ],
+      "minimum_matching_fields": [
+        "budget",
+        "rendement",
+        "ville",
+        "strategie",
+        "risque"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom_inv",
+        "contact_telephone_inv",
+        "experience_immobiliere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "source_financement",
+        "besoin_accompagnement"
+      ],
+      "recommended_fields": [
+        "autres_investissements"
+      ],
+      "optional_fields": [
+        "diaspora_flag",
+        "proche_sur_place"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "source_financement"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "salons",
+        "standing",
+        "age"
+      ],
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "COM-MATRIX-021",
+      "canonical_name": "Syndicat Copropriété — Condo/Co-ownership",
+      "request_family": "COMMERCIAL_SEARCH",
+      "transaction_type": "INVEST",
+      "property_type": "syndicat_copropriete",
+      "requester_typology": "investor",
+      "journey_stage": "SEARCH",
+      "description": "Investment matrix for syndicat copropriété — condo/co-ownership.",
+      "minimum_intake_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "horizon_investissement",
+        "ville_investissement",
+        "strategie_investissement"
+      ],
+      "minimum_search_fields": [
+        "zone_preferee",
+        "risque_accepte"
+      ],
+      "minimum_matching_fields": [
+        "budget",
+        "rendement",
+        "ville",
+        "strategie",
+        "risque"
+      ],
+      "minimum_introduction_fields": [
+        "contact_nom_inv",
+        "contact_telephone_inv",
+        "experience_immobiliere"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "source_financement",
+        "besoin_accompagnement"
+      ],
+      "recommended_fields": [
+        "autres_investissements"
+      ],
+      "optional_fields": [
+        "diaspora_flag",
+        "proche_sur_place"
+      ],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "budget_investissement",
+        "rendement_cible",
+        "source_financement"
+      ],
+      "forbidden_questions": [
+        "chambres",
+        "salons",
+        "standing",
+        "age"
+      ],
+      "source": "EXPERT_PROPOSAL",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-001",
+      "canonical_name": "Crédit Immobilier — Mortgage/Real Estate Loan",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "credit_immobilier",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for crédit immobilier — mortgage/real estate loan.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-002",
+      "canonical_name": "Financement Acquisition — Acquisition Financing",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "financement_acquisition",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for financement acquisition — acquisition financing.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-003",
+      "canonical_name": "Financement Construction — Construction Financing",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "financement_construction",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for financement construction — construction financing.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-004",
+      "canonical_name": "Financement Rénovation — Renovation Financing",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "financement_renovation",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for financement rénovation — renovation financing.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-005",
+      "canonical_name": "Financement Promotion Immobilière — Development Financing",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "financement_promotion_immobiliere",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for financement promotion immobilière — development financing.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-006",
+      "canonical_name": "Prêt Adossé Bien — Property-Backed Loan",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "pret_adosse_bien",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for prêt adossé bien — property-backed loan.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-007",
+      "canonical_name": "Recherche Investisseur — Investor Search",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "recherche_investisseur",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for recherche investisseur — investor search.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-008",
+      "canonical_name": "Cofinancement — Co-Financing",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "cofinancement",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for cofinancement — co-financing.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-009",
+      "canonical_name": "Apport Diaspora — Diaspora Contribution",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "apport_diaspora",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for apport diaspora — diaspora contribution.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    },
+    {
+      "matrix_id": "MATRIX-FIN-010",
+      "canonical_name": "Financement Professionnel — Professional/Business Financing",
+      "request_family": "FINANCING_REQUEST",
+      "transaction_type": "FINANCE",
+      "property_type": "financement_professionnel",
+      "requester_typology": "individual",
+      "journey_stage": "SEARCH",
+      "description": "Financing request matrix for financement professionnel — professional/business financing.",
+      "minimum_intake_fields": [
+        "objet_financement",
+        "montant_recherche",
+        "apport_disponible",
+        "ville_projet",
+        "type_bien_projet"
+      ],
+      "minimum_search_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "ville_projet"
+      ],
+      "minimum_matching_fields": [
+        "montant_recherche",
+        "apport_disponible",
+        "duree_souhaitee",
+        "garanties_disponibles",
+        "ville_projet"
+      ],
+      "minimum_introduction_fields": [
+        "email_contact",
+        "telephone_contact"
+      ],
+      "minimum_visit_fields": [],
+      "minimum_transaction_fields": [
+        "documents_disponibles"
+      ],
+      "recommended_fields": [
+        "delai_souhaite",
+        "autres_engagements"
+      ],
+      "optional_fields": [],
+      "conditional_fields": [],
+      "sensitive_fields": [
+        "revenus_mensuels",
+        "revenus_net",
+        "garanties_disponibles"
+      ],
+      "forbidden_questions": [
+        "pret_approuve",
+        "code_bancaire"
+      ],
+      "source": "HERITAGE_VALIDATED",
+      "confidence": "HIGH"
+    }
+  ]
+}

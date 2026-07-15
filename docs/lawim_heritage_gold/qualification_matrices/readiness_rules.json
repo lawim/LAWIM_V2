@@ -1,0 +1,496 @@
+{
+  "levels": {
+    "INTENT_IDENTIFIED": {
+      "order": 1,
+      "description": "The system has established what the user wants to do and what type of property or service they need.",
+      "required_fields": [
+        "intent",
+        "transaction_type"
+      ],
+      "conditional_requirements": [],
+      "blocking_conditions": [
+        "ambiguous_intent",
+        "unsupported_property_type",
+        "incompatible_transaction_type",
+        "clarification_refused_3_attempts"
+      ],
+      "non_blocking_missing_fields": [
+        "budget",
+        "neighborhood",
+        "city",
+        "contact_info",
+        "property_details",
+        "timing"
+      ],
+      "allowed_actions": [
+        "detect_intent",
+        "confirm_intent",
+        "detect_property_type",
+        "ask_follow_up_ambiguous",
+        "route_to_human_unsupported"
+      ],
+      "forbidden_actions": [
+        "launch_search",
+        "ask_contact_details",
+        "ask_detailed_criteria"
+      ],
+      "threshold_score": "N/A (binary)",
+      "max_exchanges": 2,
+      "expected_match_score_range": "N/A"
+    },
+    "MINIMUM_INTAKE_READY": {
+      "order": 2,
+      "description": "The system has enough information to begin locating properties — city and budget are established.",
+      "required_fields": [
+        "city",
+        "budget_max"
+      ],
+      "conditional_requirements": [
+        {
+          "family": "LAND_SEARCH",
+          "fields": [
+            "surface",
+            "usage_prevu"
+          ]
+        },
+        {
+          "family": "COMMERCIAL_SEARCH",
+          "fields": [
+            "activite_prevue",
+            "surface_min"
+          ]
+        },
+        {
+          "family": "FINANCING_REQUEST",
+          "fields": [
+            "montant_recherche",
+            "apport_disponible"
+          ]
+        }
+      ],
+      "blocking_conditions": [
+        "city_not_covered",
+        "budget_below_minimum_threshold",
+        "budget_missing_after_3_attempts",
+        "city_missing_after_3_attempts",
+        "contradictory_budget_after_clarification"
+      ],
+      "non_blocking_missing_fields": [
+        "neighborhood",
+        "contact_info",
+        "property_details",
+        "timing"
+      ],
+      "allowed_actions": [
+        "confirm_city",
+        "confirm_budget",
+        "ask_neighborhood",
+        "begin_matching_engine_init"
+      ],
+      "forbidden_actions": [
+        "launch_full_search",
+        "ask_contact_details",
+        "introduce_to_holders"
+      ],
+      "threshold_score": "20-40",
+      "max_exchanges": 4,
+      "expected_match_score_range": "20-40"
+    },
+    "MINIMUM_SEARCH_READY": {
+      "order": 3,
+      "description": "The system has the minimum criteria to launch a first property search. THIS IS THE CRITICAL THRESHOLD — once reached, LAWIM MUST launch a search immediately.",
+      "required_fields": [
+        "city",
+        "budget_max",
+        "neighborhood",
+        "property_type",
+        "transaction"
+      ],
+      "conditional_requirements": [
+        {
+          "family": "LAND_SEARCH",
+          "fields": [
+            "surface_min"
+          ]
+        },
+        {
+          "family": "COMMERCIAL_SEARCH",
+          "fields": [
+            "activite_prevue",
+            "surface_min"
+          ]
+        },
+        {
+          "family": "FINANCING_REQUEST",
+          "fields": [
+            "montant_recherche",
+            "apport_disponible",
+            "type_bien_projet",
+            "ville_projet"
+          ]
+        },
+        {
+          "family": "PROFESSIONAL_SEARCH",
+          "fields": [
+            "localisation",
+            "description_besoin",
+            "type_prestation"
+          ]
+        }
+      ],
+      "blocking_conditions": [
+        "city_neighborhood_zero_inventory",
+        "budget_too_low_for_property_type",
+        "property_type_zero_inventory_in_city",
+        "user_refuses_neighborhood"
+      ],
+      "non_blocking_missing_fields": [
+        "chambres",
+        "property_condition",
+        "specific_amenities",
+        "contact_info",
+        "timing"
+      ],
+      "allowed_actions": [
+        "LAUNCH_FIRST_SEARCH",
+        "present_top_results",
+        "ask_refinement",
+        "ask_interest_in_details"
+      ],
+      "forbidden_actions": [
+        "continue_asking_recommended_fields_before_search",
+        "withhold_results_while_collecting_non_essential",
+        "ask_contact_before_results"
+      ],
+      "threshold_score": "40-60",
+      "max_exchanges": 6,
+      "expected_match_score_range": "40-60"
+    },
+    "MINIMUM_MATCHING_READY": {
+      "order": 4,
+      "description": "The system has enough detailed criteria to rank and score matches with precision.",
+      "required_fields": [
+        "budget_type"
+      ],
+      "conditional_requirements": [
+        {
+          "condition": "appartement_villa",
+          "fields": [
+            "chambres",
+            "douches",
+            "salons"
+          ]
+        },
+        {
+          "condition": "studio",
+          "fields": [
+            "cuisine",
+            "meuble"
+          ]
+        },
+        {
+          "condition": "chambre",
+          "fields": [
+            "douches",
+            "cuisine"
+          ]
+        },
+        {
+          "condition": "land",
+          "fields": [
+            "surface",
+            "usage_prevu",
+            "type_document"
+          ]
+        }
+      ],
+      "blocking_conditions": [],
+      "non_blocking_missing_fields": [
+        "visit_preferences",
+        "contact_preferences",
+        "timing_details",
+        "amenities",
+        "condition",
+        "floor_level"
+      ],
+      "allowed_actions": [
+        "rerank_results_with_improved_criteria",
+        "filter_results_more_precisely",
+        "show_match_scores_with_breakdown",
+        "ask_top_N_results",
+        "begin_collecting_introduction_fields"
+      ],
+      "forbidden_actions": [
+        "block_search_results_while_collecting_matching_fields",
+        "replace_results_without_user_request"
+      ],
+      "threshold_score": "60-80",
+      "max_exchanges": 4,
+      "expected_match_score_range": "60-80"
+    },
+    "INTRODUCTION_READY": {
+      "order": 5,
+      "description": "The system has the user's consent and contact information to facilitate an introduction between parties.",
+      "required_fields": [
+        "nom",
+        "telephone",
+        "canal_prefere",
+        "disponibilite"
+      ],
+      "conditional_requirements": [
+        {
+          "field": "email",
+          "condition": "diaspora or specific follow-up"
+        },
+        {
+          "field": "langue",
+          "condition": "if not yet auto-detected"
+        }
+      ],
+      "blocking_conditions": [
+        "user_refuses_name_after_2_attempts",
+        "user_refuses_phone",
+        "user_not_ready_for_introduction",
+        "no_suitable_match_found"
+      ],
+      "non_blocking_missing_fields": [
+        "email",
+        "specific_visit_preferences",
+        "preferred_agent_type",
+        "detailed_feedback"
+      ],
+      "allowed_actions": [
+        "INTRODUCE_PARTIES_WITH_DOUBLE_CONSENT",
+        "share_property_details",
+        "contact_holder_on_user_behalf",
+        "schedule_introduction_call",
+        "ask_visit_preferences"
+      ],
+      "forbidden_actions": [
+        "share_contact_without_double_consent",
+        "force_introduction_if_not_ready"
+      ],
+      "threshold_score": "70-85",
+      "max_exchanges": 2,
+      "expected_match_score_range": "70-85"
+    },
+    "VISIT_READY": {
+      "order": 6,
+      "description": "All conditions are met to organise a physical visit to the property.",
+      "required_fields": [
+        "visit_date",
+        "visit_time",
+        "nombre_visiteurs",
+        "type_visite"
+      ],
+      "conditional_requirements": [
+        {
+          "condition": "LAND_SEARCH",
+          "fields": [
+            "coordonnees_gps",
+            "besoin_geometre"
+          ]
+        },
+        {
+          "condition": "COMMERCIAL_SEARCH",
+          "fields": [
+            "acces_pmr",
+            "parking"
+          ]
+        }
+      ],
+      "blocking_conditions": [
+        "property_not_available_for_visit",
+        "owner_refuses_visit",
+        "user_cannot_make_any_time_slot",
+        "access_instructions_not_obtainable",
+        "safety_concerns"
+      ],
+      "non_blocking_missing_fields": [
+        "specific_questions_about_condition",
+        "negotiation_preferences",
+        "financing_details"
+      ],
+      "allowed_actions": [
+        "schedule_and_confirm_visit",
+        "send_visit_confirmation",
+        "ask_feedback_after_visit",
+        "request_additional_documents",
+        "prepare_visit_report"
+      ],
+      "forbidden_actions": [
+        "share_exact_address_without_consent"
+      ],
+      "threshold_score": "80-95",
+      "max_exchanges": 3,
+      "expected_match_score_range": "80-95"
+    },
+    "TRANSACTION_READY": {
+      "order": 7,
+      "description": "The user is ready to proceed to transaction stage. All legal, financial, and documentary requirements are met or in progress.",
+      "required_fields": [
+        "financing",
+        "caution",
+        "charges",
+        "documents"
+      ],
+      "conditional_requirements": [
+        {
+          "condition": "LAND_SEARCH",
+          "fields": [
+            "num_titre",
+            "identite_signataires",
+            "verification_conservatoire"
+          ]
+        },
+        {
+          "condition": "RENT",
+          "fields": [
+            "caution",
+            "charges",
+            "bail"
+          ]
+        },
+        {
+          "condition": "BUY",
+          "fields": [
+            "financing",
+            "notaire",
+            "titre"
+          ]
+        },
+        {
+          "condition": "PROFESSIONAL",
+          "fields": [
+            "contrat_service",
+            "conditions_paiement"
+          ]
+        },
+        {
+          "condition": "FINANCING",
+          "fields": [
+            "income_documents",
+            "guarantee_documents"
+          ]
+        }
+      ],
+      "blocking_conditions": [
+        "financing_not_secured",
+        "title_dispute_or_legal_issue",
+        "missing_mandatory_documents",
+        "party_withdraws_consent",
+        "professional_review_not_obtained",
+        "transaction_blocker_field_unresolved"
+      ],
+      "non_blocking_missing_fields": [
+        "decorative_preferences",
+        "move_in_date",
+        "secondary_preferences",
+        "long_term_plans"
+      ],
+      "allowed_actions": [
+        "proceed_to_formal_transaction",
+        "engage_notary_legal_professional",
+        "facilitate_document_exchange",
+        "coordinate_payment",
+        "generate_final_contract"
+      ],
+      "forbidden_actions": [
+        "proceed_without_resolving_blockers",
+        "skip_legal_verification",
+        "share_confidential_documents_without_consent"
+      ],
+      "threshold_score": "90-100",
+      "max_exchanges": "ongoing",
+      "expected_match_score_range": "90-100"
+    }
+  },
+  "transitions": [
+    {
+      "from": "INTENT_IDENTIFIED",
+      "to": "MINIMUM_INTAKE_READY",
+      "trigger": "Collect city + budget",
+      "type": "auto"
+    },
+    {
+      "from": "MINIMUM_INTAKE_READY",
+      "to": "MINIMUM_SEARCH_READY",
+      "trigger": "Collect neighborhood + validate criteria",
+      "type": "auto"
+    },
+    {
+      "from": "MINIMUM_SEARCH_READY",
+      "to": "MINIMUM_MATCHING_READY",
+      "trigger": "Collect property-specific criteria",
+      "type": "auto"
+    },
+    {
+      "from": "MINIMUM_MATCHING_READY",
+      "to": "INTRODUCTION_READY",
+      "trigger": "Collect contact + confirm interest",
+      "type": "semi_auto"
+    },
+    {
+      "from": "INTRODUCTION_READY",
+      "to": "VISIT_READY",
+      "trigger": "Schedule visit + confirm access",
+      "type": "manual"
+    },
+    {
+      "from": "VISIT_READY",
+      "to": "TRANSACTION_READY",
+      "trigger": "Verify documents + legal + financing",
+      "type": "manual"
+    }
+  ],
+  "cardinal_rule": "As soon as MINIMUM_SEARCH_READY is reached (city + budget + neighborhood + property_type + transaction known), LAWIM can launch a first search. It is forbidden to continue collecting recommended or optional fields before presenting initial results.",
+  "boost_factors_by_level": {
+    "INTENT_IDENTIFIED": [],
+    "MINIMUM_INTAKE_READY": [
+      "city_match_+20",
+      "budget_within_range_+15"
+    ],
+    "MINIMUM_SEARCH_READY": [
+      "exact_neighborhood_+25",
+      "diaspora_+20"
+    ],
+    "MINIMUM_MATCHING_READY": [
+      "property_type_match_+15",
+      "amenities_match_+10"
+    ],
+    "INTRODUCTION_READY": [
+      "urgency_+15",
+      "trust_signal_+10"
+    ],
+    "VISIT_READY": [
+      "visit_intent_+20"
+    ],
+    "TRANSACTION_READY": [
+      "financing_secured_+15",
+      "documents_ready_+10"
+    ]
+  },
+  "penalty_factors_by_level": {
+    "INTENT_IDENTIFIED": [],
+    "MINIMUM_INTAKE_READY": [
+      "missing_budget_-10",
+      "unclear_location_-10"
+    ],
+    "MINIMUM_SEARCH_READY": [
+      "missing_neighborhood_-5",
+      "spam_like_-50"
+    ],
+    "MINIMUM_MATCHING_READY": [
+      "contradictory_criteria_-15"
+    ],
+    "INTRODUCTION_READY": [
+      "refused_contact_-20"
+    ],
+    "VISIT_READY": [
+      "missed_visit_-25"
+    ],
+    "TRANSACTION_READY": [
+      "incomplete_documents_-30"
+    ]
+  }
+}
