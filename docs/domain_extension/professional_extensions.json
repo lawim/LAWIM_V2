@@ -1,0 +1,1280 @@
+{
+  "document": {
+    "id": "LAWIM-H13-PROFESSIONAL-EXT-V1",
+    "title": "Professional Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Enriched catalog of all professional extension models for LAWIM_V2 — covering professional profiles, service capabilities, licensing, certification, geographic coverage, availability, ratings, verification, pricing models, SLAs, and organization membership hierarchy across 27 professional categories",
+    "sources": [
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §1 (Identity Model)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §3 (Service Model)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §12 (Organization Model)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §10 (CRM Pipeline)",
+      "CRM_EXTENSION_MODEL.md §9 (Agent Rating)",
+      "QUALIFICATION_EXTENSION_MODEL.md §10.6 (Professional Matrices)",
+      "SERVICE_TAXONOMY_EXTENSION_MODEL.md"
+    ],
+    "total_extensions": 12,
+    "by_category": {
+      "profile_entity": 2,
+      "service_capabilities": 2,
+      "credentials": 2,
+      "operations": 2,
+      "ratings_quality": 2,
+      "organization": 2
+    }
+  },
+  "professional_categories": {
+    "description": "27 professional categories organized by domain with hierarchy levels (Domain → Category → Specialty → Skill)",
+    "values": [
+      {
+        "code": "agent_immobilier",
+        "label_fr": "Agent Immobilier",
+        "label_en": "Real Estate Agent",
+        "domain": "real_estate",
+        "description": "Licensed property transaction intermediary — buy, sell, rent, lease",
+        "requires_license": true,
+        "license_type": ["professional_card", "RCCM"],
+        "primary_pricing_model": "percentage",
+        "typical_range_min_xaf": 100000,
+        "typical_range_max_xaf": 5000000,
+        "verification_required": "document"
+      },
+      {
+        "code": "notaire",
+        "label_fr": "Notaire",
+        "label_en": "Notary",
+        "domain": "legal",
+        "description": "Legal officer for property deeds, contracts, and authentications",
+        "requires_license": true,
+        "license_type": ["professional_card", "sector_specific"],
+        "primary_pricing_model": "percentage",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 1000000,
+        "verification_required": "premium"
+      },
+      {
+        "code": "geometre",
+        "label_fr": "Géomètre",
+        "label_en": "Surveyor",
+        "domain": "technical",
+        "description": "Land surveying, boundary delineation, topographic studies",
+        "requires_license": true,
+        "license_type": ["professional_card", "sector_specific"],
+        "primary_pricing_model": "per_unit",
+        "unit": "m²",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 1000000,
+        "verification_required": "document"
+      },
+      {
+        "code": "architecte",
+        "label_fr": "Architecte",
+        "label_en": "Architect",
+        "domain": "technical",
+        "description": "Building design, construction oversight, permit facilitation",
+        "requires_license": true,
+        "license_type": ["professional_card", "sector_specific"],
+        "primary_pricing_model": "percentage",
+        "typical_range_min_xaf": 500000,
+        "typical_range_max_xaf": 5000000,
+        "verification_required": "document"
+      },
+      {
+        "code": "ingenieur_civil",
+        "label_fr": "Ingénieur Génie Civil",
+        "label_en": "Civil Engineer",
+        "domain": "technical",
+        "description": "Structural engineering, construction calculations, project management",
+        "requires_license": true,
+        "license_type": ["professional_card"],
+        "primary_pricing_model": "hourly",
+        "typical_range_min_xaf": 100000,
+        "typical_range_max_xaf": 2000000,
+        "verification_required": "document"
+      },
+      {
+        "code": "electricien",
+        "label_fr": "Électricien",
+        "label_en": "Electrician",
+        "domain": "construction",
+        "description": "Electrical installation, repair, maintenance, and wiring",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "fixed",
+        "typical_range_min_xaf": 15000,
+        "typical_range_max_xaf": 300000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "plombier",
+        "label_fr": "Plombier",
+        "label_en": "Plumber",
+        "domain": "construction",
+        "description": "Plumbing systems, water supply, drainage, and sanitation",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "fixed",
+        "typical_range_min_xaf": 10000,
+        "typical_range_max_xaf": 200000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "macon",
+        "label_fr": "Maçon",
+        "label_en": "Mason",
+        "domain": "construction",
+        "description": "Masonry, brickwork, concrete structures, and foundation work",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "per_unit",
+        "unit": "m²",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 2000000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "menuisier",
+        "label_fr": "Menuisier",
+        "label_en": "Carpenter",
+        "domain": "construction",
+        "description": "Woodwork, framing, cabinetry, doors, windows, and joinery",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "fixed",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 500000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "peintre",
+        "label_fr": "Peintre",
+        "label_en": "Painter",
+        "domain": "construction",
+        "description": "Interior and exterior painting, surface preparation, finishes",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "per_unit",
+        "unit": "m²",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 500000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "carreleur",
+        "label_fr": "Carreleur",
+        "label_en": "Tiler",
+        "domain": "construction",
+        "description": "Tile installation for floors, walls, and decorative surfaces",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "per_unit",
+        "unit": "m²",
+        "typical_range_min_xaf": 100000,
+        "typical_range_max_xaf": 800000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "couvreur",
+        "label_fr": "Couvreur",
+        "label_en": "Roofer",
+        "domain": "construction",
+        "description": "Roofing installation, repair, waterproofing, and gutter systems",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "per_unit",
+        "unit": "m²",
+        "typical_range_min_xaf": 100000,
+        "typical_range_max_xaf": 1000000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "expert_immobilier",
+        "label_fr": "Expert Immobilier",
+        "label_en": "Real Estate Expert",
+        "domain": "real_estate",
+        "description": "Property valuation, market analysis, investment feasibility studies",
+        "requires_license": true,
+        "license_type": ["professional_card", "RCCM"],
+        "primary_pricing_model": "fixed",
+        "typical_range_min_xaf": 100000,
+        "typical_range_max_xaf": 500000,
+        "verification_required": "document"
+      },
+      {
+        "code": "evaluateur",
+        "label_fr": "Évaluateur",
+        "label_en": "Appraiser",
+        "domain": "real_estate",
+        "description": "Formal property appraisal for mortgage, insurance, and transaction purposes",
+        "requires_license": true,
+        "license_type": ["professional_card"],
+        "primary_pricing_model": "fixed",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 200000,
+        "verification_required": "document"
+      },
+      {
+        "code": "syndic",
+        "label_fr": "Syndic de Copropriété",
+        "label_en": "Condo Manager",
+        "domain": "real_estate",
+        "description": "Condominium association management, common area maintenance, fee collection",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "subscription",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 500000,
+        "verification_required": "document"
+      },
+      {
+        "code": "videaste_drone",
+        "label_fr": "Vidéaste Drone",
+        "label_en": "Drone Videographer",
+        "domain": "media",
+        "description": "Aerial photography, videography, 3D mapping, property inspection from above",
+        "requires_license": true,
+        "license_type": ["sector_specific"],
+        "primary_pricing_model": "tiered",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 300000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "courtier",
+        "label_fr": "Courtier",
+        "label_en": "Broker",
+        "domain": "real_estate",
+        "description": "Mortgage brokerage, insurance brokerage, financial product intermediation",
+        "requires_license": true,
+        "license_type": ["RCCM", "sector_specific"],
+        "primary_pricing_model": "percentage",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 500000,
+        "verification_required": "document"
+      },
+      {
+        "code": "gardiennage",
+        "label_fr": "Gardiennage/Sécurité",
+        "label_en": "Security Guard",
+        "domain": "security",
+        "description": "Property security, surveillance, access control, and alarm monitoring",
+        "requires_license": true,
+        "license_type": ["business_permit", "sector_specific"],
+        "primary_pricing_model": "subscription",
+        "typical_range_min_xaf": 150000,
+        "typical_range_max_xaf": 500000,
+        "verification_required": "document"
+      },
+      {
+        "code": "prestataire_administratif",
+        "label_fr": "Prestataire Administratif",
+        "label_en": "Admin Service Provider",
+        "domain": "administrative",
+        "description": "Document processing, permit facilitation, administrative form submission",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "fixed",
+        "typical_range_min_xaf": 5000,
+        "typical_range_max_xaf": 100000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "avocat",
+        "label_fr": "Avocat",
+        "label_en": "Lawyer",
+        "domain": "legal",
+        "description": "Legal representation, contract review, property litigation, advice",
+        "requires_license": true,
+        "license_type": ["professional_card", "sector_specific"],
+        "primary_pricing_model": "hourly",
+        "typical_range_min_xaf": 100000,
+        "typical_range_max_xaf": 2000000,
+        "verification_required": "premium"
+      },
+      {
+        "code": "comptable",
+        "label_fr": "Comptable",
+        "label_en": "Accountant",
+        "domain": "financial",
+        "description": "Accounting, bookkeeping, tax filing, financial statements",
+        "requires_license": true,
+        "license_type": ["professional_card"],
+        "primary_pricing_model": "subscription",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 500000,
+        "verification_required": "document"
+      },
+      {
+        "code": "assurance",
+        "label_fr": "Agent d'Assurance",
+        "label_en": "Insurance Agent",
+        "domain": "financial",
+        "description": "Insurance products including property, auto, health, and life insurance",
+        "requires_license": true,
+        "license_type": ["sector_specific"],
+        "primary_pricing_model": "percentage",
+        "typical_range_min_xaf": 25000,
+        "typical_range_max_xaf": 200000,
+        "verification_required": "document"
+      },
+      {
+        "code": "banquier",
+        "label_fr": "Banquier",
+        "label_en": "Banker",
+        "domain": "financial",
+        "description": "Banking services, mortgage origination, financing advisory",
+        "requires_license": true,
+        "license_type": ["sector_specific"],
+        "primary_pricing_model": "percentage",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 500000,
+        "verification_required": "premium"
+      },
+      {
+        "code": "promoteur",
+        "label_fr": "Promoteur Immobilier",
+        "label_en": "Property Developer",
+        "domain": "real_estate",
+        "description": "Real estate development, construction project management, land development",
+        "requires_license": true,
+        "license_type": ["RCCM", "business_permit"],
+        "primary_pricing_model": "negotiable",
+        "typical_range_min_xaf": 1000000,
+        "typical_range_max_xaf": 100000000,
+        "verification_required": "field"
+      },
+      {
+        "code": "decorateur",
+        "label_fr": "Décorateur",
+        "label_en": "Interior Decorator",
+        "domain": "design",
+        "description": "Interior design, space planning, color consulting, furniture selection",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "fixed",
+        "typical_range_min_xaf": 50000,
+        "typical_range_max_xaf": 500000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "jardinier",
+        "label_fr": "Jardinier",
+        "label_en": "Gardener",
+        "domain": "maintenance",
+        "description": "Landscaping, garden maintenance, tree trimming, outdoor design",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "fixed",
+        "typical_range_min_xaf": 15000,
+        "typical_range_max_xaf": 150000,
+        "verification_required": "basic"
+      },
+      {
+        "code": "pisciniste",
+        "label_fr": "Pisciniste",
+        "label_en": "Pool Builder",
+        "domain": "construction",
+        "description": "Swimming pool construction, maintenance, and renovation",
+        "requires_license": false,
+        "license_type": [],
+        "primary_pricing_model": "fixed",
+        "typical_range_min_xaf": 500000,
+        "typical_range_max_xaf": 10000000,
+        "verification_required": "document"
+      }
+    ]
+  },
+  "pricing_models": {
+    "description": "10 pricing models supporting diverse professional service monetization strategies",
+    "values": [
+      {
+        "code": "fixed",
+        "label": "Fixed Price",
+        "description": "Single fixed price for a defined service deliverable",
+        "applicable_categories": ["electricien", "plombier", "menuisier", "peintre", "prestataire_administratif", "decorateur", "jardinier", "pisciniste"],
+        "deposit_required": false,
+        "deposit_percentage": null
+      },
+      {
+        "code": "per_unit",
+        "label": "Per Unit",
+        "description": "Price per measurable unit (m², m³, room, hour, etc.)",
+        "applicable_categories": ["macon", "peintre", "carreleur", "couvreur", "geometre"],
+        "deposit_required": true,
+        "deposit_percentage": 0.30
+      },
+      {
+        "code": "hourly",
+        "label": "Hourly",
+        "description": "Hourly rate for time-based services",
+        "applicable_categories": ["architecte", "ingenieur_civil", "electricien", "plombier", "avocat", "expert_immobilier"],
+        "deposit_required": false,
+        "deposit_percentage": null
+      },
+      {
+        "code": "daily",
+        "label": "Daily",
+        "description": "Daily rate, typically for construction teams",
+        "applicable_categories": ["macon", "menuisier"],
+        "deposit_required": true,
+        "deposit_percentage": 0.50
+      },
+      {
+        "code": "percentage",
+        "label": "Percentage",
+        "description": "Percentage of transaction or project value",
+        "applicable_categories": ["agent_immobilier", "notaire", "courtier", "assurance"],
+        "deposit_required": false,
+        "deposit_percentage": null
+      },
+      {
+        "code": "estimate",
+        "label": "Estimate",
+        "description": "Custom quote based on site visit and scope evaluation",
+        "applicable_categories": ["macon", "electricien", "plombier", "couvreur", "carreleur", "pisciniste"],
+        "deposit_required": true,
+        "deposit_percentage": 0.40
+      },
+      {
+        "code": "subscription",
+        "label": "Subscription",
+        "description": "Recurring monthly or annual fee for ongoing service",
+        "applicable_categories": ["syndic", "gardiennage", "comptable", "prestataire_administratif"],
+        "deposit_required": false,
+        "deposit_percentage": null
+      },
+      {
+        "code": "tiered",
+        "label": "Tiered",
+        "description": "Multiple service tiers (Basic/Standard/Premium) at different price points",
+        "applicable_categories": ["videaste_drone", "agent_immobilier"],
+        "deposit_required": true,
+        "deposit_percentage": 0.50
+      },
+      {
+        "code": "negotiable",
+        "label": "Negotiable",
+        "description": "Open to negotiation, typically for large or complex projects",
+        "applicable_categories": ["promoteur", "architecte"],
+        "deposit_required": true,
+        "deposit_percentage": 0.30
+      },
+      {
+        "code": "retainer",
+        "label": "Retainer",
+        "description": "Monthly retainer for ongoing advisory or legal services",
+        "applicable_categories": ["avocat", "comptable", "expert_immobilier"],
+        "deposit_required": false,
+        "deposit_percentage": null
+      }
+    ]
+  },
+  "verification_levels": {
+    "description": "4-level verification system ensuring professional authenticity and capability",
+    "levels": [
+      {
+        "code": "basic",
+        "label": "Basic",
+        "requirements": [
+          "Phone number verified",
+          "Email address verified",
+          "Government-issued identity document submitted"
+        ],
+        "privileges": [
+          "Appears in public search results",
+          "Can receive client inquiries",
+          "Limited profile visibility"
+        ],
+        "verification_method": "automated_document_scan",
+        "estimated_turnaround": "1-2 hours"
+      },
+      {
+        "code": "document",
+        "label": "Document",
+        "requirements": [
+          "All Basic requirements met",
+          "Professional license verified (if applicable)",
+          "Business registration document (RCCM or equivalent)",
+          "Professional diploma or certificate",
+          "Tax clearance certificate"
+        ],
+        "privileges": [
+          "Full search visibility with verification badge",
+          "Can receive ServiceOrders and payments",
+          "Priority matching in search results",
+          "Featured in category listings"
+        ],
+        "verification_method": "manual_admin_review",
+        "estimated_turnaround": "24-72 hours"
+      },
+      {
+        "code": "field",
+        "label": "Field",
+        "requirements": [
+          "All Document requirements met",
+          "In-person verification by field agent",
+          "Site visit to business premises",
+          "Reference check with 2 past clients",
+          "Portfolio review"
+        ],
+        "privileges": [
+          "Featured listings with premium badge",
+          "Higher matching priority",
+          "Access to premium service orders",
+          "Eligible for enterprise contracts"
+        ],
+        "verification_method": "field_agent_visit + admin_review",
+        "estimated_turnaround": "3-7 days"
+      },
+      {
+        "code": "premium",
+        "label": "Premium",
+        "requirements": [
+          "All Field requirements met",
+          "Insurance certificate (professional liability)",
+          "Bank guarantee or bond",
+          "Criminal record check / judicial clearance",
+          "Professional association membership verification",
+          "Financial solvency check"
+        ],
+        "privileges": [
+          "Top placement in search and matching",
+          "Premium badge and featured profile",
+          "Enterprise trust certification",
+          "Access to high-value service orders",
+          "Dedicated account manager"
+        ],
+        "verification_method": "comprehensive_review + background_check",
+        "estimated_turnaround": "7-14 days"
+      }
+    ]
+  },
+  "sla_standards": {
+    "description": "SLA standards by professional type defining response, quote, visit, and start time expectations",
+    "tiers": {
+      "standard": {
+        "label": "Standard",
+        "breach_penalty": "client_notification + 5% discount credit"
+      },
+      "premium": {
+        "label": "Premium",
+        "breach_penalty": "client_notification + 10% discount credit + manager escalation"
+      },
+      "enterprise": {
+        "label": "Enterprise",
+        "breach_penalty": "account_manager_escalation + SLA_terms_review"
+      }
+    },
+    "defaults": [
+      {
+        "professional_type": "agent_immobilier",
+        "response_time_hours": 1,
+        "quote_time_hours": 2,
+        "site_visit_time_hours": 24,
+        "service_start_days": 2
+      },
+      {
+        "professional_type": "electricien",
+        "response_time_hours": 1,
+        "quote_time_hours": 2,
+        "site_visit_time_hours": 4,
+        "service_start_days": 1,
+        "emergency_response_minutes": 60
+      },
+      {
+        "professional_type": "plombier",
+        "response_time_hours": 1,
+        "quote_time_hours": 2,
+        "site_visit_time_hours": 4,
+        "service_start_days": 1,
+        "emergency_response_minutes": 45
+      },
+      {
+        "professional_type": "macon",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 7
+      },
+      {
+        "professional_type": "menuisier",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 14
+      },
+      {
+        "professional_type": "peintre",
+        "response_time_hours": 2,
+        "quote_time_hours": 8,
+        "site_visit_time_hours": 24,
+        "service_start_days": 3
+      },
+      {
+        "professional_type": "carreleur",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 7
+      },
+      {
+        "professional_type": "couvreur",
+        "response_time_hours": 2,
+        "quote_time_hours": 8,
+        "site_visit_time_hours": 24,
+        "service_start_days": 3,
+        "emergency_response_minutes": 240
+      },
+      {
+        "professional_type": "notaire",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 3
+      },
+      {
+        "professional_type": "geometre",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 7
+      },
+      {
+        "professional_type": "architecte",
+        "response_time_hours": 8,
+        "quote_time_hours": 48,
+        "site_visit_time_hours": 72,
+        "service_start_days": 14
+      },
+      {
+        "professional_type": "expert_immobilier",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 7
+      },
+      {
+        "professional_type": "evaluateur",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 7
+      },
+      {
+        "professional_type": "syndic",
+        "response_time_hours": 2,
+        "quote_time_hours": 8,
+        "site_visit_time_hours": 72,
+        "service_start_days": 7
+      },
+      {
+        "professional_type": "videaste_drone",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 7
+      },
+      {
+        "professional_type": "courtier",
+        "response_time_hours": 2,
+        "quote_time_hours": 8,
+        "site_visit_time_hours": null,
+        "service_start_days": 2
+      },
+      {
+        "professional_type": "gardiennage",
+        "response_time_hours": 2,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 7
+      },
+      {
+        "professional_type": "prestataire_administratif",
+        "response_time_hours": 1,
+        "quote_time_hours": 4,
+        "site_visit_time_hours": null,
+        "service_start_days": 1
+      },
+      {
+        "professional_type": "avocat",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": 48,
+        "service_start_days": 7
+      },
+      {
+        "professional_type": "comptable",
+        "response_time_hours": 4,
+        "quote_time_hours": 24,
+        "site_visit_time_hours": null,
+        "service_start_days": 7
+      }
+    ]
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-PRO-001",
+      "source_concept": "Professional Profile entity — transforms User into full service provider",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §1",
+      "source_rule_ids": ["GOLD-PRO-001", "GOLD-PRO-002", "GOLD-PRO-003"],
+      "current_target": "User model (extended with professional attributes)",
+      "current_limitation": "V2 has no professional profile concept. Users are either CRM contacts or agents with limited role-based fields. No structured professional identity with capabilities, credentials, or availability.",
+      "extension_category": "profile_entity",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "ProfessionalProfile (new entity)",
+      "proposed_structure": "Create ProfessionalProfile entity with: user_id (UUID), professional_type (Enum: 27 categories), secondary_types (Enum[]), professional_name (String), professional_email (String?), professional_phone (String?), business_address (String?), website (String?), social_links (JSON?), bio (Text?), years_experience (Int), employee_count (Int?), professional_status (Enum: active|inactive|suspended|archived), is_verified (Boolean), verified_at (DateTime?), verification_level (Enum: basic|document|field|premium), profile_completeness (Float 0.0-1.0), search_visible (Boolean), accepting_new_clients (Boolean), featured_until (DateTime?), created_at (DateTime), updated_at (DateTime). Profile transforms a User from simple CRM contact to full service provider with capabilities, geographic coverage, availability, ratings, and credentials.",
+      "required_fields": [
+        "ProfessionalProfile.id: UUID",
+        "ProfessionalProfile.user_id: UUID (unique, 1:1 with User)",
+        "ProfessionalProfile.professional_type: Enum (27 categories)",
+        "ProfessionalProfile.secondary_types: Enum[]",
+        "ProfessionalProfile.professional_status: Enum (active|inactive|suspended|archived)",
+        "ProfessionalProfile.is_verified: Boolean (default: false)",
+        "ProfessionalProfile.verification_level: Enum? (basic|document|field|premium)",
+        "ProfessionalProfile.search_visible: Boolean (default: true)",
+        "ProfessionalProfile.accepting_new_clients: Boolean (default: true)",
+        "ProfessionalProfile.profile_completeness: Float (0.0-1.0, computed)"
+      ],
+      "required_relations": [
+        "ProfessionalProfile → User: 1:1 (user_id references User.id)",
+        "ProfessionalProfile → ProfessionalCategory: N:M (category assignment)",
+        "ProfessionalProfile → ServiceCapability: 1:N (offered services)",
+        "ProfessionalProfile → License: 1:N (professional licenses)",
+        "ProfessionalProfile → Certification: 1:N (certifications)",
+        "ProfessionalProfile → GeographicCoverage: 1:N (coverage areas)",
+        "ProfessionalProfile → Availability: 1:N (schedule slots)",
+        "ProfessionalProfile → ProfessionalRating: 1:N (ratings received)",
+        "ProfessionalProfile → OrganizationMember: 1:N (org memberships)"
+      ],
+      "required_events": [
+        "professional.created (payload: {user_id, professional_type})",
+        "professional.updated (payload: {user_id, fields_changed})",
+        "professional.verified (payload: {user_id, verification_level})",
+        "professional.suspended (payload: {user_id, reason})",
+        "professional.status_changed (payload: {user_id, old_status, new_status})"
+      ],
+      "required_permissions": [
+        "PRO: read professional profile (all authenticated users)",
+        "PRO: update own profile (professional self)",
+        "PRO: verify professional (admin only)",
+        "PRO: suspend/archive professional (admin only)",
+        "PRO: feature professional listing (admin only)"
+      ],
+      "required_states": [
+        "ProfessionalProfile.professional_status ∈ {active, inactive, suspended, archived}",
+        "ProfessionalProfile.verification_level ∈ {basic, document, field, premium} (nullable)"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-001 (Professional Profile Fields)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Professional Platform",
+      "human_decision_required": true,
+      "human_decision_question": "Professional profile field set: as specified in PROFESSIONAL_EXTENSION_MODEL.md §1.1 (core + business + status fields) or reduced set for MVP?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-002",
+      "source_concept": "Professional categories (27 categories across 10 domains)",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §2",
+      "source_rule_ids": ["GOLD-PRO-004", "GOLD-PRO-005"],
+      "current_target": "ProfessionalCategory (reference data)",
+      "current_limitation": "V2 has no professional category taxonomy. Professional types are limited to agent_role with no support for trades (mason, carpenter, electrician, etc.) or professional services (notary, architect, lawyer).",
+      "extension_category": "profile_entity",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "ProfessionalCategory (reference data)",
+      "proposed_structure": "Create ProfessionalCategory reference data with 27 categories across 10 domains (real_estate: agent_immobilier, expert_immobilier, evaluateur, syndic, courtier, promoteur; construction: electricien, plombier, macon, menuisier, peintre, carreleur, couvreur, pisciniste; legal: notaire, avocat; technical: geometre, architecte, ingenieur_civil; financial: comptable, assurance, banquier; security: gardiennage; administrative: prestataire_administratif; media: videaste_drone; design: decorateur; maintenance: jardinier). Each category specifies: code, labels_fr/en, domain, description, requires_license (Boolean), license_types[], primary_pricing_model, typical price range, verification_required level. Hierarchy: Domain → Category → Specialty → Skill. Assign primary (exactly 1) + secondary (0-N) categories per professional.",
+      "required_fields": [
+        "ProfessionalCategory.code: String (unique)",
+        "ProfessionalCategory.label_fr: String",
+        "ProfessionalCategory.label_en: String",
+        "ProfessionalCategory.domain: Enum (10 domains)",
+        "ProfessionalCategory.description: Text",
+        "ProfessionalCategory.requires_license: Boolean",
+        "ProfessionalCategory.primary_pricing_model: Enum"
+      ],
+      "required_relations": [
+        "ProfessionalCategory → ProfessionalProfile: N:M (via assignment table)",
+        "ProfessionalCategory → License: 1:N (required license types)"
+      ],
+      "required_events": [
+        "professional.category_assigned (payload: {professional_id, category_code, is_primary})",
+        "professional.category_removed (payload: {professional_id, category_code})"
+      ],
+      "required_permissions": [
+        "PRO: read categories (all)",
+        "PRO: manage categories (admin only)"
+      ],
+      "required_states": [
+        "Primary category required (exactly 1 per professional)",
+        "Secondary categories optional (0-N per professional)"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-002 (Category Definitions)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Professional Platform",
+      "human_decision_required": true,
+      "human_decision_question": "27 categories as specified in PROFESSIONAL_EXTENSION_MODEL.md §2.1 — confirm full list or prioritize initial subset for MVP (e.g., top 15 most in-demand categories)?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-003",
+      "source_concept": "Service capability model — typed, priced, schedulable service units",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §3",
+      "source_rule_ids": ["GOLD-PRO-006", "GOLD-PRO-007", "GOLD-PRO-008"],
+      "current_target": "ServiceCapability (new entity)",
+      "current_limitation": "V2 has no service capability concept. Professionals cannot define what specific services they offer, at what price, with what terms. Service taxonomy exists but is not tied to individual professionals.",
+      "extension_category": "service_capabilities",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceCapability (new entity)",
+      "proposed_structure": "Create ServiceCapability entity: id (UUID), professional_id (UUID), capability_code (String), name (JSON multilingual), description (JSON multilingual), category (Enum), service_type (String from SERVICE_TAXONOMY), is_active (Boolean), typical_duration_minutes (Int?), requires_verification (Boolean), pricing_model (Enum: fixed|hourly|per_unit|estimate|negotiable), default_price (Decimal?), price_currency (String default XAF), price_unit (String?), deposit_required (Boolean), deposit_percentage (Float?), is_online_bookable (Boolean), lead_time_hours (Int?), created_at (DateTime). Plus matching attributes: min_project_budget, max_project_budget, preferred_project_size, languages_spoken[], service_radius_km, equipment_available[], team_available, team_size_min/max, emergency_service, after_hours_service, mobile_service. Each capability represents a distinct service a professional can deliver, with its own pricing and terms.",
+      "required_fields": [
+        "ServiceCapability.id: UUID",
+        "ServiceCapability.professional_id: UUID",
+        "ServiceCapability.capability_code: String",
+        "ServiceCapability.name: JSON (multilingual)",
+        "ServiceCapability.category: Enum (professional category code)",
+        "ServiceCapability.pricing_model: Enum (fixed|hourly|per_unit|estimate|negotiable)",
+        "ServiceCapability.default_price: Decimal?",
+        "ServiceCapability.is_active: Boolean (default: true)"
+      ],
+      "required_relations": [
+        "ServiceCapability → ProfessionalProfile: N:1",
+        "ServiceCapability → LicensingTier: 1:N (pricing tiers)",
+        "ServiceCapability → ServiceOrder: 1:N (orders fulfilled)"
+      ],
+      "required_events": [
+        "capability.created (payload: {professional_id, capability_code, pricing_model})",
+        "capability.updated (payload: {capability_id, fields_changed})",
+        "capability.deactivated (payload: {capability_id})"
+      ],
+      "required_permissions": [
+        "PRO: manage capabilities (professional self)",
+        "PRO: read capabilities (all authenticated users)"
+      ],
+      "required_states": [
+        "ServiceCapability.pricing_model ∈ {fixed, hourly, per_unit, daily, percentage, estimate, subscription, tiered, negotiable, retainer}",
+        "ServiceCapability.is_active ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-003 (Capability Definitions)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Professional Platform",
+      "human_decision_required": true,
+      "human_decision_question": "Pricing model selection: 10 models as specified (fixed, hourly, per_unit, daily, percentage, estimate, subscription, tiered, negotiable, retainer) or simplified subset for MVP?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-004",
+      "source_concept": "License tracking with verification workflow",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §4",
+      "source_rule_ids": ["GOLD-PRO-009", "GOLD-PRO-010"],
+      "current_target": "License (new entity)",
+      "current_limitation": "V2 has no license tracking. Professional credentials are not captured, verified, or linked to service delivery capabilities.",
+      "extension_category": "credentials",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "License (new entity)",
+      "proposed_structure": "Create License entity: id (UUID), professional_id (UUID), license_type (Enum: professional_card|trade_license|RCCM|business_permit|municipal_license|sector_specific), license_number (String), license_name (String), issuing_authority (String), category (String?), issued_at (DateTime), expires_at (DateTime?), is_renewable (Boolean), renewal_reminder_days (Int?), status (Enum: active|expired|suspended|revoked|pending_renewal), verification_status (Enum: unverified|pending|verified|rejected), verified_by (UUID?), verified_at (DateTime?), document_url (String?), document_type (String?), rejection_reason (Text?), metadata (JSON?), created_at (DateTime). License requirements enforced by professional category: certain categories (notary, architect, avocat) require specific license types to practice. Auto-reminder for renewals based on renewal_reminder_days.",
+      "required_fields": [
+        "License.id: UUID",
+        "License.professional_id: UUID",
+        "License.license_type: Enum",
+        "License.license_number: String",
+        "License.license_name: String",
+        "License.issuing_authority: String",
+        "License.issued_at: DateTime",
+        "License.expires_at: DateTime?",
+        "License.status: Enum (active|expired|suspended|revoked|pending_renewal)",
+        "License.verification_status: Enum (unverified|pending|verified|rejected)"
+      ],
+      "required_relations": [
+        "License → ProfessionalProfile: N:1",
+        "License.verified_by → User (admin): N:1"
+      ],
+      "required_events": [
+        "license.created (payload: {professional_id, license_type, license_number})",
+        "license.verified (payload: {license_id, verified_by})",
+        "license.rejected (payload: {license_id, reason})",
+        "license.expired (payload: {license_id, professional_id})",
+        "license.renewal_reminder (payload: {license_id, days_until_expiry})"
+      ],
+      "required_permissions": [
+        "PRO: upload license (professional self)",
+        "PRO: verify license (admin only)",
+        "PRO: read license (professional self, admin)"
+      ],
+      "required_states": [
+        "License.status ∈ {active, expired, suspended, revoked, pending_renewal}",
+        "License.verification_status ∈ {unverified, pending, verified, rejected}"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-004 (License Types per Category)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Professional Platform",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-005",
+      "source_concept": "Certification tracking — optional skill endorsements",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §4.2",
+      "source_rule_ids": ["GOLD-PRO-011", "GOLD-PRO-012"],
+      "current_target": "Certification (new entity)",
+      "current_limitation": "V2 has no certification tracking. Professional skill endorsements cannot be captured or displayed.",
+      "extension_category": "credentials",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "Certification (new entity)",
+      "proposed_structure": "Create Certification entity: id (UUID), professional_id (UUID), certification_name (String), certification_code (String?), issuing_body (String), category (String?), level (Enum: beginner|intermediate|advanced|expert|master), skills_covered (String[]), obtained_at (DateTime), expires_at (DateTime?), credential_id (String?), verifiable_url (String?), status (Enum: active|expired|revoked), verification_status (Enum: unverified|pending|verified|rejected), verified_by (UUID?), document_url (String?), created_at (DateTime). Certifications are optional skill endorsements that boost matching priority and appear on professional profile. Unlike licenses, certifications do not block service delivery if absent.",
+      "required_fields": [
+        "Certification.id: UUID",
+        "Certification.professional_id: UUID",
+        "Certification.certification_name: String",
+        "Certification.issuing_body: String",
+        "Certification.obtained_at: DateTime",
+        "Certification.level: Enum? (beginner|intermediate|advanced|expert|master)",
+        "Certification.status: Enum (active|expired|revoked)"
+      ],
+      "required_relations": [
+        "Certification → ProfessionalProfile: N:1"
+      ],
+      "required_events": [
+        "certification.created (payload: {professional_id, certification_name, issuing_body})",
+        "certification.verified (payload: {certification_id, verified_by})",
+        "certification.expired (payload: {certification_id})"
+      ],
+      "required_permissions": [
+        "PRO: add certification (professional self)",
+        "PRO: verify certification (admin only)",
+        "PRO: read certifications (all authenticated users)"
+      ],
+      "required_states": [
+        "Certification.status ∈ {active, expired, revoked}"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-005 (Certification Levels)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Professional Trust",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-006",
+      "source_concept": "Geographic coverage model — where professionals operate",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §5",
+      "source_rule_ids": ["GOLD-PRO-013", "GOLD-PRO-014"],
+      "current_target": "GeographicCoverage (new entity)",
+      "current_limitation": "V2 has no professional geographic coverage concept. Agent zones exist for CRM routing but professionals of other types cannot declare their service areas.",
+      "extension_category": "operations",
+      "proposed_domain": "Domain 3: Domain Boundaries (Geography Model)",
+      "proposed_entity": "GeographicCoverage (new entity)",
+      "proposed_structure": "Create GeographicCoverage entity: id (UUID), professional_id (UUID), coverage_type (Enum: primary|secondary|dispatch), geographic_unit_id (String referencing GeographicUnit.canonical_id), level (Enum: city|neighborhood|zone|axis|region|department|municipality), is_home_base (Boolean), travel_distance_km (Int?), additional_fee (Decimal?), is_active (Boolean), created_at (DateTime). Coverage patterns vary by professional type (see PROFESSIONAL_EXTENSION_MODEL.md §5.2). Coverage matching: intersect demandeur location with professional coverage zones, apply travel_distance_km filter, priority to is_home_base professionals within same geographic unit.",
+      "required_fields": [
+        "GeographicCoverage.id: UUID",
+        "GeographicCoverage.professional_id: UUID",
+        "GeographicCoverage.coverage_type: Enum (primary|secondary|dispatch)",
+        "GeographicCoverage.geographic_unit_id: String",
+        "GeographicCoverage.level: Enum",
+        "GeographicCoverage.is_active: Boolean (default: true)"
+      ],
+      "required_relations": [
+        "GeographicCoverage → ProfessionalProfile: N:1",
+        "GeographicCoverage → GeographicUnit: N:1 (via geographic_unit_id)"
+      ],
+      "required_events": [
+        "coverage.created (payload: {professional_id, geographic_unit_id, coverage_type})",
+        "coverage.updated (payload: {coverage_id, fields_changed})",
+        "coverage.deactivated (payload: {coverage_id})"
+      ],
+      "required_permissions": [
+        "PRO: manage coverage (professional self)",
+        "PRO: read coverage (all authenticated users)"
+      ],
+      "required_states": [
+        "GeographicCoverage.coverage_type ∈ {primary, secondary, dispatch}"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-006 (Coverage Patterns)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Professional Platform",
+      "human_decision_required": true,
+      "human_decision_question": "Coverage radius defaults per professional type (PROFESSIONAL_EXTENSION_MODEL.md §5.2) — use specified defaults or adjust per market reality?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-007",
+      "source_concept": "Availability and scheduling — professional schedule management",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §6",
+      "source_rule_ids": ["GOLD-PRO-015", "GOLD-PRO-016"],
+      "current_target": "Availability (new entity) + scheduling constraints",
+      "current_limitation": "V2 has no availability management. Professional schedules cannot be declared, searched, or used for booking.",
+      "extension_category": "operations",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "Availability (new entity)",
+      "proposed_structure": "Create Availability entity: id (UUID), professional_id (UUID), day_of_week (Enum: monday|tuesday|wednesday|thursday|friday|saturday|sunday), start_time (Time), end_time (Time), timezone (String default Africa/Douala), is_recurring (Boolean), specific_date (Date?), slot_duration_minutes (Int default 60), max_bookings_per_slot (Int default 1), is_available (Boolean default true), notes (String?), created_at (DateTime). Plus scheduling constraints on ProfessionalProfile: max_concurrent_projects (Int?), max_concurrent_visits (Int?), min_notice_hours (Int), blackout_dates (JSON), preferred_project_duration (String), weekend_available (Boolean), holiday_policy (Enum: standard|limited|full). Booking slot generation based on availability windows + slot_duration_minutes.",
+      "required_fields": [
+        "Availability.id: UUID",
+        "Availability.professional_id: UUID",
+        "Availability.day_of_week: Enum (monday-sunday)",
+        "Availability.start_time: Time",
+        "Availability.end_time: Time",
+        "Availability.is_recurring: Boolean (default: true)",
+        "Availability.slot_duration_minutes: Int (default: 60)",
+        "Availability.is_available: Boolean (default: true)"
+      ],
+      "required_relations": [
+        "Availability → ProfessionalProfile: N:1"
+      ],
+      "required_events": [
+        "availability.created (payload: {professional_id, day_of_week, start_time, end_time})",
+        "availability.updated (payload: {availability_id, fields_changed})",
+        "availability.slot_booked (payload: {professional_id, slot, client_id})"
+      ],
+      "required_permissions": [
+        "PRO: manage availability (professional self)",
+        "PRO: read availability (all authenticated users, for booking)"
+      ],
+      "required_states": [
+        "Availability.day_of_week ∈ {monday, tuesday, wednesday, thursday, friday, saturday, sunday}",
+        "start_time < end_time (validation)"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-007 (Scheduling Config)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Professional Booking",
+      "human_decision_required": true,
+      "human_decision_question": "Slot duration configuration: 60-minute default as specified, or configurable per professional type (e.g., emergency plumber 30min slots, architect 2h slots)?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-008",
+      "source_concept": "Professional rating system — multi-category post-service scoring",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §7, CRM_EXTENSION_MODEL.md §9",
+      "source_rule_ids": ["GOLD-PRO-017", "GOLD-PRO-018", "GOLD-CRM-RATING-001"],
+      "current_target": "ProfessionalRating (new entity)",
+      "current_limitation": "V2 has agent rating (CRM) but no professional rating. Post-service feedback cannot be collected for non-agent professionals (trades, legal, technical).",
+      "extension_category": "ratings_quality",
+      "proposed_domain": "Domain 10: CRM Pipeline (extended to professional domain)",
+      "proposed_entity": "ProfessionalRating (new entity)",
+      "proposed_structure": "Create ProfessionalRating entity: id (UUID), professional_id (UUID), service_order_id (UUID?), client_user_id (UUID), rating (Int 1-5), category_ratings (JSON: {quality, punctuality, communication, professionalism, value} each 1-5), review_text (Text?), is_public (Boolean default true), response_text (Text?), responded_at (DateTime?), verified_purchase (Boolean), helpful_count (Int default 0), reported (Boolean default false), reported_reason (String?), status (Enum: published|pending|hidden|removed), created_at (DateTime). Rating calculation: weighted average of category_ratings (quality=0.25, punctuality=0.20, communication=0.15, professionalism=0.25, value=0.15). Recent reviews (last 90d) weighted 2x. Verified purchase reviews weighted 1.5x. Badges: Top Professional (4.5+ min 20 reviews), Recommended (4.0+ min 10), Reliable (3.5+ min 5), New (< 5 reviews). Public display on profile header + search results.",
+      "required_fields": [
+        "ProfessionalRating.id: UUID",
+        "ProfessionalRating.professional_id: UUID",
+        "ProfessionalRating.client_user_id: UUID",
+        "ProfessionalRating.rating: Int (1-5)",
+        "ProfessionalRating.is_public: Boolean (default: true)",
+        "ProfessionalRating.verified_purchase: Boolean (default: false)",
+        "ProfessionalRating.status: Enum (published|pending|hidden|removed)",
+        "ProfessionalRating.created_at: DateTime"
+      ],
+      "required_relations": [
+        "ProfessionalRating → ProfessionalProfile: N:1",
+        "ProfessionalRating → User (client): N:1 (client_user_id)",
+        "ProfessionalRating → ServiceOrder: N:1 (optional)"
+      ],
+      "required_events": [
+        "rating.submitted (payload: {professional_id, client_id, rating, service_order_id?})",
+        "rating.responded (payload: {rating_id, professional_id, response_text})",
+        "rating.reported (payload: {rating_id, reason})",
+        "rating.status_changed (payload: {rating_id, new_status})"
+      ],
+      "required_permissions": [
+        "PRO: submit rating (service order client)",
+        "PRO: respond to rating (professional self)",
+        "PRO: moderate rating (admin only)",
+        "PRO: read ratings (all authenticated users)"
+      ],
+      "required_states": [
+        "ProfessionalRating.status ∈ {published, pending, hidden, removed}",
+        "ProfessionalRating.rating ∈ [1, 5] (Int)"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-008 (Rating Weights)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Trust & Quality",
+      "human_decision_required": true,
+      "human_decision_question": "Category rating weights: quality=0.25, punctuality=0.20, communication=0.15, professionalism=0.25, value=0.15 as specified, or different weighting per professional type (e.g., punctuality higher for emergency services)?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-009",
+      "source_concept": "Multi-level verification workflow for professionals",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §8",
+      "source_rule_ids": ["GOLD-PRO-019", "GOLD-PRO-020", "GOLD-PRO-021"],
+      "current_target": "VerificationRequest + VerificationDocument (new entities)",
+      "current_limitation": "V2 has no professional verification workflow. Agent roles exist but without structured verification levels, document upload, or admin review cycle.",
+      "extension_category": "ratings_quality",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "VerificationRequest + VerificationDocument",
+      "proposed_structure": "Create VerificationRequest: id (UUID), professional_id (UUID), requested_level (Enum: basic|document|field|premium), current_level (Enum), status (Enum: draft|submitted|under_review|approved|rejected|escalated), reviewed_by (UUID?), reviewed_at (DateTime?), rejection_reason (Text?), admin_notes (Text?), resubmission_count (Int), submitted_at (DateTime), completed_at (DateTime?). Create VerificationDocument: id (UUID), verification_request_id (UUID), document_type (Enum: identity_card|passport|driver_license|professional_card|RCCM|business_license|insurance_cert|diploma|reference_letter|criminal_record|bank_guarantee|tax_clearance|utility_bill), document_url (String), document_hash (String SHA-256), file_type (String), file_size_bytes (Int), status (Enum: pending|valid|invalid|expired|suspicious), validation_notes (Text?), validated_by (UUID?), validated_at (DateTime?), expires_at (DateTime?), created_at (DateTime). 4 verification levels (basic→document→field→premium) with increasing requirements and privileges. State machine: unverified→pending_documents→under_review→[approved|rejected|escalated]. Re-verification on document expiry with 30-day grace period.",
+      "required_fields": [
+        "VerificationRequest.id: UUID",
+        "VerificationRequest.professional_id: UUID",
+        "VerificationRequest.requested_level: Enum (basic|document|field|premium)",
+        "VerificationRequest.status: Enum (draft|submitted|under_review|approved|rejected|escalated)",
+        "VerificationDocument.id: UUID",
+        "VerificationDocument.verification_request_id: UUID",
+        "VerificationDocument.document_type: Enum",
+        "VerificationDocument.document_url: String",
+        "VerificationDocument.document_hash: String",
+        "VerificationDocument.status: Enum (pending|valid|invalid|expired|suspicious)"
+      ],
+      "required_relations": [
+        "VerificationRequest → ProfessionalProfile: N:1",
+        "VerificationRequest → User (reviewer): N:1 (reviewed_by)",
+        "VerificationDocument → VerificationRequest: N:1",
+        "VerificationDocument → User (validator): N:1 (validated_by)"
+      ],
+      "required_events": [
+        "verification.submitted (payload: {professional_id, requested_level})",
+        "verification.documents_uploaded (payload: {request_id, document_count})",
+        "verification.approved (payload: {professional_id, new_level, reviewed_by})",
+        "verification.rejected (payload: {professional_id, level, reason})",
+        "verification.escalated (payload: {request_id, reason})",
+        "verification.document_expiring (payload: {document_id, days_until_expiry})"
+      ],
+      "required_permissions": [
+        "PRO: submit verification (professional self)",
+        "PRO: upload documents (professional self)",
+        "PRO: review verification (admin only)",
+        "PRO: validate documents (admin only)",
+        "PRO: escalate verification (admin only)"
+      ],
+      "required_states": [
+        "VerificationRequest.status ∈ {draft, submitted, under_review, approved, rejected, escalated}",
+        "VerificationDocument.status ∈ {pending, valid, invalid, expired, suspicious}",
+        "VerificationDocument.document_type ∈ {13 document types}"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-009 (Verification Workflow)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Trust & Quality",
+      "human_decision_required": true,
+      "human_decision_question": "Verification level requirements: 4 levels (basic/document/field/premium) as specified in PROFESSIONAL_EXTENSION_MODEL.md §8.1 — implement all 4 levels from launch or phased roll-out (basic + document first, field + premium later)?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-010",
+      "source_concept": "Pricing models per professional type — 10 pricing models",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §9",
+      "source_rule_ids": ["GOLD-PRO-022", "GOLD-PRO-023"],
+      "current_target": "PricingTier (new entity)",
+      "current_limitation": "V2 has no pricing model for professional services. No mechanism for professionals to define service pricing with tiers, units, or deposit requirements.",
+      "extension_category": "service_capabilities",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "PricingTier (new entity)",
+      "proposed_structure": "Create PricingTier entity: id (UUID), capability_id (UUID), tier_name (String: Basic|Standard|Premium), description (JSON multilingual), pricing_model (Enum: 10 models), price (Decimal), currency (String default XAF), unit (String? for per_unit), min_quantity (Float?), max_quantity (Float?), is_promotional (Boolean), promotion_ends_at (DateTime?), deposit_required (Boolean), deposit_percentage (Float?), includes_materials (Boolean), includes_travel (Boolean), is_active (Boolean). 10 pricing models: fixed, per_unit, hourly, daily, percentage, estimate, subscription, tiered, negotiable, retainer. Professional type → pricing model mapping (reference table in PROFESSIONAL_EXTENSION_MODEL.md §9.3). Each capability supports multiple tiers for tiered pricing. Deposit percentages vary by professional type (30-50% typical for construction, 0% for percentage-based).",
+      "required_fields": [
+        "PricingTier.id: UUID",
+        "PricingTier.capability_id: UUID",
+        "PricingTier.tier_name: String",
+        "PricingTier.pricing_model: Enum (10 models)",
+        "PricingTier.price: Decimal",
+        "PricingTier.currency: String (default: XAF)",
+        "PricingTier.is_active: Boolean (default: true)"
+      ],
+      "required_relations": [
+        "PricingTier → ServiceCapability: N:1"
+      ],
+      "required_events": [
+        "pricing.created (payload: {capability_id, pricing_model, price})",
+        "pricing.updated (payload: {tier_id, fields_changed})",
+        "pricing.promotion_ended (payload: {tier_id})"
+      ],
+      "required_permissions": [
+        "PRO: manage pricing (professional self)",
+        "PRO: read pricing (all authenticated users)"
+      ],
+      "required_states": [
+        "PricingTier.pricing_model ∈ {fixed, hourly, per_unit, daily, percentage, estimate, subscription, tiered, negotiable, retainer}"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-010 (Pricing Config)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Professional Platform",
+      "human_decision_required": true,
+      "human_decision_question": "Default pricing by professional type (PROFESSIONAL_EXTENSION_MODEL.md §9.3) — use specified ranges as defaults or allow 100% professional-defined pricing?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-011",
+      "source_concept": "SLA per professional type — response, quote, visit, and delivery standards",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §10",
+      "source_rule_ids": ["GOLD-PRO-024", "GOLD-PRO-025"],
+      "current_target": "SLAProfessionnel (new entity)",
+      "current_limitation": "V2 has lead SLA (CRM) but no professional service SLA. No mechanism to define expected response, quote, or service start times per professional type.",
+      "extension_category": "operations",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "SLAProfessionnel (new entity)",
+      "proposed_structure": "Create SLAProfessionnel entity: id (UUID), professional_type (Enum), sla_tier (Enum: standard|premium|enterprise), response_time_hours (Int), quote_time_hours (Int), site_visit_time_hours (Int?), service_start_days (Int?), completion_buffer_percentage (Float default 20), emergency_response_minutes (Int?), communication_channel (Enum[]: whatsapp|telegram|phone|email|dashboard), reporting_frequency (Enum?), penalty_rate (Decimal?), escalation_contact (String?), is_active (Boolean), created_at (DateTime). Define SLA standards per professional type (reference table §10.2). 3 SLA tiers: standard (default, included), premium (higher standards, additional fee), enterprise (custom, contracted). Breach handling: response → client notification + penalty credit; quote → auto-waive fee; service start → discount; emergency no-show → compensation + review. SLAs visible on professional profile and enforced through automated monitoring.",
+      "required_fields": [
+        "SLAProfessionnel.id: UUID",
+        "SLAProfessionnel.professional_type: Enum",
+        "SLAProfessionnel.sla_tier: Enum (standard|premium|enterprise)",
+        "SLAProfessionnel.response_time_hours: Int",
+        "SLAProfessionnel.quote_time_hours: Int",
+        "SLAProfessionnel.is_active: Boolean (default: true)"
+      ],
+      "required_relations": [
+        "SLAProfessionnel → ProfessionalCategory: 1:N (by professional_type)"
+      ],
+      "required_events": [
+        "sla.created (payload: {professional_type, sla_tier, response_time_hours})",
+        "sla.breached (payload: {professional_id, sla_type, service_order_id})",
+        "sla.updated (payload: {sla_id, fields_changed})"
+      ],
+      "required_permissions": [
+        "PRO: read SLA (all authenticated users)",
+        "PRO: configure SLA (admin only)",
+        "PRO: view SLA breaches (admin, professional self)"
+      ],
+      "required_states": [
+        "SLAProfessionnel.sla_tier ∈ {standard, premium, enterprise}"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-011 (SLA Standards)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 5 — Quality Assurance",
+      "human_decision_required": true,
+      "human_decision_question": "SLA thresholds per professional type (PROFESSIONAL_EXTENSION_MODEL.md §10.2) — adopt standard/default values or allow per-professional customization within bounds?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-PRO-012",
+      "source_concept": "Organization membership hierarchy for professionals",
+      "source_document": "PROFESSIONAL_EXTENSION_MODEL.md §11",
+      "source_rule_ids": ["GOLD-PRO-026", "GOLD-PRO-027"],
+      "current_target": "OrganizationMember (extended with professional hierarchy)",
+      "current_limitation": "V2 has OrganizationMember model but no professional-specific hierarchy (roles, commission, reporting, team structure). Professionals are flat members without organizational context.",
+      "extension_category": "organization",
+      "proposed_domain": "Domain 12: Organization Model",
+      "proposed_entity": "OrganizationMember (extended)",
+      "proposed_structure": "Extend OrganizationMember with professional hierarchy: professional_id (UUID?), role (Enum: owner|partner|manager|senior|member|intern|subcontractor), join_date (DateTime), is_active (Boolean), commission_rate (Float? 0.0-1.0), revenue_share (Float? 0.0-1.0), reporting_to (UUID? self-ref), permissions (JSON[]), updated_at (DateTime). 7-level hierarchy: owner → partner → manager → senior → member → intern → subcontractor. Organization types: agency, firm, enterprise, cooperative, sole_proprietorship, freelance. Add Team entity for team-based delivery: team_id (UUID), team_name (String), team_lead (UUID), members (UUID[]), specialization (String?), max_project_size (Enum), availability_status (Enum: available|partial|fully_booked). Team-based service enables multi-professional project delivery under a single engagement.",
+      "required_fields": [
+        "OrganizationMember.professional_id: UUID? (linked professional)",
+        "OrganizationMember.role: Enum (owner|partner|manager|senior|member|intern|subcontractor)",
+        "OrganizationMember.join_date: DateTime",
+        "OrganizationMember.is_active: Boolean (default: true)",
+        "OrganizationMember.commission_rate: Float? (0.0-1.0)",
+        "OrganizationMember.reporting_to: UUID? (self-referencing)"
+      ],
+      "required_relations": [
+        "OrganizationMember → Organization: N:1",
+        "OrganizationMember → ProfessionalProfile: N:1",
+        "OrganizationMember → User: N:1",
+        "OrganizationMember → OrganizationMember (reporting_to): N:1 (self-ref)"
+      ],
+      "required_events": [
+        "org.member_added (payload: {organization_id, professional_id, role})",
+        "org.member_role_changed (payload: {member_id, old_role, new_role})",
+        "org.member_removed (payload: {member_id, reason})",
+        "org.team_created (payload: {organization_id, team_name, team_lead})",
+        "org.team_availability_changed (payload: {team_id, availability_status})"
+      ],
+      "required_permissions": [
+        "PRO: manage organization members (org admin)",
+        "PRO: assign roles (org admin)",
+        "PRO: view hierarchy (org members, admin)",
+        "PRO: manage teams (org admin, manager)"
+      ],
+      "required_states": [
+        "OrganizationMember.role ∈ {owner, partner, manager, senior, member, intern, subcontractor}",
+        "Owner role (exactly 1 per organization)"
+      ],
+      "H0.5_matrices_impacted": ["PRO-MAT-012 (Organization Hierarchy)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 5 — Professional Organization",
+      "human_decision_required": true,
+      "human_decision_question": "Organization hierarchy levels: 7 roles (owner→partner→manager→senior→member→intern→subcontractor) as specified, or simplified to 4 (owner, manager, member, subcontractor) for MVP?",
+      "status": "APPROVED"
+    }
+  ]
+}

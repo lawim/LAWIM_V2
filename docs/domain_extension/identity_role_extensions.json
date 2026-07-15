@@ -1,0 +1,807 @@
+{
+  "document": {
+    "id": "LAWIM-H13-IDENTITY-ROLE-EXT-V1",
+    "title": "Identity & Role Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Enriched catalog of all identity, role, trust, badge, and agency structure extensions required for LAWIM_V2",
+    "sources": [
+      "ROLE_CROSSWALK.md",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §2 (User/Role/Profile)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §11 (Identity Model)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §12 (Organization Model)",
+      "required_extensions.json (trust_levels, badges, agency_structure)"
+    ],
+    "total_extensions": 23,
+    "by_category": {
+      "trust_levels": 6,
+      "badges": 8,
+      "agency_structure": 9
+    }
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-RL-TRUST-001",
+      "source_concept": "Niveau 1 — Nouveau compte (New Account)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-018",
+      "source_rule_ids": ["GOLD-RL-018"],
+      "current_target": "User model",
+      "current_limitation": "No trust or verification level exists in V2 User model",
+      "extension_category": "trust_level",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User",
+      "proposed_structure": "Add trust_level INT field (1-6) with default=1 to User model. No new tables.",
+      "required_fields": [
+        "User.trust_level: Int (default: 1, min: 1, max: 6)",
+        "User.trust_score: Float (computed)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "user.trust_level_changed (payload: {previous_level, new_level, reason})"
+      ],
+      "required_permissions": [
+        "SYSTEM: read trust_level (all authenticated users)",
+        "SYSTEM: update trust_level (admin only)"
+      ],
+      "required_states": [
+        "User.trust_level ∈ {1, 2, 3, 4, 5, 6}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Default trust level assignment policy for new users",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-TRUST-002",
+      "source_concept": "Niveau 2 — Téléphone vérifié (Phone Verified)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-019",
+      "source_rule_ids": ["GOLD-RL-019"],
+      "current_target": "User model",
+      "current_limitation": "V2 has phoneE164 field but no verification flag or OTP flow",
+      "extension_category": "trust_level",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User",
+      "proposed_structure": "Add phone_verified Boolean field; implement OTP verification service and flow",
+      "required_fields": [
+        "User.phone_verified: Boolean (default: false)",
+        "User.phone_normalized: String (E.164 format)",
+        "User.phone_country_code: String"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "user.phone_verified (payload: {phone_normalized, method: 'otp_sms'})"
+      ],
+      "required_permissions": [
+        "USER: request OTP (self)",
+        "USER: verify OTP (self)"
+      ],
+      "required_states": [
+        "User.phone_verified ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-TRUST-003",
+      "source_concept": "Niveau 3 — Identité vérifiée (Identity Verified)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-020",
+      "source_rule_ids": ["GOLD-RL-020"],
+      "current_target": "User model",
+      "current_limitation": "No identity verification concept exists in V2",
+      "extension_category": "trust_level",
+      "proposed_domain": "Domain 1: User/Role/Profile Model + Domain 14: Document Model",
+      "proposed_entity": "User (with Document)",
+      "proposed_structure": "Add identity_verified Boolean; implement document upload workflow + admin validation state machine",
+      "required_fields": [
+        "User.identity_verified: Boolean (default: false)",
+        "Document.document_type: Enum (includes 'national_id', 'passport')",
+        "Document.verification_status: Enum (pending | validated | rejected)"
+      ],
+      "required_relations": [
+        "User 1:N Document (identity documents)",
+        "Document.uploaded_by → User",
+        "Document.validated_by → User (admin)"
+      ],
+      "required_events": [
+        "user.identity_verified (payload: {document_id, validated_by})",
+        "user.identity_verification_failed (payload: {document_id, rejection_reason})"
+      ],
+      "required_permissions": [
+        "USER: upload identity document (self)",
+        "ADMIN: validate identity document",
+        "ADMIN: reject identity document (with reason)"
+      ],
+      "required_states": [
+        "User.identity_verified ∈ {true, false}",
+        "Document.verification_status ∈ {pending, validated, rejected}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Identity Verification",
+      "human_decision_required": true,
+      "human_decision_question": "Admin validation threshold for identity documents",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-TRUST-004",
+      "source_concept": "Niveau 4 — Documents pro validés (Professional Docs Validated)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-021",
+      "source_rule_ids": ["GOLD-RL-021"],
+      "current_target": "User model",
+      "current_limitation": "No professional document verification workflow in V2",
+      "extension_category": "trust_level",
+      "proposed_domain": "Domain 1: User/Role/Profile Model + Domain 14: Document Model",
+      "proposed_entity": "User (with Document)",
+      "proposed_structure": "Add professional_docs_verified Boolean; implement professional document upload and admin validation workflow",
+      "required_fields": [
+        "User.professional_docs_verified: Boolean (default: false)",
+        "Document.document_type: Enum (includes 'professional_cert', 'license', 'diploma', 'rccm')"
+      ],
+      "required_relations": [
+        "User 1:N Document (professional documents)"
+      ],
+      "required_events": [
+        "user.professional_docs_validated (payload: {document_ids, validated_by})",
+        "user.professional_docs_rejected (payload: {document_ids, rejection_reason})"
+      ],
+      "required_permissions": [
+        "USER: upload professional documents (self)",
+        "ADMIN: validate professional documents",
+        "ADMIN: reject professional documents"
+      ],
+      "required_states": [
+        "User.professional_docs_verified ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Professional Verification",
+      "human_decision_required": true,
+      "human_decision_question": "Professional document acceptance criteria",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-TRUST-005",
+      "source_concept": "Niveau 5 — Professionnel vérifié (Verified Professional)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-022",
+      "source_rule_ids": ["GOLD-RL-022"],
+      "current_target": "User model",
+      "current_limitation": "No professional verification concept in V2",
+      "extension_category": "trust_level",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User",
+      "proposed_structure": "Add professional_verified Boolean; complete verification workflow combining identity_verified + professional_docs_verified + admin final approval",
+      "required_fields": [
+        "User.professional_verified: Boolean (default: false)",
+        "User.trust_level reaches 5 when professional_verified = true"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "user.professional_verified (payload: {validated_by, verification_date})",
+        "user.professional_verification_revoked (payload: {reason, revoked_by})"
+      ],
+      "required_permissions": [
+        "ADMIN: grant professional_verified",
+        "ADMIN: revoke professional_verified"
+      ],
+      "required_states": [
+        "User.professional_verified ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": [
+        "All professional search matrices (27 matrices)"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Professional Verification",
+      "human_decision_required": true,
+      "human_decision_question": "Professional verification criteria and process",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-TRUST-006",
+      "source_concept": "Niveau 6 — Compte de référence (Reference Account)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-023",
+      "source_rule_ids": ["GOLD-RL-023"],
+      "current_target": "User model",
+      "current_limitation": "No reference account concept in V2",
+      "extension_category": "trust_level",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User",
+      "proposed_structure": "Add reference_account Boolean field; admin-only grant mechanism for power users",
+      "required_fields": [
+        "User.reference_account: Boolean (default: false)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "user.reference_account_granted (payload: {granted_by, reason})",
+        "user.reference_account_revoked (payload: {revoked_by, reason})"
+      ],
+      "required_permissions": [
+        "ADMIN: grant reference_account",
+        "ADMIN: revoke reference_account"
+      ],
+      "required_states": [
+        "User.reference_account ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 5 — Advanced Trust",
+      "human_decision_required": true,
+      "human_decision_question": "Admin-only grant policy for reference account status",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-BADGE-001",
+      "source_concept": "Badge: Téléphone vérifié (Phone Verified)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-024",
+      "source_rule_ids": ["GOLD-RL-024"],
+      "current_target": "Badge (derived display)",
+      "current_limitation": "No badge display system exists in V2",
+      "extension_category": "badge",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "BadgeService (derived, not stored)",
+      "proposed_structure": "Implement badge rendering service; derive badge from User.phone_verified = true",
+      "required_fields": [],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [
+        "PUBLIC: read badges on user profiles"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Identity Verification",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-BADGE-002",
+      "source_concept": "Badge: E-mail vérifié (Email Verified)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-025",
+      "source_rule_ids": ["GOLD-RL-025"],
+      "current_target": "Badge (derived display)",
+      "current_limitation": "No email_verified flag or email badge in V2",
+      "extension_category": "badge",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "BadgeService (derived, not stored)",
+      "proposed_structure": "Add email_verified flag; derive badge from User.email_verified = true",
+      "required_fields": [
+        "User.email_verified: Boolean (default: false)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "user.email_verified (payload: {email})"
+      ],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-BADGE-003",
+      "source_concept": "Badge: Identité vérifiée (Identity Verified)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-026",
+      "source_rule_ids": ["GOLD-RL-026"],
+      "current_target": "Badge (derived display)",
+      "current_limitation": "No identity verification badge in V2",
+      "extension_category": "badge",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "BadgeService (derived, not stored)",
+      "proposed_structure": "Derive badge from User.identity_verified = true (L3 trust level)",
+      "required_fields": [],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Identity Verification",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-BADGE-004",
+      "source_concept": "Badge: Propriétaire vérifié (Owner Verified)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-027",
+      "source_rule_ids": ["GOLD-RL-027"],
+      "current_target": "Badge (derived display)",
+      "current_limitation": "No owner verification concept in V2",
+      "extension_category": "badge",
+      "proposed_domain": "Domain 1: User/Role/Profile Model + Domain 2: Property/Listing Model",
+      "proposed_entity": "BadgeService (derived, not stored)",
+      "proposed_structure": "Add owner_verified field to User; implement ownership proof document verification workflow",
+      "required_fields": [
+        "User.owner_verified: Boolean (default: false)"
+      ],
+      "required_relations": [
+        "Property.owner_id → User (ownership link for verification)"
+      ],
+      "required_events": [
+        "user.owner_verified (payload: {property_id, document_id})",
+        "user.owner_verification_rejected (payload: {property_id, rejection_reason})"
+      ],
+      "required_permissions": [
+        "USER: submit ownership proof (self)",
+        "ADMIN: validate ownership"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Property Verification",
+      "human_decision_required": true,
+      "human_decision_question": "Ownership proof criteria and verification process",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-BADGE-005",
+      "source_concept": "Badge: Agence vérifiée (Agency Verified)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-028",
+      "source_rule_ids": ["GOLD-RL-028"],
+      "current_target": "Badge (derived display)",
+      "current_limitation": "No agency verification field on Organization model",
+      "extension_category": "badge",
+      "proposed_domain": "Domain 12: Organization Model",
+      "proposed_entity": "BadgeService (derived, from Organization)",
+      "proposed_structure": "Add agency_verified to Organization model; implement verification workflow; badge derived on User from User.Organization.agency_verified",
+      "required_fields": [
+        "Organization.agency_verified: Boolean (default: false)",
+        "Organization.verification_status: Enum (unverified | pending | verified | rejected)",
+        "Organization.verified_at: DateTime?"
+      ],
+      "required_relations": [
+        "Organization 1:N User (membership for badge display)",
+        "Organization 1:N Document (registration docs)"
+      ],
+      "required_events": [
+        "organization.verified (payload: {organization_id, verified_by})",
+        "organization.verification_rejected (payload: {organization_id, rejection_reason})"
+      ],
+      "required_permissions": [
+        "ADMIN: verify organization",
+        "ADMIN: reject organization verification"
+      ],
+      "required_states": [
+        "Organization.verification_status ∈ {unverified, pending, verified, rejected}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Organization Verification",
+      "human_decision_required": true,
+      "human_decision_question": "Agency verification criteria and process",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-BADGE-006",
+      "source_concept": "Badge: Partenaire LAWIM (LAWIM Partner)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-029",
+      "source_rule_ids": ["GOLD-RL-029"],
+      "current_target": "Badge (derived display)",
+      "current_limitation": "No partner badge system in V2",
+      "extension_category": "badge",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "BadgeService (derived, composite)",
+      "proposed_structure": "Derive from professional_verified = true AND business_profiles includes a partner-type profile (notaire, geometre, banque, assureur)",
+      "required_fields": [],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Partner Ecosystem",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-BADGE-007",
+      "source_concept": "Badge: Professionnel vérifié (Verified Professional)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-030",
+      "source_rule_ids": ["GOLD-RL-030"],
+      "current_target": "Badge (derived display)",
+      "current_limitation": "No professional badge in V2",
+      "extension_category": "badge",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "BadgeService (derived, not stored)",
+      "proposed_structure": "Derive badge from User.professional_verified = true (L5 trust level)",
+      "required_fields": [],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "All professional search matrices (27 matrices)"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Professional Verification",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-BADGE-008",
+      "source_concept": "Badge: Agent actif (Active Agent)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-031",
+      "source_rule_ids": ["GOLD-RL-031"],
+      "current_target": "Badge (derived display)",
+      "current_limitation": "No agent active status tracking in V2",
+      "extension_category": "badge",
+      "proposed_domain": "Domain 1: User/Role/Profile Model + Domain 12: Organization Model",
+      "proposed_entity": "BadgeService (derived, not stored)",
+      "proposed_structure": "Add is_active_agent field or derive from onboarding_status = active AND exists active OrganizationMember record",
+      "required_fields": [
+        "User.is_active_agent: Boolean (default: false)",
+        "User.onboarding_status: Enum (invited | account_created | phone_verified | cni_uploaded | validated | active)"
+      ],
+      "required_relations": [
+        "User 1:N OrganizationMember (active membership check)"
+      ],
+      "required_events": [
+        "user.agent_activated (payload: {organization_id, activated_by})",
+        "user.agent_deactivated (payload: {organization_id, reason})"
+      ],
+      "required_permissions": [
+        "ADMIN (org): activate agent",
+        "ADMIN (org): deactivate agent"
+      ],
+      "required_states": [
+        "User.is_active_agent ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 4 — Agency Operations",
+      "human_decision_required": true,
+      "human_decision_question": "Definition of active agent (criteria for badge display)",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-AGENCY-001",
+      "source_concept": "Agent onboarding flow",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-035",
+      "source_rule_ids": ["GOLD-RL-035"],
+      "current_target": "User model",
+      "current_limitation": "No structured agent onboarding workflow exists in V2",
+      "extension_category": "agency_structure",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User (onboarding_status state machine)",
+      "proposed_structure": "Implement onboarding state machine with onboarding_status enum field on User: invited → account_created → phone_verified → cni_uploaded → validated → active",
+      "required_fields": [
+        "User.onboarding_status: Enum (invited | account_created | phone_verified | cni_uploaded | validated | active)",
+        "User.onboarding_step: Int (current step index)"
+      ],
+      "required_relations": [
+        "User 1:N OrganizationMember (agent belongs to organization)"
+      ],
+      "required_events": [
+        "user.onboarding_step_completed (payload: {step, new_status})",
+        "user.onboarding_rejected (payload: {reason, rejected_by})",
+        "user.onboarding_completed (payload: {activated_at})"
+      ],
+      "required_permissions": [
+        "ADMIN (org): invite agent",
+        "ADMIN (org): validate agent document",
+        "ADMIN (org): activate agent"
+      ],
+      "required_states": [
+        "User.onboarding_status ∈ {invited, account_created, phone_verified, cni_uploaded, validated, active}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Agency Operations",
+      "human_decision_required": true,
+      "human_decision_question": "Onboarding step policy and validation requirements per step",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-AGENCY-002",
+      "source_concept": "Minimum 3 active agents for operational agency",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-036",
+      "source_rule_ids": ["GOLD-RL-036"],
+      "current_target": "Organization model",
+      "current_limitation": "No minimum agent constraint enforcement in V2",
+      "extension_category": "agency_structure",
+      "proposed_domain": "Domain 12: Organization Model",
+      "proposed_entity": "Organization",
+      "proposed_structure": "Add agent_count validation rule; implement agency operational status logic with min_agents_required field",
+      "required_fields": [
+        "Organization.min_agents_required: Int (default: 3)",
+        "Organization.agent_count: Int (computed)",
+        "Organization.is_operational: Boolean (computed: agent_count >= min_agents_required)"
+      ],
+      "required_relations": [
+        "Organization 1:N OrganizationMember (count active agents)"
+      ],
+      "required_events": [
+        "organization.operational_status_changed (payload: {is_operational, agent_count, min_required})"
+      ],
+      "required_permissions": [
+        "ADMIN (platform): configure min_agents_required"
+      ],
+      "required_states": [
+        "Organization.is_operational ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 5 — Organization Governance",
+      "human_decision_required": true,
+      "human_decision_question": "Minimum threshold value (Gold=3) and enforcement behavior",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-AGENCY-003",
+      "source_concept": "Lead routing by geographic zone",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-037",
+      "source_rule_ids": ["GOLD-RL-037"],
+      "current_target": "OrganizationMember model",
+      "current_limitation": "No lead routing mechanism exists in V2",
+      "extension_category": "agency_structure",
+      "proposed_domain": "Domain 12: Organization Model + Domain 10: CRM Pipeline",
+      "proposed_entity": "OrganizationMember (zone assignment)",
+      "proposed_structure": "Implement agent_zones on OrganizationMember (String[]); build lead routing engine with zone-based, score-based, and availability-based routing methods",
+      "required_fields": [
+        "OrganizationMember.zones: String[] (assigned geographic zones)",
+        "OrganizationMember.max_leads: Int (per-agent lead limit)",
+        "OrganizationMember.current_leads: Int (current active lead count)"
+      ],
+      "required_relations": [
+        "OrganizationMember.user_id → User",
+        "OrganizationMember.organization_id → Organization",
+        "Lead.routed_to_agent_id → OrganizationMember.user_id"
+      ],
+      "required_events": [
+        "lead.routed (payload: {lead_id, agent_id, routing_method, zone})",
+        "organization.zone_assignment_changed (payload: {user_id, old_zones, new_zones})"
+      ],
+      "required_permissions": [
+        "ADMIN (org): assign zones to agent",
+        "ADMIN (org): configure routing rules"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Agency Operations",
+      "human_decision_required": true,
+      "human_decision_question": "Routing algorithm: round-robin, score-based, or capacity-based",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-AGENCY-004",
+      "source_concept": "Lead cost (500 FCFA default)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-038",
+      "source_rule_ids": ["GOLD-RL-038"],
+      "current_target": "LeadPurchase model",
+      "current_limitation": "No lead costing system exists in V2",
+      "extension_category": "agency_structure",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "LeadPurchase",
+      "proposed_structure": "Implement lead costing module with configurable price per lead; link to Service and AgentCredit models",
+      "required_fields": [
+        "LeadPurchase.credits_spent: Int",
+        "LeadPurchase.price_per_lead: Decimal",
+        "LeadPurchase.purchased_at: DateTime",
+        "Service.price_fcfa: Int (for lead_bronze/silver/gold packs)"
+      ],
+      "required_relations": [
+        "LeadPurchase.agent_id → User",
+        "LeadPurchase.lead_id → Lead",
+        "LeadPurchase.service_order_id → ServiceOrder"
+      ],
+      "required_events": [
+        "lead.purchased (payload: {lead_id, agent_id, credits_spent, pack_type})"
+      ],
+      "required_permissions": [
+        "AGENT: purchase lead (if has sufficient credits)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Monetization Core",
+      "human_decision_required": true,
+      "human_decision_question": "Lead pricing strategy: 500 FCFA default or market-adjusted pricing",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-AGENCY-005",
+      "source_concept": "Agent credits & boosts",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-039",
+      "source_rule_ids": ["GOLD-RL-039"],
+      "current_target": "AgentCredit model",
+      "current_limitation": "No agent credit system exists in V2",
+      "extension_category": "agency_structure",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "AgentCredit",
+      "proposed_structure": "Implement agent_credits model (balance, total_purchased, total_consumed, last_recharge) and boost system (boost_level, boost_expires_at on Property)",
+      "required_fields": [
+        "AgentCredit.agent_id: UUID",
+        "AgentCredit.balance: Int",
+        "AgentCredit.total_purchased: Int",
+        "AgentCredit.total_consumed: Int",
+        "AgentCredit.last_recharge_at: DateTime?",
+        "AgentCredit.last_recharge_amount: Int?",
+        "Property.boost_level: Enum (none | boost_7d | boost_30d | premium)",
+        "Property.boost_expires_at: DateTime?"
+      ],
+      "required_relations": [
+        "AgentCredit.agent_id → User",
+        "Property.owner_id → User (for boost purchases)"
+      ],
+      "required_events": [
+        "agent_credit.recharged (payload: {agent_id, amount, new_balance})",
+        "agent_credit.consumed (payload: {agent_id, amount, reason, new_balance})",
+        "property.boost_activated (payload: {property_id, boost_level, expires_at})"
+      ],
+      "required_permissions": [
+        "AGENT: purchase credits (via payment)",
+        "AGENT: activate boost (if sufficient credits)",
+        "ADMIN (platform): configure credit pricing"
+      ],
+      "required_states": [
+        "Property.boost_level ∈ {none, boost_7d, boost_30d, premium}"
+      ],
+      "H0.5_matrices_impacted": [
+        "All matching matrices (boost affects ranking)"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Monetization Core",
+      "human_decision_required": true,
+      "human_decision_question": "Credit pricing: cost per lead, boost pricing tiers",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-AGENCY-006",
+      "source_concept": "Agent rating (1-5 scale)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-040",
+      "source_rule_ids": ["GOLD-RL-040"],
+      "current_target": "User model",
+      "current_limitation": "No agent rating system exists in V2",
+      "extension_category": "agency_structure",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User (agent_rating field)",
+      "proposed_structure": "Add agent_rating FLOAT field (1.0-5.0); implement post-interaction rating collection workflow with satisfaction survey",
+      "required_fields": [
+        "User.agent_rating: Float (nullable, 1.0-5.0 scale)",
+        "User.total_ratings: Int (count of ratings received)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "agent.rating_updated (payload: {agent_id, new_rating, rating_count})",
+        "interaction.rating_submitted (payload: {interaction_id, rater_id, rating_value})"
+      ],
+      "required_permissions": [
+        "USER: rate agent (post-interaction)",
+        "PUBLIC: read agent rating"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "All matching matrices (agent rating affects behavioral score)"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Quality Signals",
+      "human_decision_required": true,
+      "human_decision_question": "Rating calculation method: average, weighted, or decayed",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-AGENCY-007",
+      "source_concept": "Agency hierarchy roles",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-010",
+      "source_rule_ids": ["GOLD-RL-010"],
+      "current_target": "OrganizationMember model",
+      "current_limitation": "V2 has Organization model but no agency-specific role on User within organization",
+      "extension_category": "agency_structure",
+      "proposed_domain": "Domain 12: Organization Model",
+      "proposed_entity": "OrganizationMember (agency_role field)",
+      "proposed_structure": "Add agency_role enum field (responsible | admin | agent | assistant) to OrganizationMember model; implement role-based permission scoping within org",
+      "required_fields": [
+        "OrganizationMember.agency_role: Enum (responsible | admin | agent | assistant)",
+        "OrganizationMember.joined_at: DateTime",
+        "OrganizationMember.left_at: DateTime?"
+      ],
+      "required_relations": [
+        "OrganizationMember.user_id → User",
+        "OrganizationMember.organization_id → Organization"
+      ],
+      "required_events": [
+        "organization.member_role_changed (payload: {user_id, organization_id, old_role, new_role, changed_by})",
+        "organization.member_added (payload: {user_id, organization_id, role})",
+        "organization.member_removed (payload: {user_id, organization_id, role})"
+      ],
+      "required_permissions": [
+        "RESPONSIBLE: assign org roles",
+        "ADMIN (org): assign agent/assistant roles",
+        "RESPONSIBLE: remove members"
+      ],
+      "required_states": [
+        "OrganizationMember.agency_role ∈ {responsible, admin, agent, assistant}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Agency Operations",
+      "human_decision_required": true,
+      "human_decision_question": "Granularity of agency hierarchy: 4 tiers or simplified (manager/agent only)",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-AGENCY-008",
+      "source_concept": "Agency components with trust and validation",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-033",
+      "source_rule_ids": ["GOLD-RL-033"],
+      "current_target": "Organization model",
+      "current_limitation": "V2 Organization has users+properties but no agency-level trust, validations, or admin role",
+      "extension_category": "agency_structure",
+      "proposed_domain": "Domain 12: Organization Model",
+      "proposed_entity": "Organization",
+      "proposed_structure": "Add trust_level, verification_status, lifecycle_state fields to Organization model; implement agency-level trust scoring",
+      "required_fields": [
+        "Organization.trust_level: Int (1-6)",
+        "Organization.verification_status: Enum (unverified | pending | verified | rejected)",
+        "Organization.lifecycle_state: Enum (creation | validation | active | suspended | dissolution | archived)",
+        "Organization.agency_verified: Boolean",
+        "Organization.verified_at: DateTime?"
+      ],
+      "required_relations": [
+        "Organization 1:N OrganizationMember (members for agent_count)",
+        "Organization 1:N Document (registration documents)"
+      ],
+      "required_events": [
+        "organization.lifecycle_changed (payload: {organization_id, old_state, new_state})",
+        "organization.verification_status_changed (payload: {organization_id, old_status, new_status, reviewed_by})"
+      ],
+      "required_permissions": [
+        "ADMIN (platform): verify organization",
+        "ADMIN (platform): suspend/dissolve organization"
+      ],
+      "required_states": [
+        "Organization.lifecycle_state ∈ {creation, validation, active, suspended, dissolution, archived}",
+        "Organization.verification_status ∈ {unverified, pending, verified, rejected}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Organization Verification",
+      "human_decision_required": true,
+      "human_decision_question": "Agency verification requirements and trust level criteria",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RL-AGENCY-009",
+      "source_concept": "Agency registration fields (RCCM, CNI, tax ID)",
+      "source_document": "ROLE_CROSSWALK.md / GOLD-RL-034",
+      "source_rule_ids": ["GOLD-RL-034"],
+      "current_target": "Organization model",
+      "current_limitation": "V2 Organization model missing required registration fields",
+      "extension_category": "agency_structure",
+      "proposed_domain": "Domain 12: Organization Model",
+      "proposed_entity": "Organization",
+      "proposed_structure": "Add rccm, tax_id, cni_document_id, registration_document_id fields to Organization model",
+      "required_fields": [
+        "Organization.rccm: String (Registre du Commerce et du Crédit Mobilier)",
+        "Organization.tax_id: String (tax identification number)",
+        "Organization.cni_document_id: UUID? (reference to Document for responsible person's ID)",
+        "Organization.registration_document_id: UUID? (reference to Document for business registration)"
+      ],
+      "required_relations": [
+        "Organization.cni_document_id → Document",
+        "Organization.registration_document_id → Document",
+        "Organization 1:N Document (verification documents)"
+      ],
+      "required_events": [
+        "organization.registration_updated (payload: {organization_id, fields_updated})"
+      ],
+      "required_permissions": [
+        "RESPONSIBLE: update registration fields",
+        "ADMIN (platform): validate registration fields"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Organization Verification",
+      "human_decision_required": true,
+      "human_decision_question": "Required vs optional registration fields for agency creation",
+      "status": "APPROVED"
+    }
+  ]
+}

@@ -1,0 +1,678 @@
+{
+  "document": {
+    "id": "LAWIM-EXT-SEC-V1",
+    "title": "Security & Permission Extension Model — LAWIM_V2",
+    "status": "DRAFT",
+    "date": "2026-07-15",
+    "description": "Complete structured extension model for LAWIM_V2 Security & Permission domain. Covers 4-level permission model, matrix, scope, approval workflow, consent, audit logging, temporary grants, org hierarchy, consent derivation, and relationship-based permissions.",
+    "sources": [
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §14 (Domain 13: Permission/Security Model)",
+      "required_extensions.json §permission_model",
+      "ROLE_CROSSWALK.md",
+      "GOLD-RL-014 through GOLD-RL-017"
+    ]
+  },
+  "summary": {
+    "total_extensions": 16,
+    "by_category": {
+      "system_permissions": 9,
+      "organization_permissions": 2,
+      "relationship_permissions": 1,
+      "transaction_permissions": 1,
+      "consent_derived_permissions": 1,
+      "temporary_permissions": 1,
+      "approval_workflow": 1
+    },
+    "by_priority": {
+      "P0": 0,
+      "P1": 8,
+      "P2": 8,
+      "P3": 0,
+      "P4": 0
+    }
+  },
+  "extensions": {
+    "permission_levels": [
+      {
+        "extension_id": "EXT-PERM-001",
+        "concept": "Niveau 4 — Validation (Approve permission level)",
+        "business_reason": "Formal approval workflow for agency creation, listing validation, professional verification. Highest permission tier enabling authoritative actions on platform resources.",
+        "source": "GOLD-RL-017",
+        "insufficient_current_model": "No explicit approval level or workflow exists in V2. Approve actions are either hardcoded admin checks or absent entirely.",
+        "proposed_target": "Implement Approval permission level (A) as fourth tier in permission model. Actions requiring A: agency_creation, listing_validation, professional_verification, organization_validation, refund_approval, account_suspension, account_deletion, permission_grant, temporary_permission, document_validation, transaction_validation.",
+        "impact": "Security-critical function governance; multi-person approval gates; audit trail for sensitive actions",
+        "priority": "P1",
+        "human_decision_required": true,
+        "decision_question": "Which specific actions require Approve-level permission beyond the default list",
+        "crud_vsra": {
+          "admin": "RCEA",
+          "manager": "RA",
+          "operator": "R",
+          "partner": "R",
+          "user": "R (own requests)"
+        }
+      },
+      {
+        "extension_id": "EXT-PERM-002",
+        "concept": "Niveau 1 — Lecture (Read permission level)",
+        "business_reason": "Formalize implicit read access into explicit permission level with scope awareness (own vs managed vs org vs all). Foundation for all data access control.",
+        "source": "GOLD-RL-014",
+        "insufficient_current_model": "V2 read access is implicit per role with no explicit permission check system. No scope differentiation between own/org/all resources.",
+        "proposed_target": "Implement explicit Read permission check system. Apply scope resolution: own (self-created/owned), managed (assigned/team), org (organization), all (system-wide). Read access defaults to 'own' unless matrix specifies wider scope.",
+        "impact": "Access control granularity; data confidentiality; foundation for all higher permission levels",
+        "priority": "P2",
+        "human_decision_required": true,
+        "decision_question": "Default read scope for partner and user roles across all resource types",
+        "crud_vsra": {
+          "admin": "RCEA",
+          "manager": "RCEA (org scope default)",
+          "operator": "RCEA (org scope on property/project)",
+          "partner": "R (org) + RCE (own)",
+          "user": "RCE (own only)"
+        }
+      },
+      {
+        "extension_id": "EXT-PERM-003",
+        "concept": "Niveau 2 — Création (Create permission level)",
+        "business_reason": "Formalize per-role creation rights with scope awareness. Determines which resources each role can instantiate.",
+        "source": "GOLD-RL-015",
+        "insufficient_current_model": "V2 creation rights are role-dependent but hardcoded per feature with no formal matrix. Users can create projects but not organizations; operators can create listings but not services.",
+        "proposed_target": "Formalize Create permission level per role in permission matrix. Creation scope limited by role: admin (all), manager (org-scoped), operator (org-scoped), partner (own-scoped), user (own personal resources only).",
+        "impact": "Feature-level access control; permission consistency across all resource types",
+        "priority": "P2",
+        "human_decision_required": false,
+        "crud_vsra": {
+          "admin": "RCEA",
+          "manager": "RCEA (org scoped)",
+          "operator": "RCE (org scoped on property/project)",
+          "partner": "RCE (own)",
+          "user": "RCE (own personal resources only)"
+        }
+      },
+      {
+        "extension_id": "EXT-PERM-004",
+        "concept": "Niveau 3 — Modification (Edit permission level)",
+        "business_reason": "Formalize edit scope with three tiers: own (self-created), managed (items-under-responsibility), all (any resource). Critical for data integrity.",
+        "source": "GOLD-RL-016",
+        "insufficient_current_model": "V2 edit access granted by ownership or organization membership with no formal items-under-responsibility concept. Agents cannot be explicitly assigned management scope.",
+        "proposed_target": "Formalize Edit permission scope with three tiers: own (self resources), managed (assigned/team resources), all (any resource). Add managed scope via assignment tracking (property agent_id, lead routed_to_agent_id, project assigned_agent_id).",
+        "impact": "Access control granularity; data integrity; enables agent/property management workflows",
+        "priority": "P2",
+        "human_decision_required": false,
+        "crud_vsra": {
+          "admin": "RCEA (all)",
+          "manager": "RCEA (org), RCE (managed), RCE (own)",
+          "operator": "RCE (org on property/project), RCE (own)",
+          "partner": "RCE (own)",
+          "user": "RCE (own)"
+        }
+      }
+    ],
+    "permission_matrix": [
+      {
+        "extension_id": "EXT-PERM-005",
+        "concept": "Permission matrix (Role × Resource) with all resources",
+        "business_reason": "Complete definition of which roles can perform which actions on which resources. Single source of truth for all authorization decisions. Covers 22 resource types across 5 roles.",
+        "source": "LAWIM_UNIFIED_DOMAIN_MODEL.md §14.3",
+        "insufficient_current_model": "V2 has no formal permission matrix. Authorization is implemented ad-hoc per endpoint with role checks.",
+        "proposed_target": "Implement complete permission matrix as configuration-driven lookup table. Matrix covers: Property, Project, Transaction, User, Organization, OrganizationMember, Service, ServiceOrder, Payment, Lead, LeadPurchase, Document, Visit, Match, Conversation, Negotiation, AgentCredit, CRM settings, System config, ApprovalWorkflow, Consent record, PermissionAuditLog, TemporaryPermission.",
+        "impact": "Unified authorization; systematic permission checking; audit-ready permission model",
+        "priority": "P1",
+        "human_decision_required": true,
+        "decision_question": "Permission matrix granularity: single combined matrix or separate system/org/relationship sub-matrices",
+        "crud_vsra": {
+          "admin": "RCEA across all 22 resource types",
+          "manager": "RCEA on 18/22 resources (org-scoped), R on Property(all)/Project(all)/Transaction(all)",
+          "operator": "RCE on 16/22 resources (org-scoped on Property/Project, own elsewhere)",
+          "partner": "RCE on 6/22 (own), R on 10/22 (org-scoped), otherwise none",
+          "user": "RCE on 6/22 (own only), otherwise none"
+        }
+      }
+    ],
+    "permission_scope": [
+      {
+        "extension_id": "EXT-PERM-006",
+        "concept": "Permission scope (own/managed/org/all) with resolution logic",
+        "business_reason": "Scope-based permission resolution enables fine-grained access control beyond flat role checks. Same role may have different effective permissions based on resource relationship.",
+        "source": "LAWIM_UNIFIED_DOMAIN_MODEL.md §14.3",
+        "insufficient_current_model": "V2 has basic own/org distinction but no managed scope (items-under-responsibility) and no formal scope resolution engine.",
+        "proposed_target": "Implement 4-tier scope resolution: own (direct FK), managed (assignment FK), org (org membership), all (system-wide). Resolution priority: explicit deny > managed > org > own > all. Scope mapping table per resource type with resolution function.",
+        "impact": "Granular access control; enables delegation workflow; foundation for relationship-based permissions",
+        "priority": "P2",
+        "human_decision_required": false,
+        "crud_vsra": {
+          "admin": "all scope on all resources",
+          "manager": "org scope default, all scope on specific resources (Property(all)/Project(all)/Transaction(all))",
+          "operator": "org scope on Property/Project, own scope elsewhere",
+          "partner": "org scope on read, own scope on edit",
+          "user": "own scope only"
+        }
+      }
+    ],
+    "approval_workflow": [
+      {
+        "extension_id": "EXT-PERM-007",
+        "concept": "ApprovalWorkflow entity with routing rules",
+        "business_reason": "Structured approval process for actions requiring multi-person authorization. Enables security gates for agency creation, listing validation, professional verification, refunds, and account management.",
+        "source": "LAWIM_UNIFIED_DOMAIN_MODEL.md §14.4",
+        "insufficient_current_model": "No approval workflow entity exists in V2. All approval-like actions are handled via ad-hoc admin checks or do not exist.",
+        "proposed_target": "Create ApprovalWorkflow entity with attributes: id, approval_type, target_type, target_id, requested_by, assigned_to, status (pending/approved/rejected/cancelled/escalated), reviewed_by, reviewed_at, approval_notes, rejection_reason, escalated_to, escalated_at, escalation_reason, approval_deadline, sla_breached, auto_approve_on_timeout, created_at. Implement 12 approval types with specific approval chains.",
+        "impact": "Security compliance; multi-person authorization; audit trail for sensitive actions",
+        "priority": "P1",
+        "human_decision_required": true,
+        "decision_question": "Approval routing rules: which approval types require which approver role and escalation path",
+        "crud_vsra": {
+          "definition": {
+            "target_type": "ApprovalWorkflow",
+            "description": "Approval requests are created by requesters, assigned to approvers"
+          },
+          "admin": "RCEA (all)",
+          "manager": "RA (assigned approvals), RCEA (create for org)",
+          "operator": "R (assigned approvals), C (create for own actions)",
+          "partner": "C (create own requests), R (own requests)",
+          "user": "C (create own requests), R (own requests)"
+        }
+      }
+    ],
+    "consent_management": [
+      {
+        "extension_id": "EXT-PERM-008",
+        "concept": "Consent management model with derivation rules",
+        "business_reason": "Structured consent tracking for data sharing, contact revelation, lead routing, GDPR compliance, and double consent workflow. Each consent type derives specific permissions when active.",
+        "source": "LAWIM_UNIFIED_DOMAIN_MODEL.md §14.5",
+        "insufficient_current_model": "No consent management model exists in V2. Double consent for contact is handled implicitly if at all. No GDPR consent tracking.",
+        "proposed_target": "Create Consent entity with attributes: id, consent_type (10 types), granted_by, granted_to, target_type, target_id, status (active/revoked/expired/superseded), scope (single_use/limited/ongoing/permanent), expires_at, revoked_at, revoked_by, consent_channel, consent_proof, terms_version, created_at. Implement derivation mapping from each consent type to specific permissions.",
+        "impact": "GDPR compliance; double consent enforcement; consent-based permission derivation; audit trail",
+        "priority": "P1",
+        "human_decision_required": true,
+        "decision_question": "Consent types required for MVP vs full set; GDPR processing consent scope",
+        "crud_vsra": {
+          "definition": {
+            "target_type": "Consent",
+            "description": "Consent records are created by users (self-consent) or system (derived). Readable by consent parties and authorized roles."
+          },
+          "admin": "RCEA (all)",
+          "manager": "RCEA (org related), RV (revoke org scope)",
+          "operator": "RCE (related consents)",
+          "partner": "R (related consents)",
+          "user": "RCE (own consents), RV (revoke own)"
+        }
+      }
+    ],
+    "permission_audit_logging": [
+      {
+        "extension_id": "EXT-PERM-009",
+        "concept": "Permission audit logging with retention policy",
+        "business_reason": "Complete audit trail for all permission changes, consent actions, approval decisions, and access denials. Security compliance and intrusion detection.",
+        "source": "LAWIM_UNIFIED_DOMAIN_MODEL.md §15 (Events/Observability)",
+        "insufficient_current_model": "V2 has generic Event model but no permission-specific audit logging. No structured event types for permission changes, no retention policy, no access denial logging.",
+        "proposed_target": "Create PermissionAuditLog entity with 18 event types covering permission lifecycle. Implement mandatory logging for: permission grants/revocations/denials, role/scope changes, consent grants/revocations, temporary grant lifecycle, approval decisions, access breaches, sharing activations. Retention policy: 5 years for security events, 1 year for denials, 2 years for temporary grants.",
+        "impact": "Security compliance (GDPR, SOX); intrusion detection; audit trail; forensic capabilities",
+        "priority": "P1",
+        "human_decision_required": true,
+        "decision_question": "Permission audit retention periods by event category",
+        "crud_vsra": {
+          "definition": {
+            "target_type": "PermissionAuditLog",
+            "description": "Audit logs are system-created only. Readable by authorized roles. Immutable — no modify/delete."
+          },
+          "admin": "RA (all logs)",
+          "manager": "RA (org-scoped logs)",
+          "operator": "R (own-scoped logs)",
+          "partner": "—",
+          "user": "R (own related logs)"
+        }
+      }
+    ],
+    "temporary_permissions": [
+      {
+        "extension_id": "EXT-PERM-010",
+        "concept": "Temporary permission grants with auto-revocation",
+        "business_reason": "Time-bound permission grants for delegation, emergency access, cross-org collaboration, auditor access, and support operations. Automatic expiry prevents permission sprawl.",
+        "source": "EXT-PERM-004 (derived from permission scope concept)",
+        "insufficient_current_model": "No temporary permission mechanism exists in V2. All permissions are permanent until role change or manual revocation.",
+        "proposed_target": "Create TemporaryPermission entity with attributes: id, granted_by, granted_to, resource_type, resource_id, permission_level, permission_scope, reason, starts_at, expires_at, max_extensions, extension_count, status (active/expired/revoked/extended), revoked_at, revoked_by, revocation_reason, created_at. Implement 6 grant scenarios with specified durations and approval requirements. Auto-revoke via scheduled task at expires_at.",
+        "impact": "Operational flexibility; security (auto-cleanup); delegation support; audit trail for all temporary grants",
+        "priority": "P2",
+        "human_decision_required": true,
+        "decision_question": "Temporary grant scenarios: which delegation patterns require implementation first",
+        "crud_vsra": {
+          "definition": {
+            "target_type": "TemporaryPermission",
+            "description": "Temporary grants created by authorized granters. Automatically expire. Revocable by granters and admins."
+          },
+          "admin": "RCEA (all)",
+          "manager": "RCEA (org scope), RV (own grants)",
+          "operator": "—",
+          "partner": "—",
+          "user": "—"
+        }
+      }
+    ],
+    "organization_permission_hierarchy": [
+      {
+        "extension_id": "EXT-PERM-011",
+        "concept": "Organization permission hierarchy (responsible > admin > agent > assistant)",
+        "business_reason": "4-tier agency hierarchy with distinct permission levels within the organization scope. Enables org structure with clear responsibility boundaries.",
+        "source": "EXT-RL-AGENCY-007",
+        "insufficient_current_model": "V2 Organization model has basic user membership but no agency-specific role hierarchy on OrganizationMember. No differentiated org-scoped permissions.",
+        "proposed_target": "Implement 4-tier agency hierarchy on OrganizationMember: agency_role enum (responsible/admin/agent/assistant). Permission mapping: responsible (full org control RCEA), admin (org RCEA except org settings), agent (own RCE + assigned R), assistant (assigned R only). Intersection with V2 role for effective permission calculation.",
+        "impact": "Agency management; org-scoped permission granularity; responsible accountability",
+        "priority": "P1",
+        "human_decision_required": true,
+        "decision_question": "Agency hierarchy granularity: 4 tiers or simplified (responsible/agent only) for MVP",
+        "crud_vsra_by_agency_role": {
+          "responsible": {
+            "description": "Full organizational control",
+            "org_resources": "RCEA",
+            "member_management": "RCEA (assign admin/agent/assistant)",
+            "org_settings": "RCEA",
+            "financial": "RCEA"
+          },
+          "admin": {
+            "description": "Operational org management",
+            "org_resources": "RCEA",
+            "member_management": "RCEA (assign agent/assistant only)",
+            "org_settings": "RCE (cannot modify org registration)",
+            "financial": "R (read-only)"
+          },
+          "agent": {
+            "description": "Individual operator within org",
+            "own_resources": "RCE",
+            "assigned_resources": "RCE (leads, properties)",
+            "org_resources": "R (read-only)",
+            "member_management": "—"
+          },
+          "assistant": {
+            "description": "Support role with minimal permissions",
+            "assigned_resources": "R (read-only on assignments)",
+            "org_resources": "R (read-only)",
+            "own_resources": "RCE",
+            "member_management": "—"
+          }
+        }
+      },
+      {
+        "extension_id": "EXT-PERM-014",
+        "concept": "Agency role intersection with V2 role for effective permission",
+        "business_reason": "Effective permission is the intersection of V2 role permission and agency role permission within org scope. Prevents privilege escalation where an agency role could exceed V2 role limitations.",
+        "source": "EXT-RL-AGENCY-007 (derived)",
+        "insufficient_current_model": "No dual-role permission model exists in V2. Users have a single V2 role with no org-scoped sub-role.",
+        "proposed_target": "Implement permission intersection: effective_permission = min(V2_role_permission, agency_role_permission) for org-scoped resources. For non-org resources, only V2 role applies. Resolution examples: operator+admin → org RCEA, user+agent → own RCE + org R, partner+admin → org R-only.",
+        "impact": "Security boundary enforcement; prevents privilege escalation; clean role hierarchy",
+        "priority": "P2",
+        "human_decision_required": true,
+        "decision_question": "Permission intersection rules: strict min() or custom mapping per role pair",
+        "crud_vsra": {
+          "resolution_rule": "effective = intersection(V2_role_matrix_row, agency_role_scope) for org resources; V2_role_matrix_row for non-org resources"
+        }
+      }
+    ],
+    "consent_derived_permissions": [
+      {
+        "extension_id": "EXT-PERM-012",
+        "concept": "Permission derivation from consent with revocation cascade",
+        "business_reason": "Specific permissions are derived from active consent grants. When consent is revoked, all derived permissions are immediately invalidated. Critical for GDPR compliance and double consent workflow.",
+        "source": "LAWIM_UNIFIED_DOMAIN_MODEL.md §14.5",
+        "insufficient_current_model": "No consent-to-permission derivation exists in V2. Consent is not tracked; permissions are not conditional on consent status.",
+        "proposed_target": "Implement consent-to-permission derivation mapping: 10 consent types → specific permissions. Rules: double consent → contact read, lead purchase → lead data access, data sharing → profile read, agent opt-in → lead receipt. Implement revocation cascade: consent revoked → derived permissions suspended → audit logged → downstream services notified.",
+        "impact": "GDPR compliance; consent enforcement; double consent integrity; permission lifecycle management",
+        "priority": "P2",
+        "human_decision_required": true,
+        "decision_question": "Consent derivation rules: which permissions derive from which consent types",
+        "crud_vsra": {
+          "derivation_rules": [
+            {
+              "consent": "double_consent_demandeur + double_consent_holder",
+              "derives": "contact_revelation_read",
+              "condition": "Both consents must be active",
+              "duration": "Single use per project match"
+            },
+            {
+              "consent": "contact_revelation",
+              "derives": "full_contact_read",
+              "condition": "Payment processed + consent active",
+              "duration": "Per lead purchase"
+            },
+            {
+              "consent": "agent_opt_in",
+              "derives": "lead_receipt + lead_data_access",
+              "condition": "Consent + zone assignment + availability",
+              "duration": "Ongoing while active"
+            },
+            {
+              "consent": "data_sharing",
+              "derives": "basic_profile_read",
+              "condition": "Consent active",
+              "duration": "Ongoing while active"
+            }
+          ]
+        }
+      }
+    ],
+    "relationship_permissions": [
+      {
+        "extension_id": "EXT-PERM-013",
+        "concept": "Relationship-based permissions with distance model",
+        "business_reason": "Permissions derived from relational proximity between entities. Direct relationships (ownership) grant full access; assigned, participant, org member, and consent-derived relationships grant progressively narrower access.",
+        "source": "LAWIM_UNIFIED_DOMAIN_MODEL.md (implicit in entity relationship model)",
+        "insufficient_current_model": "V2 has implicit relationship-based access (e.g., property owner can edit) but no formal relationship graph or distance model.",
+        "proposed_target": "Implement relationship distance model: Direct (owner/creator) → RCEA, Assigned (agent/assignee) → RCE, Participant (party to workflow) → R ± E, OrgMember → per agency_role, ConsentDerived → R (conditional), Public → R (public data only). Build relationship graph resolution function for permission checking.",
+        "impact": "Contextual access control; reduced manual permission assignment; intuitive permission model",
+        "priority": "P2",
+        "human_decision_required": true,
+        "decision_question": "Relationship distance thresholds: which relationships map to which permission strength",
+        "crud_vsra_by_distance": {
+          "direct": {
+            "relationships": ["owner→property", "creator→project", "uploader→document"],
+            "permissions": "RCE (full control)",
+            "examples": "Property owner, project creator, document uploader"
+          },
+          "assigned": {
+            "relationships": ["agent→property", "agent→lead", "agent→visit", "assignee→project"],
+            "permissions": "RCE (management scope)",
+            "examples": "Managing agent, assigned lead agent, visit agent"
+          },
+          "participant": {
+            "relationships": ["demandeur→transaction", "holder→transaction", "demandeur→visit", "holder→visit"],
+            "permissions": "R (own participation), E (contextual)",
+            "examples": "Transaction party, visit participant"
+          },
+          "org_member": {
+            "relationships": ["member→org resources"],
+            "permissions": "Per agency_role (RCEA→R cascade)",
+            "examples": "Org member accessing org properties"
+          },
+          "consent_derived": {
+            "relationships": ["matched user→profile", "purchaser→contact"],
+            "permissions": "R (conditional on consent)",
+            "examples": "Match-based profile read, purchased lead contact"
+          },
+          "public": {
+            "relationships": ["any user→published data"],
+            "permissions": "R (public fields only)",
+            "examples": "Published property listing, public user profile"
+          }
+        }
+      }
+    ],
+    "transaction_permissions": [
+      {
+        "extension_id": "EXT-PERM-016",
+        "concept": "Transaction permission scoping by party role",
+        "business_reason": "Transaction resources have distinct party roles (demandeur/buyer, holder/seller, agent, notaire) with role-specific permissions within the transaction context.",
+        "source": "LAWIM_UNIFIED_DOMAIN_MODEL.md §14.3 (Transaction row in matrix)",
+        "insufficient_current_model": "V2 has no Transaction entity. Permissions for transaction-like actions are handled by Project permissions.",
+        "proposed_target": "Implement transaction-specific permission scoping: demandeur (RCE on own transaction data), holder (RCE on own transaction data), agent (RCEA management), notaire (R on assigned transactions), admin (RCEA all). Transaction document permissions follow same party-role model.",
+        "impact": "Transaction data confidentiality; party role enforcement; document access control",
+        "priority": "P1",
+        "human_decision_required": true,
+        "decision_question": "Transaction party permissions: which roles can access which transaction data",
+        "crud_vsra_by_party_role": {
+          "demandeur": "RCE (own data, own documents)",
+          "holder": "RCE (own data, own documents)",
+          "agent": "RCEA (management of transaction flow)",
+          "notaire": "R (assigned transaction documents)",
+          "admin": "RCEA (all transactions)"
+        }
+      }
+    ],
+    "system_permissions": [
+      {
+        "extension_id": "EXT-PERM-015",
+        "concept": "System configuration and CRM settings permissions",
+        "business_reason": "System-level resources (system config, CRM settings) require the most restrictive permissions. Only highest roles can modify system behavior.",
+        "source": "LAWIM_UNIFIED_DOMAIN_MODEL.md §14.3 (System config and CRM settings rows)",
+        "insufficient_current_model": "V2 has no formal system config or CRM settings entities. Configuration is done via environment variables or direct DB.",
+        "proposed_target": "Implement restricted permission model for System config (admin only, Approve level) and CRM settings (admin: RCEA, manager: RA read/approve). System config includes: matching weights, SLA thresholds, scoring parameters. CRM settings includes: routing rules, classification thresholds, anti-fraud configuration.",
+        "impact": "System integrity; configuration governance; change control",
+        "priority": "P1",
+        "human_decision_required": false,
+        "crud_vsra": {
+          "system_config": {
+            "admin": "A (approve only, no direct edit)",
+            "manager": "—",
+            "operator": "—",
+            "partner": "—",
+            "user": "—"
+          },
+          "crm_settings": {
+            "admin": "RCEA",
+            "manager": "RA (read + approve changes)",
+            "operator": "—",
+            "partner": "—",
+            "user": "—"
+          }
+        }
+      }
+    ]
+  },
+  "permission_matrix_definition": {
+    "roles": ["admin", "manager", "operator", "partner", "user"],
+    "levels": {
+      "R": "Read",
+      "C": "Create",
+      "E": "Edit",
+      "A": "Approve"
+    },
+    "scopes": {
+      "own": "Resources owned by or assigned directly to the user",
+      "managed": "Resources under user's responsibility (assignments, team)",
+      "org": "Resources within user's organization",
+      "all": "All resources system-wide"
+    },
+    "resources": [
+      {
+        "resource": "Property",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCE", "user": "RCE"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "R", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "R", "operator": "—", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Project",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCEA", "user": "RCEA"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "R", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "R", "operator": "—", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Transaction",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "—", "user": "—"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "—", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "R", "operator": "—", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "User",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "RCE", "user": "RCE"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "R", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "R", "operator": "—", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Organization",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCE", "operator": "—", "partner": "—", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "—", "operator": "—", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "OrganizationMember",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "R", "user": "—"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "R", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "—", "operator": "—", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Service",
+        "matrix": {
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCE", "user": "R"}
+        }
+      },
+      {
+        "resource": "ServiceOrder",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "RCE", "user": "RCE"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "RCE", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Payment",
+        "matrix": {
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "—", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Lead",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "RCE", "user": "—"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "RCE", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "LeadPurchase",
+        "matrix": {
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "—", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Document",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCEA", "user": "RCEA"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCE", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCE", "operator": "—", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Visit",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCE", "user": "R"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCE", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Match",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "R", "user": "R"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "R", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Conversation",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCE", "user": "RCE"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCE", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Negotiation",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCE", "user": "R"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "RCE", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "RCEA", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "AgentCredit",
+        "matrix": {
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "—", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "CRM settings",
+        "matrix": {
+          "all": {"admin": "RCEA", "manager": "RA", "operator": "—", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "System config",
+        "matrix": {
+          "all": {"admin": "A", "manager": "—", "operator": "—", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "ApprovalWorkflow",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RA", "operator": "R", "partner": "R", "user": "R"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "R", "partner": "R", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RA", "operator": "R", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "Consent record",
+        "matrix": {
+          "own": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "RCE", "user": "RCE"},
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "RCE", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "PermissionAuditLog",
+        "matrix": {
+          "org": {"admin": "RA", "manager": "RA", "operator": "R", "partner": "—", "user": "—"},
+          "all": {"admin": "RA", "manager": "RA", "operator": "R", "partner": "—", "user": "—"}
+        }
+      },
+      {
+        "resource": "TemporaryPermission",
+        "matrix": {
+          "org": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "—", "user": "—"},
+          "all": {"admin": "RCEA", "manager": "RCEA", "operator": "RCE", "partner": "—", "user": "—"}
+        }
+      }
+    ]
+  },
+  "implementation_phases": {
+    "phase_1_security_foundation": {
+      "name": "Security Foundation",
+      "focus": "Permission levels, matrix, approval workflow, consent model, audit logging",
+      "extensions": [
+        "EXT-PERM-001",
+        "EXT-PERM-005",
+        "EXT-PERM-007",
+        "EXT-PERM-008",
+        "EXT-PERM-009",
+        "EXT-PERM-015",
+        "EXT-PERM-016"
+      ],
+      "estimated_effort_weeks": "4-6"
+    },
+    "phase_2_scope_and_hierarchy": {
+      "name": "Scope & Hierarchy",
+      "focus": "Permission scope, org hierarchy, role intersection, relationship permissions",
+      "extensions": [
+        "EXT-PERM-002",
+        "EXT-PERM-003",
+        "EXT-PERM-004",
+        "EXT-PERM-006",
+        "EXT-PERM-011",
+        "EXT-PERM-013",
+        "EXT-PERM-014"
+      ],
+      "estimated_effort_weeks": "3-4"
+    },
+    "phase_3_advanced": {
+      "name": "Advanced Features",
+      "focus": "Temporary grants, consent derivation, dynamic permission resolution",
+      "extensions": [
+        "EXT-PERM-010",
+        "EXT-PERM-012"
+      ],
+      "estimated_effort_weeks": "2-3"
+    }
+  }
+}

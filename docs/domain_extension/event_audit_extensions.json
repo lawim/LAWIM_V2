@@ -1,0 +1,321 @@
+{
+  "document": {
+    "id": "LAWIM-H16-EVT-EXT-V1",
+    "title": "Event & Audit Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Enriched catalog of all event, audit trail, typed event catalog, retention, privacy, consumer, correlation ID, and event sourcing extensions required for LAWIM_V2",
+    "sources": [
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §16 (Events/Observability)",
+      "Event model (Gold)"
+    ],
+    "total_extensions": 10,
+    "by_category": {
+      "event_audit": 10
+    }
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-EVT-001",
+      "source_concept": "Enriched Event entity (13 enriched attributes)",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16.1",
+      "source_rule_ids": ["GOLD-EVT-ENRICH-001"],
+      "current_target": "Event model",
+      "current_limitation": "Current V2 Event model has only id, kind (String), payload (JSON), and created_at. No entity_type, entity_id, actor_id, state tracking, source attribution, correlation, severity, privacy, or retention fields.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability",
+      "proposed_entity": "Event",
+      "proposed_structure": "Extend Event entity with: entity_type (String), entity_id (UUID), actor_id (UUID?), previous_state (String?), new_state (String?), transition (String?), source (Enum: system|user|webhook|cron|integration), correlation_id (UUID?), severity (Enum: debug|info|warning|error|critical), privacy_level (Enum: public|internal|restricted|confidential), retention_days (Int), metadata (JSON?), event_schema_version (Int). Current kind field mapped to event_type from typed catalog. Payload field remains JSON with per-event-type schemas documented.",
+      "required_fields": [
+        "Event.entity_type: String",
+        "Event.entity_id: UUID",
+        "Event.actor_id: UUID?",
+        "Event.previous_state: String?",
+        "Event.new_state: String?",
+        "Event.transition: String?",
+        "Event.source: Enum (system|user|webhook|cron|integration)",
+        "Event.correlation_id: UUID?",
+        "Event.severity: Enum (debug|info|warning|error|critical)",
+        "Event.privacy_level: Enum (public|internal|restricted|confidential)",
+        "Event.retention_days: Int",
+        "Event.metadata: JSON?",
+        "Event.event_schema_version: Int (default: 1)"
+      ],
+      "required_relations": [
+        "Event → Any entity: N:1 (via entity_type + entity_id)",
+        "Event → User (actor): N:1 (actor_id references User)"
+      ],
+      "required_events": [],
+      "required_permissions": [
+        "AUDIT: read events (authenticated, filtered by privacy_level)",
+        "AUDIT: read confidential events (admin only)",
+        "AUDIT: export events (admin, GDPR compliance)"
+      ],
+      "required_states": [
+        "Event.source ∈ {system, user, webhook, cron, integration}",
+        "Event.severity ∈ {debug, info, warning, error, critical}",
+        "Event.privacy_level ∈ {public, internal, restricted, confidential}"
+      ],
+      "H0.5_matrices_impacted": ["EVT-MAT-001 (Event Enrichment Fields)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-EVT-002",
+      "source_concept": "Typed event catalog (13 categories)",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16.2",
+      "source_rule_ids": ["GOLD-EVT-CATALOG-001"],
+      "current_target": "Event model (event_type)",
+      "current_limitation": "Current V2 uses free-form kind string without type validation, catalog, or structured payload schemas per event type.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability",
+      "proposed_entity": "Event (event_type catalog)",
+      "proposed_structure": "Implement typed event catalog with 13 categories: User (11 event types), Role/Trust (5), Property (11), Project/Dossier (9), Matching (7), Visit (7), Negotiation (7), Transaction (8), Payment (7), CRM (7), Organization (7), Approval (5), System (8). Total: ~99 typed events. Each event_type has defined payload schema, severity default, privacy default, retention tier, and consumer list. event_type validation enforced at write time.",
+      "required_fields": [
+        "Event.event_type: String (validated against catalog)",
+        "Event.payload: JSON (schema varies by event_type)"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [
+        "AUDIT: define event types (admin only)",
+        "AUDIT: read event catalog (any authenticated user)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["EVT-MAT-002 (Event Catalog Definition)", "EVT-MAT-003 (Payload Schemas)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Event catalog completeness: 99 event types across 13 categories as defined in EVENT_AUDIT_EXTENSION_MODEL.md §2. Additional event types may be needed per business domain. Confirm catalog is complete for H2 scope.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-EVT-003",
+      "source_concept": "Audit trail — all state transitions generate audit events",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16.3",
+      "source_rule_ids": ["GOLD-EVT-AUDIT-001", "GOLD-EVT-AUDIT-002"],
+      "current_target": "Event model / All entities",
+      "current_limitation": "No mandatory audit event requirement in V2; state transitions may not generate events; no standard audit event structure across entities.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability (cross-cutting)",
+      "proposed_entity": "Event (audit trail module, all entities)",
+      "proposed_structure": "Enforce mandatory audit events on every state transition across all entities. Audit event must include: entity_type, entity_id, previous_state, new_state, transition, actor_id, correlation_id, created_at. State transition matrix defined for Property (7 states), Project (8 states), Visit (5 states), Negotiation (5 states), Transaction (5 states), Lead (8 states), User (4 states), Organization (3 states). Naming convention: {entity_type}.status_changed for generic transitions; {entity_type}.{action} for specific events. Events are append-only with immutability guarantee.",
+      "required_fields": [
+        "Event.previous_state: String?",
+        "Event.new_state: String?",
+        "Event.transition: String?",
+        "Event.entity_type: String",
+        "Event.entity_id: UUID",
+        "Event.actor_id: UUID?"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [
+        "AUDIT: read audit trail (admin, manager, entity owner)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["EVT-MAT-004 (State Transition Audit Matrix)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-EVT-004",
+      "source_concept": "Retention policy per event type",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16 (design decision)",
+      "source_rule_ids": ["GOLD-EVT-RET-001"],
+      "current_target": "Event model (retention module)",
+      "current_limitation": "No retention policy exists in V2; events accumulate indefinitely with no archival or purge mechanism.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability",
+      "proposed_entity": "Event (retention policy engine)",
+      "proposed_structure": "Implement 5 retention tiers: Real-time (7d, debug events), Short-term (30d, info events), Medium-term (90d, warning events), Long-term (365d, error/critical events), Compliance (5y, GDPR/financial/legal hold). Default retention by category: User/Role/Trust/Transaction/Payment/Negotiation/Organization/Approval → 365d; Property/Project/Matching/Visit/CRM → 90d; System → 30d. Archival strategy: Hot (0-90d, PostgreSQL), Warm (91-365d, PostgreSQL + TimescaleDB), Cold (1-5y, object store Parquet/JSON, partitioned by year/month). Purge criteria: retention expired AND no legal hold AND no open investigation. Add retention_days field to Event entity, set at creation time based on event_type default.",
+      "required_fields": [
+        "Event.retention_days: Int (set from event_type default at creation)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "system.event_archived (payload: {archive_batch_id, event_count, target_storage})",
+        "system.event_purged (payload: {purge_batch_id, event_count, retention_tier})"
+      ],
+      "required_permissions": [
+        "AUDIT: configure retention policy (admin only)",
+        "AUDIT: trigger manual archive/purge (admin only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["EVT-MAT-005 (Retention Tiers)", "EVT-MAT-006 (Archival Strategy)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Data Lifecycle",
+      "human_decision_required": true,
+      "human_decision_question": "Retention durations: 7d (debug), 30d (info), 90d (warning), 365d (error/critical), 5y (compliance) as specified in EVENT_AUDIT_EXTENSION_MODEL.md §4.1. Category-level defaults may require adjustment per business/regulatory requirements.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-EVT-005",
+      "source_concept": "Privacy levels per event type",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16 (design decision)",
+      "source_rule_ids": ["GOLD-EVT-PRIV-001"],
+      "current_target": "Event model (privacy module)",
+      "current_limitation": "No privacy level concept in V2; all events have uniform visibility; no mechanism to restrict access to sensitive event payloads.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability",
+      "proposed_entity": "Event (privacy classification)",
+      "proposed_structure": "Implement 4 privacy levels: public (all authenticated users — badge_awarded, property.published), internal (platform staff/system — most events), restricted (involved parties + admin — offers, payments, transactions), confidential (admin only — GDPR, suspensions, fraud flags). Default privacy by category: User internal (exceptions: deleted→confidential, GDPR→confidential, suspended→restricted), Role/Trust internal (badge→public, role_change→restricted), Property internal (published→public, verified→public, claim→restricted), Negotiation/Transaction/Payment restricted, CRM internal (fraud→restricted), Organization internal (created/dissolved→public, suspended→restricted), System internal. Enforcement: API filter by privacy_level + user permission; payload masking for non-admin on confidential events; audit log access requires audit:read:{privacy_level} permission.",
+      "required_fields": [
+        "Event.privacy_level: Enum (public|internal|restricted|confidential)"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [
+        "AUDIT: read public events (any authenticated user)",
+        "AUDIT: read internal events (any authenticated user)",
+        "AUDIT: read restricted events (entity owner, assigned agent, admin)",
+        "AUDIT: read confidential events (admin only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["EVT-MAT-007 (Privacy Level Classification)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Security & Compliance",
+      "human_decision_required": true,
+      "human_decision_question": "Privacy level assignments: per-event-type defaults as specified in EVENT_AUDIT_EXTENSION_MODEL.md §5.2. Verify classification aligns with platform privacy policy and regulatory requirements.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-EVT-006",
+      "source_concept": "Event consumers (who needs to know)",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16 (design decision)",
+      "source_rule_ids": ["GOLD-EVT-CONSUME-001"],
+      "current_target": "Event model / Event bus",
+      "current_limitation": "No formal consumer registration or delivery guarantee system in V2; no event bus with consumer groups, retry, or dead letter queue.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability",
+      "proposed_entity": "Event (consumer infrastructure)",
+      "proposed_structure": "Define consumer matrix per event category: User events → Auth, notification, analytics, GDPR compliance; Role/Trust → Permission service, notification, scoring; Property → Search index, matching engine, notification, analytics; Project/Dossier → Matching, notification, workflow; Matching → Notification, project, analytics; Visit → Notification, calendar, CRM; Negotiation → Notification, transaction, analytics; Transaction → Document, payment, compliance; Payment → Billing, notification, ledger, compliance; CRM → Routing, notification, analytics, fraud; Organization → Auth, billing, notification; Approval → Notification, workflow, audit; System → Monitoring, alerting, SRE. Delivery: queue-based with at-least-once guarantee, ordered per entity partition, dead letter queue after 3 retries. External webhooks: admin-configurable endpoints with signing secret. Consumer registration: internal services (hardcoded subscription), webhooks (admin API), analytics (batch ETL).",
+      "required_fields": [],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [
+        "AUDIT: register webhook consumer (admin only)",
+        "AUDIT: view consumer status (admin, operations)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["EVT-MAT-008 (Consumer Matrix)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Integration Infrastructure",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-EVT-007",
+      "source_concept": "Correlation ID for event chains",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16.1",
+      "source_rule_ids": ["GOLD-EVT-CORR-001", "GOLD-EVT-CORR-002"],
+      "current_target": "Event model (correlation_id)",
+      "current_limitation": "No correlation ID in V2; events are isolated records with no mechanism to trace multi-step workflows across entities.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability",
+      "proposed_entity": "Event (correlation_id field + propagation)",
+      "proposed_structure": "Add correlation_id (UUID?) to Event. Generation scopes: Request (HTTP middleware → req_{uuid}), Workflow (workflow engine → wf_{uuid}), Business transaction (tx_{uuid}), Batch (batch_{uuid}). Propagation rules: child events inherit correlation_id from parent context; chained events carry same id; first event in chain generates new id; cross-entity events share id for same workflow. Used for idempotency (deduplication by correlation_id). Query capability: SELECT * FROM events WHERE correlation_id = :cid ORDER BY created_at for full workflow trace. Example chains: Property publishing (6 events), Lead-to-transaction (12 events with same correlation_id).",
+      "required_fields": [
+        "Event.correlation_id: UUID?"
+      ],
+      "required_relations": [
+        "Event → Event (parent): N:1 (via same correlation_id + created_at ordering)"
+      ],
+      "required_events": [],
+      "required_permissions": [
+        "AUDIT: query by correlation_id (admin, operations)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["EVT-MAT-009 (Correlation ID Strategy)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Integration Infrastructure",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-EVT-008",
+      "source_concept": "Event sourcing considerations",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16 (design decision)",
+      "source_rule_ids": ["GOLD-EVT-SOURCE-001", "GOLD-EVT-SOURCE-002"],
+      "current_target": "Event model / Architecture",
+      "current_limitation": "V2 uses entity-as-source-of-truth model. No event sourcing infrastructure, snapshot strategy, or schema versioning mechanism.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability (architectural)",
+      "proposed_entity": "Event store (architectural decision)",
+      "proposed_structure": "Adopt hybrid model for LAWIM_V2: entity tables as source of truth + enriched audit events as immutable log. Event store: append-only events table + materialized snapshots (every 100 events per aggregate or daily). State reconstruction via snapshot + incremental replay (normal path) or full replay (bootstrap/correction). Projections for query optimization. Event schema evolution: event_schema_version field; new event types added without migration; payload fields added with version increment; deprecated fields kept optional; removed types kept in catalog as DEPRECATED. No full event sourcing (state from events alone) — complexity deemed too high for current phase. Migration path: current generic Event model → typed events with schemas.",
+      "required_fields": [
+        "Event.event_schema_version: Int (default: 1)"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["EVT-MAT-010 (Event Sourcing Architecture)"],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 5 — Platform Evolution",
+      "human_decision_required": true,
+      "human_decision_question": "Event sourcing adoption: hybrid model (entity tables + audit events) recommended for LAWIM_V2. Full event sourcing (state from events only) is deferred. Confirm hybrid approach is acceptable for H2 scope.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-EVT-009",
+      "source_concept": "Severity classification",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16.1",
+      "source_rule_ids": ["GOLD-EVT-SEVERITY-001"],
+      "current_target": "Event model (severity)",
+      "current_limitation": "No severity concept in V2; all events treated equally with no operational triage capability.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability",
+      "proposed_entity": "Event (severity classification)",
+      "proposed_structure": "Add severity (Enum: debug|info|warning|error|critical) to Event. Default severity by event category: User: info (login→info, deleted→warning, GDPR→critical); Role/Trust: info; Property: info (claim→warning); Project/Dossier: info; Matching: info; Visit: info (absence→warning); Negotiation: info (silence_reminder→warning, failed→info); Transaction: info (failed→warning, disputed→warning); Payment: info (failed→warning, refunded→warning); CRM: info (fraud→warning, SLA→warning); Organization: info (suspended→critical); Approval: info; System: debug (cron→debug, error→error, warning→warning). Severity drives retention tier: debug→7d, info→30d, warning→90d, error/critical→365d. Severity used for alerting: warning→ops notification, error→incident, critical→P0 on-call.",
+      "required_fields": [
+        "Event.severity: Enum (debug|info|warning|error|critical)"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [
+        "SYSTEM: set severity (event producer)",
+        "OPS: configure severity thresholds (admin)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["EVT-MAT-011 (Severity Classification)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-EVT-010",
+      "source_concept": "Source attribution",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §16.1",
+      "source_rule_ids": ["GOLD-EVT-SOURCE-001"],
+      "current_target": "Event model (source + actor)",
+      "current_limitation": "No source or actor attribution in V2; cannot distinguish user-initiated events from system events without parsing payload.",
+      "extension_category": "event_audit",
+      "proposed_domain": "Domain 15: Events/Observability",
+      "proposed_entity": "Event (source attribution)",
+      "proposed_structure": "Add source (Enum: system|user|webhook|cron|integration) and actor_id (UUID?) to Event. system: automated processes (cron jobs, engine computation, system triggers). user: direct user action (API, dashboard, mobile). webhook: incoming webhook from external system. cron: scheduled job execution. integration: third-party integration (Campay, SMS gateway, email service). actor_id populated for source=user/webhook, null for source=system/cron. actor_id references User entity. source used for audit filtering (show only user events vs system events) and compliance (human action vs automated).",
+      "required_fields": [
+        "Event.source: Enum (system|user|webhook|cron|integration)",
+        "Event.actor_id: UUID?"
+      ],
+      "required_relations": [
+        "Event → User (actor): N:1 (actor_id references User, nullable)"
+      ],
+      "required_events": [],
+      "required_permissions": [
+        "AUDIT: filter by source (admin, operations)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["EVT-MAT-012 (Source Attribution)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    }
+  ]
+}

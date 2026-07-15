@@ -1,0 +1,1062 @@
+{
+  "document": {
+    "id": "LAWIM-H13-FINANCING-EXT-V1",
+    "title": "Financing Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Enriched catalog of all financing extension models for LAWIM_V2 — covering financing requests, product catalog, provider model, eligibility rules, applicant financial profiles, guarantees, contributions, repayment capacity, document requirements, financing matching, and decision tracking. LAWIM facilitates the match between demandeurs and financing products without replacing the financier.",
+    "sources": [
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §6 (Dossier/Project Model)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §7 (Matching Engine)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §3 (Service Model)",
+      "required_extensions.json (financing)",
+      "QUALIFICATION_EXTENSION_MODEL.md §10.5 (Financing Matrices)",
+      "CRM_EXTENSION_MODEL.md (Lead Scoring)"
+    ],
+    "total_extensions": 10,
+    "by_category": {
+      "request_and_applicant": 2,
+      "product_and_provider": 2,
+      "eligibility_and_capacity": 3,
+      "matching_and_decision": 3
+    }
+  },
+  "financing_types": {
+    "description": "12 financing types supported by the platform, covering real estate and property-related financing needs",
+    "values": [
+      {
+        "code": "mortgage_buy",
+        "label_fr": "Crédit Immobilier Achat",
+        "label_en": "Mortgage Buy",
+        "description": "Standard mortgage for purchasing a residential property",
+        "typical_term_min_months": 60,
+        "typical_term_max_months": 240,
+        "typical_interest_rate_min": 0.06,
+        "typical_interest_rate_max": 0.12,
+        "collateral_required": true,
+        "document_count_min": 8,
+        "document_count_max": 15
+      },
+      {
+        "code": "mortgage_construction",
+        "label_fr": "Crédit Immobilier Construction",
+        "label_en": "Mortgage Construction",
+        "description": "Financing for constructing a new residential property",
+        "typical_term_min_months": 60,
+        "typical_term_max_months": 240,
+        "typical_interest_rate_min": 0.07,
+        "typical_interest_rate_max": 0.13,
+        "collateral_required": true,
+        "document_count_min": 10,
+        "document_count_max": 18
+      },
+      {
+        "code": "mortgage_renovation",
+        "label_fr": "Crédit Rénovation",
+        "label_en": "Mortgage Renovation",
+        "description": "Financing for property renovation, extension, or improvement",
+        "typical_term_min_months": 36,
+        "typical_term_max_months": 120,
+        "typical_interest_rate_min": 0.08,
+        "typical_interest_rate_max": 0.14,
+        "collateral_required": true,
+        "document_count_min": 6,
+        "document_count_max": 12
+      },
+      {
+        "code": "personal_loan",
+        "label_fr": "Prêt Personnel Immobilier",
+        "label_en": "Personal Loan",
+        "description": "Unsecured personal loan for real estate-related expenses",
+        "typical_term_min_months": 12,
+        "typical_term_max_months": 60,
+        "typical_interest_rate_min": 0.10,
+        "typical_interest_rate_max": 0.20,
+        "collateral_required": false,
+        "document_count_min": 4,
+        "document_count_max": 8
+      },
+      {
+        "code": "lease",
+        "label_fr": "Crédit-Bail Immobilier",
+        "label_en": "Lease Financing",
+        "description": "Leasing or credit-bail for equipment, vehicles, or property",
+        "typical_term_min_months": 24,
+        "typical_term_max_months": 84,
+        "typical_interest_rate_min": 0.08,
+        "typical_interest_rate_max": 0.15,
+        "collateral_required": false,
+        "document_count_min": 5,
+        "document_count_max": 10
+      },
+      {
+        "code": "investment_financing",
+        "label_fr": "Financement Investissement",
+        "label_en": "Investment Financing",
+        "description": "Financing for investment properties (rental, buy-to-let, commercial)",
+        "typical_term_min_months": 60,
+        "typical_term_max_months": 240,
+        "typical_interest_rate_min": 0.07,
+        "typical_interest_rate_max": 0.12,
+        "collateral_required": true,
+        "document_count_min": 8,
+        "document_count_max": 14
+      },
+      {
+        "code": "construction_loan",
+        "label_fr": "Prêt Construction",
+        "label_en": "Construction Loan",
+        "description": "Short-term phased financing for construction projects",
+        "typical_term_min_months": 12,
+        "typical_term_max_months": 36,
+        "typical_interest_rate_min": 0.08,
+        "typical_interest_rate_max": 0.14,
+        "collateral_required": true,
+        "document_count_min": 8,
+        "document_count_max": 16
+      },
+      {
+        "code": "bridge_loan",
+        "label_fr": "Prêt Pont (Bridge Loan)",
+        "label_en": "Bridge Loan",
+        "description": "Short-term bridge financing between transactions",
+        "typical_term_min_months": 3,
+        "typical_term_max_months": 12,
+        "typical_interest_rate_min": 0.12,
+        "typical_interest_rate_max": 0.18,
+        "collateral_required": true,
+        "document_count_min": 5,
+        "document_count_max": 10
+      },
+      {
+        "code": "top_up_loan",
+        "label_fr": "Prêt Relais (Top-Up)",
+        "label_en": "Top-Up Loan",
+        "description": "Additional financing on an existing property",
+        "typical_term_min_months": 12,
+        "typical_term_max_months": 60,
+        "typical_interest_rate_min": 0.09,
+        "typical_interest_rate_max": 0.15,
+        "collateral_required": true,
+        "document_count_min": 5,
+        "document_count_max": 10
+      },
+      {
+        "code": "social_housing",
+        "label_fr": "Financement Social (Logement Social)",
+        "label_en": "Social Housing Financing",
+        "description": "Subsidized financing for social and affordable housing",
+        "typical_term_min_months": 120,
+        "typical_term_max_months": 240,
+        "typical_interest_rate_min": 0.04,
+        "typical_interest_rate_max": 0.08,
+        "collateral_required": true,
+        "document_count_min": 6,
+        "document_count_max": 12
+      },
+      {
+        "code": "business_loan",
+        "label_fr": "Prêt Commercial",
+        "label_en": "Business Loan",
+        "description": "Commercial real estate financing for business purposes",
+        "typical_term_min_months": 36,
+        "typical_term_max_months": 120,
+        "typical_interest_rate_min": 0.08,
+        "typical_interest_rate_max": 0.16,
+        "collateral_required": true,
+        "document_count_min": 8,
+        "document_count_max": 15
+      },
+      {
+        "code": "microfinance_loan",
+        "label_fr": "Microfinance Immobilière",
+        "label_en": "Microfinance Loan",
+        "description": "Small-scale housing microfinance for low-income applicants",
+        "typical_term_min_months": 6,
+        "typical_term_max_months": 36,
+        "typical_interest_rate_min": 0.15,
+        "typical_interest_rate_max": 0.30,
+        "collateral_required": false,
+        "document_count_min": 3,
+        "document_count_max": 6
+      }
+    ]
+  },
+  "provider_types": {
+    "description": "8 types of financing providers supported by the platform",
+    "values": [
+      {
+        "code": "bank",
+        "label": "Banque",
+        "label_en": "Bank",
+        "description": "Commercial bank regulated by the central bank (COBAC/BEAC)",
+        "typical_products": ["mortgage_buy", "mortgage_construction", "personal_loan", "construction_loan", "business_loan"],
+        "verification_level_required": "premium",
+        "integration_type": ["api", "manual_portal"]
+      },
+      {
+        "code": "microfinance",
+        "label": "Microfinance (EMF/MFI)",
+        "label_en": "Microfinance Institution",
+        "description": "Microfinance institution offering small-scale loans",
+        "typical_products": ["microfinance_loan", "personal_loan", "social_housing"],
+        "verification_level_required": "document",
+        "integration_type": ["manual_portal", "manual_email", "paper_based"]
+      },
+      {
+        "code": "credit_union",
+        "label": "Coopérative d'Épargne et de Crédit",
+        "label_en": "Credit Union",
+        "description": "Member-owned cooperative credit union",
+        "typical_products": ["personal_loan", "mortgage_buy", "social_housing"],
+        "verification_level_required": "document",
+        "integration_type": ["manual_email", "paper_based"]
+      },
+      {
+        "code": "insurance_company",
+        "label": "Compagnie d'Assurance",
+        "label_en": "Insurance Company",
+        "description": "Insurance company offering policy-backed loans and investment products",
+        "typical_products": ["personal_loan", "investment_financing"],
+        "verification_level_required": "document",
+        "integration_type": ["manual_portal", "manual_email"]
+      },
+      {
+        "code": "government_agency",
+        "label": "Agence Gouvernementale",
+        "label_en": "Government Agency",
+        "description": "Government housing finance agency offering subsidized loans",
+        "typical_products": ["social_housing", "mortgage_buy"],
+        "verification_level_required": "document",
+        "integration_type": ["manual_portal"]
+      },
+      {
+        "code": "fintech",
+        "label": "Fintech / Prêteur Digital",
+        "label_en": "Fintech / Digital Lender",
+        "description": "Digital lending platform offering fast, online financing",
+        "typical_products": ["personal_loan", "bridge_loan", "top_up_loan"],
+        "verification_level_required": "basic",
+        "integration_type": ["api"]
+      },
+      {
+        "code": "private_lender",
+        "label": "Prêteur Privé",
+        "label_en": "Private Lender",
+        "description": "Private individual or company offering short-term financing",
+        "typical_products": ["bridge_loan", "construction_loan", "top_up_loan"],
+        "verification_level_required": "document",
+        "integration_type": ["manual_email", "paper_based"]
+      },
+      {
+        "code": "cooperative",
+        "label": "Société Coopérative",
+        "label_en": "Cooperative Society",
+        "description": "Member-based cooperative offering housing loans to members",
+        "typical_products": ["personal_loan", "social_housing", "microfinance_loan"],
+        "verification_level_required": "basic",
+        "integration_type": ["manual_email", "paper_based"]
+      }
+    ]
+  },
+  "eligibility_rule_categories": {
+    "description": "11 eligibility rule categories covering all common financing product constraints",
+    "values": [
+      {
+        "code": "income",
+        "label": "Revenu",
+        "label_en": "Income",
+        "description": "Minimum income thresholds and income source requirements",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "Monthly income >= 500,000 XAF",
+          "Household income >= 750,000 XAF",
+          "Income source verifiable via payslip or bank statement"
+        ]
+      },
+      {
+        "code": "employment",
+        "label": "Emploi",
+        "label_en": "Employment",
+        "description": "Employment type, stability, and business age requirements",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "Employment type in {civil_servant, private_sector, self_employed}",
+          "Minimum 2 years in current employment",
+          "Minimum 3 years in business (self-employed)"
+        ]
+      },
+      {
+        "code": "age",
+        "label": "Âge",
+        "label_en": "Age",
+        "description": "Minimum and maximum age requirements at application and maturity",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "Age at application >= 21",
+          "Age at maturity <= 65",
+          "Age at maturity <= 70 (for certain products)"
+        ]
+      },
+      {
+        "code": "residency",
+        "label": "Résidence",
+        "label_en": "Residency",
+        "description": "Residency status and permit requirements",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "Resident of country = true",
+          "Valid residency permit required for non-nationals",
+          "Minimum 2 years of local residency"
+        ]
+      },
+      {
+        "code": "nationality",
+        "label": "Nationalité",
+        "label_en": "Nationality",
+        "description": "Nationality eligibility for specific products",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "Nationality in {CM} (product-specific)",
+          "Acceptance of dual nationality"
+        ]
+      },
+      {
+        "code": "credit_score",
+        "label": "Score de Crédit",
+        "label_en": "Credit Score",
+        "description": "Credit score minimums and credit history requirements",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "Credit score >= 600",
+          "No history of default in past 5 years",
+          "No active court-ordered debt"
+        ]
+      },
+      {
+        "code": "dti_ratio",
+        "label": "Ratio d'Endettement",
+        "label_en": "Debt-to-Income Ratio",
+        "description": "Maximum debt-to-income ratio for loan qualification",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "DTI ratio <= 40%",
+          "Total monthly payments / income <= 0.45",
+          "Housing expense ratio <= 30%"
+        ]
+      },
+      {
+        "code": "ltv_ratio",
+        "label": "Ratio Prêt-Valeur",
+        "label_en": "Loan-to-Value Ratio",
+        "description": "Maximum loan-to-value ratio based on appraisal",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "LTV <= 80% for standard purchase",
+          "LTV <= 70% for construction",
+          "LTV <= 60% for investment properties"
+        ]
+      },
+      {
+        "code": "contribution",
+        "label": "Apport Personnel",
+        "label_en": "Down Payment",
+        "description": "Minimum down payment and contribution requirements",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "Down payment >= 20% of property value",
+          "Own contribution >= 15% of project cost",
+          "Contribution source verifiable"
+        ]
+      },
+      {
+        "code": "collateral",
+        "label": "Garantie",
+        "label_en": "Collateral",
+        "description": "Collateral type, value, and encumbrance requirements",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "Collateral type in {land_deed, property_title, bank_guarantee}",
+          "Collateral value >= loan amount * 1.5",
+          "Collateral not encumbered by prior charges"
+        ]
+      },
+      {
+        "code": "geographic",
+        "label": "Géographique",
+        "label_en": "Geographic",
+        "description": "Geographic availability and property location constraints",
+        "severity_default": "hard_block",
+        "example_rules": [
+          "Property city in eligible cities list",
+          "Property located in covered region/department",
+          "Provider branch accessible within city"
+        ]
+      }
+    ]
+  },
+  "repayment_capacity_thresholds": {
+    "description": "Repayment capacity scoring thresholds used in capacity calculation",
+    "thresholds": {
+      "dti_ratio": {
+        "description": "Debt-to-Income Ratio thresholds for capacity classification",
+        "excellent": {"max": 0.20, "description": "Strong capacity — DTI ≤ 20%"},
+        "good": {"min": 0.21, "max": 0.30, "description": "Adequate capacity — DTI 21-30%"},
+        "fair": {"min": 0.31, "max": 0.40, "description": "Marginal capacity — DTI 31-40%"},
+        "weak": {"min": 0.41, "max": 0.50, "description": "Below threshold — DTI 41-50%"},
+        "insufficient": {"min": 0.51, "description": "Cannot afford — DTI > 50%"}
+      },
+      "default_max_dti": 0.40,
+      "formula": {
+        "repayment_capacity": "monthly_net_income - monthly_expenses - existing_loan_payments",
+        "dti_ratio": "(existing_loan_payments + proposed_monthly_payment) / monthly_net_income",
+        "ltv_ratio": "loan_amount / property_appraised_value",
+        "max_affordable_monthly": "monthly_net_income * max_dti_ratio - existing_loan_payments",
+        "max_affordable_loan": "PV(max_affordable_monthly, term_months, interest_rate)"
+      }
+    }
+  },
+  "document_requirements_matrix": {
+    "description": "Document requirements matrix defining mandatory (M), conditional (C), and not required (—) documents per financing type",
+    "documents": [
+      {"code": "DOC-ID-CARD", "name_fr": "Carte Nationale d'Identité", "category": "identity", "mortgage": "M", "personal": "M", "construction": "M", "bridge": "M", "social": "M", "microfinance": "M"},
+      {"code": "DOC-PASSPORT", "name_fr": "Passeport", "category": "identity", "mortgage": "C", "personal": "C", "construction": "C", "bridge": "C", "social": "C", "microfinance": "—"},
+      {"code": "DOC-RESIDENCE", "name_fr": "Carte de Séjour", "category": "identity", "mortgage": "C", "personal": "C", "construction": "C", "bridge": "C", "social": "C", "microfinance": "—"},
+      {"code": "DOC-PAYSLIP-3M", "name_fr": "Bulletins de Salaire (3 mois)", "category": "income", "mortgage": "M", "personal": "M", "construction": "M", "bridge": "—", "social": "M", "microfinance": "C"},
+      {"code": "DOC-BANK-STATEMENT-6M", "name_fr": "Relevés Bancaires (6 mois)", "category": "income", "mortgage": "M", "personal": "M", "construction": "M", "bridge": "M", "social": "M", "microfinance": "M"},
+      {"code": "DOC-TAX-RETURN", "name_fr": "Déclaration d'Impôts", "category": "income", "mortgage": "M", "personal": "C", "construction": "M", "bridge": "C", "social": "M", "microfinance": "—"},
+      {"code": "DOC-EMPLOYER-LETTER", "name_fr": "Attestation d'Emploi", "category": "employment", "mortgage": "M", "personal": "M", "construction": "M", "bridge": "—", "social": "M", "microfinance": "C"},
+      {"code": "DOC-RCCM", "name_fr": "Registre de Commerce", "category": "business", "mortgage": "C", "personal": "—", "construction": "M", "bridge": "—", "social": "—", "microfinance": "—"},
+      {"code": "DOC-BUSINESS-LICENSE", "name_fr": "Patente / Licence", "category": "business", "mortgage": "C", "personal": "—", "construction": "M", "bridge": "—", "social": "—", "microfinance": "—"},
+      {"code": "DOC-TAX-CLEARANCE", "name_fr": "Quitus Fiscal", "category": "business", "mortgage": "—", "personal": "—", "construction": "M", "bridge": "C", "social": "—", "microfinance": "—"},
+      {"code": "DOC-PROPERTY-TITLE", "name_fr": "Titre Foncier", "category": "property", "mortgage": "M", "personal": "C", "construction": "M", "bridge": "M", "social": "M", "microfinance": "C"},
+      {"code": "DOC-SALE-AGREEMENT", "name_fr": "Compromis de Vente", "category": "property", "mortgage": "M", "personal": "—", "construction": "—", "bridge": "—", "social": "M", "microfinance": "—"},
+      {"code": "DOC-CADASTRAL-PLAN", "name_fr": "Plan Cadastral", "category": "property", "mortgage": "—", "personal": "—", "construction": "M", "bridge": "M", "social": "—", "microfinance": "—"},
+      {"code": "DOC-CONSTRUCTION-PERMIT", "name_fr": "Permis de Construire", "category": "property", "mortgage": "—", "personal": "—", "construction": "M", "bridge": "M", "social": "—", "microfinance": "—"},
+      {"code": "DOC-APPRAISAL", "name_fr": "Rapport d'Évaluation", "category": "property", "mortgage": "M", "personal": "—", "construction": "M", "bridge": "M", "social": "M", "microfinance": "—"},
+      {"code": "DOC-DEED-OF-SALE", "name_fr": "Acte de Vente", "category": "legal", "mortgage": "M", "personal": "—", "construction": "—", "bridge": "—", "social": "M", "microfinance": "—"},
+      {"code": "DOC-MARRIAGE-CERT", "name_fr": "Acte de Mariage", "category": "legal", "mortgage": "C", "personal": "C", "construction": "C", "bridge": "—", "social": "C", "microfinance": "—"},
+      {"code": "DOC-GUARANTEE-LETTER", "name_fr": "Lettre de Garantie", "category": "guarantee", "mortgage": "M", "personal": "C", "construction": "M", "bridge": "M", "social": "M", "microfinance": "C"},
+      {"code": "DOC-CONTRIBUTION-PROOF", "name_fr": "Preuve d'Apport Personnel", "category": "financial", "mortgage": "M", "personal": "M", "construction": "M", "bridge": "M", "social": "M", "microfinance": "M"},
+      {"code": "DOC-INSURANCE", "name_fr": "Attestation d'Assurance", "category": "financial", "mortgage": "M", "personal": "C", "construction": "M", "bridge": "M", "social": "—", "microfinance": "—"}
+    ]
+  },
+  "decision_reason_codes": {
+    "description": "Standardized decision reason codes for financing decisions, organized by category",
+    "categories": [
+      {
+        "code": "insufficient_income",
+        "label": "Revenu insuffisant",
+        "label_en": "Insufficient Income",
+        "reasons": [
+          {"code": "INC-001", "label_fr": "Revenu mensuel inférieur au minimum requis", "label_en": "Monthly income below minimum requirement"},
+          {"code": "INC-002", "label_fr": "Revenu non vérifiable", "label_en": "Income source cannot be verified"}
+        ]
+      },
+      {
+        "code": "debt_ratio",
+        "label": "Ratio d'endettement",
+        "label_en": "Debt Ratio",
+        "reasons": [
+          {"code": "DTI-001", "label_fr": "Ratio d'endettement dépasse le maximum autorisé", "label_en": "Debt-to-income ratio exceeds maximum"},
+          {"code": "DTI-002", "label_fr": "Capacité de remboursement insuffisante", "label_en": "Insufficient repayment capacity"}
+        ]
+      },
+      {
+        "code": "credit_history",
+        "label": "Historique de crédit",
+        "label_en": "Credit History",
+        "reasons": [
+          {"code": "CRD-001", "label_fr": "Historique de crédit défavorable", "label_en": "Unfavorable credit history"},
+          {"code": "CRD-002", "label_fr": "Score de crédit inférieur au minimum requis", "label_en": "Credit score below minimum"},
+          {"code": "CRD-003", "label_fr": "Antécédent de défaut de paiement", "label_en": "Previous payment default"}
+        ]
+      },
+      {
+        "code": "collateral",
+        "label": "Garantie",
+        "label_en": "Collateral",
+        "reasons": [
+          {"code": "COL-001", "label_fr": "Valeur de la garantie insuffisante", "label_en": "Collateral value below requirement"},
+          {"code": "COL-002", "label_fr": "Titre foncier non valide ou grevé", "label_en": "Land title invalid or encumbered"},
+          {"code": "COL-003", "label_fr": "Garant ne répond pas aux critères", "label_en": "Guarantor does not meet criteria"}
+        ]
+      },
+      {
+        "code": "documentation",
+        "label": "Documentation",
+        "label_en": "Documentation",
+        "reasons": [
+          {"code": "DOC-001", "label_fr": "Documents requis incomplets", "label_en": "Required documents missing"},
+          {"code": "DOC-002", "label_fr": "Documents non conformes", "label_en": "Documents do not meet requirements"},
+          {"code": "DOC-003", "label_fr": "Documents expirés", "label_en": "Documents expired"}
+        ]
+      },
+      {
+        "code": "eligibility",
+        "label": "Éligibilité",
+        "label_en": "Eligibility",
+        "reasons": [
+          {"code": "ELG-001", "label_fr": "Âge hors des limites autorisées", "label_en": "Age outside allowable range"},
+          {"code": "ELG-002", "label_fr": "Nationalité non éligible", "label_en": "Nationality not accepted"},
+          {"code": "ELG-003", "label_fr": "Résidence non conforme", "label_en": "Residency requirement not met"},
+          {"code": "ELG-004", "label_fr": "Type d'emploi non accepté", "label_en": "Employment type not accepted"}
+        ]
+      },
+      {
+        "code": "policy",
+        "label": "Politique interne",
+        "label_en": "Internal Policy",
+        "reasons": [
+          {"code": "POL-001", "label_fr": "Politique interne du prêteur", "label_en": "Internal policy decline"},
+          {"code": "POL-002", "label_fr": "Plafond mensuel de demandes atteint", "label_en": "Provider monthly quota reached"}
+        ]
+      },
+      {
+        "code": "other",
+        "label": "Autre",
+        "label_en": "Other",
+        "reasons": [
+          {"code": "OTH-001", "label_fr": "Autre raison (voir explications)", "label_en": "Other reason (see explanation)"}
+        ]
+      }
+    ]
+  },
+  "match_scoring_algorithm": {
+    "description": "Financing match scoring algorithm weighting and component definitions",
+    "formula": "match_score = eligibility_weight * eligibility_score + capacity_weight * capacity_score + product_fit_weight * product_fit_score + preference_weight * preference_score",
+    "components": [
+      {
+        "name": "eligibility",
+        "weight": 0.50,
+        "description": "Eligibility rule evaluation result",
+        "score_mapping": {
+          "eligible": 1.0,
+          "conditionally_eligible": 0.5,
+          "ineligible": 0.0
+        }
+      },
+      {
+        "name": "capacity",
+        "weight": 0.25,
+        "description": "Repayment capacity classification",
+        "score_mapping": {
+          "excellent": 1.0,
+          "good": 0.8,
+          "fair": 0.6,
+          "weak": 0.3,
+          "insufficient": 0.0
+        }
+      },
+      {
+        "name": "product_fit",
+        "weight": 0.15,
+        "description": "Composite fit score based on amount match, term match, and rate competitiveness",
+        "sub_components": [
+          {"name": "amount_match", "weight_within": 0.40, "method": "requested_amount / max_amount (capped at 1.0)"},
+          {"name": "term_match", "weight_within": 0.30, "method": "preferred_term within [min_term, max_term] ? 1.0 : decay"},
+          {"name": "rate_competitiveness", "weight_within": 0.30, "method": "inverse of interest_rate position within market range"}
+        ]
+      },
+      {
+        "name": "preference",
+        "weight": 0.10,
+        "description": "Match against demandeur's explicitly stated preferences",
+        "factors": ["provider_type_preference", "term_preference", "rate_sensitivity"]
+      }
+    ]
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-FIN-001",
+      "source_concept": "Financing Request entity — demandeur's application for financing",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §2",
+      "source_rule_ids": ["GOLD-FIN-001", "GOLD-FIN-002", "GOLD-FIN-003"],
+      "current_target": "FinancingRequest (new entity)",
+      "current_limitation": "V2 has no financing request concept. Financing intent is captured only as part of Project qualification without dedicated financing request entity, status tracking, or provider-facing workflow.",
+      "extension_category": "request_and_applicant",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "FinancingRequest (new entity)",
+      "proposed_structure": "Create FinancingRequest entity: id (UUID), user_id (UUID), project_id (UUID?), financing_type (Enum: 12 types), purpose_description (Text), requested_amount (Decimal), currency (String default XAF), preferred_term_months (Int?), preferred_interest_rate (Decimal?), monthly_payment_capacity (Decimal?), has_existing_loans (Boolean), existing_loan_total (Decimal?), urgency (Enum: low|medium|high|urgent), status (Enum: draft|submitted|matching|matched|documents_pending|documents_submitted|under_review|approved|rejected|withdrawn|funded|closed), readiness_score (Float?), submitted_at (DateTime?), matched_at (DateTime?), funded_at (DateTime?), closed_at (DateTime?), created_at (DateTime). Each request represents a demandeur's need for financing. Links to User (applicant), Project (property being financed), ApplicantFinancialProfile (financial situation), Guarantee (collateral), Contribution (down payment), FinancingMatch (match attempts), and FinancingDecision (provider decisions). LAWIM does not replace the financier — it facilitates the match between demandeur and provider.",
+      "required_fields": [
+        "FinancingRequest.id: UUID",
+        "FinancingRequest.user_id: UUID",
+        "FinancingRequest.financing_type: Enum (12 financing types)",
+        "FinancingRequest.requested_amount: Decimal",
+        "FinancingRequest.currency: String (default: XAF)",
+        "FinancingRequest.status: Enum (draft|submitted|matching|matched|documents_pending|documents_submitted|under_review|approved|rejected|withdrawn|funded|closed)"
+      ],
+      "required_relations": [
+        "FinancingRequest → User (demandeur): N:1",
+        "FinancingRequest → Project: 0:1 (property being financed)",
+        "FinancingRequest → ApplicantFinancialProfile: 1:1",
+        "FinancingRequest → Guarantee: 1:N",
+        "FinancingRequest → Contribution: 1:N",
+        "FinancingRequest → FinancingMatch: 1:N",
+        "FinancingRequest → FinancingDecision: 1:N"
+      ],
+      "required_events": [
+        "financing_request.created (payload: {user_id, financing_type, requested_amount})",
+        "financing_request.submitted (payload: {request_id, submitted_at})",
+        "financing_request.matched (payload: {request_id, product_id, match_score})",
+        "financing_request.documents_submitted (payload: {request_id, document_count})",
+        "financing_request.decision_received (payload: {request_id, decision_type})",
+        "financing_request.funded (payload: {request_id, funded_amount, funded_at})",
+        "financing_request.closed (payload: {request_id, reason})"
+      ],
+      "required_permissions": [
+        "FIN: create financing request (demandeur self-service)",
+        "FIN: read own requests (demandeur self)",
+        "FIN: read all requests (admin, agent)",
+        "FIN: update request status (system, admin)"
+      ],
+      "required_states": [
+        "FinancingRequest.status ∈ {draft, submitted, matching, matched, documents_pending, documents_submitted, under_review, approved, rejected, withdrawn, funded, closed}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-001 (Financing Request States)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 3 — Financing Pipeline",
+      "human_decision_required": true,
+      "human_decision_question": "Financing types: 12 types as specified (FINANCING_EXTENSION_MODEL.md §3.2) or subset for MVP (e.g., mortgage_buy + mortgage_construction + personal_loan + microfinance_loan)?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-FIN-002",
+      "source_concept": "Financing Product catalog — searchable, comparable loan products",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §3",
+      "source_rule_ids": ["GOLD-FIN-004", "GOLD-FIN-005", "GOLD-FIN-006"],
+      "current_target": "FinancingProduct (new entity)",
+      "current_limitation": "V2 has no financing product catalog. No mechanism to list, compare, or match loan products from multiple providers.",
+      "extension_category": "product_and_provider",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "FinancingProduct (new entity)",
+      "proposed_structure": "Create FinancingProduct entity: id (UUID), provider_id (UUID), product_code (String unique), product_name (JSON multilingual), description (JSON multilingual), financing_type (Enum), is_active (Boolean), min_amount (Decimal), max_amount (Decimal), currency (String), min_term_months (Int), max_term_months (Int), interest_rate_type (Enum: fixed|variable|mixed|tiered), interest_rate_min (Decimal), interest_rate_max (Decimal), effective_apr (Decimal?), processing_fee_percentage (Decimal?), processing_fee_fixed (Decimal?), insurance_required (Boolean), insurance_rate (Decimal?), collateral_required (Boolean), collateral_type (Enum[]?), guarantor_required (Boolean), min_guarantors (Int?), max_funding_time_days (Int), prepayment_allowed (Boolean), prepayment_fee (Decimal?), target_market (Enum[]: individual|professional|enterprise|diaspora|civil_servant|student), geographic_availability (String[]), featured (Boolean), featured_until (DateTime?), created_at (DateTime), updated_at (DateTime). Plus matching attributes: min_income_monthly, max_debt_to_income_ratio, min_contribution_percentage, max_loan_to_value_ratio, min_age, max_age, employment_type_accepted[], min_years_in_business, nationality_required[], residency_required, min_credit_score. Products are searchable by financing_type, amount, term, and geographic availability.",
+      "required_fields": [
+        "FinancingProduct.id: UUID",
+        "FinancingProduct.provider_id: UUID",
+        "FinancingProduct.product_code: String (unique)",
+        "FinancingProduct.product_name: JSON (multilingual)",
+        "FinancingProduct.financing_type: Enum",
+        "FinancingProduct.is_active: Boolean (default: true)",
+        "FinancingProduct.min_amount: Decimal",
+        "FinancingProduct.max_amount: Decimal",
+        "FinancingProduct.min_term_months: Int",
+        "FinancingProduct.max_term_months: Int",
+        "FinancingProduct.interest_rate_type: Enum (fixed|variable|mixed|tiered)"
+      ],
+      "required_relations": [
+        "FinancingProduct → FinancingProvider: N:1",
+        "FinancingProduct → EligibilityRule: 1:N",
+        "FinancingProduct → DocumentRequirement: 1:N",
+        "FinancingProduct → FinancingMatch: 1:N"
+      ],
+      "required_events": [
+        "product.created (payload: {provider_id, product_code, financing_type})",
+        "product.updated (payload: {product_id, fields_changed})",
+        "product.activated (payload: {product_id})",
+        "product.deactivated (payload: {product_id})"
+      ],
+      "required_permissions": [
+        "FIN: read products (all authenticated users)",
+        "FIN: manage products (provider admin, platform admin)"
+      ],
+      "required_states": [
+        "FinancingProduct.financing_type ∈ {12 types}",
+        "FinancingProduct.interest_rate_type ∈ {fixed, variable, mixed, tiered}",
+        "FinancingProduct.is_active ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-002 (Product Catalog)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 3 — Financing Pipeline",
+      "human_decision_required": true,
+      "human_decision_question": "Financing product matching attributes: include all 16 matching attributes as specified in FINANCING_EXTENSION_MODEL.md §3.3 or subset for initial MVP (income, DTI, LTV, contribution, collateral)?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-FIN-003",
+      "source_concept": "Financing Provider model — banks, microfinance, and other lenders",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §4",
+      "source_rule_ids": ["GOLD-FIN-007", "GOLD-FIN-008", "GOLD-FIN-009"],
+      "current_target": "FinancingProvider (new entity)",
+      "current_limitation": "V2 has no financing provider model. Financial institutions are not registered on the platform and their products, commissions, and integrations are not managed.",
+      "extension_category": "product_and_provider",
+      "proposed_domain": "Domain 12: Organization Model",
+      "proposed_entity": "FinancingProvider (new entity)",
+      "proposed_structure": "Create FinancingProvider entity: id (UUID), provider_type (Enum: bank|microfinance|credit_union|insurance_company|government_agency|fintech|private_lender|cooperative), provider_name (String), provider_code (String), registration_number (String?), license_number (String?), regulatory_body (String?), country (String default CM), headquarters_address (String?), contact_phone (String?), contact_email (String?), website (String?), logo_url (String?), description (Text?), years_in_operation (Int?), total_branches (Int?), coverage_cities (String[]), is_verified (Boolean), verification_status (Enum: unverified|pending|verified|suspended), commission_model (Enum: fixed_per_loan|percentage_of_loan|success_fee|subscription), commission_rate (Decimal?), integration_type (Enum: api|manual_email|manual_portal|paper_based), integration_status (Enum: not_connected|active|degraded|disconnected), api_endpoint (String?), api_key_last_rotated (DateTime?), contact_person_name (String?), contact_person_email (String?), contact_person_phone (String?), sla_response_days (Int default 5), max_concurrent_applications (Int?), monthly_application_limit (Int?), is_active (Boolean), activated_at (DateTime?), created_at (DateTime). Providers offer products, have eligibility rules, and receive financing applications through the platform. Commission is earned by LAWIM upon successful funding.",
+      "required_fields": [
+        "FinancingProvider.id: UUID",
+        "FinancingProvider.provider_type: Enum (8 types)",
+        "FinancingProvider.provider_name: String",
+        "FinancingProvider.provider_code: String (unique)",
+        "FinancingProvider.is_verified: Boolean (default: false)",
+        "FinancingProvider.verification_status: Enum (unverified|pending|verified|suspended)",
+        "FinancingProvider.commission_model: Enum",
+        "FinancingProvider.integration_type: Enum",
+        "FinancingProvider.is_active: Boolean (default: true)"
+      ],
+      "required_relations": [
+        "FinancingProvider → FinancingProduct: 1:N",
+        "FinancingProvider → EligibilityRule: 1:N (provider-level rules)",
+        "FinancingProvider → FinancingDecision: 1:N"
+      ],
+      "required_events": [
+        "provider.created (payload: {provider_name, provider_type})",
+        "provider.verified (payload: {provider_id, verified_by})",
+        "provider.activated (payload: {provider_id})",
+        "provider.deactivated (payload: {provider_id, reason})",
+        "provider.integration_status_changed (payload: {provider_id, old_status, new_status})"
+      ],
+      "required_permissions": [
+        "FIN: read providers (all authenticated users)",
+        "FIN: manage providers (platform admin only)",
+        "FIN: view provider commission (admin only)"
+      ],
+      "required_states": [
+        "FinancingProvider.provider_type ∈ {8 types}",
+        "FinancingProvider.verification_status ∈ {unverified, pending, verified, suspended}",
+        "FinancingProvider.integration_status ∈ {not_connected, active, degraded, disconnected}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-003 (Provider Types)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 3 — Financing Pipeline",
+      "human_decision_required": true,
+      "human_decision_question": "Provider types: all 8 types as specified (FINANCING_EXTENSION_MODEL.md §4.3) or initial focus on banks and microfinance institutions only?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-FIN-004",
+      "source_concept": "Eligibility rules engine — hard and soft constraints for financing products",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §5",
+      "source_rule_ids": ["GOLD-FIN-010", "GOLD-FIN-011", "GOLD-FIN-012"],
+      "current_target": "EligibilityRule (new entity) + evaluation engine",
+      "current_limitation": "V2 has no eligibility rules engine. Financing matching cannot evaluate applicant qualifications against product requirements.",
+      "extension_category": "eligibility_and_capacity",
+      "proposed_domain": "Domain 7: Matching Engine",
+      "proposed_entity": "EligibilityRule (new entity)",
+      "proposed_structure": "Create EligibilityRule entity: id (UUID), product_id (UUID?), provider_id (UUID?), rule_code (String unique), rule_name (String), rule_type (Enum: income|employment|age|residency|nationality|credit_score|dti_ratio|ltv_ratio|contribution|collateral|guarantor|business_age|documentation|geographic), operator (Enum: greater_than|greater_than_or_equal|less_than|less_than_or_equal|equal|not_equal|in|not_in|between|contains|matches_all|matches_any|custom_function), value (JSON), unit (String?), error_message (JSON multilingual), severity (Enum: hard_block|soft_warning|info), priority (Int), is_active (Boolean), effective_from (DateTime), effective_until (DateTime?), created_at (DateTime). Rules organized by categories (11 categories in §5.2). Evaluation flow: 1) Identify candidate products by financing_type match, 2) Geographic filter, 3) Target market filter, 4) Evaluate hard_block rules (any fail = product excluded), 5) Evaluate soft_warning rules (flagged but still eligible), 6) Score and rank eligible products.",
+      "required_fields": [
+        "EligibilityRule.id: UUID",
+        "EligibilityRule.rule_code: String (unique)",
+        "EligibilityRule.rule_type: Enum (11 categories)",
+        "EligibilityRule.operator: Enum",
+        "EligibilityRule.value: JSON",
+        "EligibilityRule.severity: Enum (hard_block|soft_warning|info)",
+        "EligibilityRule.is_active: Boolean (default: true)"
+      ],
+      "required_relations": [
+        "EligibilityRule → FinancingProduct: N:1 (product-level rule)",
+        "EligibilityRule → FinancingProvider: N:1 (provider-level rule)"
+      ],
+      "required_events": [
+        "eligibility_rule.created (payload: {rule_code, rule_type, severity})",
+        "eligibility_rule.updated (payload: {rule_id, fields_changed})",
+        "eligibility.check_completed (payload: {request_id, product_id, result, failed_rules})"
+      ],
+      "required_permissions": [
+        "FIN: read eligibility rules (all authenticated users)",
+        "FIN: manage rules (provider admin, platform admin)"
+      ],
+      "required_states": [
+        "EligibilityRule.severity ∈ {hard_block, soft_warning, info}",
+        "EligibilityRule.rule_type ∈ {11 categories}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-004 (Eligibility Rule Categories)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Financing Matching",
+      "human_decision_required": true,
+      "human_decision_question": "Eligibility rule severity: binary (hard_block only) or three-tier (hard_block + soft_warning + info) as specified? Three-tier provides better user experience by showing demandeurs why they nearly qualify.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-FIN-005",
+      "source_concept": "Applicant Financial Profile — comprehensive financial data collection",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §6",
+      "source_rule_ids": ["GOLD-FIN-013", "GOLD-FIN-014"],
+      "current_target": "ApplicantFinancialProfile (new entity)",
+      "current_limitation": "V2 has no financial profile concept. Applicant income, expenses, assets, and liabilities are not captured in a structured format for financing evaluation.",
+      "extension_category": "request_and_applicant",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "ApplicantFinancialProfile (new entity)",
+      "proposed_structure": "Create ApplicantFinancialProfile entity: id (UUID), financing_request_id (UUID), employment_status (Enum: civil_servant|private_sector_employee|self_employed|business_owner|freelancer|retiree|student|unemployed|homemaker), employer_name (String?), employer_sector (Enum: public|private|ngos|international|informal), job_title (String?), years_at_current_job (Decimal?), monthly_income (Decimal), income_currency (String default XAF), income_sources (JSON[]), additional_income (Decimal?), additional_income_description (String?), monthly_expenses (Decimal), expense_breakdown (JSON?), existing_loan_payments (Decimal?), total_assets (Decimal?), asset_breakdown (JSON?), total_liabilities (Decimal?), liability_breakdown (JSON?), has_bank_account (Boolean), bank_name (String?), account_type (Enum: checking|savings|both), years_banking (Decimal?), has_credit_history (Boolean), credit_score (Int?), credit_score_source (String?), has_mobile_money (Boolean), mobile_money_provider (String?), is_verified (Boolean), verification_method (Enum: self_declared|payslip|bank_statement|tax_return|employer_letter|account_aggregator), verified_at (DateTime?), verified_by (UUID?), created_at (DateTime), updated_at (DateTime). 6 verification methods with trust levels from Low (self_declared) to High (account_aggregator). Financial profile is used for eligibility evaluation, repayment capacity calculation, and match scoring.",
+      "required_fields": [
+        "ApplicantFinancialProfile.id: UUID",
+        "ApplicantFinancialProfile.financing_request_id: UUID",
+        "ApplicantFinancialProfile.employment_status: Enum",
+        "ApplicantFinancialProfile.monthly_income: Decimal",
+        "ApplicantFinancialProfile.monthly_expenses: Decimal",
+        "ApplicantFinancialProfile.is_verified: Boolean (default: false)"
+      ],
+      "required_relations": [
+        "ApplicantFinancialProfile → FinancingRequest: 1:1",
+        "ApplicantFinancialProfile → RepaymentCapacity: 1:1 (computed from profile)"
+      ],
+      "required_events": [
+        "financial_profile.created (payload: {financing_request_id})",
+        "financial_profile.updated (payload: {profile_id, fields_changed})",
+        "financial_profile.verified (payload: {profile_id, method, verified_by})"
+      ],
+      "required_permissions": [
+        "FIN: create/update own financial profile (demandeur self)",
+        "FIN: read financial profile (demandeur self, admin, provider upon submission)"
+      ],
+      "required_states": [
+        "ApplicantFinancialProfile.employment_status ∈ {9 types}",
+        "ApplicantFinancialProfile.verification_method ∈ {6 methods}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-005 (Financial Profile Fields)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 3 — Financing Pipeline",
+      "human_decision_required": true,
+      "human_decision_question": "Financial profile verification: 6 verification methods as specified (self_declared to account_aggregator) or simplified (self_declared + payslip + bank_statement only) for MVP?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-FIN-006",
+      "source_concept": "Guarantee and Contribution tracking — collateral and down payment management",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §7",
+      "source_rule_ids": ["GOLD-FIN-015", "GOLD-FIN-016"],
+      "current_target": "Guarantee + Contribution (new entities)",
+      "current_limitation": "V2 has no guarantee or contribution tracking. Collateral and down payment information is not captured as structured data.",
+      "extension_category": "eligibility_and_capacity",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Guarantee + Contribution",
+      "proposed_structure": "Create Guarantee entity: id (UUID), financing_request_id (UUID), guarantee_type (Enum: property_mortgage|land_deed|bank_guarantee|personal_guarantee|corporate_guarantee|life_insurance|savings_account_lien|securities_collateral|vehicle_title|equipment_lien|guarantee_fund), description (Text), estimated_value (Decimal), value_currency (String), valuation_method (Enum: appraisal|market_estimate|tax_value|self_declared), appraisal_document_url (String?), owner_name (String), owner_relationship (Enum: self|spouse|parent|sibling|business_partner|third_party), is_encumbered (Boolean), existing_charges (Decimal?), net_equity (Decimal?), status (Enum: offered|verified|accepted|rejected|released), verification_status (Enum: unverified|pending|verified|rejected), verified_by (UUID?), verified_at (DateTime?), document_url (String?), notes (Text?), created_at (DateTime). Create Contribution entity: id (UUID), financing_request_id (UUID), contribution_type (Enum: cash_down_payment|existing_property_equity|land_contribution|material_contribution|labor_contribution|government_subsidy|employer_assistance|family_contribution|cooperative_contribution), description (Text), amount (Decimal), currency (String), percentage_of_total (Float?), source_description (Text?), source_verification (Enum: unverified|bank_statement|sale_agreement|gift_letter|subsidy_letter|payroll_deduction), availability_date (DateTime?), is_committed (Boolean), commitment_proof_url (String?), status (Enum: planned|committed|verified|received|refunded), created_at (DateTime). Rules: minimum contribution % by product, contribution source verification over 10M XAF, multiple guarantees allowed, guarantee substitution permitted.",
+      "required_fields": [
+        "Guarantee.id: UUID",
+        "Guarantee.financing_request_id: UUID",
+        "Guarantee.guarantee_type: Enum",
+        "Guarantee.estimated_value: Decimal",
+        "Guarantee.status: Enum (offered|verified|accepted|rejected|released)",
+        "Contribution.id: UUID",
+        "Contribution.financing_request_id: UUID",
+        "Contribution.contribution_type: Enum",
+        "Contribution.amount: Decimal",
+        "Contribution.status: Enum (planned|committed|verified|received|refunded)"
+      ],
+      "required_relations": [
+        "Guarantee → FinancingRequest: N:1",
+        "Contribution → FinancingRequest: N:1"
+      ],
+      "required_events": [
+        "guarantee.created (payload: {request_id, guarantee_type, estimated_value})",
+        "guarantee.verified (payload: {guarantee_id, verified_by})",
+        "guarantee.accepted (payload: {guarantee_id})",
+        "contribution.created (payload: {request_id, contribution_type, amount})",
+        "contribution.verified (payload: {contribution_id, verified_by})",
+        "contribution.received (payload: {contribution_id, received_at})"
+      ],
+      "required_permissions": [
+        "FIN: manage guarantees (demandeur self, admin)",
+        "FIN: manage contributions (demandeur self, admin)",
+        "FIN: verify guarantee/contribution (admin, provider)"
+      ],
+      "required_states": [
+        "Guarantee.status ∈ {offered, verified, accepted, rejected, released}",
+        "Guarantee.guarantee_type ∈ {11 types}",
+        "Contribution.status ∈ {planned, committed, verified, received, refunded}",
+        "Contribution.contribution_type ∈ {9 types}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-006 (Guarantee Types)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Financing Matching",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-FIN-007",
+      "source_concept": "Repayment Capacity calculation — DTI-based affordability analysis",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §8",
+      "source_rule_ids": ["GOLD-FIN-017", "GOLD-FIN-018"],
+      "current_target": "RepaymentCapacity (new entity) + calculation engine",
+      "current_limitation": "V2 has no repayment capacity calculation. Cannot determine whether an applicant can afford a proposed loan based on their financial profile.",
+      "extension_category": "eligibility_and_capacity",
+      "proposed_domain": "Domain 7: Matching Engine",
+      "proposed_entity": "RepaymentCapacity (new entity)",
+      "proposed_structure": "Create RepaymentCapacity entity: id (UUID), financing_request_id (UUID), monthly_net_income (Decimal computed), monthly_expenses (Decimal), existing_loan_payments (Decimal), disposable_income (Decimal), proposed_monthly_payment (Decimal?), dti_ratio (Float computed), max_affordable_monthly_payment (Decimal), max_affordable_loan_amount (Decimal), ltv_ratio (Float?), repayment_capacity_score (Enum: excellent|good|fair|weak|insufficient), score_thresholds (JSON), used_dti_threshold (Float default 0.40), used_interest_rate (Decimal), used_term_months (Int), calculated_at (DateTime), notes (Text?). Formula: repayment_capacity = monthly_net_income - monthly_expenses - existing_loan_payments; DTI = (existing_loan_payments + proposed_monthly_payment) / monthly_net_income; max_affordable_loan = PV(monthly_net_income * max_dti - existing_loan_payments, term, rate). Scoring: excellent (DTI ≤ 20%), good (21-30%), fair (31-40%), weak (41-50%), insufficient (> 50%). LTV = loan_amount / property_appraised_value. Calculation triggers when financial profile is updated or a match is proposed.",
+      "required_fields": [
+        "RepaymentCapacity.id: UUID",
+        "RepaymentCapacity.financing_request_id: UUID",
+        "RepaymentCapacity.monthly_net_income: Decimal",
+        "RepaymentCapacity.monthly_expenses: Decimal",
+        "RepaymentCapacity.disposable_income: Decimal",
+        "RepaymentCapacity.dti_ratio: Float",
+        "RepaymentCapacity.repayment_capacity_score: Enum (excellent|good|fair|weak|insufficient)",
+        "RepaymentCapacity.max_affordable_loan_amount: Decimal",
+        "RepaymentCapacity.calculated_at: DateTime"
+      ],
+      "required_relations": [
+        "RepaymentCapacity → FinancingRequest: 1:1",
+        "RepaymentCapacity → ApplicantFinancialProfile: 1:1 (source data)"
+      ],
+      "required_events": [
+        "capacity.calculated (payload: {request_id, dti_ratio, capacity_score, max_affordable_loan})",
+        "capacity.recalculated (payload: {request_id, previous_dti, new_dti, reason})"
+      ],
+      "required_permissions": [
+        "FIN: read repayment capacity (demandeur self, admin, provider upon submission)"
+      ],
+      "required_states": [
+        "RepaymentCapacity.repayment_capacity_score ∈ {excellent, good, fair, weak, insufficient}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-007 (Capacity Thresholds)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 3 — Financing Pipeline",
+      "human_decision_required": true,
+      "human_decision_question": "DTI thresholds for capacity scoring: Gold defaults (excellent ≤20%, good 21-30%, fair 31-40%, weak 41-50%, insufficient >50%) — accept or adjust for African market context where informal income is more common?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-FIN-008",
+      "source_concept": "Document requirements per financing type — mandatory and conditional document lists",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §9",
+      "source_rule_ids": ["GOLD-FIN-019", "GOLD-FIN-020"],
+      "current_target": "DocumentRequirement + DocumentSubmission (new entities)",
+      "current_limitation": "V2 has no financing document management. Required documents for loan applications are not defined, tracked, or validated.",
+      "extension_category": "request_and_applicant",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "DocumentRequirement + DocumentSubmission",
+      "proposed_structure": "Create DocumentRequirement: id (UUID), product_id (UUID?), financing_type (Enum?), document_code (String unique), document_name (JSON multilingual), description (JSON multilingual), category (Enum: identity|income|employment|property|legal|financial|guarantee|business|personal), requirement_level (Enum: mandatory|conditional|recommended), condition_expression (JSON?), accepts_alternatives (Boolean), alternative_document_codes (String[]?), max_age_months (Int?), requires_notarization (Boolean), requires_translation (Boolean), accepted_formats (String[] default [pdf, jpg, png]), max_file_size_mb (Int default 10), is_active (Boolean), sort_order (Int), created_at (DateTime). Create DocumentSubmission: id (UUID), financing_request_id (UUID), document_requirement_id (UUID), document_url (String), document_hash (String SHA-256), file_type (String), file_size_bytes (Int), status (Enum: pending|uploaded|validated|rejected|expired), uploaded_at (DateTime), validated_by (UUID?), validated_at (DateTime?), rejection_reason (Text?), is_alternative (Boolean), alternative_for_code (String?), expires_at (DateTime?), notes (Text?). 20 document types defined with mandatory/conditional/- matrix per financing type (§9.2). Document submission triggers validation workflow.",
+      "required_fields": [
+        "DocumentRequirement.id: UUID",
+        "DocumentRequirement.document_code: String (unique)",
+        "DocumentRequirement.category: Enum (9 categories)",
+        "DocumentRequirement.requirement_level: Enum (mandatory|conditional|recommended)",
+        "DocumentSubmission.id: UUID",
+        "DocumentSubmission.financing_request_id: UUID",
+        "DocumentSubmission.document_requirement_id: UUID",
+        "DocumentSubmission.document_url: String",
+        "DocumentSubmission.document_hash: String",
+        "DocumentSubmission.status: Enum (pending|uploaded|validated|rejected|expired)"
+      ],
+      "required_relations": [
+        "DocumentRequirement → FinancingProduct: N:1 (product-specific)",
+        "DocumentRequirement → FinancingRequest: N:M (via DocumentSubmission)",
+        "DocumentSubmission → FinancingRequest: N:1",
+        "DocumentSubmission → DocumentRequirement: N:1"
+      ],
+      "required_events": [
+        "document.requirement_created (payload: {document_code, financing_type, requirement_level})",
+        "document.uploaded (payload: {submission_id, request_id, document_code})",
+        "document.validated (payload: {submission_id, validated_by})",
+        "document.rejected (payload: {submission_id, reason})",
+        "document.expiring (payload: {submission_id, days_until_expiry})"
+      ],
+      "required_permissions": [
+        "FIN: upload documents (demandeur self)",
+        "FIN: validate documents (admin, provider)",
+        "FIN: read document status (demandeur self, admin, provider)"
+      ],
+      "required_states": [
+        "DocumentRequirement.requirement_level ∈ {mandatory, conditional, recommended}",
+        "DocumentSubmission.status ∈ {pending, uploaded, validated, rejected, expired}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-008 (Document Matrix)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Financing Matching",
+      "human_decision_required": true,
+      "human_decision_question": "Document matrix: 20 document types with Mandatory/Conditional/Not Required per 6 financing types as specified in FINANCING_EXTENSION_MODEL.md §9.2 — confirm matrix or adjust per market/regulatory requirements?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-FIN-009",
+      "source_concept": "Financing Match — demandeur to product matching with scoring",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §10",
+      "source_rule_ids": ["GOLD-FIN-021", "GOLD-FIN-022", "GOLD-FIN-023"],
+      "current_target": "FinancingMatch (new entity) + scoring algorithm",
+      "current_limitation": "V2 has no financing match concept. No mechanism to match financing requests with products, score compatibility, or track match lifecycle.",
+      "extension_category": "matching_and_decision",
+      "proposed_domain": "Domain 7: Matching Engine",
+      "proposed_entity": "FinancingMatch (new entity)",
+      "proposed_structure": "Create FinancingMatch entity: id (UUID), financing_request_id (UUID), product_id (UUID), provider_id (UUID), match_type (Enum: auto|manual|demandeur_selected|agent_selected), match_score (Float? 0.0-1.0), eligibility_result (Enum: eligible|conditionally_eligible|ineligible), eligibility_details (JSON), failed_rules (JSON[]), warnings (JSON[]), proposed_amount (Decimal), proposed_term_months (Int), proposed_interest_rate (Decimal), proposed_monthly_payment (Decimal), total_cost_of_credit (Decimal), effective_apr (Decimal), status (Enum: pending|selected|submitted|in_progress|successful|unsuccessful|expired), selected_at (DateTime?), submitted_to_provider_at (DateTime?), provider_responded_at (DateTime?), expires_at (DateTime?), notes (Text?), created_at (DateTime). Match scoring algorithm: eligibility_weight (0.50) + capacity_weight (0.25) + product_fit_weight (0.15) + preference_weight (0.10). Match lifecycle: eligibility check → match created → presented → selected → dossier preparation → submitted to provider → provider review → decision. LAWIM facilitates the match; the provider makes the decision.",
+      "required_fields": [
+        "FinancingMatch.id: UUID",
+        "FinancingMatch.financing_request_id: UUID",
+        "FinancingMatch.product_id: UUID",
+        "FinancingMatch.provider_id: UUID",
+        "FinancingMatch.match_type: Enum (auto|manual|demandeur_selected|agent_selected)",
+        "FinancingMatch.eligibility_result: Enum (eligible|conditionally_eligible|ineligible)",
+        "FinancingMatch.status: Enum (pending|selected|submitted|in_progress|successful|unsuccessful|expired)",
+        "FinancingMatch.created_at: DateTime"
+      ],
+      "required_relations": [
+        "FinancingMatch → FinancingRequest: N:1",
+        "FinancingMatch → FinancingProduct: N:1",
+        "FinancingMatch → FinancingProvider: N:1",
+        "FinancingMatch → FinancingDecision: 1:1 (resulting decision)"
+      ],
+      "required_events": [
+        "match.created (payload: {request_id, product_id, match_score})",
+        "match.selected (payload: {match_id, selected_at})",
+        "match.submitted (payload: {match_id, submitted_to_provider_at})",
+        "match.completed (payload: {match_id, result, decision_id})",
+        "match.expired (payload: {match_id, reason})"
+      ],
+      "required_permissions": [
+        "FIN: read matches (demandeur self, admin, provider for own products)",
+        "FIN: select match (demandeur self, agent)",
+        "FIN: submit match (demandeur self, admin)"
+      ],
+      "required_states": [
+        "FinancingMatch.status ∈ {pending, selected, submitted, in_progress, successful, unsuccessful, expired}",
+        "FinancingMatch.eligibility_result ∈ {eligible, conditionally_eligible, ineligible}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-009 (Match Scoring)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Financing Matching",
+      "human_decision_required": true,
+      "human_decision_question": "Match scoring weights: eligibility=0.50, capacity=0.25, product_fit=0.15, preference=0.10 as specified — confirm weighting or adjust for market? Consider whether eligibility should have even higher weight (0.60-0.70) given regulatory nature of financing.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-FIN-010",
+      "source_concept": "Financing Decision tracking — provider decision management with reason codes",
+      "source_document": "FINANCING_EXTENSION_MODEL.md §11",
+      "source_rule_ids": ["GOLD-FIN-024", "GOLD-FIN-025", "GOLD-FIN-026"],
+      "current_target": "FinancingDecision (new entity) + reason code catalog",
+      "current_limitation": "V2 has no financing decision tracking. Provider decisions, reason codes, conditions, counter-offers, and commission tracking are not captured.",
+      "extension_category": "matching_and_decision",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "FinancingDecision (new entity)",
+      "proposed_structure": "Create FinancingDecision entity: id (UUID), financing_match_id (UUID), financing_request_id (UUID), provider_id (UUID), decision_type (Enum: approved|rejected|conditional|pending_documents|under_review|withdrawn|expired), decision_date (DateTime), decision_reason_code (String? from standard catalog), decision_reason_text (Text?), decision_details (JSON?), approved_amount (Decimal?), approved_term_months (Int?), approved_interest_rate (Decimal?), approved_conditions (JSON?), rejection_category (Enum: credit_history|insufficient_income|debt_ratio|collateral|documentation|eligibility|policy|other), rejection_details (JSON?), counter_offer_amount (Decimal?), counter_offer_terms (JSON?), provider_reference (String?), provider_officer_name (String?), provider_officer_contact (String?), estimated_funding_date (DateTime?), funded_at (DateTime?), funded_amount (Decimal?), commission_earned (Decimal?), commission_currency (String default XAF), commission_paid (Boolean), commission_paid_at (DateTime?), demandeur_notified (Boolean), demandeur_notified_at (DateTime?), demandeur_feedback (Enum: satisfied|neutral|dissatisfied), status (Enum: pending|under_review|decision_made|funded|closed|appealed), created_at (DateTime), updated_at (DateTime). Standardized reason code catalog with 8 categories and 17 specific reason codes (FINANCING_EXTENSION_MODEL.md §11.2). Decision lifecycle: submitted → under_review → (approved|conditional|rejected|counter_offer) → funded/closed. Commission tracking for LAWIM revenue on successful funding.",
+      "required_fields": [
+        "FinancingDecision.id: UUID",
+        "FinancingDecision.financing_match_id: UUID",
+        "FinancingDecision.financing_request_id: UUID",
+        "FinancingDecision.provider_id: UUID",
+        "FinancingDecision.decision_type: Enum (approved|rejected|conditional|pending_documents|under_review|withdrawn|expired)",
+        "FinancingDecision.decision_date: DateTime",
+        "FinancingDecision.status: Enum (pending|under_review|decision_made|funded|closed|appealed)"
+      ],
+      "required_relations": [
+        "FinancingDecision → FinancingMatch: 1:1",
+        "FinancingDecision → FinancingRequest: N:1",
+        "FinancingDecision → FinancingProvider: N:1"
+      ],
+      "required_events": [
+        "decision.under_review (payload: {match_id, provider_id})",
+        "decision.approved (payload: {match_id, approved_amount, approved_rate, conditions?})",
+        "decision.rejected (payload: {match_id, reason_code, reason_text})",
+        "decision.conditional (payload: {match_id, conditions})",
+        "decision.counter_offer (payload: {match_id, counter_amount, counter_terms})",
+        "decision.funded (payload: {match_id, funded_amount, funded_at})",
+        "decision.commission_paid (payload: {decision_id, commission_amount})"
+      ],
+      "required_permissions": [
+        "FIN: record decision (provider admin, platform admin)",
+        "FIN: read decision (demandeur self, admin, provider)",
+        "FIN: view commission (admin, provider self)"
+      ],
+      "required_states": [
+        "FinancingDecision.decision_type ∈ {approved, rejected, conditional, pending_documents, under_review, withdrawn, expired}",
+        "FinancingDecision.status ∈ {pending, under_review, decision_made, funded, closed, appealed}",
+        "FinancingDecision.rejection_category ∈ {8 categories}"
+      ],
+      "H0.5_matrices_impacted": ["FIN-MAT-010 (Decision Reason Codes)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 5 — Financing Operations",
+      "human_decision_required": true,
+      "human_decision_question": "Decision reason code catalog: 17 specific codes across 8 categories as specified (FINANCING_EXTENSION_MODEL.md §11.2) — confirm coverage is sufficient for initial providers or add market-specific codes?",
+      "status": "APPROVED"
+    }
+  ]
+}

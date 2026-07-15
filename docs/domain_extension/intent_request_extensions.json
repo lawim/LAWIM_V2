@@ -1,0 +1,556 @@
+{
+  "document": {
+    "id": "LAWIM-H13-INTENT-TRX-EXT-V1",
+    "title": "Intent, Request & Transaction Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Enriched catalog of all intent detection, transaction type, and transaction workflow extensions required for LAWIM_V2",
+    "sources": [
+      "INTENT_TRANSACTION_CROSSWALK.md",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §5 (Intent/Transaction Model)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §8 (Negotiation Workflow)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §9 (Transaction Workflow)",
+      "required_extensions.json (intent_detection, transaction_types)"
+    ],
+    "total_extensions": 14,
+    "by_category": {
+      "intent_detection": 6,
+      "transaction_types": 8
+    }
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-INT-001",
+      "source_concept": "Keyword-based intent detection",
+      "source_document": "INTENT_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-INT-001"],
+      "current_target": "Project model",
+      "current_limitation": "V2 has no intent detection — users explicitly select project_type from form",
+      "extension_category": "intent_detection",
+      "proposed_domain": "Domain 4: Intent/Transaction Model",
+      "proposed_entity": "Intent (new entity) + IntentEngine (new service)",
+      "proposed_structure": "Create Intent entity with source_text, detected_intent enum, confidence float, language enum, keyword_scores JSON. Build IntentEngine service with keyword dictionaries for FR, EN, PID languages. Implement KeywordIntentClassifier with per-language tokenizer, normalization (NFKD + unicode), and per-keyword weight scoring. Store Intent records for audit and pipeline traceability.",
+      "required_fields": [
+        "Intent.id: UUID",
+        "Intent.source_text: Text",
+        "Intent.language: Enum (fr | en | pid)",
+        "Intent.detected_intent: Enum (buy | rent | sell | invest | search_property | find_professional | service | finance | other)",
+        "Intent.confidence: Float (0.0-1.0)",
+        "Intent.threshold: Float (default: 0.70)",
+        "Intent.keyword_scores: JSON (per-keyword contribution map)",
+        "Intent.detection_method: Enum (keyword | explicit_selection | hybrid)",
+        "Intent.project_type_mapping: Enum (buy | rent | sell | invest | find | service | finance | other)",
+        "Intent.session_id: String",
+        "Intent.source_channel: Enum (whatsapp | telegram | dashboard | api)",
+        "Intent.detected_at: DateTime"
+      ],
+      "required_relations": [
+        "Intent.user_id → User (N:1, who expressed intent)",
+        "Intent.project_id → Project (0:1, project spawned from intent)"
+      ],
+      "required_events": [
+        "intent.detected (payload: {intent_id, user_id, detected_intent, confidence, language, source_channel})",
+        "intent.below_threshold (payload: {intent_id, highest_confidence, threshold, fallback_action: 'prompt' | 'explicit_selection'})",
+        "intent.project_created (payload: {intent_id, project_id, project_type})"
+      ],
+      "required_permissions": [
+        "SYSTEM: create intent (pipeline)",
+        "USER: view own intents",
+        "ADMIN: view all intents"
+      ],
+      "required_states": [
+        "Intent.detected_intent ∈ {buy, rent, sell, invest, search_property, find_professional, service, finance, other}",
+        "Intent.language ∈ {fr, en, pid}",
+        "Intent.detection_method ∈ {keyword, explicit_selection, hybrid}"
+      ],
+      "H0.5_matrices_impacted": [
+        "Residential Search (18 matrices) — intent pre-filters matrix selection",
+        "Land Search (7 matrices)",
+        "Commercial Search (21 matrices)",
+        "Professional Search (27 matrices)",
+        "Real Estate Service (24 matrices)",
+        "Financing Request (10 matrices)",
+        "Investment (5 matrices)"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Intent detection mandatory for all channels or chat-only (WhatsApp/Telegram)",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-INT-002",
+      "source_concept": "Confidence threshold (0.70)",
+      "source_document": "INTENT_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-INT-002"],
+      "current_target": "IntentEngine configuration",
+      "current_limitation": "No confidence scoring or threshold concept in V2",
+      "extension_category": "intent_detection",
+      "proposed_domain": "Domain 4: Intent/Transaction Model",
+      "proposed_entity": "IntentEngineConfig (global + per-channel)",
+      "proposed_structure": "Implement configurable confidence threshold with per-channel overrides. Default 0.70 for WhatsApp/Telegram, 0.50 for Dashboard (suggestion mode), 0.80 for API (reject below). Below-threshold behavior: confidence >= 0.50 prompts user with top 2-3 options; confidence < 0.50 falls back to explicit selection or 'other'.",
+      "required_fields": [
+        "IntentEngineConfig.default_threshold: Float (0.70)",
+        "IntentEngineConfig.channel_overrides: JSON (whatsapp: 0.70, telegram: 0.70, dashboard: 0.50, api: 0.80)",
+        "IntentEngineConfig.fallback_strategy: Enum (prompt_user | explicit_selection | default_other)",
+        "Intent.threshold: Float (per-intent override, defaults from config)",
+        "Intent.confidence: Float (computed by pipeline)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "intent.below_threshold (payload: {intent_id, confidence, threshold, channel, fallback_action})",
+        "intent.threshold_config_updated (payload: {channel, old_threshold, new_threshold})"
+      ],
+      "required_permissions": [
+        "ADMIN: configure intent detection thresholds",
+        "OPERATOR: override threshold per session"
+      ],
+      "required_states": [
+        "Intent.confidence >= 0.70 → auto_assign",
+        "0.50 <= Intent.confidence < 0.70 → prompt_user",
+        "Intent.confidence < 0.50 → fallback_to_explicit"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Confidence threshold value: 0.70 (Gold) or tunable per channel",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-INT-003",
+      "source_concept": "Multi-intent detection",
+      "source_document": "INTENT_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-INT-003"],
+      "current_target": "Intent model",
+      "current_limitation": "V2 supports single project_type per user; no parallel intent handling",
+      "extension_category": "intent_detection",
+      "proposed_domain": "Domain 4: Intent/Transaction Model",
+      "proposed_entity": "Intent (multi-intent fields)",
+      "proposed_structure": "Add multi-intent detection logic to IntentEngine. When 2+ intents score >= 0.70 or total score >= 1.40 with semantic distance > 0.3, set is_multi_intent=true and populate sub_intents array. Each sub-intent spawns an independent Project linked via multi_intent_group_id. Support cross-project coordination through shared group ID.",
+      "required_fields": [
+        "Intent.is_multi_intent: Boolean (default: false)",
+        "Intent.sub_intents: JSON[] (array of {intent, confidence, entities, assigned_project_id})",
+        "Project.multi_intent_group_id: UUID? (links parallel projects from same utterance)"
+      ],
+      "required_relations": [
+        "Intent.project_id → Project (for primary sub-intent)",
+        "Project.multi_intent_group_id → Intent (group linkage)"
+      ],
+      "required_events": [
+        "intent.multi_detected (payload: {source_text, sub_intents: [{intent, confidence, project_id}]})",
+        "intent.multi_projects_created (payload: {group_id, project_ids: [...]})"
+      ],
+      "required_states": [
+        "Intent.is_multi_intent ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Intent Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-INT-004",
+      "source_concept": "Urgency detection",
+      "source_document": "INTENT_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-INT-004"],
+      "current_target": "Project model",
+      "current_limitation": "No urgency detection mechanism in V2",
+      "extension_category": "intent_detection",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 10: CRM Pipeline",
+      "proposed_entity": "Intent (urgency scoring) + Project (urgency fields)",
+      "proposed_structure": "Add urgency detection to IntentEngine pipeline. Score urgency from temporal keywords (0.30), specific deadlines (0.35), negative consequences (0.20), repetition/emphasis (0.10), diaspora premium (0.05). Classify into 4 levels: low (0.00-0.25), medium (0.26-0.50), high (0.51-0.75), urgent (0.76-1.00). Store urgency on Intent and propagate to spawned Project for SLA routing.",
+      "required_fields": [
+        "Intent.urgency_score: Float (0.0-1.0)",
+        "Intent.urgency_keywords: String[] (keywords that triggered urgency)",
+        "Project.urgency_score: Float (0.0-1.0, propagated from intent)",
+        "Project.urgency_level: Enum (low | medium | high | urgent)",
+        "Project.urgency_detected_at: DateTime?"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "project.urgency_updated (payload: {project_id, old_level, new_level, score})",
+        "project.urgency_sla_adjusted (payload: {project_id, sla_priority, sla_deadline})"
+      ],
+      "required_permissions": [
+        "AGENT: view project urgency level",
+        "ADMIN: configure urgency thresholds"
+      ],
+      "required_states": [
+        "Project.urgency_level ∈ {low, medium, high, urgent}",
+        "SLA bound: low→P2, medium→P1, high→P0 (30min), urgent→P0 (15min)"
+      ],
+      "H0.5_matrices_impacted": [
+        "CRM scoring — urgency boost: urgent → +20"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Intent Enhancement",
+      "human_decision_required": true,
+      "human_decision_question": "Urgency scoring method and integration with lead scoring",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-INT-005",
+      "source_concept": "Entity extraction per intent",
+      "source_document": "INTENT_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-INT-005"],
+      "current_target": "Intent model",
+      "current_limitation": "No structured entity extraction in V2",
+      "extension_category": "intent_detection",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 5: Dossier/Project Model",
+      "proposed_entity": "Intent (extracted_entities JSON)",
+      "proposed_structure": "Add per-intent entity extraction to IntentEngine. Extract budget (min/max), city, neighborhood, property_type, surface (min/max), bedrooms, furnished, timeline, and intent-specific entities. Store as normalized JSON. Auto-populate Project qualification fields from extracted entities to reduce user friction. Extraction methods: regex patterns for prices/surfaces, gazetteer lookup for locations, type dictionary for property types.",
+      "required_fields": [
+        "Intent.extracted_entities: JSON (normalized entity object per intent type)",
+        "Project (auto-populated fields from entities: budget_min, budget_max, city, neighborhood, property_type, surface, bedrooms, timeline)"
+      ],
+      "required_relations": [
+        "Intent.project_id → Project (for entity propagation)"
+      ],
+      "required_events": [
+        "project.qualification_prefilled (payload: {project_id, source_intent_id, entity_fields: [field_names]})"
+      ],
+      "required_permissions": [
+        "USER: view pre-filled qualification fields",
+        "USER: edit pre-filled qualification fields"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "All qualification matrices — entity extraction pre-fills matrix fields"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Intent Enhancement",
+      "human_decision_required": true,
+      "human_decision_question": "Entity extraction method: rule-based (Gold) or NLP",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-INT-006",
+      "source_concept": "Intent-to-role mapping",
+      "source_document": "INTENT_TRANSACTION_CROSSWALK.md §3",
+      "source_rule_ids": ["GOLD-INT-006"],
+      "current_target": "Project model + User business_role",
+      "current_limitation": "No formal role mapping or user role abstraction exists in V2",
+      "extension_category": "intent_detection",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 1: User/Role/Profile Model",
+      "proposed_entity": "Intent (project_type_mapping) + Project (business_role)",
+      "proposed_structure": "Implement intent-to-role mapping service. Map each detected intent to a business_role (buyer, seller, tenant, investor, visitor, client). Store project_type_mapping on Intent and assign business_role on spawned Project. Role determines qualification matrix selection, matching strategy, and CRM segmentation. Support explicit override by user after detection.",
+      "required_fields": [
+        "Intent.project_type_mapping: Enum (buy | rent | sell | invest | find | service | finance | other)",
+        "Project.business_role: Enum (buyer | seller | tenant | investor | visitor | client)"
+      ],
+      "required_relations": [
+        "Project.user_id → User (role applies to user in project context)",
+        "Project.intent_id → Intent (0:1, source of role mapping)"
+      ],
+      "required_events": [
+        "project.role_assigned (payload: {project_id, user_id, role, source_intent_id})",
+        "project.role_changed (payload: {project_id, old_role, new_role, changed_by: 'user' | 'system'})"
+      ],
+      "required_permissions": [
+        "USER: view own business_role",
+        "USER: override business_role (from intent mapping)"
+      ],
+      "required_states": [
+        "Project.business_role ∈ {buyer, seller, tenant, investor, visitor, client}",
+        "Mapping: buy→buyer, rent→tenant, sell→seller, invest→investor, search_property→visitor, find_professional→client, service→client, finance→investor"
+      ],
+      "H0.5_matrices_impacted": [
+        "All qualification matrices — role filters available matrix families"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Intent Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-TRX-001",
+      "source_concept": "short_stay transaction type",
+      "source_document": "INTENT_TRANSACTION_CROSSWALK.md §2",
+      "source_rule_ids": ["GOLD-TRX-001"],
+      "current_target": "Transaction model + Project model",
+      "current_limitation": "Subsumed by 'rent' project_type; no dedicated short_stay handling",
+      "extension_category": "transaction_types",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 9: Transaction Workflow",
+      "proposed_entity": "Transaction (transaction_type enum)",
+      "proposed_structure": "Add 'short_stay' to Transaction.transaction_type enum and Project.project_type enum (or sub-type via metadata). Implement short-stay specific fields: check_in_date, check_out_date, number_of_guests, amenities, cancellation_policy. Distinct document regime: short-term contract, ID copy, payment receipt (no tenant rights). Qualification via Hotel/Tourism sub-referentiel matrices.",
+      "required_fields": [
+        "Transaction.transaction_type includes 'short_stay'",
+        "Project.project_type includes 'short_stay' (or rent + sub_type metadata)",
+        "Transaction.short_stay_details: JSON (check_in, check_out, guests, amenities)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "transaction.short_stay_created (payload: {transaction_id, check_in, check_out, guests})"
+      ],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Hotel/Tourism qualification matrices (3+ matrices)"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Transaction Expansion",
+      "human_decision_required": true,
+      "human_decision_question": "Short_stay: dedicated project_type or rent sub-type with metadata",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-TRX-002",
+      "source_concept": "lease (bail 3+ ans) transaction type",
+      "source_document": "INTENT_TRANSACTION_CROSSWALK.md §2",
+      "source_rule_ids": ["GOLD-TRX-002"],
+      "current_target": "Transaction model + Project model",
+      "current_limitation": "Subsumed by 'rent' with timeline_horizon maxing at 2 years",
+      "extension_category": "transaction_types",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 9: Transaction Workflow",
+      "proposed_entity": "Transaction (transaction_type enum)",
+      "proposed_structure": "Add 'lease' to Transaction.transaction_type enum. Extend Project.timeline_horizon to support 3-99 years. Implement lease-specific fields: lease_duration_years, renewal_options, indexation_clause, deposit_months (3-6 for residential). Notarization required for leases > 3 years. Separate from standard rental in qualification and document requirements.",
+      "required_fields": [
+        "Transaction.transaction_type includes 'lease'",
+        "Project.timeline_horizon: Int (extended to 99)",
+        "Transaction.lease_details: JSON (duration_years, renewal_clause, indexation)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "transaction.lease_created (payload: {transaction_id, duration_years, notarization_required})"
+      ],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Residential Search (long-term variant)",
+        "Commercial Search (long-term variant)"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Transaction Expansion",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-TRX-003",
+      "source_concept": "cession_bail (commercial lease transfer)",
+      "source_document": "INTENT_TRANSACTION_CROSSWALK.md §2",
+      "source_rule_ids": ["GOLD-TRX-003"],
+      "current_target": "Transaction model",
+      "current_limitation": "No equivalent; mapped to 'other' in V2",
+      "extension_category": "transaction_types",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 9: Transaction Workflow",
+      "proposed_entity": "Transaction (transaction_type enum)",
+      "proposed_structure": "Add 'cession_bail' to Transaction.transaction_type enum. Implement as transfer of commercial lease rights requiring landlord consent. Fields: original_lease_id, remaining_duration, transfer_fee, landlord_consent_status. Document requirements: original lease, landlord consent letter, transfer agreement, RCCM. Qualification via Commercial sub-referentiel.",
+      "required_fields": [
+        "Transaction.transaction_type includes 'cession_bail'",
+        "Transaction.cession_bail_details: JSON (original_lease_ref, remaining_months, transfer_price, landlord_consented: Boolean)"
+      ],
+      "required_relations": [
+        "Transaction.project_id → Project",
+        "Transaction.original_lease_document_id → Document"
+      ],
+      "required_events": [
+        "transaction.cession_bail_created (payload: {transaction_id, original_lease_ref})",
+        "transaction.cession_bail_landlord_consented (payload: {transaction_id, consented_at})"
+      ],
+      "required_permissions": [
+        "HOLDER: upload original lease",
+        "LANDLORD: consent to transfer"
+      ],
+      "required_states": [
+        "cession_bail.landlord_consent_status ∈ {pending, consented, refused}"
+      ],
+      "H0.5_matrices_impacted": [
+        "Commercial search matrices (cession_bail variant)"
+      ],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 3 — Niche Transaction Types",
+      "human_decision_required": true,
+      "human_decision_question": "Cession_bail: dedicated type or metadata extension of 'lease'",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-TRX-004",
+      "source_concept": "bail_commercial (commercial lease 3-9 ans)",
+      "source_document": "INTENT_TRANSACTION_CROSSWALK.md §2",
+      "source_rule_ids": ["GOLD-TRX-004"],
+      "current_target": "Transaction model",
+      "current_limitation": "Subsumed by generic 'rent' with no commercial lease handling",
+      "extension_category": "transaction_types",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 9: Transaction Workflow",
+      "proposed_entity": "Transaction (transaction_type enum)",
+      "proposed_structure": "Add 'bail_commercial' to Transaction.transaction_type enum. Implement OHADA-compliant commercial lease with 3-9 year terms. Fields: business_type, renovation_responsibility, signage_rights, rent_review_formula (3-2-3-2 common). Document requirements: commercial lease contract, RCCM, tax ID, business license. Tenant has statutory right to renew under OHADA.",
+      "required_fields": [
+        "Transaction.transaction_type includes 'bail_commercial'",
+        "Transaction.bail_commercial_details: JSON (business_type, duration_years, renovation_clause, renewal_option, rent_review_formula)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "transaction.bail_commercial_created (payload: {transaction_id, duration_years, business_type})"
+      ],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Commercial Search matrices (21 matrices, bail_commercial variant)"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Transaction Expansion",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-TRX-005",
+      "source_concept": "cession (business asset transfer)",
+      "source_document": "INTENT_TRANSACTION_CROSSWALK.md §2",
+      "source_rule_ids": ["GOLD-TRX-005"],
+      "current_target": "Transaction model",
+      "current_limitation": "No equivalent; mapped to 'other' in V2",
+      "extension_category": "transaction_types",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 9: Transaction Workflow",
+      "proposed_entity": "Transaction (transaction_type enum)",
+      "proposed_structure": "Add 'cession' to Transaction.transaction_type enum. Implement business asset transfer (fonds de commerce) workflow. Fields: business_name, rccm_number, goodwill_value, inventory_included, client_list_included, employee_list_included, handover_training. Requires publication in newspaper, registration with tax authorities, right of first refusal notification. Document requirements: RCCM, tax clearance, financial statements, lease, licenses.",
+      "required_fields": [
+        "Transaction.transaction_type includes 'cession'",
+        "Transaction.cession_details: JSON (business_name, rccm, goodwill_value, inventory_value, includes_employees: Boolean)",
+        "Publication required: Boolean (set true for cession)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "transaction.cession_created (payload: {transaction_id, business_name, rccm})",
+        "transaction.cession_published (payload: {transaction_id, publication_date, publication_ref})"
+      ],
+      "required_permissions": [
+        "ADMIN: validate cession publication"
+      ],
+      "required_states": [
+        "cession.publication_status ∈ {not_required, pending, published, verified}"
+      ],
+      "H0.5_matrices_impacted": [
+        "Business transfer qualification matrices (specific to cession)"
+      ],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 3 — Niche Transaction Types",
+      "human_decision_required": true,
+      "human_decision_question": "Cession: in-scope for LAWIM or out-of-scope",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-TRX-006",
+      "source_concept": "finance (financing request)",
+      "source_document": "INTENT_TRANSACTION_CROSSWALK.md §2",
+      "source_rule_ids": ["GOLD-TRX-006"],
+      "current_target": "Transaction model + Project model",
+      "current_limitation": "Implicitly bundled into buy/invest projects; no standalone financing request type",
+      "extension_category": "transaction_types",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 9: Transaction Workflow",
+      "proposed_entity": "Transaction (transaction_type enum)",
+      "proposed_structure": "Add 'finance' to Transaction.transaction_type enum and Project.project_type enum. Implement financing-specific fields: loan_amount_requested, loan_purpose, income_monthly, existing_commitments, collateral_description, preferred_term_months. 10 financing qualification matrices for different credit types. Document requirements: ID, proof of income, property documents, 3 months bank statements. Partner bank integration for credit assessment.",
+      "required_fields": [
+        "Transaction.transaction_type includes 'finance'",
+        "Project.project_type includes 'finance'",
+        "Transaction.finance_details: JSON (loan_amount, purpose, term_months, income, collateral)",
+        "Transaction.partner_bank_id: UUID? (routed bank)"
+      ],
+      "required_relations": [
+        "Transaction.partner_bank_id → Organization (partner bank)"
+      ],
+      "required_events": [
+        "transaction.finance_created (payload: {transaction_id, loan_amount, purpose})",
+        "transaction.finance_submitted_to_bank (payload: {transaction_id, bank_id, submitted_at})",
+        "transaction.finance_approved (payload: {transaction_id, approved_amount, interest_rate, terms})",
+        "transaction.finance_rejected (payload: {transaction_id, rejection_reason})"
+      ],
+      "required_permissions": [
+        "USER: submit financing request",
+        "BANK: view assigned financing requests"
+      ],
+      "required_states": [
+        "Transaction.finance_status ∈ {draft, submitted, under_review, approved, rejected, disbursed}"
+      ],
+      "H0.5_matrices_impacted": [
+        "10 financing qualification matrices"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Transaction Expansion",
+      "human_decision_required": true,
+      "human_decision_question": "Finance: standalone project type or sub-intent of buy/invest",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-TRX-007",
+      "source_concept": "find (professional search)",
+      "source_document": "INTENT_TRANSACTION_CROSSWALK.md §2",
+      "source_rule_ids": ["GOLD-TRX-007"],
+      "current_target": "Transaction model + Project model",
+      "current_limitation": "No equivalent; mapped to 'other' in V2",
+      "extension_category": "transaction_types",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 3: Service Model",
+      "proposed_entity": "Transaction (transaction_type enum) + ServiceRequest",
+      "proposed_structure": "Add 'find' to Transaction.transaction_type enum and Project.project_type enum. Implement professional search/discovery workflow. Fields: profession_requested, specialization, mission_description, location_preference. 27 professional search qualification matrices. Link to ServiceRequest for agent assignment. No document requirement for discovery phase; professional contact may require lead purchase. Integrate with professional matching engine.",
+      "required_fields": [
+        "Transaction.transaction_type includes 'find'",
+        "Project.project_type includes 'find'",
+        "Project.profession_requested: String",
+        "Project.specialization: String?",
+        "ServiceRequest.request_type: 'search' (for find sub-type)"
+      ],
+      "required_relations": [
+        "Transaction.project_id → Project",
+        "Transaction.service_request_id → ServiceRequest (0:1)"
+      ],
+      "required_events": [
+        "project.find_created (payload: {project_id, profession, specialization})",
+        "project.find_matched (payload: {project_id, professional_id, match_score})"
+      ],
+      "required_permissions": [
+        "USER: submit find request",
+        "AGENT: respond to find request"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "27 professional search qualification matrices"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Professional Ecosystem",
+      "human_decision_required": true,
+      "human_decision_question": "Find: core LAWIM feature or separate marketplace",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-TRX-008",
+      "source_concept": "service (real estate service procurement)",
+      "source_document": "INTENT_TRANSACTION_CROSSWALK.md §2",
+      "source_rule_ids": ["GOLD-TRX-008"],
+      "current_target": "Transaction model + Project model",
+      "current_limitation": "No equivalent; mapped to 'other' in V2",
+      "extension_category": "transaction_types",
+      "proposed_domain": "Domain 4: Intent/Transaction Model + Domain 3: Service Model",
+      "proposed_entity": "Transaction (transaction_type enum) + ServiceOrder linkage",
+      "proposed_structure": "Add 'service' to Transaction.transaction_type enum and Project.project_type enum. Implement real estate service procurement workflow. Fields: service_code (from Service catalog), service_description, scope_of_work, location, preferred_timeline. 24 real estate service qualification matrices. Link to ServiceOrder for service fulfillment and Payment lifecycle. Document requirements depend on service type (estimation vs photography vs expertise).",
+      "required_fields": [
+        "Transaction.transaction_type includes 'service'",
+        "Project.project_type includes 'service'",
+        "Transaction.service_code: String (references Service.code)",
+        "Transaction.service_order_id: UUID? (links to ServiceOrder when paid service)"
+      ],
+      "required_relations": [
+        "Transaction.service_order_id → ServiceOrder (0:1)",
+        "Transaction.project_id → Project",
+        "ServiceOrder.service_id → Service (service catalog item)"
+      ],
+      "required_events": [
+        "project.service_created (payload: {project_id, service_code, description})",
+        "project.service_order_placed (payload: {project_id, service_order_id, amount})"
+      ],
+      "required_permissions": [
+        "USER: order service",
+        "PROVIDER: fulfill service order"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "24 real estate service qualification matrices"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Professional Ecosystem",
+      "human_decision_required": true,
+      "human_decision_question": "Service procurement: integrated workflow or separate service ordering",
+      "status": "APPROVED"
+    }
+  ]
+}

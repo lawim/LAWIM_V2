@@ -1,0 +1,656 @@
+{
+  "document": {
+    "id": "LAWIM-H13-MATCHING-EXT-V1",
+    "title": "Search & Matching Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Complete machine-readable catalog of all search and matching extensions from Heritage Gold → LAWIM_V2, including Match entity, 5 scoring dimensions, 4 compatibility levels, 9 matching roles, boost/penalty rules, rematching engine, progressive search expansion, continuous market surveillance, market tension index, dossier and property health scores, constraint system, transaction blockers, and failed matching diagnostics",
+    "sources": [
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §6 (Matching Engine)",
+      "required_extensions.json (matching section)",
+      "MATCHING_MODEL.md (Gold)",
+      "WORKFLOW_STATE_CROSSWALK.md"
+    ],
+    "total_extensions": 13,
+    "by_priority": {
+      "P1": 7,
+      "P2": 6
+    },
+    "by_decision": {
+      "CREATE_NEW_ENGINE": 8,
+      "CONFIGURE_EXISTING": 4,
+      "CREATE_NEW_ENTITY": 1
+    }
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-MAT-001",
+      "source_concept": "Full matching engine",
+      "source_document": "MATCHING_MODEL.md (Gold), WORKFLOW_03",
+      "source_rule_ids": ["WORKFLOW_03", "MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No matching engine exists in V2 — properties listed, users search/contact manually",
+      "extension_category": "matching_engine",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "Match + ScoringEngine + RematchingEngine",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement Match entity with full attributes, composite scoring algorithm, boost/penalty rules with caps, rematching engine with trigger events, minimum score 60/100, top 10 max results",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P1",
+      "attributes": [
+        {"name": "id", "type": "UUID", "description": "Primary identifier"},
+        {"name": "project_id", "type": "UUID", "description": "Reference to Project (demandeur dossier)"},
+        {"name": "property_id", "type": "UUID", "description": "Reference to Property"},
+        {"name": "agent_id", "type": "UUID?", "description": "Reference to assigned agent"},
+        {"name": "overall_score", "type": "Float", "description": "Composite score (0-100)"},
+        {"name": "compatibility_level", "type": "Enum", "values": ["excellent", "good", "average", "low"], "description": "Compatibility classification"},
+        {"name": "rank", "type": "Int", "description": "Ranking position for this project"},
+        {"name": "is_active", "type": "Boolean", "description": "Whether match is currently active"},
+        {"name": "is_proposed", "type": "Boolean", "description": "Whether match has been proposed to demandeur"},
+        {"name": "demandeur_decision", "type": "Enum?", "values": ["pending", "interested", "not_interested"], "description": "Demandeur decision"},
+        {"name": "holder_decision", "type": "Enum?", "values": ["pending", "favorable", "refused"], "description": "Holder decision"},
+        {"name": "decision_deadline", "type": "DateTime?", "description": "Deadline for current decision"},
+        {"name": "rematch_count", "type": "Int", "description": "Number of rematches for this pair"},
+        {"name": "rematch_reason", "type": "String?", "description": "Reason for rematch trigger"},
+        {"name": "match_pool", "type": "Enum", "values": ["primary", "expansion_geo", "expansion_budget", "expansion_type"], "description": "Which search pool this match belongs to"},
+        {"name": "score_breakdown", "type": "JSON", "description": "Detailed per-dimension scores"},
+        {"name": "created_at", "type": "DateTime", "description": "Match creation timestamp"},
+        {"name": "expires_at", "type": "DateTime", "description": "Match expiration"},
+        {"name": "proposed_at", "type": "DateTime?", "description": "When match was proposed"},
+        {"name": "demandeur_decided_at", "type": "DateTime?", "description": "When demandeur decided"},
+        {"name": "holder_decided_at", "type": "DateTime?", "description": "When holder decided"}
+      ],
+      "scoring_config": {
+        "dimensions": [
+          {"family": "Geographic", "weight": 0.25, "sub_dimensions": ["location_proximity", "zone_preference", "mobility_mode"]},
+          {"family": "Budget", "weight": 0.20, "sub_dimensions": ["price_alignment", "negotiability", "budget_tolerance"]},
+          {"family": "Property", "weight": 0.20, "sub_dimensions": ["type_match", "surface", "bedrooms", "features"]},
+          {"family": "Behavioral", "weight": 0.15, "sub_dimensions": ["response_time", "profile_completeness", "activity_recency"]},
+          {"family": "Document/Trust", "weight": 0.10, "sub_dimensions": ["documentation", "trust_level", "verification"]},
+          {"family": "Transaction Success", "weight": 0.10, "sub_dimensions": ["historical_conversion", "intent_strength", "reliability"]}
+        ],
+        "minimum_score": 60,
+        "maximum_results": 10,
+        "boost_cap": 50,
+        "penalty_floor": 0,
+        "compatibility_thresholds": {
+          "excellent": {"min": 85, "max": 100, "action": "auto_propose"},
+          "good": {"min": 70, "max": 84, "action": "propose_with_note"},
+          "average": {"min": 60, "max": 69, "action": "conditional_propose"},
+          "low": {"min": 0, "max": 59, "action": "not_proposed"}
+        }
+      },
+      "boost_rules": [
+        {"rule_id": "BOOST-001", "name": "Premium listing", "value": 10, "condition": "property.is_premium = true", "cap": 50},
+        {"rule_id": "BOOST-002", "name": "Agent pro subscription", "value": 15, "condition": "agent has active agent_pro subscription", "cap": 50},
+        {"rule_id": "BOOST-003", "name": "Complete dossier", "value": 10, "condition": "All qualification steps completed", "cap": 50},
+        {"rule_id": "BOOST-004", "name": "Verified identity", "value": 5, "condition": "demandeur.identity_verified = true", "cap": 50},
+        {"rule_id": "BOOST-005", "name": "Urgent demandeur", "value": 20, "condition": "demandeur urgency = high/urgent", "cap": 50},
+        {"rule_id": "BOOST-006", "name": "Boost 7d active", "value": 8, "condition": "property.boost_level = boost_7d", "cap": 50},
+        {"rule_id": "BOOST-007", "name": "Boost 30d active", "value": 12, "condition": "property.boost_level = boost_30d", "cap": 50},
+        {"rule_id": "BOOST-008", "name": "Property verified", "value": 5, "condition": "property.verification_status = verified", "cap": 50},
+        {"rule_id": "BOOST-009", "name": "Agency verified", "value": 10, "condition": "holder.agency_verified = true", "cap": 50},
+        {"rule_id": "BOOST-010", "name": "Cash purchase", "value": 15, "condition": "demandeur.cash_purchase = true", "cap": 50}
+      ],
+      "penalty_rules": [
+        {"rule_id": "PEN-001", "name": "Incomplete dossier", "value": -10, "condition": "Qualification < 80% complete", "floor": 0},
+        {"rule_id": "PEN-002", "name": "Unverified phone", "value": -15, "condition": "demandeur.phone_verified = false", "floor": 0},
+        {"rule_id": "PEN-003", "name": "Spam-like behavior", "value": -50, "condition": "Fraud layers triggered", "floor": 0},
+        {"rule_id": "PEN-004", "name": "No-show history", "value": -20, "condition": "no_show_count > 2", "floor": 0},
+        {"rule_id": "PEN-005", "name": "Incomplete property listing", "value": -10, "condition": "Property quality_score < 40", "floor": 0},
+        {"rule_id": "PEN-006", "name": "Low agent rating", "value": -10, "condition": "agent_rating < 3.0", "floor": 0},
+        {"rule_id": "PEN-007", "name": "No documents uploaded", "value": -15, "condition": "Document count = 0", "floor": 0},
+        {"rule_id": "PEN-008", "name": "Inactive > 90d", "value": -10, "condition": "last_activity > 90d ago", "floor": 0}
+      ],
+      "rematching_config": {
+        "max_cycles": 3,
+        "triggers": [
+          {"name": "demandeur_refuses", "source": "demandeur_decision = not_interested", "action": "exclude_property_and_recalculate"},
+          {"name": "holder_refuses", "source": "holder_decision = refused", "action": "exclude_property_and_recalculate"},
+          {"name": "visit_fails_no_show", "source": "absence_type set", "action": "offer_reschedule_or_new_match"},
+          {"name": "visit_fails_holder_no_show", "source": "absence_type = holder_no_show", "action": "offer_new_match"},
+          {"name": "negotiation_fails", "source": "failure_reason set", "action": "offer_new_match"},
+          {"name": "match_expires", "source": "expires_at passed", "action": "recalculate_and_repropose"},
+          {"name": "new_listing", "source": "property.published event", "action": "evaluate_against_dossiers"},
+          {"name": "dossier_updated", "source": "project.qualification changed", "action": "recalculate_matches"},
+          {"name": "holder_silence", "source": "72h no response", "action": "send_reminders_then_exclude"}
+        ]
+      },
+      "progressive_expansion": {
+        "levels": [
+          {"level": 0, "condition": "initial search", "action": "original criteria", "score_impact": 0},
+          {"level": 1, "condition": "top 10 matches all < 85", "action": "expand budget ±10%", "score_impact": -5},
+          {"level": 2, "condition": "< 5 matches >= 70", "action": "expand to nearby neighborhoods", "score_impact": -10},
+          {"level": 3, "condition": "< 3 matches >= 60", "action": "expand budget ±20%", "score_impact": -10},
+          {"level": 4, "condition": "< 3 matches >= 60", "action": "expand to city-level (L2)", "score_impact": -25},
+          {"level": 5, "condition": "no matches >= 60", "action": "expand to region-level (L3)", "score_impact": -50},
+          {"level": 6, "condition": "no matches >= 60", "action": "expand property type (family)", "score_impact": -20},
+          {"level": 7, "condition": "no matches at all", "action": "expand country-level + max budget ±30%", "score_impact": -75}
+        ]
+      },
+      "human_decision_required": true,
+      "decision_question": "Matching algorithm design: rule-based (Gold) or ML-enhanced"
+    },
+    {
+      "extension_id": "EXT-MAT-002",
+      "source_concept": "5 scoring dimensions",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No scoring dimensions exist in V2 matching",
+      "extension_category": "matching_scoring",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "ScoringEngine",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement 5 scoring dimensions with configurable weights per property type: Geographic (0.25), Budget (0.20), Property (0.20), Behavioral (0.15), Document/Trust (0.10), Transaction Success (0.10). Include sub-dimension scoring algorithm, per-dimension score normalization, composite score calculation formula",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P1",
+      "scoring_dimensions": [
+        {
+          "family": "Geographic",
+          "weight": 0.25,
+          "sub_dimensions": [
+            {"name": "location_proximity", "weight_within": 0.50},
+            {"name": "zone_preference", "weight_within": 0.30},
+            {"name": "mobility_mode", "weight_within": 0.20}
+          ],
+          "scoring_function": "geographic_score_with_5_levels"
+        },
+        {
+          "family": "Budget",
+          "weight": 0.20,
+          "sub_dimensions": [
+            {"name": "price_alignment", "weight_within": 0.60},
+            {"name": "negotiability", "weight_within": 0.20},
+            {"name": "budget_tolerance", "weight_within": 0.20}
+          ],
+          "scoring_function": "overlap_percentage_scoring"
+        },
+        {
+          "family": "Property",
+          "weight": 0.20,
+          "sub_dimensions": [
+            {"name": "type_match", "weight_within": 0.40},
+            {"name": "surface_alignment", "weight_within": 0.20},
+            {"name": "bedrooms_match", "weight_within": 0.20},
+            {"name": "feature_match_rate", "weight_within": 0.20}
+          ],
+          "scoring_function": "property_characteristics_alignment"
+        },
+        {
+          "family": "Behavioral",
+          "weight": 0.15,
+          "sub_dimensions": [
+            {"name": "response_time", "weight_within": 0.25},
+            {"name": "profile_completeness", "weight_within": 0.35},
+            {"name": "activity_recency", "weight_within": 0.20},
+            {"name": "reliability_signals", "weight_within": 0.20}
+          ],
+          "scoring_function": "user_behavior_signals"
+        },
+        {
+          "family": "Document/Trust",
+          "weight": 0.10,
+          "sub_dimensions": [
+            {"name": "trust_level", "weight_within": 0.40},
+            {"name": "document_completeness", "weight_within": 0.30},
+            {"name": "verification_status", "weight_within": 0.30}
+          ],
+          "scoring_function": "trust_and_document_scoring"
+        },
+        {
+          "family": "Transaction Success",
+          "weight": 0.10,
+          "sub_dimensions": [
+            {"name": "historical_conversion", "weight_within": 0.40},
+            {"name": "intent_strength", "weight_within": 0.20},
+            {"name": "holder_reliability", "weight_within": 0.20},
+            {"name": "market_demand", "weight_within": 0.10},
+            {"name": "agent_involvement", "weight_within": 0.10}
+          ],
+          "scoring_function": "predicted_success_probability"
+        }
+      ],
+      "score_calculation": "For each dimension d: raw_score_d = compute_dimension_score(d), weighted_score_d = raw_score_d × weight_d. composite_raw = SUM(weighted_score_d). composite_final = CLAMP(composite_raw + total_boost - total_penalty, 0, 100). compatibility_level = classify(composite_final)",
+      "human_decision_required": true,
+      "decision_question": "Scoring dimension weights: Gold defaults or tunable per property type"
+    },
+    {
+      "extension_id": "EXT-MAT-003",
+      "source_concept": "Geographic scoring (5 levels)",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No geographic scoring in V2 matching",
+      "extension_category": "matching_scoring",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "ScoringEngine.Geographic",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement geographic scoring with 5 proximity tiers (L1: same neighborhood=100, L2: same city diff neighborhood=75, L3: same region diff city=50, L4: same country diff region=25, L5: different country=0). Support 3 mobility modes (low: 5km steep decay, medium: 20km gradual decay, high: 50km+ shallow decay). Zone preference bonuses. Geographic expansion steps for progressive search.",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P1",
+      "geographic_levels": [
+        {"level": "L1", "name": "Same neighborhood", "distance": "exact", "base_score": 100, "description": "Exact location match"},
+        {"level": "L2", "name": "Same city, diff neighborhood", "distance": "same city", "base_score": 75, "description": "City-level match"},
+        {"level": "L3", "name": "Same region, diff city", "distance": "same region", "base_score": 50, "description": "Regional match"},
+        {"level": "L4", "name": "Same country, diff region", "distance": "same country", "base_score": 25, "description": "Country-level match"},
+        {"level": "L5", "name": "Different country", "distance": "different country", "base_score": 0, "description": "No geographic match"}
+      ],
+      "mobility_modes": [
+        {"mode": "low", "radius_km": 5, "decay_function": "steep_linear: score = 100 × max(0, 1 - d/5)", "typical_profile": "Elderly, no vehicle, family constraint"},
+        {"mode": "medium", "radius_km": 20, "decay_function": "gradual: score = 100 × max(0, 1 - d/20)", "typical_profile": "Average professional, has transport"},
+        {"mode": "high", "radius_km": 50, "decay_function": "shallow: score = 100 × max(0, 1 - d/50)", "typical_profile": "Investor, diaspora, corporate"}
+      ],
+      "zone_bonuses": [
+        {"match": "exact_neighborhood", "bonus": 10, "condition": "Both in same neighborhood list"},
+        {"match": "nearby_zone_3km", "bonus": 5, "condition": "Adjacent zone within 3km"},
+        {"match": "same_city", "bonus": 0, "condition": "Within same city"},
+        {"match": "outside_city", "bonus": -10, "condition": "Different city"}
+      ],
+      "human_decision_required": false
+    },
+    {
+      "extension_id": "EXT-MAT-004",
+      "source_concept": "4 compatibility levels",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No compatibility level classification in V2 matching",
+      "extension_category": "matching_classification",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "Match.compatibility_level",
+      "proposed_structure": "CONFIGURE_EXISTING — Implement compatibility level thresholds and display logic: Excellent (85-100) auto-propose, Good (70-84) propose with note, Average (60-69) conditional propose, Low (<60) not proposed. Add color-coded badges and score breakdown display per level.",
+      "decision": "CONFIGURE_EXISTING",
+      "priority": "P1",
+      "compatibility_levels": [
+        {"level": "excellent", "min_score": 85, "max_score": 100, "label": "Excellent", "badge_color": "green", "action": "auto_propose", "display": "Best Match badge, score breakdown, immediate proposal"},
+        {"level": "good", "min_score": 70, "max_score": 84, "label": "Good", "badge_color": "blue", "action": "propose_with_note", "display": "Good Match badge, standard proposal"},
+        {"level": "average", "min_score": 60, "max_score": 69, "label": "Average", "badge_color": "yellow", "action": "conditional_propose", "display": "Average Match, proposed only if no better options"},
+        {"level": "low", "min_score": 0, "max_score": 59, "label": "Low", "badge_color": "gray", "action": "not_proposed", "display": "Below Threshold, hidden from default view"}
+      ],
+      "human_decision_required": true,
+      "decision_question": "Compatibility level thresholds (score ranges per level)"
+    },
+    {
+      "extension_id": "EXT-MAT-005",
+      "source_concept": "Rematching rules",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No rematching concept in V2 matching",
+      "extension_category": "matching_rematching",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "RematchingEngine + Project.rematch_count",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement automatic rematching on 9 trigger events (demandeur refusal, holder refusal, visit no-show, holder no-show, negotiation failure, match expiry, new listing, dossier update, holder silence). Max 3 rematch cycles per dossier. Exclusion rules for refused properties. Failed matching diagnostic on max cycles reached.",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P1",
+      "rematching_triggers": [
+        {"trigger_id": "RMT-001", "name": "Demandeur refuses match", "source": "demandeur_decision = not_interested", "action": "Exclude property, recalculate, propose next", "max_cycles": 3},
+        {"trigger_id": "RMT-002", "name": "Holder refuses contact", "source": "holder_decision = refused", "action": "Exclude property, recalculate, propose next", "max_cycles": 3},
+        {"trigger_id": "RMT-003", "name": "Visit fails (no-show)", "source": "absence_type set", "action": "Offer reschedule or new property match", "max_cycles": 3},
+        {"trigger_id": "RMT-004", "name": "Visit fails (holder no-show)", "source": "absence_type = holder_no_show", "action": "Offer new property match", "max_cycles": 3},
+        {"trigger_id": "RMT-005", "name": "Negotiation fails", "source": "failure_reason set", "action": "Offer new property match", "max_cycles": 3},
+        {"trigger_id": "RMT-006", "name": "Match expires (30d)", "source": "expires_at passed", "action": "Recalculate score, re-propose if valid", "max_cycles": 3},
+        {"trigger_id": "RMT-007", "name": "New property listed", "source": "property.published event", "action": "Evaluate against all active dossiers", "max_cycles": null},
+        {"trigger_id": "RMT-008", "name": "Dossier updated", "source": "project.qualification changed", "action": "Recalculate all matches for project", "max_cycles": null},
+        {"trigger_id": "RMT-009", "name": "Holder silence (72h)", "source": "holder_decision pending > 72h", "action": "Send reminders, then auto-exclude", "max_cycles": 2}
+      ],
+      "rematching_flow": "1. Trigger event detected. 2. Check rematch_count < max_rematches (default 3). 3. If yes: exclude current property, set rematch_reason, increment rematch_count, recalculate scores, propose next best. 4. If no: mark project matching_status=failed, generate diagnostic, notify agent.",
+      "human_decision_required": true,
+      "decision_question": "Rematching trigger events and exclusion rules"
+    },
+    {
+      "extension_id": "EXT-MAT-006",
+      "source_concept": "Exclusion criteria for matching",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No exclusion logic in V2 matching",
+      "extension_category": "matching_constraints",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "MatchingEngine (constraint/rule engine)",
+      "proposed_structure": "CONFIGURE_EXISTING — Implement hard constraint system (budget disjoint, type mismatch, country mismatch, transaction type mismatch, availability blocked, holder blacklisted) as binary pass/fail filters. Soft constraints (partial overlap, subtype mismatch, neighborhood mismatch, missing features) as weighted score reductions. Ranking preferences (6 tie-breakers) for equal-score ordering. 6 exclusion rules (previously refused, holder refusal, active negotiation, rematch max, property suspended, demandeur blacklisted). Verification-only fields that inform but do not score.",
+      "decision": "CONFIGURE_EXISTING",
+      "priority": "P1",
+      "hard_constraints": [
+        {"constraint_id": "HC-001", "name": "Budget disjoint", "condition": "demandeur.max < property.min OR demandeur.min > property.max", "behavior": "exclude", "override": "negotiable flag"},
+        {"constraint_id": "HC-002", "name": "Property type mismatch", "condition": "demandeur.type ≠ property.type AND no family match", "behavior": "exclude"},
+        {"constraint_id": "HC-003", "name": "Location country mismatch", "condition": "demandeur.country ≠ property.country", "behavior": "exclude"},
+        {"constraint_id": "HC-004", "name": "Transaction type mismatch", "condition": "demandeur.project_type incompatible with property.availability", "behavior": "exclude"},
+        {"constraint_id": "HC-005", "name": "Availability blocked", "condition": "property.availability = sold/rented/archived", "behavior": "exclude"},
+        {"constraint_id": "HC-006", "name": "Holder blacklisted", "condition": "holder.trust_level < 2 OR holder.blacklisted", "behavior": "exclude"}
+      ],
+      "soft_constraints": [
+        {"constraint_id": "SC-001", "name": "Budget partial overlap", "score_reduction": "0-50 based on overlap %", "description": "Proportional to overlap gap"},
+        {"constraint_id": "SC-002", "name": "Property subtype mismatch", "score_reduction": -20, "description": "Different subtype within same family"},
+        {"constraint_id": "SC-003", "name": "Location neighborhood mismatch", "score_reduction": -25, "description": "Same city, different neighborhood"},
+        {"constraint_id": "SC-004", "name": "Missing required features", "score_reduction": "-10 per feature", "max_reduction": -50},
+        {"constraint_id": "SC-005", "name": "Bedroom mismatch", "score_reduction": "-15 per bedroom", "max_reduction": -45},
+        {"constraint_id": "SC-006", "name": "Surface mismatch > 30%", "score_reduction": -20, "description": "Surface more than 30% off target"}
+      ],
+      "ranking_preferences": [
+        {"preference_id": "RP-001", "name": "Premium listing", "priority": 1, "condition": "is_premium = true"},
+        {"preference_id": "RP-002", "name": "Boosted listing", "priority": 2, "condition": "boost_level > none"},
+        {"preference_id": "RP-003", "name": "Recent activity", "priority": 3, "condition": "More recent last_activity_at"},
+        {"preference_id": "RP-004", "name": "Trust level", "priority": 4, "condition": "Higher demandeur trust_level"},
+        {"preference_id": "RP-005", "name": "Newer listing", "priority": 5, "condition": "Earlier published_at"},
+        {"preference_id": "RP-006", "name": "Agent rating", "priority": 6, "condition": "Higher agent_rating"}
+      ],
+      "exclusion_rules": [
+        {"exclusion_id": "EX-001", "name": "Previously refused by demandeur", "duration": "permanent", "reason": "Historical refusal"},
+        {"exclusion_id": "EX-002", "name": "Previously refused by holder", "duration": "permanent", "reason": "Holder refused contact"},
+        {"exclusion_id": "EX-003", "name": "Active negotiation", "duration": "until concluded", "reason": "Ongoing process"},
+        {"exclusion_id": "EX-004", "name": "Rematch max exceeded", "duration": "permanent for pair", "condition": "rematch_count >= 3"},
+        {"exclusion_id": "EX-005", "name": "Property suspended/maintenance", "duration": "until reactivated", "condition": "status = maintenance"},
+        {"exclusion_id": "EX-006", "name": "Demandeur blacklisted", "duration": "permanent", "condition": "Fraud detected"}
+      ],
+      "verification_only_fields": [
+        "holder_occupation", "demandeur_occupation", "property_construction_year",
+        "property_last_renovation", "property_floor_number", "property_total_floors",
+        "property_orientation", "heating_type", "parking_type", "furnished_status",
+        "pet_policy", "hoa_fees", "property_taxes"
+      ],
+      "human_decision_required": false
+    },
+    {
+      "extension_id": "EXT-MAT-007",
+      "source_concept": "Transaction success score",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No transaction success prediction in V2 matching",
+      "extension_category": "matching_scoring",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "ScoringEngine.Transaction + TransactionBlockerRegistry",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement transaction success score based on 5 factors: historical conversion rate (0-40), intent strength (0-20), holder reliability (0-20), property market demand (0-10), agent involvement (0-10). Implement transaction blocker registry with 10 blockers (trust level, verification, documents, consent, agent assignment, payment, identity, price mismatch, legal hold) each with resolution path and responsible party.",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P2",
+      "transaction_success_factors": [
+        {"factor": "historical_conversion_rate", "max_score": 40, "source": "Past match-to-transaction conversion rate for similar profiles"},
+        {"factor": "intent_strength", "max_score": 20, "source": "buy=20, rent=15, invest=15, sell=10"},
+        {"factor": "holder_reliability", "max_score": 20, "source": "Based on past holder behavior and completion rate"},
+        {"factor": "property_market_demand", "max_score": 10, "source": "High/medium/low demand segment per MTI"},
+        {"factor": "agent_involvement", "max_score": 10, "source": "Agent-pro subscription = 10, standard agent = 5, no agent = 0"}
+      ],
+      "transaction_blockers": [
+        {"blocker_id": "TB-001", "name": "Trust level insufficient", "checked_at": "transaction_initiation", "condition": "demandeur.trust_level < 3 OR holder.trust_level < 3", "resolution": "Complete verification steps", "responsible": "User"},
+        {"blocker_id": "TB-002", "name": "Property verification incomplete", "checked_at": "transaction_initiation", "condition": "property.verification_status != verified", "resolution": "Purchase verification service", "responsible": "Holder/Agent"},
+        {"blocker_id": "TB-003", "name": "Required documents missing", "checked_at": "transaction_preparation", "condition": "Per transaction type document requirements", "resolution": "Upload documents", "responsible": "Both parties"},
+        {"blocker_id": "TB-004", "name": "Holder consent not obtained", "checked_at": "transaction_initiation", "condition": "holder_decision != favorable", "resolution": "Contact holder", "responsible": "Agent/System"},
+        {"blocker_id": "TB-005", "name": "Demandeur consent not obtained", "checked_at": "transaction_initiation", "condition": "demandeur_decision != interested", "resolution": "Follow up with demandeur", "responsible": "Agent/System"},
+        {"blocker_id": "TB-006", "name": "Agent not assigned", "checked_at": "transaction_initiation", "condition": "No active agent on match", "resolution": "Assign agent", "responsible": "System/Admin"},
+        {"blocker_id": "TB-007", "name": "Payment not completed", "checked_at": "transaction_preparation", "condition": "service_order.status != paid", "resolution": "Process payment", "responsible": "User"},
+        {"blocker_id": "TB-008", "name": "Identity not verified", "checked_at": "transaction_signing", "condition": "Both parties must have identity_verified", "resolution": "Complete identity verification", "responsible": "User"},
+        {"blocker_id": "TB-009", "name": "Price mismatch > 5%", "checked_at": "transaction_agreement", "condition": "price_agreed vs price_negotiable deviation > 5%", "resolution": "Renegotiate", "responsible": "Both parties"},
+        {"blocker_id": "TB-010", "name": "Legal hold on property", "checked_at": "transaction_preparation", "condition": "Property flagged with legal issue", "resolution": "Resolve legal issue", "responsible": "Holder/Notaire"}
+      ],
+      "human_decision_required": true,
+      "decision_question": "Transaction success score: statistical model or heuristic"
+    },
+    {
+      "extension_id": "EXT-MAT-008",
+      "source_concept": "Market tension index",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No market intelligence in V2 matching",
+      "extension_category": "matching_market_intelligence",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "MarketAnalysis",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement Market Tension Index (MTI = active_dossiers / active_properties) stratified by property type, city/zone, and price range. 5 tension levels (Oversupply < 0.5, Balanced 0.5-1.0, Tension 1.0-2.0, High Tension 2.0-5.0, Critical >= 5.0). MTI impacts matching strategy: score thresholds, max proposals, proposal speed adjust per tension level.",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P2",
+      "mti_formula": "MTI = count(active_dossiers) / count(active_properties)",
+      "stratification_dimensions": ["property_type", "city_or_zone", "price_range"],
+      "price_ranges": [
+        {"range": "low", "min": 0, "max": 25000000, "label": "Low (< 25M FCFA)"},
+        {"range": "mid", "min": 25000000, "max": 75000000, "label": "Mid (25-75M FCFA)"},
+        {"range": "high", "min": 75000000, "max": 150000000, "label": "High (75-150M FCFA)"},
+        {"range": "premium", "min": 150000000, "max": null, "label": "Premium (> 150M FCFA)"}
+      ],
+      "tension_levels": [
+        {"mti_min": 0, "mti_max": 0.5, "label": "Oversupply", "market_condition": "More properties than seekers", "score_threshold_adjust": 50, "max_proposals": 15, "proposal_speed": "standard"},
+        {"mti_min": 0.5, "mti_max": 1.0, "label": "Balanced", "market_condition": "Equilibrium", "score_threshold_adjust": 60, "max_proposals": 10, "proposal_speed": "standard"},
+        {"mti_min": 1.0, "mti_max": 2.0, "label": "Tension", "market_condition": "More seekers than properties", "score_threshold_adjust": 65, "max_proposals": 7, "proposal_speed": "expedited"},
+        {"mti_min": 2.0, "mti_max": 5.0, "label": "High Tension", "market_condition": "Significant shortage", "score_threshold_adjust": 70, "max_proposals": 5, "proposal_speed": "immediate"},
+        {"mti_min": 5.0, "mti_max": null, "label": "Critical", "market_condition": "Extreme shortage", "score_threshold_adjust": 75, "max_proposals": 3, "proposal_speed": "vip_immediate"}
+      ],
+      "human_decision_required": false
+    },
+    {
+      "extension_id": "EXT-MAT-009",
+      "source_concept": "Dossier health score",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No dossier health scoring in V2 matching",
+      "extension_category": "matching_quality_scoring",
+      "proposed_domain": "Domain 6: Matching Engine / Domain 5: Dossier",
+      "proposed_entity": "DossierHealth (computed score on Project)",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement Dossier Health Score (DHS) = completeness(0.50) + data_quality(0.30) + freshness(0.20). 4 health levels: Excellent (85-100) full matching, Good (70-84) matching with suggestions, Average (50-69) limited matching, Poor (<50) matching blocked. Score displayed as readiness indicator on dossier dashboard.",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P2",
+      "dhs_formula": "DHS = completeness_score × 0.50 + data_quality_score × 0.30 + freshness_score × 0.20",
+      "completeness_factors": [
+        {"factor": "qualification_steps_completed", "max_score": 40, "source": "10 qualification steps, each worth 4 points"},
+        {"factor": "criteria_defined", "max_score": 30, "source": "Budget, location, type, features defined"},
+        {"factor": "documents_uploaded", "max_score": 30, "source": "Required documents for project type"}
+      ],
+      "data_quality_factors": [
+        {"factor": "budget_specificity", "max_score": 30, "source": "Exact range = 30, min only = 20, none = 0"},
+        {"factor": "location_precision", "max_score": 30, "source": "Neighborhood = 30, city = 15, region = 5"},
+        {"factor": "criteria_detail", "max_score": 40, "source": "3+ criteria with values = 40, 1-2 = 20, none = 0"}
+      ],
+      "freshness_factors": [
+        {"recency": "within_7d", "score": 100},
+        {"recency": "within_30d", "score": 70},
+        {"recency": "within_90d", "score": 40},
+        {"recency": "over_90d", "score": 10}
+      ],
+      "health_levels": [
+        {"min_score": 85, "max_score": 100, "label": "Excellent", "meaning": "Ready for matching", "action": "Full matching enabled"},
+        {"min_score": 70, "max_score": 84, "label": "Good", "meaning": "Minor improvements needed", "action": "Matching active, improvement suggestions"},
+        {"min_score": 50, "max_score": 69, "label": "Average", "meaning": "Requires more data", "action": "Matching limited, prompt for completion"},
+        {"min_score": 0, "max_score": 49, "label": "Poor", "meaning": "Not match-ready", "action": "Matching blocked, dossier incomplete"}
+      ],
+      "human_decision_required": false
+    },
+    {
+      "extension_id": "EXT-MAT-010",
+      "source_concept": "Property health score",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No property health scoring in V2 matching",
+      "extension_category": "matching_quality_scoring",
+      "proposed_domain": "Domain 6: Matching Engine / Domain 2: Property",
+      "proposed_entity": "PropertyHealth (computed score on Property)",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement Property Health Score (PHS) = completeness(0.40) + quality(0.30) + freshness(0.20) + verification(0.10). 4 health levels mirroring DHS. Score influences match priority and listing visibility. Properties with PHS < 50 get reduced match visibility.",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P2",
+      "phs_formula": "PHS = completeness_score × 0.40 + quality_score × 0.30 + freshness_score × 0.20 + verification_score × 0.10",
+      "completeness_factors": [
+        {"factor": "required_fields_filled", "max_score": 30, "source": "All mandatory fields present"},
+        {"factor": "photos_uploaded", "max_score": 25, "source": "Minimum 3 photos = 25, 1-2 = 15, none = 0"},
+        {"factor": "documents_attached", "max_score": 25, "source": "Required documents present"},
+        {"factor": "price_and_location_set", "max_score": 20, "source": "Price and precise location set"}
+      ],
+      "quality_factors": [
+        {"factor": "data_quality_grade", "max_score": 40, "source": "A+=40, A=30, B=20, C=10, D=0"},
+        {"factor": "professional_photos", "max_score": 20, "source": "Professional photography = 20, standard = 10"},
+        {"factor": "detailed_description", "max_score": 20, "source": "Description > 100 chars = 20, > 50 = 10, less = 0"},
+        {"factor": "amenities_listed", "max_score": 20, "source": "5+ amenities = 20, 2-4 = 10, <2 = 0"}
+      ],
+      "freshness_factors": [
+        {"recency": "within_7d", "score": 100},
+        {"recency": "within_30d", "score": 80},
+        {"recency": "within_90d", "score": 50},
+        {"recency": "over_90d", "score": 10}
+      ],
+      "verification_factors": [
+        {"status": "verified", "score": 100},
+        {"status": "pending", "score": 50},
+        {"status": "unverified", "score": 0},
+        {"status": "rejected", "score": 0}
+      ],
+      "health_levels": [
+        {"min_score": 85, "max_score": 100, "label": "Excellent", "meaning": "Premium listing quality", "action": "Boost in matching; Verified badge"},
+        {"min_score": 70, "max_score": 84, "label": "Good", "meaning": "High quality", "action": "Standard matching; Quality Listing badge"},
+        {"min_score": 50, "max_score": 69, "label": "Average", "meaning": "Needs improvement", "action": "Lower match priority; improvement prompts"},
+        {"min_score": 0, "max_score": 49, "label": "Poor", "meaning": "Incomplete", "action": "Reduced visibility; publication warnings"}
+      ],
+      "human_decision_required": false
+    },
+    {
+      "extension_id": "EXT-MAT-011",
+      "source_concept": "9 matching roles",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No matching role concept in V2 matching",
+      "extension_category": "matching_roles",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "MatchingEngine (role-based weight configuration)",
+      "proposed_structure": "CONFIGURE_EXISTING — Define 9 matching roles (demandeur, holder, agent, notaire, investor, diaspora, professional, guarantor, co_demandeur) with role-specific scoring weight configurations. Role is determined from user's intent_and project context. Each role has different weight distribution across the 5 scoring dimensions.",
+      "decision": "CONFIGURE_EXISTING",
+      "priority": "P1",
+      "roles": [
+        {
+          "role": "demandeur",
+          "type": "primary",
+          "description": "Property seeker (buyer/tenant)",
+          "weights": {"geographic": 0.25, "budget": 0.20, "property": 0.20, "behavioral": 0.15, "document_trust": 0.10, "transaction_success": 0.10}
+        },
+        {
+          "role": "holder",
+          "type": "primary",
+          "description": "Property owner/seller",
+          "weights": {"geographic": 0.15, "budget": 0.25, "property": 0.25, "behavioral": 0.10, "document_trust": 0.15, "transaction_success": 0.10}
+        },
+        {
+          "role": "agent",
+          "type": "facilitator",
+          "description": "Managing agent for owner",
+          "weights": {"geographic": 0.00, "budget": 0.00, "property": 0.00, "behavioral": 0.40, "document_trust": 0.40, "transaction_success": 0.20}
+        },
+        {
+          "role": "notaire",
+          "type": "professional",
+          "description": "Notary for transaction",
+          "weights": {"geographic": 0.00, "budget": 0.00, "property": 0.00, "behavioral": 0.00, "document_trust": 0.80, "transaction_success": 0.20}
+        },
+        {
+          "role": "investor",
+          "type": "specialized",
+          "description": "Investment buyer",
+          "weights": {"geographic": 0.15, "budget": 0.30, "property": 0.15, "behavioral": 0.10, "document_trust": 0.10, "transaction_success": 0.20}
+        },
+        {
+          "role": "diaspora",
+          "type": "specialized",
+          "description": "Diaspora seeker",
+          "weights": {"geographic": 0.10, "budget": 0.25, "property": 0.20, "behavioral": 0.10, "document_trust": 0.25, "transaction_success": 0.10}
+        },
+        {
+          "role": "professional",
+          "type": "service",
+          "description": "Professional service provider",
+          "weights": {"geographic": 0.25, "budget": 0.00, "property": 0.00, "behavioral": 0.35, "document_trust": 0.40, "transaction_success": 0.00}
+        },
+        {
+          "role": "guarantor",
+          "type": "secondary",
+          "description": "Guarantor for rental",
+          "weights": {"geographic": 0.00, "budget": 0.25, "property": 0.00, "behavioral": 0.00, "document_trust": 0.75, "transaction_success": 0.00}
+        },
+        {
+          "role": "co_demandeur",
+          "type": "secondary",
+          "description": "Co-buyer/co-tenant",
+          "weights": {"geographic": 0.25, "budget": 0.20, "property": 0.20, "behavioral": 0.15, "document_trust": 0.10, "transaction_success": 0.10}
+        }
+      ],
+      "human_decision_required": true,
+      "decision_question": "Matching role definitions and scoring weights per role"
+    },
+    {
+      "extension_id": "EXT-MAT-012",
+      "source_concept": "Progressive search expansion",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No search expansion logic in V2 matching",
+      "extension_category": "matching_search_expansion",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "SearchExpansion",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement 8-level progressive search expansion triggered when insufficient matches found. Expansion order: geographic (neighborhood→city→region→country), budget (±10%→±20%→±30%), property type (exact→family→any), surface (±20%→±40%), bedrooms (±1→±2). Each level has defined score impact. Match pool labeled (primary, expansion_geo, expansion_budget, expansion_type) for transparent display.",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P2",
+      "expansion_levels": [
+        {"level": 0, "name": "Initial search", "condition": "Original criteria", "action": "Full scoring as per original criteria", "pool": "primary"},
+        {"level": 1, "name": "Budget ±10%", "condition": "Top 10 matches all < 85", "action": "Expand budget tolerance ±10%", "impact": {"budget": -5}, "pool": "expansion_budget"},
+        {"level": 2, "name": "Nearby neighborhoods", "condition": "< 5 matches >= 70", "action": "Expand to nearby neighborhoods", "impact": {"geographic": -10}, "pool": "expansion_geo"},
+        {"level": 3, "name": "Budget ±20%", "condition": "< 3 matches >= 60", "action": "Expand budget tolerance ±20%", "impact": {"budget": -10}, "pool": "expansion_budget"},
+        {"level": 4, "name": "City-level (L2)", "condition": "< 3 matches >= 60", "action": "Expand to city-level geographic", "impact": {"geographic": -25}, "pool": "expansion_geo"},
+        {"level": 5, "name": "Region-level (L3)", "condition": "No matches >= 60", "action": "Expand to region-level geographic", "impact": {"geographic": -50}, "pool": "expansion_geo"},
+        {"level": 6, "name": "Property family match", "condition": "No matches >= 60", "action": "Expand property type to family match", "impact": {"property": -20}, "pool": "expansion_type"},
+        {"level": 7, "name": "Max expansion", "condition": "No matches at all", "action": "Country-level + max budget ±30%", "impact": {"geographic": -75, "budget": -15}, "pool": "expansion_geo"}
+      ],
+      "expansion_priority_order": ["Geographic (neighborhood → city → region → country)", "Budget (±10% → ±20% → ±30%)", "Property type (exact → family → any)", "Surface (±20% → ±40%)", "Bedrooms (±1 → ±2)"],
+      "human_decision_required": true,
+      "decision_question": "Search expansion rules: priority order and maximum expansion bounds"
+    },
+    {
+      "extension_id": "EXT-MAT-013",
+      "source_concept": "Continuous market surveillance",
+      "source_document": "MATCHING_MODEL.md (Gold)",
+      "source_rule_ids": ["MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "No market surveillance mechanism in V2 matching",
+      "extension_category": "matching_surveillance",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "MarketSurveillance",
+      "proposed_structure": "CREATE_NEW_ENGINE — Implement event-driven market surveillance that monitors 8 event types (new property published, availability change, price change, boost activation, verification complete, dossier criteria change, trust level change, new property in same zone). On each event, identify affected dossiers, compute scores, create match records if score >= 60 and competitive. Excellent matches (>= 85) trigger immediate push notification. Batch processing schedule: real-time for publications, 15min for price/availability, 1h for boosts, 24h for full re-evaluation.",
+      "decision": "CREATE_NEW_ENGINE",
+      "priority": "P2",
+      "surveillance_events": [
+        {"event_id": "MS-001", "event": "New property published", "source": "property.status → published", "action": "Score against all active dossiers", "schedule": "real-time"},
+        {"event_id": "MS-002", "event": "Property availability changes", "source": "availability → available/pending", "action": "Re-score for matched dossiers", "schedule": "15min"},
+        {"event_id": "MS-003", "event": "Property price changes", "source": "price_displayed updated", "action": "Re-score for matched dossiers", "schedule": "15min"},
+        {"event_id": "MS-004", "event": "Property boost activated", "source": "boost_level changes", "action": "Re-score (boost value update)", "schedule": "1h"},
+        {"event_id": "MS-005", "event": "Property verification completes", "source": "verification_status → verified", "action": "Re-score (trust update)", "schedule": "1h"},
+        {"event_id": "MS-006", "event": "Dossier criteria updated", "source": "project.qualification changed", "action": "Re-score all matches for project", "schedule": "real-time"},
+        {"event_id": "MS-007", "event": "User trust level changes", "source": "trust_level updated", "action": "Re-score affected matches", "schedule": "1h"},
+        {"event_id": "MS-008", "event": "New property in same zone", "source": "property.published, same zone", "action": "Score against zone-interested dossiers", "schedule": "real-time"}
+      ],
+      "notification_thresholds": [
+        {"score_min": 85, "action": "Immediate push notification to demandeur, flag for agent review"},
+        {"score_min": 70, "action": "Standard notification to demandeur"},
+        {"score_min": 60, "action": "Add to match pool, no notification"}
+      ],
+      "batch_schedule": [
+        {"frequency": "real-time", "scope": "New publications, dossier updates, same-zone listings", "action": "Immediate scoring"},
+        {"frequency": "15min", "scope": "Price/availability changes", "action": "Batch re-score"},
+        {"frequency": "1h", "scope": "Boost/verification/trust changes", "action": "Batch re-score"},
+        {"frequency": "24h", "scope": "Full dossier re-evaluation", "action": "Re-score all active matches"},
+        {"frequency": "on_demand", "scope": "Manual trigger", "action": "Full re-score"}
+      ],
+      "human_decision_required": false
+    }
+  ],
+  "implementation_notes": {
+    "phase_assignment": "Phase 1 Core Business (EXT-MAT-001 through EXT-MAT-006, EXT-MAT-011: P1) — Phase 2 Operations (EXT-MAT-007 through EXT-MAT-010, EXT-MAT-012, EXT-MAT-013: P2)",
+    "matching_flow_summary": "1. Trigger (new dossier, new property, event) → 2. Apply hard constraints → 3. Score 6 dimensions with weights → 4. Apply boost/penalty rules → 5. Classify compatibility level → 6. Rank (top 10 max) → 7. Propose to demandeur → 8. Double consent workflow → 9. Mise en relation → 10. Visit → 11. Negotiation → 12. Transaction (or rematch on failure)",
+    "key_algorithms": {
+      "composite_score": "CLAMP(SUM(dimension_score × dimension_weight) + MIN(total_boost, 50) - total_penalty, 0, 100)",
+      "geographic_score": "base_score_at_level × mobility_decay(distance) + zone_bonus",
+      "budget_score": "overlap_percentage(pricing_range) + negotiable_bonus",
+      "dhs": "completeness × 0.50 + data_quality × 0.30 + freshness × 0.20",
+      "phs": "completeness × 0.40 + quality × 0.30 + freshness × 0.20 + verification × 0.10",
+      "mti": "count(active_dossiers) / count(active_properties) per segment"
+    }
+  },
+  "crosswalk_references": {
+    "LAWIM_UNIFIED_DOMAIN_MODEL": ["§6 (Matching Engine)"],
+    "required_extensions.json": ["matching section (EXT-MAT-001 through EXT-MAT-013)"],
+    "WORKFLOW_STATE_CROSSWALK": ["EXT-WF-001 (Matching Lifecycle)"],
+    "MATCHING_MODEL.md": ["Full source document"]
+  }
+}

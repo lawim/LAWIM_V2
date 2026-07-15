@@ -1,0 +1,961 @@
+{
+  "document": {
+    "id": "LAWIM-H13-QUAL-EXT-V1",
+    "title": "Qualification Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Enriched catalog of all qualification engine extensions — 107 matrices, field dictionary, priority system, progressive 10-step order, per-channel adaptation, versioning, and applicability rules",
+    "sources": [
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §6 (Dossier/Project Model)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §7 (Matching Engine)",
+      "required_extensions.json (qualification_engine)",
+      "MATRIX_CATALOG.md (Gold)",
+      "QUALIFICATION_MODEL.md (Gold)"
+    ],
+    "total_extensions": 11,
+    "by_category": {
+      "matrix_definition": 7,
+      "field_semantics": 1,
+      "question_priority": 1,
+      "progressive_order": 1,
+      "channel_adaptation": 1
+    },
+    "total_matrices": 107,
+    "by_domain": {
+      "residential": 18,
+      "land": 7,
+      "commercial": 21,
+      "investment": 5,
+      "financing": 10,
+      "professional": 27,
+      "service": 24
+    }
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-QUAL-001",
+      "source_concept": "Residential Search qualification matrices (18 matrices)",
+      "source_document": "MATRIX_CATALOG.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-MAT-RES-001",
+        "GOLD-MAT-RES-002",
+        "GOLD-MAT-RES-003",
+        "GOLD-MAT-RES-004",
+        "GOLD-MAT-RES-005",
+        "GOLD-MAT-RES-006",
+        "GOLD-MAT-RES-007",
+        "GOLD-MAT-RES-008",
+        "GOLD-MAT-RES-009",
+        "GOLD-MAT-RES-010",
+        "GOLD-MAT-RES-011",
+        "GOLD-MAT-RES-012",
+        "GOLD-MAT-RES-013",
+        "GOLD-MAT-RES-014",
+        "GOLD-MAT-RES-015",
+        "GOLD-MAT-RES-016",
+        "GOLD-MAT-RES-017",
+        "GOLD-MAT-RES-018"
+      ],
+      "current_target": "Project/Dossier qualification system",
+      "current_limitation": "No qualification matrix system exists in V2. Property qualification is handled via free-form project_type selection with no structured field collection.",
+      "extension_category": "matrix_definition",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "QualificationMatrixDefinition",
+      "proposed_structure": "Create QualificationMatrixDefinition entity as versioned metadata (not rigid columns). Store matrix definitions in database with codes RES-APT-BUY through RES-OTH-RENT. Each matrix links to N QualificationFieldDefinitions (15-26 fields per matrix), QualificationRuleDefinitions, ReadinessDefinitions, and MatrixApplicability rules. Matrix versions stored as immutable snapshots in MatrixVersion entity. Qualification answers stored as JSON document (qualification_data) on Project entity.",
+      "required_fields": [
+        "QualificationMatrixDefinition.id: UUID",
+        "QualificationMatrixDefinition.matrix_code: String (unique)",
+        "QualificationMatrixDefinition.name: JSON (multilingual)",
+        "QualificationMatrixDefinition.domain: Enum (residential|land|commercial|investment|financing|professional|service)",
+        "QualificationMatrixDefinition.family_code: String",
+        "QualificationMatrixDefinition.version: String (semver)",
+        "QualificationMatrixDefinition.status: Enum (draft|active|deprecated|retired)",
+        "QualificationMatrixDefinition.field_count: Int",
+        "QualificationMatrixDefinition.is_default_for_family: Boolean",
+        "Project.qualification_data: JSON",
+        "Project.qualification_matrix_id: UUID?",
+        "Project.qualification_version: String?",
+        "Project.qualification_step: Int (1-10)"
+      ],
+      "required_relations": [
+        "QualificationMatrixDefinition 1:N QualificationFieldDefinition",
+        "QualificationMatrixDefinition 1:N QualificationRuleDefinition",
+        "QualificationMatrixDefinition 1:N ReadinessDefinition",
+        "QualificationMatrixDefinition 1:N MatrixVersion",
+        "QualificationMatrixDefinition 1:N MatrixApplicability",
+        "Project N:1 QualificationMatrixDefinition"
+      ],
+      "required_events": [
+        "qualification.matrix_assigned (payload: {project_id, matrix_code, version})",
+        "qualification.step_completed (payload: {project_id, step, fields_answered})",
+        "qualification.completed (payload: {project_id, matrix_code, version})",
+        "qualification.escalated (payload: {project_id, reason, missing_fields})"
+      ],
+      "required_permissions": [
+        "QUAL: read matrix definitions (all authenticated users)",
+        "QUAL: administer matrix (admin, manager)",
+        "QUAL: create version (admin only)",
+        "QUAL: activate version (admin only)",
+        "QUAL: deprecate matrix (admin only)"
+      ],
+      "required_states": [
+        "QualificationMatrixDefinition.status ∈ {draft, active, deprecated, retired}",
+        "MatrixVersion.version_type ∈ {major, minor, patch}",
+        "Project.qualification_step ∈ {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}"
+      ],
+      "H0.5_matrices_impacted": [
+        "QUAL-MAT-001 (Residential Matrices)",
+        "QUAL-MAT-002 (Field Definitions)"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "matrix_catalog": {
+        "domain": "residential",
+        "count": 18,
+        "matrices": [
+          {"code": "RES-APT-BUY", "name": "Recherche Appartement Achat", "transaction_types": ["buy"], "property_types": ["apartment"]},
+          {"code": "RES-APT-RENT", "name": "Recherche Appartement Location", "transaction_types": ["rent"], "property_types": ["apartment"]},
+          {"code": "RES-HOU-BUY", "name": "Recherche Maison Achat", "transaction_types": ["buy"], "property_types": ["house"]},
+          {"code": "RES-HOU-RENT", "name": "Recherche Maison Location", "transaction_types": ["rent"], "property_types": ["house"]},
+          {"code": "RES-VIL-BUY", "name": "Recherche Villa Achat", "transaction_types": ["buy"], "property_types": ["villa"]},
+          {"code": "RES-VIL-RENT", "name": "Recherche Villa Location", "transaction_types": ["rent"], "property_types": ["villa"]},
+          {"code": "RES-STU-BUY", "name": "Recherche Studio Achat", "transaction_types": ["buy"], "property_types": ["studio"]},
+          {"code": "RES-STU-RENT", "name": "Recherche Studio Location", "transaction_types": ["rent"], "property_types": ["studio"]},
+          {"code": "RES-DUP-BUY", "name": "Recherche Duplex Achat", "transaction_types": ["buy"], "property_types": ["duplex"]},
+          {"code": "RES-DUP-RENT", "name": "Recherche Duplex Location", "transaction_types": ["rent"], "property_types": ["duplex"]},
+          {"code": "RES-PEN-BUY", "name": "Recherche Penthouse Achat", "transaction_types": ["buy"], "property_types": ["penthouse"]},
+          {"code": "RES-PEN-RENT", "name": "Recherche Penthouse Location", "transaction_types": ["rent"], "property_types": ["penthouse"]},
+          {"code": "RES-CHM-RENT", "name": "Recherche Chambre Location", "transaction_types": ["rent"], "property_types": ["room"]},
+          {"code": "RES-RES-BUY", "name": "Recherche Résidence Achat", "transaction_types": ["buy"], "property_types": ["residence"]},
+          {"code": "RES-RES-RENT", "name": "Recherche Résidence Location", "transaction_types": ["rent"], "property_types": ["residence"]},
+          {"code": "RES-CONDO-BUY", "name": "Recherche Condominium Achat", "transaction_types": ["buy"], "property_types": ["condominium"]},
+          {"code": "RES-CONDO-RENT", "name": "Recherche Condominium Location", "transaction_types": ["rent"], "property_types": ["condominium"]},
+          {"code": "RES-OTH-RENT", "name": "Recherche Autre Logement Location", "transaction_types": ["rent"], "property_types": ["other_residential"]}
+        ]
+      }
+    },
+    {
+      "extension_id": "EXT-QUAL-002",
+      "source_concept": "Land Search qualification matrices (7 matrices)",
+      "source_document": "MATRIX_CATALOG.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-MAT-LND-001",
+        "GOLD-MAT-LND-002",
+        "GOLD-MAT-LND-003",
+        "GOLD-MAT-LND-004",
+        "GOLD-MAT-LND-005",
+        "GOLD-MAT-LND-006",
+        "GOLD-MAT-LND-007"
+      ],
+      "current_target": "Project/Dossier qualification system",
+      "current_limitation": "No land-specific qualification matrices exist. Land property type exists but has no differentiated qualification fields or title status handling.",
+      "extension_category": "matrix_definition",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "QualificationMatrixDefinition (land domain)",
+      "proposed_structure": "Implement 7 land qualification matrices as QualificationMatrixDefinition records with domain='land'. Each matrix includes land-specific fields: title_status (deal_breaker), is_constructible (hard_constraint), land_area (strong_preference), flood_zone (deal_breaker). Matrices differentiated by transaction type (buy vs invest) and land subtype (plot, agricultural_land, commercial_land, industrial_land).",
+      "required_fields": [
+        "QualificationMatrixDefinition (domain=land): Same structure as EXT-QUAL-001",
+        "QualificationFieldDefinition: title_status, is_constructible, land_area, land_use, road_access, electricity_nearby, water_nearby, flood_zone, land_orientation"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["QUAL-MAT-003 (Land Matrices)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "matrix_catalog": {
+        "domain": "land",
+        "count": 7,
+        "matrices": [
+          {"code": "LND-PLT-BUY", "name": "Recherche Terrain Achat", "transaction_types": ["buy"], "property_types": ["plot"]},
+          {"code": "LND-PLT-INV", "name": "Recherche Terrain Investissement", "transaction_types": ["invest"], "property_types": ["plot"]},
+          {"code": "LND-AGR-BUY", "name": "Recherche Terrain Agricole Achat", "transaction_types": ["buy"], "property_types": ["agricultural_land"]},
+          {"code": "LND-AGR-INV", "name": "Recherche Terrain Agricole Investissement", "transaction_types": ["invest"], "property_types": ["agricultural_land"]},
+          {"code": "LND-COM-BUY", "name": "Recherche Terrain Commercial Achat", "transaction_types": ["buy"], "property_types": ["commercial_land"]},
+          {"code": "LND-COM-INV", "name": "Recherche Terrain Commercial Investissement", "transaction_types": ["invest"], "property_types": ["commercial_land"]},
+          {"code": "LND-IND-BUY", "name": "Recherche Terrain Industriel Achat", "transaction_types": ["buy"], "property_types": ["industrial_land"]}
+        ]
+      }
+    },
+    {
+      "extension_id": "EXT-QUAL-003",
+      "source_concept": "Commercial Search qualification matrices (21 matrices)",
+      "source_document": "MATRIX_CATALOG.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-MAT-COM-001",
+        "GOLD-MAT-COM-002",
+        "GOLD-MAT-COM-003",
+        "GOLD-MAT-COM-004",
+        "GOLD-MAT-COM-005",
+        "GOLD-MAT-COM-006",
+        "GOLD-MAT-COM-007",
+        "GOLD-MAT-COM-008",
+        "GOLD-MAT-COM-009",
+        "GOLD-MAT-COM-010",
+        "GOLD-MAT-COM-011",
+        "GOLD-MAT-COM-012",
+        "GOLD-MAT-COM-013",
+        "GOLD-MAT-COM-014",
+        "GOLD-MAT-COM-015",
+        "GOLD-MAT-COM-016",
+        "GOLD-MAT-COM-017",
+        "GOLD-MAT-COM-018",
+        "GOLD-MAT-COM-019",
+        "GOLD-MAT-COM-020",
+        "GOLD-MAT-COM-021"
+      ],
+      "current_target": "Project/Dossier qualification system",
+      "current_limitation": "No commercial qualification matrices exist. Commercial property types are not differentiated from residential in qualification flow.",
+      "extension_category": "matrix_definition",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "QualificationMatrixDefinition (commercial domain)",
+      "proposed_structure": "Implement 21 commercial qualification matrices as QualificationMatrixDefinition records with domain='commercial'. Each matrix includes commercial-specific fields: commercial_type, front_window, ceiling_height, floor_load, loading_dock, parking_capacity, access_truck, visibility, commercial_zone, license_type. Matrices cover office, shop, warehouse, hotel, garage, hangar, laboratory, club_hall, and multi-commercial types across buy, rent, and commercial_lease transaction types.",
+      "required_fields": [
+        "QualificationFieldDefinition: commercial_type, front_window, ceiling_height, floor_load, loading_dock, parking_capacity, access_truck, visibility, commercial_zone, license_type"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["QUAL-MAT-004 (Commercial Matrices)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "matrix_catalog": {
+        "domain": "commercial",
+        "count": 21,
+        "matrices": [
+          {"code": "COM-OFF-BUY", "name": "Recherche Bureau Achat", "transaction_types": ["buy"], "property_types": ["office"]},
+          {"code": "COM-OFF-RENT", "name": "Recherche Bureau Location", "transaction_types": ["rent"], "property_types": ["office"]},
+          {"code": "COM-SHP-BUY", "name": "Recherche Local Commercial Achat", "transaction_types": ["buy"], "property_types": ["shop"]},
+          {"code": "COM-SHP-RENT", "name": "Recherche Local Commercial Location", "transaction_types": ["rent"], "property_types": ["shop"]},
+          {"code": "COM-WRH-BUY", "name": "Recherche Entrepôt Achat", "transaction_types": ["buy"], "property_types": ["warehouse"]},
+          {"code": "COM-WRH-RENT", "name": "Recherche Entrepôt Location", "transaction_types": ["rent"], "property_types": ["warehouse"]},
+          {"code": "COM-RES-BUY", "name": "Recherche Résidence Commerciale Achat", "transaction_types": ["buy"], "property_types": ["commercial_residence"]},
+          {"code": "COM-RES-RENT", "name": "Recherche Résidence Commerciale Location", "transaction_types": ["rent"], "property_types": ["commercial_residence"]},
+          {"code": "COM-HOT-BUY", "name": "Recherche Hôtel Achat", "transaction_types": ["buy"], "property_types": ["hotel"]},
+          {"code": "COM-HOT-RENT", "name": "Recherche Hôtel Location", "transaction_types": ["rent"], "property_types": ["hotel"]},
+          {"code": "COM-GAR-BUY", "name": "Recherche Parking/Box Achat", "transaction_types": ["buy"], "property_types": ["garage"]},
+          {"code": "COM-GAR-RENT", "name": "Recherche Parking/Box Location", "transaction_types": ["rent"], "property_types": ["garage"]},
+          {"code": "COM-LAN-BUY", "name": "Recherche Hangar Achat", "transaction_types": ["buy"], "property_types": ["hangar"]},
+          {"code": "COM-LAN-RENT", "name": "Recherche Hangar Location", "transaction_types": ["rent"], "property_types": ["hangar"]},
+          {"code": "COM-LAB-BUY", "name": "Recherche Laboratoire Achat", "transaction_types": ["buy"], "property_types": ["laboratory"]},
+          {"code": "COM-LAB-RENT", "name": "Recherche Laboratoire Location", "transaction_types": ["rent"], "property_types": ["laboratory"]},
+          {"code": "COM-CLB-BUY", "name": "Recherche Club/Salle Achat", "transaction_types": ["buy"], "property_types": ["club_hall"]},
+          {"code": "COM-CLB-RENT", "name": "Recherche Club/Salle Location", "transaction_types": ["rent"], "property_types": ["club_hall"]},
+          {"code": "COM-COM-BUY", "name": "Recherche Local Commercial Multi Achat", "transaction_types": ["buy"], "property_types": ["commercial_multi"]},
+          {"code": "COM-COM-RENT", "name": "Recherche Local Commercial Multi Location", "transaction_types": ["rent"], "property_types": ["commercial_multi"]},
+          {"code": "COM-COM-LEASE", "name": "Recherche Bail Commercial", "transaction_types": ["commercial_lease"], "property_types": ["commercial"]}
+        ]
+      }
+    },
+    {
+      "extension_id": "EXT-QUAL-004",
+      "source_concept": "Investment qualification matrices (5 matrices)",
+      "source_document": "MATRIX_CATALOG.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-MAT-INV-001",
+        "GOLD-MAT-INV-002",
+        "GOLD-MAT-INV-003",
+        "GOLD-MAT-INV-004",
+        "GOLD-MAT-INV-005"
+      ],
+      "current_target": "Project/Dossier qualification system",
+      "current_limitation": "No investment-specific qualification matrices exist. Investment intent is not differentiated in qualification flow.",
+      "extension_category": "matrix_definition",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "QualificationMatrixDefinition (investment domain)",
+      "proposed_structure": "Implement 5 investment qualification matrices as QualificationMatrixDefinition records with domain='investment'. Each matrix includes investment-specific fields: investment_type, roi_target, investment_horizon, monthly_rental_income, management_type, exit_strategy, co_investors. Matrices differentiate by investment target: residential, commercial, land, project development, and condominium syndicate.",
+      "required_fields": [
+        "QualificationFieldDefinition: investment_type, roi_target, investment_horizon, monthly_rental_income, management_type, exit_strategy, co_investors"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["QUAL-MAT-005 (Investment Matrices)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "matrix_catalog": {
+        "domain": "investment",
+        "count": 5,
+        "matrices": [
+          {"code": "INV-RES-BUY", "name": "Investissement Résidentiel", "transaction_types": ["invest"], "property_types": ["residential"]},
+          {"code": "INV-COM-BUY", "name": "Investissement Commercial", "transaction_types": ["invest"], "property_types": ["commercial"]},
+          {"code": "INV-LND-BUY", "name": "Investissement Terrain", "transaction_types": ["invest"], "property_types": ["land"]},
+          {"code": "INV-PRO-BUY", "name": "Investissement Promotion Immobilière", "transaction_types": ["invest"], "property_types": ["project_development"]},
+          {"code": "INV-SYN-BUY", "name": "Investissement Syndicat Copropriété", "transaction_types": ["invest"], "property_types": ["condominium_syndicate"]}
+        ]
+      }
+    },
+    {
+      "extension_id": "EXT-QUAL-005",
+      "source_concept": "Financing Request qualification matrices (10 matrices)",
+      "source_document": "MATRIX_CATALOG.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-MAT-FIN-001",
+        "GOLD-MAT-FIN-002",
+        "GOLD-MAT-FIN-003",
+        "GOLD-MAT-FIN-004",
+        "GOLD-MAT-FIN-005",
+        "GOLD-MAT-FIN-006",
+        "GOLD-MAT-FIN-007",
+        "GOLD-MAT-FIN-008",
+        "GOLD-MAT-FIN-009",
+        "GOLD-MAT-FIN-010"
+      ],
+      "current_target": "Project/Dossier qualification system",
+      "current_limitation": "No financing qualification matrices exist. Financing requests are not handled as a standalone qualification path.",
+      "extension_category": "matrix_definition",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "QualificationMatrixDefinition (financing domain)",
+      "proposed_structure": "Implement 10 financing qualification matrices as QualificationMatrixDefinition records with domain='financing'. Each matrix includes financing-specific fields: financing_type, loan_amount, down_payment, loan_duration, monthly_payment, interest_rate, employment_status, monthly_income, existing_loans, guarantor_available. Matrices cover mortgage (buy/construction/renovation), personal loan, lease, investment financing, construction loan, bridge loan, top-up loan, and social housing financing.",
+      "required_fields": [
+        "QualificationFieldDefinition: financing_type, loan_amount, down_payment, loan_duration, monthly_payment, interest_rate, employment_status, monthly_income, existing_loans, guarantor_available"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["QUAL-MAT-006 (Financing Matrices)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "matrix_catalog": {
+        "domain": "financing",
+        "count": 10,
+        "matrices": [
+          {"code": "FIN-MTG-BUY", "name": "Crédit Immobilier Achat", "transaction_types": ["finance"], "property_types": ["any"]},
+          {"code": "FIN-MTG-CON", "name": "Crédit Immobilier Construction", "transaction_types": ["finance"], "property_types": ["any"]},
+          {"code": "FIN-MTG-REN", "name": "Crédit Immobilier Rénovation", "transaction_types": ["finance"], "property_types": ["any"]},
+          {"code": "FIN-PER-BUY", "name": "Prêt Personnel Immobilier", "transaction_types": ["finance"], "property_types": ["any"]},
+          {"code": "FIN-LEA-BUY", "name": "Crédit-Bail Immobilier", "transaction_types": ["finance"], "property_types": ["any"]},
+          {"code": "FIN-INV-BUY", "name": "Financement Investissement", "transaction_types": ["finance"], "property_types": ["investment"]},
+          {"code": "FIN-CON-BUY", "name": "Prêt Construction", "transaction_types": ["finance"], "property_types": ["any"]},
+          {"code": "FIN-BRI-BUY", "name": "Prêt Pont (Bridge Loan)", "transaction_types": ["finance"], "property_types": ["any"]},
+          {"code": "FIN-TOP-BUY", "name": "Prêt Relais (Top-Up)", "transaction_types": ["finance"], "property_types": ["any"]},
+          {"code": "FIN-SOC-BUY", "name": "Financement Social (Logement Social)", "transaction_types": ["finance"], "property_types": ["social_housing"]}
+        ]
+      }
+    },
+    {
+      "extension_id": "EXT-QUAL-006",
+      "source_concept": "Professional Search qualification matrices (27 matrices)",
+      "source_document": "MATRIX_CATALOG.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-MAT-PRO-001",
+        "GOLD-MAT-PRO-002",
+        "GOLD-MAT-PRO-003",
+        "GOLD-MAT-PRO-004",
+        "GOLD-MAT-PRO-005",
+        "GOLD-MAT-PRO-006",
+        "GOLD-MAT-PRO-007",
+        "GOLD-MAT-PRO-008",
+        "GOLD-MAT-PRO-009",
+        "GOLD-MAT-PRO-010",
+        "GOLD-MAT-PRO-011",
+        "GOLD-MAT-PRO-012",
+        "GOLD-MAT-PRO-013",
+        "GOLD-MAT-PRO-014",
+        "GOLD-MAT-PRO-015",
+        "GOLD-MAT-PRO-016",
+        "GOLD-MAT-PRO-017",
+        "GOLD-MAT-PRO-018",
+        "GOLD-MAT-PRO-019",
+        "GOLD-MAT-PRO-020",
+        "GOLD-MAT-PRO-021",
+        "GOLD-MAT-PRO-022",
+        "GOLD-MAT-PRO-023",
+        "GOLD-MAT-PRO-024",
+        "GOLD-MAT-PRO-025",
+        "GOLD-MAT-PRO-026",
+        "GOLD-MAT-PRO-027"
+      ],
+      "current_target": "Project/Dossier qualification system",
+      "current_limitation": "No professional search matrices exist. FIND-type project has no structured qualification for professional service discovery.",
+      "extension_category": "matrix_definition",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "QualificationMatrixDefinition (professional domain)",
+      "proposed_structure": "Implement 27 professional search matrices as QualificationMatrixDefinition records with domain='professional'. Each matrix represents a distinct professional type (agent, notary, surveyor, architect, engineer, electrician, plumber, mason, carpenter, painter, tiler, roofer, real estate expert, appraiser, condo manager, drone videographer, broker, security, admin provider, lawyer, accountant, insurance, banker, developer, decorator, gardener, pool builder). Includes professional search fields: professional_type, service_required, city_pro, neighborhood_pro, language_pro, years_experience, certification, urgency_pro.",
+      "required_fields": [
+        "QualificationFieldDefinition: professional_type, service_required, city_pro, neighborhood_pro, language_pro, years_experience, certification, urgency_pro"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["QUAL-MAT-007 (Professional Matrices)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "matrix_catalog": {
+        "domain": "professional",
+        "count": 27,
+        "matrices": [
+          {"code": "PRO-AGE-FND", "name": "Recherche Agent Immobilier", "service_type": "agent_immobilier"},
+          {"code": "PRO-NOT-FND", "name": "Recherche Notaire", "service_type": "notaire"},
+          {"code": "PRO-GEO-FND", "name": "Recherche Géomètre", "service_type": "geometre"},
+          {"code": "PRO-ARC-FND", "name": "Recherche Architecte", "service_type": "architecte"},
+          {"code": "PRO-ENG-FND", "name": "Recherche Ingénieur/Génie Civil", "service_type": "ingenieur_civil"},
+          {"code": "PRO-ELE-FND", "name": "Recherche Électricien", "service_type": "electricien"},
+          {"code": "PRO-PLM-FND", "name": "Recherche Plombier", "service_type": "plombier"},
+          {"code": "PRO-MAC-FND", "name": "Recherche Maçon", "service_type": "macon"},
+          {"code": "PRO-MEN-FND", "name": "Recherche Menuisier", "service_type": "menuisier"},
+          {"code": "PRO-PEI-FND", "name": "Recherche Peintre", "service_type": "peintre"},
+          {"code": "PRO-CAR-FND", "name": "Recherche Carreleur", "service_type": "carreleur"},
+          {"code": "PRO-COU-FND", "name": "Recherche Couvreur", "service_type": "couvreur"},
+          {"code": "PRO-EXP-FND", "name": "Recherche Expert Immobilier", "service_type": "expert_immobilier"},
+          {"code": "PRO-EVA-FND", "name": "Recherche Évaluateur", "service_type": "evaluateur"},
+          {"code": "PRO-SYN-FND", "name": "Recherche Syndic", "service_type": "syndic"},
+          {"code": "PRO-VID-FND", "name": "Recherche Vidéaste Drone", "service_type": "videaste_drone"},
+          {"code": "PRO-COU-FND2", "name": "Recherche Courtier", "service_type": "courtier"},
+          {"code": "PRO-GAR-FND", "name": "Recherche Gardiennage", "service_type": "gardiennage"},
+          {"code": "PRO-ADM-FND", "name": "Recherche Prestataire Administratif", "service_type": "prestataire_administratif"},
+          {"code": "PRO-AVOCAT", "name": "Recherche Avocat", "service_type": "avocat"},
+          {"code": "PRO-COMPTA", "name": "Recherche Comptable", "service_type": "comptable"},
+          {"code": "PRO-ASSU-FND", "name": "Recherche Assurance", "service_type": "assurance"},
+          {"code": "PRO-BANQ-FND", "name": "Recherche Banquier", "service_type": "banquier"},
+          {"code": "PRO-PROM-FND", "name": "Recherche Promoteur Immobilier", "service_type": "promoteur"},
+          {"code": "PRO-DECO-FND", "name": "Recherche Décorateur", "service_type": "decorateur"},
+          {"code": "PRO-JARD-FND", "name": "Recherche Jardinier", "service_type": "jardinier"},
+          {"code": "PRO-PISC-FND", "name": "Recherche Pisciniste", "service_type": "pisciniste"}
+        ]
+      }
+    },
+    {
+      "extension_id": "EXT-QUAL-007",
+      "source_concept": "Real Estate Service qualification matrices (24 matrices)",
+      "source_document": "MATRIX_CATALOG.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-MAT-SVC-001",
+        "GOLD-MAT-SVC-002",
+        "GOLD-MAT-SVC-003",
+        "GOLD-MAT-SVC-004",
+        "GOLD-MAT-SVC-005",
+        "GOLD-MAT-SVC-006",
+        "GOLD-MAT-SVC-007",
+        "GOLD-MAT-SVC-008",
+        "GOLD-MAT-SVC-009",
+        "GOLD-MAT-SVC-010",
+        "GOLD-MAT-SVC-011",
+        "GOLD-MAT-SVC-012",
+        "GOLD-MAT-SVC-013",
+        "GOLD-MAT-SVC-014",
+        "GOLD-MAT-SVC-015",
+        "GOLD-MAT-SVC-016",
+        "GOLD-MAT-SVC-017",
+        "GOLD-MAT-SVC-018",
+        "GOLD-MAT-SVC-019",
+        "GOLD-MAT-SVC-020",
+        "GOLD-MAT-SVC-021",
+        "GOLD-MAT-SVC-022",
+        "GOLD-MAT-SVC-023",
+        "GOLD-MAT-SVC-024"
+      ],
+      "current_target": "Project/Dossier qualification system",
+      "current_limitation": "No real estate service qualification matrices exist. SERVICE-type project has no structured qualification for service procurement.",
+      "extension_category": "matrix_definition",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "QualificationMatrixDefinition (service domain)",
+      "proposed_structure": "Implement 24 real estate service qualification matrices as QualificationMatrixDefinition records with domain='service'. Each matrix represents a distinct real estate service type: estimation, expertise, document verification, visit, second visit, rental management, rental listing, sales listing, publication, photography, videography, drone, home staging, renovation, construction, maintenance, cleaning, security, moving, insurance, legal advice, tax advice, condo management, rent recovery. Includes service request fields: service_type, property_to_service, city_service, service_description, service_timeline, service_budget.",
+      "required_fields": [
+        "QualificationFieldDefinition: service_type, property_to_service, city_service, service_description, service_timeline, service_budget"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["QUAL-MAT-008 (Service Matrices)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "matrix_catalog": {
+        "domain": "service",
+        "count": 24,
+        "matrices": [
+          {"code": "SVC-EST-REQ", "name": "Demande d'Estimation", "service_type": "estimation"},
+          {"code": "SVC-EXP-REQ", "name": "Demande d'Expertise", "service_type": "expertise"},
+          {"code": "SVC-VER-REQ", "name": "Vérification Documentaire", "service_type": "verification_documentaire"},
+          {"code": "SVC-VIS-REQ", "name": "Demande de Visite", "service_type": "visite_property"},
+          {"code": "SVC-CVIS-REQ", "name": "Demande de Contre-Visite", "service_type": "contre_visite"},
+          {"code": "SVC-GLOC-REQ", "name": "Demande Gestion Locative", "service_type": "gestion_locative"},
+          {"code": "SVC-MLOC-REQ", "name": "Demande Mise en Location", "service_type": "mise_en_location"},
+          {"code": "SVC-MVENT-REQ", "name": "Demande Mise en Vente", "service_type": "mise_en_vente"},
+          {"code": "SVC-PUB-REQ", "name": "Demande Publication", "service_type": "publication_service"},
+          {"code": "SVC-PHOT-REQ", "name": "Demande Photographie", "service_type": "photographie"},
+          {"code": "SVC-VID-REQ", "name": "Demande Vidéo", "service_type": "video_service"},
+          {"code": "SVC-DRON-REQ", "name": "Demande Drone", "service_type": "drone_service"},
+          {"code": "SVC-HOME-REQ", "name": "Demande Home Staging", "service_type": "home_staging"},
+          {"code": "SVC-RENO-REQ", "name": "Demande Rénovation", "service_type": "renovation_service"},
+          {"code": "SVC-CONS-REQ", "name": "Demande Construction", "service_type": "construction_service"},
+          {"code": "SVC-ENT-REQ", "name": "Demande Entretien", "service_type": "entretien"},
+          {"code": "SVC-NET-REQ", "name": "Demande Nettoyage", "service_type": "nettoyage"},
+          {"code": "SVC-SEC-REQ", "name": "Demande Sécurisation", "service_type": "securisation"},
+          {"code": "SVC-DEM-REQ", "name": "Demande Déménagement", "service_type": "demenagement"},
+          {"code": "SVC-ASS-REQ", "name": "Demande Assurance", "service_type": "assurance_service"},
+          {"code": "SVC-JUR-REQ", "name": "Demande Conseil Juridique", "service_type": "conseil_juridique"},
+          {"code": "SVC-FIS-REQ", "name": "Demande Conseil Fiscal", "service_type": "conseil_fiscal"},
+          {"code": "SVC-CPROP-REQ", "name": "Demande Gestion Copropriété", "service_type": "gestion_copropriete"},
+          {"code": "SVC-REC-REQ", "name": "Demande Recouvrement Locatif", "service_type": "recouvrement_locatif"}
+        ]
+      }
+    },
+    {
+      "extension_id": "EXT-QUAL-008",
+      "source_concept": "Field dictionary with matching roles",
+      "source_document": "QUALIFICATION_MODEL.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-QUAL-FIELD-001",
+        "GOLD-QUAL-FIELD-002",
+        "GOLD-QUAL-FIELD-003",
+        "GOLD-QUAL-FIELD-004",
+        "GOLD-QUAL-FIELD-005",
+        "GOLD-QUAL-FIELD-006",
+        "GOLD-QUAL-FIELD-007",
+        "GOLD-QUAL-FIELD-008",
+        "GOLD-QUAL-FIELD-009",
+        "GOLD-QUAL-FIELD-010"
+      ],
+      "current_target": "Qualification field definitions",
+      "current_limitation": "No field-to-role mapping exists in V2. Qualification fields are not mapped to matching engine roles, making qualification data unusable for automated matching.",
+      "extension_category": "field_semantics",
+      "proposed_domain": "Domain 5: Dossier/Project Model + Domain 6: Matching Engine",
+      "proposed_entity": "QualificationFieldDefinition + MatchingSemanticDefinition",
+      "proposed_structure": "Create QualificationFieldDefinition entity as the canonical field dictionary. Each field maps to a MatchingSemanticDefinition that declares: matching_role (hard_constraint, strong_preference, weak_preference, nice_to_have, deal_breaker, tie_breaker, exclusion, boost, transaction_blocker), weight (0.0-1.0), scoring_function (exact_match, range_match, fuzzy_match, boolean_match, enum_match, geographic_distance), boost_value (for boost role), penalty_value (for mismatch penalties), is_filter (pre-filter before scoring), filter_operator, and exclusion_values. Each field also declares its priority (mandatory, important, optional), step_number (1-10), per-channel visibility flags, and conditional dependency rules. Core fields (intention, property_type, city, budget_min, budget_max) are shared across all matrices. Domain-specific fields are defined per matrix family.",
+      "required_fields": [
+        "QualificationFieldDefinition.id: UUID",
+        "QualificationFieldDefinition.matrix_id: UUID",
+        "QualificationFieldDefinition.field_code: String",
+        "QualificationFieldDefinition.label: JSON",
+        "QualificationFieldDefinition.field_type: Enum (text|number|decimal|boolean|enum|multiselect|date|location|range)",
+        "QualificationFieldDefinition.priority: Enum (mandatory|important|optional)",
+        "QualificationFieldDefinition.step_number: Int (1-10)",
+        "QualificationFieldDefinition.matching_role: Enum (hard_constraint|strong_preference|weak_preference|nice_to_have|deal_breaker|tie_breaker|exclusion|boost|transaction_blocker)",
+        "QualificationFieldDefinition.matching_weight: Float?",
+        "QualificationFieldDefinition.is_visible_on_whatsapp: Boolean",
+        "QualificationFieldDefinition.is_visible_on_telegram: Boolean",
+        "QualificationFieldDefinition.is_visible_on_dashboard: Boolean",
+        "QualificationFieldDefinition.depends_on_field_id: UUID?",
+        "QualificationFieldDefinition.depends_on_value: JSON?",
+        "MatchingSemanticDefinition.field_id: UUID",
+        "MatchingSemanticDefinition.matching_role: Enum (same 9 roles)",
+        "MatchingSemanticDefinition.weight: Float (0.0-1.0)",
+        "MatchingSemanticDefinition.scoring_function: Enum (exact_match|range_match|fuzzy_match|boolean_match|enum_match|geographic_distance)",
+        "MatchingSemanticDefinition.boost_value: Int?",
+        "MatchingSemanticDefinition.penalty_value: Int?",
+        "MatchingSemanticDefinition.is_filter: Boolean",
+        "MatchingSemanticDefinition.filter_operator: Enum? (equals|contains|range|any_of|all_of|not)",
+        "MatchingSemanticDefinition.exclusion_values: JSON[]?"
+      ],
+      "required_relations": [
+        "QualificationFieldDefinition N:1 QualificationMatrixDefinition",
+        "QualificationFieldDefinition 0:1 QualificationFieldDefinition (self-referential dependency)",
+        "MatchingSemanticDefinition 1:1 QualificationFieldDefinition",
+        "MatchingSemanticDefinition N:1 MatchingEngine scoring dimension"
+      ],
+      "required_events": [
+        "qualification.field_answered (payload: {project_id, field_code, value, step})",
+        "qualification.field_skipped (payload: {project_id, field_code, reason})"
+      ],
+      "required_permissions": [
+        "QUAL: define fields (admin only)",
+        "QUAL: assign matching role (admin only)"
+      ],
+      "required_states": [
+        "QualificationFieldDefinition.priority ∈ {mandatory, important, optional}",
+        "QualificationFieldDefinition.matching_role ∈ {hard_constraint, strong_preference, weak_preference, nice_to_have, deal_breaker, tie_breaker, exclusion, boost, transaction_blocker}",
+        "MatchingSemanticDefinition.scoring_function ∈ {exact_match, range_match, fuzzy_match, boolean_match, enum_match, geographic_distance}"
+      ],
+      "H0.5_matrices_impacted": [
+        "QUAL-MAT-002 (Field Definitions)",
+        "MAT-MAT-001 (Scoring Configuration)"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "field_dictionary": {
+        "core_fields": {
+          "mandatory": ["intention", "property_type", "city", "budget_min", "budget_max"],
+          "important": ["neighborhood", "timeline", "surface_min", "bedrooms_min", "condition"],
+          "optional": ["surface_max", "bedrooms_max", "bathrooms_min", "furnished", "floor_level", "parking", "balcony", "garden", "elevator", "construction_year"]
+        },
+        "residential_fields": {
+          "important": ["residence_type", "rooms_total"],
+          "optional": ["living_room", "dining_room", "guest_toilet", "maid_room", "terrace", "pool", "heating", "air_conditioning"]
+        },
+        "land_fields": {
+          "mandatory": ["title_status", "is_constructible", "land_area", "flood_zone"],
+          "important": ["land_use", "road_access"],
+          "optional": ["electricity_nearby", "water_nearby", "land_orientation"]
+        },
+        "commercial_fields": {
+          "mandatory": ["commercial_type", "license_type"],
+          "important": ["front_window", "ceiling_height", "access_truck", "visibility", "commercial_zone"],
+          "optional": ["floor_load", "loading_dock", "parking_capacity"]
+        },
+        "investment_fields": {
+          "mandatory": ["investment_type"],
+          "important": ["roi_target", "investment_horizon", "monthly_rental_income", "management_type"],
+          "optional": ["exit_strategy", "co_investors"]
+        },
+        "financing_fields": {
+          "mandatory": ["financing_type", "loan_amount", "down_payment", "monthly_income"],
+          "important": ["loan_duration", "monthly_payment", "employment_status", "existing_loans", "guarantor_available"],
+          "optional": ["interest_rate"]
+        },
+        "professional_fields": {
+          "mandatory": ["professional_type", "service_required", "city_pro"],
+          "important": ["certification", "service_timeline"],
+          "optional": ["neighborhood_pro", "language_pro", "years_experience", "urgency_pro"]
+        },
+        "service_fields": {
+          "mandatory": ["service_type", "city_service"],
+          "important": ["property_to_service", "service_timeline", "service_budget"],
+          "optional": ["service_description"]
+        }
+      }
+    },
+    {
+      "extension_id": "EXT-QUAL-009",
+      "source_concept": "Question priority system",
+      "source_document": "QUALIFICATION_MODEL.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-QUAL-PRIORITY-001",
+        "GOLD-QUAL-PRIORITY-002",
+        "GOLD-QUAL-PRIORITY-003"
+      ],
+      "current_target": "Qualification question ordering",
+      "current_limitation": "No question priority weighting in V2. All qualification questions are treated equally with no differentiation between mandatory, important, and optional fields.",
+      "extension_category": "question_priority",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "QualificationFieldDefinition.priority + QuestionRuleDefinition",
+      "proposed_structure": "Implement 3-tier priority system on QualificationFieldDefinition: mandatory (must answer, cannot proceed without), important (should answer, encouraged but deferrable), optional (nice to have, can skip freely). Priority determines: (1) asking order — mandatory first, then important, then optional; (2) channel behavior — WhatsApp only asks mandatory (1 per interaction), Telegram asks mandatory + 1 important, Dashboard renders all; (3) matching impact — mandatory fields act as pre-filters, important fields are scoring inputs, optional fields are boost-only. Priority distribution varies by domain: residential 4-6 mandatory / 5-8 important / 6-12 optional; land 5-7 / 4-6 / 4-8; commercial 5-7 / 6-10 / 6-14; investment 4-5 / 5-7 / 3-6; financing 5-7 / 5-8 / 3-6; professional 3-4 / 3-5 / 4-8; service 3-4 / 3-5 / 3-6.",
+      "required_fields": [
+        "QualificationFieldDefinition.priority: Enum (mandatory|important|optional)",
+        "QualificationFieldDefinition.sort_order: Int (display order within priority tier)",
+        "QuestionRuleDefinition.allow_skip: Boolean (true for important/optional)",
+        "QuestionRuleDefinition.confirmation_required: Boolean (true for mandatory)",
+        "QuestionRuleDefinition.retry_on_invalid: Boolean (true for mandatory)",
+        "QuestionRuleDefinition.max_retries: Int (3 for mandatory, 1 for important, 0 for optional)"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [
+        "QualificationFieldDefinition.priority ∈ {mandatory, important, optional}"
+      ],
+      "H0.5_matrices_impacted": ["QUAL-MAT-009 (Priority Configuration)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "priority_rules": {
+        "mandatory": {
+          "behavior": "User cannot proceed without answering",
+          "pre_filter": true,
+          "whatsapp": "always asked (1 per interaction)",
+          "telegram": "asked first in step",
+          "dashboard": "required field (red asterisk)",
+          "skip_allowed": false,
+          "max_retries": 3
+        },
+        "important": {
+          "behavior": "User can defer but is encouraged",
+          "pre_filter": false,
+          "whatsapp": "aggregated into 'we need a few more details'",
+          "telegram": "asked after mandatory fields",
+          "dashboard": "marked 'recommended'",
+          "skip_allowed": true,
+          "max_retries": 1
+        },
+        "optional": {
+          "behavior": "User can skip freely",
+          "pre_filter": false,
+          "whatsapp": "not asked (captured via 'optional details' prompt)",
+          "telegram": "asked only on explicit 'learn more'",
+          "dashboard": "collapsed section, user expands voluntarily",
+          "skip_allowed": true,
+          "max_retries": 0
+        }
+      },
+      "asking_order": {
+        "step_1_3": "Only mandatory fields (intention, property_type, city)",
+        "step_4_6": "Mandatory + Important fields",
+        "step_7_9": "All fields (mandatory + important + optional)",
+        "step_10": "Confirmation of all answers + escalation path"
+      }
+    },
+    {
+      "extension_id": "EXT-QUAL-010",
+      "source_concept": "Progressive qualification order (10 steps)",
+      "source_document": "QUALIFICATION_MODEL.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-QUAL-STEP-001",
+        "GOLD-QUAL-STEP-002",
+        "GOLD-QUAL-STEP-003",
+        "GOLD-QUAL-STEP-004",
+        "GOLD-QUAL-STEP-005",
+        "GOLD-QUAL-STEP-006",
+        "GOLD-QUAL-STEP-007",
+        "GOLD-QUAL-STEP-008",
+        "GOLD-QUAL-STEP-009",
+        "GOLD-QUAL-STEP-010"
+      ],
+      "current_target": "Project qualification flow",
+      "current_limitation": "V2 has flat journey steps with no progressive disclosure order. All questions are presented simultaneously regardless of context or channel.",
+      "extension_category": "progressive_order",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "QualificationRuleDefinition (step transition rules) + Project.qualification_step",
+      "proposed_structure": "Implement 10-step progressive qualification order as a strict state machine on Project. Step 1 (Intention): Determine primary intent. Step 2 (Type): Property/Service type classification. Step 3 (Ville): City selection. Step 4 (Quartier): Neighborhood preference. Step 5 (Budget): Budget range. Step 6 (Délai): Timeline and urgency. Step 7 (Critères): Specific criteria (surface, bedrooms, condition). Step 8 (Préférences): Preferences (furnished, parking, etc.). Step 9 (Confirmation): Summary confirmation. Step 10 (Escalade): Escalate to agent if incomplete. Each step has per-channel question limits (WhatsApp: 1, Telegram: 2-3, Dashboard: full). Transition rules: Step N → N+1 when all mandatory fields in Step N are answered. Step N → N+2 when user skips all optional fields. Any step → Step 10 when user requests agent assistance. State tracked via Project.qualification_step (Int 1-10). Step definitions stored as QualificationRuleDefinition records with rule_type='step_transition'.",
+      "required_fields": [
+        "Project.qualification_step: Int (1-10)",
+        "Project.qualification_completed_at: DateTime?",
+        "QualificationFieldDefinition.step_number: Int (1-10)",
+        "QualificationRuleDefinition.rule_type: Enum (including 'step_transition')",
+        "QualificationRuleDefinition.condition_expression: JSON",
+        "QualificationRuleDefinition.action: JSON"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "qualification.step_completed (payload: {project_id, step, fields_answered})",
+        "qualification.step_skipped (payload: {project_id, step, reason})",
+        "qualification.completed (payload: {project_id, step: 9})",
+        "qualification.escalated (payload: {project_id, step, reason, missing_fields})"
+      ],
+      "required_permissions": [
+        "QUAL: read qualification step (all project participants)",
+        "QUAL: update qualification step (project owner, agent)",
+        "QUAL: force_step_advance (admin only)"
+      ],
+      "required_states": [
+        "Project.qualification_step ∈ {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}"
+      ],
+      "H0.5_matrices_impacted": ["QUAL-MAT-010 (Step Configuration)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": false,
+      "status": "APPROVED",
+      "progressive_steps": {
+        "1": {
+          "name": "Intention",
+          "action": "Determine primary intent (buy/rent/sell/invest)",
+          "mandatory_fields": ["intention"],
+          "channel_limits": {"whatsapp": 1, "telegram": 1, "dashboard": 1},
+          "skip_behavior": "Cannot skip"
+        },
+        "2": {
+          "name": "Type",
+          "action": "Property type classification",
+          "mandatory_fields": ["property_type"],
+          "channel_limits": {"whatsapp": 1, "telegram": 1, "dashboard": 1},
+          "skip_behavior": "Cannot skip"
+        },
+        "3": {
+          "name": "Ville",
+          "action": "City selection",
+          "mandatory_fields": ["city"],
+          "optional_fields": ["neighborhood"],
+          "channel_limits": {"whatsapp": 1, "telegram": 2, "dashboard": 2},
+          "skip_behavior": "Cannot skip city; neighborhood skippable"
+        },
+        "4": {
+          "name": "Quartier",
+          "action": "Neighborhood preference",
+          "mandatory_fields": [],
+          "optional_fields": ["neighborhood", "zone"],
+          "channel_limits": {"whatsapp": 1, "telegram": 2, "dashboard": 2},
+          "skip_behavior": "Skippable"
+        },
+        "5": {
+          "name": "Budget",
+          "action": "Budget range",
+          "mandatory_fields": ["budget_min", "budget_max"],
+          "optional_fields": ["negotiable"],
+          "channel_limits": {"whatsapp": 1, "telegram": 2, "dashboard": 3},
+          "skip_behavior": "Cannot skip"
+        },
+        "6": {
+          "name": "Délai",
+          "action": "Timeline",
+          "mandatory_fields": [],
+          "optional_fields": ["timeline", "urgency"],
+          "channel_limits": {"whatsapp": 1, "telegram": 2, "dashboard": 2},
+          "skip_behavior": "Skippable"
+        },
+        "7": {
+          "name": "Critères",
+          "action": "Specific criteria (bedrooms, surface, features)",
+          "mandatory_fields": [],
+          "important_fields": ["surface_min", "bedrooms_min", "condition"],
+          "optional_fields": ["surface_max", "bedrooms_max", "bathrooms_min", "construction_year"],
+          "channel_limits": {"whatsapp": 1, "telegram": 3, "dashboard": "full"},
+          "skip_behavior": "Important fields only"
+        },
+        "8": {
+          "name": "Préférences",
+          "action": "Preferences (furnished, floor, parking)",
+          "mandatory_fields": [],
+          "optional_fields": ["furnished", "parking", "balcony", "garden", "elevator", "pool", "terrace"],
+          "channel_limits": {"whatsapp": 0, "telegram": 2, "dashboard": "full"},
+          "skip_behavior": "All optional"
+        },
+        "9": {
+          "name": "Confirmation",
+          "action": "Qualification summary confirmation",
+          "mandatory_fields": ["confirmation"],
+          "channel_limits": {"whatsapp": 1, "telegram": 1, "dashboard": 1},
+          "skip_behavior": "Must confirm"
+        },
+        "10": {
+          "name": "Escalade",
+          "action": "Escalate to agent if incomplete",
+          "mandatory_fields": [],
+          "channel_limits": {"whatsapp": "agent handoff", "telegram": "agent chat", "dashboard": "submit to matching"},
+          "skip_behavior": "Auto-escalate if incomplete"
+        }
+      },
+      "transition_rules": [
+        {"from": "N", "to": "N+1", "condition": "All mandatory fields in Step N are answered"},
+        {"from": "N", "to": "N+2", "condition": "User explicitly says 'I don't know' or skips all optional fields"},
+        {"from": "9", "to": "matching", "condition": "Confirmation = true AND all mandatory fields answered"},
+        {"from": "9", "to": "10", "condition": "Confirmation = false OR mandatory fields missing"},
+        {"from": "any", "to": "10", "condition": "User requests agent assistance at any point"},
+        {"from": "any", "to": "repeat", "condition": "User provides invalid input (max 3 retries per field)"}
+      ]
+    },
+    {
+      "extension_id": "EXT-QUAL-011",
+      "source_concept": "Per-channel adaptation",
+      "source_document": "QUALIFICATION_MODEL.md (Gold)",
+      "source_rule_ids": [
+        "GOLD-QUAL-CHAN-001",
+        "GOLD-QUAL-CHAN-002",
+        "GOLD-QUAL-CHAN-003"
+      ],
+      "current_target": "Qualification rendering per channel",
+      "current_limitation": "V2 has single qualification flow regardless of channel. WhatsApp, Telegram, and Dashboard all present the same questions in the same format, leading to poor UX on chat channels.",
+      "extension_category": "channel_adaptation",
+      "proposed_domain": "Domain 5: Dossier/Project Model + Channel Integration Layer",
+      "proposed_entity": "QuestionRuleDefinition (per-channel config) + Per-channel rendering engine",
+      "proposed_structure": "Implement channel-adaptive qualification engine that renders the same matrix differently per channel. Three channel profiles: (1) WhatsApp: 1 question per interaction, session-based (24h timeout), quick reply buttons, free text fallback, agent handoff via 'Talk to agent' keyword. (2) Telegram: 2-3 questions per interaction, inline keyboard, session-based (48h timeout), /agent command for escalation. (3) Dashboard: full step rendered at once, form inputs with validation, step indicator, progress tracking, persistent session. Per-channel question limits: WhatsApp — mandatory 1, important 0 (aggregated), optional 0; Telegram — mandatory 2, important 1, optional 0 (expandable); Dashboard — all fields rendered. Channel adaptation configuration stored on QuestionRuleDefinition with fields: channel (whatsapp|telegram|dashboard|api), question_template (multilingual), response_type, max_questions_per_interaction, min_answers_before_proceed, allow_skip, auto_advance, confirmation_required. Each QualificationFieldDefinition also has is_visible_on_whatsapp, is_visible_on_telegram, is_visible_on_dashboard flags.",
+      "required_fields": [
+        "QuestionRuleDefinition.id: UUID",
+        "QuestionRuleDefinition.field_id: UUID",
+        "QuestionRuleDefinition.channel: Enum (whatsapp|telegram|dashboard|api)",
+        "QuestionRuleDefinition.question_template: JSON (multilingual)",
+        "QuestionRuleDefinition.response_type: Enum (free_text|single_choice|multiple_choice|number|yes_no|location_picker|date_picker)",
+        "QuestionRuleDefinition.max_questions_per_interaction: Int",
+        "QuestionRuleDefinition.min_answers_before_proceed: Int",
+        "QuestionRuleDefinition.allow_skip: Boolean",
+        "QuestionRuleDefinition.skip_label: JSON?",
+        "QuestionRuleDefinition.auto_advance: Boolean",
+        "QuestionRuleDefinition.confirmation_required: Boolean",
+        "QuestionRuleDefinition.retry_on_invalid: Boolean",
+        "QuestionRuleDefinition.max_retries: Int",
+        "QualificationFieldDefinition.is_visible_on_whatsapp: Boolean",
+        "QualificationFieldDefinition.is_visible_on_telegram: Boolean",
+        "QualificationFieldDefinition.is_visible_on_dashboard: Boolean",
+        "QualificationFieldDefinition.whatsapp_question_limit: Int (default 1)",
+        "QualificationFieldDefinition.telegram_question_limit: Int (default 2-3)",
+        "QualificationFieldDefinition.dashboard_question_limit: Int (default 0 = unlimited)"
+      ],
+      "required_relations": [
+        "QuestionRuleDefinition N:1 QualificationFieldDefinition",
+        "QuestionRuleDefinition mapped to channel integration service"
+      ],
+      "required_events": [
+        "qualification.question_sent (payload: {project_id, channel, field_code, question_text})",
+        "qualification.question_answered (payload: {project_id, channel, field_code, answer})",
+        "qualification.channel_switched (payload: {project_id, from_channel, to_channel})"
+      ],
+      "required_permissions": [
+        "QUAL: render qualification (per-channel — any user on their own project)",
+        "QUAL: configure channel adaptation (admin only)"
+      ],
+      "required_states": [
+        "QuestionRuleDefinition.channel ∈ {whatsapp, telegram, dashboard, api}",
+        "QuestionRuleDefinition.response_type ∈ {free_text, single_choice, multiple_choice, number, yes_no, location_picker, date_picker}"
+      ],
+      "H0.5_matrices_impacted": [
+        "QUAL-MAT-011 (Channel Configuration)",
+        "INT-MAT-001 (Channel Integration)"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Operations",
+      "human_decision_required": true,
+      "decision_question": "Per-channel question limits: Gold defaults (WhatsApp:1, Telegram:2-3, Dashboard:full) or adjustable per channel per matrix?",
+      "status": "APPROVED",
+      "channel_profiles": {
+        "whatsapp": {
+          "interaction_style": "Conversational, single-thread",
+          "questions_per_interaction": 1,
+          "response_mechanism": "Free text / button reply",
+          "media_support": "Images, documents",
+          "state_persistence": "Session-based (24h timeout)",
+          "back_navigation": "'Back' keyword",
+          "skip_mechanism": "'Skip' reply",
+          "agent_handoff": "'Talk to agent' keyword",
+          "mandatory_per_interaction": 1,
+          "important_per_interaction": 0,
+          "optional_per_interaction": 0,
+          "entry_point": "'What are you looking for?' → intention",
+          "question_format": "Single question with quick reply buttons",
+          "progress_indication": "'Step X of 10' in message footer",
+          "error_handling": "'I didn't understand. Please reply with a number.'",
+          "timeout_handling": "24h inactivity → reminder → reopen",
+          "confirmation": "Summary card with 'Confirm' button"
+        },
+        "telegram": {
+          "interaction_style": "Conversational, multi-thread",
+          "questions_per_interaction": 3,
+          "response_mechanism": "Inline keyboard / free text",
+          "media_support": "Images, documents",
+          "state_persistence": "Session-based (48h timeout)",
+          "back_navigation": "'Back' button",
+          "skip_mechanism": "'Skip' inline button",
+          "agent_handoff": "/agent command",
+          "mandatory_per_interaction": 2,
+          "important_per_interaction": 1,
+          "optional_per_interaction": 0,
+          "entry_point": "/start → inline keyboard → intention",
+          "question_format": "Grouped questions with inline keyboard",
+          "progress_indication": "Progress bar in message",
+          "error_handling": "'Invalid input. Choose from options below:'",
+          "timeout_handling": "48h inactivity → reminder → reopen",
+          "confirmation": "Summary message with approve button"
+        },
+        "dashboard": {
+          "interaction_style": "Form-based, full view",
+          "questions_per_interaction": "Full step rendered",
+          "response_mechanism": "Form inputs (dropdown, slider, text)",
+          "media_support": "Full media, maps, calculators",
+          "state_persistence": "Persistent (until form submitted)",
+          "back_navigation": "Previous step button",
+          "skip_mechanism": "'Skip this step' link",
+          "agent_handoff": "'Request agent assistance' button",
+          "mandatory_per_interaction": "All mandatory",
+          "important_per_interaction": "All important",
+          "optional_per_interaction": "All optional (collapsed)",
+          "entry_point": "Landing page → matrix selection",
+          "question_format": "Form with validation, help tooltips, sliders",
+          "progress_indication": "Step indicator at top of form",
+          "error_handling": "Inline validation error",
+          "timeout_handling": "Session preserved indefinitely",
+          "confirmation": "Review page with edit links"
+        }
+      }
+    }
+  ]
+}

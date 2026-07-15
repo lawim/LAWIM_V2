@@ -1,0 +1,2571 @@
+{
+  "document": {
+    "id": "LAWIM-H13-SERVICE-TAXONOMY-EXT-V1",
+    "title": "Service Taxonomy Extension Catalog \u2014 Heritage Gold \u2192 LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Complete machine-readable catalog of all service-related extensions required for LAWIM_V2: monetized services, real estate services, professional services, CRM monetized services, and service lifecycle",
+    "sources": [
+      "SERVICE_CROSSWALK.md",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md \u00a74 (Service Model)",
+      "required_extensions.json (monetized_services, real_estate_services, professional_services, crm_monetized_services, service_lifecycle)"
+    ],
+    "total_extensions": 60,
+    "by_category": {
+      "monetized_services": 13,
+      "real_estate_services": 24,
+      "professional_services": 12,
+      "crm_monetized_services": 9,
+      "service_lifecycle": 2
+    }
+  },
+  "service_families": {
+    "description": "Eleven service families forming the taxonomy backbone",
+    "values": [
+      {
+        "id": "SV-FAM-001",
+        "family": "immobilier",
+        "canonical_name": "Immobilier",
+        "description": "Core real estate services: valuation, visits, listings, transactions",
+        "service_count": 12
+      },
+      {
+        "id": "SV-FAM-002",
+        "family": "juridique",
+        "canonical_name": "Juridique",
+        "description": "Legal services: notary, legal advice, transaction accompaniment",
+        "service_count": 4
+      },
+      {
+        "id": "SV-FAM-003",
+        "family": "technique",
+        "canonical_name": "Technique",
+        "description": "Skilled trades: masonry, carpentry, painting, tiling, roofing, plumbing, electrical",
+        "service_count": 9
+      },
+      {
+        "id": "SV-FAM-004",
+        "family": "financier",
+        "canonical_name": "Financier",
+        "description": "Financial services: tax advice, insurance, valuation, financing",
+        "service_count": 5
+      },
+      {
+        "id": "SV-FAM-005",
+        "family": "documentaire",
+        "canonical_name": "Documentaire",
+        "description": "Document services: verification, document control, title checks",
+        "service_count": 3
+      },
+      {
+        "id": "SV-FAM-006",
+        "family": "commercial",
+        "canonical_name": "Commercial",
+        "description": "Marketing and media: photography, videography, drone, staging, publication",
+        "service_count": 7
+      },
+      {
+        "id": "SV-FAM-007",
+        "family": "gestion",
+        "canonical_name": "Gestion",
+        "description": "Management services: rental management, condo management, syndicate",
+        "service_count": 5
+      },
+      {
+        "id": "SV-FAM-008",
+        "family": "construction",
+        "canonical_name": "Construction",
+        "description": "Construction and development services",
+        "service_count": 2
+      },
+      {
+        "id": "SV-FAM-009",
+        "family": "renovation",
+        "canonical_name": "Renovation",
+        "description": "Renovation, maintenance, and cleaning services",
+        "service_count": 4
+      },
+      {
+        "id": "SV-FAM-010",
+        "family": "securite",
+        "canonical_name": "S\u00e9curit\u00e9",
+        "description": "Security and surveillance services",
+        "service_count": 2
+      },
+      {
+        "id": "SV-FAM-011",
+        "family": "mobilite",
+        "canonical_name": "Mobilit\u00e9",
+        "description": "Mobility and relocation services",
+        "service_count": 1
+      }
+    ]
+  },
+  "service_categories": {
+    "description": "Four economic categories for service classification",
+    "values": [
+      {
+        "category": "monetized",
+        "count": 13,
+        "description": "Paid services generating platform revenue"
+      },
+      {
+        "category": "real_estate",
+        "count": 24,
+        "description": "Real estate professional services"
+      },
+      {
+        "category": "professional",
+        "count": 27,
+        "description": "Professional trades and skilled services (12 new + 15 existing in V2)"
+      },
+      {
+        "category": "crm",
+        "count": 9,
+        "description": "CRM and lead management services"
+      }
+    ]
+  },
+  "service_catalog": [
+    {
+      "id": 1,
+      "code": "boost_7j",
+      "name": "Boost visibilit\u00e9 7 jours",
+      "price_fcfa": 2000,
+      "category": "monetized",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": 7
+    },
+    {
+      "id": 2,
+      "code": "boost_30j",
+      "name": "Boost visibilit\u00e9 30 jours",
+      "price_fcfa": 5000,
+      "category": "monetized",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": 30
+    },
+    {
+      "id": 3,
+      "code": "premium_listing",
+      "name": "Annonce premium",
+      "price_fcfa": 10000,
+      "category": "monetized",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 4,
+      "code": "agent_pro",
+      "name": "Abonnement agent professionnel",
+      "price_fcfa": 10000,
+      "category": "monetized",
+      "service_family": "immobilier",
+      "pricing_model": "recurring",
+      "duration_days": 30
+    },
+    {
+      "id": 5,
+      "code": "accompagnement_visite",
+      "name": "Accompagnement de visite",
+      "price_fcfa": 50000,
+      "category": "monetized",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 6,
+      "code": "accompagnement_transaction",
+      "name": "Accompagnement de transaction",
+      "price_fcfa": 50000,
+      "category": "monetized",
+      "service_family": "juridique",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 7,
+      "code": "controle_documentaire",
+      "name": "Contr\u00f4le documentaire",
+      "price_fcfa": 5000,
+      "category": "monetized",
+      "service_family": "documentaire",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 8,
+      "code": "photographie_pro",
+      "name": "Photographie professionnelle",
+      "price_fcfa": 15000,
+      "category": "monetized",
+      "service_family": "commercial",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 9,
+      "code": "video_pro",
+      "name": "Vid\u00e9o professionnelle",
+      "price_fcfa": 25000,
+      "category": "monetized",
+      "service_family": "commercial",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 10,
+      "code": "verification_bien",
+      "name": "V\u00e9rification de bien",
+      "price_fcfa": 10000,
+      "category": "monetized",
+      "service_family": "documentaire",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 11,
+      "code": "mise_en_relation",
+      "name": "Mise en relation payante",
+      "price_fcfa": 500,
+      "category": "monetized",
+      "service_family": "immobilier",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 12,
+      "code": "assistance_personnalisee",
+      "name": "Assistance personnalis\u00e9e",
+      "price_fcfa": 50000,
+      "category": "monetized",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 13,
+      "code": "visibilite_premium",
+      "name": "Visibilit\u00e9 premium",
+      "price_fcfa": 7500,
+      "category": "monetized",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": 30
+    },
+    {
+      "id": 14,
+      "code": "lead_bronze",
+      "name": "Lead Bronze (1 contact)",
+      "price_fcfa": 500,
+      "category": "crm",
+      "service_family": "commercial",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 15,
+      "code": "lead_silver",
+      "name": "Lead Silver (5 contacts)",
+      "price_fcfa": 1500,
+      "category": "crm",
+      "service_family": "commercial",
+      "pricing_model": "tiered",
+      "duration_days": null
+    },
+    {
+      "id": 16,
+      "code": "lead_gold",
+      "name": "Lead Gold (15 contacts)",
+      "price_fcfa": 3000,
+      "category": "crm",
+      "service_family": "commercial",
+      "pricing_model": "tiered",
+      "duration_days": null
+    },
+    {
+      "id": 17,
+      "code": "deblocage_coordonnees",
+      "name": "D\u00e9blocage coordonn\u00e9es propri\u00e9taire",
+      "price_fcfa": 500,
+      "category": "crm",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 18,
+      "code": "demandeur_premium",
+      "name": "Demandeur Premium",
+      "price_fcfa": 1000,
+      "category": "crm",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 19,
+      "code": "diaspora_simple",
+      "name": "Diaspora Simple",
+      "price_fcfa": 25000,
+      "category": "crm",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": 30
+    },
+    {
+      "id": 20,
+      "code": "diaspora_rapport",
+      "name": "Diaspora Rapport",
+      "price_fcfa": 50000,
+      "category": "crm",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": 60
+    },
+    {
+      "id": 21,
+      "code": "diaspora_complet",
+      "name": "Diaspora Complet",
+      "price_fcfa": 75000,
+      "category": "crm",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": 90
+    },
+    {
+      "id": 22,
+      "code": "agent_business",
+      "name": "Abonnement Agent Business",
+      "price_fcfa": 25000,
+      "category": "crm",
+      "service_family": "gestion",
+      "pricing_model": "recurring",
+      "duration_days": 30
+    },
+    {
+      "id": 23,
+      "code": "estimation_immobiliere",
+      "name": "Estimation immobili\u00e8re",
+      "price_fcfa": 15000,
+      "category": "real_estate",
+      "service_family": "financier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 24,
+      "code": "expertise_immobiliere",
+      "name": "Expertise immobili\u00e8re",
+      "price_fcfa": 25000,
+      "category": "real_estate",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 25,
+      "code": "verification_documentaire",
+      "name": "V\u00e9rification documentaire",
+      "price_fcfa": 10000,
+      "category": "real_estate",
+      "service_family": "documentaire",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 26,
+      "code": "visite_property",
+      "name": "Visite de propri\u00e9t\u00e9",
+      "price_fcfa": 5000,
+      "category": "real_estate",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 27,
+      "code": "contre_visite",
+      "name": "Contre-visite",
+      "price_fcfa": 5000,
+      "category": "real_estate",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 28,
+      "code": "gestion_locative",
+      "name": "Gestion locative",
+      "price_fcfa": 10000,
+      "category": "real_estate",
+      "service_family": "gestion",
+      "pricing_model": "recurring",
+      "duration_days": 30
+    },
+    {
+      "id": 29,
+      "code": "mise_en_location",
+      "name": "Mise en location",
+      "price_fcfa": 20000,
+      "category": "real_estate",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 30,
+      "code": "mise_en_vente",
+      "name": "Mise en vente",
+      "price_fcfa": 25000,
+      "category": "real_estate",
+      "service_family": "immobilier",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 31,
+      "code": "publication_service",
+      "name": "Service de publication",
+      "price_fcfa": 5000,
+      "category": "real_estate",
+      "service_family": "commercial",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 32,
+      "code": "photographie_immobiliere",
+      "name": "Photographie immobili\u00e8re",
+      "price_fcfa": 15000,
+      "category": "real_estate",
+      "service_family": "commercial",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 33,
+      "code": "video_immobiliere",
+      "name": "Vid\u00e9o immobili\u00e8re",
+      "price_fcfa": 25000,
+      "category": "real_estate",
+      "service_family": "commercial",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 34,
+      "code": "drone_service",
+      "name": "Service drone",
+      "price_fcfa": 35000,
+      "category": "real_estate",
+      "service_family": "commercial",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 35,
+      "code": "home_staging",
+      "name": "Home staging",
+      "price_fcfa": 30000,
+      "category": "real_estate",
+      "service_family": "commercial",
+      "pricing_model": "fixed",
+      "duration_days": null
+    },
+    {
+      "id": 36,
+      "code": "renovation_service",
+      "name": "Service r\u00e9novation",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "renovation",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 37,
+      "code": "construction_service",
+      "name": "Service construction",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "construction",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 38,
+      "code": "entretien_property",
+      "name": "Entretien de propri\u00e9t\u00e9",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "renovation",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 39,
+      "code": "nettoyage_property",
+      "name": "Nettoyage de propri\u00e9t\u00e9",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "renovation",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 40,
+      "code": "securisation_property",
+      "name": "S\u00e9curisation de propri\u00e9t\u00e9",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "securite",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 41,
+      "code": "demenagement",
+      "name": "D\u00e9m\u00e9nagement",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "mobilite",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 42,
+      "code": "assurance_service",
+      "name": "Service d'assurance",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "financier",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 43,
+      "code": "conseil_juridique_immobilier",
+      "name": "Conseil juridique immobilier",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "juridique",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 44,
+      "code": "conseil_fiscal_immobilier",
+      "name": "Conseil fiscal immobilier",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "financier",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 45,
+      "code": "gestion_copropriete",
+      "name": "Gestion de copropri\u00e9t\u00e9",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "gestion",
+      "pricing_model": "per_use",
+      "duration_days": null
+    },
+    {
+      "id": 46,
+      "code": "recouvrement_locatif",
+      "name": "Recouvrement locatif",
+      "price_fcfa": null,
+      "category": "real_estate",
+      "service_family": "gestion",
+      "pricing_model": "per_use",
+      "duration_days": null
+    }
+  ],
+  "service_entities": {
+    "Service": {
+      "description": "Catalog item defining a monetized service with fixed price, classification, and lifecycle",
+      "attributes": {
+        "id": {
+          "type": "UUID",
+          "required": true,
+          "description": "Primary identifier"
+        },
+        "code": {
+          "type": "String",
+          "required": true,
+          "description": "Unique service code"
+        },
+        "name": {
+          "type": "String",
+          "required": true,
+          "description": "Display name"
+        },
+        "description": {
+          "type": "Text",
+          "required": false,
+          "description": "Service description"
+        },
+        "service_family": {
+          "type": "Enum",
+          "required": true,
+          "values": "11 families from service_families"
+        },
+        "category": {
+          "type": "Enum",
+          "required": true,
+          "values": [
+            "monetized",
+            "real_estate",
+            "professional",
+            "crm"
+          ]
+        },
+        "price_fcfa": {
+          "type": "Int",
+          "required": false,
+          "description": "Price in FCFA"
+        },
+        "currency": {
+          "type": "String",
+          "required": false,
+          "default": "XAF"
+        },
+        "is_active": {
+          "type": "Boolean",
+          "required": false,
+          "default": true
+        },
+        "duration_days": {
+          "type": "Int",
+          "required": false,
+          "description": "Duration for time-based services"
+        },
+        "provider_categories": {
+          "type": "String[]",
+          "required": false,
+          "description": "Required provider professional categories"
+        },
+        "requester_categories": {
+          "type": "String[]",
+          "required": false
+        },
+        "qualification_matrix_id": {
+          "type": "UUID?",
+          "required": false
+        },
+        "required_documents": {
+          "type": "String[]",
+          "required": false
+        },
+        "required_verifications": {
+          "type": "String[]",
+          "required": false
+        },
+        "pricing_model": {
+          "type": "Enum",
+          "required": false,
+          "values": [
+            "fixed",
+            "recurring",
+            "per_use",
+            "tiered",
+            "free"
+          ]
+        },
+        "geographic_scope": {
+          "type": "Enum",
+          "required": false,
+          "values": [
+            "local",
+            "regional",
+            "national",
+            "diaspora"
+          ]
+        },
+        "sla_hours": {
+          "type": "Int?",
+          "required": false
+        },
+        "workflow_id": {
+          "type": "UUID?",
+          "required": false
+        },
+        "consent_requirements": {
+          "type": "JSON[]",
+          "required": false
+        },
+        "matching_requirements": {
+          "type": "JSON[]",
+          "required": false
+        },
+        "lifecycle_state": {
+          "type": "Enum",
+          "required": false,
+          "values": [
+            "creation",
+            "proposition",
+            "acceptation",
+            "paiement",
+            "activation",
+            "utilisation",
+            "expiration",
+            "archivage"
+          ]
+        }
+      },
+      "state_machine": {
+        "states": 8,
+        "transitions": [
+          "creation \u2192 proposition",
+          "proposition \u2192 acceptation",
+          "acceptation \u2192 paiement",
+          "paiement \u2192 activation",
+          "activation \u2192 utilisation",
+          "utilisation \u2192 expiration",
+          "expiration \u2192 archivage"
+        ]
+      }
+    },
+    "ServiceOrder": {
+      "description": "Customer purchase of a service with 8-state lifecycle",
+      "attributes": {
+        "id": {
+          "type": "UUID",
+          "required": true,
+          "description": "Primary identifier"
+        },
+        "service_id": {
+          "type": "UUID",
+          "required": true,
+          "description": "Reference to Service"
+        },
+        "buyer_id": {
+          "type": "UUID",
+          "required": true,
+          "description": "Reference to User (buyer)"
+        },
+        "property_id": {
+          "type": "UUID?",
+          "required": false
+        },
+        "project_id": {
+          "type": "UUID?",
+          "required": false
+        },
+        "price_paid": {
+          "type": "Decimal",
+          "required": true
+        },
+        "currency": {
+          "type": "String",
+          "required": false,
+          "default": "XAF"
+        },
+        "status": {
+          "type": "Enum",
+          "required": true,
+          "values": [
+            "created",
+            "proposed",
+            "accepted",
+            "payment_pending",
+            "paid",
+            "activated",
+            "in_use",
+            "expired",
+            "archived",
+            "cancelled"
+          ]
+        },
+        "activated_at": {
+          "type": "DateTime?",
+          "required": false
+        },
+        "expires_at": {
+          "type": "DateTime?",
+          "required": false
+        },
+        "cancelled_at": {
+          "type": "DateTime?",
+          "required": false
+        },
+        "cancellation_reason": {
+          "type": "String?",
+          "required": false
+        }
+      },
+      "state_machine": {
+        "states": 10,
+        "transitions": [
+          "created \u2192 proposed",
+          "proposed \u2192 accepted",
+          "proposed \u2192 cancelled",
+          "accepted \u2192 payment_pending",
+          "accepted \u2192 cancelled",
+          "payment_pending \u2192 paid",
+          "payment_pending \u2192 cancelled",
+          "paid \u2192 activated",
+          "paid \u2192 cancelled",
+          "activated \u2192 in_use",
+          "activated \u2192 expired",
+          "in_use \u2192 expired",
+          "in_use \u2192 archived",
+          "expired \u2192 archived"
+        ]
+      }
+    },
+    "Payment": {
+      "description": "Payment processing for service orders with 10-state sub-machine, Campay integration",
+      "attributes": {
+        "id": {
+          "type": "UUID",
+          "required": true
+        },
+        "service_order_id": {
+          "type": "UUID",
+          "required": true
+        },
+        "amount": {
+          "type": "Decimal",
+          "required": true
+        },
+        "currency": {
+          "type": "String",
+          "required": false,
+          "default": "XAF"
+        },
+        "provider": {
+          "type": "String",
+          "required": false,
+          "default": "campay"
+        },
+        "provider_reference": {
+          "type": "String?",
+          "required": false
+        },
+        "phone_number": {
+          "type": "String",
+          "required": true
+        },
+        "status": {
+          "type": "Enum",
+          "required": true,
+          "values": [
+            "created",
+            "initiated",
+            "pending",
+            "confirmed",
+            "failed",
+            "cancelled",
+            "expired",
+            "refunded",
+            "reconciled",
+            "disputed"
+          ]
+        },
+        "initiated_at": {
+          "type": "DateTime?",
+          "required": false
+        },
+        "confirmed_at": {
+          "type": "DateTime?",
+          "required": false
+        },
+        "failed_at": {
+          "type": "DateTime?",
+          "required": false
+        },
+        "failure_reason": {
+          "type": "String?",
+          "required": false
+        },
+        "refunded_at": {
+          "type": "DateTime?",
+          "required": false
+        },
+        "disputed_at": {
+          "type": "DateTime?",
+          "required": false
+        },
+        "dispute_reason": {
+          "type": "String?",
+          "required": false
+        }
+      },
+      "state_machine": {
+        "states": 10,
+        "transitions": [
+          "created \u2192 initiated",
+          "initiated \u2192 pending",
+          "initiated \u2192 failed",
+          "pending \u2192 confirmed",
+          "pending \u2192 failed",
+          "pending \u2192 cancelled",
+          "pending \u2192 expired",
+          "confirmed \u2192 reconciled",
+          "confirmed \u2192 disputed",
+          "confirmed \u2192 refunded",
+          "disputed \u2192 refunded"
+        ],
+        "provider_integration": "Campay Mobile Money API"
+      }
+    },
+    "AgentCredit": {
+      "description": "Agent credit balance and transaction tracking for lead and boost purchases",
+      "attributes": {
+        "id": {
+          "type": "UUID",
+          "required": true
+        },
+        "agent_id": {
+          "type": "UUID",
+          "required": true,
+          "description": "Reference to User (agent)"
+        },
+        "balance": {
+          "type": "Int",
+          "required": true,
+          "default": 0
+        },
+        "total_purchased": {
+          "type": "Int",
+          "required": true,
+          "default": 0
+        },
+        "total_consumed": {
+          "type": "Int",
+          "required": true,
+          "default": 0
+        },
+        "last_recharge_at": {
+          "type": "DateTime?",
+          "required": false
+        },
+        "last_recharge_amount": {
+          "type": "Int?",
+          "required": false
+        }
+      },
+      "operations": [
+        "recharge",
+        "consume_lead",
+        "consume_boost",
+        "refund",
+        "admin_adjust"
+      ]
+    },
+    "LeadPurchase": {
+      "description": "Agent purchase of lead contact information",
+      "attributes": {
+        "id": {
+          "type": "UUID",
+          "required": true
+        },
+        "agent_id": {
+          "type": "UUID",
+          "required": true,
+          "description": "Purchasing agent"
+        },
+        "lead_id": {
+          "type": "UUID",
+          "required": true,
+          "description": "Reference to Lead"
+        },
+        "service_order_id": {
+          "type": "UUID",
+          "required": true,
+          "description": "Reference to ServiceOrder"
+        },
+        "credits_spent": {
+          "type": "Int",
+          "required": true
+        },
+        "purchased_at": {
+          "type": "DateTime",
+          "required": true
+        },
+        "contact_revealed": {
+          "type": "Boolean",
+          "required": false,
+          "default": true
+        }
+      }
+    }
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-SVC-MON-001",
+      "source_concept": "Boost visibilit\u00e9 7 jours",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-062",
+      "source_rule_ids": [
+        "GOLD-DM-062"
+      ],
+      "current_target": "Property model",
+      "current_limitation": "V2 Property model has no boost_level or boost_expires_at fields",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "Property (boost fields)",
+      "proposed_structure": "Add boost_level enum and boost_expires_at datetime to Property model; implement boost purchase flow via ServiceOrder",
+      "required_fields": [
+        "Property.boost_level: Enum (none | boost_7d | boost_30d | premium)",
+        "Property.boost_expires_at: DateTime?",
+        "Service.code: 'boost_7j' with price_fcfa=2000"
+      ],
+      "required_relations": [
+        "Property.owner_id \u2192 User (boost purchaser)",
+        "ServiceOrder.service_id \u2192 Service (boost_7j)",
+        "ServiceOrder.property_id \u2192 Property (boost target)"
+      ],
+      "required_events": [
+        "property.boost_activated (payload: {property_id, boost_level, expires_at})",
+        "property.boost_expired (payload: {property_id, boost_level})"
+      ],
+      "required_permissions": [
+        "AGENT: purchase boost (if sufficient credits)",
+        "PUBLIC: view boosted properties (ranking-aware)"
+      ],
+      "required_states": [
+        "Property.boost_level \u2208 {none, boost_7d, boost_30d, premium}"
+      ],
+      "H0.5_matrices_impacted": [
+        "All matching matrices (boost affects ranking score)"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-002",
+      "source_concept": "Boost visibilit\u00e9 30 jours",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-063",
+      "source_rule_ids": [
+        "GOLD-DM-063"
+      ],
+      "current_target": "Property model",
+      "current_limitation": "Same as boost_7j \u2014 no boost system exists",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "Property (boost fields, same system as MON-001)",
+      "proposed_structure": "Implement as same boost system with duration parameter (7 vs 30 days); Service.code='boost_30j' with price_fcfa=5000",
+      "required_fields": [
+        "Same boost infrastructure as EXT-SVC-MON-001",
+        "Service.code: 'boost_30j' with price_fcfa=5000, duration_days=30"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "All matching matrices (boost affects ranking score)"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-003",
+      "source_concept": "Annonce premium (Premium listing)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-064",
+      "source_rule_ids": [
+        "GOLD-DM-064"
+      ],
+      "current_target": "Property model",
+      "current_limitation": "No premium listing concept in V2 Property model",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model + Domain 2: Property/Listing Model",
+      "proposed_entity": "Property (is_premium field)",
+      "proposed_structure": "Add is_premium Boolean to Property; implement premium ranking boost in matching engine (+10 score boost); Service.code='premium_listing' with price_fcfa=10000",
+      "required_fields": [
+        "Property.is_premium: Boolean (default: false)",
+        "Service.code: 'premium_listing' with price_fcfa=10000"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "property.premium_activated (payload: {property_id})",
+        "property.premium_expired (payload: {property_id})"
+      ],
+      "required_permissions": [
+        "AGENT: purchase premium listing"
+      ],
+      "required_states": [
+        "Property.is_premium \u2208 {true, false}"
+      ],
+      "H0.5_matrices_impacted": [
+        "All matching matrices (premium adds +10 score boost)"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-004",
+      "source_concept": "Abonnement agent professionnel (Agent Pro subscription)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-065",
+      "source_rule_ids": [
+        "GOLD-DM-065"
+      ],
+      "current_target": "ServiceOrder / Subscription model",
+      "current_limitation": "No subscription model exists in V2",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (recurring billing)",
+      "proposed_structure": "Implement Subscription model linked to Organization/User with monthly billing via Campay; Service.code='agent_pro' with price_fcfa=10000/month",
+      "required_fields": [
+        "ServiceOrder.service_id: UUID (reference to agent_pro service)",
+        "ServiceOrder.buyer_id: UUID (agent)",
+        "ServiceOrder.status includes recurring billing states",
+        "Service.code: 'agent_pro' with price_fcfa=10000, duration_days=30"
+      ],
+      "required_relations": [
+        "ServiceOrder.buyer_id \u2192 User",
+        "ServiceOrder.property_id \u2192 Property? (optional agent context)"
+      ],
+      "required_events": [
+        "subscription.created (payload: {user_id, service_id, amount, interval})",
+        "subscription.renewed (payload: {subscription_id, next_billing_date})",
+        "subscription.cancelled (payload: {subscription_id, reason})"
+      ],
+      "required_permissions": [
+        "AGENT: purchase subscription",
+        "ADMIN: configure subscription pricing and features"
+      ],
+      "required_states": [
+        "ServiceOrder.status \u2208 {active, cancelled, expired} for subscriptions"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": true,
+      "human_decision_question": "Subscription billing cycle, features, and cancellation policy",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-005",
+      "source_concept": "Accompagnement de visite (Visit accompaniment)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-066",
+      "source_rule_ids": [
+        "GOLD-DM-066"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No visit accompaniment service model in V2",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model + Domain 7: Visit Workflow",
+      "proposed_entity": "ServiceOrder (visit_accompaniment type)",
+      "proposed_structure": "Implement as ServiceOrder with type='visit_accompaniment' linked to Visit; Service.code='accompagnement_visite' with price_fcfa=50000",
+      "required_fields": [
+        "ServiceOrder.service_id: UUID (reference to accompagnement_visite)",
+        "ServiceOrder.property_id: UUID? (visit context)",
+        "Service.code: 'accompagnement_visite' with price_fcfa=50000"
+      ],
+      "required_relations": [
+        "ServiceOrder.property_id \u2192 Property",
+        "ServiceOrder \u2192 Visit (fulfillment link)"
+      ],
+      "required_events": [
+        "service_order.visit_accompaniment_scheduled (payload: {order_id, visit_id, agent_id})",
+        "service_order.visit_accompaniment_completed (payload: {order_id, visit_id})"
+      ],
+      "required_permissions": [
+        "USER: purchase visit accompaniment",
+        "AGENT: fulfill visit accompaniment"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 \u2014 Service Fulfillment",
+      "human_decision_required": true,
+      "human_decision_question": "Visit accompaniment scope and delivery model",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-006",
+      "source_concept": "Accompagnement de transaction (Transaction accompaniment)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-067",
+      "source_rule_ids": [
+        "GOLD-DM-067"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No transaction accompaniment service model in V2",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model + Domain 9: Transaction Workflow",
+      "proposed_entity": "ServiceOrder (transaction_accompaniment type)",
+      "proposed_structure": "Implement as ServiceOrder with type='transaction_accompaniment' with fulfillment tracking; Service.code='accompagnement_transaction' with price_fcfa=50000",
+      "required_fields": [
+        "ServiceOrder.service_id: UUID (reference to accompagnement_transaction)",
+        "ServiceOrder.project_id: UUID? (transaction context)",
+        "Service.code: 'accompagnement_transaction' with price_fcfa=50000"
+      ],
+      "required_relations": [
+        "ServiceOrder.project_id \u2192 Project",
+        "ServiceOrder \u2192 Transaction (fulfillment link)"
+      ],
+      "required_events": [
+        "service_order.transaction_accompaniment_started (payload: {order_id, transaction_id})",
+        "service_order.transaction_accompaniment_completed (payload: {order_id, transaction_id})"
+      ],
+      "required_permissions": [
+        "USER: purchase transaction accompaniment",
+        "AGENT: fulfill transaction accompaniment"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 \u2014 Service Fulfillment",
+      "human_decision_required": true,
+      "human_decision_question": "Transaction accompaniment scope and deliverables",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-007",
+      "source_concept": "Contr\u00f4le documentaire (Document verification)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-068",
+      "source_rule_ids": [
+        "GOLD-DM-068"
+      ],
+      "current_target": "ServiceOrder / Document model",
+      "current_limitation": "No document verification service in V2",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model + Domain 14: Document Model",
+      "proposed_entity": "ServiceOrder (document_verification type)",
+      "proposed_structure": "Defer to later phase; requires document upload and verification workflow; Service.code='controle_documentaire' with price_fcfa=5000",
+      "required_fields": [
+        "Service.code: 'controle_documentaire' with price_fcfa=5000",
+        "Document.verification_status: Enum (pending | validated | rejected)"
+      ],
+      "required_relations": [
+        "ServiceOrder \u2192 Document (documents to verify)"
+      ],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": true,
+      "human_decision_question": "Document verification scope and pricing",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-008",
+      "source_concept": "Photographie professionnelle (Professional photography)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-069",
+      "source_rule_ids": [
+        "GOLD-DM-069"
+      ],
+      "current_target": "Media model",
+      "current_limitation": "V2 Media model supports photo storage but not professional photography service ordering",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model + Domain 14: Document Model",
+      "proposed_entity": "Media (service order origin)",
+      "proposed_structure": "Extend Media model with service order origin tracking; Service.code='photographie_pro' with price_fcfa=15000",
+      "required_fields": [
+        "Media.service_order_id: UUID? (origin tracking)",
+        "Service.code: 'photographie_pro' with price_fcfa=15000"
+      ],
+      "required_relations": [
+        "Media.service_order_id \u2192 ServiceOrder"
+      ],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-009",
+      "source_concept": "Vid\u00e9o professionnelle (Professional videography)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-070",
+      "source_rule_ids": [
+        "GOLD-DM-070"
+      ],
+      "current_target": "Media model",
+      "current_limitation": "V2 Media model supports video but no professional video production service",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model + Domain 14: Document Model",
+      "proposed_entity": "Media (service order origin)",
+      "proposed_structure": "Extend Media model with service order origin for video services; Service.code='video_pro' with price_fcfa=25000",
+      "required_fields": [
+        "Media.service_order_id: UUID? (origin tracking)",
+        "Service.code: 'video_pro' with price_fcfa=25000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-010",
+      "source_concept": "V\u00e9rification de bien (Property verification)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-071",
+      "source_rule_ids": [
+        "GOLD-DM-071"
+      ],
+      "current_target": "Property model",
+      "current_limitation": "No property verification_status field in V2",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model + Domain 2: Property/Listing Model",
+      "proposed_entity": "Property (verification fields)",
+      "proposed_structure": "Add verification_status and verified_at to Property; implement verification as ServiceOrder; Service.code='verification_bien' with price_fcfa=10000",
+      "required_fields": [
+        "Property.verification_status: Enum (unverified | pending | verified | rejected)",
+        "Property.verified_at: DateTime?",
+        "Service.code: 'verification_bien' with price_fcfa=10000"
+      ],
+      "required_relations": [
+        "ServiceOrder.property_id \u2192 Property (verification target)"
+      ],
+      "required_events": [
+        "property.verification_requested (payload: {property_id, service_order_id})",
+        "property.verification_completed (payload: {property_id, status, verified_by})",
+        "property.verification_rejected (payload: {property_id, reason})"
+      ],
+      "required_permissions": [
+        "ADMIN: verify property",
+        "ADMIN: reject property verification"
+      ],
+      "required_states": [
+        "Property.verification_status \u2208 {unverified, pending, verified, rejected}"
+      ],
+      "H0.5_matrices_impacted": [
+        "All matching matrices (verification affects trust score)"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 \u2014 Service Fulfillment",
+      "human_decision_required": true,
+      "human_decision_question": "Property verification criteria and process",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-011",
+      "source_concept": "Mise en relation payante (Pay-per-connection)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-072",
+      "source_rule_ids": [
+        "GOLD-DM-072"
+      ],
+      "current_target": "LeadPurchase + AgentCredit models",
+      "current_limitation": "No pay-per-connection mechanism exists in V2",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "LeadPurchase + AgentCredit",
+      "proposed_structure": "Implement LeadPurchase model + agent credit system. This is the single most important monetization mechanism. Service.code='mise_en_relation' with price_fcfa=500 per connection",
+      "required_fields": [
+        "LeadPurchase.agent_id: UUID (purchasing agent)",
+        "LeadPurchase.lead_id: UUID (purchased lead)",
+        "LeadPurchase.service_order_id: UUID (payment link)",
+        "LeadPurchase.credits_spent: Int",
+        "LeadPurchase.purchased_at: DateTime",
+        "AgentCredit.agent_id: UUID",
+        "AgentCredit.balance: Int",
+        "AgentCredit.total_purchased: Int",
+        "AgentCredit.total_consumed: Int",
+        "Service.code: 'mise_en_relation' with price_fcfa=500"
+      ],
+      "required_relations": [
+        "LeadPurchase.agent_id \u2192 User",
+        "LeadPurchase.lead_id \u2192 Lead",
+        "LeadPurchase.service_order_id \u2192 ServiceOrder",
+        "AgentCredit.agent_id \u2192 User"
+      ],
+      "required_events": [
+        "lead.purchased (payload: {lead_id, agent_id, credits_spent, pack_type})",
+        "agent_credit.recharged (payload: {agent_id, amount, new_balance})",
+        "agent_credit.consumed (payload: {agent_id, amount, reason, new_balance})"
+      ],
+      "required_permissions": [
+        "AGENT: purchase lead (if sufficient credits)",
+        "AGENT: recharge credits (via payment)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": true,
+      "human_decision_question": "Pay-per-connection pricing and agent opt-in flow",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-012",
+      "source_concept": "Assistance personnalis\u00e9e (Personalized assistance)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-073",
+      "source_rule_ids": [
+        "GOLD-DM-073"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No premium assistant service in V2",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (premium_assistance type)",
+      "proposed_structure": "Requires human decision on distinction from accompagnement services before implementing; Service.code='assistance_personnalisee' with price_fcfa=50000",
+      "required_fields": [
+        "Service.code: 'assistance_personnalisee' with price_fcfa=50000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": true,
+      "human_decision_question": "Distinction from accompagnement_visite and accompagnement_transaction services",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-MON-013",
+      "source_concept": "Visibilit\u00e9 premium (Premium visibility)",
+      "source_document": "SERVICE_CROSSWALK.md / GOLD-DM-074",
+      "source_rule_ids": [
+        "GOLD-DM-074"
+      ],
+      "current_target": "Service / Property model",
+      "current_limitation": "Distinct from boost (2,000/5,000) and premium_listing (10,000) \u2014 unclear differentiation",
+      "extension_category": "monetized_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "Service (catalog entry)",
+      "proposed_structure": "Requires human decision to determine distinct semantics vs boost/premium_listing; Service.code='visibilite_premium' with price_fcfa=7500",
+      "required_fields": [
+        "Service.code: 'visibilite_premium' with price_fcfa=7500, duration_days=30"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 5 \u2014 Enhanced Monetization",
+      "human_decision_required": true,
+      "human_decision_question": "Semantic distinction from boost (2 tiers) and premium_listing services",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-001",
+      "source_concept": "estimation_immobiliere (Property estimation/valuation)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-ESTI-001",
+      "source_rule_ids": [
+        "SVC-ESTI-001"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No valuation service or matrix in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (estimation type)",
+      "proposed_structure": "Implement estimation service matrix with valuation workflow; Service.code='estimation_immobiliere' with price_fcfa=15000",
+      "required_fields": [
+        "Service.code: 'estimation_immobiliere' with price_fcfa=15000",
+        "Property.price_estimation: Decimal (valuation result)"
+      ],
+      "required_relations": [
+        "ServiceOrder.property_id \u2192 Property (property being valued)"
+      ],
+      "required_events": [
+        "estimation.completed (payload: {property_id, estimated_value, method})"
+      ],
+      "required_permissions": [
+        "PROFESSIONAL: perform estimation",
+        "USER: request estimation"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Valuation matrices"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-002",
+      "source_concept": "expertise (Professional expertise/inspection)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-EXPE-002",
+      "source_rule_ids": [
+        "SVC-EXPE-002"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No expertise service model in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (expertise type)",
+      "proposed_structure": "Implement expertise service with inspection workflow; Service.code='expertise_immobiliere' with price_fcfa=25000",
+      "required_fields": [
+        "Service.code: 'expertise_immobiliere' with price_fcfa=25000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 \u2014 Service Fulfillment",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-003",
+      "source_concept": "verification_documentaire (Document verification)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-VERI-003",
+      "source_rule_ids": [
+        "SVC-VERI-003"
+      ],
+      "current_target": "ServiceOrder / Document model",
+      "current_limitation": "No document verification service matrix in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (document_verification type)",
+      "proposed_structure": "Linked to controle_documentaire monetized service; implement verification workflow; Service.code='verification_documentaire' with price_fcfa=10000",
+      "required_fields": [
+        "Service.code: 'verification_documentaire' with price_fcfa=10000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 \u2014 Service Fulfillment",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-004",
+      "source_concept": "visite_property (Property visit)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-VISI-004",
+      "source_rule_ids": [
+        "SVC-VISI-004"
+      ],
+      "current_target": "Visit model",
+      "current_limitation": "V2 Conversation model links user-property but has no visit scheduling or accompaniment tracking",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 7: Visit Workflow",
+      "proposed_entity": "Visit (scheduling state machine)",
+      "proposed_structure": "Implement visit scheduling as a service with state machine; Service.code='visite_property' with price_fcfa=5000",
+      "required_fields": [
+        "Visit.status: Enum (9-state lifecycle)",
+        "Service.code: 'visite_property' with price_fcfa=5000"
+      ],
+      "required_relations": [
+        "Visit.project_id \u2192 Project",
+        "Visit.property_id \u2192 Property",
+        "Visit.demandeur_id \u2192 User",
+        "Visit.holder_id \u2192 User"
+      ],
+      "required_events": [
+        "visit.scheduled (payload: {visit_id, datetime, property_id, demandeur_id})",
+        "visit.confirmed (payload: {visit_id})",
+        "visit.completed (payload: {visit_id})",
+        "visit.absence_recorded (payload: {visit_id, absent_party})"
+      ],
+      "required_permissions": [
+        "USER: schedule visit",
+        "HOLDER: confirm visit",
+        "AGENT: manage visit"
+      ],
+      "required_states": [
+        "Visit.status \u2208 {requested, awaiting_confirmation, confirmed, rescheduled, cancelled, completed, refused, absent_demandeur, absent_holder}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-005",
+      "source_concept": "contre_visite (Second visit)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-CONT-005",
+      "source_rule_ids": [
+        "SVC-CONT-005"
+      ],
+      "current_target": "Visit model",
+      "current_limitation": "No visit follow-up tracking in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 7: Visit Workflow",
+      "proposed_entity": "Visit (contre_visite type)",
+      "proposed_structure": "Extend visit infrastructure with contre-visite type; Service.code='contre_visite' with price_fcfa=5000",
+      "required_fields": [
+        "Visit.visit_type: Enum (initial | follow_up)",
+        "Service.code: 'contre_visite' with price_fcfa=5000"
+      ],
+      "required_relations": [
+        "Visit (self-referential for follow-up chain)"
+      ],
+      "required_events": [
+        "visit.follow_up_scheduled (payload: {original_visit_id, follow_up_visit_id})"
+      ],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-006",
+      "source_concept": "gestion_locative (Rental management)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-GEST-006",
+      "source_rule_ids": [
+        "SVC-GEST-006"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No rental management service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (recurring rental management)",
+      "proposed_structure": "Implement rental management workflow with recurring service model; Service.code='gestion_locative' with price_fcfa=10000/month",
+      "required_fields": [
+        "Service.code: 'gestion_locative' with price_fcfa=10000, duration_days=30"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 5 \u2014 Enhanced Monetization",
+      "human_decision_required": true,
+      "human_decision_question": "Rental management scope: full management vs referral only",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-007",
+      "source_concept": "mise_en_location (Rental listing service)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-MISE-007",
+      "source_rule_ids": [
+        "SVC-MISE-007"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "V2 Property model covers creation but not the service of listing",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (rental_listing type)",
+      "proposed_structure": "Implement listing as a service with order tracking; Service.code='mise_en_location' with price_fcfa=20000",
+      "required_fields": [
+        "Service.code: 'mise_en_location' with price_fcfa=20000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-008",
+      "source_concept": "mise_en_vente (Sales listing service)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-MISE-008",
+      "source_rule_ids": [
+        "SVC-MISE-008"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "V2 Property model covers creation but not the service of listing",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (sales_listing type)",
+      "proposed_structure": "Same as mise_en_location but for sale transaction; Service.code='mise_en_vente' with price_fcfa=25000",
+      "required_fields": [
+        "Service.code: 'mise_en_vente' with price_fcfa=25000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-009",
+      "source_concept": "publication_service (Publication service)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-PUBL-009",
+      "source_rule_ids": [
+        "SVC-PUBL-009"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "V2 Property has publishedAt but no publication workflow as a service",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (publication type)",
+      "proposed_structure": "Implement publication service with channel management; Service.code='publication_service' with price_fcfa=5000",
+      "required_fields": [
+        "Service.code: 'publication_service' with price_fcfa=5000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 \u2014 Monetization Core",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-010",
+      "source_concept": "photographie (Photography service)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-PHOT-010",
+      "source_rule_ids": [
+        "SVC-PHOT-010"
+      ],
+      "current_target": "Media model",
+      "current_limitation": "V2 Media stores photos but has no service ordering for photography",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "Media (service order flow)",
+      "proposed_structure": "Extend Media model with photography service order flow; Service.code='photographie_immobiliere' with price_fcfa=15000",
+      "required_fields": [
+        "Media.service_order_id: UUID?",
+        "Service.code: 'photographie_immobiliere' with price_fcfa=15000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-011",
+      "source_concept": "video_service (Video service)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-VIDE-011",
+      "source_rule_ids": [
+        "SVC-VIDE-011"
+      ],
+      "current_target": "Media model",
+      "current_limitation": "V2 Media supports video but no video service ordering",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "Media (video service order flow)",
+      "proposed_structure": "Extend Media with video service order flow; Service.code='video_immobiliere' with price_fcfa=25000",
+      "required_fields": [
+        "Media.service_order_id: UUID?",
+        "Service.code: 'video_immobiliere' with price_fcfa=25000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-012",
+      "source_concept": "drone_service (Drone photography)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-DRON-012",
+      "source_rule_ids": [
+        "SVC-DRON-012"
+      ],
+      "current_target": "Media model",
+      "current_limitation": "No drone service capability in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "Media (drone sub-service)",
+      "proposed_structure": "Implement as sub-service of photography; Service.code='drone_service' with price_fcfa=35000",
+      "required_fields": [
+        "Service.code: 'drone_service' with price_fcfa=35000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-013",
+      "source_concept": "home_staging",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-HOME-013",
+      "source_rule_ids": [
+        "SVC-HOME-013"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No staging service model in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (home_staging type)",
+      "proposed_structure": "Implement as professional service with staging workflow; Service.code='home_staging' with price_fcfa=30000",
+      "required_fields": [
+        "Service.code: 'home_staging' with price_fcfa=30000"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-014",
+      "source_concept": "renovation_service",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-RENO-014",
+      "source_rule_ids": [
+        "SVC-RENO-014"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "V2 Project.projectType can represent renovation generically but no dedicated service",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (renovation type)",
+      "proposed_structure": "Implement renovation service with scope management; Service.code='renovation_service'",
+      "required_fields": [
+        "Service.code: 'renovation_service'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 5 \u2014 Enhanced Monetization",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-015",
+      "source_concept": "construction_service",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-CONS-015",
+      "source_rule_ids": [
+        "SVC-CONS-015"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "V2 Project.projectType can represent construction generically but no dedicated service",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (construction type)",
+      "proposed_structure": "Implement construction service with project management; Service.code='construction_service'",
+      "required_fields": [
+        "Service.code: 'construction_service'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 5 \u2014 Enhanced Monetization",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-016",
+      "source_concept": "entretien (Property maintenance)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-ENTR-016",
+      "source_rule_ids": [
+        "SVC-ENTR-016"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No maintenance service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (maintenance type)",
+      "proposed_structure": "Implement as recurring service; Service.code='entretien_property'",
+      "required_fields": [
+        "Service.code: 'entretien_property'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-017",
+      "source_concept": "nettoyage (Cleaning service)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-NETT-017",
+      "source_rule_ids": [
+        "SVC-NETT-017"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No cleaning service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (cleaning type)",
+      "proposed_structure": "Implement as professional service; Service.code='nettoyage_property'",
+      "required_fields": [
+        "Service.code: 'nettoyage_property'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-018",
+      "source_concept": "securisation (Security service)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-SECU-018",
+      "source_rule_ids": [
+        "SVC-SECU-018"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No security service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (security type)",
+      "proposed_structure": "Implement as professional service; Service.code='securisation_property'",
+      "required_fields": [
+        "Service.code: 'securisation_property'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-019",
+      "source_concept": "demenagement (Moving service)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-DEME-019",
+      "source_rule_ids": [
+        "SVC-DEME-019"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No moving service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (moving type)",
+      "proposed_structure": "Implement as professional service; Service.code='demenagement'",
+      "required_fields": [
+        "Service.code: 'demenagement'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-020",
+      "source_concept": "assurance_service (Insurance referral)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-ASSU-020",
+      "source_rule_ids": [
+        "SVC-ASSU-020"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No insurance service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (insurance referral)",
+      "proposed_structure": "Implement as partner referral service; Service.code='assurance_service'",
+      "required_fields": [
+        "Service.code: 'assurance_service'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-021",
+      "source_concept": "conseil_juridique (Legal advice)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-CONS-021",
+      "source_rule_ids": [
+        "SVC-CONS-021"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No legal advice service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (legal_advice type)",
+      "proposed_structure": "Implement as partner professional service with lawyer network; Service.code='conseil_juridique_immobilier'",
+      "required_fields": [
+        "Service.code: 'conseil_juridique_immobilier'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-022",
+      "source_concept": "conseil_fiscal (Tax advice)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-CONS-022",
+      "source_rule_ids": [
+        "SVC-CONS-022"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No tax advice service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (tax_advice type)",
+      "proposed_structure": "Implement as partner professional service; Service.code='conseil_fiscal_immobilier'",
+      "required_fields": [
+        "Service.code: 'conseil_fiscal_immobilier'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-023",
+      "source_concept": "gestion_copropriete (Condo management)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-GEST-023",
+      "source_rule_ids": [
+        "SVC-GEST-023"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No condo management service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (condo_management type)",
+      "proposed_structure": "Implement as professional management service; Service.code='gestion_copropriete'",
+      "required_fields": [
+        "Service.code: 'gestion_copropriete'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-RES-024",
+      "source_concept": "recouvrement_locatif (Rent recovery)",
+      "source_document": "SERVICE_CROSSWALK.md / SVC-RECO-024",
+      "source_rule_ids": [
+        "SVC-RECO-024"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No rent recovery service in V2",
+      "extension_category": "real_estate_service",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (rent_recovery type)",
+      "proposed_structure": "Implement as dispute resolution service; Service.code='recouvrement_locatif'",
+      "required_fields": [
+        "Service.code: 'recouvrement_locatif'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Advanced Services",
+      "human_decision_required": true,
+      "human_decision_question": "Rent recovery scope: advisory vs active collection",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-001",
+      "source_concept": "macon (Masonry professional)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-MACON-008",
+      "source_rule_ids": [
+        "PRO-MACON-008"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'mason' to business_profiles.py; add 'mason' to professional_category enum values",
+      "required_fields": [
+        "User.business_profiles[] includes 'mason'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (masonry services)"
+      ],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 4 \u2014 Professional Profiles",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-002",
+      "source_concept": "menuisier (Carpenter/joiner)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-MENUI-011",
+      "source_rule_ids": [
+        "PRO-MENUI-011"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'carpenter' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'carpenter'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (carpentry services)"
+      ],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 4 \u2014 Professional Profiles",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-003",
+      "source_concept": "peintre (Painter)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-PEINT-012",
+      "source_rule_ids": [
+        "PRO-PEINT-012"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'painter' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'painter'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (painting services)"
+      ],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 4 \u2014 Professional Profiles",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-004",
+      "source_concept": "carreleur (Tiler)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-CARRE-013",
+      "source_rule_ids": [
+        "PRO-CARRE-013"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'tiler' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'tiler'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (tiling services)"
+      ],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 4 \u2014 Professional Profiles",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-005",
+      "source_concept": "couvreur (Roofer)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-COUVR-014",
+      "source_rule_ids": [
+        "PRO-COUVR-014"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'roofer' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'roofer'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (roofing services)"
+      ],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 4 \u2014 Professional Profiles",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-006",
+      "source_concept": "expert_immobilier (Real estate expert)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-EXPIM-015",
+      "source_rule_ids": [
+        "PRO-EXPIM-015"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'real_estate_expert' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'real_estate_expert'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (real estate expertise)"
+      ],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 4 \u2014 Professional Profiles",
+      "human_decision_required": true,
+      "human_decision_question": "Distinction from agent_immobilier and evaluateur",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-007",
+      "source_concept": "evaluateur (Appraiser)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-EVALU-016",
+      "source_rule_ids": [
+        "PRO-EVALU-016"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'appraiser' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'appraiser'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (valuation)"
+      ],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Professional Profiles",
+      "human_decision_required": true,
+      "human_decision_question": "Distinction from expert_immobilier role",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-008",
+      "source_concept": "syndic (Condo manager)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-SYNDI-018",
+      "source_rule_ids": [
+        "PRO-SYNDI-018"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'condo_manager' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'condo_manager'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (property management)"
+      ],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Professional Profiles",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-009",
+      "source_concept": "videaste_drone (Drone videographer)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-VIDEO-020",
+      "source_rule_ids": [
+        "PRO-VIDEO-020"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'drone_videographer' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'drone_videographer'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (aerial photography)"
+      ],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Professional Profiles",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-010",
+      "source_concept": "courtier (Broker)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-COURT-026",
+      "source_rule_ids": [
+        "PRO-COURT-026"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'broker' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'broker'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (brokerage)"
+      ],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Professional Profiles",
+      "human_decision_required": true,
+      "human_decision_question": "Distinction from agent_immobilier role",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-011",
+      "source_concept": "gardiennage (Security/guard services)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-GARDI-023",
+      "source_rule_ids": [
+        "PRO-GARDI-023"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'security_guard' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'security_guard'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (security services)"
+      ],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Professional Profiles",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-PRO-012",
+      "source_concept": "prestataire_administratif (Admin service provider)",
+      "source_document": "SERVICE_CROSSWALK.md / PRO-PREST-027",
+      "source_rule_ids": [
+        "PRO-PREST-027"
+      ],
+      "current_target": "User.business_profiles",
+      "current_limitation": "Not in V2 business_profiles.py",
+      "extension_category": "professional_service",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User.business_profiles",
+      "proposed_structure": "Add 'admin_service_provider' to business_profiles.py",
+      "required_fields": [
+        "User.business_profiles[] includes 'admin_service_provider'"
+      ],
+      "required_relations": [],
+      "required_events": [],
+      "required_permissions": [],
+      "required_states": [],
+      "H0.5_matrices_impacted": [
+        "Professional search matrices (administrative services)"
+      ],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 6 \u2014 Professional Profiles",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-LIFE-001",
+      "source_concept": "Service lifecycle (8 states)",
+      "source_document": "SERVICE_CROSSWALK.md / WORKFLOW_08 (Gold)",
+      "source_rule_ids": [
+        "WF-08-SERVICE"
+      ],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No service order or service lifecycle exists in V2",
+      "extension_category": "service_lifecycle",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (status state machine)",
+      "proposed_structure": "Implement ServiceOrder model with 8-state lifecycle: cr\u00e9ation \u2192 proposition \u2192 acceptation \u2192 paiement \u2192 activation \u2192 utilisation \u2192 expiration \u2192 archivage",
+      "required_fields": [
+        "ServiceOrder.status: Enum (created | proposed | accepted | payment_pending | paid | activated | in_use | expired | archived | cancelled)",
+        "ServiceOrder.activated_at: DateTime?",
+        "ServiceOrder.expires_at: DateTime?",
+        "ServiceOrder.cancelled_at: DateTime?",
+        "ServiceOrder.cancellation_reason: String?"
+      ],
+      "required_relations": [
+        "ServiceOrder.service_id \u2192 Service",
+        "ServiceOrder.buyer_id \u2192 User",
+        "ServiceOrder.property_id \u2192 Property?",
+        "ServiceOrder.project_id \u2192 Project?"
+      ],
+      "required_events": [
+        "service_order.created (payload: {order_id, service_id, buyer_id})",
+        "service_order.proposed (payload: {order_id})",
+        "service_order.accepted (payload: {order_id})",
+        "service_order.payment_pending (payload: {order_id, amount})",
+        "service_order.paid (payload: {order_id})",
+        "service_order.activated (payload: {order_id})",
+        "service_order.in_use (payload: {order_id})",
+        "service_order.expired (payload: {order_id})",
+        "service_order.archived (payload: {order_id})",
+        "service_order.cancelled (payload: {order_id, reason})"
+      ],
+      "required_permissions": [
+        "USER: create service order",
+        "USER: cancel own order",
+        "ADMIN: manage all orders"
+      ],
+      "required_states": [
+        "ServiceOrder.status \u2208 {created, proposed, accepted, payment_pending, paid, activated, in_use, expired, archived, cancelled}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 \u2014 Foundation",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-LIFE-002",
+      "source_concept": "Payment sub-states (10 states)",
+      "source_document": "SERVICE_CROSSWALK.md / WORKFLOW_08 (Gold)",
+      "source_rule_ids": [
+        "WF-08-PAYMENT"
+      ],
+      "current_target": "Payment model",
+      "current_limitation": "No payment processing system active in V2 (feature flag payments=OFF)",
+      "extension_category": "service_lifecycle",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "Payment (status state machine)",
+      "proposed_structure": "Implement Payment model with 10-state sub-machine: CREATED \u2192 INITIATED \u2192 PENDING \u2192 CONFIRMED \u2192 FAILED \u2192 CANCELLED \u2192 EXPIRED \u2192 REFUNDED \u2192 RECONCILED \u2192 DISPUTED; integrate Campay Mobile Money",
+      "required_fields": [
+        "Payment.id: UUID",
+        "Payment.service_order_id: UUID",
+        "Payment.amount: Decimal",
+        "Payment.currency: String (XAF)",
+        "Payment.provider: String (campay)",
+        "Payment.provider_reference: String?",
+        "Payment.phone_number: String",
+        "Payment.status: Enum (created | initiated | pending | confirmed | failed | cancelled | expired | refunded | reconciled | disputed)",
+        "Payment.initiated_at: DateTime?",
+        "Payment.confirmed_at: DateTime?",
+        "Payment.failed_at: DateTime?",
+        "Payment.failure_reason: String?",
+        "Payment.refunded_at: DateTime?",
+        "Payment.disputed_at: DateTime?",
+        "Payment.dispute_reason: String?"
+      ],
+      "required_relations": [
+        "Payment.service_order_id \u2192 ServiceOrder"
+      ],
+      "required_events": [
+        "payment.created (payload: {payment_id, service_order_id, amount})",
+        "payment.initiated (payload: {payment_id, provider, phone_number})",
+        "payment.pending (payload: {payment_id})",
+        "payment.confirmed (payload: {payment_id, provider_reference})",
+        "payment.failed (payload: {payment_id, reason})",
+        "payment.cancelled (payload: {payment_id})",
+        "payment.expired (payload: {payment_id})",
+        "payment.refunded (payload: {payment_id})",
+        "payment.reconciled (payload: {payment_id})",
+        "payment.disputed (payload: {payment_id, reason})"
+      ],
+      "required_permissions": [
+        "USER: initiate payment",
+        "SYSTEM: process payment callback",
+        "ADMIN: refund payment",
+        "ADMIN: resolve dispute"
+      ],
+      "required_states": [
+        "Payment.status \u2208 {created, initiated, pending, confirmed, failed, cancelled, expired, refunded, reconciled, disputed}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 \u2014 Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Payment processor selection: Campay (Gold) or multi-processor",
+      "status": "APPROVED"
+    }
+  ]
+}

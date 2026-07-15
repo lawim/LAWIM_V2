@@ -1,0 +1,1142 @@
+{
+  "document": {
+    "id": "LAWIM-H13-GEOGRAPHY-EXT-V1",
+    "title": "Geography Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Enriched catalog of all geography model extensions required for LAWIM_V2, covering African real estate geography with 14 hierarchical levels, alias resolution, zone-based CRM routing, geographic scoring, mobility modes, and market equivalents",
+    "sources": [
+      "GEOGRAPHY_MODEL.md (Gold)",
+      "GEOGRAPHY_EXECUTION_ARCHITECTURE.md",
+      "required_extensions.json (geography)",
+      "PROXIMITY_SCORING_MODEL.md",
+      "GEO_RESOLUTION_CONTRACT.md",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §3 (Domain Boundaries)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §10 (CRM Pipeline)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §5 (Search & Matching)"
+    ],
+    "total_extensions": 12,
+    "by_category": {
+      "geographic_unit_model": 3,
+      "geo_crm_routing": 1,
+      "geo_scoring": 2,
+      "geo_relations": 3,
+      "geo_reference_data": 3
+    }
+  },
+  "geographic_levels": {
+    "description": "14-level geographic hierarchy covering administrative boundaries and operational groupings for African real estate",
+    "values": [
+      {
+        "canonical_name": "country",
+        "level": 1,
+        "category": "administrative",
+        "description": "Sovereign state — top of the geographic hierarchy",
+        "example": "Cameroon (CM)",
+        "parent": null,
+        "cardinality": "~55 per continent",
+        "data_status": "complete",
+        "coverage_estimate": "100%",
+        "aliases": ["pays", "nation"]
+      },
+      {
+        "canonical_name": "region",
+        "level": 2,
+        "category": "administrative",
+        "description": "First-level administrative division (state, province, region)",
+        "example": "Centre, Littoral",
+        "parent": "country",
+        "cardinality": "~10 per country",
+        "data_status": "complete",
+        "coverage_estimate": "100%",
+        "aliases": ["région", "province", "state"]
+      },
+      {
+        "canonical_name": "department",
+        "level": 3,
+        "category": "administrative",
+        "description": "Second-level administrative division",
+        "example": "Mfoundi, Wouri",
+        "parent": "region",
+        "cardinality": "~58 per country",
+        "data_status": "partial",
+        "coverage_estimate": "60%",
+        "aliases": ["département", "division"]
+      },
+      {
+        "canonical_name": "municipality",
+        "level": 4,
+        "category": "administrative",
+        "description": "Legal municipal entity with elected government",
+        "example": "Yaoundé VI, Douala III",
+        "parent": "department",
+        "cardinality": "~360 per country",
+        "data_status": "partial",
+        "coverage_estimate": "40%",
+        "aliases": ["commune", "municipalité", "conseil"]
+      },
+      {
+        "canonical_name": "district",
+        "level": 5,
+        "category": "administrative",
+        "description": "Sub-municipal administrative district",
+        "example": "District de Bastos",
+        "parent": "municipality",
+        "cardinality": "~1500 per country",
+        "data_status": "partial",
+        "coverage_estimate": "30%",
+        "aliases": ["arrondissement", "sous-préfecture"]
+      },
+      {
+        "canonical_name": "city",
+        "level": 6,
+        "category": "operational",
+        "description": "Urban settlement that may span multiple municipalities",
+        "example": "Yaoundé, Douala, Bafoussam",
+        "parent": "region",
+        "cardinality": "~200 per country",
+        "data_status": "complete",
+        "coverage_estimate": "100% (28 cities: 10 priority + 18 secondary)",
+        "aliases": ["ville", "city", "town"]
+      },
+      {
+        "canonical_name": "neighborhood",
+        "level": 7,
+        "category": "operational",
+        "description": "Named residential or commercial area within a city",
+        "example": "Bastos, Akwa, Bonamoussadi",
+        "parent": "city",
+        "cardinality": "~4000 per country",
+        "data_status": "partial",
+        "coverage_estimate": "10% (382 documented)",
+        "aliases": ["quartier", "neighborhood", "district"]
+      },
+      {
+        "canonical_name": "zone",
+        "level": 8,
+        "category": "operational",
+        "description": "LAWIM-defined grouping of neighborhoods for agent routing and market analysis",
+        "example": "Yaoundé Nord, Douala Centre",
+        "parent": "city",
+        "cardinality": "configurable",
+        "data_status": "draft",
+        "coverage_estimate": "configurable per organization",
+        "aliases": ["zone", "sector", "secteur"]
+      },
+      {
+        "canonical_name": "axis",
+        "level": 9,
+        "category": "operational",
+        "description": "Linear geographic corridor along a major road or boulevard",
+        "example": "Axe Bastos-Mvog-Mbi, Axe Akwa-Bonapriso",
+        "parent": "city",
+        "cardinality": "configurable",
+        "data_status": "minimal",
+        "coverage_estimate": "N/A",
+        "aliases": ["axe", "corridor", "boulevard"]
+      },
+      {
+        "canonical_name": "landmark",
+        "level": 10,
+        "category": "operational",
+        "description": "Notable point of interest used as geographic reference",
+        "example": "Marché Mfoundi, Hôpital Central, Université Yaoundé I",
+        "parent": "neighborhood",
+        "cardinality": "configurable",
+        "data_status": "minimal",
+        "coverage_estimate": "N/A",
+        "aliases": ["point_de_repere", "landmark", "monument"]
+      },
+      {
+        "canonical_name": "village",
+        "level": 11,
+        "category": "operational",
+        "description": "Rural settlement outside municipal boundaries",
+        "example": "Nkoabang, Mbankomo",
+        "parent": "district",
+        "cardinality": "configurable",
+        "data_status": "sparse",
+        "coverage_estimate": "N/A",
+        "aliases": ["village"]
+      },
+      {
+        "canonical_name": "cluster",
+        "level": 12,
+        "category": "operational",
+        "description": "Group of geographically related units for matching optimization",
+        "example": "Cluster Yaoundé Nord, Cluster Douala Centre",
+        "parent": "zone",
+        "cardinality": "configurable",
+        "data_status": "draft",
+        "coverage_estimate": "configurable",
+        "aliases": ["cluster", "groupe", "pôle"]
+      },
+      {
+        "canonical_name": "gps_point",
+        "level": 13,
+        "category": "reference",
+        "description": "Precise GPS coordinate reference point, may belong to any level",
+        "example": "3.848032, 11.502075",
+        "parent": null,
+        "cardinality": "unbounded",
+        "data_status": "partial",
+        "coverage_estimate": "62.6% of known neighborhoods",
+        "aliases": ["coordonnées", "gps", "coordinates"]
+      },
+      {
+        "canonical_name": "geographic_alias",
+        "level": 14,
+        "category": "reference",
+        "description": "Non-hierarchical alias entry for name resolution, maps variant names to canonical units",
+        "example": "Ydé → Yaoundé, DLA → Douala",
+        "parent": null,
+        "cardinality": "unbounded",
+        "data_status": "partial",
+        "coverage_estimate": "limited",
+        "aliases": ["alias", "synonyme", "variante"]
+      }
+    ]
+  },
+  "alias_types": {
+    "description": "10 alias types for the geographic alias resolution system, ordered by confidence impact",
+    "values": [
+      {
+        "canonical_name": "canonical",
+        "description": "Primary official name of the geographic unit",
+        "confidence_impact": -0.00,
+        "resolution_priority": 1,
+        "example": "Yaoundé",
+        "source": "official_register"
+      },
+      {
+        "canonical_name": "official_alias",
+        "description": "Recognized alternative official name (administrative variant, bilingual name)",
+        "confidence_impact": -0.02,
+        "resolution_priority": 2,
+        "example": "Yáundé",
+        "source": "official_register"
+      },
+      {
+        "canonical_name": "common_variant",
+        "description": "Common local spelling or pronunciation variant",
+        "confidence_impact": -0.05,
+        "resolution_priority": 3,
+        "example": "Youndé",
+        "source": "knowledge_base"
+      },
+      {
+        "canonical_name": "compound",
+        "description": "Compound name with extra geographic qualifier",
+        "confidence_impact": -0.05,
+        "resolution_priority": 3,
+        "example": "Yaoundé Ville",
+        "source": "knowledge_base"
+      },
+      {
+        "canonical_name": "social_variant",
+        "description": "Social media, SMS, or chat abbreviation",
+        "confidence_impact": -0.10,
+        "resolution_priority": 4,
+        "example": "Ydé, DLA, Yao",
+        "source": "observed_usage"
+      },
+      {
+        "canonical_name": "historical",
+        "description": "Historical name no longer in official use",
+        "confidence_impact": -0.10,
+        "resolution_priority": 6,
+        "example": "Jáunde (German colonial)",
+        "source": "historical_record"
+      },
+      {
+        "canonical_name": "legacy",
+        "description": "Legacy system name from Heritage Gold or previous data sources",
+        "confidence_impact": -0.10,
+        "resolution_priority": 7,
+        "example": "YAOUNDE_CAPITALE",
+        "source": "legacy_import"
+      },
+      {
+        "canonical_name": "typo",
+        "description": "Known typographical error from user input history",
+        "confidence_impact": -0.15,
+        "resolution_priority": 5,
+        "example": "Yaunde",
+        "source": "typo_database"
+      },
+      {
+        "canonical_name": "translation",
+        "description": "Name translated into another language",
+        "confidence_impact": -0.15,
+        "resolution_priority": 8,
+        "example": "Jaunde (German)",
+        "source": "translation_table"
+      },
+      {
+        "canonical_name": "phonetic",
+        "description": "Phonetic approximation based on pronunciation",
+        "confidence_impact": -0.20,
+        "resolution_priority": 9,
+        "example": "Yaonday",
+        "source": "ai_generated"
+      }
+    ]
+  },
+  "geographic_scoring": {
+    "description": "5-level geographic scoring system for match precision between demandeur location and property location",
+    "formula": "geo_score = base_weight * geo_level_weight",
+    "base_weight_default": 0.30,
+    "levels": [
+      {
+        "level": 1,
+        "code": "geo_exact",
+        "label": "Exact",
+        "description": "Exact geographic match — same neighborhood",
+        "score_weight": 1.00,
+        "match_condition": "demandeur.neighborhood_id === property.neighborhood_id",
+        "example": "Bastos ↔ Bastos"
+      },
+      {
+        "level": 2,
+        "code": "geo_high",
+        "label": "High",
+        "description": "Same zone or compatible axis — nearby neighborhoods",
+        "score_weight": 0.85,
+        "match_condition": "shareZone() || shareAxis()",
+        "example": "Bastos ↔ Golf (same zone)"
+      },
+      {
+        "level": 3,
+        "code": "geo_medium",
+        "label": "Medium",
+        "description": "Same cluster within the same city",
+        "score_weight": 0.60,
+        "match_condition": "shareCluster()",
+        "example": "Bastos ↔ Mvog-Mbi (same cluster)"
+      },
+      {
+        "level": 4,
+        "code": "geo_low",
+        "label": "Low",
+        "description": "Same city, different cluster — accessible but not close",
+        "score_weight": 0.30,
+        "match_condition": "demandeur.city_id === property.city_id && !shareCluster()",
+        "example": "Bastos ↔ Ngoa-Ekellé"
+      },
+      {
+        "level": 5,
+        "code": "geo_minimal",
+        "label": "Minimal",
+        "description": "City affinity match — different but compatible cities",
+        "score_weight": 0.10,
+        "match_condition": "hasAffinity(demandeur.city_id, property.city_id)",
+        "example": "Yaoundé ↔ Mbalmayo"
+      }
+    ]
+  },
+  "mobility_modes": {
+    "description": "3 mobility modes defining travel thresholds for proximity matching and commute compatibility",
+    "values": [
+      {
+        "code": "mobility_low",
+        "label": "Low (Walk)",
+        "max_distance_km": 5,
+        "typical_speed_kmh": 5,
+        "transport_mode": "walking",
+        "description": "Walking distance — properties within walkable range for daily commute",
+        "default_selection_rules": [
+          "User explicitly requests walking distance",
+          "Urgent rental (student, worker)",
+          "Tenant with no vehicle"
+        ],
+        "scoring": {
+          "within_range": 1.0,
+          "decay_formula": "max(0, 1 - (excess_km / 5))",
+          "hard_cutoff_km": 10
+        }
+      },
+      {
+        "code": "mobility_medium",
+        "label": "Medium (Drive)",
+        "max_distance_km": 20,
+        "typical_speed_kmh": 30,
+        "transport_mode": "driving",
+        "description": "Short driving distance — standard urban commute range",
+        "default_selection_rules": [
+          "Default mode when no preference specified",
+          "Standard property search",
+          "Commercial property search",
+          "Buyer looking within same city"
+        ],
+        "scoring": {
+          "within_range": 1.0,
+          "decay_formula": "max(0, 1 - (excess_km / 20))",
+          "hard_cutoff_km": 40
+        }
+      },
+      {
+        "code": "mobility_high",
+        "label": "High (Regional)",
+        "max_distance_km": 50,
+        "typical_speed_kmh": 80,
+        "transport_mode": "driving",
+        "description": "Regional commuting — acceptable for investment or cross-city opportunities",
+        "default_selection_rules": [
+          "Investment property type",
+          "Diaspora investor profile",
+          "Cross-market expansion",
+          "Affinity city pairs"
+        ],
+        "scoring": {
+          "within_range": 1.0,
+          "decay_formula": "max(0, 1 - (excess_km / 50))",
+          "hard_cutoff_km": 100
+        }
+      }
+    ]
+  },
+  "relation_types": {
+    "description": "8 geographic relation types for typed connections between geographic units",
+    "values": [
+      {
+        "canonical_name": "NEARBY",
+        "code": "nearby",
+        "symmetric": true,
+        "description": "Geographic units in close proximity (≤ 2 km walking distance)",
+        "inference_method": "computed from GPS proximity (haversine ≤ 2 km)",
+        "used_by": ["matching_engine", "proximity_scoring", "visit_planning"],
+        "cardinality": "N:M"
+      },
+      {
+        "canonical_name": "CONTAINS",
+        "code": "contains",
+        "symmetric": false,
+        "description": "Parent-child containment relationship (derived from parent_id hierarchy)",
+        "inference_method": "derived from parent_id field on GeographicUnit",
+        "used_by": ["crm_routing", "search_engine", "qualification"],
+        "cardinality": "1:N"
+      },
+      {
+        "canonical_name": "ADJACENT",
+        "code": "adjacent",
+        "symmetric": true,
+        "description": "Units sharing a border or immediately adjacent to each other",
+        "inference_method": "inferred from shared edges in geometry (GeoJSON boundary intersection)",
+        "used_by": ["proximity_scoring", "visit_planning"],
+        "cardinality": "N:M"
+      },
+      {
+        "canonical_name": "SAME_AXIS",
+        "code": "same_axis",
+        "symmetric": true,
+        "description": "Units located along the same major road, boulevard, or geographic corridor",
+        "inference_method": "manually curated per city",
+        "used_by": ["matching_engine", "proximity_scoring"],
+        "cardinality": "N:M"
+      },
+      {
+        "canonical_name": "SAME_CLUSTER",
+        "code": "same_cluster",
+        "symmetric": true,
+        "description": "Units grouped into the same LAWIM-defined cluster for optimized matching",
+        "inference_method": "manually curated based on affinity and proximity",
+        "used_by": ["matching_engine", "search_engine"],
+        "cardinality": "N:M"
+      },
+      {
+        "canonical_name": "COMMUTE_COMPATIBLE",
+        "code": "commute_compatible",
+        "symmetric": true,
+        "description": "Units within acceptable commute distance based on mobility mode thresholds",
+        "inference_method": "computed from mobility mode thresholds (5/20/50+ km)",
+        "used_by": ["matching_engine", "proximity_scoring"],
+        "cardinality": "N:M"
+      },
+      {
+        "canonical_name": "ADMINISTRATIVE_PARENT",
+        "code": "administrative_parent",
+        "symmetric": false,
+        "description": "Official administrative hierarchy relationship (government-defined boundaries)",
+        "inference_method": "derived from administrative registry data",
+        "used_by": ["crm_routing", "qualification", "reporting"],
+        "cardinality": "1:N"
+      },
+      {
+        "canonical_name": "MARKET_EQUIVALENT",
+        "code": "market_equivalent",
+        "symmetric": true,
+        "description": "Cross-market equivalent units with similar real estate characteristics",
+        "inference_method": "manually curated with multi-dimensional similarity scoring",
+        "used_by": ["matching_engine", "price_estimation", "cross_market_search"],
+        "cardinality": "N:M"
+      }
+    ]
+  },
+  "market_equivalent_dimensions": {
+    "description": "6 similarity dimensions used to compute market equivalence scores between geographic units",
+    "dimensions": [
+      {
+        "canonical_name": "population_density",
+        "weight": 0.25,
+        "description": "Population per square kilometer",
+        "data_source": "census_data"
+      },
+      {
+        "canonical_name": "economic_activity",
+        "weight": 0.20,
+        "description": "Commercial and business activity level",
+        "data_source": "business_registry, poi_density"
+      },
+      {
+        "canonical_name": "real_estate_price_tier",
+        "weight": 0.20,
+        "description": "Average price per square meter for relevant property types",
+        "data_source": "market_data, transaction_history"
+      },
+      {
+        "canonical_name": "infrastructure_level",
+        "weight": 0.15,
+        "description": "Roads, utilities, public services availability",
+        "data_source": "infrastructure_survey"
+      },
+      {
+        "canonical_name": "urbanization_pattern",
+        "weight": 0.10,
+        "description": "Urban vs suburban vs rural character",
+        "data_source": "satellite_imagery, land_use_data"
+      },
+      {
+        "canonical_name": "demographic_profile",
+        "weight": 0.10,
+        "description": "Income levels, age distribution, household size",
+        "data_source": "census_data, survey_data"
+      }
+    ],
+    "lifecycle": {
+      "description": "Market equivalent lifecycle stages from suggestion to deprecation",
+      "stages": [
+        {
+          "canonical_name": "suggested",
+          "description": "AI-suggested equivalence based on algorithmic similarity detection",
+          "trigger": "Algorithmic clustering identifies similar profiles",
+          "active_for_matching": false
+        },
+        {
+          "canonical_name": "validated",
+          "description": "Human-expert validated equivalence after review",
+          "trigger": "Admin or domain expert confirms equivalence",
+          "active_for_matching": false
+        },
+        {
+          "canonical_name": "active",
+          "description": "Active for cross-market matching and price estimation",
+          "trigger": "Manual activation after validation",
+          "active_for_matching": true
+        },
+        {
+          "canonical_name": "deprecated",
+          "description": "No longer considered equivalent due to market changes",
+          "trigger": "Market shift or expert override",
+          "active_for_matching": false
+        }
+      ]
+    }
+  },
+  "relation_inference_rules": {
+    "description": "Automated inference rules for geographic relations",
+    "rules": [
+      {
+        "relation": "CONTAINS",
+        "method": "direct_from_hierarchy",
+        "description": "If unit A has parent_id = unit B, then B CONTAINS A",
+        "source_field": "GeographicUnit.parent_id",
+        "automation_level": "fully_automated"
+      },
+      {
+        "relation": "ADJACENT",
+        "method": "geometry_border_intersection",
+        "description": "If geometry polygons share an edge or vertex, units are adjacent",
+        "source_field": "GeographicUnit.geometry",
+        "automation_level": "automated_with_gps"
+      },
+      {
+        "relation": "NEARBY",
+        "method": "gps_proximity_calculation",
+        "description": "If GPS distance ≤ 2 km (haversine), units are nearby",
+        "source_field": "GeographicUnit.coordinates",
+        "automation_level": "automated_with_gps"
+      },
+      {
+        "relation": "COMMUTE_COMPATIBLE",
+        "method": "mobility_threshold_check",
+        "description": "If distance ≤ mobility mode max distance, units are commute compatible",
+        "source_field": "GeographicUnit.coordinates + mobility_mode",
+        "automation_level": "automated_with_gps"
+      },
+      {
+        "relation": "SAME_AXIS",
+        "method": "manual_curation",
+        "description": "Axes are defined per city by domain experts",
+        "source_field": "manual",
+        "automation_level": "manual"
+      },
+      {
+        "relation": "SAME_CLUSTER",
+        "method": "manual_curation",
+        "description": "Clusters group neighborhoods with high affinity",
+        "source_field": "manual",
+        "automation_level": "manual"
+      },
+      {
+        "relation": "MARKET_EQUIVALENT",
+        "method": "multi_dimensional_scoring",
+        "description": "Cross-market equivalence computed from 6 similarity dimensions, requires validation",
+        "source_field": "market_equivalent_dimensions",
+        "automation_level": "ai_suggested_with_human_validation"
+      }
+    ]
+  },
+  "geo_confidence_calculation": {
+    "description": "Composite confidence calculation for geographic resolution quality",
+    "formula": "resolution_confidence = base * alias_factor * gps_factor * ambiguity_factor",
+    "base_values": {
+      "exact_match": 1.0,
+      "alias_match": 0.85,
+      "fuzzy_match": 0.70,
+      "compound_match": 0.75,
+      "unresolved": 0.0
+    },
+    "alias_factors": {
+      "verified_alias": 1.0,
+      "unverified_alias": 0.90,
+      "typo_correction": 0.80
+    },
+    "gps_factors": {
+      "HIGH_precision": 1.0,
+      "MEDIUM_precision": 0.85,
+      "LOW_precision": 0.60,
+      "UNKNOWN_precision": 0.30
+    },
+    "ambiguity_factors": {
+      "unique_match": 1.0,
+      "resolved_ambiguity": 0.50,
+      "unresolved_ambiguity": 0.0
+    }
+  },
+  "zone_model": {
+    "description": "Zone-based CRM routing model for agent assignment",
+    "fields": {
+      "zone_id": {"type": "String", "required": true, "description": "Zone identifier (e.g., ZONE-YAO-NORD)"},
+      "name": {"type": "String", "required": true, "description": "Display name (e.g., Yaoundé Nord)"},
+      "organization_id": {"type": "UUID", "required": true, "description": "Organization that owns this zone"},
+      "member_ids": {"type": "UUID[]", "required": true, "description": "Agents assigned to this zone"},
+      "geographic_unit_ids": {"type": "String[]", "required": true, "description": "Geographic units covered by this zone"},
+      "is_active": {"type": "Boolean", "required": true, "default": true, "description": "Whether zone is active for routing"},
+      "routing_priority": {"type": "Int", "required": true, "default": 100, "description": "Priority when multiple zones match (lower = higher)"},
+      "max_leads_per_agent": {"type": "Int", "required": true, "default": 10, "description": "Max concurrent leads per agent"}
+    },
+    "routing_methods": [
+      {
+        "canonical_name": "zone_based",
+        "description": "Match lead city/neighborhood to zone geographic_unit_ids. Route to agent with lowest current lead count in matching zone.",
+        "fallback": "availability_based"
+      },
+      {
+        "canonical_name": "availability_based",
+        "description": "Route to agent with lowest current_leads / max_leads ratio who is online and zone-eligible.",
+        "fallback": "score_based"
+      },
+      {
+        "canonical_name": "score_based",
+        "description": "Route to agent with highest agent_rating in the matching zone or general pool.",
+        "fallback": "manual"
+      },
+      {
+        "canonical_name": "manual",
+        "description": "Admin manually assigns lead to an agent from the organization member list."
+      }
+    ]
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-GEO-001",
+      "source_concept": "Geographic unit model (14 levels)",
+      "source_document": "GEOGRAPHY_MODEL.md (Gold)",
+      "source_rule_ids": ["GEO-001", "GEO-002", "GEO-003"],
+      "current_target": "New entity: GeographicUnit",
+      "current_limitation": "V2 has no unified geographic unit model. Cities, neighborhoods, and zones are scattered across string fields with no hierarchy, aliasing, or canonical identification.",
+      "extension_category": "geographic_unit_model",
+      "proposed_domain": "Domain 3: Domain Boundaries (Geography Model)",
+      "proposed_entity": "GeographicUnit (new entity)",
+      "proposed_structure": "Create GeographicUnit entity with canonical_id (String), name (String), aliases (String[]), level (Enum: 14 values), parent_id (String?), coordinates (GeoJSON Point?), geometry (GeoJSON?), source (Enum: official|recovered|inferred|user_provided|ai_generated), confidence (Float 0.0-1.0), last_verified_at (DateTime?), status (Enum: active|deprecated|draft|pending_verification). Each geographic location is a GeographicUnit record at its appropriate level.",
+      "required_fields": [
+        "GeographicUnit.canonical_id: String",
+        "GeographicUnit.name: String",
+        "GeographicUnit.aliases: String[]",
+        "GeographicUnit.level: Enum (14 values)",
+        "GeographicUnit.parent_id: String?",
+        "GeographicUnit.coordinates: GeoJSON Point?",
+        "GeographicUnit.geometry: GeoJSON?",
+        "GeographicUnit.source: Enum (official|recovered|inferred|user_provided|ai_generated)",
+        "GeographicUnit.confidence: Float (0.0-1.0)",
+        "GeographicUnit.last_verified_at: DateTime?",
+        "GeographicUnit.status: Enum (active|deprecated|draft|pending_verification)"
+      ],
+      "required_relations": [
+        "GeographicUnit → GeographicUnit (parent): N:1 (self-referential via parent_id)",
+        "GeographicUnit → GeographicRelation: 1:N (relations where this unit participates)",
+        "Property → GeographicUnit: N:1 (property references its location)"
+      ],
+      "required_events": [
+        "geographic_unit.created (payload: {canonical_id, level, parent_id})",
+        "geographic_unit.updated (payload: {canonical_id, fields_changed})",
+        "geographic_unit.verified (payload: {canonical_id, verified_by})",
+        "geographic_unit.status_changed (payload: {canonical_id, old_status, new_status})"
+      ],
+      "required_permissions": [
+        "GEO: read geographic units (all authenticated users)",
+        "GEO: update geographic unit (admin only)",
+        "GEO: verify geographic unit (admin only)"
+      ],
+      "required_states": [
+        "GeographicUnit.level ∈ {country, region, department, municipality, district, city, neighborhood, zone, axis, landmark, village, cluster, gps_point, geographic_alias}",
+        "GeographicUnit.source ∈ {official, recovered, inferred, user_provided, ai_generated}",
+        "GeographicUnit.status ∈ {active, deprecated, draft, pending_verification}"
+      ],
+      "H0.5_matrices_impacted": ["GEO-MAT-001 (Hierarchy Definition)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Geographic level definitions: 14 levels as specified (GEOGRAPHY_EXTENSION_MODEL.md §2.1) or collapsed set for MVP?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-002",
+      "source_concept": "Geographic hierarchy with administrative and operational levels",
+      "source_document": "GEOGRAPHY_MODEL.md (Gold)",
+      "source_rule_ids": ["GEO-001", "GEO-002"],
+      "current_target": "GeographicUnit model",
+      "current_limitation": "V2 has only city/neighborhood string fields with no hierarchical structure. No support for administrative levels (region, department, municipality) or operational groupings (zone, axis, cluster).",
+      "extension_category": "geographic_unit_model",
+      "proposed_domain": "Domain 3: Domain Boundaries (Geography Model)",
+      "proposed_entity": "GeographicUnit (hierarchy extension)",
+      "proposed_structure": "Implement 14-level hierarchy: administrative levels (country→region→department→municipality→district) + operational levels (city→neighborhood→zone→axis→landmark→village→cluster) + reference levels (gps_point→geographic_alias). Hierarchy enforced via parent_id self-reference with level validation. Every unit must have a complete parent chain to country. Operational units (zone, axis, cluster) may have context-dependent parent bindings.",
+      "required_fields": [
+        "GeographicUnit.level: Enum (14 values)",
+        "GeographicUnit.parent_id: String? (validated against parent level)"
+      ],
+      "required_relations": [
+        "GeographicUnit → GeographicUnit (parent): N:1 hierarchy chain"
+      ],
+      "required_events": [
+        "geographic_unit.parent_changed (payload: {canonical_id, old_parent, new_parent})"
+      ],
+      "required_permissions": [],
+      "required_states": [
+        "Level-validated parent-child relationship: child.level must be > parent.level",
+        "Administrative chain must be complete to country level"
+      ],
+      "H0.5_matrices_impacted": ["GEO-MAT-002 (Hierarchy Validation)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Hierarchy scope: full 14-level hierarchy for all African markets, or start with Cameroon-only collapsed hierarchy (8 levels omitting zone/axis/landmark/village/cluster)?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-003",
+      "source_concept": "Geographic aliases system",
+      "source_document": "GEOGRAPHY_MODEL.md §5 (Gold), ALIAS_RESOLUTION_CONTRACT.md",
+      "source_rule_ids": ["GEO-004", "GEO-005", "GEO-006"],
+      "current_target": "GeographicAlias (new entity) + LocationSynonym (table)",
+      "current_limitation": "V2 has no alias resolution system. Location matching uses simple string comparison with limited typo correction. No learning mechanism for new location names.",
+      "extension_category": "geographic_unit_model",
+      "proposed_domain": "Domain 3: Domain Boundaries (Geography Model)",
+      "proposed_entity": "GeographicAlias + LocationSynonym",
+      "proposed_structure": "Create GeographicAlias entity: id (UUID), canonical_unit_id (String), alias (String), alias_type (Enum: 10 types), language (String?), source (String), confidence (Float 0.0-1.0), occurrences (Int), last_seen_at (DateTime?), created_at (DateTime), status (Enum: active|deprecated|pending_review). Create LocationSynonym table for learned mappings: input_text (String), canonical_id (String), match_type (Enum: exact|fuzzy|compound|manual), match_distance (Int), confidence (Float), occurrences (Int), last_matched_at (DateTime). Implement 5-stage resolution pipeline: normalization → exact match → fuzzy match (Levenshtein ≤ 3) → compound extraction → knowledge learning. Auto-create aliases at 5 occurrences with 0.50 confidence.",
+      "required_fields": [
+        "GeographicAlias.id: UUID",
+        "GeographicAlias.canonical_unit_id: String",
+        "GeographicAlias.alias: String",
+        "GeographicAlias.alias_type: Enum (10 alias types)",
+        "GeographicAlias.confidence: Float",
+        "GeographicAlias.status: Enum (active|deprecated|pending_review)",
+        "GeographicAlias.created_at: DateTime",
+        "LocationSynonym.input_text: String",
+        "LocationSynonym.canonical_id: String",
+        "LocationSynonym.match_type: Enum (exact|fuzzy|compound|manual)",
+        "LocationSynonym.match_distance: Int",
+        "LocationSynonym.confidence: Float"
+      ],
+      "required_relations": [
+        "GeographicAlias.canonical_unit_id → GeographicUnit.canonical_id",
+        "LocationSynonym.canonical_id → GeographicUnit.canonical_id"
+      ],
+      "required_events": [
+        "geo_alias.created (payload: {canonical_id, alias, alias_type})",
+        "geo_alias.auto_learned (payload: {canonical_id, alias, occurrences})",
+        "geo_alias.deprecated (payload: {alias_id, reason})"
+      ],
+      "required_permissions": [
+        "GEO: read aliases (all authenticated users)",
+        "GEO: manage aliases (admin only)"
+      ],
+      "required_states": [
+        "GeographicAlias.alias_type ∈ {canonical, official_alias, common_variant, social_variant, typo, historical, legacy, compound, translation, phonetic}",
+        "GeographicAlias.status ∈ {active, deprecated, pending_review}",
+        "LocationSynonym.match_type ∈ {exact, fuzzy, compound, manual}"
+      ],
+      "H0.5_matrices_impacted": ["GEO-MAT-003 (Alias Resolution Pipeline)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Fuzzy matching threshold: Gold uses Levenshtein ≤ 3. Accept default or adjust per market?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-004",
+      "source_concept": "Zone-based routing for CRM",
+      "source_document": "GEOGRAPHY_MODEL.md §4 (Gold), CRM_EXTENSION_MODEL.md §5",
+      "source_rule_ids": ["GOLD-CRM-ROUTE-001", "GOLD-CRM-ROUTE-002"],
+      "current_target": "Zone (new entity) + OrganizationMember.zones extension",
+      "current_limitation": "V2 has no zone concept. Lead routing uses simple round-robin without geographic awareness.",
+      "extension_category": "geo_crm_routing",
+      "proposed_domain": "Domain 10: CRM Pipeline + Domain 12: Organization Model",
+      "proposed_entity": "Zone + OrganizationMember (zones field extension)",
+      "proposed_structure": "Create Zone entity: zone_id (String), name (String), organization_id (UUID), member_ids (UUID[]), geographic_unit_ids (String[]), is_active (Boolean), routing_priority (Int), max_leads_per_agent (Int), created_at (DateTime). Extend OrganizationMember with zones (String[]) referencing Zone.zone_id. Implement 4 routing methods: zone-based (primary), availability-based (fallback), score-based (tiebreaker), manual (admin). Decision tree: resolve unit → find matching zones → single match route / multiple match by priority / no match fallback to availability.",
+      "required_fields": [
+        "Zone.zone_id: String",
+        "Zone.name: String",
+        "Zone.organization_id: UUID",
+        "Zone.member_ids: UUID[]",
+        "Zone.geographic_unit_ids: String[]",
+        "Zone.is_active: Boolean",
+        "Zone.routing_priority: Int",
+        "Zone.max_leads_per_agent: Int",
+        "OrganizationMember.zones: String[]"
+      ],
+      "required_relations": [
+        "Zone.member_ids → OrganizationMember.user_id",
+        "Zone.geographic_unit_ids → GeographicUnit.canonical_id",
+        "Zone.organization_id → Organization",
+        "OrganizationMember.user_id → User"
+      ],
+      "required_events": [
+        "zone.created (payload: {zone_id, organization_id, geographic_unit_count})",
+        "zone.member_assigned (payload: {zone_id, user_id})",
+        "zone.member_removed (payload: {zone_id, user_id})",
+        "zone.routing_priority_changed (payload: {zone_id, old_priority, new_priority})"
+      ],
+      "required_permissions": [
+        "CRM: assign zones to agent (org admin/responsible)",
+        "CRM: configure routing rules (org admin)",
+        "CRM: view zone assignments (org admin, agent self)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["CRM-MAT-006 (Routing Rules — extended with zones)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — CRM Pipeline",
+      "human_decision_required": true,
+      "human_decision_question": "Zone routing strategy: multi-level zone assignment (city-wide, cluster, specific neighborhoods) or flat per-city zones? Gold specifies zone-based with availability fallback.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-005",
+      "source_concept": "Geographic scoring levels (5 levels)",
+      "source_document": "GEOGRAPHY_MODEL.md §9 (Gold), PROXIMITY_SCORING_MODEL.md",
+      "source_rule_ids": ["GEO-008", "GEO-011", "MATCH-001", "MATCH-004", "MATCH-005"],
+      "current_target": "MatchingEngine (geographic component)",
+      "current_limitation": "V2 has binary city/neighborhood match with fixed weights. No graduated scoring for partial geographic matches.",
+      "extension_category": "geo_scoring",
+      "proposed_domain": "Domain 9: Search and Matching",
+      "proposed_entity": "MatchingEngine (geographic scoring module)",
+      "proposed_structure": "Implement 5-level geographic scoring: Level 1 — Exact (1.00, same neighborhood), Level 2 — High (0.85, same zone/axis), Level 3 — Medium (0.60, same cluster), Level 4 — Low (0.30, same city different cluster), Level 5 — Minimal (0.10, city affinity). Formula: geo_score = base_weight × geo_level_weight where base_weight defaults to 30% of total match score. Geographic scoring components: city match (30% of geo weight), neighborhood match (40%), zone/cluster match (20%), GPS proximity (10%). Level determination via shareZone(), shareAxis(), shareCluster(), hasAffinity() functions.",
+      "required_fields": [
+        "MatchingConfig.geo_base_weight: Float (default: 0.30)",
+        "MatchingConfig.geo_level_weights: JSON (5 levels with weights)",
+        "Property.geo_score: Float? (computed during matching)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "match.geo_scored (payload: {demandeur_location, property_location, geo_level, geo_score})"
+      ],
+      "required_permissions": [
+        "MATCH: read geo scoring config (admin only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["MAT-MAT-003 (Geographic Scoring Weights)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Matching Engine",
+      "human_decision_required": true,
+      "human_decision_question": "Geographic score weights: Gold baseline (exact 1.00, high 0.85, medium 0.60, low 0.30, minimal 0.10) as specified in GEOGRAPHY_EXTENSION_MODEL.md §5.1, or adjusted values per market segment?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-006",
+      "source_concept": "Mobility modes (3 modes)",
+      "source_document": "GEOGRAPHY_EXECUTION_ARCHITECTURE.md §11, PROXIMITY_SCORING_MODEL.md",
+      "source_rule_ids": ["GEO-010", "GEO-011"],
+      "current_target": "ProximityScorer (mobility context module)",
+      "current_limitation": "V2 has no mobility context. Proximity scoring uses fixed distance without mode differentiation.",
+      "extension_category": "geo_scoring",
+      "proposed_domain": "Domain 9: Search and Matching",
+      "proposed_entity": "ProximityScorer (mobility module)",
+      "proposed_structure": "Implement 3 mobility modes: Low/Walk (5 km, 5 km/h, walking), Medium/Drive (20 km, 30 km/h urban, default), High/Regional (50+ km, 80 km/h inter-urban). Mode selection: explicit user preference, inferred from property type (investment → high), urgency (urgent rental → low), diaspora profile (→ high). Scoring: within max_distance → 1.0; beyond → decay max(0, 1 - (excess/max)); hard cutoff at 2× max. Mobility score integrated into overall geographic score as a multiplier. COMMUTE_COMPATIBLE relation derived from mobility thresholds.",
+      "required_fields": [
+        "ProximityConfig.mobility_low_max_km: Int (default: 5)",
+        "ProximityConfig.mobility_medium_max_km: Int (default: 20)",
+        "ProximityConfig.mobility_high_max_km: Int (default: 50)",
+        "MatchResult.mobility_mode: Enum? (low|medium|high)",
+        "MatchResult.commute_score: Float? (0.0-1.0)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "match.mobility_scored (payload: {mobility_mode, distance_km, commute_score})"
+      ],
+      "required_permissions": [
+        "MATCH: read mobility config (admin only)"
+      ],
+      "required_states": [
+        "MatchResult.mobility_mode ∈ {low, medium, high}"
+      ],
+      "H0.5_matrices_impacted": ["PROX-MAT-001 (Mobility Thresholds)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Proximity Scoring",
+      "human_decision_required": true,
+      "human_decision_question": "Mobility distance thresholds: Gold defaults (low=5km, medium=20km, high=50km) as specified in GEOGRAPHY_EXTENSION_MODEL.md §6.1, or adjusted for African urban context?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-007",
+      "source_concept": "Geographic relations (8 types)",
+      "source_document": "GEOGRAPHY_MODEL.md (Gold), PROXIMITY_SCORING_MODEL.md",
+      "source_rule_ids": ["GEO-008", "GEO-010", "GEO-011"],
+      "current_target": "GeographicRelation (new entity)",
+      "current_limitation": "V2 has no relation system between geographic units. Affinity matrices and proximity are computed ad-hoc without persistent relation storage.",
+      "extension_category": "geo_relations",
+      "proposed_domain": "Domain 3: Domain Boundaries (Geography Model)",
+      "proposed_entity": "GeographicRelation (new entity)",
+      "proposed_structure": "Create GeographicRelation entity: id (UUID), source_unit_id (String), target_unit_id (String), relation_type (Enum: nearby|contains|adjacent|same_axis|same_cluster|commute_compatible|administrative_parent|market_equivalent), direction (Enum: bidirectional|source_to_target|target_to_source), weight (Float 0.0-1.0), metadata (JSON? — includes distance_km, estimated_travel_time, road_quality), source (String: official|inferred|manual), valid_from (DateTime), valid_until (DateTime?), status (Enum: active|deprecated). Implement inference rules: CONTAINS from parent_id hierarchy, ADJACENT from geometry borders, NEARBY from GPS proximity (≤ 2 km), COMMUTE_COMPATIBLE from mobility thresholds. SAME_AXIS, SAME_CLUSTER, MARKET_EQUIVALENT are manually curated.",
+      "required_fields": [
+        "GeographicRelation.id: UUID",
+        "GeographicRelation.source_unit_id: String",
+        "GeographicRelation.target_unit_id: String",
+        "GeographicRelation.relation_type: Enum (8 values)",
+        "GeographicRelation.direction: Enum (bidirectional|source_to_target|target_to_source)",
+        "GeographicRelation.weight: Float (0.0-1.0)",
+        "GeographicRelation.metadata: JSON?",
+        "GeographicRelation.source: String",
+        "GeographicRelation.status: Enum (active|deprecated)"
+      ],
+      "required_relations": [
+        "GeographicRelation.source_unit_id → GeographicUnit.canonical_id",
+        "GeographicRelation.target_unit_id → GeographicUnit.canonical_id"
+      ],
+      "required_events": [
+        "geo_relation.created (payload: {source, target, relation_type, weight})",
+        "geo_relation.inferred (payload: {source, target, relation_type, inference_method})",
+        "geo_relation.deprecated (payload: {relation_id, reason})"
+      ],
+      "required_permissions": [
+        "GEO: read relations (all authenticated users)",
+        "GEO: manage relations (admin only)"
+      ],
+      "required_states": [
+        "GeographicRelation.relation_type ∈ {nearby, contains, adjacent, same_axis, same_cluster, commute_compatible, administrative_parent, market_equivalent}",
+        "GeographicRelation.status ∈ {active, deprecated}"
+      ],
+      "H0.5_matrices_impacted": ["GEO-MAT-004 (Relation Inference Rules)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Geography Relations",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-008",
+      "source_concept": "Market equivalents for cross-market matching",
+      "source_document": "GEOGRAPHY_MODEL.md (Gold)",
+      "source_rule_ids": ["GEO-008"],
+      "current_target": "GeographicRelation (MARKET_EQUIVALENT extension)",
+      "current_limitation": "V2 has no cross-market equivalence concept. Properties from different cities or neighborhoods cannot be compared or matched based on similarity.",
+      "extension_category": "geo_relations",
+      "proposed_domain": "Domain 9: Search and Matching",
+      "proposed_entity": "GeographicRelation (MARKET_EQUIVALENT type)",
+      "proposed_structure": "Extend GeographicRelation with MARKET_EQUIVALENT type. Compute similarity from 6 dimensions: population_density (25%), economic_activity (20%), real_estate_price_tier (20%), infrastructure_level (15%), urbanization_pattern (10%), demographic_profile (10%). Lifecycle: suggested (AI-detected, not active) → validated (expert reviewed, not active) → active (available for matching) → deprecated (market change). Examples: Bastos↔Bonapriso (0.85), Mvog-Mbi↔Deido (0.75), Odza↔Makepe (0.70). Cross-market expansion workflow: no exact properties → find MARKET_EQUIVALENT relations → include with weight as similarity score → present with annotation.",
+      "required_fields": [
+        "GeographicRelation.relation_type: includes 'market_equivalent'",
+        "GeographicRelation.metadata.similarity_dimensions: JSON (6 dimension scores)",
+        "GeographicRelation.weight: Float (overall similarity 0.0-1.0)",
+        "GeographicRelation.source: String (suggested|validated|active|deprecated)"
+      ],
+      "required_relations": [
+        "GeographicRelation.source_unit_id → GeographicUnit (source market)",
+        "GeographicRelation.target_unit_id → GeographicUnit (target market)"
+      ],
+      "required_events": [
+        "market_equivalent.suggested (payload: {source, target, similarity_score})",
+        "market_equivalent.validated (payload: {source, target, validated_by})",
+        "market_equivalent.activated (payload: {source, target})",
+        "market_equivalent.deprecated (payload: {source, target, reason})"
+      ],
+      "required_permissions": [
+        "GEO: suggest market equivalent (system/ai)",
+        "GEO: validate market equivalent (admin/domain expert)",
+        "GEO: activate/deactivate market equivalent (admin)"
+      ],
+      "required_states": [
+        "GeographicRelation.source ∈ {suggested, validated, active, deprecated} (for MARKET_EQUIVALENT type)"
+      ],
+      "H0.5_matrices_impacted": ["MAT-MAT-004 (Market Equivalent Expansion)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 5 — Cross-Market Matching",
+      "human_decision_required": true,
+      "human_decision_question": "Market equivalent validation workflow: AI-suggested with human validation (as specified in GEOGRAPHY_EXTENSION_MODEL.md §8.4) or fully automated for high-confidence pairs?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-009",
+      "source_concept": "GPS point system with precision levels",
+      "source_document": "GEOGRAPHY_EXECUTION_ARCHITECTURE.md §10, GEOGRAPHY_MODEL.md §7",
+      "source_rule_ids": ["GEO-007"],
+      "current_target": "GeographicUnit (gps_point level)",
+      "current_limitation": "V2 GPS data has no precision metadata, source tracking, or confidence levels. Only 62.6% of neighborhoods have GPS data with unknown quality.",
+      "extension_category": "geo_reference_data",
+      "proposed_domain": "Domain 3: Domain Boundaries (Geography Model)",
+      "proposed_entity": "GeographicUnit (gps_point level extension)",
+      "proposed_structure": "Extend GeographicUnit model with gps_point level for coordinate storage. Implement GPS precision levels: HIGH (< 50m), MEDIUM (50-500m), LOW (> 500m), UNKNOWN (no metadata). GPS resolution fallback chain: 1) neighborhood GPS exact, 2) neighborhood centroid inferred, 3) city GPS coordinates, 4) region GPS centroid, 5) null GPS with UNKNOWN accuracy. Store GPS metadata: source (String), precision_level (Enum), confidence (Float), last_verified_at (DateTime?). GPS coverage target: 100% of priority cities, 80% of secondary cities.",
+      "required_fields": [
+        "GeographicUnit.coordinates: GeoJSON Point? (GPS coordinates)",
+        "GeographicUnit.gps_precision: Enum? (HIGH|MEDIUM|LOW|UNKNOWN)",
+        "GeographicUnit.gps_source: String? (data file or service name)",
+        "GeographicUnit.gps_confidence: Float? (0.0-1.0)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "geo.gps_updated (payload: {canonical_id, precision, source})",
+        "geo.gps_verified (payload: {canonical_id, precision, verified_by})"
+      ],
+      "required_permissions": [
+        "GEO: update GPS data (admin only)",
+        "GEO: verify GPS coordinates (admin only)"
+      ],
+      "required_states": [
+        "GeographicUnit.gps_precision ∈ {HIGH, MEDIUM, LOW, UNKNOWN}"
+      ],
+      "H0.5_matrices_impacted": ["GEO-MAT-005 (GPS Coverage Target)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Geography Data Quality",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-010",
+      "source_concept": "Geographic confidence calculation",
+      "source_document": "GEOGRAPHY_EXECUTION_ARCHITECTURE.md §1.1 (Stage 7), GEO_RESOLUTION_CONTRACT.md",
+      "source_rule_ids": ["GEO-006"],
+      "current_target": "GeographicUnit / GeoEngine",
+      "current_limitation": "V2 has no confidence calculation for geographic resolution. Successful match is binary; no quality metric.",
+      "extension_category": "geo_reference_data",
+      "proposed_domain": "Domain 3: Domain Boundaries (Geography Model)",
+      "proposed_entity": "GeographicUnit (confidence calculation)",
+      "proposed_structure": "Implement composite confidence calculation: resolution_confidence = base × alias_factor × gps_factor × ambiguity_factor. Base values: exact (1.0), alias (0.85), fuzzy (0.70), compound (0.75), unresolved (0.0). Alias factors: verified (1.0), unverified (0.90), typo (0.80). GPS factors: HIGH (1.0), MEDIUM (0.85), LOW (0.60), UNKNOWN (0.30). Ambiguity factors: unique (1.0), resolved (0.50), unresolved (0.0). Store computed confidence on GeographicUnit.confidence. Recalculate on alias addition, GPS update, or verification event.",
+      "required_fields": [
+        "GeographicUnit.confidence: Float (computed, 0.0-1.0)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "geo.confidence_recalculated (payload: {canonical_id, old_confidence, new_confidence})"
+      ],
+      "required_permissions": [
+        "GEO: read confidence (all authenticated users)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["GEO-MAT-006 (Confidence Thresholds)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Geography Data Quality",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-011",
+      "source_concept": "Location synonym table for learned resolution",
+      "source_document": "GEOGRAPHY_MODEL.md §5.4 (Gold), GEOGRAPHY_EXECUTION_ARCHITECTURE.md §2",
+      "source_rule_ids": ["GEO-004", "GEO-006"],
+      "current_target": "LocationSynonym (Supabase table)",
+      "current_limitation": "V2 has limited location synonym coverage. No automated learning mechanism for new location names from user input.",
+      "extension_category": "geo_reference_data",
+      "proposed_domain": "Domain 3: Domain Boundaries (Geography Model)",
+      "proposed_entity": "LocationSynonym (existing table extension)",
+      "proposed_structure": "Extend LocationSynonym table with standardized schema: input_text (String — raw user input), canonical_id (String — resolved unit), match_type (Enum: exact|fuzzy|compound|manual), match_distance (Int — Levenshtein distance, 0 for exact), confidence (Float 0.0-1.0), occurrences (Int — usage count), last_matched_at (DateTime), created_at (DateTime). Implement learning pipeline: on unresolved location → store as candidate → increment occurrences → at 5 occurrences → auto-create alias with 0.50 confidence in GeographicAlias → notify admin for review.",
+      "required_fields": [
+        "LocationSynonym.input_text: String (unique indexed)",
+        "LocationSynonym.canonical_id: String",
+        "LocationSynonym.match_type: Enum (exact|fuzzy|compound|manual)",
+        "LocationSynonym.match_distance: Int",
+        "LocationSynonym.confidence: Float",
+        "LocationSynonym.occurrences: Int (default: 1)",
+        "LocationSynonym.last_matched_at: DateTime"
+      ],
+      "required_relations": [
+        "LocationSynonym.canonical_id → GeographicUnit.canonical_id"
+      ],
+      "required_events": [
+        "location_synonym.learned (payload: {input_text, canonical_id, confidence, occurrences})",
+        "location_synonym.promoted_to_alias (payload: {input_text, canonical_id, occurrences})"
+      ],
+      "required_permissions": [
+        "GEO: read location synonyms (all authenticated users)",
+        "SYSTEM: auto-create location synonyms (geo engine)"
+      ],
+      "required_states": [
+        "LocationSynonym.match_type ∈ {exact, fuzzy, compound, manual}"
+      ],
+      "H0.5_matrices_impacted": ["GEO-MAT-007 (Synonym Learning Policy)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Geography Learning",
+      "human_decision_required": true,
+      "human_decision_question": "Auto-learning policy: auto-create alias at 5 occurrences with 0.50 confidence (as specified in GEOGRAPHY_EXTENSION_MODEL.md §3.2) or require admin review at any confidence level?",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-GEO-012",
+      "source_concept": "Relation inference engine",
+      "source_document": "GEOGRAPHY_MODEL.md (Gold), PROXIMITY_SCORING_MODEL.md",
+      "source_rule_ids": ["GEO-008", "GEO-010"],
+      "current_target": "GeographicRelation (automated inference)",
+      "current_limitation": "V2 has no automated relation inference. All geographic affinities and proximities must be manually curated.",
+      "extension_category": "geo_relations",
+      "proposed_domain": "Domain 3: Domain Boundaries (Geography Model)",
+      "proposed_entity": "GeographicRelation (inference engine)",
+      "proposed_structure": "Implement automated relation inference engine. CONTAINS: derived directly from GeographicUnit.parent_id. ADJACENT: inferred from geometry edge intersection (GeoJSON boundary analysis). NEARBY: computed from GPS haversine distance ≤ 2 km. COMMUTE_COMPATIBLE: computed from GPS distance ≤ mobility mode threshold. ADJACENT, NEARBY, and COMMUTE_COMPATIBLE relations are batch-computed on a schedule (daily/weekly). Batch inference creates relations with source='inferred' and status='active'. Manual relations (SAME_AXIS, SAME_CLUSTER, MARKET_EQUIVALENT) are excluded from automation. Inference logs track created/deprecated relations.",
+      "required_fields": [
+        "GeographicRelation.source: includes 'inferred' for automated relations",
+        "GeographicRelation.inference_rule: String? (which rule produced this relation)"
+      ],
+      "required_relations": [
+        "GeographicRelation → GeographicUnit (source and target)"
+      ],
+      "required_events": [
+        "geo_relation.batch_inferred (payload: {rule, count_created, count_deprecated})",
+        "geo_relation.inference_run_completed (payload: {run_id, timestamp, stats})"
+      ],
+      "required_permissions": [
+        "SYSTEM: run relation inference (geo engine service)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["GEO-MAT-008 (Inference Schedule)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Geography Automation",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    }
+  ],
+  "related_extensions": {
+    "description": "Cross-references to other extension domains",
+    "zone_based_routing": "EXT-CRM-005 (CRM routing engine — zone method uses Zone entity)",
+    "lead_scoring_boosters": "EXT-CRM-002 (city_detected +10, neighborhood_detected +10 boosters reference GeographicUnit)",
+    "proximity_scoring": "EXT-PROP-008 (data quality scoring includes location completeness)",
+    "location_extraction": "EXT-INTENT-* (entity extraction detects city/neighborhood references)",
+    "mobility_context": "EXT-MAT-* (matching dimensions include commute distance)",
+    "alias_resolution": "EXT-CRM-004 (Levenshtein-based normalization in CRM pipeline)"
+  }
+}

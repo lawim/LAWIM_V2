@@ -1,0 +1,899 @@
+{
+  "document": {
+    "id": "LAWIM-H13-DOSSIER-EXT-V1",
+    "title": "Project & Dossier Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Complete machine-readable catalog of all project/dossier domain extensions required for LAWIM_V2",
+    "sources": [
+      "INTENT_TRANSACTION_CROSSWALK.md",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §5 (Dossier/Project Model)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §6 (Matching Engine)",
+      "required_extensions.json (workflows, qualification_engine, matching, nba)"
+    ],
+    "total_extensions": 20,
+    "by_category": {
+      "dossier_state_machine": 2,
+      "double_consent": 2,
+      "holder_decision": 2,
+      "qualification": 1,
+      "rematching": 2,
+      "participant_tracking": 2,
+      "health_score": 1,
+      "linked_entities": 3,
+      "channel": 1,
+      "sla_priority": 2,
+      "nba": 1,
+      "progressive_expansion": 1
+    }
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-DOS-001",
+      "source_concept": "Multi-dossier project model",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1",
+      "source_rule_ids": ["GOLD-DOS-001"],
+      "current_target": "Project model",
+      "current_limitation": "V2 Project is single-threaded; no support for parallel operational dossiers under one project goal",
+      "extension_category": "dossier_state_machine",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Project (enriched)",
+      "proposed_structure": "Add parent_project_id (UUID?) for hierarchical multi-dossier linking. Add is_multi_dossier (Boolean) flag. Add dossier_count (Int) for active dossier count. A single project goal may spawn multiple child dossiers, each with independent dossier_state, matching pipeline, and participants.",
+      "required_fields": [
+        "Project.parent_project_id: UUID? (self-referential FK, null for root projects)",
+        "Project.is_multi_dossier: Boolean (default: false)",
+        "Project.dossier_count: Int (default: 1)",
+        "Project.project_goal: String (free-text description of user objective)"
+      ],
+      "required_relations": [
+        "Project.parent_project_id → Project (self-referential N:1 for dossier hierarchy)",
+        "Project → Project (1:N, parent to child dossiers)"
+      ],
+      "required_events": [
+        "project.dossier_created (payload: {parent_project_id, child_project_id, dossier_type})",
+        "project.dossier_merged (payload: {project_id, merged_into_project_id})",
+        "project.dossier_closed (payload: {project_id, dossier_type, outcome})"
+      ],
+      "required_permissions": [
+        "USER: create child dossier under own project",
+        "AGENT: create child dossier under managed project",
+        "ADMIN: merge dossiers"
+      ],
+      "required_states": [
+        "Project.is_multi_dossier ∈ {true, false}",
+        "Project.dossier_count >= 1"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Dossier Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-002",
+      "source_concept": "14-state dossier lifecycle",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1",
+      "source_rule_ids": ["GOLD-DOS-002"],
+      "current_target": "Project model",
+      "current_limitation": "V2 Project has 5 statuses (draft, active, paused, completed, archived) — insufficient for structured operational tracking",
+      "extension_category": "dossier_state_machine",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Project (dossier_state enum)",
+      "proposed_structure": "Add dossier_state enum with 14 states: creation, qualification, matching, presentation, wait_demandeur, wait_holder, mise_en_relation, visit, negotiation, agreement, transaction, closure, archive. Keep existing V2 status field for backward compatibility. Map V2 status → dossier_state in compatibility layer.",
+      "required_fields": [
+        "Project.dossier_state: Enum (creation | qualification | matching | presentation | wait_demandeur | wait_holder | mise_en_relation | visit | negotiation | agreement | transaction | closure | archive)",
+        "Project.matching_status: Enum (not_started | in_progress | completed | rematching | failed)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "project.dossier_state_changed (payload: {project_id, from_state, to_state, transition, actor_id})",
+        "project.matching_status_changed (payload: {project_id, from_status, to_status})"
+      ],
+      "required_permissions": [
+        "AGENT: transition dossier state (manual override)",
+        "SYSTEM: auto-transition dossier state (on events)"
+      ],
+      "required_states": [
+        "Project.dossier_state ∈ {creation, qualification, matching, presentation, wait_demandeur, wait_holder, mise_en_relation, visit, negotiation, agreement, transaction, closure, archive}",
+        "Legacy mapping: draft→creation/qualification, active→matching/presentation/wait_*, paused→paused (retained), completed→closure, archived→archive"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Core Dossier Workflow",
+      "human_decision_required": true,
+      "human_decision_question": "State granularity: full 14-state model or simplified subset for MVP",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-003",
+      "source_concept": "Dossier type classification",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1",
+      "source_rule_ids": ["GOLD-DOS-003"],
+      "current_target": "Project model",
+      "current_limitation": "No dossier_type classification — project_type serves double duty as journey and operational classifier",
+      "extension_category": "dossier_state_machine",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Project (dossier_type enum)",
+      "proposed_structure": "Add dossier_type enum: purchase, rental, sale, investment, professional_search, service_request, financing, other. Separates operational classification from project_type (which remains as user-facing journey type). Enables per-type matching strategies, SLA thresholds, and document requirements.",
+      "required_fields": [
+        "Project.dossier_type: Enum (purchase | rental | sale | investment | professional_search | service_request | financing | other)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "project.dossier_type_assigned (payload: {project_id, dossier_type, source: 'intent' | 'manual'})"
+      ],
+      "required_permissions": [
+        "SYSTEM: auto-assign dossier_type from intent",
+        "AGENT: override dossier_type"
+      ],
+      "required_states": [
+        "Project.dossier_type ∈ {purchase, rental, sale, investment, professional_search, service_request, financing, other}"
+      ],
+      "H0.5_matrices_impacted": [
+        "All qualification matrices — dossier_type filters applicable matrix families"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Dossier Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-004",
+      "source_concept": "Project goal (free-text)",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1",
+      "source_rule_ids": ["GOLD-DOS-004"],
+      "current_target": "Project model",
+      "current_limitation": "No free-text goal field; project intent is captured only by project_type enum",
+      "extension_category": "linked_entities",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Project (project_goal field)",
+      "proposed_structure": "Add project_goal (Text) field for free-text user objective description. Auto-populated from intent source_text when available. Editable by user. Provides context for agents and matching engine.",
+      "required_fields": [
+        "Project.project_goal: Text (user-facing objective description, nullable)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "project.goal_updated (payload: {project_id, old_goal, new_goal, updated_by})"
+      ],
+      "required_permissions": [
+        "USER: edit own project goal",
+        "AGENT: edit managed project goal"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Dossier Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-005",
+      "source_concept": "Double consent workflow",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1.2",
+      "source_rule_ids": ["GOLD-DOS-005"],
+      "current_target": "Project model + Consent entity",
+      "current_limitation": "No consent mechanism exists in V2 — contact is revealed unilaterally",
+      "extension_category": "double_consent",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Project (double_consent_status) + Consent (new entity)",
+      "proposed_structure": "Add double_consent_status enum to Project: not_started, demandeur_interested, holder_contacted, holder_favorable, consent_obtained, refused, expired. Create Consent entity with consent_id, project_id, demandeur_id, holder_id, property_id, demandeur_consented_at, holder_consented_at, consent_obtained_at, expires_at. Both parties must explicitly consent before contact is revealed. Implement 72h expiry with reminder chain.",
+      "required_fields": [
+        "Project.double_consent_status: Enum (not_started | demandeur_interested | holder_contacted | holder_favorable | consent_obtained | refused | expired)",
+        "Consent.id: UUID",
+        "Consent.project_id: UUID (FK → Project)",
+        "Consent.demandeur_id: UUID (FK → User)",
+        "Consent.holder_id: UUID (FK → User)",
+        "Consent.property_id: UUID (FK → Property)",
+        "Consent.demandeur_consented_at: DateTime?",
+        "Consent.demandeur_consent_method: Enum (click | message | verbal_confirmed)",
+        "Consent.holder_consented_at: DateTime?",
+        "Consent.holder_consent_method: Enum (click | message | verbal_confirmed)",
+        "Consent.consent_obtained_at: DateTime?",
+        "Consent.contact_revealed_at: DateTime?",
+        "Consent.expires_at: DateTime?",
+        "Consent.status: Enum (active | expired | revoked | replaced)"
+      ],
+      "required_relations": [
+        "Consent.project_id → Project (N:1)",
+        "Consent.demandeur_id → User (N:1)",
+        "Consent.holder_id → User (N:1)",
+        "Consent.property_id → Property (N:1)"
+      ],
+      "required_events": [
+        "consent.demandeur_given (payload: {consent_id, project_id, demandeur_id, property_id})",
+        "consent.holder_given (payload: {consent_id, project_id, holder_id, property_id})",
+        "consent.obtained (payload: {consent_id, project_id, demandeur_id, holder_id, property_id})",
+        "consent.refused (payload: {consent_id, project_id, refused_by: 'demandeur' | 'holder', reason})",
+        "consent.expired (payload: {consent_id, project_id, expiry_type: 'demandeur_silence' | 'holder_silence'})",
+        "consent.revoked (payload: {consent_id, project_id, revoked_by})",
+        "consent.renewed (payload: {old_consent_id, new_consent_id, project_id})"
+      ],
+      "required_permissions": [
+        "USER: give/revoke own consent",
+        "SYSTEM: expire consent on timeout",
+        "AGENT: view consent status",
+        "ADMIN: override consent"
+      ],
+      "required_states": [
+        "Project.double_consent_status ∈ {not_started, demandeur_interested, holder_contacted, holder_favorable, consent_obtained, refused, expired}",
+        "Consent.status ∈ {active, expired, revoked, replaced}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Core Dossier Workflow",
+      "human_decision_required": true,
+      "human_decision_question": "Double consent mandatory for all match types or configurable per dossier type",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-006",
+      "source_concept": "Double consent expiry and renewal",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1.2",
+      "source_rule_ids": ["GOLD-DOS-006"],
+      "current_target": "Consent entity",
+      "current_limitation": "No consent expiry, renewal, or revocation workflow exists in V2",
+      "extension_category": "double_consent",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Consent (expiry & renewal fields)",
+      "proposed_structure": "Implement consent expiry (30 days after consent_obtained if no action). Add renewal workflow: expired consents trigger a new consent flow with the same or different property. Revocation: either party may revoke consent at any time before contact reveal. Replace: new consent supersedes old (e.g., different property).",
+      "required_fields": [
+        "Consent.expires_at: DateTime? (30d after consent_obtained)",
+        "Consent.renewed_from_id: UUID? (self-referential, links to previous consent)",
+        "Consent.replaced_by_id: UUID? (self-referential, links to superseding consent)",
+        "Consent.revoked_at: DateTime?",
+        "Consent.revoked_by: UUID? (FK → User)",
+        "Consent.revocation_reason: String?"
+      ],
+      "required_relations": [
+        "Consent.renewed_from_id → Consent (1:1, renewal chain)",
+        "Consent.replaced_by_id → Consent (1:1, replacement chain)",
+        "Consent.revoked_by → User (N:1)"
+      ],
+      "required_events": [
+        "consent.expired (payload: {consent_id, project_id, expiry_type})",
+        "consent.revoked (payload: {consent_id, project_id, revoked_by, reason})",
+        "consent.renewed (payload: {old_consent_id, new_consent_id, project_id})",
+        "consent.replaced (payload: {old_consent_id, new_consent_id, reason: 'new_property' | 'reconsent'})"
+      ],
+      "required_permissions": [
+        "USER: revoke own consent",
+        "SYSTEM: expire consent on schedule",
+        "AGENT: extend consent expiry"
+      ],
+      "required_states": [
+        "Consent.expires_at > consent_obtained_at",
+        "Consent.revoked_at <= now()"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Dossier Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-007",
+      "source_concept": "Holder decision chain",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1.2",
+      "source_rule_ids": ["GOLD-DOS-007"],
+      "current_target": "Project model + HolderDecision entity",
+      "current_limitation": "No holder decision tracking exists in V2; holders cannot express conditional acceptance or refusal reasons",
+      "extension_category": "holder_decision",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "HolderDecision (new entity)",
+      "proposed_structure": "Create HolderDecision entity to track the holder's response to a demandeur's interest. Support states: pending, favorable, refused, conditional, silence. Capture refusal reasons (price_disagreement, timeline_mismatch, already_negotiating, unavailable, other). Support conditional acceptance with condition parameters (price threshold, timeline). Implement 72h deadline with 4-tier silence escalation.",
+      "required_fields": [
+        "HolderDecision.id: UUID",
+        "HolderDecision.project_id: UUID (FK → Project)",
+        "HolderDecision.holder_id: UUID (FK → User)",
+        "HolderDecision.property_id: UUID (FK → Property)",
+        "HolderDecision.decision: Enum (pending | favorable | refused | conditional | silence)",
+        "HolderDecision.refusal_reason: Enum? (price_disagreement | timeline_mismatch | already_negotiating | unavailable | other)",
+        "HolderDecision.refusal_detail: String?",
+        "HolderDecision.condition_type: Enum? (price | timeline | terms | other)",
+        "HolderDecision.condition_value: JSON?",
+        "HolderDecision.decided_at: DateTime?",
+        "HolderDecision.responded_via: Enum? (whatsapp | telegram | dashboard | phone)",
+        "HolderDecision.escalation_tier: Int (0-4, default: 0)",
+        "HolderDecision.deadline: DateTime (72h from creation)",
+        "HolderDecision.created_at: DateTime"
+      ],
+      "required_relations": [
+        "HolderDecision.project_id → Project (N:1)",
+        "HolderDecision.holder_id → User (N:1)",
+        "HolderDecision.property_id → Property (N:1)"
+      ],
+      "required_events": [
+        "holder_decision.pending (payload: {decision_id, holder_id, property_id, deadline})",
+        "holder_decision.favorable (payload: {decision_id, holder_id, property_id})",
+        "holder_decision.refused (payload: {decision_id, holder_id, property_id, reason, detail})",
+        "holder_decision.conditional (payload: {decision_id, holder_id, condition_type, condition_value})",
+        "holder_decision.silence_escalated (payload: {decision_id, tier, action})",
+        "holder_decision.expired (payload: {decision_id, reason: 'no_response_72h'})"
+      ],
+      "required_permissions": [
+        "HOLDER: respond to decision request",
+        "AGENT: view holder decision status",
+        "SYSTEM: escalate holder silence",
+        "ADMIN: override holder decision"
+      ],
+      "required_states": [
+        "HolderDecision.decision ∈ {pending, favorable, refused, conditional, silence}",
+        "HolderDecision.refusal_reason ∈ {price_disagreement, timeline_mismatch, already_negotiating, unavailable, other} (nullable)",
+        "HolderDecision.escalation_tier ∈ {0, 1, 2, 3, 4}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Core Dossier Workflow",
+      "human_decision_required": true,
+      "human_decision_question": "Holder silence escalation tier actions and timing (Gold: 24/48/72h tiers)",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-008",
+      "source_concept": "Holder silence escalation chain",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1.2",
+      "source_rule_ids": ["GOLD-DOS-008"],
+      "current_target": "HolderDecision entity",
+      "current_limitation": "No silence escalation mechanism exists in V2",
+      "extension_category": "holder_decision",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "HolderDecision (silence escalation fields)",
+      "proposed_structure": "Implement 4-tier silence escalation on HolderDecision. Tier 1 (24h): first reminder via preferred channel. Tier 2 (48h): second reminder + agent notification. Tier 3 (72h): final reminder + property flagged 'to_confirm'. Tier 4 (72h+): property deprioritized, rematching triggered, admin notified. Each tier logs escalation event and updates HolderDecision.escalation_tier.",
+      "required_fields": [
+        "HolderDecision.escalation_tier: Int (0-4)",
+        "HolderDecision.last_reminder_at: DateTime?",
+        "HolderDecision.reminder_count: Int (0-4)",
+        "HolderDecision.escalation_history: JSON[] (array of {tier, action, timestamp, triggered_by})",
+        "Project.holder_silence_flag: Boolean (default: false, set to true at tier 3+)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "holder_decision.reminder_sent (payload: {decision_id, tier, channel})",
+        "holder_decision.silence_escalated (payload: {decision_id, from_tier, to_tier, action})",
+        "project.holder_silence_flagged (payload: {project_id, property_id, escalation_tier})"
+      ],
+      "required_permissions": [
+        "SYSTEM: execute escalation steps",
+        "AGENT: view escalation status",
+        "ADMIN: reset escalation tier"
+      ],
+      "required_states": [
+        "HolderDecision.escalation_tier ∈ {0, 1, 2, 3, 4}",
+        "Tier 0: pending (< 24h)",
+        "Tier 1: 24h reminder",
+        "Tier 2: 48h reminder + agent notified",
+        "Tier 3: 72h final reminder + property flagged",
+        "Tier 4: 72h+ rematching triggered"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Core Dossier Workflow",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-009",
+      "source_concept": "10-step qualification order",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1.1",
+      "source_rule_ids": ["GOLD-DOS-009"],
+      "current_target": "Project model",
+      "current_limitation": "V2 has no structured progressive qualification flow; qualification questions are ad-hoc",
+      "extension_category": "qualification",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Project (qualification_step + qualification_data)",
+      "proposed_structure": "Add qualification_step (Int 0-10) field tracking current position in 10-step qualification order. Add qualification_data (JSON) storing captured answers keyed by step. Steps: 1=Intention, 2=Type, 3=City, 4=Neighborhood, 5=Budget, 6=Timeline, 7=Criteria, 8=Preferences, 9=Confirmation, 10=Escalade. Steps 1,2,3,5,6,9 are required; 4,7,8,10 optional. Back-navigation permitted. Skip logic based on intent/type.",
+      "required_fields": [
+        "Project.qualification_step: Int (0-10, 0=not started, 10=completed)",
+        "Project.qualification_data: JSON (keyed by step_number, e.g. {\"1\": {intent: \"buy\"}, \"2\": {property_type: \"apartment\"}})",
+        "Project.qualification_completed: Boolean (true when step >= 9 confirmed)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "project.qualification_step_completed (payload: {project_id, step, data})",
+        "project.qualification_skipped (payload: {project_id, step, reason})",
+        "project.qualification_completed (payload: {project_id, total_steps_completed})",
+        "project.qualification_reset (payload: {project_id, from_step, to_step, reason})"
+      ],
+      "required_permissions": [
+        "USER: answer qualification questions",
+        "AGENT: fill qualification on behalf of user",
+        "SYSTEM: auto-skip steps based on skip logic"
+      ],
+      "required_states": [
+        "Project.qualification_step ∈ {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}",
+        "Required: 1 (intention), 2 (type), 3 (city), 5 (budget), 6 (timeline), 9 (confirmation)",
+        "Optional: 4 (neighborhood), 7 (criteria), 8 (preferences), 10 (escalade)"
+      ],
+      "H0.5_matrices_impacted": [
+        "All qualification matrices — qualification data feeds matrix field values"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Core Dossier Workflow",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-010",
+      "source_concept": "Rematching engine with triggers and exclusions",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1 (rematching_count)",
+      "source_rule_ids": ["GOLD-DOS-010"],
+      "current_target": "Project model + Match entity",
+      "current_limitation": "No rematching logic exists in V2; once a match fails, there is no automatic recalculation or re-proposal",
+      "extension_category": "rematching",
+      "proposed_domain": "Domain 5: Dossier/Project Model + Domain 6: Matching Engine",
+      "proposed_entity": "Project (rematching fields) + Match (rematch fields)",
+      "proposed_structure": "Add rematching_count (Int) and max_rematches (Int, default=3) to Project. Implement 10 rematching triggers (demandeur refuses, holder refuses, consent expires, visit fails, negotiation fails, match expires, new property listed, dossier updated, holder silence, holder unavailable). Exclude refused/expired properties with configurable cooldown periods. Progressive search expansion per rematch cycle.",
+      "required_fields": [
+        "Project.rematching_count: Int (default: 0)",
+        "Project.max_rematches: Int (default: 3)",
+        "Project.rematch_history: JSON[] (array of {trigger, excluded_property_id, new_property_id, timestamp, expansion_level})"
+      ],
+      "required_relations": [
+        "Match.rematch_count: Int (rematch count for this specific match pair)"
+      ],
+      "required_events": [
+        "project.rematch_triggered (payload: {project_id, trigger, current_count, max_count})",
+        "project.rematch_completed (payload: {project_id, new_matches_count, expansion_level})",
+        "project.rematch_exhausted (payload: {project_id, reason: 'max_rematches_reached'})",
+        "project.rematch_exclusion_added (payload: {project_id, property_id, exclusion_reason, cooldown_until})"
+      ],
+      "required_permissions": [
+        "SYSTEM: trigger rematch on matching events",
+        "AGENT: manually trigger rematch",
+        "USER: request rematch"
+      ],
+      "required_states": [
+        "Project.rematching_count <= Project.max_rematches",
+        "Rematch exhaustion: rematching_count == max_rematches → escalate to agent"
+      ],
+      "H0.5_matrices_impacted": [
+        "Matching engine — rematch triggers recalculate match scores"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Core Dossier Workflow",
+      "human_decision_required": true,
+      "human_decision_question": "Rematch exclusion cooldown durations: Gold defaults or configurable per property family",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-011",
+      "source_concept": "Progressive search expansion",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §7.5 (Rematching Engine)",
+      "source_rule_ids": ["GOLD-DOS-011"],
+      "current_target": "Match entity + Project",
+      "current_limitation": "No progressive expansion strategy exists in V2 matching",
+      "extension_category": "progressive_expansion",
+      "proposed_domain": "Domain 6: Matching Engine",
+      "proposed_entity": "Match (expansion level) + Project (search_expansion fields)",
+      "proposed_structure": "Implement 4-level progressive search expansion: Initial (exact city+neighborhood, full criteria), Rematch 1 (same city, budget ±10%, surface ±15%), Rematch 2 (same region, budget ±20%, surface ±25%), Rematch 3 (any region, budget ±30%, relaxed criteria). Store expansion_level on Project. Each rematch trigger increments expansion level.",
+      "required_fields": [
+        "Project.search_expansion_level: Int (0-3, default: 0)",
+        "Project.search_radius_km: Int (computed from expansion level)",
+        "Project.search_parameters: JSON (current active search parameters including expansion modifications)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "project.search_expanded (payload: {project_id, from_level, to_level, new_parameters})",
+        "project.search_parameters_updated (payload: {project_id, parameters})"
+      ],
+      "required_permissions": [
+        "SYSTEM: auto-expand search on rematch",
+        "AGENT: manually expand/collapse search",
+        "USER: accept expanded search parameters"
+      ],
+      "required_states": [
+        "Project.search_expansion_level ∈ {0, 1, 2, 3}",
+        "Level 0: exact (initial match)",
+        "Level 1: city-wide",
+        "Level 2: regional",
+        "Level 3: national (relaxed)"
+      ],
+      "H0.5_matrices_impacted": [
+        "Geographic scoring — expansion level modifies distance thresholds"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Matching Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-012",
+      "source_concept": "Participant tracking with roles and lifecycle",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1 (Relationships)",
+      "source_rule_ids": ["GOLD-DOS-012"],
+      "current_target": "ProjectParticipant (new entity)",
+      "current_limitation": "V2 has no formal participant model; users are associated with projects implicitly via owner_id and agent fields",
+      "extension_category": "participant_tracking",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "ProjectParticipant (new entity)",
+      "proposed_structure": "Create ProjectParticipant entity with id, project_id, user_id, role (owner, demandeur, holder, agent, notaire, professional, assistant, observer), status (active, pending, removed, declined), invited_at, joined_at, removed_at, removal_reason, permissions (JSON[]), is_primary (Boolean), metadata (JSON). Support participant lifecycle: Invited → Pending → Active → Removed/Left/Declined. Track engagement per participant.",
+      "required_fields": [
+        "ProjectParticipant.id: UUID",
+        "ProjectParticipant.project_id: UUID (FK → Project)",
+        "ProjectParticipant.user_id: UUID (FK → User)",
+        "ProjectParticipant.role: Enum (owner | demandeur | holder | agent | notaire | professional | assistant | observer)",
+        "ProjectParticipant.status: Enum (active | pending | removed | declined)",
+        "ProjectParticipant.invited_at: DateTime?",
+        "ProjectParticipant.joined_at: DateTime?",
+        "ProjectParticipant.removed_at: DateTime?",
+        "ProjectParticipant.removal_reason: String?",
+        "ProjectParticipant.permissions: JSON[]",
+        "ProjectParticipant.is_primary: Boolean (default: false)",
+        "ProjectParticipant.metadata: JSON"
+      ],
+      "required_relations": [
+        "ProjectParticipant.project_id → Project (N:1)",
+        "ProjectParticipant.user_id → User (N:1)"
+      ],
+      "required_events": [
+        "participant.invited (payload: {participant_id, project_id, user_id, role, invited_by})",
+        "participant.joined (payload: {participant_id, project_id, user_id, role})",
+        "participant.role_changed (payload: {participant_id, old_role, new_role, changed_by})",
+        "participant.removed (payload: {participant_id, reason, removed_by})",
+        "participant.left (payload: {participant_id, reason})"
+      ],
+      "required_permissions": [
+        "OWNER: invite/remove participants",
+        "AGENT: invite participants (limited roles)",
+        "USER: accept/decline invitation"
+      ],
+      "required_states": [
+        "ProjectParticipant.role ∈ {owner, demandeur, holder, agent, notaire, professional, assistant, observer}",
+        "ProjectParticipant.status ∈ {active, pending, removed, declined}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Dossier Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-013",
+      "source_concept": "Participant engagement metrics",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1",
+      "source_rule_ids": ["GOLD-DOS-013"],
+      "current_target": "ProjectParticipant entity",
+      "current_limitation": "No engagement tracking exists per participant in V2",
+      "extension_category": "participant_tracking",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "ProjectParticipant (engagement fields)",
+      "proposed_structure": "Add engagement tracking fields to ProjectParticipant. Track response_time_avg (seconds), response_rate (0-100), message_count, last_active_at, engagement_score (computed). These feed into dossier health score and NBA prioritization.",
+      "required_fields": [
+        "ProjectParticipant.response_time_avg: Int? (seconds, average response time to requests)",
+        "ProjectParticipant.response_rate: Float? (0-100, percentage of requests responded to)",
+        "ProjectParticipant.message_count: Int (default: 0)",
+        "ProjectParticipant.last_active_at: DateTime?",
+        "ProjectParticipant.engagement_score: Float? (0-100, composite engagement metric)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "participant.engagement_updated (payload: {participant_id, response_rate, response_time_avg, engagement_score})"
+      ],
+      "required_permissions": [
+        "SYSTEM: compute engagement metrics"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Dossier Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-014",
+      "source_concept": "Active request management",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1",
+      "source_rule_ids": ["GOLD-DOS-014"],
+      "current_target": "ActiveRequest (new entity)",
+      "current_limitation": "No formal active request tracking in V2; pending actions are implicit",
+      "extension_category": "linked_entities",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "ActiveRequest (new entity)",
+      "proposed_structure": "Create ActiveRequest entity to track the current pending action in the dossier workflow. Fields: id, project_id, request_type (qualification_answer, match_review, consent_demandeur, consent_holder, holder_decision, visit_confirmation, visit_reschedule, offer_response, document_upload, information_request, payment_confirmation, signature), requested_from_id, requested_by_id, status (pending, fulfilled, declined, expired, cancelled), deadline, reminder_count, last_reminder_at, response_data, responded_at, context. Each dossier has 0 or 1 active request.",
+      "required_fields": [
+        "ActiveRequest.id: UUID",
+        "ActiveRequest.project_id: UUID (FK → Project, unique — one active request per dossier)",
+        "ActiveRequest.request_type: Enum (qualification_answer | match_review | consent_demandeur | consent_holder | holder_decision | visit_confirmation | visit_reschedule | offer_response | document_upload | information_request | payment_confirmation | signature)",
+        "ActiveRequest.requested_from_id: UUID (FK → User, expected responder)",
+        "ActiveRequest.requested_by_id: UUID? (FK → User, request initiator)",
+        "ActiveRequest.status: Enum (pending | fulfilled | declined | expired | cancelled)",
+        "ActiveRequest.deadline: DateTime",
+        "ActiveRequest.reminder_count: Int (default: 0)",
+        "ActiveRequest.last_reminder_at: DateTime?",
+        "ActiveRequest.response_data: JSON?",
+        "ActiveRequest.responded_at: DateTime?",
+        "ActiveRequest.context: JSON",
+        "ActiveRequest.created_at: DateTime"
+      ],
+      "required_relations": [
+        "ActiveRequest.project_id → Project (1:1)",
+        "ActiveRequest.requested_from_id → User (N:1)",
+        "ActiveRequest.requested_by_id → User (N:1, nullable)"
+      ],
+      "required_events": [
+        "active_request.created (payload: {request_id, project_id, request_type, requested_from, deadline})",
+        "active_request.fulfilled (payload: {request_id, response_data, responded_at})",
+        "active_request.declined (payload: {request_id, reason})",
+        "active_request.expired (payload: {request_id, reason: 'deadline_passed'})",
+        "active_request.reminder_sent (payload: {request_id, reminder_count})",
+        "active_request.cancelled (payload: {request_id, cancelled_by})"
+      ],
+      "required_permissions": [
+        "USER: respond to own active requests",
+        "SYSTEM: expire active requests on deadline",
+        "AGENT: create/cancel active requests for managed dossiers"
+      ],
+      "required_states": [
+        "ActiveRequest.status ∈ {pending, fulfilled, declined, expired, cancelled}",
+        "ActiveRequest.request_type ∈ {qualification_answer, match_review, consent_demandeur, consent_holder, holder_decision, visit_confirmation, visit_reschedule, offer_response, document_upload, information_request, payment_confirmation, signature}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Dossier Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-015",
+      "source_concept": "Linked properties registry with match context",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1 (Relationships)",
+      "source_rule_ids": ["GOLD-DOS-015"],
+      "current_target": "ProjectPropertyLink (new entity)",
+      "current_limitation": "V2 has no structured N:M link between Project and Property with match context and per-property decisions",
+      "extension_category": "linked_entities",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "ProjectPropertyLink (new entity)",
+      "proposed_structure": "Create ProjectPropertyLink entity to track N:M relationships between Project and Property with full match context. Fields: id, project_id, property_id, match_score, compatibility_level, link_type (matched, proposed, interested, visited, negotiated, transacted, rejected, archived), demandeur_decision, holder_decision, linked_at, unlinked_at, unlink_reason, rank. Provides per-property decision tracking within a dossier.",
+      "required_fields": [
+        "ProjectPropertyLink.id: UUID",
+        "ProjectPropertyLink.project_id: UUID (FK → Project)",
+        "ProjectPropertyLink.property_id: UUID (FK → Property)",
+        "ProjectPropertyLink.match_score: Float? (0-100)",
+        "ProjectPropertyLink.compatibility_level: Enum? (excellent | good | average | low)",
+        "ProjectPropertyLink.link_type: Enum (matched | proposed | interested | visited | negotiated | transacted | rejected | archived)",
+        "ProjectPropertyLink.demandeur_decision: Enum? (pending | interested | not_interested)",
+        "ProjectPropertyLink.holder_decision: Enum? (pending | favorable | refused)",
+        "ProjectPropertyLink.linked_at: DateTime",
+        "ProjectPropertyLink.unlinked_at: DateTime?",
+        "ProjectPropertyLink.unlink_reason: String?",
+        "ProjectPropertyLink.rank: Int"
+      ],
+      "required_relations": [
+        "ProjectPropertyLink.project_id → Project (N:1)",
+        "ProjectPropertyLink.property_id → Property (N:1)"
+      ],
+      "required_events": [
+        "project_property.linked (payload: {link_id, project_id, property_id, link_type, match_score})",
+        "project_property.status_changed (payload: {link_id, from_type, to_type, transition})",
+        "project_property.unlinked (payload: {link_id, reason})",
+        "project_property.decision_updated (payload: {link_id, party: 'demandeur' | 'holder', decision})"
+      ],
+      "required_permissions": [
+        "SYSTEM: create link on match",
+        "USER: update own decision on link",
+        "AGENT: update link status"
+      ],
+      "required_states": [
+        "ProjectPropertyLink.link_type ∈ {matched, proposed, interested, visited, negotiated, transacted, rejected, archived}",
+        "ProjectPropertyLink.demandeur_decision ∈ {pending, interested, not_interested} (nullable)",
+        "ProjectPropertyLink.holder_decision ∈ {pending, favorable, refused} (nullable)"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Dossier Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-016",
+      "source_concept": "Linked services registry",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §4 (Service Model)",
+      "source_rule_ids": ["GOLD-DOS-016"],
+      "current_target": "ProjectServiceLink (new entity)",
+      "current_limitation": "No link between project and service orders exists in V2",
+      "extension_category": "linked_entities",
+      "proposed_domain": "Domain 5: Dossier/Project Model + Domain 3: Service Model",
+      "proposed_entity": "ProjectServiceLink (new entity)",
+      "proposed_structure": "Create ProjectServiceLink entity to track service orders linked to a dossier. Fields: id, project_id, service_order_id, service_code, status (pending, active, fulfilled, cancelled), linked_at, fulfilled_at. Enables services purchased within a dossier context (boost, accompaniment, photography).",
+      "required_fields": [
+        "ProjectServiceLink.id: UUID",
+        "ProjectServiceLink.project_id: UUID (FK → Project)",
+        "ProjectServiceLink.service_order_id: UUID (FK → ServiceOrder)",
+        "ProjectServiceLink.service_code: String (reference to Service.code)",
+        "ProjectServiceLink.status: Enum (pending | active | fulfilled | cancelled)",
+        "ProjectServiceLink.linked_at: DateTime",
+        "ProjectServiceLink.fulfilled_at: DateTime?"
+      ],
+      "required_relations": [
+        "ProjectServiceLink.project_id → Project (N:1)",
+        "ProjectServiceLink.service_order_id → ServiceOrder (N:1)"
+      ],
+      "required_events": [
+        "project_service.linked (payload: {link_id, project_id, service_code, order_id})",
+        "project_service.fulfilled (payload: {link_id, fulfilled_at})",
+        "project_service.cancelled (payload: {link_id, reason})"
+      ],
+      "required_permissions": [
+        "USER: link service to own project",
+        "AGENT: link service to managed project",
+        "SYSTEM: auto-link service when purchased in dossier context"
+      ],
+      "required_states": [
+        "ProjectServiceLink.status ∈ {pending, active, fulfilled, cancelled}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Service Integration",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-017",
+      "source_concept": "Linked professionals registry",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1 (Relationships)",
+      "source_rule_ids": ["GOLD-DOS-017"],
+      "current_target": "ProjectProfessionalLink (new entity)",
+      "current_limitation": "No mechanism to link professionals to a project/dossier in V2",
+      "extension_category": "linked_entities",
+      "proposed_domain": "Domain 5: Dossier/Project Model + Domain 3: Service Model",
+      "proposed_entity": "ProjectProfessionalLink (new entity)",
+      "proposed_structure": "Create ProjectProfessionalLink entity to track professional engagements within a dossier. Fields: id, project_id, professional_id (FK → User), profession, status (suggested, engaged, active, completed, cancelled), engagement_scope, linked_at, completed_at. Supports notaries, surveyors, architects, lawyers, and other professionals required for transactions.",
+      "required_fields": [
+        "ProjectProfessionalLink.id: UUID",
+        "ProjectProfessionalLink.project_id: UUID (FK → Project)",
+        "ProjectProfessionalLink.professional_id: UUID (FK → User)",
+        "ProjectProfessionalLink.profession: String (e.g., 'notaire', 'geometre', 'architecte')",
+        "ProjectProfessionalLink.status: Enum (suggested | engaged | active | completed | cancelled)",
+        "ProjectProfessionalLink.engagement_scope: String?",
+        "ProjectProfessionalLink.linked_at: DateTime",
+        "ProjectProfessionalLink.completed_at: DateTime?"
+      ],
+      "required_relations": [
+        "ProjectProfessionalLink.project_id → Project (N:1)",
+        "ProjectProfessionalLink.professional_id → User (N:1)"
+      ],
+      "required_events": [
+        "project_professional.linked (payload: {link_id, project_id, professional_id, profession})",
+        "project_professional.engaged (payload: {link_id, scope})",
+        "project_professional.completed (payload: {link_id, completed_at})",
+        "project_professional.cancelled (payload: {link_id, reason})"
+      ],
+      "required_permissions": [
+        "AGENT: link professional to dossier",
+        "OWNER: suggest professional for dossier",
+        "PROFESSIONAL: accept/decline engagement"
+      ],
+      "required_states": [
+        "ProjectProfessionalLink.status ∈ {suggested, engaged, active, completed, cancelled}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 3 — Professional Ecosystem",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-018",
+      "source_concept": "Source channel tracking",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1",
+      "source_rule_ids": ["GOLD-DOS-018"],
+      "current_target": "Project model",
+      "current_limitation": "No source channel or communication preference tracking on V2 Project",
+      "extension_category": "channel",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Project (channel fields)",
+      "proposed_structure": "Add source_channel (whatsapp, telegram, dashboard, api, referral, agent_assisted), channel_session_id, language (fr, en, pid), communication_preference (whatsapp, telegram, email, sms, dashboard) fields to Project. Enables channel-aware communication and routing decisions.",
+      "required_fields": [
+        "Project.source_channel: Enum (whatsapp | telegram | dashboard | api | referral | agent_assisted)",
+        "Project.channel_session_id: String? (external session identifier)",
+        "Project.language: Enum (fr | en | pid, default: fr)",
+        "Project.communication_preference: Enum (whatsapp | telegram | email | sms | dashboard, default: whatsapp)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "project.channel_updated (payload: {project_id, channel, session_id})",
+        "project.language_updated (payload: {project_id, old_language, new_language})",
+        "project.communication_preference_updated (payload: {project_id, old_preference, new_preference})"
+      ],
+      "required_permissions": [
+        "USER: update communication preference",
+        "SYSTEM: set source_channel on project creation"
+      ],
+      "required_states": [
+        "Project.source_channel ∈ {whatsapp, telegram, dashboard, api, referral, agent_assisted}",
+        "Project.language ∈ {fr, en, pid}",
+        "Project.communication_preference ∈ {whatsapp, telegram, email, sms, dashboard}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Dossier Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-019",
+      "source_concept": "Dossier health score",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §7 (Matching — EXT-MAT-009)",
+      "source_rule_ids": ["GOLD-DOS-019"],
+      "current_target": "Project model",
+      "current_limitation": "No health score concept exists in V2; dossier health is not measured",
+      "extension_category": "health_score",
+      "proposed_domain": "Domain 5: Dossier/Project Model",
+      "proposed_entity": "Project (health_score + components)",
+      "proposed_structure": "Add health_score (Int 0-100) and health_score_components (JSON) to Project. Compute from 5 weighted dimensions: Completeness (0.25), Recency (0.20), Responsiveness (0.20), Progress (0.20), Risk (0.15). Health status: 80-100=Healthy, 60-79=Attention, 40-59=Warning, 20-39=Critical, 0-19=Stalled. Recalculate on state transitions, participant actions, SLA breaches, and daily cron.",
+      "required_fields": [
+        "Project.health_score: Int (0-100)",
+        "Project.health_score_components: JSON ({\"completeness\": N, \"recency\": N, \"responsiveness\": N, \"progress\": N, \"risk\": N})",
+        "Project.health_status: Enum (healthy | attention | warning | critical | stalled)",
+        "Project.health_last_computed_at: DateTime?"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "project.health_score_updated (payload: {project_id, old_score, new_score, old_status, new_status, components})",
+        "project.health_status_changed (payload: {project_id, from_status, to_status})",
+        "project.health_score_critical (payload: {project_id, score, triggered_by: 'sla_breach' | 'inactivity' | 'rematch_exhaustion'})"
+      ],
+      "required_permissions": [
+        "SYSTEM: compute health score",
+        "AGENT: view health score for managed dossiers",
+        "ADMIN: view health score for all dossiers"
+      ],
+      "required_states": [
+        "Project.health_status ∈ {healthy, attention, warning, critical, stalled}",
+        "Score ranges: healthy(80-100), attention(60-79), warning(40-59), critical(20-39), stalled(0-19)"
+      ],
+      "H0.5_matrices_impacted": [
+        "NBA engine — health status triggers NBA recalculation",
+        "Agent dashboard — health score displayed for prioritization"
+      ],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 2 — Operations & Monitoring",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-DOS-020",
+      "source_concept": "Dossier priority and SLA tracking",
+      "source_document": "LAWIM_UNIFIED_DOMAIN_MODEL.md §6.1",
+      "source_rule_ids": ["GOLD-DOS-020"],
+      "current_target": "Project model",
+      "current_limitation": "No per-dossier priority or state-level SLA tracking in V2",
+      "extension_category": "sla_priority",
+      "proposed_domain": "Domain 5: Dossier/Project Model + SLA Engine",
+      "proposed_entity": "Project (priority & SLA fields)",
+      "proposed_structure": "Add priority (p0, p1, p2, p3) to Project for dossier-level priority. Add sla_state_deadline (DateTime), sla_breached (Boolean), sla_breach_count (Int). Implement per-state SLA thresholds: creation=24h, qualification=7d, matching=48h, presentation=7d, wait_demandeur=72h, wait_holder=72h, mise_en_relation=7d, visit=14d, negotiation=30d, agreement=7d, transaction=90d, closure=7d. SLA breach triggers NBA recalculation and health score penalty.",
+      "required_fields": [
+        "Project.priority: Enum (p0 | p1 | p2 | p3)",
+        "Project.sla_state_deadline: DateTime? (computed on each state transition)",
+        "Project.sla_breached: Boolean (default: false)",
+        "Project.sla_breach_count: Int (default: 0)",
+        "Project.sla_breach_history: JSON[] (array of {state, breached_at, escalated_to, resolution})"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "project.sla_deadline_set (payload: {project_id, state, deadline})",
+        "project.sla_breached (payload: {project_id, state, deadline, breach_count})",
+        "project.sla_escalated (payload: {project_id, tier, action})",
+        "project.priority_changed (payload: {project_id, old_priority, new_priority, reason})"
+      ],
+      "required_permissions": [
+        "SYSTEM: monitor SLA deadlines",
+        "AGENT: view SLA status for managed dossiers",
+        "ADMIN: override dossier priority"
+      ],
+      "required_states": [
+        "Project.priority ∈ {p0, p1, p2, p3}",
+        "Per-state SLA max durations defined in thresholds"
+      ],
+      "H0.5_matrices_impacted": [
+        "SLA monitoring engine — dossier states add new SLA dimensions",
+        "NBA engine — SLA breach triggers NBA recalculation"
+      ],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Core Dossier Workflow",
+      "human_decision_required": true,
+      "human_decision_question": "Per-state SLA threshold durations: Gold defaults or configurable per dossier type",
+      "status": "APPROVED"
+    }
+  ]
+}

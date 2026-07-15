@@ -1,0 +1,824 @@
+{
+  "document": {
+    "id": "LAWIM-H13-PROPERTY-TAXONOMY-V1",
+    "title": "Property Taxonomy Extension Model — Machine-Readable Catalog",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Complete machine-readable catalog of all property taxonomy extensions from Heritage Gold → LAWIM_V2",
+    "sources": [
+      "PROPERTY_TYPE_CROSSWALK.md",
+      "required_extensions.json (property_model section)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §3",
+      "MATRIX_CATALOG.md"
+    ],
+    "total_extensions": 45
+  },
+  "property_families": {
+    "description": "Seven canonical property families forming the classification backbone",
+    "values": [
+      {
+        "id": "PR-FAM-001",
+        "family": "residential",
+        "canonical_name": "Résidentiel",
+        "aliases": ["logement", "habitation", "residential"],
+        "description": "Properties designed for human habitation",
+        "gold_source": "GOLD-PR-001",
+        "sub_referentiel": "Directive/02A-RESIDENTIAL-REFERENCE.md",
+        "applicable_transactions": ["rent", "sale", "short_stay", "lease"],
+        "priority": "P0",
+        "status": "active"
+      },
+      {
+        "id": "PR-FAM-002",
+        "family": "commercial",
+        "canonical_name": "Commercial",
+        "aliases": ["commerce", "business", "commercial"],
+        "description": "Properties used for business and commercial activities",
+        "gold_source": "GOLD-PR-002",
+        "sub_referentiel": "Directive/02B-COMMERCIAL-REFERENCE.md",
+        "applicable_transactions": ["rent", "sale", "commercial_lease", "lease"],
+        "priority": "P0",
+        "status": "active"
+      },
+      {
+        "id": "PR-FAM-003",
+        "family": "industrial",
+        "canonical_name": "Industriel",
+        "aliases": ["industrie", "industrial"],
+        "description": "Properties used for manufacturing, storage, and industrial activities",
+        "gold_source": "GOLD-PR-003",
+        "sub_referentiel": "Directive/02C-INDUSTRIAL-REFERENCE.md",
+        "applicable_transactions": ["sale", "lease", "commercial_lease"],
+        "priority": "P0",
+        "status": "active"
+      },
+      {
+        "id": "PR-FAM-004",
+        "family": "land",
+        "canonical_name": "Foncier",
+        "aliases": ["terrain", "foncier", "land", "parcelle"],
+        "description": "Land parcels and undeveloped plots",
+        "gold_source": "GOLD-PR-004",
+        "sub_referentiel": "Directive/02D-LAND-REFERENCE.md",
+        "applicable_transactions": ["sale", "lease", "investment"],
+        "priority": "P0",
+        "status": "active"
+      },
+      {
+        "id": "PR-FAM-005",
+        "family": "agricultural",
+        "canonical_name": "Agricole",
+        "aliases": ["agriculture", "agricole", "farm", "plantation"],
+        "description": "Properties used for agricultural and farming activities",
+        "gold_source": "GOLD-PR-005",
+        "sub_referentiel": "Directive/02E-AGRICULTURAL-REFERENCE.md",
+        "applicable_transactions": ["sale", "lease", "investment"],
+        "priority": "P3",
+        "status": "active"
+      },
+      {
+        "id": "PR-FAM-006",
+        "family": "hotel",
+        "canonical_name": "Hôtelier",
+        "aliases": ["hotel", "hotelier", "hospitality", "touristique"],
+        "description": "Properties used for hospitality and accommodation services",
+        "gold_source": "GOLD-PR-006",
+        "sub_referentiel": "Directive/02F-HOTEL-REFERENCE.md",
+        "applicable_transactions": ["rent", "sale", "short_stay", "lease"],
+        "priority": "P3",
+        "status": "active"
+      },
+      {
+        "id": "PR-FAM-007",
+        "family": "project",
+        "canonical_name": "Projet immobilier",
+        "aliases": ["projet", "development", "promotion", "project"],
+        "description": "Real estate development projects and construction programs",
+        "gold_source": "GOLD-PR-007",
+        "sub_referentiel": "Directive/02G-PROJECT-REFERENCE.md",
+        "applicable_transactions": ["sale", "investment"],
+        "priority": "P3",
+        "status": "active"
+      }
+    ]
+  },
+  "property_types": {
+    "description": "Complete property type taxonomy with hierarchical classification across all families",
+    "values": [
+      {
+        "id": "PR-TYPE-001",
+        "canonical_name": "apartment",
+        "canonical_id": "residential.apartment",
+        "aliases": ["appartement", "apt"],
+        "family": "residential",
+        "parent_id": null,
+        "description": "Self-contained housing unit within a building",
+        "applicable_transactions": ["rent", "sale", "short_stay", "lease"],
+        "applicable_fields": ["surface", "bedrooms", "bathrooms", "floor", "etage", "ascenseur", "parking", "cuisine_equipee", "climatisation", "gardien", "balcon"],
+        "qualification_matrix_ids": ["MAT-RES-001", "MAT-RES-004", "MAT-RES-005", "MAT-RES-006"],
+        "matching_dimensions": ["surface", "bedrooms", "price", "location", "furnishing"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-002",
+        "canonical_name": "house",
+        "canonical_id": "residential.house",
+        "aliases": ["maison", "house"],
+        "family": "residential",
+        "parent_id": null,
+        "description": "Standalone residential building",
+        "applicable_transactions": ["rent", "sale", "lease"],
+        "applicable_fields": ["surface", "bedrooms", "bathrooms", "parking", "garden", "jardin", "garage", "nombre_etages", "cour", "climatisation", "cuisine_equipee"],
+        "qualification_matrix_ids": ["MAT-RES-002", "MAT-RES-012", "MAT-RES-013"],
+        "matching_dimensions": ["surface", "bedrooms", "price", "location", "land_size"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-003",
+        "canonical_name": "villa",
+        "canonical_id": "residential.villa",
+        "aliases": ["villa"],
+        "family": "residential",
+        "parent_id": null,
+        "description": "Large detached residential property with land",
+        "applicable_transactions": ["rent", "sale", "lease"],
+        "applicable_fields": ["surface", "bedrooms", "bathrooms", "parking", "garden", "piscine", "garage", "nombre_etages", "climatisation", "gardien"],
+        "qualification_matrix_ids": ["MAT-RES-008", "MAT-RES-009"],
+        "matching_dimensions": ["surface", "bedrooms", "price", "location", "land_size", "premium"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-004",
+        "canonical_name": "studio",
+        "canonical_id": "residential.studio",
+        "aliases": ["studio"],
+        "family": "residential",
+        "parent_id": null,
+        "description": "Single-room apartment combining living, sleeping, and kitchen",
+        "applicable_transactions": ["rent", "sale", "short_stay"],
+        "applicable_fields": ["surface", "bathrooms", "floor", "etage", "meuble", "cuisine_equipee", "climatisation", "balcon"],
+        "qualification_matrix_ids": ["MAT-RES-003", "MAT-RES-004", "MAT-RES-005"],
+        "matching_dimensions": ["surface", "price", "location", "furnishing"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-005",
+        "canonical_name": "duplex",
+        "canonical_id": "residential.duplex",
+        "aliases": ["duplex"],
+        "family": "residential",
+        "parent_id": null,
+        "description": "Two-level apartment unit",
+        "applicable_transactions": ["rent", "sale", "lease"],
+        "applicable_fields": ["surface", "bedrooms", "bathrooms", "parking", "nombre_etages", "climatisation", "cuisine_equipee", "balcon"],
+        "qualification_matrix_ids": ["MAT-RES-010"],
+        "matching_dimensions": ["surface", "bedrooms", "price", "location"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-006",
+        "canonical_name": "room",
+        "canonical_id": "residential.room",
+        "aliases": ["chambre", "room"],
+        "family": "residential",
+        "parent_id": null,
+        "description": "Single room for rent, typically in shared accommodation",
+        "applicable_transactions": ["rent", "short_stay"],
+        "applicable_fields": ["surface", "meuble", "climatisation", "ventilateur", "etage", "internet"],
+        "qualification_matrix_ids": ["MAT-RES-001", "MAT-RES-002"],
+        "matching_dimensions": ["surface", "price", "location", "furnishing"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-007",
+        "canonical_name": "building",
+        "canonical_id": "residential.building",
+        "aliases": ["immeuble", "building"],
+        "family": "residential",
+        "parent_id": null,
+        "description": "Multi-unit residential building",
+        "applicable_transactions": ["sale", "investment"],
+        "applicable_fields": ["surface", "nombre_unités", "nombre_etages", "ascenseur", "parking", "gardien", "cave"],
+        "qualification_matrix_ids": ["MAT-RES-016"],
+        "matching_dimensions": ["surface", "units", "price", "location", "investment_return"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-008",
+        "canonical_name": "land",
+        "canonical_id": "land.land",
+        "aliases": ["terrain", "land", "parcelle", "plot"],
+        "family": "land",
+        "parent_id": null,
+        "description": "Land parcel or plot",
+        "applicable_transactions": ["sale", "lease", "investment"],
+        "applicable_fields": ["surface_terrain", "title_status", "is_constructible", "lot_size", "zoning", "servitude", "acces_route", "raccordement_eau", "raccordement_electricite", "loti"],
+        "qualification_matrix_ids": ["MAT-LAND-001", "MAT-LAND-002", "MAT-LAND-003", "MAT-LAND-004", "MAT-LAND-005", "MAT-LAND-006", "MAT-LAND-007"],
+        "matching_dimensions": ["surface", "price", "location", "constructibility", "title_status"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-009",
+        "canonical_name": "shop",
+        "canonical_id": "commercial.shop",
+        "aliases": ["boutique", "shop", "magasin"],
+        "family": "commercial",
+        "parent_id": null,
+        "description": "Retail shop or store",
+        "applicable_transactions": ["rent", "sale", "commercial_lease"],
+        "applicable_fields": ["surface_commerciale", "front_window", "vitrine", "parking_clients", "hauteur_sous_plafond", "sanitaires_clients"],
+        "qualification_matrix_ids": ["MAT-COM-001", "MAT-COM-004"],
+        "matching_dimensions": ["surface", "price", "location", "visibility", "foot_traffic"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-010",
+        "canonical_name": "office",
+        "canonical_id": "commercial.office",
+        "aliases": ["bureau", "office"],
+        "family": "commercial",
+        "parent_id": null,
+        "description": "Office or professional workspace",
+        "applicable_transactions": ["rent", "sale", "commercial_lease"],
+        "applicable_fields": ["surface_commerciale", "nombre_pieces", "parking", "climatisation", "acces_handicapes", "sanitaires", "etage", "ascenseur"],
+        "qualification_matrix_ids": ["MAT-COM-002"],
+        "matching_dimensions": ["surface", "price", "location", "accessibility"],
+        "status": "active",
+        "version": 1
+      },
+      {
+        "id": "PR-TYPE-011",
+        "canonical_name": "warehouse",
+        "canonical_id": "industrial.warehouse",
+        "aliases": ["entrepot", "entrepôt", "warehouse"],
+        "family": "industrial",
+        "parent_id": null,
+        "description": "Storage and warehousing facility",
+        "applicable_transactions": ["rent", "sale", "lease", "commercial_lease"],
+        "applicable_fields": ["surface", "hauteur_plafond", "access_camion", "charge_sol", "quai_chargement", "puissance_electrique", "zone_logistique", "parking_poids_lourds"],
+        "qualification_matrix_ids": ["MAT-COM-005"],
+        "matching_dimensions": ["surface", "price", "location", "access", "height"],
+        "status": "active",
+        "version": 1
+      }
+    ],
+    "subtypes": {
+      "description": "Sub-referentiel types per family — finer granularity within each family",
+      "residential": {
+        "description": "18 residential matrix types",
+        "types": [
+          {"canonical_name": "chambre_simple", "parent": "room", "aliases": ["basic room"], "qualification_matrix": "MAT-RES-001"},
+          {"canonical_name": "chambre_moderne", "parent": "room", "aliases": ["room with shower"], "qualification_matrix": "MAT-RES-002"},
+          {"canonical_name": "studio", "parent": "studio", "aliases": ["basic studio"], "qualification_matrix": "MAT-RES-003"},
+          {"canonical_name": "studio_moderne", "parent": "studio", "aliases": ["studio with internal shower"], "qualification_matrix": "MAT-RES-004"},
+          {"canonical_name": "studio_meuble", "parent": "studio", "aliases": ["furnished studio"], "qualification_matrix": "MAT-RES-005"},
+          {"canonical_name": "appartement_non_meuble", "parent": "apartment", "aliases": ["unfurnished apartment"], "qualification_matrix": "MAT-RES-006"},
+          {"canonical_name": "appartement_meuble", "parent": "apartment", "aliases": ["furnished apartment"], "qualification_matrix": "MAT-RES-007"},
+          {"canonical_name": "villa", "parent": "villa", "aliases": ["standalone villa"], "qualification_matrix": "MAT-RES-008"},
+          {"canonical_name": "villa_basse", "parent": "villa", "aliases": ["single-story villa"], "qualification_matrix": "MAT-RES-009"},
+          {"canonical_name": "duplex", "parent": "duplex", "aliases": ["two-level unit"], "qualification_matrix": "MAT-RES-010"},
+          {"canonical_name": "triplex", "parent": "apartment", "aliases": ["three-level unit"], "qualification_matrix": "MAT-RES-011"},
+          {"canonical_name": "maison_individuelle", "parent": "house", "aliases": ["single-family home"], "qualification_matrix": "MAT-RES-012"},
+          {"canonical_name": "maison_de_ville", "parent": "house", "aliases": ["townhouse"], "qualification_matrix": "MAT-RES-013"},
+          {"canonical_name": "chambre_hotel", "parent": "room", "aliases": ["hotel room"], "qualification_matrix": "MAT-RES-014"},
+          {"canonical_name": "appartement_courte_duree", "parent": "apartment", "aliases": ["short-term rental apartment"], "qualification_matrix": "MAT-RES-015"},
+          {"canonical_name": "residence_meublee", "parent": "apartment", "aliases": ["furnished residence"], "qualification_matrix": "MAT-RES-016"},
+          {"canonical_name": "colocation", "parent": "apartment", "aliases": ["shared housing"], "qualification_matrix": "MAT-RES-017"},
+          {"canonical_name": "cite_universitaire", "parent": "apartment", "aliases": ["university residence"], "qualification_matrix": "MAT-RES-018"}
+        ]
+      },
+      "land": {
+        "description": "7 land matrix types",
+        "types": [
+          {"canonical_name": "terrain_titre", "parent": "land", "aliases": ["land with title deed"], "qualification_matrix": "MAT-LAND-001"},
+          {"canonical_name": "terrain_non_titre", "parent": "land", "aliases": ["land without title deed"], "qualification_matrix": "MAT-LAND-002"},
+          {"canonical_name": "terrain_loti", "parent": "land", "aliases": ["serviced land"], "qualification_matrix": "MAT-LAND-003"},
+          {"canonical_name": "terrain_non_loti", "parent": "land", "aliases": ["unserviced land"], "qualification_matrix": "MAT-LAND-004"},
+          {"canonical_name": "terrain_titre_collectif", "parent": "land", "aliases": ["collective title land"], "qualification_matrix": "MAT-LAND-005"},
+          {"canonical_name": "terrain_titre_individuel", "parent": "land", "aliases": ["individual title land"], "qualification_matrix": "MAT-LAND-006"},
+          {"canonical_name": "terrain_sous_morcellement", "parent": "land", "aliases": ["land undergoing subdivision"], "qualification_matrix": "MAT-LAND-007"}
+        ]
+      },
+      "commercial": {
+        "description": "16 commercial matrix types",
+        "types": [
+          {"canonical_name": "boutique", "parent": "shop", "aliases": ["retail shop"], "qualification_matrix": "MAT-COM-001"},
+          {"canonical_name": "bureau", "parent": "office", "aliases": ["office space"], "qualification_matrix": "MAT-COM-002"},
+          {"canonical_name": "local_commercial", "parent": "shop", "aliases": ["general commercial space"], "qualification_matrix": "MAT-COM-003"},
+          {"canonical_name": "magasin", "parent": "shop", "aliases": ["store"], "qualification_matrix": "MAT-COM-004"},
+          {"canonical_name": "entrepot", "parent": "warehouse", "aliases": ["warehouse"], "qualification_matrix": "MAT-COM-005"},
+          {"canonical_name": "hangar", "parent": null, "aliases": ["hangar/shed"], "qualification_matrix": "MAT-COM-006"},
+          {"canonical_name": "atelier", "parent": null, "aliases": ["workshop"], "qualification_matrix": "MAT-COM-007"},
+          {"canonical_name": "restaurant", "parent": null, "aliases": ["restaurant space"], "qualification_matrix": "MAT-COM-008"},
+          {"canonical_name": "bar", "parent": null, "aliases": ["bar/nightlife"], "qualification_matrix": "MAT-COM-009"},
+          {"canonical_name": "hotel", "parent": null, "aliases": ["hotel (commercial)"], "qualification_matrix": "MAT-COM-010"},
+          {"canonical_name": "auberge", "parent": null, "aliases": ["inn/lodge"], "qualification_matrix": "MAT-COM-011"},
+          {"canonical_name": "immeuble_de_rapport", "parent": "building", "aliases": ["income-generating building"], "qualification_matrix": "MAT-COM-012"},
+          {"canonical_name": "immeuble_commercial", "parent": "building", "aliases": ["commercial building"], "qualification_matrix": "MAT-COM-013"},
+          {"canonical_name": "station_service", "parent": null, "aliases": ["gas station"], "qualification_matrix": "MAT-COM-014"},
+          {"canonical_name": "site_industriel", "parent": null, "aliases": ["industrial site"], "qualification_matrix": "MAT-COM-015"},
+          {"canonical_name": "espace_evenementiel", "parent": null, "aliases": ["event space"], "qualification_matrix": "MAT-COM-016"}
+        ]
+      },
+      "industrial": {
+        "description": "Industrial sub-types",
+        "types": [
+          {"canonical_name": "usine", "parent": null, "aliases": ["factory"], "qualification_matrix": "MAT-IND-001"},
+          {"canonical_name": "atelier_industriel", "parent": null, "aliases": ["industrial workshop"], "qualification_matrix": "MAT-IND-002"},
+          {"canonical_name": "entrepot_industriel", "parent": "warehouse", "aliases": ["industrial warehouse"], "qualification_matrix": "MAT-IND-003"},
+          {"canonical_name": "plateforme_logistique", "parent": null, "aliases": ["logistics platform"], "qualification_matrix": "MAT-IND-004"},
+          {"canonical_name": "zone_industrielle", "parent": null, "aliases": ["industrial zone"], "qualification_matrix": "MAT-IND-005"}
+        ]
+      },
+      "agricultural": {
+        "description": "Agricultural sub-types",
+        "types": [
+          {"canonical_name": "plantation", "parent": null, "aliases": ["plantation"], "qualification_matrix": "MAT-AGR-001"},
+          {"canonical_name": "ferme", "parent": null, "aliases": ["farm"], "qualification_matrix": "MAT-AGR-002"},
+          {"canonical_name": "terre_agricole", "parent": null, "aliases": ["agricultural land"], "qualification_matrix": "MAT-AGR-003"},
+          {"canonical_name": "elevage", "parent": null, "aliases": ["livestock farm"], "qualification_matrix": "MAT-AGR-004"},
+          {"canonical_name": "exploitation_agricole", "parent": null, "aliases": ["agricultural operation"], "qualification_matrix": "MAT-AGR-005"}
+        ]
+      },
+      "hotel": {
+        "description": "Hotel sub-types",
+        "types": [
+          {"canonical_name": "hotel", "parent": null, "aliases": ["hotel establishment"], "qualification_matrix": "MAT-HOT-001"},
+          {"canonical_name": "auberge", "parent": null, "aliases": ["inn"], "qualification_matrix": "MAT-HOT-002"},
+          {"canonical_name": "residence_touristique", "parent": null, "aliases": ["tourist residence"], "qualification_matrix": "MAT-HOT-003"},
+          {"canonical_name": "chambre_hotel", "parent": null, "aliases": ["hotel room"], "qualification_matrix": "MAT-HOT-004"},
+          {"canonical_name": "campement", "parent": null, "aliases": ["lodging camp"], "qualification_matrix": "MAT-HOT-005"}
+        ]
+      },
+      "project": {
+        "description": "Real estate project sub-types",
+        "types": [
+          {"canonical_name": "lotissement", "parent": null, "aliases": ["land subdivision"], "qualification_matrix": "MAT-PRO-001"},
+          {"canonical_name": "promotion_immobiliere", "parent": null, "aliases": ["real estate development"], "qualification_matrix": "MAT-PRO-002"},
+          {"canonical_name": "construction_neuve", "parent": null, "aliases": ["new construction"], "qualification_matrix": "MAT-PRO-003"},
+          {"canonical_name": "renovation", "parent": null, "aliases": ["renovation project"], "qualification_matrix": "MAT-PRO-004"}
+        ]
+      }
+    }
+  },
+  "usage_types": {
+    "description": "Property usage classification for determining applicable transaction rules",
+    "values": [
+      {"canonical_name": "owner_occupied", "description": "Occupied by the property owner"},
+      {"canonical_name": "tenant_occupied", "description": "Occupied by a tenant under lease"},
+      {"canonical_name": "vacant", "description": "Currently unoccupied"},
+      {"canonical_name": "seasonal", "description": "Used seasonally or part-time"},
+      {"canonical_name": "mixed", "description": "Mixed residential and commercial use"},
+      {"canonical_name": "investment_only", "description": "Held purely for investment purposes"}
+    ]
+  },
+  "occupancy_types": {
+    "description": "Current occupancy state of the property",
+    "values": [
+      {"canonical_name": "vacant", "description": "No occupant"},
+      {"canonical_name": "occupied_by_owner", "description": "Occupied by owner"},
+      {"canonical_name": "occupied_by_tenant", "description": "Occupied by tenant with active lease"},
+      {"canonical_name": "seasonal_occupancy", "description": "Occupied on a seasonal basis"}
+    ]
+  },
+  "furnishing_status": {
+    "description": "Level of furnishing provided with the property",
+    "values": [
+      {"canonical_name": "furnished", "aliases": ["meuble", "meublé"], "description": "Fully furnished"},
+      {"canonical_name": "semi_furnished", "aliases": ["semi_meuble", "semi-meublé"], "description": "Partially furnished"},
+      {"canonical_name": "unfurnished", "aliases": ["non_meuble", "non meublé", "vide"], "description": "No furniture provided"},
+      {"canonical_name": "equipped_kitchen", "aliases": ["cuisine_equipee"], "description": "Equipped kitchen only"}
+    ]
+  },
+  "construction_styles": {
+    "description": "Architectural and construction style classification",
+    "values": [
+      {"canonical_name": "moderne", "aliases": ["modern", "contemporary"], "description": "Modern construction"},
+      {"canonical_name": "traditionnelle", "aliases": ["traditional"], "description": "Traditional construction"},
+      {"canonical_name": "ancienne", "aliases": ["old", "colonial"], "description": "Older/colonial style"},
+      {"canonical_name": "contemporaine", "aliases": ["contemporary"], "description": "Contemporary design"},
+      {"canonical_name": "industrielle", "aliases": ["industrial"], "description": "Industrial construction"}
+    ]
+  },
+  "legal_status": {
+    "description": "Legal and documentation status of the property",
+    "values": [
+      {"canonical_name": "title_deed", "aliases": ["titre_foncier"], "description": "Property with registered title deed"},
+      {"canonical_name": "land_title", "aliases": ["titre_terrain"], "description": "Land title certificate"},
+      {"canonical_name": "building_permit", "aliases": ["permis_construire"], "description": "Construction permit issued"},
+      {"canonical_name": "co_ownership", "aliases": ["copropriete"], "description": "Co-ownership/copropriété regime"},
+      {"canonical_name": "customary", "aliases": ["coutumier", "traditionnel"], "description": "Customary/traditional ownership"},
+      {"canonical_name": "leasehold", "aliases": ["bail_emphyteotique"], "description": "Long-term leasehold"},
+      {"canonical_name": "undivided", "aliases": ["indivision"], "description": "Undivided co-ownership"}
+    ]
+  },
+  "commercial_categories": {
+    "description": "Specific commercial use categories",
+    "values": [
+      {"canonical_name": "retail", "description": "Retail and shops"},
+      {"canonical_name": "office", "description": "Office and professional"},
+      {"canonical_name": "food_service", "description": "Restaurants, bars, cafes"},
+      {"canonical_name": "warehouse_logistics", "description": "Warehousing and logistics"},
+      {"canonical_name": "hospitality", "description": "Hotels and accommodation"},
+      {"canonical_name": "industrial", "description": "Light industrial"},
+      {"canonical_name": "mixed_use", "description": "Mixed commercial use"},
+      {"canonical_name": "event_space", "description": "Events and gatherings"},
+      {"canonical_name": "vehicle_related", "description": "Gas stations, parking, garages"}
+    ]
+  },
+  "investment_categories": {
+    "description": "Investment-type property categorization",
+    "values": [
+      {"canonical_name": "investissement_locatif", "description": "Rental investment — buy-to-let"},
+      {"canonical_name": "investissement_terrain", "description": "Land investment"},
+      {"canonical_name": "investissement_commercial", "description": "Commercial real estate investment"},
+      {"canonical_name": "investissement_promotion", "description": "Development/construction investment"},
+      {"canonical_name": "syndicat_copropriete", "description": "Condominium syndicate investment"}
+    ]
+  },
+  "lifecycle": {
+    "description": "10-step property lifecycle state machine",
+    "states": [
+      {"step": 1, "canonical_name": "creation", "gold_name": "Réception", "description": "Initial reception of property data into the system", "allowable_previous": [], "allowable_next": ["normalization"]},
+      {"step": 2, "canonical_name": "normalization", "gold_name": "Normalisation", "description": "Data normalization and cleansing", "allowable_previous": ["creation"], "allowable_next": ["classification", "creation"]},
+      {"step": 3, "canonical_name": "classification", "gold_name": "Classification", "description": "Family and type classification assignment", "allowable_previous": ["normalization"], "allowable_next": ["validation", "normalization"]},
+      {"step": 4, "canonical_name": "validation", "gold_name": "Validation", "description": "Consistency and completeness checks", "allowable_previous": ["classification"], "allowable_next": ["published", "classification"]},
+      {"step": 5, "canonical_name": "published", "gold_name": "Publication", "description": "Published and publicly visible", "allowable_previous": ["validation"], "allowable_next": ["matching", "archived", "validation"]},
+      {"step": 6, "canonical_name": "matching", "gold_name": "Matching", "description": "Active in matching engine for demandeur scoring", "allowable_previous": ["published"], "allowable_next": ["mise_en_relation", "published", "archived"]},
+      {"step": 7, "canonical_name": "mise_en_relation", "gold_name": "Mise en relation", "description": "Contact established between demandeur and détenteur", "allowable_previous": ["matching"], "allowable_next": ["suivi", "matching", "archived"]},
+      {"step": 8, "canonical_name": "suivi", "gold_name": "Suivi", "description": "Transaction follow-up in progress", "allowable_previous": ["mise_en_relation"], "allowable_next": ["archived", "conserve", "mise_en_relation"]},
+      {"step": 9, "canonical_name": "archived", "gold_name": "Archivage", "description": "Archived after completion or inactivity", "allowable_previous": ["published", "matching", "mise_en_relation", "suivi"], "allowable_next": ["conserve", "published"]},
+      {"step": 10, "canonical_name": "conserve", "gold_name": "Conservation historique", "description": "Historical preservation — final terminal state", "allowable_previous": ["suivi", "archived"], "allowable_next": []}
+    ]
+  },
+  "availability_states": {
+    "description": "Availability state machine with guarded transitions",
+    "states": [
+      {
+        "canonical_name": "available",
+        "description": "Property is available for transaction",
+        "allowable_transitions": ["pending", "archived"]
+      },
+      {
+        "canonical_name": "pending",
+        "description": "Property is reserved or under negotiation",
+        "allowable_transitions": ["available", "rented", "sold", "archived"]
+      },
+      {
+        "canonical_name": "rented",
+        "description": "Property has been rented",
+        "allowable_transitions": ["archived", "available"]
+      },
+      {
+        "canonical_name": "sold",
+        "description": "Property has been sold",
+        "allowable_transitions": ["archived"]
+      },
+      {
+        "canonical_name": "archived",
+        "description": "No longer active on the market",
+        "allowable_transitions": ["available"]
+      }
+    ],
+    "transition_rules": [
+      {"from": "available", "to": "pending", "guard": "reservation_or_negotiation_initiated"},
+      {"from": "available", "to": "archived", "guard": "owner_request_or_90d_inactivity"},
+      {"from": "pending", "to": "available", "guard": "reservation_cancelled"},
+      {"from": "pending", "to": "rented", "guard": "rental_agreement_signed"},
+      {"from": "pending", "to": "sold", "guard": "sale_completed"},
+      {"from": "pending", "to": "archived", "guard": "deal_failed_or_withdrawn"},
+      {"from": "rented", "to": "archived", "guard": "lease_ended"},
+      {"from": "rented", "to": "available", "guard": "lease_terminated_early"},
+      {"from": "sold", "to": "archived", "guard": "sale_finalized"},
+      {"from": "archived", "to": "available", "guard": "relisted_by_owner"}
+    ]
+  },
+  "price_model": {
+    "description": "Six-level pricing model with seven price types",
+    "levels": {
+      "description": "6 price levels for comprehensive pricing",
+      "values": [
+        {"canonical_name": "displayed", "gold_name": "Prix affiché", "description": "Single displayed/listed price (primary price)", "required": true, "type": "Decimal"},
+        {"canonical_name": "negotiable", "gold_name": "Prix négociable", "description": "Negotiable price if different from displayed", "required": false, "type": "Decimal"},
+        {"canonical_name": "final", "gold_name": "Prix final", "description": "Final agreed transaction price", "required": false, "type": "Decimal"},
+        {"canonical_name": "estimation", "gold_name": "Estimation", "description": "Estimated market value", "required": false, "type": "Decimal"},
+        {"canonical_name": "range", "gold_name": "Fourchette de marché", "description": "Market price range (min/max)", "required": false, "type": "Range"},
+        {"canonical_name": "history", "gold_name": "Historique de variation", "description": "Historical price variation data", "required": false, "type": "JSON[]"}
+      ]
+    },
+    "types": {
+      "description": "7 price types for transaction-specific pricing",
+      "values": [
+        {"canonical_name": "rent", "gold_name": "Loyer", "description": "Monthly rent amount", "applicable_transactions": ["rent", "lease", "commercial_lease", "short_stay"]},
+        {"canonical_name": "sale", "gold_name": "Vente", "description": "Sale/purchase price", "applicable_transactions": ["sale", "investment"]},
+        {"canonical_name": "deposit", "gold_name": "Dépôt de garantie", "description": "Security/guarantee deposit", "applicable_transactions": ["rent", "lease", "short_stay"]},
+        {"canonical_name": "guarantee", "gold_name": "Caution", "description": "Surety/guarantee bond", "applicable_transactions": ["rent", "lease"]},
+        {"canonical_name": "monthly", "gold_name": "Mensualité", "description": "Monthly payment (for credit)", "applicable_transactions": ["sale", "investment"]},
+        {"canonical_name": "fees", "gold_name": "Frais de service", "description": "Service fees", "applicable_transactions": ["rent", "sale", "lease"]},
+        {"canonical_name": "taxes", "gold_name": "Taxes", "description": "Applicable taxes", "applicable_transactions": ["rent", "sale", "lease", "commercial_lease"]}
+      ]
+    },
+    "negotiable_flag": {
+      "description": "Boolean indicator whether price is negotiable",
+      "field": "negotiable",
+      "type": "Boolean",
+      "default": false
+    }
+  },
+  "publication_rules": {
+    "description": "8 publication validation rules that must pass before property is published",
+    "values": [
+      {
+        "rule_number": 1,
+        "canonical_name": "family_check",
+        "description": "property_family must be set to a valid family",
+        "gold_id": "GOLD-PR-062",
+        "severity": "critical",
+        "v2_status": "UNMAPPED"
+      },
+      {
+        "rule_number": 2,
+        "canonical_name": "type_check",
+        "description": "property_type must be valid and consistent with property_family",
+        "gold_id": "GOLD-PR-063",
+        "severity": "critical",
+        "v2_status": "UNMAPPED"
+      },
+      {
+        "rule_number": 3,
+        "canonical_name": "location_check",
+        "description": "city and neighborhood must be provided",
+        "gold_id": "GOLD-PR-064",
+        "severity": "critical",
+        "v2_status": "MAPPED"
+      },
+      {
+        "rule_number": 4,
+        "canonical_name": "price_check",
+        "description": "At least price_displayed must be > 0",
+        "gold_id": "GOLD-PR-065",
+        "severity": "critical",
+        "v2_status": "PARTIAL_MAPPED"
+      },
+      {
+        "rule_number": 5,
+        "canonical_name": "holder_check",
+        "description": "owner_id must be a verified user (détenteur identifiable)",
+        "gold_id": "GOLD-PR-066",
+        "severity": "high",
+        "v2_status": "UNMAPPED"
+      },
+      {
+        "rule_number": 6,
+        "canonical_name": "normalization_check",
+        "description": "All critical information fields must pass normalization",
+        "gold_id": "GOLD-PR-067",
+        "severity": "high",
+        "v2_status": "UNMAPPED"
+      },
+      {
+        "rule_number": 7,
+        "canonical_name": "documents_check",
+        "description": "Required documents per type must be uploaded",
+        "gold_id": "GOLD-PR-068",
+        "severity": "high",
+        "v2_status": "UNMAPPED"
+      },
+      {
+        "rule_number": 8,
+        "canonical_name": "reference_code_check",
+        "description": "SIE reference code must be generated",
+        "gold_id": "GOLD-PR-069",
+        "severity": "medium",
+        "v2_status": "UNMAPPED"
+      }
+    ]
+  },
+  "data_quality_scoring": {
+    "description": "Data quality scoring engine for property listings",
+    "formula": "quality_score = int(completeness * 0.6 + reliability * 0.4)",
+    "completeness": {
+      "weight": 0.6,
+      "dimensions": [
+        {"field": "title", "weight": 0.10, "description": "Property title present"},
+        {"field": "description", "weight": 0.15, "description": "Property description present and sufficient length"},
+        {"field": "price", "weight": 0.15, "description": "Price information provided"},
+        {"field": "location", "weight": 0.15, "description": "City and neighborhood provided"},
+        {"field": "type", "weight": 0.15, "description": "Property type and family specified"},
+        {"field": "images", "weight": 0.15, "description": "At least one image uploaded"},
+        {"field": "contact", "weight": 0.15, "description": "Contact information provided"}
+      ]
+    },
+    "reliability": {
+      "weight": 0.4,
+      "source_scores": {
+        "agent": 90,
+        "google_form": 85,
+        "import": 70,
+        "whatsapp": 50,
+        "telegram": 50,
+        "dashboard": 85,
+        "api": 75,
+        "unknown": 30
+      }
+    },
+    "grading": {
+      "description": "Letter grade assignment based on quality score",
+      "thresholds": [
+        {"grade": "A+", "min_score": 80, "description": "Excellent quality"},
+        {"grade": "A", "min_score": 60, "description": "Good quality"},
+        {"grade": "B", "min_score": 40, "description": "Average quality"},
+        {"grade": "C", "min_score": 20, "description": "Below average quality"},
+        {"grade": "D", "min_score": 0, "description": "Poor quality — needs improvement"}
+      ]
+    }
+  },
+  "per_type_specific_fields": {
+    "description": "Family-specific and type-specific fields stored in metadata_json",
+    "land": {
+      "fields": [
+        {"canonical_name": "title_status", "type": "Enum", "values": ["titre_foncier", "titre_terrain", "sans_titre", "coutumier", "indivision", "en_cours"], "description": "Legal title status of the land"},
+        {"canonical_name": "is_constructible", "type": "Boolean", "description": "Whether the land is constructible"},
+        {"canonical_name": "lot_size", "type": "Decimal", "description": "Lot size in square meters"},
+        {"canonical_name": "zoning", "type": "String", "description": "Zoning classification"},
+        {"canonical_name": "servitude", "type": "String", "description": "Easements or servitudes"},
+        {"canonical_name": "acces_route", "type": "Boolean", "description": "Road access available"},
+        {"canonical_name": "raccordement_eau", "type": "Boolean", "description": "Water connection available"},
+        {"canonical_name": "raccordement_electricite", "type": "Boolean", "description": "Electricity connection available"},
+        {"canonical_name": "loti", "type": "Boolean", "description": "Whether the land is serviced (loti)"},
+        {"canonical_name": "surface_constructible", "type": "Decimal", "description": "Constructible surface area"},
+        {"canonical_name": "coefficient_occupation_sol", "type": "Decimal", "description": "Floor area ratio (COS)"}
+      ]
+    },
+    "industrial": {
+      "fields": [
+        {"canonical_name": "access_camion", "type": "Boolean", "description": "Truck access available"},
+        {"canonical_name": "hauteur_plafond", "type": "Decimal", "description": "Ceiling height in meters"},
+        {"canonical_name": "charge_sol", "type": "Decimal", "description": "Floor load capacity in kg/m²"},
+        {"canonical_name": "puissance_electrique", "type": "String", "description": "Electrical power capacity"},
+        {"canonical_name": "quai_chargement", "type": "Boolean", "description": "Loading dock available"},
+        {"canonical_name": "parking_poids_lourds", "type": "Boolean", "description": "Heavy vehicle parking"},
+        {"canonical_name": "zone_logistique", "type": "String", "description": "Logistics zone classification"},
+        {"canonical_name": "pont_roulant", "type": "Boolean", "description": "Overhead crane available"},
+        {"canonical_name": "alarme_incendie", "type": "Boolean", "description": "Fire alarm system"},
+        {"canonical_name": "extracteur_air", "type": "Boolean", "description": "Air extraction system"}
+      ]
+    },
+    "commercial": {
+      "fields": [
+        {"canonical_name": "front_window", "type": "Decimal", "description": "Storefront width in meters"},
+        {"canonical_name": "vitrine", "type": "Boolean", "description": "Display window available"},
+        {"canonical_name": "parking_clients", "type": "Integer", "description": "Customer parking spaces"},
+        {"canonical_name": "superficie_commerciale", "type": "Decimal", "description": "Commercial floor area"},
+        {"canonical_name": "hauteur_sous_plafond", "type": "Decimal", "description": "Ceiling height"},
+        {"canonical_name": "sanitaires_clients", "type": "Boolean", "description": "Customer restrooms"},
+        {"canonical_name": "acces_handicapes", "type": "Boolean", "description": "Accessibility for disabled"},
+        {"canonical_name": "terrasse", "type": "Boolean", "description": "Outdoor terrace available"},
+        {"canonical_name": "enseigne", "type": "Boolean", "description": "Signage allowed"},
+        {"canonical_name": "climatisation_commerciale", "type": "Boolean", "description": "Commercial HVAC"}
+      ]
+    },
+    "residential": {
+      "fields": [
+        {"canonical_name": "etage", "type": "Integer", "description": "Floor number"},
+        {"canonical_name": "ascenseur", "type": "Boolean", "description": "Elevator available"},
+        {"canonical_name": "parking", "type": "String", "values": ["none", "street", "garage", "covered", "multiple"], "description": "Parking type"},
+        {"canonical_name": "gardien", "type": "Boolean", "description": "Security guard/doorman"},
+        {"canonical_name": "cuisine_equipee", "type": "Boolean", "description": "Equipped kitchen"},
+        {"canonical_name": "climatisation", "type": "String", "values": ["none", "central", "split", "window"], "description": "Air conditioning type"},
+        {"canonical_name": "balcon", "type": "Boolean", "description": "Balcony available"},
+        {"canonical_name": "jardin", "type": "Boolean", "description": "Garden available"},
+        {"canonical_name": "piscine", "type": "Boolean", "description": "Swimming pool"},
+        {"canonical_name": "groupe_electrogene", "type": "Boolean", "description": "Generator available"},
+        {"canonical_name": "citerme_eau", "type": "Boolean", "description": "Water tank"},
+        {"canonical_name": "internet", "type": "Boolean", "description": "Internet connection"},
+        {"canonical_name": "meuble", "type": "Boolean", "description": "Furnished"},
+        {"canonical_name": "nombre_pieces", "type": "Integer", "description": "Number of rooms"},
+        {"canonical_name": "surface_habitable", "type": "Decimal", "description": "Living area in m²"}
+      ]
+    },
+    "agricultural": {
+      "fields": [
+        {"canonical_name": "type_culture", "type": "String", "description": "Type of crop/cultivation"},
+        {"canonical_name": "surface_exploitable", "type": "Decimal", "description": "Farmable surface area"},
+        {"canonical_name": "source_eau", "type": "String", "values": ["puit", "forage", "cours_eau", "reseau", "pluvial"], "description": "Water source"},
+        {"canonical_name": "acces_engins", "type": "Boolean", "description": "Machinery access"},
+        {"canonical_name": "type_elevage", "type": "String", "description": "Type of livestock if applicable"},
+        {"canonical_name": "infrastructure_existante", "type": "String", "description": "Existing farm infrastructure"}
+      ]
+    },
+    "hotel": {
+      "fields": [
+        {"canonical_name": "nombre_chambres", "type": "Integer", "description": "Number of rooms"},
+        {"canonical_name": "etoiles", "type": "Integer", "description": "Star rating"},
+        {"canonical_name": "restaurant_interne", "type": "Boolean", "description": "On-site restaurant"},
+        {"canonical_name": "piscine_hotel", "type": "Boolean", "description": "Hotel pool"},
+        {"canonical_name": "salle_conference", "type": "Boolean", "description": "Conference room"},
+        {"canonical_name": "parking_hotel", "type": "Integer", "description": "Hotel parking capacity"}
+      ]
+    },
+    "project": {
+      "fields": [
+        {"canonical_name": "nombre_logements", "type": "Integer", "description": "Number of housing units planned"},
+        {"canonical_name": "date_livraison", "type": "DateTime", "description": "Expected delivery date"},
+        {"canonical_name": "phase_projet", "type": "String", "values": ["conception", "chantier", "finition", "livre"], "description": "Project phase"},
+        {"canonical_name": "promoteur", "type": "String", "description": "Developer/promoter name"},
+        {"canonical_name": "permis_construire", "type": "Boolean", "description": "Building permit obtained"}
+      ]
+    }
+  },
+  "auto_archive": {
+    "description": "Automatic archiving of stale properties after 90 days of inactivity",
+    "rule": {
+      "name": "90-day inactivity auto-archive",
+      "trigger": "last_activity_at + 90 days without new activity",
+      "action": "Move property lifecycle to 'archived' state",
+      "notification": "Notify owner 7 days before auto-archive",
+      "exclusions": ["properties in 'suivi' or 'conserve' state"],
+      "gold_source": "PROPERTY_TYPE_CROSSWALK.md §7 (GAP-006)",
+      "priority": "P2"
+    },
+    "check_frequency": "daily (cron)",
+    "fields": {
+      "last_activity_at": {"type": "DateTime", "description": "Timestamp of last property activity"},
+      "expires_at": {"type": "DateTime", "description": "Auto-archive date (last_activity_at + 90 days)"}
+    }
+  },
+  "extensible_taxonomy": {
+    "description": "Extensible taxonomy node structure for property type classification",
+    "node_structure": {
+      "canonical_id": {"type": "String", "required": true, "description": "Unique hierarchical identifier (e.g., 'residential.apartment.studio_meuble')"},
+      "canonical_name": {"type": "String", "required": true, "description": "Primary canonical name"},
+      "aliases": {"type": "String[]", "required": false, "description": "Alternative names and legacy mappings"},
+      "parent_id": {"type": "String", "required": false, "description": "Parent canonical ID for hierarchical relationships"},
+      "family": {"type": "String", "required": true, "description": "Property family this type belongs to"},
+      "applicable_transactions": {"type": "String[]", "required": true, "description": "Transaction types applicable to this property type"},
+      "applicable_fields": {"type": "String[]", "required": false, "description": "Specific fields relevant for this type"},
+      "qualification_matrix_ids": {"type": "String[]", "required": false, "description": "References to qualification matrices applicable to this type"},
+      "matching_dimensions": {"type": "String[]", "required": false, "description": "Matching scoring dimensions relevant for this type"},
+      "verification_requirements": {"type": "String[]", "required": false, "description": "Required verification documents or checks"},
+      "status": {"type": "Enum", "required": true, "values": ["active", "deprecated", "draft"], "description": "Taxonomy node lifecycle status"},
+      "version": {"type": "Integer", "required": true, "description": "Version number for change tracking"}
+    },
+    "design_rationale": {
+      "why_not_monolithic_enums": [
+        "Monolithic enums become unmanageable with 76+ types across 7 families — a single enum would have too many values causing maintenance complexity",
+        "Family-specific validation rules require polymorphic handling that a flat enum cannot express",
+        "Per-family sub-referentials evolve independently — a monolithic enum creates coupling between unrelated types",
+        "Qualification matrix binding is per-type not per-enum — a flat enum cannot carry metadata",
+        "Legacy compatibility requires aliasing and mapping — a structured taxonomy supports this naturally",
+        "Extensibility: new types can be added per family without affecting other families or the overall enum contract",
+        "Versioning: individual types can be deprecated or versioned without breaking the entire classification system"
+      ],
+      "approach": "Hierarchical taxonomy with family-scoped type registries, referenced via canonical_id strings"
+    }
+  },
+  "verification_requirements": {
+    "description": "Verification requirements per property type category",
+    "land": {
+      "required_documents": ["title_deed_or_proof", "owner_id", "tax_receipt"],
+      "checks": ["title_status_verification", "cadastral_reference_match", "ownership_chain"]
+    },
+    "residential": {
+      "required_documents": ["owner_id", "property_title", "tax_receipt"],
+      "checks": ["ownership_verification", "property_visit_confirmation"]
+    },
+    "commercial": {
+      "required_documents": ["owner_id", "commercial_license", "property_title", "tax_receipt"],
+      "checks": ["ownership_verification", "commercial_zoning_check"]
+    },
+    "industrial": {
+      "required_documents": ["owner_id", "industrial_permit", "property_title", "environmental_clearance"],
+      "checks": ["ownership_verification", "industrial_zoning_check", "environmental_compliance"]
+    },
+    "agricultural": {
+      "required_documents": ["owner_id", "land_title", "agricultural_permit"],
+      "checks": ["ownership_verification", "agricultural_zoning_check"]
+    },
+    "hotel": {
+      "required_documents": ["owner_id", "hotel_license", "property_title", "health_certificate"],
+      "checks": ["ownership_verification", "hospitality_license_verification"]
+    },
+    "project": {
+      "required_documents": ["developer_id", "building_permit", "land_title", "project_approval"],
+      "checks": ["developer_verification", "permit_validation", "project_feasibility"]
+    }
+  },
+  "related_extensions": {
+    "description": "Cross-references to other extension domains",
+    "qualification_matrices": "EXT-QUAL-* (107 matrices across all property types)",
+    "matching_engine": "EXT-MAT-* (5 scoring dimensions, 9 matching roles)",
+    "publication_workflow": "EXT-WF-009 (SIE-enriched publication pipeline)",
+    "transaction_types": "EXT-TRX-* (transaction type alignment)",
+    "data_quality": "EXT-PROP-008 (quality scoring engine)"
+  }
+}

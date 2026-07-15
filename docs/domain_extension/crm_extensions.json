@@ -1,0 +1,766 @@
+{
+  "document": {
+    "id": "LAWIM-H13-CRM-EXT-V1",
+    "title": "CRM Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Enriched catalog of all CRM pipeline, lead scoring, routing, fraud detection, agent rating, feedback, and monetized service extensions required for LAWIM_V2",
+    "sources": [
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §11 (CRM Pipeline)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §12 (Identity Model)",
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §13 (Organization Model)",
+      "required_extensions.json (crm, crm_monetized_services)",
+      "CRM_MODEL.md (Gold)"
+    ],
+    "total_extensions": 20,
+    "by_category": {
+      "crm_pipeline": 11,
+      "crm_monetized_services": 9
+    }
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-CRM-001",
+      "source_concept": "Lead scoring engine (base + boosters - penalties)",
+      "source_document": "CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-CRM-SCORE-001", "GOLD-CRM-SCORE-002"],
+      "current_target": "Lead model",
+      "current_limitation": "No lead scoring exists in V2; no CRM pipeline or lead evaluation mechanism",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline",
+      "proposed_entity": "Lead",
+      "proposed_structure": "Implement Lead entity with scoring engine module. Store base_score (Int), boosters_applied (JSON[]), penalties_applied (JSON[]), total_boost (Int), total_penalty (Int), final_score (Int) as computed fields on Lead. Score formula: final_score = max(0, min(150, base_score + sum(boosters) - sum(penalties))).",
+      "required_fields": [
+        "Lead.base_score: Int",
+        "Lead.boosters_applied: JSON[]",
+        "Lead.penalties_applied: JSON[]",
+        "Lead.total_boost: Int",
+        "Lead.total_penalty: Int",
+        "Lead.final_score: Int",
+        "Lead.lead_type: Enum (tenant|buyer|seller|investor|diaspora_investor)",
+        "Lead.pipeline_stage: Enum (incoming|normalized|extracted|intent_detected|enriched|scored|classified|routed)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "lead.created (payload: {source_channel, lead_type, base_score})",
+        "lead.scored (payload: {final_score, total_boost, total_penalty})",
+        "lead.classified (payload: {classification, sla_priority, sla_deadline})",
+        "lead.routed (payload: {agent_id, routing_method})",
+        "lead.converted (payload: {project_id})"
+      ],
+      "required_permissions": [
+        "CRM: read lead (assigned agent, admin, manager)",
+        "CRM: update lead (assigned agent, admin, manager)",
+        "CRM: score override (admin only)",
+        "CRM: route override (admin, manager)"
+      ],
+      "required_states": [
+        "Lead.pipeline_stage ∈ {incoming, normalized, extracted, intent_detected, enriched, scored, classified, routed}",
+        "Lead.classification ∈ {hot, warm, cold, low, spam}",
+        "Lead.lead_type ∈ {tenant, buyer, seller, investor, diaspora_investor}"
+      ],
+      "H0.5_matrices_impacted": ["CRM-MAT-001 (Scoring Configuration)", "CRM-MAT-002 (Classification Thresholds)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-002",
+      "source_concept": "Score boosters (13 boosters)",
+      "source_document": "CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-CRM-BOOST-001", "GOLD-CRM-BOOST-002", "GOLD-CRM-BOOST-003", "GOLD-CRM-BOOST-004", "GOLD-CRM-BOOST-005", "GOLD-CRM-BOOST-006", "GOLD-CRM-BOOST-007", "GOLD-CRM-BOOST-008", "GOLD-CRM-BOOST-009", "GOLD-CRM-BOOST-010", "GOLD-CRM-BOOST-011", "GOLD-CRM-BOOST-012", "GOLD-CRM-BOOST-013"],
+      "current_target": "Lead model / Scoring engine",
+      "current_limitation": "No score boosting mechanism in V2; no booster registry or detection logic",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline",
+      "proposed_entity": "Lead (scoring engine module)",
+      "proposed_structure": "Implement configurable booster registry with 13 boosters: budget_detected(+15), city_detected(+10), neighborhood_detected(+10), urgency_detected(+20), diaspora(+25), cash_purchase(+15), property_type_specified(+5), timeline_specified(+10), multiple_criteria(+10), professional(+15), referral(+10), complete_profile(+10), verified_phone(+10). Each booster has detection condition, value, and priority level. Boosters stored as JSON array on Lead.boosters_applied. Max total boost: not capped per-booster; final score capped at 150.",
+      "required_fields": [
+        "Lead.boosters_applied: JSON[] [{type: String, value: Int, detected_at: DateTime}]"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "lead.booster_applied (payload: {booster_type, value})"
+      ],
+      "required_permissions": [
+        "CRM: configure boosters (admin only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["CRM-MAT-003 (Booster Registry)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Booster weights and detection criteria: Gold defaults (see CRM_EXTENSION_MODEL.md §3.2) or adjusted values per market segment",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-003",
+      "source_concept": "Score penalties (8 penalties)",
+      "source_document": "CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-CRM-PEN-001", "GOLD-CRM-PEN-002", "GOLD-CRM-PEN-003", "GOLD-CRM-PEN-004", "GOLD-CRM-PEN-005", "GOLD-CRM-PEN-006", "GOLD-CRM-PEN-007", "GOLD-CRM-PEN-008"],
+      "current_target": "Lead model / Scoring engine",
+      "current_limitation": "No score penalty mechanism in V2; no penalty registry or detection logic",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline",
+      "proposed_entity": "Lead (scoring engine module)",
+      "proposed_structure": "Implement configurable penalty registry with 8 penalties: missing_budget(-10), unclear_location(-10), spam_like(-50), too_short(-20), external_links(-30), duplicate_message(-20), aggressive_language(-30), impossible_request(-40). Each penalty has detection condition, value, and severity level. Penalties stored as JSON array on Lead.penalties_applied. Final score has minimum floor of 0 to prevent negative scores from cascading.",
+      "required_fields": [
+        "Lead.penalties_applied: JSON[] [{type: String, value: Int, detected_at: DateTime}]"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "lead.penalty_applied (payload: {penalty_type, value})"
+      ],
+      "required_permissions": [
+        "CRM: configure penalties (admin only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["CRM-MAT-004 (Penalty Registry)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Penalty weights and detection criteria: Gold defaults (see CRM_EXTENSION_MODEL.md §3.3) or adjusted values per market segment",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-004",
+      "source_concept": "Lead classification (5 classes)",
+      "source_document": "CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-CRM-CLASS-001", "GOLD-CRM-CLASS-002", "GOLD-CRM-CLASS-003"],
+      "current_target": "Lead model",
+      "current_limitation": "No lead classification in V2; no threshold-based class assignment",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline",
+      "proposed_entity": "Lead (classification module)",
+      "proposed_structure": "Implement classification module with 5 classes: HOT(80-150), WARM(60-79), COLD(40-59), LOW(20-39), SPAM(0-19). Configurable thresholds stored in CRM settings. Classification overrides: fraud layer 4 → SPAM; blocked user → SPAM; diaspora+investor >70 → HOT upgrade. Add classification enum field and sla_priority mapping (HOT=P0, WARM=P1, COLD=P2, LOW=P3, SPAM=quarantine).",
+      "required_fields": [
+        "Lead.classification: Enum (hot|warm|cold|low|spam)",
+        "Lead.sla_priority: Enum (p0|p1|p2|p3)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "lead.classified (payload: {classification, score, sla_priority, sla_deadline})"
+      ],
+      "required_permissions": [
+        "CRM: configure classification thresholds (admin only)"
+      ],
+      "required_states": [
+        "Lead.classification ∈ {hot, warm, cold, low, spam}",
+        "Lead.sla_priority ∈ {p0, p1, p2, p3}"
+      ],
+      "H0.5_matrices_impacted": ["CRM-MAT-005 (Classification Thresholds)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Classification thresholds for each class: Gold defaults (HOT 80-150, WARM 60-79, COLD 40-59, LOW 20-39, SPAM 0-19) or adjusted",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-005",
+      "source_concept": "CRM routing engine",
+      "source_document": "CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-CRM-ROUTE-001", "GOLD-CRM-ROUTE-002", "GOLD-CRM-ROUTE-003", "GOLD-CRM-ROUTE-004", "GOLD-CRM-ROUTE-005"],
+      "current_target": "Lead / OrganizationMember",
+      "current_limitation": "No lead routing mechanism exists in V2; no agent zone assignment or lead capacity tracking",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline / Domain 12: Organization Model",
+      "proposed_entity": "Lead + OrganizationMember",
+      "proposed_structure": "Implement routing engine with 4 methods: zone-based (city/neighborhood → agent zones[]), availability-based (lowest lead_capacity ratio), score-based (highest agent_rating), manual (admin assignment). Decision tree: zone match → availability → score → manual queue. Add zones[], max_leads, current_leads to OrganizationMember. Add lead_capacity, lead_count to Organization. SPAM leads never routed; sent to quarantine queue.",
+      "required_fields": [
+        "Lead.routed_to_agent_id: UUID?",
+        "Lead.routed_at: DateTime?",
+        "Lead.routing_method: Enum? (zone|availability|score|manual)",
+        "OrganizationMember.zones: String[]",
+        "OrganizationMember.max_leads: Int",
+        "OrganizationMember.current_leads: Int",
+        "Organization.lead_capacity: Int",
+        "Organization.lead_count: Int"
+      ],
+      "required_relations": [
+        "Lead → User (agent): N:1 (routed_to_agent_id references User)",
+        "OrganizationMember → User: N:1 (agent membership)"
+      ],
+      "required_events": [
+        "lead.routed (payload: {agent_id, routing_method, routing_reason})",
+        "lead.rerouted (payload: {previous_agent_id, new_agent_id, reason})",
+        "lead.routing_failed (payload: {reason, escalation_to_admin})"
+      ],
+      "required_permissions": [
+        "CRM: route lead (system, engine auto-route)",
+        "CRM: manual assign lead (admin, manager)",
+        "CRM: configure routing rules (admin only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["CRM-MAT-006 (Routing Rules)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "Routing strategy: primary routing dimension (zone-based with availability fallback as specified in CRM_EXTENSION_MODEL.md §5.2) or alternative strategy",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-006",
+      "source_concept": "7-factor CRM scoring",
+      "source_document": "CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-CRM-7F-001", "GOLD-CRM-7F-002"],
+      "current_target": "Lead model / Scoring engine",
+      "current_limitation": "No multi-factor scoring in V2; current scoring is base + boosters - penalties without factor breakdown",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline",
+      "proposed_entity": "Lead (scoring engine module - extended)",
+      "proposed_structure": "Extend scoring engine with 7-factor breakdown stored in metadata: budget_alignment (0-100), location_relevance (0-100), urgency_level (0-100), diaspora_proximity (0-100), cash_capacity (0-100), property_specificity (0-100), timeline_clarity (0-100). Each factor is computed independently and contributes to overall score. Factor data stored in JSON field Lead.score_factors (not replacing boosters/penalties). Factors used for routing insight and agent briefing, not for classification override.",
+      "required_fields": [
+        "Lead.score_factors: JSON? (7-factor breakdown with per-factor scores)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "lead.factors_computed (payload: {score_factors})"
+      ],
+      "required_permissions": [
+        "CRM: read score factors (assigned agent, admin, manager)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["CRM-MAT-007 (7-Factor Configuration)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Scoring Enhancement",
+      "human_decision_required": true,
+      "human_decision_question": "7-factor scoring implementation: integrated into main scoring engine (with factor breakdown) or separate analytical module",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-007",
+      "source_concept": "Behavior tracking fields",
+      "source_document": "CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-CRM-BEHAV-001", "GOLD-CRM-BEHAV-002", "GOLD-CRM-BEHAV-003", "GOLD-CRM-BEHAV-004", "GOLD-CRM-BEHAV-005", "GOLD-CRM-BEHAV-006", "GOLD-CRM-BEHAV-007", "GOLD-CRM-BEHAV-008"],
+      "current_target": "User / Lead / Event models",
+      "current_limitation": "No behavior tracking infrastructure in V2; no data collection points for user behavioral signals",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline / Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User + Lead + Event",
+      "proposed_structure": "Implement 8 behavior tracking dimensions: (1) message_history via Event audit trail (lead.* events), (2) response_time computed from first_response_at - created_at on Lead, (3) response_rate Float on User (messages responded / total received), (4) budget_changes JSON[] on Lead tracking {previous_min, previous_max, new_min, new_max, changed_at}, (5) visit_requests count derived from Event visit.requested, (6) visit_completion_rate Float on User (completed/requested), (7) negotiation_history JSON[] summary on User, (8) complaint_count Int + complaint_types[] String on User. Behavior data feeds into scoring and routing engine.",
+      "required_fields": [
+        "User.response_rate: Float (computed)",
+        "User.visit_completion_rate: Float (computed)",
+        "User.complaint_count: Int",
+        "User.complaint_types: String[]",
+        "User.negotiation_history: JSON?",
+        "Lead.budget_changes: JSON[]?",
+        "Lead.first_response_at: DateTime?",
+        "Lead.response_time_seconds: Int? (computed)"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "user.response_recorded (payload: {lead_id, response_time_seconds})",
+        "user.budget_changed (payload: {lead_id, previous, new})",
+        "user.complaint_filed (payload: {complaint_type, description})",
+        "user.visit_completion_recorded (payload: {visit_id, completed})"
+      ],
+      "required_permissions": [
+        "CRM: read behavior data (assigned agent, admin, manager)",
+        "CRM: read aggregated stats (admin, manager)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["CRM-MAT-008 (Behavior Scoring Weights)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 3 — Scoring Enhancement",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-008",
+      "source_concept": "Anti-fraud detection layers (4 layers)",
+      "source_document": "CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-CRM-FRAUD-001", "GOLD-CRM-FRAUD-002", "GOLD-CRM-FRAUD-003", "GOLD-CRM-FRAUD-004"],
+      "current_target": "Lead model / Fraud detection service",
+      "current_limitation": "No fraud detection in V2; no mechanism to detect broker spam, duplicate listings, fake prices, or suspicious urgency",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline",
+      "proposed_entity": "Lead (fraud detection module)",
+      "proposed_structure": "Implement 4 fraud detection layers: Layer 1 (Broker spam) — same phone/email >5 leads in 1h → rate-limit 24h; Layer 2 (Duplicate listing) — same property details >2 accounts in 7d → merge investigation; Layer 3 (Fake price) — price >300% from market avg → require verification; Layer 4 (Suspicious urgency) — aggressive language + no details + external links → temporary suspension. Add is_fraud Boolean, fraud_layers_triggered String[], fraud_action_taken Enum to Lead. Fraud detection runs before scoring: Layers 1-2 halt pipeline; Layers 3-4 apply penalties/overrides.",
+      "required_fields": [
+        "Lead.is_fraud: Boolean (default: false)",
+        "Lead.fraud_layers_triggered: String[]",
+        "Lead.fraud_action_taken: Enum? (none|flag|temporary_suspend|block)",
+        "Lead.fraud_reviewed_by: UUID?",
+        "Lead.fraud_reviewed_at: DateTime?",
+        "Lead.fraud_notes: String?"
+      ],
+      "required_relations": [
+        "Lead → User (reviewer): N:1 (fraud_reviewed_by references User)"
+      ],
+      "required_events": [
+        "lead.fraud_flagged (payload: {layers_triggered, action_taken})",
+        "lead.fraud_cleared (payload: {cleared_by, reason})",
+        "lead.fraud_escalated (payload: {reason, assigned_admin})"
+      ],
+      "required_permissions": [
+        "CRM: read fraud flags (admin, manager, assigned agent)",
+        "CRM: clear fraud flag (admin only)",
+        "CRM: block/unblock sender (admin only)"
+      ],
+      "required_states": [
+        "Lead.fraud_action_taken ∈ {none, flag, temporary_suspend, block}",
+        "Lead.fraud_action_taken = block → Lead creation blocked for sender"
+      ],
+      "H0.5_matrices_impacted": ["CRM-MAT-009 (Fraud Detection Configuration)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Trust & Safety",
+      "human_decision_required": true,
+      "human_decision_question": "Anti-fraud automation: automatic suspension for Layers 1, 2, 4 (as specified in CRM_EXTENSION_MODEL.md §6.2) or human-in-the-loop for all actions",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-009",
+      "source_concept": "Agent rating system (post-interaction)",
+      "source_document": "CRM_MODEL.md §13 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-RATING-001", "GOLD-CRM-RATING-002", "GOLD-CRM-RATING-003"],
+      "current_target": "User / OrganizationMember models",
+      "current_limitation": "No agent rating mechanism in V2; no post-interaction rating collection or agent_rating field",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User + Feedback (rating source)",
+      "proposed_structure": "Implement post-interaction rating workflow. Collection triggers: post-lead resolution (WhatsApp/Telegram, 1h), post-visit (WhatsApp/Telegram/Dashboard, 2h), post-transaction (Dashboard/Email, 24h), manual (Dashboard anytime). Rating scale 1-5 with labels (Poor→Excellent). Weighted average calculation: lead resolution feedback weight 1.0, post-visit weight 1.5, post-transaction weight 2.0, manual weight 1.0 with 50% decay after 90 days. Display: agent_rating Float rounded to 1 decimal on User profile. Used in score-based routing.",
+      "required_fields": [
+        "User.agent_rating: Float (computed, 1.0-5.0, nullable for unrated agents)",
+        "User.total_ratings: Int (computed, count of ratings received)",
+        "User.rating_breakdown: JSON? (counts per rating level 1-5)"
+      ],
+      "required_relations": [
+        "User → Feedback: 1:N (agent receives ratings)",
+        "Feedback → Lead: N:1 (rating source context)"
+      ],
+      "required_events": [
+        "user.rating_received (payload: {rater_id, rating, source})",
+        "user.rating_updated (payload: {new_rating, previous_rating})"
+      ],
+      "required_permissions": [
+        "CRM: read agent_rating (any authenticated user)",
+        "CRM: rate agent (lead owner, project participant)"
+      ],
+      "required_states": [
+        "User.agent_rating ∈ [1.0, 5.0] (Float)",
+        "Feedback.rating ∈ [1, 5] (Int)"
+      ],
+      "H0.5_matrices_impacted": ["CRM-MAT-010 (Rating Calculation Method)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Trust & Safety",
+      "human_decision_required": true,
+      "human_decision_question": "Rating collection timing: all 4 triggers (lead resolution + visit + transaction + manual) as specified in CRM_EXTENSION_MODEL.md §9.2, or reduced set for MVP",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-010",
+      "source_concept": "Feedback handling system",
+      "source_document": "CRM_MODEL.md §13 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-FB-001", "GOLD-CRM-FB-002", "GOLD-CRM-FB-003"],
+      "current_target": "New entity: Feedback",
+      "current_limitation": "No feedback handling in V2; Notification model exists but no structured feedback collection, aggregation, or reporting",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline",
+      "proposed_entity": "Feedback (new entity)",
+      "proposed_structure": "Create Feedback entity: id (UUID), lead_id (UUID?), user_id (UUID), agent_id (UUID?), organization_id (UUID?), feedback_type (Enum: rating|complaint|suggestion|compliment|report_issue), rating (Int 1-5?), category (Enum: service_quality|response_time|professionalism|accuracy|communication|technical|other), description (Text), status (Enum: submitted|acknowledged|in_review|resolved|escalated|closed), resolution_notes (Text?), resolved_by (UUID?), resolved_at (DateTime?), escalated_to (UUID?), is_public (Boolean), created_at (DateTime). Lifecycle: Submitted → Acknowledged → In Review → Resolved → Closed (with Escalated sub-path). Processing rules: auto-acknowledge within 5min; rating ≤2 auto-priority assign to admin within 1h; standard resolution SLA 48h (complaint 24h, escalated 4h). Aggregate feedback_score per agent/organization/platform.",
+      "required_fields": [
+        "Feedback.id: UUID",
+        "Feedback.lead_id: UUID?",
+        "Feedback.user_id: UUID",
+        "Feedback.agent_id: UUID?",
+        "Feedback.organization_id: UUID?",
+        "Feedback.feedback_type: Enum (rating|complaint|suggestion|compliment|report_issue)",
+        "Feedback.rating: Int? (1-5)",
+        "Feedback.category: Enum? (service_quality|response_time|professionalism|accuracy|communication|technical|other)",
+        "Feedback.description: Text",
+        "Feedback.status: Enum (submitted|acknowledged|in_review|resolved|escalated|closed)",
+        "Feedback.resolution_notes: Text?",
+        "Feedback.resolved_by: UUID?",
+        "Feedback.resolved_at: DateTime?",
+        "Feedback.escalated_to: UUID?",
+        "Feedback.is_public: Boolean (default: false)",
+        "Feedback.created_at: DateTime"
+      ],
+      "required_relations": [
+        "Feedback → Lead: N:1 (optional source lead)",
+        "Feedback → User (author): N:1 (feedback author)",
+        "Feedback → User (agent): N:1 (optional target agent)",
+        "Feedback → Organization: N:1 (optional org context)",
+        "Feedback → User (resolver): N:1 (optional admin resolver)"
+      ],
+      "required_events": [
+        "feedback.submitted (payload: {feedback_type, rating?, category?})",
+        "feedback.acknowledged (payload: {feedback_id})",
+        "feedback.resolved (payload: {resolved_by, resolution_notes})",
+        "feedback.escalated (payload: {escalated_to, reason})"
+      ],
+      "required_permissions": [
+        "CRM: submit feedback (any authenticated user)",
+        "CRM: read own feedback (feedback author user)",
+        "CRM: read all feedback (admin, manager)",
+        "CRM: resolve feedback (admin, manager)",
+        "CRM: escalate feedback (admin)"
+      ],
+      "required_states": [
+        "Feedback.status ∈ {submitted, acknowledged, in_review, resolved, escalated, closed}",
+        "Feedback.feedback_type ∈ {rating, complaint, suggestion, compliment, report_issue}",
+        "Feedback.rating ∈ [1, 5] (Int, nullable)"
+      ],
+      "H0.5_matrices_impacted": ["CRM-MAT-011 (Feedback Categories)", "CRM-MAT-012 (Resolution SLAs)"],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 6 — Quality & Feedback",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-CRM-011",
+      "source_concept": "Lead SLA by priority",
+      "source_document": "CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["GOLD-CRM-SLA-001", "GOLD-CRM-SLA-002", "GOLD-CRM-SLA-003", "GOLD-CRM-SLA-004"],
+      "current_target": "Lead model",
+      "current_limitation": "No lead SLA concept in V2; no priority-based response time tracking or breach detection",
+      "extension_category": "crm_pipeline",
+      "proposed_domain": "Domain 10: CRM Pipeline",
+      "proposed_entity": "Lead (SLA module)",
+      "proposed_structure": "Implement SLA tracking per lead: P0 (< 30min, HOT), P1 (< 2h, WARM), P2 (< 24h, COLD), P3 (J+1 to J+7, LOW). Add sla_priority (Enum: p0|p1|p2|p3) and sla_deadline (DateTime) set on classification. sla_breached (Boolean) flag set when now > sla_deadline AND first_response_at IS NULL. Breach detection cron runs every 5 minutes. P0 breach: immediate re-route + admin alert; P1 breach: admin notification; P2/P3 breach: logged for reporting. SLA metrics tracked per agent: sla_breach_count, avg_response_time, sla_compliance_rate.",
+      "required_fields": [
+        "Lead.sla_priority: Enum (p0|p1|p2|p3)",
+        "Lead.sla_deadline: DateTime",
+        "Lead.first_response_at: DateTime?",
+        "Lead.sla_breached: Boolean",
+        "Lead.sla_breach_escalated: Boolean?",
+        "Lead.sla_escalated_at: DateTime?"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "lead.sla_breached (payload: {sla_priority, sla_deadline, assigned_agent_id})",
+        "lead.sla_escalated (payload: {reason, re_routed_to_agent_id})",
+        "lead.sla_responded (payload: {first_response_at, response_time_seconds})"
+      ],
+      "required_permissions": [
+        "CRM: read SLA data (assigned agent, admin, manager)",
+        "CRM: override SLA priority (admin only)",
+        "CRM: view SLA reports (admin, manager)"
+      ],
+      "required_states": [
+        "Lead.sla_priority ∈ {p0, p1, p2, p3}",
+        "Lead.sla_priority = p0 → sla_deadline = created_at + 30min",
+        "Lead.sla_priority = p1 → sla_deadline = created_at + 2h",
+        "Lead.sla_priority = p2 → sla_deadline = created_at + 24h",
+        "Lead.sla_priority = p3 → sla_deadline = created_at + 7d"
+      ],
+      "H0.5_matrices_impacted": ["CRM-MAT-013 (SLA Thresholds)", "CRM-MAT-014 (Escalation Rules)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 1 — Foundation",
+      "human_decision_required": true,
+      "human_decision_question": "SLA thresholds: Gold defaults (P0 30min, P1 2h, P2 24h, P3 7d) as specified in CRM_EXTENSION_MODEL.md §8.1, or adjusted values",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-CRM-001",
+      "source_concept": "Lead Bronze (1 contact at 500 FCFA)",
+      "source_document": "CRM_MODEL.md §14.1 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-PACK-001"],
+      "current_target": "LeadPurchase model",
+      "current_limitation": "No lead purchase system exists in V2; no mechanism for agents to buy individual lead contacts",
+      "extension_category": "crm_monetized_services",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "LeadPurchase",
+      "proposed_structure": "Implement LeadPurchase model: id (UUID), agent_id (UUID references User), lead_id (UUID references Lead), service_order_id (UUID references ServiceOrder), pack_type (Enum: bronze|silver|gold|coordinate_unlock), credits_spent (Int), price_paid (Decimal), purchased_at (DateTime), contact_revealed (Boolean). Lead Bronze: 1 contact, 500 FCFA, 1 credit (if using credit system). LeadPurchase links to ServiceOrder for payment processing via Campay.",
+      "required_fields": [
+        "LeadPurchase.id: UUID",
+        "LeadPurchase.agent_id: UUID",
+        "LeadPurchase.lead_id: UUID",
+        "LeadPurchase.service_order_id: UUID?",
+        "LeadPurchase.pack_type: Enum (bronze|silver|gold|coordinate_unlock)",
+        "LeadPurchase.credits_spent: Int",
+        "LeadPurchase.price_paid: Decimal",
+        "LeadPurchase.purchased_at: DateTime",
+        "LeadPurchase.contact_revealed: Boolean"
+      ],
+      "required_relations": [
+        "LeadPurchase → User (agent): N:1",
+        "LeadPurchase → Lead: N:1",
+        "LeadPurchase → ServiceOrder: N:1"
+      ],
+      "required_events": [
+        "lead_purchase.created (payload: {agent_id, lead_id, pack_type, price_paid})",
+        "lead_purchase.contact_revealed (payload: {lead_id, agent_id})"
+      ],
+      "required_permissions": [
+        "CRM: purchase lead (agent role",
+        "CRM: view purchased lead (purchasing agent, admin)",
+        "CRM: refund lead purchase (admin only)"
+      ],
+      "required_states": [
+        "LeadPurchase.pack_type ∈ {bronze, silver, gold, coordinate_unlock}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Monetization",
+      "human_decision_required": true,
+      "human_decision_question": "Lead pricing: 500 FCFA default (Gold) per lead bronze, or market-adjusted pricing per region",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-CRM-002",
+      "source_concept": "Lead Silver (5 contacts at 1,500 FCFA)",
+      "source_document": "CRM_MODEL.md §14.1 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-PACK-002"],
+      "current_target": "LeadPurchase model",
+      "current_limitation": "No lead pack system exists in V2; no bulk lead purchase tiers",
+      "extension_category": "crm_monetized_services",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "LeadPurchase (silver pack extension)",
+      "proposed_structure": "Extend LeadPurchase with silver pack support: 5 contacts at 1,500 FCFA (300 FCFA/lead, 40% discount vs bronze). Implemented as same LeadPurchase model with pack_type='silver'. Credits spent: 3 credits. Links to ServiceOrder for payment. Silver pack deducts from available leads in bulk; each lead consumed independently.",
+      "required_fields": [
+        "Same as EXT-SVC-CRM-001 with pack_type=silver"
+      ],
+      "required_relations": [
+        "Same as EXT-SVC-CRM-001"
+      ],
+      "required_events": [
+        "lead_purchase.pack_consumed (payload: {pack_id, remaining_leads})"
+      ],
+      "required_permissions": [
+        "Same as EXT-SVC-CRM-001"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Monetization",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-CRM-003",
+      "source_concept": "Lead Gold (15 contacts at 3,000 FCFA)",
+      "source_document": "CRM_MODEL.md §14.1 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-PACK-003"],
+      "current_target": "LeadPurchase model",
+      "current_limitation": "No lead pack system exists in V2; no high-volume lead purchase tier",
+      "extension_category": "crm_monetized_services",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "LeadPurchase (gold pack extension)",
+      "proposed_structure": "Extend LeadPurchase with gold pack support: 15 contacts at 3,000 FCFA (200 FCFA/lead, 60% discount vs bronze). Implemented as same LeadPurchase model with pack_type='gold'. Credits spent: 6 credits. Gold pack provides best per-lead value and is recommended for active agents.",
+      "required_fields": [
+        "Same as EXT-SVC-CRM-001 with pack_type=gold"
+      ],
+      "required_relations": [
+        "Same as EXT-SVC-CRM-001"
+      ],
+      "required_events": [
+        "Same as EXT-SVC-CRM-002"
+      ],
+      "required_permissions": [
+        "Same as EXT-SVC-CRM-001"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Monetization",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-CRM-004",
+      "source_concept": "Déblocage coordonnées propriétaire (Owner contact unlock, 500 FCFA)",
+      "source_document": "CRM_MODEL.md §14.2 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-UNLOCK-001"],
+      "current_target": "LeadPurchase model",
+      "current_limitation": "No contact unlock mechanism in V2; owner contact details are either free or not accessible",
+      "extension_category": "crm_monetized_services",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "LeadPurchase (coordinate_unlock extension)",
+      "proposed_structure": "Extend LeadPurchase with coordinate_unlock pack_type: separate from lead purchase, allows agent to unlock property owner contact details for a specific property. Price: 500 FCFA (same as lead bronze but different mechanism). Implementation: distinct ServiceOrder type 'coordinate_unlock' + LeadPurchase with pack_type='coordinate_unlock' referencing property_id instead of lead_id. When purchased, owner phone/email revealed to agent.",
+      "required_fields": [
+        "LeadPurchase.pack_type: extends Enum to include 'coordinate_unlock'",
+        "LeadPurchase.property_id: UUID? (for coordinate_unlock)",
+        "LeadPurchase.contact_revealed: Boolean"
+      ],
+      "required_relations": [
+        "LeadPurchase → Property: N:1 (for coordinate_unlock)"
+      ],
+      "required_events": [
+        "coordinate_unlock.purchased (payload: {agent_id, property_id, owner_id})",
+        "coordinate_unlock.revealed (payload: {agent_id, property_id})"
+      ],
+      "required_permissions": [
+        "CRM: purchase coordinate unlock (agent role)",
+        "CRM: view owner contact (purchasing agent only, 30d window)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 2 — Monetization",
+      "human_decision_required": true,
+      "human_decision_question": "Distinction from lead purchase: same price (500 FCFA) but different mechanism — coordinate_unlock targets property owner contacts while lead purchase targets demandeur contacts. Confirm this distinction is correct for implementation.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-CRM-005",
+      "source_concept": "Demandeur Premium (Premium seeker profile, 1,000 FCFA)",
+      "source_document": "CRM_MODEL.md §14.2 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-PREM-001"],
+      "current_target": "User model / ServiceOrder",
+      "current_limitation": "No premium profile concept in V2; property seekers have no premium tier with priority features",
+      "extension_category": "crm_monetized_services",
+      "proposed_domain": "Domain 1: User/Role/Profile Model",
+      "proposed_entity": "User (premium seeker extension)",
+      "proposed_structure": "Add premium seeker profile as a ServiceOrder-based subscription. Premium features: priority matching, agent priority response, enhanced visibility to agents, advanced filtering. Price: 1,000 FCFA. Duration: 30 days. Field: User.is_premium_seeker (Boolean, default false), User.premium_seeker_expires_at (DateTime?). Linked to ServiceOrder for payment.",
+      "required_fields": [
+        "User.is_premium_seeker: Boolean (default: false)",
+        "User.premium_seeker_expires_at: DateTime?"
+      ],
+      "required_relations": [
+        "User → ServiceOrder: 1:N (premium seeker purchases)"
+      ],
+      "required_events": [
+        "user.premium_seeker_activated (payload: {expires_at})",
+        "user.premium_seeker_expired (payload: {user_id})"
+      ],
+      "required_permissions": [
+        "CRM: activate premium seeker (self-service via payment)",
+        "SYSTEM: elevate matching priority (premium seekers)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["MAT-015 (Premium Matching Boost)"],
+      "implementation_priority": "P4",
+      "implementation_wave": "Wave 10 — Premium Experience",
+      "human_decision_required": true,
+      "human_decision_question": "Premium seeker features and pricing: 1,000 FCFA for 30 days with priority matching and agent response (Gold defaults). Confirm scope and pricing.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-CRM-006",
+      "source_concept": "Diaspora Simple (25,000 FCFA)",
+      "source_document": "CRM_MODEL.md §14.3 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-DIASP-001"],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No diaspora service exists in V2 (feature_flag OFF); no verified property access for diaspora users",
+      "extension_category": "crm_monetized_services",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (diaspora service extension)",
+      "proposed_structure": "Implement diaspora service tier 'diaspora_simple' as ServiceOrder: price 25,000 FCFA, category='crm', duration_days=90. Features: verified property access, dedicated agent, property listings curated for diaspora. Requires diaspora verification (foreign phone, international ID). Linked to Service → ServiceOrder → Payment flow via Campay.",
+      "required_fields": [
+        "ServiceOrder.diaspora_tier: Enum? (simple|rapport|complet)",
+        "ServiceOrder.diaspora_verified: Boolean?",
+        "User.is_diaspora_served: Boolean? (linked to active diaspora service)"
+      ],
+      "required_relations": [
+        "ServiceOrder → Service: N:1 (diaspora service catalog entry)",
+        "ServiceOrder → User (buyer): N:1"
+      ],
+      "required_events": [
+        "diaspora_service.activated (payload: {user_id, tier, expires_at})",
+        "diaspora_service.expired (payload: {user_id, tier})"
+      ],
+      "required_permissions": [
+        "CRM: purchase diaspora service (diaspora users)",
+        "CRM: assign diaspora agent (admin only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["DIASP-MAT-001 (Diaspora Qualification)"],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 7 — Diaspora Market",
+      "human_decision_required": true,
+      "human_decision_question": "Diaspora service scope: Gold specifies 3 tiers (Simple 25k, Rapport 50k, Complet 75k). Confirm diaspora market as priority for LAWIM_V2.",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-CRM-007",
+      "source_concept": "Diaspora Rapport (50,000 FCFA)",
+      "source_document": "CRM_MODEL.md §14.3 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-DIASP-002"],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No diaspora service exists in V2",
+      "extension_category": "crm_monetized_services",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (diaspora rapport extension)",
+      "proposed_structure": "Diaspora mid-tier 'diaspora_rapport': price 50,000 FCFA, includes all Simple features plus accompaniment and property reports (property valuation report, neighborhood analysis, investment memo). Duration: 90 days. Same implementation pattern as EXT-SVC-CRM-006 with tier='rapport'.",
+      "required_fields": [
+        "Same as EXT-SVC-CRM-006 with diaspora_tier=rapport"
+      ],
+      "required_relations": [
+        "Same as EXT-SVC-CRM-006"
+      ],
+      "required_events": [
+        "Same as EXT-SVC-CRM-006"
+      ],
+      "required_permissions": [
+        "Same as EXT-SVC-CRM-006"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["DIASP-MAT-002 (Diaspora Report Generation)"],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 7 — Diaspora Market",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-CRM-008",
+      "source_concept": "Diaspora Complet (75,000 FCFA)",
+      "source_document": "CRM_MODEL.md §14.3 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-DIASP-003"],
+      "current_target": "ServiceOrder model",
+      "current_limitation": "No diaspora service exists in V2",
+      "extension_category": "crm_monetized_services",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (diaspora complet extension)",
+      "proposed_structure": "Diaspora premium tier 'diaspora_complet': price 75,000 FCFA, includes all Rapport features plus full accompaniment package (visit accompaniment, negotiation support, transaction assistance, legal referral). Duration: 180 days. End-to-end diaspora investment solution.",
+      "required_fields": [
+        "Same as EXT-SVC-CRM-006 with diaspora_tier=complet"
+      ],
+      "required_relations": [
+        "Same as EXT-SVC-CRM-006"
+      ],
+      "required_events": [
+        "Same as EXT-SVC-CRM-006"
+      ],
+      "required_permissions": [
+        "Same as EXT-SVC-CRM-006"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["DIASP-MAT-003 (Diaspora Full Accompaniment)"],
+      "implementation_priority": "P3",
+      "implementation_wave": "Wave 7 — Diaspora Market",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-SVC-CRM-009",
+      "source_concept": "Abonnement Agent Business (25,000 FCFA/month)",
+      "source_document": "CRM_MODEL.md §14.4 (Gold)",
+      "source_rule_ids": ["GOLD-CRM-SUB-001"],
+      "current_target": "ServiceOrder / Subscription model",
+      "current_limitation": "No subscription system exists in V2; no premium agent subscription tier with enhanced features",
+      "extension_category": "crm_monetized_services",
+      "proposed_domain": "Domain 3: Service Model",
+      "proposed_entity": "ServiceOrder (agent business subscription)",
+      "proposed_structure": "Implement 'agent_business' subscription as recurring ServiceOrder: 25,000 FCFA/month. Features: enhanced lead allocation (higher max_leads), priority routing, advanced CRM analytics, lead history export, multi-zone assignment. Linked to OrganizationMember for lead capacity upgrades. Duration: monthly billing via Campay. Agent must have active agent_business subscription for premium lead allocation.",
+      "required_fields": [
+        "OrganizationMember.subscription_tier: Enum? (standard|business)",
+        "OrganizationMember.subscription_expires_at: DateTime?",
+        "OrganizationMember.subscription_auto_renew: Boolean (default: true)"
+      ],
+      "required_relations": [
+        "OrganizationMember → ServiceOrder: 1:N (subscription payments)"
+      ],
+      "required_events": [
+        "agent_subscription.activated (payload: {agent_id, tier, expires_at})",
+        "agent_subscription.renewed (payload: {agent_id, new_expires_at})",
+        "agent_subscription.expired (payload: {agent_id})",
+        "agent_subscription.cancelled (payload: {agent_id, reason})"
+      ],
+      "required_permissions": [
+        "CRM: purchase agent subscription (agent role)",
+        "CRM: cancel subscription (agent self-service, admin)",
+        "CRM: override subscription tier (admin only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 5 — Agent Platform",
+      "human_decision_required": true,
+      "human_decision_question": "Agent Business features differentiation from Agent Pro (10,000 FCFA/month). Gold specifies Business at 25k/month with enhanced lead allocation. Confirm feature set and pricing.",
+      "status": "APPROVED"
+    }
+  ]
+}

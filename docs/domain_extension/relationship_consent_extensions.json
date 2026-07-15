@@ -1,0 +1,803 @@
+{
+  "document": {
+    "id": "LAWIM-H13-RC-EXT-V1",
+    "title": "Relationship & Consent Extension Catalog — Heritage Gold → LAWIM_V2",
+    "status": "CANONICAL",
+    "date": "2026-07-15",
+    "description": "Complete machine-readable catalog of all relationship and consent domain extensions from Heritage Gold → LAWIM_V2, including match consent tracking, proposal workflow, double consent model (C1 demandeur + C2 holder), relationship entity, participant roles, introduction tracking, shared data scope, consent lifecycle, revocation, expiration, idempotency, audit trail, and human handover workflows",
+    "sources": [
+      "LAWIM_UNIFIED_DOMAIN_MODEL.md §7 (Relationship), §8 (Consent), §11 (CRM Pipeline)",
+      "required_extensions.json (workflows section — EXT-WF-002)",
+      "required_extensions.json (sla section — EXT-SLA-006)",
+      "required_extensions.json (nba section)",
+      "CONSENT_EXECUTION_CONTRACT.md",
+      "RELATIONSHIP_LIFECYCLE.md",
+      "RELATIONSHIP_EXECUTION_ARCHITECTURE.md"
+    ],
+    "total_extensions": 13,
+    "by_priority": {
+      "P1": 8,
+      "P2": 5
+    },
+    "by_decision": {
+      "CREATE_NEW_ENGINE": 3,
+      "CREATE_NEW_ENTITY": 4,
+      "ENRICH_EXISTING_ENTITY": 3,
+      "CONFIGURE_EXISTING": 2,
+      "ADD_NEW_WORKFLOW": 1
+    }
+  },
+  "extensions": [
+    {
+      "extension_id": "EXT-RC-001",
+      "source_concept": "Match model with consent tracking",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md, RELATIONSHIP_LIFECYCLE.md",
+      "source_rule_ids": ["MATCHING_MODEL.md", "WORKFLOW_03 (Gold)"],
+      "current_target": "Match (from matching engine)",
+      "current_limitation": "V2 has no consent tracking on matches; Match entity lacks demandeur/holder consent references, decision deadlines, and consent-linked state transitions",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 6: Matching Engine / Domain 7: Relationship",
+      "proposed_entity": "Match",
+      "proposed_structure": "ENRICH_EXISTING_ENTITY — Add consent-tracking fields to Match: demandeur_consent_id, holder_consent_id, double_consent_obtained_at, demandeur_decision (pending|interested|not_interested), holder_decision (pending|favorable|refused), decision_deadline. Add consent-aware states to Match state machine. Link Match lifecycle to double consent workflow.",
+      "required_fields": [
+        "Match.demandeur_decision: Enum (pending|interested|not_interested)",
+        "Match.holder_decision: Enum (pending|favorable|refused)",
+        "Match.demandeur_consent_id: UUID?",
+        "Match.holder_consent_id: UUID?",
+        "Match.double_consent_obtained_at: DateTime?",
+        "Match.decision_deadline: DateTime?"
+      ],
+      "required_relations": [
+        "Match → Consent (demandeur_consent_id): 0:1",
+        "Match → Consent (holder_consent_id): 0:1",
+        "Match → Relationship: 1:0:1"
+      ],
+      "required_events": [
+        "match.consent_demandeur_requested (payload: {match_id, consent_id})",
+        "match.consent_demandeur_granted (payload: {match_id, consent_id})",
+        "match.consent_demandeur_declined (payload: {match_id, consent_id, reason?})",
+        "match.consent_holder_requested (payload: {match_id, consent_id})",
+        "match.consent_holder_granted (payload: {match_id, consent_id})",
+        "match.consent_holder_refused (payload: {match_id, consent_id, reason?})",
+        "match.double_consent_obtained (payload: {match_id, demandeur_consent_id, holder_consent_id})",
+        "match.consent_expired (payload: {match_id, consent_id, expiry_type})"
+      ],
+      "required_permissions": [
+        "Match: read consent status (all parties to the match)",
+        "Match: update decision (own party only)",
+        "Match: view consent history (assigned agent, admin)"
+      ],
+      "required_states": [
+        "Match.state ∈ {created, scored, proposed, demandeur_consent_pending, demandeur_consent_granted, holder_consent_pending, double_consent_obtained, relationship_established, active, expired, closed, archived}",
+        "Match.demandeur_decision ∈ {pending, interested, not_interested}",
+        "Match.holder_decision ∈ {pending, favorable, refused}"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-006 (Matching Readiness)", "H05-MAT-007 (Consent Requirements)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-002",
+      "source_concept": "Proposal workflow",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md §3, RELATIONSHIP_LIFECYCLE.md",
+      "source_rule_ids": ["WORKFLOW_04 (Gold)", "MATCHING_MODEL.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "V2 has no proposal entity; match to consent transition lacks structured proposal with versioning, presentation, response tracking, or SLA",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 7: Relationship",
+      "proposed_entity": "Proposal",
+      "proposed_structure": "CREATE_NEW_ENTITY — Implement Proposal entity with attributes: id, match_id, project_id, property_id, proposal_version, status (draft|sent|accepted|rejected|withdrawn|expired), presentation (JSON with score breakdown and property highlights), sent_at, responded_at, response (interested|not_interested|need_more_info), created_at, expires_at. Proposal flow: draft → sent → responded. SLA: 48h for demandeur response, 7d proposal validity.",
+      "required_fields": [
+        "Proposal.id: UUID (PK)",
+        "Proposal.match_id: UUID (FK → Match)",
+        "Proposal.project_id: UUID (FK → Project)",
+        "Proposal.property_id: UUID (FK → Property)",
+        "Proposal.proposal_version: Int",
+        "Proposal.status: Enum (draft|sent|accepted|rejected|withdrawn|expired)",
+        "Proposal.presentation: JSON",
+        "Proposal.sent_at: DateTime?",
+        "Proposal.responded_at: DateTime?",
+        "Proposal.response: Enum? (interested|not_interested|need_more_info)",
+        "Proposal.created_at: DateTime",
+        "Proposal.expires_at: DateTime"
+      ],
+      "required_relations": [
+        "Proposal → Match: N:1",
+        "Proposal → Project: N:1",
+        "Proposal → Property: N:1"
+      ],
+      "required_events": [
+        "proposal.created (payload: {match_id, proposal_version})",
+        "proposal.sent (payload: {proposal_id, sent_at})",
+        "proposal.responded (payload: {proposal_id, response, responded_at})",
+        "proposal.expired (payload: {proposal_id, expires_at})",
+        "proposal.withdrawn (payload: {proposal_id, reason?})"
+      ],
+      "required_permissions": [
+        "Proposal: read (match parties, assigned agent)",
+        "Proposal: respond (demandeur only)",
+        "Proposal: withdraw (system, admin)"
+      ],
+      "required_states": [
+        "Proposal.status ∈ {draft, sent, accepted, rejected, withdrawn, expired}",
+        "Proposal.response ∈ {interested, not_interested, need_more_info}"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-006 (Matching Readiness)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Proposal validity SLA (default 48h for demandeur response) and auto-withdraw behavior",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-003",
+      "source_concept": "Double consent model — Demandeur consent (C1)",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md §3, RELATIONSHIP_LIFECYCLE.md §1.2",
+      "source_rule_ids": ["WORKFLOW_04 (Gold) §25"],
+      "current_target": "No existing entity",
+      "current_limitation": "V2 has no demandeur consent entity, no consent request lifecycle, no C1-specific SLA or channel tracking",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 8: Consent Management",
+      "proposed_entity": "Consent (type: demandeur_consent)",
+      "proposed_structure": "CREATE_NEW_ENTITY — Implement Consent entity with consent_type=demandeur_consent. Attributes: id, match_id, party_id, party_role=demandeur, consent_type, status (requested|granted|declined|expired|revoked), scope (JSON with purpose, proposal_id), channel, response_time, requested_at, responded_at, decline_reason?, expires_at (default 90d from grant). SLA: 48h from request to response. Reminder at 24h. Side effects: granted→initiate holder contact, declined→trigger rematching, expired→close consent.",
+      "required_fields": [
+        "Consent.id: UUID (PK)",
+        "Consent.match_id: UUID (FK → Match)",
+        "Consent.party_id: UUID (FK → User)",
+        "Consent.party_role: Enum (demandeur)",
+        "Consent.consent_type: Enum (demandeur_consent)",
+        "Consent.status: Enum (requested|granted|declined|expired|revoked)",
+        "Consent.scope: JSON",
+        "Consent.channel: Enum (whatsapp|telegram|web|mobile|api)",
+        "Consent.response_time: Int?",
+        "Consent.requested_at: DateTime",
+        "Consent.responded_at: DateTime?",
+        "Consent.decline_reason: String?",
+        "Consent.expires_at: DateTime",
+        "Consent.created_at: DateTime"
+      ],
+      "required_relations": [
+        "Consent → Match: N:1",
+        "Consent → User (party): N:1",
+        "Consent → Relationship: 1:0:1"
+      ],
+      "required_events": [
+        "consent.demandeur_requested (payload: {consent_id, match_id, channel})",
+        "consent.demandeur_granted (payload: {consent_id, response_time, channel})",
+        "consent.demandeur_declined (payload: {consent_id, reason?})",
+        "consent.demandeur_expired (payload: {consent_id, sla_exceeded})",
+        "consent.demandeur_revoked (payload: {consent_id, reason?})",
+        "consent.demandeur_reminder_sent (payload: {consent_id, reminder_number})"
+      ],
+      "required_permissions": [
+        "Consent: request (system only)",
+        "Consent: respond (own party only)",
+        "Consent: revoke (own party only)",
+        "Consent: view (match parties, assigned agent, admin)"
+      ],
+      "required_states": [
+        "Consent.status ∈ {requested, granted, declined, expired, revoked}",
+        "Consent.consent_type = demandeur_consent",
+        "Consent.party_role = demandeur"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-007 (Consent Requirements)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Demandeur consent SLA (default 48h) and reminder strategy",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-004",
+      "source_concept": "Double consent model — Holder consent (C2)",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md §4, RELATIONSHIP_LIFECYCLE.md §4",
+      "source_rule_ids": ["WORKFLOW_04 (Gold) §25", "WORKFLOW_STATE_CROSSWALK.md §4"],
+      "current_target": "No existing entity",
+      "current_limitation": "V2 has no holder consent entity, no holder response handling (accept/refuse/delay/alternative/unavailable), no silence workflow, no per-property-type SLA",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 8: Consent Management",
+      "proposed_entity": "Consent (type: holder_consent)",
+      "proposed_structure": "CREATE_NEW_ENTITY — Implement Consent entity with consent_type=holder_consent. Attributes: id, match_id, party_id, party_role=holder, consent_type, status (requested|granted|declined|expired|revoked), scope (JSON with purpose, property_id), response (accept|refuse|delay|alternative|unavailable), alternative_property_id?, delay_duration?, reminder_count (0-3), last_reminder_at?, silence_workflow_exhausted, requested_at, responded_at, decline_reason?, expires_at (default 90d from grant). SLA: per property type (24h-30d). Silence workflow: 3 reminders + property marked 'to confirm' + rematch + LAWIM notify.",
+      "required_fields": [
+        "Consent.id: UUID (PK)",
+        "Consent.match_id: UUID (FK → Match)",
+        "Consent.party_id: UUID (FK → User)",
+        "Consent.party_role: Enum (holder)",
+        "Consent.consent_type: Enum (holder_consent)",
+        "Consent.status: Enum (requested|granted|declined|expired|revoked)",
+        "Consent.response: Enum? (accept|refuse|delay|alternative|unavailable)",
+        "Consent.alternative_property_id: UUID?",
+        "Consent.delay_duration: Int?",
+        "Consent.reminder_count: Int",
+        "Consent.last_reminder_at: DateTime?",
+        "Consent.silence_workflow_exhausted: Boolean",
+        "Consent.scope: JSON",
+        "Consent.channel: Enum (whatsapp|telegram|web|mobile|api)",
+        "Consent.requested_at: DateTime",
+        "Consent.responded_at: DateTime?",
+        "Consent.decline_reason: String?",
+        "Consent.expires_at: DateTime",
+        "Consent.created_at: DateTime"
+      ],
+      "required_relations": [
+        "Consent → Match: N:1",
+        "Consent → User (party): N:1",
+        "Consent → Property (alternative): 0:1",
+        "Consent → Relationship: 1:0:1"
+      ],
+      "required_events": [
+        "consent.holder_requested (payload: {consent_id, match_id, channel})",
+        "consent.holder_granted (payload: {consent_id, response, response_time})",
+        "consent.holder_refused (payload: {consent_id, reason?})",
+        "consent.holder_delayed (payload: {consent_id, delay_duration})",
+        "consent.holder_alternative_proposed (payload: {consent_id, alternative_property_id})",
+        "consent.holder_unavailable (payload: {consent_id})",
+        "consent.holder_expired (payload: {consent_id, sla_exceeded})",
+        "consent.holder_revoked (payload: {consent_id, reason?})",
+        "consent.holder_reminder_sent (payload: {consent_id, reminder_number, sla_level})",
+        "consent.holder_silence_exhausted (payload: {consent_id, reminders_sent})"
+      ],
+      "required_permissions": [
+        "Consent: request (system only)",
+        "Consent: respond (holder only)",
+        "Consent: revoke (holder only)",
+        "Consent: view (match parties, assigned agent, admin)"
+      ],
+      "required_states": [
+        "Consent.status ∈ {requested, granted, declined, expired, revoked}",
+        "Consent.response ∈ {accept, refuse, delay, alternative, unavailable}",
+        "Consent.consent_type = holder_consent",
+        "Consent.party_role = holder"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-007 (Consent Requirements)", "H05-MAT-021 (Holder Responsiveness SLA)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Holder silence reminder intervals and property 'to confirm' behavior per property type",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-005",
+      "source_concept": "Relationship entity (established after double consent)",
+      "source_document": "RELATIONSHIP_LIFECYCLE.md, RELATIONSHIP_EXECUTION_ARCHITECTURE.md",
+      "source_rule_ids": ["WORKFLOW_04 (Gold)", "CRM_MODEL.md (Gold) §19"],
+      "current_target": "No existing entity",
+      "current_limitation": "V2 has Conversation model linking user↔property but no formal Relationship entity with status machine, consent references, health score, anonymity tracking, or SLA enforcement",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 7: Relationship",
+      "proposed_entity": "Relationship",
+      "proposed_structure": "CREATE_NEW_ENTITY — Implement Relationship entity with full state machine (10 states), double consent references, anonymity management, health scoring, inactivity SLA. Core attributes: id, match_id, proposal_id, demandeur_id, holder_id, property_id, demandeur_consent_id, holder_consent_id, status (proposed|consent_demandeur_pending|consent_demandeur_granted|consent_holder_pending|active|follow_up|expired|revoked|closed|archived), introduction_id?, shared_data_scope_id?, anonymity_lifted, anonymity_lifted_at?, interlocutor (proprietaire|agent|notaire|autre), agent_id?, visit_count, negotiation_status?, transaction_id?, health_score?, health_level?, last_activity_at, inactivity_alert_sent, follow_up_count, created_at, activated_at?, closed_at?, expires_at, version.",
+      "required_fields": [
+        "Relationship.id: UUID (PK)",
+        "Relationship.match_id: UUID (FK → Match, UNIQUE)",
+        "Relationship.proposal_id: UUID (FK → Proposal)",
+        "Relationship.demandeur_id: UUID (FK → User)",
+        "Relationship.holder_id: UUID (FK → User)",
+        "Relationship.property_id: UUID (FK → Property)",
+        "Relationship.demandeur_consent_id: UUID (FK → Consent)",
+        "Relationship.holder_consent_id: UUID (FK → Consent)",
+        "Relationship.status: Enum (proposed|consent_demandeur_pending|consent_demandeur_granted|consent_holder_pending|active|follow_up|expired|revoked|closed|archived)",
+        "Relationship.introduction_id: UUID? (FK → Introduction)",
+        "Relationship.shared_data_scope_id: UUID? (FK → SharedDataScope)",
+        "Relationship.anonymity_lifted: Boolean",
+        "Relationship.anonymity_lifted_at: DateTime?",
+        "Relationship.interlocutor: Enum? (proprietaire|agent|notaire|autre)",
+        "Relationship.agent_id: UUID? (FK → User)",
+        "Relationship.visit_count: Int",
+        "Relationship.negotiation_status: Enum? (not_started|in_progress|successful|failed)",
+        "Relationship.transaction_id: UUID?",
+        "Relationship.health_score: Int?",
+        "Relationship.health_level: Enum? (excellent|normal|monitor|critical)",
+        "Relationship.last_activity_at: DateTime",
+        "Relationship.inactivity_alert_sent: Boolean",
+        "Relationship.follow_up_count: Int",
+        "Relationship.created_at: DateTime",
+        "Relationship.activated_at: DateTime?",
+        "Relationship.closed_at: DateTime?",
+        "Relationship.expires_at: DateTime",
+        "Relationship.version: Int"
+      ],
+      "required_relations": [
+        "Relationship → Match: 1:1",
+        "Relationship → Proposal: 1:1",
+        "Relationship → User (demandeur): N:1",
+        "Relationship → User (holder): N:1",
+        "Relationship → Property: N:1",
+        "Relationship → Consent (demandeur): 1:1",
+        "Relationship → Consent (holder): 1:1",
+        "Relationship → Introduction: 1:0:1",
+        "Relationship → SharedDataScope: 1:0:N",
+        "Relationship → User (agent): N:0:1"
+      ],
+      "required_events": [
+        "relationship.created (payload: {relationship_id, match_id, demandeur_id, holder_id, property_id})",
+        "relationship.status_changed (payload: {relationship_id, old_status, new_status})",
+        "relationship.activated (payload: {relationship_id, activated_at})",
+        "relationship.anonymity_lifted (payload: {relationship_id})",
+        "relationship.inactivity_alert (payload: {relationship_id, alert_level})",
+        "relationship.health_changed (payload: {relationship_id, health_score, health_level})",
+        "relationship.visit_scheduled (payload: {relationship_id, visit_id})",
+        "relationship.negotiation_status_changed (payload: {relationship_id, negotiation_status})",
+        "relationship.closed (payload: {relationship_id, final_state, reason})",
+        "relationship.archived (payload: {relationship_id})",
+        "relationship.reactivated (payload: {relationship_id, admin_id, reason})"
+      ],
+      "required_permissions": [
+        "Relationship: read (parties, assigned agent, admin)",
+        "Relationship: update status (system via state machine)",
+        "Relationship: close (any party, assigned agent, admin)",
+        "Relationship: reactivate (admin only)"
+      ],
+      "required_states": [
+        "Relationship.status ∈ {proposed, consent_demandeur_pending, consent_demandeur_granted, consent_holder_pending, active, follow_up, expired, revoked, closed, archived}",
+        "Relationship.negotiation_status ∈ {not_started, in_progress, successful, failed}",
+        "Relationship.health_level ∈ {excellent, normal, monitor, critical}",
+        "Terminal states: expired, revoked, closed, archived"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-006 (Matching Readiness)", "H05-MAT-007 (Consent Requirements)", "H05-MAT-022 (Relationship Health)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Relationship health score component weights and inactivity thresholds",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-006",
+      "source_concept": "Participant roles in a relationship",
+      "source_document": "RELATIONSHIP_EXECUTION_ARCHITECTURE.md, CONSENT_EXECUTION_CONTRACT.md §5",
+      "source_rule_ids": ["ROLE_CROSSWALK.md", "CRM_MODEL.md (Gold)"],
+      "current_target": "User / Organization",
+      "current_limitation": "V2 has User roles (buyer, seller, agent) but no relationship-specific role context, no agent opt-in workflow, no co-demandeur or guarantor support within a relationship",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 7: Relationship / Domain 12: Identity",
+      "proposed_entity": "RelationshipParticipant (junction entity)",
+      "proposed_structure": "ENRICH_EXISTING_ENTITY — Implement RelationshipParticipant junction table linking User to Relationship with role-specific context. Attributes: id, relationship_id, user_id, role (demandeur|holder|agent|co_demandeur|guarantor|notaire|professional|lawim_collaborator), joined_at, left_at?, status (active|inactive|removed), permission_level (full|limited|read_only). Add agent_optin workflow with 4-step process: detection → permission request → consent log → conditional share. Support extended roles: co-demandeur, guarantor, notaire, professional.",
+      "required_fields": [
+        "RelationshipParticipant.id: UUID (PK)",
+        "RelationshipParticipant.relationship_id: UUID (FK → Relationship)",
+        "RelationshipParticipant.user_id: UUID (FK → User)",
+        "RelationshipParticipant.role: Enum (demandeur|holder|agent|co_demandeur|guarantor|notaire|professional|lawim_collaborator)",
+        "RelationshipParticipant.joined_at: DateTime",
+        "RelationshipParticipant.left_at: DateTime?",
+        "RelationshipParticipant.status: Enum (active|inactive|removed)",
+        "RelationshipParticipant.permission_level: Enum (full|limited|read_only)"
+      ],
+      "required_relations": [
+        "RelationshipParticipant → Relationship: N:1",
+        "RelationshipParticipant → User: N:1"
+      ],
+      "required_events": [
+        "relationship.party_added (payload: {relationship_id, user_id, role})",
+        "relationship.party_removed (payload: {relationship_id, user_id, role, reason?})",
+        "relationship.party_role_changed (payload: {relationship_id, user_id, old_role, new_role})",
+        "agent_optin.requested (payload: {user_id, zone, property_type})",
+        "agent_optin.granted (payload: {user_id, consent_id})",
+        "agent_optin.declined (payload: {user_id, consent_id, is_permanent?})",
+        "agent_optin.revoked (payload: {user_id, consent_id})"
+      ],
+      "required_permissions": [
+        "RelationshipParticipant: read (relationship parties, admin)",
+        "RelationshipParticipant: add (admin, system for agent routing)",
+        "RelationshipParticipant: remove (admin, own party for self-removal)"
+      ],
+      "required_states": [
+        "RelationshipParticipant.role ∈ {demandeur, holder, agent, co_demandeur, guarantor, notaire, professional, lawim_collaborator}",
+        "RelationshipParticipant.status ∈ {active, inactive, removed}",
+        "agent_optin.status ∈ {not_asked, requested, granted, declined, revoked}"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-003 (Role Definitions)", "H05-MAT-007 (Consent Requirements)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Extended role support (co-demandeur, guarantor, notaire, professional) - which roles to implement in V1 vs defer",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-007",
+      "source_concept": "Introduction tracking",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md, CRM_MODEL.md (Gold)",
+      "source_rule_ids": ["CRM_MODEL.md (Gold) §11"],
+      "current_target": "No existing entity",
+      "current_limitation": "V2 has no introduction tracking; no referral attribution, no commission eligibility tracking, no introducer role recording",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 7: Relationship",
+      "proposed_entity": "Introduction",
+      "proposed_structure": "CREATE_NEW_ENTITY — Implement Introduction entity to track how parties were connected. Attributes: id, relationship_id, introduction_method (matching_engine|referral|agent_introduction|direct_search|manual), introducer_id? (User), introducer_role? (agent|user|lawim|system), referral_code?, referral_reward_claimed, commission_eligible, commission_amount?, commission_paid?, match_id, proposal_id, created_at. Link to referral reward system.",
+      "required_fields": [
+        "Introduction.id: UUID (PK)",
+        "Introduction.relationship_id: UUID (FK → Relationship, UNIQUE)",
+        "Introduction.introduction_method: Enum (matching_engine|referral|agent_introduction|direct_search|manual)",
+        "Introduction.introducer_id: UUID? (FK → User)",
+        "Introduction.introducer_role: Enum? (agent|user|lawim|system)",
+        "Introduction.referral_code: String?",
+        "Introduction.referral_reward_claimed: Boolean",
+        "Introduction.commission_eligible: Boolean",
+        "Introduction.commission_amount: Decimal?",
+        "Introduction.commission_paid: Boolean",
+        "Introduction.match_id: UUID? (FK → Match)",
+        "Introduction.proposal_id: UUID? (FK → Proposal)",
+        "Introduction.created_at: DateTime"
+      ],
+      "required_relations": [
+        "Introduction → Relationship: 1:1",
+        "Introduction → User (introducer): 0:1",
+        "Introduction → Match: 0:1",
+        "Introduction → Proposal: 0:1"
+      ],
+      "required_events": [
+        "introduction.created (payload: {relationship_id, method, introducer_id?})",
+        "introduction.referral_reward_claimed (payload: {introduction_id, reward_amount})",
+        "introduction.commission_paid (payload: {introduction_id, commission_amount})"
+      ],
+      "required_permissions": [
+        "Introduction: read (relationship parties, assigned agent, admin)",
+        "Introduction: update commission (admin only)",
+        "Introduction: claim reward (introducer only)"
+      ],
+      "required_states": [
+        "Introduction.introduction_method ∈ {matching_engine, referral, agent_introduction, direct_search, manual}",
+        "Introduction.introducer_role ∈ {agent, user, lawim, system}"
+      ],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Referral reward amount and commission rate for agent introductions",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-008",
+      "source_concept": "Shared data scope per relationship",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md §6, DATA_SHARING_POLICY.md",
+      "source_rule_ids": ["WORKFLOW_04 (Gold)", "PRIVACY_AND_SENSITIVE_FIELDS.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "V2 has no per-relationship data sharing scope; contact coordinates are either fully visible or fully hidden with no granular control, no scope levels, no field-level sharing consent",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 8: Consent Management / Domain 18: Privacy",
+      "proposed_entity": "SharedDataScope",
+      "proposed_structure": "CREATE_NEW_ENTITY — Implement SharedDataScope entity for per-relationship data sharing. Attributes: id, relationship_id, scope_level (basic_contact|full_contact|professional_contact|temporary_access), fields_shared (String[]), granted_by_party (UUID), granted_at, expires_at?, is_active, revoked_at?, revoke_reason?. Enforce H0.5 privacy levels: PUBLIC fields always visible, PRIVATE require relationship consent, SENSITIVE require explicit data sharing consent, CONFIDENTIAL never shared via platform. Scope levels: basic_contact (phone), full_contact (phone+email+address), professional_contact (phone+email+agency, all relationships with same agent), temporary_access (phone, 7 days).",
+      "required_fields": [
+        "SharedDataScope.id: UUID (PK)",
+        "SharedDataScope.relationship_id: UUID (FK → Relationship)",
+        "SharedDataScope.scope_level: Enum (basic_contact|full_contact|professional_contact|temporary_access)",
+        "SharedDataScope.fields_shared: String[]",
+        "SharedDataScope.granted_by_party: UUID (FK → User)",
+        "SharedDataScope.granted_at: DateTime",
+        "SharedDataScope.expires_at: DateTime?",
+        "SharedDataScope.is_active: Boolean",
+        "SharedDataScope.revoked_at: DateTime?",
+        "SharedDataScope.revoke_reason: String?"
+      ],
+      "required_relations": [
+        "SharedDataScope → Relationship: N:1",
+        "SharedDataScope → User (grantor): N:1"
+      ],
+      "required_events": [
+        "data_sharing.granted (payload: {scope_id, relationship_id, scope_level, fields_shared})",
+        "data_sharing.revoked (payload: {scope_id, relationship_id, reason?})",
+        "data_sharing.expired (payload: {scope_id, relationship_id})",
+        "data_sharing.renewed (payload: {scope_id, new_expires_at})"
+      ],
+      "required_permissions": [
+        "SharedDataScope: grant (own party only)",
+        "SharedDataScope: revoke (own party only)",
+        "SharedDataScope: read (target party only)"
+      ],
+      "required_states": [
+        "SharedDataScope.scope_level ∈ {basic_contact, full_contact, professional_contact, temporary_access}",
+        "SharedDataScope.is_active ∈ {true, false}"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-007 (Consent Requirements)", "H05-MAT-018 (Privacy Levels)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Data sharing scope levels and default visibility per relationship phase",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-009",
+      "source_concept": "Consent lifecycle management",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md §2",
+      "source_rule_ids": ["WORKFLOW_04 (Gold) §25"],
+      "current_target": "Consent (generic)",
+      "current_limitation": "V2 has no consent lifecycle state machine; no single consent record with requested→granted→revoked→expired states, no SLA enforcement per consent type, no renewal mechanism, no consent principles enforcement (explicit, informed, specific, revocable, recorded, time-bound, auditable)",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 8: Consent Management",
+      "proposed_entity": "Consent (base entity with type-specific extensions)",
+      "proposed_structure": "CONFIGURE_EXISTING — Implement Consent base entity with lifecycle state machine. States: requested → granted|declined → revoked|expired. Each consent has type (demandeur_consent|holder_consent|agent_optin|data_sharing), party_role, scope, channel, SLA, validity period, renewal mechanism. Enforce 7 consent principles: explicit (active opt-in only), informed (purpose+recipient+duration+revocation in request), specific (no blanket consent), revocable (revocation path on every consent), recorded (immutable audit), time-bound (expiration on every consent), auditable (full lifecycle trace). SLA: demandeur_consent 48h, holder_consent per property type, granted validity 90d default. Renewal request at T-7d.",
+      "required_fields": [
+        "Consent.id: UUID (PK)",
+        "Consent.match_id: UUID? (FK → Match)",
+        "Consent.party_id: UUID (FK → User)",
+        "Consent.party_role: Enum (demandeur|holder|user)",
+        "Consent.consent_type: Enum (demandeur_consent|holder_consent|agent_optin|data_sharing)",
+        "Consent.status: Enum (requested|granted|declined|expired|revoked)",
+        "Consent.scope: JSON",
+        "Consent.channel: Enum (whatsapp|telegram|web|mobile|api)",
+        "Consent.requested_at: DateTime",
+        "Consent.responded_at: DateTime?",
+        "Consent.granted_at: DateTime?",
+        "Consent.revoked_at: DateTime?",
+        "Consent.expires_at: DateTime",
+        "Consent.renewal_requested_at: DateTime?",
+        "Consent.renewed_at: DateTime?",
+        "Consent.created_at: DateTime"
+      ],
+      "required_relations": [
+        "Consent → Match: N:0:1",
+        "Consent → User: N:1",
+        "Consent → Relationship: 1:0:1"
+      ],
+      "required_events": [
+        "consent.requested (payload: {consent_id, consent_type, party_id, scope})",
+        "consent.granted (payload: {consent_id, response_time, channel})",
+        "consent.declined (payload: {consent_id, reason?})",
+        "consent.revoked (payload: {consent_id, reason?})",
+        "consent.expired (payload: {consent_id, expiry_source})",
+        "consent.renewed (payload: {consent_id, new_expiry_date})",
+        "consent.renewal_requested (payload: {consent_id, days_until_expiry})",
+        "consent.renewal_declined (payload: {consent_id})"
+      ],
+      "required_permissions": [
+        "Consent: request (system only)",
+        "Consent: respond (own party only)",
+        "Consent: revoke (own party only)",
+        "Consent: renew (own party only)",
+        "Consent: view (affected parties, assigned agent, admin)"
+      ],
+      "required_states": [
+        "Consent.status ∈ {requested, granted, declined, expired, revoked}",
+        "Consent.consent_type ∈ {demandeur_consent, holder_consent, agent_optin, data_sharing}",
+        "Consent.party_role ∈ {demandeur, holder, user}"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-007 (Consent Requirements)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Consent validity periods per type (default 90d) and renewal strategy",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-010",
+      "source_concept": "Revocation workflow",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md §8",
+      "source_rule_ids": ["WORKFLOW_04 (Gold)"],
+      "current_target": "Consent / Relationship",
+      "current_limitation": "V2 has no structured revocation workflow; no revocation state machine, no legal hold handling, no side-effect orchestration per consent type, no channel-specific revocation authentication",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 8: Consent Management",
+      "proposed_entity": "Consent (revocation sub-workflow)",
+      "proposed_structure": "CONFIGURE_EXISTING — Implement revocation sub-workflow on Consent. Revocation sources: user keyword (WhatsApp/Telegram with OTP), web/mobile click, support call. Immediate effect: status→revoked. Side effects within 1h: relationship termination (if C1/C2), data re-masking (if data_sharing), agent access revoked (if agent_optin). Notify counterparty within 1h. Legal hold: if active legal proceeding, enter pending_review state. Timeline: T+0 revoke, T+1h side effects, T+24h dependent processes terminated. Irreversible: new consent required for future ops.",
+      "required_fields": [
+        "Consent.revoked_at: DateTime?",
+        "Consent.revoke_reason: String?",
+        "Consent.revoke_source: Enum? (user_initiated|system|legal_hold|support)",
+        "Consent.revoke_evidence: JSON? (session_id, support_ticket_id, legal_ref)",
+        "Consent.legal_hold_active: Boolean",
+        "Consent.legal_hold_reason: String?",
+        "Consent.legal_hold_applied_at: DateTime?",
+        "Consent.legal_hold_removed_at: DateTime?"
+      ],
+      "required_relations": [
+        "Consent → LegalHold: 0:1"
+      ],
+      "required_events": [
+        "consent.revocation_requested (payload: {consent_id, source, reason?})",
+        "consent.revoked (payload: {consent_id, source, reason?})",
+        "consent.revocation_side_effects_executed (payload: {consent_id, effects})",
+        "consent.legal_hold_applied (payload: {consent_id, hold_reason, authority})",
+        "consent.legal_hold_removed (payload: {consent_id, resolution})",
+        "consent.legal_hold_blocks_revocation (payload: {consent_id, hold_reason})"
+      ],
+      "required_permissions": [
+        "Consent: revoke (own party, admin)",
+        "Consent: legal hold (admin, legal team only)",
+        "Consent: override legal hold (executive only)"
+      ],
+      "required_states": [
+        "Consent.legal_hold_active ∈ {true, false}",
+        "Consent.revoke_source ∈ {user_initiated, system, legal_hold, support}"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-007 (Consent Requirements)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Legal hold override authority levels and revocation notification templates",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-011",
+      "source_concept": "Expiration handling",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md §2.4, RELATIONSHIP_LIFECYCLE.md §3, §10",
+      "source_rule_ids": ["WORKFLOW_STATE_CROSSWALK.md §4", "WORKFLOW_04 (Gold)"],
+      "current_target": "Consent / Relationship / Match / Proposal / SharedDataScope",
+      "current_limitation": "V2 has no centralized expiration handling; no pre-expiry warnings, no cascading expiration across related entities, no consent renewal mechanism, no post-expiry cleanup or archival workflow",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 7: Relationship / Domain 8: Consent Management",
+      "proposed_entity": "Multiple (expiration engine as shared service)",
+      "proposed_structure": "ENRICH_EXISTING_ENTITY — Implement centralized expiration engine with configurable per-entity SLA. Expiration sources: Match (expires_at), Proposal (7d), Consent C1 SLA (48h), Consent C1 validity (90d), Consent C2 SLA (per property type), Consent C2 validity (90d), Relationship inactivity (90d), SharedDataScope (per scope). Each source has: pre-expiry warning period, action on expiry, recovery path. Pre-expiry warnings: T-7d for validity, T-24h for SLA. Consent renewal: request at T-7d, auto-revoke on decline/no-response. Post-expiry: T+0 mark expired/execute side effects, T+90d auto-archive, T+180d anonymize.",
+      "required_fields": [
+        "All entities with expiry: expires_at: DateTime",
+        "All entities with SLA: sla_deadline: DateTime?",
+        "Consent.renewal_requested_at: DateTime?",
+        "Consent.renewed_at: DateTime?",
+        "Consent.renewal_channel: Enum?"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "expiration.pre_expiry_warning (payload: {entity_type, entity_id, days_remaining})",
+        "expiration.executed (payload: {entity_type, entity_id, expired_at})",
+        "expiration.archived (payload: {entity_type, entity_id, archived_at})",
+        "expiration.anonymized (payload: {entity_type, entity_id, anonymized_at})",
+        "consent.renewal_requested (payload: {consent_id, days_until_expiry})",
+        "consent.renewal_granted (payload: {consent_id, new_expiry})",
+        "consent.renewal_declined (payload: {consent_id})"
+      ],
+      "required_permissions": [
+        "Expiration: read schedule (admin)",
+        "Expiration: override (admin only)",
+        "Consent: renew (own party only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["H05-MAT-021 (SLA Configuration)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Consent renewal strategy: auto-renewal with notification vs explicit re-consent required",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-012",
+      "source_concept": "Idempotency guarantees",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md, RELATIONSHIP_EXECUTION_ARCHITECTURE.md",
+      "source_rule_ids": [],
+      "current_target": "All consent/relationship operations",
+      "current_limitation": "V2 has no idempotency guarantees on consent operations; no idempotency keys, no unique constraints on business keys, no duplicate prevention on consent request/grant/revocation",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 8: Consent Management / Cross-cutting",
+      "proposed_entity": "All (idempotency layer)",
+      "proposed_structure": "ADD_NEW_WORKFLOW — Implement idempotency layer across all consent and relationship operations. Idempotency keys per operation: create_consent_request (match_id+party_id+consent_type), grant_consent (consent_id+party_id), create_relationship (match_id), create_introduction (relationship_id), create_shared_data_scope (relationship_id+granting_party_id), revoke_consent (consent_id+revocation_request_id), renew_consent (consent_id+renewal_request_id). Enforcement: API gateway (Idempotency-Key header, 24h retention), service layer (unique constraint), database (composite unique indexes), event bus (dedup by event ID). Guard rules: duplicate consent request returns existing record, duplicate grant rejected by state machine, duplicate revocation is no-op, race condition resolved by first-response-wins.",
+      "required_fields": [
+        "Consent.idempotency_key: String? (unique per operation type)",
+        "OperationLog.idempotency_key: String (PK)",
+        "OperationLog.operation_type: String",
+        "OperationLog.request_hash: String",
+        "OperationLog.processed_at: DateTime",
+        "OperationLog.result: JSON"
+      ],
+      "required_relations": [],
+      "required_events": [
+        "idempotency.duplicate_detected (payload: {idempotency_key, operation_type, existing_result})",
+        "idempotency.race_condition_resolved (payload: {idempotency_key, winning_response, losing_response})"
+      ],
+      "required_permissions": [
+        "Idempotency: read log (admin only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": [],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": false,
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-013",
+      "source_concept": "Audit trail for all consent changes",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md §9, RELATIONSHIP_LIFECYCLE.md §8",
+      "source_rule_ids": ["WORKFLOW_04 (Gold)"],
+      "current_target": "No existing entity",
+      "current_limitation": "V2 has no structured consent audit trail; no append-only consent_events table, no cryptographic hash chain, no relationship-scoped audit event catalog, no retention guarantee for consent records",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 19: Events, Observability & Audit",
+      "proposed_entity": "ConsentAuditEvent",
+      "proposed_structure": "CREATE_NEW_ENTITY — Implement append-only ConsentAuditEvent table with immutable guarantees. Event types: consent.requested, consent.granted, consent.declined, consent.revoked, consent.expired, consent.renewed, consent.sla_reminder_sent, consent.silence_workflow_step, consent.auto_closed, consent.legal_hold_applied, consent.legal_hold_removed, consent.human_handover, consent.human_resolved. Additional relationship-scoped events: relationship.created, relationship.status_changed, relationship.party_added, relationship.party_removed, relationship.anonymity_lifted, relationship.data_shared, relationship.data_shared_revoked, relationship.visit_scheduled, relationship.negotiation_opened, relationship.closed, relationship.archived, relationship.reactivated. Each event record: audit_id (UUID), event_type, timestamp, consent_id?, relationship_id?, party_id?, actor_id?, actor_role, old_status?, new_status?, scope (JSON), metadata (JSON with channel, response_time, ip, user_agent, session_id), state_snapshot (JSON), signature (hash of previous event + payload hash). Guarantees: append-only, immutable (cryptographic hash chain), timestamped (NTP), traceable, never deleted.",
+      "required_fields": [
+        "ConsentAuditEvent.audit_id: UUID (PK)",
+        "ConsentAuditEvent.event_type: String",
+        "ConsentAuditEvent.timestamp: DateTime",
+        "ConsentAuditEvent.consent_id: UUID? (FK → Consent)",
+        "ConsentAuditEvent.relationship_id: UUID? (FK → Relationship)",
+        "ConsentAuditEvent.party_id: UUID?",
+        "ConsentAuditEvent.actor_id: UUID?",
+        "ConsentAuditEvent.actor_role: String?",
+        "ConsentAuditEvent.old_status: String?",
+        "ConsentAuditEvent.new_status: String?",
+        "ConsentAuditEvent.scope: JSON?",
+        "ConsentAuditEvent.metadata: JSON?",
+        "ConsentAuditEvent.state_snapshot: JSON?",
+        "ConsentAuditEvent.signature: String",
+        "ConsentAuditEvent.previous_event_hash: String"
+      ],
+      "required_relations": [
+        "ConsentAuditEvent → Consent: N:0:1",
+        "ConsentAuditEvent → Relationship: N:0:1"
+      ],
+      "required_events": [
+        "audit.event_written (payload: {audit_id, event_type, timestamp})"
+      ],
+      "required_permissions": [
+        "ConsentAuditEvent: read (own party own consents, admin full)",
+        "ConsentAuditEvent: write (system only, append-only)"
+      ],
+      "required_states": [],
+      "H0.5_matrices_impacted": ["H05-MAT-019 (Audit Requirements)"],
+      "implementation_priority": "P1",
+      "implementation_wave": "Wave 4 — Relationship & Consent",
+      "human_decision_required": true,
+      "human_decision_question": "Audit event retention period (LAWIM heritage says NEVER deleted) and cryptographic hash chain implementation",
+      "status": "APPROVED"
+    },
+    {
+      "extension_id": "EXT-RC-014",
+      "source_concept": "Human handover workflow",
+      "source_document": "CONSENT_EXECUTION_CONTRACT.md §10, RELATIONSHIP_LIFECYCLE.md §7",
+      "source_rule_ids": ["WORKFLOW_04 (Gold) §5", "WORKFLOW_STATE_CROSSWALK.md"],
+      "current_target": "No existing entity",
+      "current_limitation": "V2 has no human handover mechanism for failed automated consent; no escalation ticket system, no trigger detection for consent failures, no LAWIM collaborator dashboard for stuck consents",
+      "extension_category": "relationship_consent",
+      "proposed_domain": "Domain 8: Consent Management / Domain 19: Support",
+      "proposed_entity": "HumanHandoverTicket",
+      "proposed_structure": "CREATE_NEW_ENTITY — Implement HumanHandoverTicket entity for escalation from automated consent workflows. Triggers: silence exhaustion, technical failure (3 retry), ambiguous response, dispute flagged, legal hold, fraud suspicion, consent race condition, repeated expiry (3+). Each trigger has urgency (low|medium|high|urgent). Ticket attributes: id, consent_id?, relationship_id?, trigger (Enum), trigger_detail (String), urgency, status (open|assigned|in_progress|resolved|closed), assigned_to? (LAWIM collaborator), assigned_at?, resolution (consent_recorded|parties_contacted|system_retried|ticket_closed), resolution_note?, escalation_count, created_at, resolved_at. Human resolution actions: record consent manually, contact parties offline, force close, override SLA, mark property confirmed, trigger rematch, escalate to legal. SLA by urgency: urgent (15min assign, 2h resolve), high (1h/24h), medium (4h/48h), low (24h/72h). Escalation chain: L1 collaborator → L2 manager → L3 legal → L4 executive. Audit events for every handover step.",
+      "required_fields": [
+        "HumanHandoverTicket.id: UUID (PK)",
+        "HumanHandoverTicket.consent_id: UUID? (FK → Consent)",
+        "HumanHandoverTicket.relationship_id: UUID? (FK → Relationship)",
+        "HumanHandoverTicket.trigger: Enum (silence_exhaustion|technical_failure|ambiguous_response|dispute_flagged|legal_hold|fraud_suspicion|race_condition|repeated_expiry)",
+        "HumanHandoverTicket.trigger_detail: String",
+        "HumanHandoverTicket.urgency: Enum (low|medium|high|urgent)",
+        "HumanHandoverTicket.status: Enum (open|assigned|in_progress|resolved|closed)",
+        "HumanHandoverTicket.assigned_to: UUID? (FK → User)",
+        "HumanHandoverTicket.assigned_at: DateTime?",
+        "HumanHandoverTicket.resolution: Enum? (consent_recorded|parties_contacted|system_retried|ticket_closed)",
+        "HumanHandoverTicket.resolution_note: String?",
+        "HumanHandoverTicket.escalation_count: Int",
+        "HumanHandoverTicket.escalation_level: Int",
+        "HumanHandoverTicket.created_at: DateTime",
+        "HumanHandoverTicket.resolved_at: DateTime?"
+      ],
+      "required_relations": [
+        "HumanHandoverTicket → Consent: N:0:1",
+        "HumanHandoverTicket → Relationship: N:0:1",
+        "HumanHandoverTicket → User (assignee): N:0:1"
+      ],
+      "required_events": [
+        "handover.ticket_created (payload: {ticket_id, trigger, urgency})",
+        "handover.ticket_assigned (payload: {ticket_id, collaborator_id})",
+        "handover.ticket_resolved (payload: {ticket_id, resolution, resolved_by})",
+        "handover.ticket_escalated (payload: {ticket_id, level, reason})",
+        "handover.ticket_sla_breached (payload: {ticket_id, urgency, sla_type})"
+      ],
+      "required_permissions": [
+        "HumanHandoverTicket: create (system only)",
+        "HumanHandoverTicket: assign (admin, manager)",
+        "HumanHandoverTicket: resolve (assigned collaborator)",
+        "HumanHandoverTicket: escalate (assigned collaborator, manager)",
+        "HumanHandoverTicket: read (assigned collaborator, admin)"
+      ],
+      "required_states": [
+        "HumanHandoverTicket.trigger ∈ {silence_exhaustion, technical_failure, ambiguous_response, dispute_flagged, legal_hold, fraud_suspicion, race_condition, repeated_expiry}",
+        "HumanHandoverTicket.urgency ∈ {low, medium, high, urgent}",
+        "HumanHandoverTicket.status ∈ {open, assigned, in_progress, resolved, closed}",
+        "HumanHandoverTicket.resolution ∈ {consent_recorded, parties_contacted, system_retried, ticket_closed}"
+      ],
+      "H0.5_matrices_impacted": ["H05-MAT-021 (SLA Configuration)"],
+      "implementation_priority": "P2",
+      "implementation_wave": "Wave 5 — Support Operations",
+      "human_decision_required": true,
+      "human_decision_question": "Human handover trigger conditions: which triggers warrant automatic escalation vs retry",
+      "status": "APPROVED"
+    }
+  ],
+  "crosswalk_references": {
+    "CONSENT_EXECUTION_CONTRACT.md": ["Full source document"],
+    "RELATIONSHIP_LIFECYCLE.md": ["Full source document"],
+    "RELATIONSHIP_EXECUTION_ARCHITECTURE.md": ["Full source document"],
+    "required_extensions.json": ["EXT-WF-002 (Contact Lifecycle)", "EXT-SLA-006 (Holder Silence)", "EXT-NBA-001 through EXT-NBA-004"],
+    "LAWIM_UNIFIED_DOMAIN_MODEL.md": ["§7 (Relationship)", "§8 (Consent)"],
+    "DATA_SHARING_POLICY.md": ["§4 (Visibility Levels)"],
+    "SEARCH_MATCHING_EXTENSION_MODEL.md": ["§1 (Match Entity)"],
+    "WORKFLOW_EXTENSION_MODEL.md": ["§1 (Matching Lifecycle)", "§2 (Contact Lifecycle)"]
+  }
+}
