@@ -17,6 +17,12 @@ DEFAULT_DISCLAIMER_TEXT_EN = (
     "and contractual details."
 )
 
+DEFAULT_DISCLAIMER_TEXT_PCM = (
+    "LAWIM AI fit make mistake. "
+    "Abeg check important info well, especially legal, money "
+    "and contract matter."
+)
+
 
 @dataclass(frozen=True, slots=True)
 class DisclaimerConfig:
@@ -25,7 +31,7 @@ class DisclaimerConfig:
     position: str = "after_response"
     style: str = "subtle"
     channels: tuple[str, ...] = ("web", "whatsapp", "telegram", "admin")
-    languages: dict[str, str] = field(default_factory=lambda: {"fr": DEFAULT_DISCLAIMER_TEXT, "en": DEFAULT_DISCLAIMER_TEXT_EN})
+    languages: dict[str, str] = field(default_factory=lambda: {"fr": DEFAULT_DISCLAIMER_TEXT, "en": DEFAULT_DISCLAIMER_TEXT_EN, "pcm": DEFAULT_DISCLAIMER_TEXT_PCM})
     agency_overrides: dict[str, bool] = field(default_factory=dict)
     provider_overrides: dict[str, bool] = field(default_factory=dict)
     globally_disabled: bool = False
@@ -83,7 +89,7 @@ class DisclaimerManager:
                 position=str(row.get("position", "after_response")),
                 style=str(row.get("style", "subtle")),
                 channels=tuple(row.get("channels", ["web", "whatsapp", "telegram", "admin"])),
-                languages=dict(row.get("languages", {"fr": DEFAULT_DISCLAIMER_TEXT, "en": DEFAULT_DISCLAIMER_TEXT_EN})),
+                languages=dict(row.get("languages", {"fr": DEFAULT_DISCLAIMER_TEXT, "en": DEFAULT_DISCLAIMER_TEXT_EN, "pcm": DEFAULT_DISCLAIMER_TEXT_PCM})),
                 agency_overrides=dict(row.get("agency_overrides", {})),
                 provider_overrides=dict(row.get("provider_overrides", {})),
                 globally_disabled=bool(row.get("globally_disabled", False)),

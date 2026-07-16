@@ -1,0 +1,15 @@
+{
+  "release_version": "LAWIM_V2_MULTILINGUAL_RC1",
+  "git_commit": "",
+  "schema_version": "v17",
+  "translation_version": "1.0",
+  "terminology_version": "1.0",
+  "qa_catalog_version": "1.0.0",
+  "feature_flags": {
+    "ai_orchestrator": true,
+    "multilingual": true,
+    "qa_catalog": true
+  },
+  "backup_reference": "/opt/lawim/backups/pre-hardening-20260716T183203Z.tar.gz",
+  "rollback_target": "70eb8498"
+}
