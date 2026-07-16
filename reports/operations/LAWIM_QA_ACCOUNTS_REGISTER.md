@@ -1,9 +1,9 @@
 # LAWIM — QA Test Accounts Register
 
-**Document ID:** LAWIM-OPS-QA-ACCOUNTS-V1  
-**Status:** OPERATIONAL  
-**Date:** 2026-07-15  
-**Security:** Passwords stored OUTSIDE Git in `/opt/lawim/secrets/qa-test-accounts.env`
+**Document ID:** LAWIM-OPS-QA-ACCOUNTS-V2
+**Status:** OPERATIONAL
+**Date:** 2026-07-16
+**Decision:** LAWIM QA ACCOUNTS RECREATED AND VERIFIED
 
 ---
 
@@ -16,37 +16,36 @@
 | operator | Opérateur | Agency | read, write |
 | partner | Partenaire | Partner | read |
 | user | Utilisateur | Public | read_own |
-| tenant_admin | Admin tenant | Tenant | read, write, manage_tenant |
-| agent | Agent immobilier | Agency | read, write_conversation, write_property |
 
-## QA Accounts Created
+## QA Accounts — Sanitised (Git-safe)
 
-| Login | Role | Agency | Status | Password Location |
-|-------|------|--------|--------|-------------------|
-| qa.admin.global | admin | — | ACTIVE, must change password | `/opt/lawim/secrets/qa-test-accounts.env` |
-| qa.manager.agency01 | manager | QA Agency 01 | ACTIVE, must change password | same |
-| qa.manager.agency02 | manager | QA Agency 02 | ACTIVE, must change password | same |
-| qa.agent.agency01.01 | agent | QA Agency 01 | ACTIVE, must change password | same |
-| qa.agent.agency01.02 | agent | QA Agency 01 | ACTIVE, must change password | same |
-| qa.agent.agency02.01 | agent | QA Agency 02 | ACTIVE, must change password | same |
-| qa.operator.01 | operator | QA Agency 01 | ACTIVE, must change password | same |
-| qa.partner.01 | partner | — | ACTIVE, must change password | same |
-| qa.user.01 | user | — | ACTIVE, must change password | same |
-| qa.user.02 | user | — | ACTIVE, must change password | same |
-| qa.auditor.01 | admin (auditor) | — | ACTIVE, must change password | same |
+| Identifiant | Rôle | Téléphone masqué | Email masqué | Agence/Tenant | Connexion testée |
+|------------|------|-----------------|-------------|---------------|-----------------|
+| qa.admin.global | admin | +23769****** | qa.***@lawim.qa | — | ✅ PASS |
+| qa.tenant.admin | admin | +23773****** | qa.***@lawim.qa | — | ✅ PASS |
+| qa.manager.douala | manager | +23767****** | qa.***@lawim.qa | QA Agency Douala | ✅ PASS |
+| qa.manager.yaounde | manager | +23791****** | qa.***@lawim.qa | QA Agency Yaoundé | ✅ PASS |
+| qa.agent.douala.01 | agent | +23769****** | qa.***@lawim.qa | QA Agency Douala | ✅ PASS |
+| qa.agent.douala.02 | agent | +23769****** | qa.***@lawim.qa | QA Agency Douala | ✅ PASS |
+| qa.agent.yaounde.01 | agent | +23761****** | qa.***@lawim.qa | QA Agency Yaoundé | ✅ PASS |
+| qa.operator.01 | operator | +23798****** | qa.***@lawim.qa | QA Agency Douala | ✅ PASS |
+| qa.partner.01 | partner | +23783****** | qa.***@lawim.qa | — | ✅ PASS |
+| qa.user.01 | user | +23783****** | qa.***@lawim.qa | — | ✅ PASS |
+| qa.user.02 | user | +23784****** | qa.***@lawim.qa | — | ✅ PASS |
+| qa.auditor.01 | admin | +23780****** | qa.***@lawim.qa | — | ✅ PASS |
 
 ## Password Policy
 
-- Length: 20+ characters
-- Complexity: upper, lower, digits, special
+- Length: 24 characters
+- Complexity: upper, lower, digits, special (`!@#$%&*+-_=.`)
 - Unique per account
-- Temporary: must change on first login
-- Generated via: `python3 -c "import secrets, string; print(''.join(secrets.choice(string.ascii_letters+string.digits+'!@#$%') for _ in range(24)))"`
+- Temporary: must change on first login (enforced at DB level)
+- Generated via: `secrets.SystemRandom` (cryptographically secure)
 
 ## Security
 
-- Credentials file: `/opt/lawim/secrets/qa-test-accounts.env`
-- Permissions: `600` (owner read/write only)
-- Never committed to Git
+- Credentials file (server): `/opt/lawim/secrets/qa-test-accounts.env` — root:root, chmod 600
+- Credentials file (laptop): `/home/abel/.config/lawim/qa-test-accounts.env` — abel:abel, chmod 600
+- Never committed to Git (files are outside the repository)
 - Never logged
-- Transfer to password manager required
+- Passwords not derivable from hashes (PBKDF2-HMAC-SHA256, 210k iterations)
