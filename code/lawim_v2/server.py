@@ -3807,8 +3807,8 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
                         """,
                         (conversation_id, channel, user_id, raw, raw, message_key, body.get("metadata_json", "{}"), now),
                     )
-            except Exception:
-                pass
+            except Exception as exc:
+                LOGGER.warning("Failed to persist message for conversation %s: %s", conversation_id, exc)
 
             self._send_json({
                 "conversation_id": conversation_id,
