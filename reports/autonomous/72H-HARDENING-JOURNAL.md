@@ -26,7 +26,7 @@
 - Performance benchmarks captured (hot paths + runtime)
 
 ### Phase 3: Backend and API Hardening
-- Fixed `_DEFAULT_VAULT_KEY`: now reads from `LAIM_VAULT_KEY` env var
+- Fixed `_DEFAULT_VAULT_KEY`: now reads from `LAWIM_VAULT_KEY` env var
 - Fixed bare `except Exception: pass` in orchestrator.py (2 locations)
 - Fixed silent message persistence failure in server.py
 - Fixed bare except in backup/recovery.py database dump
@@ -48,7 +48,7 @@
 - Runtime: /readyz (p50 1.04ms), /api/health (p50 3.65ms), /api/properties (p50 1.64ms)
 
 ### Phase 13: Validate & Build
-- All 14 validation scripts PASS
+- All 18 validation scripts PASS
 - Frontend production build: 22 precached entries, 771.60 KiB total
 - PWA with workbox service worker generated
 

@@ -20,5 +20,5 @@
 ## Verification
 - All 1718+ tests pass
 - Frontend builds successfully
-- All 14 validators pass
+- All 18 validators pass
 - Performance baselines captured (no degradation)
