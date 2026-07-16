@@ -2,9 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import logging
 import time
 from typing import Any, Iterable
 import uuid
+
+logger = logging.getLogger(__name__)
 
 from ..contact import COMPANY_NAME
 from .complexity import ComplexityReport, classify_text
@@ -532,8 +535,8 @@ class AIOrchestrator:
             if new_content != response.content:
                 object.__setattr__(response, "content", new_content)
                 return True
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("Disclaimer injection failed: %s", exc)
         return False
 
     def _call_provider(self, provider: AIProvider, request: AIRequest) -> AIResponse:
@@ -653,8 +656,8 @@ class AIOrchestrator:
                 total_latency_ms=sum(a.latency_ms for a in attempts),
                 trace=fallback_chain_trace,
             )
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("Failed to track fallback metrics: %s", exc)
 
     def _persist_request_completion(
         self,

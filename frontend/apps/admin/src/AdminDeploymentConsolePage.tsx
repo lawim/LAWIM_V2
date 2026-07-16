@@ -67,18 +67,15 @@ export function AdminDeploymentConsolePage() {
   };
 
   const handleRestart = async (service: string) => {
-    console.log(`Restarting ${service}...`);
-    // Implement restart logic
+    // TODO: Implement restart logic
   };
 
   const handleBackup = async () => {
-    console.log('Starting backup...');
-    // Implement backup logic
+    // TODO: Implement backup logic
   };
 
   const handleScaleService = async (service: string, replicas: number) => {
-    console.log(`Scaling ${service} to ${replicas} replicas...`);
-    // Implement scaling logic
+    // TODO: Implement scaling logic
   };
 
   return (

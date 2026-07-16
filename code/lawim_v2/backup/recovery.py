@@ -3,16 +3,20 @@ from __future__ import annotations
 import io
 import hashlib
 import json
+import logging
 import os
 import platform
 import re
 import socket
 import shutil
+import sqlite3
 import subprocess
 import sys
 import time
 import zipfile
 from dataclasses import asdict, dataclass, field
+
+LOGGER = logging.getLogger(__name__)
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Protocol, TYPE_CHECKING
@@ -200,7 +204,8 @@ def _database_dump_from_sqlite(repository: LawimRepository) -> str:
         return "-- database dump unavailable\n"
     try:
         lines = list(connection.iterdump())
-    except Exception:
+    except (RuntimeError, OSError, sqlite3.DatabaseError) as exc:
+        LOGGER.warning("Database dump failed: %s", exc)
         return "-- database dump unavailable\n"
     if not lines:
         return "-- database dump empty\n"

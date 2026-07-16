@@ -4,6 +4,7 @@ import base64
 import hashlib
 import hmac
 import json
+import os
 import re
 import secrets
 from dataclasses import dataclass, field
@@ -13,7 +14,10 @@ from typing import Any, Mapping, Sequence
 
 
 ACTIVATION_TIMESTAMP = "2026-07-05T10:00:00Z"
-_DEFAULT_VAULT_KEY = "lawim-credential-vault-placeholder"
+_DEFAULT_VAULT_KEY = os.environ.get("LAWIM_VAULT_KEY", "lawim-credential-vault-placeholder")
+if _DEFAULT_VAULT_KEY == "lawim-credential-vault-placeholder":
+    import warnings
+    warnings.warn("LAWIM_VAULT_KEY not set; using insecure placeholder key")
 
 
 def _utc_now() -> str:

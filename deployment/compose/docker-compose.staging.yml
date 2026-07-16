@@ -40,6 +40,7 @@ services:
       DATABASE_URL: postgresql://lawim:${DB_PASSWORD}@postgres:5432/lawim_staging
       REDIS_URL: redis://redis:6379/0
       JWT_SECRET: ${JWT_SECRET}
+      LAWIM_VAULT_KEY: ${LAWIM_VAULT_KEY:-}
       ENVIRONMENT: staging
       LOG_LEVEL: info
       GREEN_API_API_URL: ${GREEN_API_API_URL:-}

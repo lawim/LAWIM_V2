@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -39,8 +39,11 @@ class RelationshipConsentRequest:
         if not self.expires_at:
             return False
         try:
-            return self.expires_at >= datetime.utcnow().isoformat()
-        except Exception:
+            expires = datetime.fromisoformat(self.expires_at)
+            if expires.tzinfo is None:
+                expires = expires.replace(tzinfo=timezone.utc)
+            return expires > datetime.now(timezone.utc)
+        except (TypeError, ValueError):
             return False
 
     def to_dict(self) -> dict[str, Any]:
