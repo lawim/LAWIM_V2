@@ -3,18 +3,28 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import time
-from typing import Iterable
+from typing import Any, Iterable
 import uuid
 
 from ..contact import COMPANY_NAME
 from .complexity import ComplexityReport, classify_text
 from .contracts import AIMessage, AIProvider, AIRequest, AIResponse
+from .disclaimer import DisclaimerManager
+from .internal_reasoning import InternalReasoningEngine, ReasoningContext
 from .learning import LearningEngine
+from .memory import MemoryOptimizer
 from .models import RoutingDecision
 from .monitoring import CircuitBreakerManager
+from .prompt_reconstruction import PromptReconstructionEngine, ReconstructedContext
 from .providers import DeepSeekProvider, GeminiProvider, OpenAIProvider
 from .router import build_provider_chain, dedupe_chain
-from .safety import estimate_simple_token_count, looks_like_prompt_injection, redact_sensitive_object, redact_sensitive_text, stable_hash
+from .safety import (
+    estimate_simple_token_count,
+    looks_like_prompt_injection,
+    redact_sensitive_object,
+    redact_sensitive_text,
+    stable_hash,
+)
 
 
 def _utcnow() -> str:
@@ -36,6 +46,9 @@ class OrchestrationOutcome:
     response: AIResponse
     attempts: tuple[AIResponse, ...] = ()
     provider_chain: tuple[str, ...] = ()
+    internal_response: bool = False
+    disclaimer_added: bool = False
+    continuity_context: ReconstructedContext | None = None
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -44,6 +57,8 @@ class OrchestrationOutcome:
             "response": self.response.to_dict(),
             "attempts": [attempt.to_dict() for attempt in self.attempts],
             "provider_chain": list(self.provider_chain),
+            "internal_response": self.internal_response,
+            "disclaimer_added": self.disclaimer_added,
         }
 
 
@@ -56,15 +71,24 @@ class AIOrchestrator:
         providers: dict[str, AIProvider] | None = None,
         learning_engine: LearningEngine | None = None,
         circuit_breakers: CircuitBreakerManager | None = None,
+        continuity_engine: PromptReconstructionEngine | None = None,
+        memory_optimizer: MemoryOptimizer | None = None,
+        internal_reasoning: InternalReasoningEngine | None = None,
+        disclaimer_manager: DisclaimerManager | None = None,
+        knowledge_runtime=None,
     ) -> None:
         self.repository = repository
         self.config = config
         self.learning_engine = learning_engine or LearningEngine(repository, config)
         self.circuit_breakers = circuit_breakers or CircuitBreakerManager(repository, config)
         self.providers = providers or self._build_default_providers()
+        self.continuity_engine = continuity_engine or PromptReconstructionEngine(repository, config)
+        self.memory_optimizer = memory_optimizer or MemoryOptimizer(repository, config)
+        self.internal_reasoning = internal_reasoning or InternalReasoningEngine(repository, config, knowledge_runtime)
+        self.disclaimer_manager = disclaimer_manager or DisclaimerManager(repository, config)
 
     def _build_default_providers(self) -> dict[str, AIProvider]:
-        providers: dict[str, AIProvider] = {
+        return {
             "deepseek": DeepSeekProvider(
                 api_key=self.config.deepseek_api_key,
                 model=self.config.deepseek_model,
@@ -93,7 +117,6 @@ class AIOrchestrator:
                 timeout_seconds=self.config.ai_request_timeout_seconds,
             ),
         }
-        return providers
 
     def classify(self, text: str | None, *, context_messages: int = 0) -> ComplexityReport:
         report = classify_text(text, context_messages=context_messages)
@@ -135,6 +158,29 @@ class AIOrchestrator:
             }
         )
         request_id = f"ai-{stable_hash(f'{conversation_key}:{message_id}:{sanitized_text}')[:20]}"
+
+        continuity = self.continuity_engine.reconstruct(
+            conversation_key=conversation_key,
+            user_id=filtered_metadata.get("user_id"),
+            organization_id=organization_id,
+            agent_code=filtered_metadata.get("agent_code"),
+            language=language or "fr",
+            current_text=text,
+        )
+        memory_bundle = self.memory_optimizer.load_for_conversation(
+            conversation_key=conversation_key,
+            user_id=filtered_metadata.get("user_id"),
+            organization_id=organization_id,
+            agent_code=filtered_metadata.get("agent_code"),
+        )
+        continuity_block = continuity.to_prompt_block()
+        memory_block = memory_bundle.to_prompt()
+
+        if continuity_block:
+            filtered_metadata["continuity_context"] = continuity_block
+        if memory_block:
+            filtered_metadata["memory_context"] = memory_block
+
         return AIRequest(
             request_id=request_id,
             channel=channel,
@@ -170,7 +216,7 @@ class AIOrchestrator:
             sanitized_text=request.sanitized_text,
             context_json=[message.to_dict() for message in request.context_messages],
             metadata=request.metadata,
-            provider_chain_json=list(provider_chain),
+            provider_chain_json=list(provider_chain) + ["internal"],
             status="pending",
         )
         attempts: list[AIResponse] = []
@@ -181,6 +227,8 @@ class AIOrchestrator:
         time_budget = float(self.config.ai_total_timeout_seconds)
         deadline = routing_started + time_budget
         complexity_report = self.classify(request.text, context_messages=len(request.context_messages))
+        fallback_chain_trace: list[dict[str, object]] = []
+        internal_used = False
 
         for provider_key in provider_chain:
             if time.perf_counter() >= deadline:
@@ -190,6 +238,7 @@ class AIOrchestrator:
                 continue
             if not provider.is_enabled():
                 self._record_provider_skip(provider_key, request, "provider_disabled")
+                fallback_chain_trace.append({"provider": provider_key, "reason": "disabled"})
                 continue
             if not self.circuit_breakers.can_attempt(provider_key):
                 self._record_provider_skip(provider_key, request, "circuit_open")
@@ -200,11 +249,19 @@ class AIOrchestrator:
                     f"Circuit breaker open for {provider_key}",
                     {"request_key": request.request_id, "conversation_key": request.conversation_key},
                 )
+                fallback_chain_trace.append({"provider": provider_key, "reason": "circuit_open"})
                 continue
 
             response = self._call_provider(provider, request)
             attempts.append(response)
             self._persist_attempt(request, response, provider_key=provider_key)
+            fallback_chain_trace.append({
+                "provider": provider_key,
+                "success": response.success,
+                "error_type": response.error_type,
+                "latency_ms": response.latency_ms,
+            })
+
             if response.success and self._response_is_acceptable(response):
                 selected_response = response
                 selected_provider = provider_key
@@ -222,43 +279,68 @@ class AIOrchestrator:
                     f"Provider {provider_key} returned an invalid response",
                     {"request_key": request.request_id, "conversation_key": request.conversation_key},
                 )
+                fallback_chain_trace[-1]["reason_detail"] = "invalid_response"
 
         if selected_response is None:
-            if attempts:
-                selected_response = attempts[-1]
-                selected_provider = selected_response.provider
-                reason = "provider_failed"
-            else:
-                selected_response = AIResponse(
-                    provider="none",
-                    model="none",
-                    success=False,
-                    content="",
-                    latency_ms=0,
-                    input_tokens=0,
-                    output_tokens=0,
-                    estimated_cost=0.0,
-                    finish_reason="unavailable",
-                    error_type="provider_unavailable",
-                    error_code="provider_unavailable",
-                    retryable=False,
-                    fallback_required=False,
-                    request_id=request.request_id,
-                    provider_request_id=None,
-                    valid=False,
-                    complete=False,
-                    relevant=False,
-                    safe=True,
-                    well_formed=False,
-                    confidence_score=0.0,
-                    metadata={"maintenance_mode": True},
+            internal_used = True
+            internal_result = self.internal_reasoning.reason(
+                ReasoningContext(
+                    user_text=request.text,
+                    conversation_key=request.conversation_key,
+                    language=request.language or "fr",
+                    known_facts=tuple(
+                        request.metadata.get("continuity_context", "").split("\n")
+                        if isinstance(request.metadata.get("continuity_context"), str)
+                        else ()
+                    ),
+                    known_intent=complexity_report.complexity,
                 )
-                attempts.append(selected_response)
-                self._persist_attempt(request, selected_response, provider_key="none")
-                selected_provider = "none"
+            )
+            selected_response = AIResponse(
+                provider="internal",
+                model="lawim_v2_internal",
+                success=True,
+                content=internal_result.content,
+                latency_ms=internal_result.latency_ms,
+                input_tokens=0,
+                output_tokens=len(internal_result.content.split()),
+                estimated_cost=0.0,
+                finish_reason="internal_reasoning",
+                error_type=None,
+                error_code=None,
+                retryable=False,
+                fallback_required=True,
+                request_id=request.request_id,
+                provider_request_id=None,
+                valid=True,
+                complete=True,
+                relevant=True,
+                safe=True,
+                well_formed=True,
+                confidence_score=internal_result.confidence,
+                metadata={
+                    "internal_reasoning": True,
+                    "reasoning_path": internal_result.reasoning_path,
+                    "sources": list(internal_result.sources),
+                    "requires_escalation": internal_result.requires_escalation,
+                    "escalation_reason": internal_result.escalation_reason,
+                },
+            )
+            selected_provider = "internal"
+            reason = "internal_reasoning_fallback"
+            attempts.append(selected_response)
+            self._persist_attempt(request, selected_response, provider_key="internal")
+            fallback_chain_trace.append({
+                "provider": "internal",
+                "success": True,
+                "reason": "all_external_providers_failed",
+            })
 
         final_response = selected_response
-        fallback_used = False
+        fallback_used = reason not in {"provider_response", ""}
+
+        disclaimer_added = self._apply_disclaimer(final_response, request)
+
         self._persist_request_completion(
             request_row=request_row,
             request=request,
@@ -268,12 +350,20 @@ class AIOrchestrator:
             fallback_used=fallback_used,
             reason=reason,
         )
+        self._persist_fallback_observability(
+            request=request,
+            selected_provider=selected_provider,
+            reason=reason,
+            attempts=attempts,
+            fallback_chain_trace=fallback_chain_trace,
+            internal_used=internal_used,
+        )
         routing_decision = RoutingDecision(
             request_id=request.request_id,
             conversation_key=request.conversation_key,
             complexity=complexity_report.complexity,
             selected_provider=selected_provider,
-            chain=provider_chain,
+            chain=tuple(list(provider_chain) + (["internal"] if internal_used else [])),
             reason=reason,
             fallback_used=fallback_used,
             created_at=_utcnow(),
@@ -285,11 +375,13 @@ class AIOrchestrator:
             complexity=complexity_report.complexity,
             selected_provider=selected_provider,
             fallback_used=fallback_used,
-            chain=list(provider_chain),
+            chain=list(provider_chain) + (["internal"] if internal_used else []),
             rationale={
                 "reason": reason,
                 "signals": list(complexity_report.signals),
                 "attempts": [attempt.provider for attempt in attempts],
+                "internal_used": internal_used,
+                "fallback_trace": fallback_chain_trace,
             },
         )
         if self.config.ai_learning_enabled:
@@ -302,6 +394,9 @@ class AIOrchestrator:
             response=final_response,
             attempts=tuple(attempts),
             provider_chain=provider_chain,
+            internal_response=internal_used,
+            disclaimer_added=disclaimer_added,
+            continuity_context=None,
         )
 
     def list_providers(self) -> list[dict[str, object]]:
@@ -357,6 +452,9 @@ class AIOrchestrator:
     def list_knowledge_versions(self) -> list[dict[str, object]]:
         return self.repository.list_ai_knowledge_versions(limit=100)
 
+    def list_fallback_metrics(self) -> dict[str, object]:
+        return self.repository.get_ai_fallback_metrics()
+
     def review_learning_candidate(self, *, candidate_key: str, decision: str, notes: str = "", reviewer_user_id: int | None = None) -> dict[str, object]:
         return self.repository.review_ai_learning_candidate(
             candidate_key=candidate_key,
@@ -378,6 +476,14 @@ class AIOrchestrator:
         overview = self.repository.ai_overview()
         overview["providers"] = len(self.providers)
         overview["provider_health"] = self.list_health()
+        disclaimer_config = self.disclaimer_manager.get_config()
+        overview["disclaimer"] = {
+            "enabled": disclaimer_config.enabled,
+            "globally_disabled": disclaimer_config.globally_disabled,
+            "position": disclaimer_config.position,
+        }
+        overview["internal_reasoning_available"] = True
+        overview["continuity_engine_available"] = True
         return overview
 
     def _provider_chain(self, request: AIRequest) -> tuple[str, ...]:
@@ -394,7 +500,7 @@ class AIOrchestrator:
         return dedupe_chain(filtered)
 
     def _limit_context_messages(self, messages: tuple[AIMessage, ...]) -> tuple[AIMessage, ...]:
-        limited = tuple(messages)[-self.config.ai_max_context_messages :]
+        limited = tuple(messages)[-self.config.ai_max_context_messages:]
         if self.config.ai_max_context_tokens is None:
             return limited
         while limited and estimate_simple_token_count(" ".join(message.content for message in limited)) > self.config.ai_max_context_tokens:
@@ -412,10 +518,40 @@ class AIOrchestrator:
             return False
         return True
 
+    def _apply_disclaimer(self, response: AIResponse, request: AIRequest) -> bool:
+        if response.provider == "internal":
+            return False
+        try:
+            new_content = self.disclaimer_manager.inject_disclaimer(
+                response.content,
+                channel=request.channel,
+                provider=response.provider,
+                language=request.language or "fr",
+                organization_id=request.organization_id,
+            )
+            if new_content != response.content:
+                object.__setattr__(response, "content", new_content)
+                return True
+        except Exception:
+            pass
+        return False
+
     def _call_provider(self, provider: AIProvider, request: AIRequest) -> AIResponse:
         if provider.name != "internal" and provider.name not in self.providers:
             raise KeyError(provider.name)
-        return provider.generate(request)
+        response = provider.generate(request)
+        response = self._detect_provider_anomalies(response)
+        return response
+
+    def _detect_provider_anomalies(self, response: AIResponse) -> AIResponse:
+        if not response.success:
+            return response
+        if response.content and len(response.content) < 10 and response.finish_reason != "stop":
+            object.__setattr__(response, "valid", False)
+            object.__setattr__(response, "error_type", "truncated_response")
+        if response.latency_ms > (self.config.ai_request_timeout_seconds * 1000 * 0.8):
+            object.__setattr__(response, "metadata", {**response.metadata, "provider_slow": True})
+        return response
 
     def _persist_attempt(self, request: AIRequest, response: AIResponse, *, provider_key: str) -> None:
         self.repository.create_ai_response(
@@ -493,6 +629,32 @@ class AIOrchestrator:
             output_tokens=response.output_tokens,
             estimated_cost=response.estimated_cost,
         )
+
+    def _persist_fallback_observability(
+        self,
+        *,
+        request: AIRequest,
+        selected_provider: str,
+        reason: str,
+        attempts: list[AIResponse],
+        fallback_chain_trace: list[dict[str, object]],
+        internal_used: bool,
+    ) -> None:
+        fallback_count = sum(1 for a in attempts if a.provider != selected_provider)
+        try:
+            self.repository.record_ai_fallback_metrics(
+                request_key=request.request_id,
+                conversation_key=request.conversation_key,
+                final_provider=selected_provider,
+                reason=reason,
+                fallback_count=fallback_count,
+                total_attempts=len(attempts),
+                internal_used=internal_used,
+                total_latency_ms=sum(a.latency_ms for a in attempts),
+                trace=fallback_chain_trace,
+            )
+        except Exception:
+            pass
 
     def _persist_request_completion(
         self,

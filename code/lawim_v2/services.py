@@ -143,9 +143,20 @@ class LawimServices:
         from .cognition.service import CognitionService
 
         self.cognition = CognitionService(repository, self.projects)
-        from .ai import AIOrchestrator
+        from .ai import AIOrchestrator, DisclaimerManager, InternalReasoningEngine, MemoryOptimizer, PromptReconstructionEngine
 
-        self.ai = AIOrchestrator(repository, config)
+        memory = MemoryOptimizer(repository, config)
+        continuity = PromptReconstructionEngine(repository, config)
+        internal = InternalReasoningEngine(repository, config, self.knowledge_runtime if hasattr(self, 'knowledge_runtime') else None)
+        disclaimer = DisclaimerManager(repository, config)
+        self.ai = AIOrchestrator(
+            repository, config,
+            memory_optimizer=memory,
+            continuity_engine=continuity,
+            internal_reasoning=internal,
+            disclaimer_manager=disclaimer,
+            knowledge_runtime=self.knowledge_runtime if hasattr(self, 'knowledge_runtime') else None,
+        )
         self.maintenance = MaintenanceService(repository)
         from .knowledge_platform.service import KnowledgePlatformService
 
