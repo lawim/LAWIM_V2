@@ -1,0 +1,45 @@
+{
+  "total_conversations": 1250,
+  "splits": {
+    "train": 1000,
+    "dev": 125,
+    "test": 125
+  },
+  "languages": {
+    "fr": 416,
+    "en": 420,
+    "pcm": 414
+  },
+  "channels": {
+    "web": 438,
+    "whatsapp": 397,
+    "telegram": 415
+  },
+  "user_roles": {
+    "prospect": 1085,
+    "owner": 135,
+    "agency": 10,
+    "service_provider": 10,
+    "buyer": 10
+  },
+  "expected_agents": {
+    "QUALIFICATION": 570,
+    "REAL_ESTATE": 135,
+    "VISIT_TRANSACTION": 135,
+    "DOCUMENT": 135,
+    "SUPPORT": 135,
+    "RELATIONSHIP": 30,
+    "CONVERSATION": 110
+  },
+  "intents": {
+    "property_search": 360,
+    "owner_listing": 135,
+    "visit_transaction": 135,
+    "documents_finance": 135,
+    "support_safety": 135,
+    "crm_relationship": 30,
+    "progressive_qualification": 210,
+    "language_switch": 90,
+    "ambiguous_request": 20
+  }
+}

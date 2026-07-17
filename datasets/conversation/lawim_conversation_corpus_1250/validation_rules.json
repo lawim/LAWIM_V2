@@ -1,0 +1,22 @@
+{
+  "required_behaviors": [
+    "preserve_context",
+    "single_active_language",
+    "ask_one_next_useful_question",
+    "never_invent_property_price_document_payment_visit_or_status",
+    "handover_only_when_needed_or_explicit",
+    "never_use_generic_acknowledgment_as_normal_reply",
+    "render_ai_disclaimer_for_ai_generated_responses",
+    "do_not_repeat_known_slots",
+    "return_terminal_result_for_every_supported_message"
+  ],
+  "forbidden_outputs": [
+    "Message reçu. Un conseiller LAWIM vous contactera sous peu.",
+    "Message received. A LAWIM advisor will contact you shortly.",
+    "bilingual_response_without_explicit_switch",
+    "invented_property_match",
+    "unverified_payment_success",
+    "unverified_visit_confirmation",
+    "automatic_handover_without_record"
+  ]
+}

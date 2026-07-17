@@ -1,0 +1,31 @@
+{
+  "conversation_count": 136,
+  "language_counts": {
+    "fr": 51,
+    "en": 42,
+    "pcm": 43
+  },
+  "intent_counts": {
+    "greeting": 3,
+    "rental_search": 4,
+    "purchase_search": 3,
+    "land_search": 3,
+    "commercial_search": 1,
+    "budget_clarification": 1,
+    "location_clarification": 1,
+    "progressive_qualification": 3,
+    "visit_request": 3,
+    "document_request": 3,
+    "human_handover": 3,
+    "support": 1,
+    "no_results": 1,
+    "privacy": 3,
+    "fraud_warning": 3,
+    "legal_question": 1,
+    "payment_question": 1,
+    "property_search": 90,
+    "ambiguous_intent": 3,
+    "unsupported_request": 3,
+    "language_switch": 2
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "required_fields": [
+    "id",
+    "language",
+    "intent",
+    "difficulty",
+    "channel",
+    "handover_required",
+    "known_slots",
+    "missing_slots",
+    "expected_action",
+    "messages"
+  ],
+  "allowed_languages": [
+    "fr",
+    "en",
+    "pcm"
+  ],
+  "allowed_roles": [
+    "system",
+    "user",
+    "assistant"
+  ],
+  "quality_rules": [
+    "single_active_language_per_assistant_turn",
+    "preserve_known_slots",
+    "ask_only_next_useful_question",
+    "never_invent_property_price_document_or_status",
+    "handover_only_when_explicit_or_required",
+    "no_generic_acknowledgment_as_normal_reply",
+    "ai_disclaimer_present_for_ai_responses"
+  ]
+}

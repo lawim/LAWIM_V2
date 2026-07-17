@@ -1,0 +1,9 @@
+{
+  "lawim_conversations_1250.jsonl": "5917784a3a81419334e2aac82cc34760120e41c0089f3e2c490f6b8d16e45314",
+  "train.jsonl": "725dcfc0f787d03a6736f6cb29cae22e77aadc7e275f4a0169ca3ebc0b297cab",
+  "dev.jsonl": "646f84ddc8f3e021ee92a7340cdd1a50ccf7094e94750d530a65ffd2e4fc6b61",
+  "test.jsonl": "1f39c525e8e905aa46c9c69f9e7dcf511cf549a5821cd2088ad7f32ff0ef8411",
+  "dataset_summary.json": "1967dc3cb138fde3a831b7ef2f15a215e50b5cb11469512302a62dbca4d4511a",
+  "validation_rules.json": "e0b9e9633475dbc29fbe15e02b3673c7f1507a498f20b3bee102d5cfc4899952",
+  "README.md": "2f0e9a7fc7a06f4d41bc7cb6e9d1643e42d18c06174efc38a21df17dc79fc2c6"
+}
