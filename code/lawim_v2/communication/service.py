@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import uuid
 
 from ..observability import METRICS
 from ..maintenance import MAINTENANCE_FLAGS, MAINTENANCE_RESPONSE, MaintenanceService, MaintenanceSubmission
@@ -807,11 +808,33 @@ class CommunicationService:
             if MAINTENANCE_FLAGS.get("lawim_core_rebuild_maintenance_mode", False):
                 maintenance_reply = self._dispatch_maintenance_reply(channel="whatsapp", normalized=normalized, message_row=message_row)
             else:
-                self.repository.create_communication_log(
-                    level="debug",
-                    message="WhatsApp inbound message received (maintenance mode inactive)",
-                    payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"])},
-                )
+                reply_text = "Message reçu. Un conseiller LAWIM vous contactera sous peu. / Message received. A LAWIM advisor will contact you shortly."
+                sender_chat_id = str(normalized.get("chat_id") or normalized.get("sender") or "")
+                normalized_number = self._normalize_whatsapp_number(sender_chat_id)
+                if normalized_number:
+                    try:
+                        delivery = self.repository.send_whatsapp(
+                            to=normalized_number,
+                            message=reply_text,
+                            correlation_id=str(uuid.uuid4()),
+                        )
+                        self.repository.create_communication_log(
+                            level="info",
+                            message="WhatsApp acknowledgment sent",
+                            payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"]), "to": mask_delivery_recipient(normalized_number)},
+                        )
+                    except Exception as exc:
+                        self.repository.create_communication_log(
+                            level="error",
+                            message="WhatsApp acknowledgment failed",
+                            payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"]), "error": str(exc)},
+                        )
+                else:
+                    self.repository.create_communication_log(
+                        level="debug",
+                        message="WhatsApp inbound message received (maintenance mode inactive, no reply sent - missing recipient)",
+                        payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"])},
+                    )
         return {
             "status": "ok",
             "accepted": True,
@@ -940,11 +963,32 @@ class CommunicationService:
             if MAINTENANCE_FLAGS.get("lawim_core_rebuild_maintenance_mode", False):
                 maintenance_reply = self._dispatch_maintenance_reply(channel="telegram", normalized=normalized, message_row=message_row)
             else:
-                self.repository.create_communication_log(
-                    level="debug",
-                    message="Telegram inbound message received (maintenance mode inactive)",
-                    payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"])},
-                )
+                reply_text = "Message reçu. Un conseiller LAWIM vous contactera sous peu. / Message received. A LAWIM advisor will contact you shortly."
+                chat_id = normalized.get("chat_id_raw")
+                if chat_id is not None:
+                    try:
+                        delivery = self.repository.send_telegram(
+                            chat_id=chat_id,
+                            message=reply_text,
+                            correlation_id=str(uuid.uuid4()),
+                        )
+                        self.repository.create_communication_log(
+                            level="info",
+                            message="Telegram acknowledgment sent",
+                            payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"]), "chat_id_present": True},
+                        )
+                    except Exception as exc:
+                        self.repository.create_communication_log(
+                            level="error",
+                            message="Telegram acknowledgment failed",
+                            payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"]), "error": str(exc)},
+                        )
+                else:
+                    self.repository.create_communication_log(
+                        level="debug",
+                        message="Telegram inbound message received (maintenance mode inactive, no reply sent - missing chat_id)",
+                        payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"])},
+                    )
         return {
             "status": "ok",
             "accepted": True,
