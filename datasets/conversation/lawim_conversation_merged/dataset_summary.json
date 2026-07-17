@@ -1,0 +1,19 @@
+{
+  "total": 11386,
+  "languages": {
+    "fr": 3749,
+    "en": 3821,
+    "pcm": 3816
+  },
+  "sources": {
+    "ds-136": 136,
+    "corpus-1250": 1250,
+    "corpus-10k": 10000
+  },
+  "unique_intents": 69,
+  "splits": {
+    "train": 9108,
+    "dev": 1139,
+    "test": 1139
+  }
+}

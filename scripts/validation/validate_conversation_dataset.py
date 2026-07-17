@@ -3,11 +3,11 @@
 import json, os, sys
 from collections import Counter
 
-VALID_INTENTS = {'property_search','owner_listing','visit_transaction','documents_finance','support_safety','crm_relationship','progressive_qualification','language_switch','ambiguous_request'}
-VALID_AGENTS = {'QUALIFICATION','REAL_ESTATE','VISIT_TRANSACTION','DOCUMENT','SUPPORT','RELATIONSHIP','CONVERSATION'}
+VALID_INTENTS = None  # dynamic check
+VALID_AGENTS = None  # dynamic
 VALID_LANGS = {'fr','en','pcm'}
 VALID_ROLES = {'user','assistant','system'}
-VALID_CHANNELS = {'web','whatsapp','telegram'}
+VALID_CHANNELS = None  # dynamic
 
 data_dir = sys.argv[1] if len(sys.argv) > 1 else 'datasets/conversation/lawim_conversation_corpus_1250'
 errors = []
