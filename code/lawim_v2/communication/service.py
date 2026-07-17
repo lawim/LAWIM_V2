@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 
 from ..observability import METRICS
-from ..maintenance import MAINTENANCE_RESPONSE, MaintenanceService, MaintenanceSubmission
+from ..maintenance import MAINTENANCE_FLAGS, MAINTENANCE_RESPONSE, MaintenanceService, MaintenanceSubmission
 from ..project_service import ProjectPermissionDenied, ProjectService
 from ..financial.engines import normalize_mobile_money_number
 from . import dto as cdto
@@ -804,7 +804,14 @@ class CommunicationService:
         )
         maintenance_reply = None
         if not duplicate and type_webhook == "incomingMessageReceived" and message_row is not None:
-            maintenance_reply = self._dispatch_maintenance_reply(channel="whatsapp", normalized=normalized, message_row=message_row)
+            if MAINTENANCE_FLAGS.get("lawim_core_rebuild_maintenance_mode", False):
+                maintenance_reply = self._dispatch_maintenance_reply(channel="whatsapp", normalized=normalized, message_row=message_row)
+            else:
+                self.repository.create_communication_log(
+                    level="debug",
+                    message="WhatsApp inbound message received (maintenance mode inactive)",
+                    payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"])},
+                )
         return {
             "status": "ok",
             "accepted": True,
@@ -930,7 +937,14 @@ class CommunicationService:
         )
         maintenance_reply = None
         if not duplicate and update_type in {"message", "business_message", "guest_message"} and message_row is not None:
-            maintenance_reply = self._dispatch_maintenance_reply(channel="telegram", normalized=normalized, message_row=message_row)
+            if MAINTENANCE_FLAGS.get("lawim_core_rebuild_maintenance_mode", False):
+                maintenance_reply = self._dispatch_maintenance_reply(channel="telegram", normalized=normalized, message_row=message_row)
+            else:
+                self.repository.create_communication_log(
+                    level="debug",
+                    message="Telegram inbound message received (maintenance mode inactive)",
+                    payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"])},
+                )
         return {
             "status": "ok",
             "accepted": True,
