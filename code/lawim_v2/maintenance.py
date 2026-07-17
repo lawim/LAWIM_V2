@@ -5,20 +5,25 @@ from dataclasses import dataclass
 from .observability import METRICS
 
 MAINTENANCE_RESPONSE = (
-    "🤖 LAWIM AI : Le service intelligent de LAWIM fait actuellement l’objet d’une reconstruction complète. "
-    "Votre message a bien été enregistré, mais aucune recherche, mise en relation ou action automatique ne sera "
-    "lancée pendant cette période. Pour une demande urgente, un membre de l’équipe LAWIM peut reprendre votre message."
+    "LAWIM est momentanément indisponible.\n\n"
+    "Site Web : https://lawim.app\n"
+    "Téléphone : +237 686 822 667\n"
+    "WhatsApp : +237 686 822 667\n"
+    "WhatsApp Business : @lawimofficial\n"
+    "Telegram : @lawim_bot\n"
+    "Facebook : @lawimofficial\n"
+    "Email : contact@lawim.app"
 )
 
 MAINTENANCE_FLAGS: dict[str, bool] = {
-    "lawim_core_rebuild_maintenance_mode": True,
-    "conversation_service_enabled": False,
-    "qualification_service_enabled": False,
-    "search_orchestration_enabled": False,
-    "matching_service_enabled": False,
-    "relationship_service_enabled": False,
-    "automated_relationship_consent_enabled": False,
-    "conversation_driven_visits_enabled": False,
+    "lawim_core_rebuild_maintenance_mode": False,
+    "conversation_service_enabled": True,
+    "qualification_service_enabled": True,
+    "search_orchestration_enabled": True,
+    "matching_service_enabled": True,
+    "relationship_service_enabled": True,
+    "automated_relationship_consent_enabled": True,
+    "conversation_driven_visits_enabled": True,
 }
 
 MAINTENANCE_EVENTS = {
