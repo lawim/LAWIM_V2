@@ -592,11 +592,14 @@ class CommunicationService:
                 if response_text:
                     if outcome.response.provider == "internal":
                         response_text += "\n\n_Réponse préparée par le moteur interne LAWIM._"
-                    disclaimer_text = ""
-                    if self.disclaimer:
-                        disclaimer_text = self.disclaimer.get_text(language="fr")
+                    disclaimer_text = self.DISCLAIMER_TEXTS.get("fr", "")
                     if disclaimer_text:
-                        response_text += f"\n\n{disclaimer_text}"
+                        if channel == "whatsapp":
+                            response_text += f"\n\n_{disclaimer_text}_"
+                        elif channel == "telegram":
+                            response_text += f"\n\n<i>{disclaimer_text}</i>"
+                        else:
+                            response_text += f"\n\n{disclaimer_text}"
                     self.repository.create_communication_log(
                         level="info",
                         message="AI reply generated for channel",
@@ -611,6 +614,12 @@ class CommunicationService:
                 )
         return self._greeting_response(channel)
 
+    DISCLAIMER_TEXTS: dict[str, str] = {
+        "fr": "LAWIM AI peut commettre des erreurs. Vérifiez les informations importantes, notamment les informations juridiques, financières et contractuelles.",
+        "en": "LAWIM AI can make mistakes. Verify important information, especially legal, financial and contractual information.",
+        "pcm": "LAWIM AI fit make mistake. Abeg check important information well, especially legal, money and contract matter.",
+    }
+
     def _greeting_response(self, channel: str, language: str = "fr") -> str:
         texts = {
             "fr": "Bonjour et bienvenue sur LAWIM.\n\nJe peux vous accompagner pour rechercher, publier, louer, acheter ou vendre un bien immobilier. Que souhaitez-vous faire ?",
@@ -618,14 +627,12 @@ class CommunicationService:
             "pcm": "Welcome for LAWIM.\n\nI fit help you find, post, rent, buy or sell property. Wetin you want do?",
         }
         base = texts.get(language, texts["fr"])
-        disclaimer = ""
-        if self.disclaimer:
-            disclaimer = self.disclaimer.get_text(language=language)
-        if channel == "whatsapp" and disclaimer:
+        disclaimer = self.DISCLAIMER_TEXTS.get(language, self.DISCLAIMER_TEXTS["fr"])
+        if channel == "whatsapp":
             return f"{base}\n\n_{disclaimer}_"
-        if channel == "telegram" and disclaimer:
+        if channel == "telegram":
             return f"{base}\n\n<i>{disclaimer}</i>"
-        return f"{base}\n\n{disclaimer}" if disclaimer else base
+        return f"{base}\n\n{disclaimer}"
 
     def _dispatch_maintenance_reply(
         self,
