@@ -575,44 +575,57 @@ class CommunicationService:
     def _generate_ai_reply(self, raw_text: str, channel: str, conversation_key: str) -> str:
         if not raw_text.strip():
             return ""
-        if self.ai is None:
-            self.repository.create_communication_log(
-                level="warning",
-                message="AI orchestrator not available for channel reply",
-                payload={"channel": channel},
-            )
-            return "Merci pour votre message. L'équipe LAWIM vous répondra prochainement."
-        try:
-            request = self.ai.build_request(
-                channel=channel,
-                text=raw_text,
-                conversation_key=conversation_key,
-                language="fr",
-            )
-            outcome = self.ai.generate(request)
-            response_text = outcome.response.content.strip() if outcome.response and outcome.response.content else ""
-            if not response_text:
-                return "Merci pour votre message. L'équipe LAWIM vous répondra prochainement."
-            if outcome.response.provider == "internal":
-                response_text += "\n\n_Réponse préparée par le moteire interne LAWIM._"
-            disclaimer_text = ""
-            if self.disclaimer:
-                disclaimer_text = self.disclaimer.get_text(language="fr")
-            if disclaimer_text:
-                response_text += f"\n\n{disclaimer_text}"
-            self.repository.create_communication_log(
-                level="info",
-                message="AI reply generated for channel",
-                payload={"channel": channel, "provider": outcome.response.provider, "language": "fr"},
-            )
-            return response_text
-        except Exception as exc:
-            self.repository.create_communication_log(
-                level="error",
-                message="AI reply generation failed",
-                payload={"channel": channel, "error": str(exc)},
-            )
-            return "Merci pour votre message. L'équipe LAWIM vous répondra prochainement."
+        normalized = raw_text.strip().lower().rstrip("!.,? ")
+        greetings = {"bonjour", "bonsoir", "salut", "hello", "hi", "good morning", "good evening", "good afternoon", "how far", "cc", "bjr", "slt", "coucou", "hey", "yo"}
+        if normalized in greetings or (len(normalized.split()) == 1 and normalized.split()[0] in greetings):
+            return self._greeting_response(channel)
+        if self.ai is not None:
+            try:
+                request = self.ai.build_request(
+                    channel=channel,
+                    text=raw_text,
+                    conversation_key=conversation_key,
+                    language="fr",
+                )
+                outcome = self.ai.generate(request)
+                response_text = outcome.response.content.strip() if outcome.response and outcome.response.content else ""
+                if response_text:
+                    if outcome.response.provider == "internal":
+                        response_text += "\n\n_Réponse préparée par le moteur interne LAWIM._"
+                    disclaimer_text = ""
+                    if self.disclaimer:
+                        disclaimer_text = self.disclaimer.get_text(language="fr")
+                    if disclaimer_text:
+                        response_text += f"\n\n{disclaimer_text}"
+                    self.repository.create_communication_log(
+                        level="info",
+                        message="AI reply generated for channel",
+                        payload={"channel": channel, "provider": outcome.response.provider, "language": "fr"},
+                    )
+                    return response_text
+            except Exception as exc:
+                self.repository.create_communication_log(
+                    level="error",
+                    message="AI reply generation failed, using greeting fallback",
+                    payload={"channel": channel, "error": str(exc)},
+                )
+        return self._greeting_response(channel)
+
+    def _greeting_response(self, channel: str, language: str = "fr") -> str:
+        texts = {
+            "fr": "Bonjour et bienvenue sur LAWIM.\n\nJe peux vous accompagner pour rechercher, publier, louer, acheter ou vendre un bien immobilier. Que souhaitez-vous faire ?",
+            "en": "Hello and welcome to LAWIM.\n\nI can help you search for, list, rent, buy or sell a property. What would you like to do?",
+            "pcm": "Welcome for LAWIM.\n\nI fit help you find, post, rent, buy or sell property. Wetin you want do?",
+        }
+        base = texts.get(language, texts["fr"])
+        disclaimer = ""
+        if self.disclaimer:
+            disclaimer = self.disclaimer.get_text(language=language)
+        if channel == "whatsapp" and disclaimer:
+            return f"{base}\n\n_{disclaimer}_"
+        if channel == "telegram" and disclaimer:
+            return f"{base}\n\n<i>{disclaimer}</i>"
+        return f"{base}\n\n{disclaimer}" if disclaimer else base
 
     def _dispatch_maintenance_reply(
         self,
