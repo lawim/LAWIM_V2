@@ -248,12 +248,16 @@ class CommunicationService:
         policy,
         config=None,
         maintenance: MaintenanceService | None = None,
+        ai_orchestrator=None,
+        disclaimer_manager=None,
     ) -> None:
         self.repository = repository
         self.projects = project_service
         self.policy = policy
         self.config = config
         self.maintenance = maintenance or MaintenanceService(repository)
+        self.ai = ai_orchestrator
+        self.disclaimer = disclaimer_manager
         self.engine = CommunicationPlatformEngine()
         self.notifications = NotificationService(repository)
         self.email = EmailService(repository)
@@ -568,6 +572,48 @@ class CommunicationService:
                 return f"+{digits}"
             return ""
 
+    def _generate_ai_reply(self, raw_text: str, channel: str, conversation_key: str) -> str:
+        if not raw_text.strip():
+            return ""
+        if self.ai is None:
+            self.repository.create_communication_log(
+                level="warning",
+                message="AI orchestrator not available for channel reply",
+                payload={"channel": channel},
+            )
+            return "Merci pour votre message. L'équipe LAWIM vous répondra prochainement."
+        try:
+            request = self.ai.build_request(
+                channel=channel,
+                text=raw_text,
+                conversation_key=conversation_key,
+                language="fr",
+            )
+            outcome = self.ai.generate(request)
+            response_text = outcome.response.content.strip() if outcome.response and outcome.response.content else ""
+            if not response_text:
+                return "Merci pour votre message. L'équipe LAWIM vous répondra prochainement."
+            if outcome.response.provider == "internal":
+                response_text += "\n\n_Réponse préparée par le moteire interne LAWIM._"
+            disclaimer_text = ""
+            if self.disclaimer:
+                disclaimer_text = self.disclaimer.get_text(language="fr")
+            if disclaimer_text:
+                response_text += f"\n\n{disclaimer_text}"
+            self.repository.create_communication_log(
+                level="info",
+                message="AI reply generated for channel",
+                payload={"channel": channel, "provider": outcome.response.provider, "language": "fr"},
+            )
+            return response_text
+        except Exception as exc:
+            self.repository.create_communication_log(
+                level="error",
+                message="AI reply generation failed",
+                payload={"channel": channel, "error": str(exc)},
+            )
+            return "Merci pour votre message. L'équipe LAWIM vous répondra prochainement."
+
     def _dispatch_maintenance_reply(
         self,
         *,
@@ -807,10 +853,14 @@ class CommunicationService:
             if MAINTENANCE_FLAGS.get("lawim_core_rebuild_maintenance_mode", False):
                 maintenance_reply = self._dispatch_maintenance_reply(channel="whatsapp", normalized=normalized, message_row=message_row)
             else:
-                reply_text = "Message reçu. Un conseiller LAWIM vous contactera sous peu. / Message received. A LAWIM advisor will contact you shortly."
+                reply_text = self._generate_ai_reply(
+                    raw_text=str(normalized.get("message_body") or normalized.get("text") or ""),
+                    channel="whatsapp",
+                    conversation_key=str(message_row.get("id") or ""),
+                )
                 sender_chat_id = str(normalized.get("chat_id") or normalized.get("sender") or "")
                 normalized_number = self._normalize_whatsapp_number(sender_chat_id)
-                if normalized_number:
+                if normalized_number and reply_text:
                     try:
                         delivery = self.repository.send_whatsapp(
                             to_number=normalized_number,
@@ -818,16 +868,16 @@ class CommunicationService:
                         )
                         self.repository.create_communication_log(
                             level="info",
-                            message="WhatsApp acknowledgment sent",
+                            message="WhatsApp contextual reply sent",
                             payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"]), "to": mask_delivery_recipient(normalized_number)},
                         )
                     except Exception as exc:
                         self.repository.create_communication_log(
                             level="error",
-                            message="WhatsApp acknowledgment failed",
+                            message="WhatsApp contextual reply failed",
                             payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"]), "error": str(exc)},
                         )
-                else:
+                elif not normalized_number:
                     self.repository.create_communication_log(
                         level="debug",
                         message="WhatsApp inbound message received (maintenance mode inactive, no reply sent - missing recipient)",
@@ -961,9 +1011,13 @@ class CommunicationService:
             if MAINTENANCE_FLAGS.get("lawim_core_rebuild_maintenance_mode", False):
                 maintenance_reply = self._dispatch_maintenance_reply(channel="telegram", normalized=normalized, message_row=message_row)
             else:
-                reply_text = "Message reçu. Un conseiller LAWIM vous contactera sous peu. / Message received. A LAWIM advisor will contact you shortly."
+                reply_text = self._generate_ai_reply(
+                    raw_text=str(normalized.get("text") or normalized.get("message_body") or ""),
+                    channel="telegram",
+                    conversation_key=str(message_row.get("id") or ""),
+                )
                 chat_id = normalized.get("chat_id_raw")
-                if chat_id is not None:
+                if chat_id is not None and reply_text:
                     try:
                         delivery = self.repository.send_telegram(
                             chat_id=chat_id,
@@ -971,19 +1025,19 @@ class CommunicationService:
                         )
                         self.repository.create_communication_log(
                             level="info",
-                            message="Telegram acknowledgment sent",
+                            message="Telegram contextual reply sent",
                             payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"]), "chat_id_present": True},
                         )
                     except Exception as exc:
                         self.repository.create_communication_log(
                             level="error",
-                            message="Telegram acknowledgment failed",
+                            message="Telegram contextual reply failed",
                             payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"]), "error": str(exc)},
                         )
                 else:
                     self.repository.create_communication_log(
                         level="debug",
-                        message="Telegram inbound message received (maintenance mode inactive, no reply sent - missing chat_id)",
+                        message="Telegram inbound message received (maintenance mode inactive, no reply sent - missing chat_id or empty response)",
                         payload={"event_id": int(event_row["id"]), "message_id": int(message_row["id"])},
                     )
         return {

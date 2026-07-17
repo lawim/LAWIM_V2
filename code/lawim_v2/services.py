@@ -197,6 +197,8 @@ class LawimServices:
             self.policy,
             config=config,
             maintenance=self.maintenance,
+            ai_orchestrator=self.ai,
+            disclaimer_manager=disclaimer,
         )
         from .analytics.service import AnalyticsService
 
