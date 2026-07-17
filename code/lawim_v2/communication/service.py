@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-import uuid
 
 from ..observability import METRICS
 from ..maintenance import MAINTENANCE_FLAGS, MAINTENANCE_RESPONSE, MaintenanceService, MaintenanceSubmission
@@ -814,9 +813,8 @@ class CommunicationService:
                 if normalized_number:
                     try:
                         delivery = self.repository.send_whatsapp(
-                            to=normalized_number,
-                            message=reply_text,
-                            correlation_id=str(uuid.uuid4()),
+                            to_number=normalized_number,
+                            body=reply_text,
                         )
                         self.repository.create_communication_log(
                             level="info",
@@ -969,8 +967,7 @@ class CommunicationService:
                     try:
                         delivery = self.repository.send_telegram(
                             chat_id=chat_id,
-                            message=reply_text,
-                            correlation_id=str(uuid.uuid4()),
+                            body=reply_text,
                         )
                         self.repository.create_communication_log(
                             level="info",
