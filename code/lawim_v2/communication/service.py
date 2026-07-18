@@ -590,16 +590,8 @@ class CommunicationService:
                 outcome = self.ai.generate(request)
                 response_text = outcome.response.content.strip() if outcome.response and outcome.response.content else ""
                 if response_text:
-                    if outcome.response.provider == "internal":
-                        response_text += "\n\n_Réponse préparée par le moteur interne LAWIM._"
-                    disclaimer_text = self.DISCLAIMER_TEXTS.get("fr", "")
-                    if disclaimer_text:
-                        if channel == "whatsapp":
-                            response_text += f"\n\n_{disclaimer_text}_"
-                        elif channel == "telegram":
-                            response_text += f"\n\n<i>{disclaimer_text}</i>"
-                        else:
-                            response_text += f"\n\n{disclaimer_text}"
+                    if channel in ("whatsapp", "telegram"):
+                        response_text += self._format_ai_footer("fr", channel)
                     self.repository.create_communication_log(
                         level="info",
                         message="AI reply generated for channel",
@@ -614,11 +606,19 @@ class CommunicationService:
                 )
         return self._greeting_response(channel)
 
-    DISCLAIMER_TEXTS: dict[str, str] = {
-        "fr": "LAWIM AI peut commettre des erreurs. Vérifiez les informations importantes, notamment les informations juridiques, financières et contractuelles.",
-        "en": "LAWIM AI can make mistakes. Verify important information, especially legal, financial and contractual information.",
-        "pcm": "LAWIM AI fit make mistake. Abeg check important information well, especially legal, money and contract matter.",
+    AI_FOOTER_TEXTS: dict[str, str] = {
+        "fr": "ℹ️ Assisté par LAWIM AI",
+        "en": "ℹ️ Assisted by LAWIM AI",
+        "pcm": "ℹ️ Message wey LAWIM AI help produce am",
     }
+
+    def _format_ai_footer(self, language: str, channel: str) -> str:
+        text = self.AI_FOOTER_TEXTS.get(language, self.AI_FOOTER_TEXTS["fr"])
+        if channel == "whatsapp":
+            return f"\n\n──────────────\n_{text}_"
+        if channel == "telegram":
+            return f"\n\n──────────────\n<i>{text}</i>"
+        return ""
 
     def _greeting_response(self, channel: str, language: str = "fr") -> str:
         texts = {
@@ -627,12 +627,9 @@ class CommunicationService:
             "pcm": "Welcome for LAWIM.\n\nI fit help you find, post, rent, buy or sell property. Wetin you want do?",
         }
         base = texts.get(language, texts["fr"])
-        disclaimer = self.DISCLAIMER_TEXTS.get(language, self.DISCLAIMER_TEXTS["fr"])
-        if channel == "whatsapp":
-            return f"{base}\n\n_{disclaimer}_"
-        if channel == "telegram":
-            return f"{base}\n\n<i>{disclaimer}</i>"
-        return f"{base}\n\n{disclaimer}"
+        if channel in ("whatsapp", "telegram"):
+            return base + self._format_ai_footer(language, channel)
+        return base
 
     def _dispatch_maintenance_reply(
         self,

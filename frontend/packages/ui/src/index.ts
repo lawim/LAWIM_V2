@@ -7,6 +7,7 @@ export * from './components/Textarea';
 export * from './components/Checkbox';
 export * from './components/BrandMark';
 export * from './components/PageShell';
+export * from './components/AIConversationFooter';
 export * from './brand';
 export * from './i18n';
 export * from './features';
