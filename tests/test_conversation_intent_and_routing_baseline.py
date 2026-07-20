@@ -49,13 +49,11 @@ def test_district_response_is_continuation(svc: CommunicationService) -> None:
     assert "?parler" not in reply.lower()
 
 
-@pytest.mark.xfail(strict=True, reason="Handover request returns generic greeting instead of handover response")
 def test_human_handover_triggers(svc: CommunicationService) -> None:
     reply = svc._generate_ai_reply("Je veux parler à une personne", "whatsapp", "conv-1")
     assert "parler" in reply.lower() or "conseiller" in reply.lower()
 
 
-@pytest.mark.xfail(strict=True, reason="Known routing defect: Bonjour incorrectly routed to SUPPORT")
 def test_bonjour_does_not_route_to_support(svc: CommunicationService) -> None:
     reply = svc._generate_ai_reply("Bonjour", "whatsapp", "conv-1")
     assert "assistance" not in reply.lower()

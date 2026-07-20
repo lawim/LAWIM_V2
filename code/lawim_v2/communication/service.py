@@ -5,6 +5,7 @@ import re
 from ..observability import METRICS
 from ..maintenance import MAINTENANCE_FLAGS, MAINTENANCE_RESPONSE, MaintenanceService, MaintenanceSubmission
 from ..project_service import ProjectPermissionDenied, ProjectService
+from ..conversation.state.engine import ConversationStateEngine
 from ..financial.engines import normalize_mobile_money_number
 from . import dto as cdto
 from .delivery import mask_delivery_recipient
@@ -250,6 +251,7 @@ class CommunicationService:
         maintenance: MaintenanceService | None = None,
         ai_orchestrator=None,
         disclaimer_manager=None,
+        conversation_state_engine: ConversationStateEngine | None = None,
     ) -> None:
         self.repository = repository
         self.projects = project_service
@@ -258,6 +260,7 @@ class CommunicationService:
         self.maintenance = maintenance or MaintenanceService(repository)
         self.ai = ai_orchestrator
         self.disclaimer = disclaimer_manager
+        self.conversation_state_engine = conversation_state_engine
         self.engine = CommunicationPlatformEngine()
         self.notifications = NotificationService(repository)
         self.email = EmailService(repository)
@@ -572,33 +575,56 @@ class CommunicationService:
                 return f"+{digits}"
             return ""
 
-    def _generate_ai_reply(self, raw_text: str, channel: str, conversation_key: str) -> str:
+    def _generate_ai_reply(self, raw_text: str, channel: str, conversation_key: str, actor_id: int | str | None = None, language: str = "fr") -> str:
         if not raw_text.strip():
             return ""
-        normalized = raw_text.strip().lower().rstrip("!.,? ")
-        greetings = {"bonjour", "bonsoir", "salut", "hello", "hi", "good morning", "good evening", "good afternoon", "how far", "cc", "bjr", "slt", "coucou", "hey", "yo"}
-        if normalized in greetings or (len(normalized.split()) == 1 and normalized.split()[0] in greetings):
-            return self._greeting_response(channel)
+        raw_lower = raw_text.strip().lower()
+        handover_markers = ("parler à une personne", "parler a une personne", "humain", "conseiller", "équipe", "equipe", "assistance", "support")
+        if any(marker in raw_lower for marker in handover_markers):
+            return "Je vous mets en relation avec un conseiller LAWIM. Merci de patienter."
+        if self.conversation_state_engine is not None:
+            try:
+                result = self.conversation_state_engine.process_turn(
+                    actor_id=actor_id,
+                    channel=channel,
+                    external_conversation_id=conversation_key,
+                    message=raw_text,
+                    language=language,
+                )
+                response_text = result.get("response", "")
+                if response_text:
+                    if channel in ("whatsapp", "telegram"):
+                        try:
+                            response_text += self._format_ai_footer(language, channel)
+                        except Exception:
+                            pass
+                    return response_text
+            except Exception as exc:
+                self.repository.create_communication_log(
+                    level="error",
+                    message="ConversationStateEngine failed, falling back",
+                    payload={"channel": channel, "error": str(exc)},
+                )
         if self.ai is not None:
             try:
                 request = self.ai.build_request(
                     channel=channel,
                     text=raw_text,
                     conversation_key=conversation_key,
-                    language="fr",
+                    language=language,
                 )
                 outcome = self.ai.generate(request)
                 response_text = outcome.response.content.strip() if outcome.response and outcome.response.content else ""
                 if response_text:
                     if channel in ("whatsapp", "telegram"):
                         try:
-                            response_text += self._format_ai_footer("fr", channel)
+                            response_text += self._format_ai_footer(language, channel)
                         except Exception:
                             pass
                     self.repository.create_communication_log(
                         level="info",
                         message="AI reply generated for channel",
-                        payload={"channel": channel, "provider": outcome.response.provider, "language": "fr"},
+                        payload={"channel": channel, "provider": outcome.response.provider, "language": language},
                     )
                     return response_text
             except Exception as exc:
@@ -607,12 +633,12 @@ class CommunicationService:
                     message="AI reply generation failed, using greeting fallback",
                     payload={"channel": channel, "error": str(exc)},
                 )
-        return self._greeting_response(channel)
+        return self._greeting_response(channel, language)
 
     AI_FOOTER_TEXTS: dict[str, str] = {
-        "fr": "ℹ️ Réponse générée avec l'assistance de LAWIM AI. Comme toute IA, elle peut parfois se tromper. Vérifiez les informations importantes avant toute décision.",
-        "en": "ℹ️ This response was generated with the assistance of LAWIM AI. Like any AI, it may sometimes make mistakes. Verify important information before making a decision.",
-        "pcm": "ℹ️ LAWIM AI help generate this answer. Like any AI, e fit make mistake sometimes. Abeg check important information before you decide.",
+        "fr": "ℹ️ LAWIM AI peut se tromper. Vérifiez les informations importantes.",
+        "en": "ℹ️ LAWIM AI may err. Verify important information.",
+        "pcm": "ℹ️ LAWIM AI fit make mistake. Check important information.",
     }
 
     def _format_ai_footer(self, language: str, channel: str) -> str:
@@ -879,13 +905,14 @@ class CommunicationService:
             if MAINTENANCE_FLAGS.get("lawim_core_rebuild_maintenance_mode", False):
                 maintenance_reply = self._dispatch_maintenance_reply(channel="whatsapp", normalized=normalized, message_row=message_row)
             else:
+                sender_chat_id = str(normalized.get("chat_id") or normalized.get("sender") or "")
+                normalized_number = self._normalize_whatsapp_number(sender_chat_id)
                 reply_text = self._generate_ai_reply(
                     raw_text=str(normalized.get("message_body") or normalized.get("text") or ""),
                     channel="whatsapp",
-                    conversation_key=str(message_row.get("id") or ""),
+                    conversation_key=normalized_number or sender_chat_id,
+                    actor_id=normalized.get("user_id"),
                 )
-                sender_chat_id = str(normalized.get("chat_id") or normalized.get("sender") or "")
-                normalized_number = self._normalize_whatsapp_number(sender_chat_id)
                 if normalized_number and reply_text:
                     try:
                         delivery = self.repository.send_whatsapp(
@@ -1037,12 +1064,13 @@ class CommunicationService:
             if MAINTENANCE_FLAGS.get("lawim_core_rebuild_maintenance_mode", False):
                 maintenance_reply = self._dispatch_maintenance_reply(channel="telegram", normalized=normalized, message_row=message_row)
             else:
+                chat_id = normalized.get("chat_id_raw")
                 reply_text = self._generate_ai_reply(
                     raw_text=str(normalized.get("text") or normalized.get("message_body") or ""),
                     channel="telegram",
-                    conversation_key=str(message_row.get("id") or ""),
+                    conversation_key=str(chat_id or normalized.get("chat_id") or message_row.get("id") or ""),
+                    actor_id=normalized.get("user_id"),
                 )
-                chat_id = normalized.get("chat_id_raw")
                 if chat_id is not None and reply_text:
                     try:
                         delivery = self.repository.send_telegram(

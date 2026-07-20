@@ -81,7 +81,6 @@ def test_wizard_advances_step_when_mandatory_fields_are_met() -> None:
     assert session.current_step > STEP_INTENTION
 
 
-@pytest.mark.xfail(strict=True, reason="ProgressiveWizard does not set completed=True after advancing past CONFIRMATION step; existing production bug")
 def test_wizard_marks_completed() -> None:
     rr, mr, qr = _make_registries()
     readiness = ReadinessEvaluator(rr)

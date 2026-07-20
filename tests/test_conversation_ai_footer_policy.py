@@ -19,7 +19,6 @@ def svc() -> CommunicationService:
     )
 
 
-@pytest.mark.xfail(strict=True, reason="Footer text is 23 words, must be ≤ 10")
 def test_french_footer_has_ten_words_or_less(svc: CommunicationService) -> None:
     footer = svc.AI_FOOTER_TEXTS.get("fr", "")
     word_count = len(footer.split())
@@ -27,14 +26,12 @@ def test_french_footer_has_ten_words_or_less(svc: CommunicationService) -> None:
     assert "ℹ️" in footer
 
 
-@pytest.mark.xfail(strict=True, reason="Footer text is 26 words, must be ≤ 10")
 def test_english_footer_has_ten_words_or_less(svc: CommunicationService) -> None:
     footer = svc.AI_FOOTER_TEXTS.get("en", "")
     word_count = len(footer.split())
     assert word_count <= 10, f"EN footer has {word_count} words, expected ≤ 10"
 
 
-@pytest.mark.xfail(strict=True, reason="Footer text is 22 words, must be ≤ 10")
 def test_pcm_footer_has_ten_words_or_less(svc: CommunicationService) -> None:
     footer = svc.AI_FOOTER_TEXTS.get("pcm", "")
     word_count = len(footer.split())

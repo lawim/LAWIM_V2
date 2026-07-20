@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -89,9 +90,11 @@ class ProgressiveWizard:
         self,
         readiness: ReadinessEvaluator,
         resolver: NextQuestionResolver,
+        repository: Any = None,
     ) -> None:
         self._readiness = readiness
         self._resolver = resolver
+        self._repository = repository
         self._sessions: dict[str, QualificationSession] = {}
 
     def create_session(
@@ -134,6 +137,7 @@ class ProgressiveWizard:
 
         session.known_fields[field] = value
         self._check_step_completion(session)
+        self._auto_persist(session_id)
 
         return {
             "session_id": session_id,
@@ -145,23 +149,21 @@ class ProgressiveWizard:
         }
 
     def _check_step_completion(self, session: QualificationSession) -> None:
-        step = session.current_step
-        mandatory = STEP_MANDATORY.get(step, ())
-        known = set(session.known_fields.keys())
+        while True:
+            step = session.current_step
+            mandatory = STEP_MANDATORY.get(step, ())
+            known = set(session.known_fields.keys())
 
-        missing = [f for f in mandatory if f not in known]
-        if missing:
-            return
+            missing = [f for f in mandatory if f not in known]
+            if missing:
+                return
 
-        self._advance_step(session)
+            if step >= STEP_CONFIRMATION:
+                session.completed = True
+                return
 
-    def _advance_step(self, session: QualificationSession) -> None:
-        if session.current_step >= STEP_CONFIRMATION:
-            session.completed = True
-            return
-
-        session.current_step += 1
-        session.errors.clear()
+            session.current_step += 1
+            session.errors.clear()
 
     def get_step_info(self, step: int) -> dict[str, Any]:
         fields = STEP_FIELDS.get(step, ())
@@ -220,6 +222,93 @@ class ProgressiveWizard:
             "reason": reason,
             "known_fields": dict(session.known_fields),
         }
+
+    def reload_session(self, session_id: str) -> QualificationSession | None:
+        loaded = self.load_session(session_id)
+        if loaded:
+            self._sessions[session_id] = loaded
+        return loaded
+
+    def _ensure_wizard_table(self) -> None:
+        if self._repository is None:
+            return
+        try:
+            self._repository.execute(
+                """CREATE TABLE IF NOT EXISTS wizard_sessions (
+                    session_id TEXT PRIMARY KEY,
+                    channel TEXT DEFAULT 'dashboard',
+                    current_step INTEGER DEFAULT 1,
+                    known_fields TEXT DEFAULT '{}',
+                    errors_json TEXT DEFAULT '[]',
+                    completed INTEGER DEFAULT 0,
+                    retry_count_json TEXT DEFAULT '{}',
+                    escalated INTEGER DEFAULT 0,
+                    updated_at TEXT
+                )"""
+            )
+        except Exception:
+            pass
+
+    def persist_session(self, session_id: str) -> dict[str, Any]:
+        session = self._sessions.get(session_id)
+        if session is None:
+            return {"error": "session_not_found"}
+        if self._repository is None:
+            return {"status": "no_repository"}
+        self._ensure_wizard_table()
+        try:
+            self._repository.execute(
+                """INSERT OR REPLACE INTO wizard_sessions (
+                    session_id, channel, current_step, known_fields,
+                    errors_json, completed, retry_count_json, escalated, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                [
+                    session.session_id,
+                    session.channel,
+                    session.current_step,
+                    json.dumps(session.known_fields, ensure_ascii=False),
+                    json.dumps(session.errors),
+                    1 if session.completed else 0,
+                    json.dumps(session.retry_count),
+                    1 if session.escalated else 0,
+                    __import__("datetime").datetime.now(
+                        __import__("datetime").timezone.utc
+                    ).isoformat(),
+                ],
+            )
+            return {"status": "saved", "session_id": session_id}
+        except Exception:
+            return {"error": "persist_failed"}
+
+    def load_session(self, session_id: str) -> QualificationSession | None:
+        if self._repository is None:
+            return None
+        try:
+            row = self._repository.fetch_one(
+                "SELECT * FROM wizard_sessions WHERE session_id = ?",
+                [session_id],
+            )
+            if not row:
+                return None
+            return QualificationSession(
+                session_id=row["session_id"],
+                channel=row.get("channel", "dashboard"),
+                current_step=row.get("current_step", STEP_INTENTION),
+                known_fields=json.loads(row.get("known_fields", "{}")),
+                errors=json.loads(row.get("errors_json", "[]")),
+                completed=bool(row.get("completed", 0)),
+                retry_count=json.loads(row.get("retry_count_json", "{}")),
+                escalated=bool(row.get("escalated", 0)),
+            )
+        except Exception:
+            return None
+
+    def _auto_persist(self, session_id: str) -> None:
+        if self._repository is not None:
+            try:
+                self.persist_session(session_id)
+            except Exception:
+                pass
 
     def reset_session(self, session_id: str) -> dict[str, Any]:
         if session_id in self._sessions:

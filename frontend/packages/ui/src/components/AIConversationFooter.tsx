@@ -8,15 +8,15 @@ interface AIConversationFooterProps {
 }
 
 const FOOTER_TEXTS_FULL: Record<string, string> = {
-  fr: "ℹ️ Réponse générée avec l'assistance de LAWIM AI. Comme toute IA, elle peut parfois se tromper. Vérifiez les informations importantes avant toute décision.",
-  en: 'ℹ️ This response was generated with the assistance of LAWIM AI. Like any AI, it may sometimes make mistakes. Verify important information before making a decision.',
-  pcm: 'ℹ️ LAWIM AI help generate this answer. Like any AI, e fit make mistake sometimes. Abeg check important information before you decide.',
+  fr: 'ℹ️ LAWIM AI peut se tromper. Vérifiez les informations importantes.',
+  en: 'ℹ️ LAWIM AI may err. Verify important information.',
+  pcm: 'ℹ️ LAWIM AI fit make mistake. Check important information.',
 };
 
 const FOOTER_TEXTS_COMPACT: Record<string, string> = {
-  fr: 'ℹ️ Assisté par LAWIM AI',
-  en: 'ℹ️ Assisted by LAWIM AI',
-  pcm: 'ℹ️ Message wey LAWIM AI help produce am',
+  fr: 'ℹ️ LAWIM AI peut se tromper.',
+  en: 'ℹ️ LAWIM AI may err.',
+  pcm: 'ℹ️ LAWIM AI fit make mistake.',
 };
 
 export function AIConversationFooter({

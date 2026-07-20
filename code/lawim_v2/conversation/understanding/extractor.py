@@ -143,18 +143,33 @@ def extract_all(text: str) -> dict[str, Any]:
     return results
 
 
+_FRENCH_NUMBERS: dict[str, int] = {
+    "zero": 0, "un": 1, "une": 1, "deux": 2, "trois": 3, "quatre": 4,
+    "cinq": 5, "six": 6, "sept": 7, "huit": 8, "neuf": 9, "dix": 10,
+    "onze": 11, "douze": 12, "treize": 13, "quatorze": 14, "quinze": 15,
+    "seize": 16,
+}
+
+
+def _french_word_to_int(word: str) -> int | None:
+    return _FRENCH_NUMBERS.get(word.lower().strip())
+
+
 def _extract_bedrooms(text: str) -> dict[str, Any] | None:
     patterns = [
         re.compile(r"(\d+)\s*(?:chambres?|pieces?|pièces?)", re.IGNORECASE),
         re.compile(r"(?:chambres?|pieces?|pièces?)\s*(\d+)", re.IGNORECASE),
         re.compile(r"(\d+)\s*(?:br|bedrooms?)", re.IGNORECASE),
         re.compile(r"t(\d+)", re.IGNORECASE),
+        re.compile(r"(deux|trois|quatre|cinq|six|un|une)\s+(?:chambres?|pieces?|pièces?)", re.IGNORECASE),
+        re.compile(r"(?:chambres?|pieces?|pièces?)\s*(deux|trois|quatre|cinq|six|un|une)", re.IGNORECASE),
     ]
     for pattern in patterns:
         match = pattern.search(text)
         if match:
-            num = int(match.group(1))
-            if 1 <= num <= 50:
+            raw = match.group(1)
+            num = _french_word_to_int(raw) if not raw.isdigit() else int(raw)
+            if num is not None and 1 <= num <= 50:
                 return {
                     "field": "bedroom_count",
                     "raw_value": match.group(0),
