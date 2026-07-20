@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from html import escape
 import http.client
 import json
 import logging
@@ -285,8 +286,10 @@ def send_telegram_message(
     message: str,
     timeout_seconds: int = 30,
 ) -> DeliveryCall:
+    safe_message = escape(message)
+    safe_message = safe_message.replace("&lt;i&gt;", "<i>").replace("&lt;/i&gt;", "</i>")
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
-    payload = {"chat_id": chat_id, "text": message}
+    payload: dict[str, object] = {"chat_id": chat_id, "text": safe_message, "parse_mode": "HTML"}
     call = _request_json_ipv4_first(
         provider="telegram",
         method="POST",
@@ -303,6 +306,26 @@ def send_telegram_message(
     ).strip()
     telegram_ok = bool(response.get("ok", False))
     success = call.ok and telegram_ok and bool(provider_message_id)
+
+    if not success and "can't parse entities" in (str(response.get("description") or "")).lower():
+        payload.pop("parse_mode", None)
+        payload["text"] = message
+        call = _request_json_ipv4_first(
+            provider="telegram",
+            method="POST",
+            url=url,
+            payload=payload,
+            timeout_seconds=timeout_seconds,
+        )
+        response = call.response_json or {}
+        response_result = response.get("result") if isinstance(response.get("result"), dict) else {}
+        provider_message_id = str(
+            response_result.get("message_id")
+            if isinstance(response_result, dict)
+            else ""
+        ).strip()
+        telegram_ok = bool(response.get("ok", False))
+        success = call.ok and telegram_ok and bool(provider_message_id)
     error_message = None
     if not success:
         error_message = (

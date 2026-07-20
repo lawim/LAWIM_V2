@@ -3,6 +3,7 @@ import { Navigate, NavLink, useLocation, useNavigate, useParams } from 'react-ro
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiSdk, type ProjectSummary } from '@api-sdk';
 import {
+  AIConversationFooter,
   Badge,
   BrandMark,
   Button,
@@ -835,12 +836,18 @@ export function ConversationStudioPage() {
     maintenanceMutation.mutate();
   };
 
+  const { language } = useLanguage();
+  const aiLang = language === 'pcm' ? 'pcm' : language === 'en' ? 'en' : 'fr';
+
   return (
     <CockpitFrame title={`💬 ${t('assistant.title')}`}>
       <div className="mx-auto max-w-4xl">
         <Surface className="p-5">
           <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">LAWIM AI</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">🤖 LAWIM AI</p>
+            <p className="text-xs text-slate-500">
+              <AIConversationFooter generatedByAI language={aiLang as 'fr' | 'en' | 'pcm'} />
+            </p>
             <h1 className="text-xl font-semibold text-slate-900">Service intelligent en reconstruction</h1>
             <p className="text-sm text-slate-600">
               Votre message sera enregistré. Aucune recherche, qualification, mise en relation ou action automatique

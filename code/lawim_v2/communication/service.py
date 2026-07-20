@@ -591,7 +591,10 @@ class CommunicationService:
                 response_text = outcome.response.content.strip() if outcome.response and outcome.response.content else ""
                 if response_text:
                     if channel in ("whatsapp", "telegram"):
-                        response_text += self._format_ai_footer("fr", channel)
+                        try:
+                            response_text += self._format_ai_footer("fr", channel)
+                        except Exception:
+                            pass
                     self.repository.create_communication_log(
                         level="info",
                         message="AI reply generated for channel",
@@ -607,18 +610,21 @@ class CommunicationService:
         return self._greeting_response(channel)
 
     AI_FOOTER_TEXTS: dict[str, str] = {
-        "fr": "ℹ️ Assisté par LAWIM AI",
-        "en": "ℹ️ Assisted by LAWIM AI",
-        "pcm": "ℹ️ Message wey LAWIM AI help produce am",
+        "fr": "ℹ️ Réponse générée avec l'assistance de LAWIM AI. Comme toute IA, elle peut parfois se tromper. Vérifiez les informations importantes avant toute décision.",
+        "en": "ℹ️ This response was generated with the assistance of LAWIM AI. Like any AI, it may sometimes make mistakes. Verify important information before making a decision.",
+        "pcm": "ℹ️ LAWIM AI help generate this answer. Like any AI, e fit make mistake sometimes. Abeg check important information before you decide.",
     }
 
     def _format_ai_footer(self, language: str, channel: str) -> str:
-        text = self.AI_FOOTER_TEXTS.get(language, self.AI_FOOTER_TEXTS["fr"])
-        if channel == "whatsapp":
-            return f"\n\n──────────────\n_{text}_"
-        if channel == "telegram":
-            return f"\n\n──────────────\n<i>{text}</i>"
-        return ""
+        try:
+            text = self.AI_FOOTER_TEXTS.get(language, self.AI_FOOTER_TEXTS["fr"])
+            if channel == "whatsapp":
+                return f"\n\n──────────────\n_{text}_"
+            if channel == "telegram":
+                return f"\n\n──────────────\n<i>{text}</i>"
+            return ""
+        except Exception:
+            return ""
 
     def _greeting_response(self, channel: str, language: str = "fr") -> str:
         texts = {
@@ -628,7 +634,10 @@ class CommunicationService:
         }
         base = texts.get(language, texts["fr"])
         if channel in ("whatsapp", "telegram"):
-            return base + self._format_ai_footer(language, channel)
+            try:
+                return base + self._format_ai_footer(language, channel)
+            except Exception:
+                return base
         return base
 
     def _dispatch_maintenance_reply(

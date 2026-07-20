@@ -5,6 +5,10 @@ export interface ConversationMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: string;
+  generatedByAI?: boolean;
+  language?: 'fr' | 'en' | 'pcm';
+  authorDisplayName?: string;
+  authorIcon?: string;
 }
 
 export interface ConversationSession {
