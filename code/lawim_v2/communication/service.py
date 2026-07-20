@@ -606,6 +606,7 @@ class CommunicationService:
             return ""
 
     def _generate_ai_reply(self, raw_text: str, channel: str, conversation_key: str, actor_id: int | str | None = None, language: str = "fr") -> str:
+        from ..conversation.state.validator import ConversationResponseValidator
         if self.ai is not None:
             try:
                 self.ai.build_request(
@@ -622,7 +623,7 @@ class CommunicationService:
         handover_markers = ("parler à une personne", "parler a une personne", "humain", "conseiller", "équipe", "equipe", "assistance", "support")
         if any(marker in raw_lower for marker in handover_markers):
             return "Je vous mets en relation avec un conseiller LAWIM. Merci de patienter."
-        if self.conversation_state_engine is not None:
+        if self.conversation_state_engine is not None and isinstance(self.conversation_state_engine, ConversationStateEngine):
             try:
                 result = self.conversation_state_engine.process_turn(
                     actor_id=actor_id,
@@ -633,6 +634,13 @@ class CommunicationService:
                 )
                 response_text = result.get("response", "")
                 if response_text:
+                    plan = result.get("response_plan")
+                    if plan is not None:
+                        from ..conversation.state.state import ResponsePlan
+                        if isinstance(plan, ResponsePlan):
+                            validated, status = ConversationResponseValidator().validate(response_text, plan)
+                            if status == "REPAIR":
+                                response_text = validated
                     if channel in ("whatsapp", "telegram"):
                         try:
                             response_text += self._format_ai_footer(language, channel)
@@ -656,7 +664,6 @@ class CommunicationService:
                 outcome = self.ai.generate(request)
                 response_text = outcome.response.content.strip() if outcome.response and outcome.response.content else ""
                 if response_text:
-                    from ..conversation.state.validator import ConversationResponseValidator
                     from ..conversation.state.state import ResponsePlan
                     plan = ResponsePlan(maximum_questions=1)
                     validated, _ = ConversationResponseValidator().validate(response_text, plan)

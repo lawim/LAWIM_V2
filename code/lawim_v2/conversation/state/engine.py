@@ -137,6 +137,7 @@ class ConversationStateEngine:
                 return contextualized
 
         if is_greeting:
+            plan = self._build_greeting_plan(state)
             response_text = self._generate_response(plan, state)
             state.last_lawim_message = response_text
             state.last_action = "greeting"

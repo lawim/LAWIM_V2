@@ -7,8 +7,25 @@ from typing import Any
 from .state import ConversationState
 
 
+class _ConnectionWrapper:
+    def __init__(self, conn) -> None:
+        self.conn = conn
+
+    def execute(self, sql: str, params: object = ()) -> object:
+        cur = self.conn.execute(sql, params or ())
+        self.conn.commit()
+        return cur
+
+    def fetch_one(self, sql: str, params: object = ()) -> dict | None:
+        cur = self.conn.execute(sql, params or ())
+        row = cur.fetchone()
+        return dict(row) if row else None
+
+
 class ConversationStateRepository:
     def __init__(self, db) -> None:
+        if not hasattr(db, 'fetch_one'):
+            db = _ConnectionWrapper(db)
         self.db = db
         self._ensure_table()
 

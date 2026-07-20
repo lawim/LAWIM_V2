@@ -190,6 +190,33 @@ class LawimServices:
 
         self.security = SecurityService(repository, self.projects, self.policy)
         from .communication.service import CommunicationService
+        from .conversation.state.engine import ConversationStateEngine
+        from .conversation.state.repository import ConversationStateRepository
+        from .conversation.state.resolver import ConversationResolver
+
+        import sqlite3, tempfile
+
+        class _ConvDB:
+            def __init__(self, conn: sqlite3.Connection) -> None:
+                self.conn = conn
+
+            def execute(self, sql: str, params: object = ()) -> object:
+                cur = self.conn.execute(sql, params or ())
+                self.conn.commit()
+                return cur
+
+            def fetch_one(self, sql: str, params: object = ()) -> dict | None:
+                cur = self.conn.execute(sql, params or ())
+                row = cur.fetchone()
+                return dict(row) if row else None
+
+        _conv_db_path = tempfile.mktemp(suffix=".db", prefix="lawim_conv_")
+        _conv_conn = sqlite3.connect(_conv_db_path)
+        _conv_conn.row_factory = sqlite3.Row
+        _conv_db = _ConvDB(_conv_conn)
+        _conv_repo = ConversationStateRepository(_conv_db)
+        _conv_resolver = ConversationResolver()
+        _conv_engine = ConversationStateEngine(_conv_repo, _conv_resolver)
 
         self.communication = CommunicationService(
             repository,
@@ -199,6 +226,7 @@ class LawimServices:
             maintenance=self.maintenance,
             ai_orchestrator=self.ai,
             disclaimer_manager=disclaimer,
+            conversation_state_engine=_conv_engine,
         )
         from .analytics.service import AnalyticsService
 
