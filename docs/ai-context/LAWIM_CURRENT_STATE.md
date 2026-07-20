@@ -31,11 +31,14 @@ Validation utilisateur réelle encore requise.
 - Handover détecté via mots-clés (`parler à une personne`, etc.)
 - Footer ≤10 mots dans toutes les langues
 
-### Tests de baseline : 50 PASS, 7 XFAIL
+### Tests de baseline : 57 PASS, 0 XFAIL
 
-Les 7 XFAIL restants concernent la conservation du contexte multi-tour,
-qui nécessite l'intégration complète du state engine avec l'AIOrchestrator
-et les providers IA.
+Les sept défauts de baseline sont corrigés localement.
+Conversation State Engine : VALIDÉ LOCALEMENT
+ProgressiveWizard : CONNECTÉ AU RUNTIME
+AIOrchestrator : CONTRAINT PAR RESPONSEPLAN
+Déploiement OVH : NON EFFECTUÉ
+Recette utilisateur réelle : EN ATTENTE
 
 ### Scénario de reproduction
 
