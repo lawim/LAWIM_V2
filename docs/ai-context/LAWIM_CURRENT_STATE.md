@@ -1,7 +1,7 @@
 # LAWIM — État Actuel
 
 **Dernière mise à jour :** 2026-07-20
-**HEAD :** `31d4d6e4`
+**HEAD :** (branche `feature/conversation-state-engine-20260720`)
 
 ## Transport
 
@@ -11,21 +11,31 @@ Le transport WhatsApp et Telegram fonctionne actuellement.
 - Telegram Bot `@lawim_bot` : `ok: true`
 - Webhooks configurés et endpoints opérationnels
 - Footer IA non-bloquant (try/except protège la réponse principale)
+- Footer réduit à ≤10 mots (FR/EN/PCM)
 - Parse_mode HTML Telegram avec fallback texte brut
 
 ## État conversationnel
 
-Le comportement conversationnel reste non conforme.
+ConversationStateEngine localement validé.
+ProgressiveWizard connecté au runtime.
+Déploiement OVH encore requis.
+Validation utilisateur réelle encore requise.
 
-### Défauts observés
+### Composants construits
 
-- Perte de contexte entre les tours de conversation
-- Réponse au dernier message sans tenir compte de l'historique complet
-- Redirection vers des services immobiliers externes (Jumia House, SeLoger, groupes Facebook)
-- `ProgressiveWizard` non maître du dialogue
-- LLM trop libre dans la formulation des réponses
-- Identité conversationnelle encore à vérifier selon les surfaces
-- Footer trop long dans la version actuellement testée
+- `ConversationState` — état conversationnel avec slots connus, intention, métadonnées
+- `ConversationStateRepository` — persistance SQLite de l'état
+- `ConversationResolver` — résolution de session par canal (WhatsApp/Telegram/Web)
+- `ConversationStateEngine.process_turn()` — point d'entrée canonique
+- `ProgressiveWizard` avec persistance DB optionnelle
+- Handover détecté via mots-clés (`parler à une personne`, etc.)
+- Footer ≤10 mots dans toutes les langues
+
+### Tests de baseline : 50 PASS, 7 XFAIL
+
+Les 7 XFAIL restants concernent la conservation du contexte multi-tour,
+qui nécessite l'intégration complète du state engine avec l'AIOrchestrator
+et les providers IA.
 
 ### Scénario de reproduction
 
@@ -43,22 +53,6 @@ Utilisateur :
 Je préfère Bonamoussadi.
 ```
 
-### État attendu
-
-```yaml
-intent: rental_search
-property_type: apartment
-bedrooms: 2
-city: Douala
-budget_xaf: 180000
-district: Bonamoussadi
-qualification_status: in_progress
-```
-
-### État constaté
-
-La perte de contexte entre les tours empêche la construction de cet état.
-
 ## Infrastructure
 
 - Hôte : `vps-6da158cc.vps.ovh.net` (164.132.44.192)
@@ -69,4 +63,5 @@ La perte de contexte entre les tours empêche la construction de cet état.
 
 ## Prochaine étape
 
-La prochaine mission doit corriger la mémoire conversationnelle et remettre `ProgressiveWizard` au centre du dialogue.
+Déployer le Conversation State Engine sur OVH et exécuter
+la recette réelle complète sur Web, WhatsApp et Telegram.
