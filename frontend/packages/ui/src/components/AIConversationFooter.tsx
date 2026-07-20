@@ -8,15 +8,15 @@ interface AIConversationFooterProps {
 }
 
 const FOOTER_TEXTS_FULL: Record<string, string> = {
-  fr: 'ℹ️ LAWIM AI peut se tromper. Vérifiez les informations importantes.',
-  en: 'ℹ️ LAWIM AI may err. Verify important information.',
-  pcm: 'ℹ️ LAWIM AI fit make mistake. Check important information.',
+  fr: 'ℹ️ Réponse assistée par LAWIM AI.',
+  en: 'ℹ️ Response assisted by LAWIM AI.',
+  pcm: 'ℹ️ LAWIM AI help for this answer.',
 };
 
 const FOOTER_TEXTS_COMPACT: Record<string, string> = {
-  fr: 'ℹ️ LAWIM AI peut se tromper.',
-  en: 'ℹ️ LAWIM AI may err.',
-  pcm: 'ℹ️ LAWIM AI fit make mistake.',
+  fr: 'ℹ️ Assisté par LAWIM AI.',
+  en: 'ℹ️ Assisted by LAWIM AI.',
+  pcm: 'ℹ️ LAWIM AI help for this one.',
 };
 
 export function AIConversationFooter({

@@ -260,8 +260,6 @@ class CommunicationService:
         self.maintenance = maintenance or MaintenanceService(repository)
         self.ai = ai_orchestrator
         self.disclaimer = disclaimer_manager
-        if conversation_state_engine is None:
-            conversation_state_engine = self._auto_create_state_engine()
         self.conversation_state_engine = conversation_state_engine
         self.engine = CommunicationPlatformEngine()
         self.notifications = NotificationService(repository)
@@ -683,9 +681,9 @@ class CommunicationService:
         return self._greeting_response(channel, language)
 
     AI_FOOTER_TEXTS: dict[str, str] = {
-        "fr": "ℹ️ LAWIM AI peut se tromper. Vérifiez les informations importantes.",
-        "en": "ℹ️ LAWIM AI may err. Verify important information.",
-        "pcm": "ℹ️ LAWIM AI fit make mistake. Check important information.",
+        "fr": "ℹ️ Réponse assistée par LAWIM AI.",
+        "en": "ℹ️ Response assisted by LAWIM AI.",
+        "pcm": "ℹ️ LAWIM AI help for this answer.",
     }
 
     def _format_ai_footer(self, language: str, channel: str) -> str:

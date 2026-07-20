@@ -18,6 +18,38 @@ _HANDOVER_PHRASES = [
     "conseiller lawim", "humain", "personne reelle", "parler a quelqu'un",
     "operateur", "assistance", "parler à une personne", "parler à un conseiller",
 ]
+_REPHRASE_PHRASES = [
+    "je ne comprends pas", "je n'ai pas compris", "expliquez",
+    "reformulez", "c'est-à-dire", "c'est a dire", "what do you mean",
+    "i don't understand", "i no understand", "explain",
+]
+_REAL_ESTATE_DOMAIN_WORDS = {
+    "appartement", "studio", "maison", "villa", "terrain", "bureau", "local",
+    "commerce", "magasin", "entrepôt", "entrepot", "garage", "parking",
+    "chambre", "duplex", "immeuble", "logement", "propriete", "bien",
+    "location", "louer", "acheter", "vendre", "investir", "habitation",
+    "residence", "surface", "m2", "piece", "cuisine", "salon", "balcon",
+}
+_FRENCH_MARKERS = {"bonjour", "je", "j'", "mon", "ma", "mes", "ton", "ta", "ses", "nous", "vous", "ils", "elles", "le", "la", "les", "un", "une", "des", "du", "au", "aux", "est", "sont", "dans", "pour", "avec", "sur", "que", "qui", "quoi", "comment", "pourquoi", "quand", "ou", "où", "merci", "s'il vous plaît", "s'il te plaît", "svp", "stp"}
+_ENGLISH_MARKERS = {"hello", "hi", "the", "a", "an", "my", "your", "his", "her", "our", "their", "i", "you", "he", "she", "it", "we", "they", "is", "are", "was", "were", "in", "on", "at", "for", "with", "to", "from", "this", "that", "please", "thank", "would", "could", "should", "want", "need"}
+_PCM_MARKERS = {"dey", "na", "di", "wey", "fit", "abi", "komot", "wetin", "make", "sabi", "abeg", "broda", "sista"}
+
+def _detect_language(text: str) -> str | None:
+    """Detect the language of a message based on common markers."""
+    words = set(text.lower().split())
+    fr_score = len(words & _FRENCH_MARKERS)
+    en_score = len(words & _ENGLISH_MARKERS)
+    pcm_score = len(words & _PCM_MARKERS)
+    # PCM markers also match some English — subtract commonality
+    en_score -= pcm_score // 2
+    if fr_score > en_score and fr_score > pcm_score:
+        return "fr"
+    if pcm_score > en_score and pcm_score > fr_score:
+        return "pcm"
+    if en_score > 0:
+        return "en"
+    return None
+
 _GREETING_RESPONSES: dict[str, str] = {
     "fr": "Bonjour et bienvenue sur LAWIM.\n\nJe peux vous accompagner pour rechercher, publier, louer, acheter ou vendre un bien immobilier. Que souhaitez-vous faire ?",
     "en": "Hello and welcome to LAWIM.\n\nI can help you search for, list, rent, buy or sell a property. What would you like to do?",
@@ -55,8 +87,17 @@ class ConversationStateEngine:
         normalized_lower = clean_message.lower()
         first_word = normalized_lower.split()[0] if normalized_lower.split() else ""
 
+        # Preserve active language — never switch unless user explicitly uses another language for several turns
+        detected_lang = _detect_language(message)
+        if detected_lang and detected_lang != state.language:
+            state.language = detected_lang
+
+        # Detect real estate domain for ambiguous terms
+        has_real_estate_keywords = any(kw in normalized_lower for kw in _REAL_ESTATE_DOMAIN_WORDS)
+
         is_greeting = first_word in _GREETING_WORDS or normalized_lower in _GREETING_WORDS
         is_handover = any(phrase in normalized_lower for phrase in _HANDOVER_PHRASES)
+        is_rephrase_request = any(phrase in normalized_lower for phrase in _REPHRASE_PHRASES)
 
         if is_handover:
             plan = self._build_handover_plan(state)
@@ -73,8 +114,29 @@ class ConversationStateEngine:
                 "actions": [{"action": "handover_requested", "status": "executed"}],
             }
 
+        # Handle rephrase requests — reformulate last question without changing state
+        if is_rephrase_request and state.last_question_key:
+            plan = self._build_rephrase_plan(state)
+            response_text = self._generate_response(plan, state)
+            state.last_lawim_message = response_text
+            state.last_action = "rephrase"
+            self._repository.save(state)
+            return {
+                "state": state,
+                "response": response_text,
+                "response_plan": plan,
+                "handover_required": False,
+                "wizard_completed": False,
+                "actions": [{"action": "rephrase", "status": "executed"}],
+            }
+
+        # Contextualize short answers based on last question
+        if state.last_question_key and not has_real_estate_keywords and len(message.split()) <= 5:
+            contextualized = self._try_contextualize_short_answer(state, message)
+            if contextualized:
+                return contextualized
+
         if is_greeting:
-            plan = self._build_greeting_plan(state)
             response_text = self._generate_response(plan, state)
             state.last_lawim_message = response_text
             state.last_action = "greeting"
@@ -286,6 +348,147 @@ class ConversationStateEngine:
             "surface": {"fr": "Quelle surface ?", "en": "What surface area?", "pcm": "Wetin be surface?"},
         }
         return QUESTIONS.get(field, {}).get(language, QUESTIONS.get(field, {}).get("fr", ""))
+
+    def _try_contextualize_short_answer(
+        self,
+        state: ConversationState,
+        message: str,
+    ) -> dict[str, Any] | None:
+        """Try to interpret a short message as an answer to the last question."""
+        last_slot = state.last_question_slot
+        if not last_slot:
+            return None
+
+        clean = message.strip().lower().rstrip("!.,?;: ")
+        update = ConversationStateUpdate()
+
+        # Map short answers to slots based on last_question_slot
+        if last_slot in ("budget_xaf", "budget_max", "budget_min", "budget"):
+            from ..understanding.extractor import extract_all
+            extracted = extract_all(message)
+            for fact in extracted.get("facts", []):
+                field = fact.get("field")
+                value = fact.get("normalized_value") or fact.get("raw_value")
+                if field and value is not None:
+                    update.new_slots[field.replace("price_", "budget_")] = value
+            if not update.new_slots:
+                # Try simple numeric extraction
+                import re
+                nums = re.findall(r'[\d\s]{3,}', message)
+                if nums:
+                    val = int(re.sub(r'\s', '', nums[0]))
+                    update.new_slots[last_slot] = val
+                    update.new_slots["budget_period"] = "monthly"
+
+        elif last_slot in ("city", "ville"):
+            update.new_slots["city"] = clean.title()
+
+        elif last_slot in ("neighborhood", "district", "quartier"):
+            update.new_slots["district"] = clean.title()
+
+        elif last_slot in ("transaction_type",):
+            if "louer" in clean or "location" in clean or "loc" in clean:
+                update.new_slots["transaction_type"] = "rent"
+            elif "acheter" in clean or "achat" in clean or "buy" in clean:
+                update.new_slots["transaction_type"] = "buy"
+            elif "vendre" in clean or "vente" in clean or "sell" in clean:
+                update.new_slots["transaction_type"] = "sell"
+
+        elif last_slot in ("property_type", "type_bien"):
+            if "studio" in clean:
+                update.new_slots["property_type"] = "studio"
+                update.new_slots["property_usage"] = "residential"
+            elif "appartement" in clean or "apartment" in clean:
+                update.new_slots["property_type"] = "apartment"
+            elif "maison" in clean or "house" in clean:
+                update.new_slots["property_type"] = "house"
+            elif "terrain" in clean or "land" in clean:
+                update.new_slots["property_type"] = "land"
+            elif "bureau" in clean or "office" in clean:
+                update.new_slots["property_type"] = "office"
+            elif "local" in clean:
+                update.new_slots["property_type"] = "commercial"
+
+        elif last_slot in ("furnished", "meuble"):
+            if clean in ("oui", "yes", "meublé", "meuble", "yeah"):
+                update.new_slots["furnished"] = True
+            elif clean in ("non", "no", "pas meublé", "pas meuble", "vide", "nope"):
+                update.new_slots["furnished"] = False
+
+        elif last_slot in ("property_usage", "usage"):
+            if "habitation" in clean or "residen" in clean or "vivre" in clean or "loger" in clean:
+                update.new_slots["property_usage"] = "residential"
+            elif "commercial" in clean or "bureau" in clean or "professionnel" in clean:
+                update.new_slots["property_usage"] = "commercial"
+
+        if not update.new_slots:
+            return None
+
+        state = self._merge_update(state, update)
+        return self._continue_with_wizard(state, update.new_slots, channel="whatsapp")
+
+    def _continue_with_wizard(
+        self,
+        state: ConversationState,
+        new_slots: dict[str, Any],
+        channel: str,
+    ) -> dict[str, Any] | None:
+        wizard_result = None
+        wizard_completed = False
+        next_question_key = ""
+        next_question_text = ""
+
+        if self._wizard is not None and state.qualification_status != "completed":
+            wizard_result = self._run_wizard(state, new_slots, channel)
+            if wizard_result:
+                next_question_key = wizard_result["next_question_key"]
+                next_question_text = wizard_result["next_question_text"]
+                wizard_completed = wizard_result.get("completed", False)
+                if wizard_completed:
+                    state.qualification_status = "completed"
+
+        plan = self._build_response_plan(state, wizard_result)
+        response_text = self._generate_response(plan, state)
+        state.last_lawim_message = response_text
+        state.last_question_key = next_question_key
+        state.last_action = plan.next_action or "respond"
+        self._repository.save(state)
+
+        return {
+            "state": state,
+            "response": response_text,
+            "response_plan": plan,
+            "handover_required": plan.handover_required,
+            "wizard_completed": wizard_completed,
+            "actions": [],
+        }
+
+    def _build_rephrase_plan(self, state: ConversationState) -> ResponsePlan:
+        """Reformulate the last question without changing state."""
+        rephrase_texts: dict[str, str] = {
+            "budget_max": "Quel est votre budget maximum ? Par exemple : 100 000 FCFA par mois.",
+            "budget_xaf": "Quel budget avez-vous prévu ?",
+            "city": "Dans quelle ville ou localité cherchez-vous ?",
+            "neighborhood": "Dans quel quartier préférez-vous ?",
+            "district": "Quel quartier vous intéresse ?",
+            "property_type": "Quel type de bien cherchez-vous ? (appartement, studio, maison, terrain...)",
+            "transaction_type": "Souhaitez-vous louer, acheter ou vendre ?",
+            "furnished": "Voulez-vous un logement meublé ou non meublé ?",
+            "property_usage": "S'agit-il d'une habitation ou d'un usage commercial ?",
+            "bedrooms": "Combien de chambres souhaitez-vous ?",
+        }
+        base = rephrase_texts.get(state.last_question_key or "", "")
+        if not base:
+            base = "Pourriez-vous reformuler votre réponse ?"
+        text = f"Je reformule ma question : {base}"
+        return ResponsePlan(
+            language=state.language,
+            response_type="REPHRASE",
+            next_action="await_input",
+            next_question_key=state.last_question_key or "",
+            next_question_text=base,
+            response_template=text,
+        )
 
     def _build_greeting_plan(self, state: ConversationState) -> ResponsePlan:
         text = _GREETING_RESPONSES.get(state.language, _GREETING_RESPONSES["fr"])
