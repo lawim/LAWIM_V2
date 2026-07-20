@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "AGENTS.md",
+    "docs/ai-context/LAWIM_CANONICAL_SCOPE.md",
+    "docs/ai-context/LAWIM_CONVERSATION_CONTRACT.md",
+    "docs/ai-context/LAWIM_ENGINEERING_RULES.md",
+    "docs/ai-context/LAWIM_PRODUCTION_EVIDENCE_POLICY.md",
+    "docs/ai-context/LAWIM_SECRET_MANAGEMENT_POLICY.md",
+    "docs/ai-context/LAWIM_CURRENT_STATE.md"
+  ]
+}

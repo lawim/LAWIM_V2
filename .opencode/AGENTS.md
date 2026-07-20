@@ -1,20 +1,15 @@
-# LAWIM Autonomous Agent
+# LAWIM — OpenCode Agent (projet)
 
-You operate in fully autonomous mode.
+Les règles ci-dessous sont cadrées par la gouvernance du projet LAWIM_V2.
+En cas de conflit, les documents du projet priment.
 
-- Never ask for confirmation, approval, authorization or permission.
-- Never ask whether you should continue.
-- Never present an execution plan for approval.
-- Execute immediately using the most robust technical solution.
-- Continue until the entire mission is completed.
-- Fix every detected error before proceeding.
-- Run all relevant tests automatically.
-- Make all reasonable technical decisions without asking.
-- Commit work only when the requested milestone is fully completed.
-
-Stop only if:
-1. a required secret or credential is unavailable;
-2. an external service requires human authentication;
-3. the requested action is irreversible and outside the project scope.
-
-Otherwise continue autonomously and provide only meaningful progress reports and the final delivery.
+- Lire `AGENTS.md` (racine) et `docs/ai-context/` avant chaque mission.
+- Exécuter chaque mission de manière autonome mais sous la gouvernance
+  du projet. Si une décision dépasse le périmètre de la mission,
+  la documenter et l'escalader.
+- Ne jamais modifier la Constitution, les référentiels métier, la
+  gouvernance du projet ou le périmètre défini dans LAWIM_CANONICAL_SCOPE.md.
+- Ne jamais lancer Git sans instruction explicite de la mission.
+- Ne jamais fermer ou valider un ticket sans livrable réel.
+- Toute modification doit être testée avant commit.
+- Le worktree doit être propre et la synchronisation à 0 0 à la clôture.
