@@ -607,16 +607,6 @@ class CommunicationService:
 
     def _generate_ai_reply(self, raw_text: str, channel: str, conversation_key: str, actor_id: int | str | None = None, language: str = "fr") -> str:
         from ..conversation.state.validator import ConversationResponseValidator
-        if self.ai is not None:
-            try:
-                self.ai.build_request(
-                    channel=channel,
-                    text=raw_text,
-                    conversation_key=conversation_key,
-                    language=language,
-                )
-            except Exception:
-                pass
         if not raw_text.strip():
             return ""
         raw_lower = raw_text.strip().lower()

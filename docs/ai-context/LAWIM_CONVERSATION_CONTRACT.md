@@ -116,3 +116,59 @@ Il doit être :
 - Messages utilisateur : `👤 <nom/identifiant>`
 - Messages LAWIM : `🤖 LAWIM AI`
 - Jamais de noms de fournisseurs IA visibles
+
+---
+
+## Architecture contract (Chantier 1)
+
+### Canonical runtime chain
+
+```
+message entrant
+  → normalisation
+  → CommunicationService._generate_ai_reply()
+    → ConversationStateEngine.process_turn()
+      → ConversationResolver.resolve()
+      → ConversationStateRepository.load()
+      → greeting / handover / rephrase detection
+      → slot extraction + merge
+      → ProgressiveWizard (if configured)
+      → _build_response_plan() → ResponsePlan
+      → _generate_response() → LLM (AIOrchestrator)
+      → ConversationStateRepository.save()
+    → ConversationResponseValidator.validate()
+    → footer append (WhatsApp / Telegram only)
+  → provider delivery (send_whatsapp / send_telegram)
+```
+
+### ResponsePlan mandatory
+
+No provider call may occur without a `ResponsePlan`. The state engine produces one via `_build_response_plan()` for every turn. The fallback path (when `ConversationStateEngine` is unavailable) creates a synthetic `ResponsePlan(maximum_questions=1)`. Both paths validate the response against the plan before delivery.
+
+### ResponseValidator active
+
+`ConversationResponseValidator.validate()` is called on every response. It performs:
+
+1. **Forbidden content detection** — blocks neutral assistant phrases, external real-estate platform referrals, unrequested translation, and grammar correction.
+2. **Question count enforcement** — if `response.count("?") > plan.maximum_questions`, the response is replaced with `plan.next_question_text` (status `REPAIR`).
+
+### Forbidden content list
+
+| Category | Patterns | Action |
+|----------|----------|--------|
+| Neutral assistant | "assistant neutre", "neutral assistant", "I cannot make business decisions", "je ne peux pas prendre de décisions commerciales", "provide more context for your request" | REPAIR |
+| External referrals | "Jumia", "SeLoger", "Leboncoin", "Facebook", "Lamudi" | REPAIR / BLOCK |
+| Unrequested translation | "french for", "in english", "français signifie", "in french" | REPAIR |
+| Grammar correction | "correct spelling is", "the correct phrasing", "you wrote", "vous avez écrit", "l'orthographe correcte", "la bonne orthographe" | REPAIR |
+
+### One question per response
+
+`ResponsePlan.maximum_questions` defaults to 1. If the generated response contains more questions than the plan allows, the validator replaces the response with `plan.next_question_text`.
+
+### Language continuity rules
+
+1. `ConversationState.language` tracks the active language (default: `"fr"`).
+2. Language is detected on each turn via `_detect_language()`.
+3. If the detected language differs from `state.language`, the state is updated.
+4. A single foreign word does not change the conversation language.
+5. English conversations stay in English; French conversations stay in French.
