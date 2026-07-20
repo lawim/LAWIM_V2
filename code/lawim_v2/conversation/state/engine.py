@@ -9,6 +9,7 @@ from ...knowledge_runtime.engine.wizard import ProgressiveWizard
 from .resolver import ConversationResolver
 from .repository import ConversationStateRepository
 from .state import ConversationState, ConversationStateUpdate, ResponsePlan
+from .validator import ConversationResponseValidator
 
 
 _GREETING_WORDS = {"bonjour", "bonsoir", "salut", "hello", "hi", "slt", "bjr", "cc", "coucou", "hey", "yo"}
@@ -50,7 +51,8 @@ class ConversationStateEngine:
         state.last_user_message = message
         state.updated_at = datetime.now(timezone.utc).isoformat()
 
-        normalized_lower = message.strip().lower().rstrip("!.,? ")
+        clean_message = message.strip().rstrip("!.,?;: ")
+        normalized_lower = clean_message.lower()
         first_word = normalized_lower.split()[0] if normalized_lower.split() else ""
 
         is_greeting = first_word in _GREETING_WORDS or normalized_lower in _GREETING_WORDS
@@ -86,8 +88,18 @@ class ConversationStateEngine:
                 "actions": [],
             }
 
-        extracted = extract_all(message)
+        if "finalement" in message.lower():
+            state.known_slots.pop("budget_max", None)
+            state.known_slots.pop("budget_min", None)
+
+        extracted = extract_all(clean_message)
         update = self._extracted_to_update(extracted, message)
+
+        if not update.new_slots and clean_message and state.last_question_slot:
+            contextual = self._contextualize_short_reply(clean_message, state)
+            if contextual:
+                update.new_slots.update(contextual)
+
         state = self._merge_update(state, update)
 
         wizard_result = None
@@ -104,11 +116,12 @@ class ConversationStateEngine:
                 if wizard_completed:
                     state.qualification_status = "completed"
 
-        plan = self._build_response_plan(state, wizard_result)
+        plan = self._build_response_plan(state, wizard_result, update.new_slots)
         response_text = self._generate_response(plan, state)
 
         state.last_lawim_message = response_text
         state.last_question_key = next_question_key
+        state.last_question_slot = plan.next_question_key or ""
         state.last_action = plan.next_action or "respond"
         self._repository.save(state)
 
@@ -139,6 +152,26 @@ class ConversationStateEngine:
             created_at=now,
             updated_at=now,
         )
+
+    def _contextualize_short_reply(self, clean_message: str, state: ConversationState) -> dict[str, object]:
+        from ..understanding.money import normalize_amount
+        from ..understanding.geography import KNOWN_NEIGHBORHOODS, NEIGHBORHOOD_TO_CITY
+        result: dict[str, object] = {}
+        slot = state.last_question_slot
+        if slot in ("budget_max", "budget", "budget_min"):
+            amount = normalize_amount(clean_message)
+            if amount.confidence > 0 and amount.normalized_amount is not None:
+                result[slot] = amount.normalized_amount
+        if slot in ("neighborhood", "district", "city", "location"):
+            lower = clean_message.lower()
+            if lower in KNOWN_NEIGHBORHOODS:
+                result["neighborhood"] = KNOWN_NEIGHBORHOODS[lower]
+                city = NEIGHBORHOOD_TO_CITY.get(lower)
+                if city:
+                    result["city"] = city
+            elif lower in {k.lower(): v for k, v in KNOWN_NEIGHBORHOODS.items()}:
+                pass
+        return result
 
     def _extracted_to_update(
         self,
@@ -264,6 +297,7 @@ class ConversationStateEngine:
         )
 
     def _build_handover_plan(self, state: ConversationState) -> ResponsePlan:
+        from uuid import uuid4
         messages: dict[str, str] = {
             "fr": "Je comprends. Je vais vous mettre en relation avec un conseiller LAWIM qui pourra vous assister.",
             "en": "I understand. I will connect you with a LAWIM advisor who can assist you.",
@@ -276,6 +310,8 @@ class ConversationStateEngine:
             next_action="handover",
             handover_required=True,
             handover_reason="user_requested_human",
+            handover_target_team="support",
+            handover_id=str(uuid4()),
             response_template=text,
         )
 
@@ -283,13 +319,16 @@ class ConversationStateEngine:
         self,
         state: ConversationState,
         wizard_result: dict[str, Any] | None,
+        updated_slots: dict[str, Any] | None = None,
     ) -> ResponsePlan:
+        resolved_updated = dict(updated_slots or {})
         if wizard_result is None:
             return ResponsePlan(
                 language=state.language,
                 response_type="ACKNOWLEDGE",
                 next_action="await_input",
                 acknowledgement_facts=dict(state.known_slots),
+                updated_slots=resolved_updated,
             )
 
         completed = wizard_result.get("completed", False)
@@ -304,6 +343,7 @@ class ConversationStateEngine:
                 next_question_key="",
                 next_question_text="",
                 response_template="Merci ! Vos informations sont completes. Je lance la recherche..." if state.language == "fr" else "Thank you! Your information is complete. Starting search...",
+                updated_slots=resolved_updated,
             )
 
         if next_q_key:
@@ -314,6 +354,7 @@ class ConversationStateEngine:
                 next_question_key=next_q_key,
                 next_question_text=next_q_text,
                 response_template=next_q_text,
+                updated_slots=resolved_updated,
             )
 
         return ResponsePlan(
@@ -321,13 +362,47 @@ class ConversationStateEngine:
             response_type="ACKNOWLEDGE",
             next_action="await_input",
             response_template="Merci. Pouvez-vous me donner plus de details ?" if state.language == "fr" else "Thank you. Can you provide more details?",
+            updated_slots=resolved_updated,
         )
 
+    def _build_acknowledgement_text(self, slots: dict[str, Any], language: str) -> str:
+        parts: list[str] = []
+        for key, value in slots.items():
+            if key in ("budget_max", "budget"):
+                parts.append(f"avec un budget de {value} FCFA")
+            elif key == "property_type":
+                parts.append(f"de type {value}")
+            elif key == "city":
+                parts.append(f"à {value}")
+            elif key == "neighborhood":
+                parts.append(f"dans le quartier {value}")
+            elif key == "bedroom_count":
+                parts.append(f"de {value} chambres")
+        if not parts:
+            return ""
+        if language == "fr":
+            return "Très bien. Vous recherchez " + ", ".join(parts) + "."
+        if language == "en":
+            return "Very well. You are looking for " + ", ".join(parts) + "."
+        return "Okay. You dey find " + ", ".join(parts) + "."
+
     def _generate_response(self, plan: ResponsePlan, state: ConversationState) -> str:
-        if plan.response_template:
+        if plan.response_template and not plan.updated_slots:
+            return plan.response_template
+        if plan.response_template and plan.updated_slots:
+            ack = self._build_acknowledgement_text(plan.updated_slots, state.language)
+            if ack:
+                return f"{ack}\n\n{plan.response_template}"
             return plan.response_template
         if plan.next_question_text:
+            ack = self._build_acknowledgement_text(plan.acknowledgement_facts, state.language)
+            if ack:
+                return f"{ack}\n\n{plan.next_question_text}"
             return plan.next_question_text
+        if plan.acknowledgement_facts:
+            ack = self._build_acknowledgement_text(plan.acknowledgement_facts, state.language)
+            if ack:
+                return ack
         messages: dict[str, str] = {
             "fr": "Merci. Continuez a nous fournir les informations necessaires.",
             "en": "Thank you. Please continue providing the required information.",

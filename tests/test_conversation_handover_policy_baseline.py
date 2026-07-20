@@ -43,7 +43,6 @@ def test_handover_request_triggers_handover(svc: CommunicationService) -> None:
     assert "parler" in reply.lower() or "conseiller" in reply.lower() or "assistance" in reply.lower()
 
 
-@pytest.mark.xfail(strict=True, reason="Handover metadata not populated in _generate_ai_reply")
 def test_handover_requires_id_reason_target(svc: CommunicationService) -> None:
     from lawim_v2.conversation.domain.states import ConversationState
 

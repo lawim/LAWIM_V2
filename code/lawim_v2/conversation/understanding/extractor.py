@@ -14,7 +14,7 @@ from .property_types import normalize_property_type, normalize_transaction_type
 
 def _scan_location(text: str) -> list[dict[str, Any]]:
     results: list[dict[str, Any]] = []
-    lower = text.lower()
+    lower = text.lower().rstrip("!.,?;:")
     words = set(lower.split())
     multi_word = {"new bell", "tout doux beau"}
 

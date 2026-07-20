@@ -30,6 +30,7 @@ class ConversationStateRepository:
                 last_user_message TEXT DEFAULT '',
                 last_lawim_message TEXT DEFAULT '',
                 last_question_key TEXT DEFAULT '',
+                last_question_slot TEXT DEFAULT '',
                 last_action TEXT DEFAULT '',
                 qualification_status TEXT DEFAULT 'unqualified',
                 qualification_step INTEGER DEFAULT 0,
@@ -59,10 +60,10 @@ class ConversationStateRepository:
                 actor_id, channel, channel_session_id, language,
                 current_intent, intent_confidence, previous_intent, transaction_type,
                 known_slots, missing_slots, changed_slots,
-                last_user_message, last_lawim_message, last_question_key, last_action,
+                last_user_message, last_lawim_message, last_question_key, last_question_slot, last_action,
                 qualification_status, qualification_step, selected_agent, handover_status,
                 wizard_session_id, created_at, updated_at, version
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(channel, channel_session_id) DO UPDATE SET
                 actor_id=excluded.actor_id, language=excluded.language,
                 current_intent=excluded.current_intent, intent_confidence=excluded.intent_confidence,
@@ -70,7 +71,7 @@ class ConversationStateRepository:
                 known_slots=excluded.known_slots, missing_slots=excluded.missing_slots,
                 changed_slots=excluded.changed_slots,
                 last_user_message=excluded.last_user_message, last_lawim_message=excluded.last_lawim_message,
-                last_question_key=excluded.last_question_key, last_action=excluded.last_action,
+                last_question_key=excluded.last_question_key, last_question_slot=excluded.last_question_slot, last_action=excluded.last_action,
                 qualification_status=excluded.qualification_status, qualification_step=excluded.qualification_step,
                 selected_agent=excluded.selected_agent, handover_status=excluded.handover_status,
                 wizard_session_id=excluded.wizard_session_id,
@@ -90,6 +91,7 @@ class ConversationStateRepository:
                 state.last_user_message,
                 state.last_lawim_message,
                 state.last_question_key,
+                state.last_question_slot,
                 state.last_action,
                 state.qualification_status,
                 state.qualification_step,
@@ -130,6 +132,7 @@ class ConversationStateRepository:
             last_user_message=row.get("last_user_message", ""),
             last_lawim_message=row.get("last_lawim_message", ""),
             last_question_key=row.get("last_question_key", ""),
+            last_question_slot=row.get("last_question_slot", ""),
             last_action=row.get("last_action", ""),
             qualification_status=row.get("qualification_status", "unqualified"),
             qualification_step=row.get("qualification_step", 0),

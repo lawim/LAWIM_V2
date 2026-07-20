@@ -59,8 +59,14 @@ class Planner:
 
         if not can_transition(conversation.state, "message_received"):
             if not can_receive_state(conversation.state):
+                from uuid import uuid4
                 decision.action = ActionType.HANDOVER_TO_HUMAN.value
                 decision.requires_human = True
+                decision.action_parameters = {
+                    "handover_id": str(uuid4()),
+                    "reason": "state_not_receiving",
+                    "target_team": "support",
+                }
                 return decision
 
         handover_decision = self._check_handover(message, conversation, decision)
@@ -82,8 +88,14 @@ class Planner:
         decision.loop_score = loop_result.loop_score
 
         if loop_result.action == "handover":
+            from uuid import uuid4
             decision.action = ActionType.HANDOVER_TO_HUMAN.value
             decision.requires_human = True
+            decision.action_parameters = {
+                "handover_id": str(uuid4()),
+                "reason": "loop_exceeded",
+                "target_team": "support",
+            }
             decision.state_after = ConversationState.HUMAN_HANDOVER
             conversation.apply_transition("loop_exceeded")
             return decision
@@ -150,8 +162,14 @@ class Planner:
             return decision
 
         if state == ConversationState.HUMAN_HANDOVER:
+            from uuid import uuid4
             decision.action = ActionType.HANDOVER_TO_HUMAN.value
             decision.requires_human = True
+            decision.action_parameters = {
+                "handover_id": str(uuid4()),
+                "reason": "state_human_handover",
+                "target_team": "support",
+            }
             return decision
 
         next_action = determine_next_action(conversation)
@@ -175,8 +193,14 @@ class Planner:
         decision: ConversationDecision,
     ) -> ConversationDecision | None:
         if message.is_handover_request():
+            from uuid import uuid4
             decision.action = ActionType.HANDOVER_TO_HUMAN.value
             decision.requires_human = True
+            decision.action_parameters = {
+                "handover_id": str(uuid4()),
+                "reason": "user_requested_human",
+                "target_team": "support",
+            }
             conversation.apply_transition("handover_requested")
             decision.state_after = conversation.state
             return decision

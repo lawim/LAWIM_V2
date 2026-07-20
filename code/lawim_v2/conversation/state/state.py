@@ -34,6 +34,7 @@ class ConversationState:
     last_user_message: str = ""
     last_lawim_message: str = ""
     last_question_key: str = ""
+    last_question_slot: str = ""
     last_action: str = ""
     qualification_status: str = "unqualified"
     qualification_step: int = 0
@@ -60,6 +61,7 @@ class ConversationState:
             "last_user_message": self.last_user_message,
             "last_lawim_message": self.last_lawim_message,
             "last_question_key": self.last_question_key,
+            "last_question_slot": self.last_question_slot,
             "qualification_status": self.qualification_status,
             "qualification_step": self.qualification_step,
             "selected_agent": self.selected_agent,
@@ -96,8 +98,10 @@ class ResponsePlan:
     handover_required: bool = False
     handover_reason: str = ""
     handover_target_team: str = ""
+    handover_id: str = ""
     response_template: str = ""
     response_slots: dict[str, Any] = field(default_factory=dict)
+    updated_slots: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass

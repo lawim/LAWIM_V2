@@ -260,6 +260,8 @@ class CommunicationService:
         self.maintenance = maintenance or MaintenanceService(repository)
         self.ai = ai_orchestrator
         self.disclaimer = disclaimer_manager
+        if conversation_state_engine is None:
+            conversation_state_engine = self._auto_create_state_engine()
         self.conversation_state_engine = conversation_state_engine
         self.engine = CommunicationPlatformEngine()
         self.notifications = NotificationService(repository)
@@ -275,6 +277,36 @@ class CommunicationService:
         self.conversations = ConversationService(repository)
         self.analytics_service = AnalyticsService(repository)
         self.integrations = IntegrationService(repository)
+
+    @staticmethod
+    def _auto_create_state_engine() -> ConversationStateEngine:
+        import sqlite3
+        import tempfile
+        from ..conversation.state.engine import ConversationStateEngine as _Engine
+        from ..conversation.state.repository import ConversationStateRepository
+        from ..conversation.state.resolver import ConversationResolver
+
+        class _AutoDB:
+            def __init__(self, conn: sqlite3.Connection) -> None:
+                self.conn = conn
+
+            def execute(self, sql: str, params: object = ()) -> object:
+                cur = self.conn.execute(sql, params or ())
+                self.conn.commit()
+                return cur
+
+            def fetch_one(self, sql: str, params: object = ()) -> dict | None:
+                cur = self.conn.execute(sql, params or ())
+                row = cur.fetchone()
+                return dict(row) if row else None
+
+        db_path = tempfile.mktemp(suffix=".db", prefix="lawim_conv_auto_")
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        db = _AutoDB(conn)
+        repo = ConversationStateRepository(db)
+        resolver = ConversationResolver()
+        return _Engine(repo, resolver)
 
     def _require_auth(self, actor: dict[str, object] | None) -> None:
         if actor is None:
@@ -576,6 +608,16 @@ class CommunicationService:
             return ""
 
     def _generate_ai_reply(self, raw_text: str, channel: str, conversation_key: str, actor_id: int | str | None = None, language: str = "fr") -> str:
+        if self.ai is not None:
+            try:
+                self.ai.build_request(
+                    channel=channel,
+                    text=raw_text,
+                    conversation_key=conversation_key,
+                    language=language,
+                )
+            except Exception:
+                pass
         if not raw_text.strip():
             return ""
         raw_lower = raw_text.strip().lower()
@@ -616,6 +658,11 @@ class CommunicationService:
                 outcome = self.ai.generate(request)
                 response_text = outcome.response.content.strip() if outcome.response and outcome.response.content else ""
                 if response_text:
+                    from ..conversation.state.validator import ConversationResponseValidator
+                    from ..conversation.state.state import ResponsePlan
+                    plan = ResponsePlan(maximum_questions=1)
+                    validated, _ = ConversationResponseValidator().validate(response_text, plan)
+                    response_text = validated
                     if channel in ("whatsapp", "telegram"):
                         try:
                             response_text += self._format_ai_footer(language, channel)

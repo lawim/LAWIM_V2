@@ -8,7 +8,6 @@ from lawim_v2.communication.service import CommunicationService
 from tests.lawim_harness import LawimTestHarness
 
 
-@pytest.mark.xfail(strict=True, reason="Known context-loss defect documented in LAWIM_CURRENT_STATE")
 def test_rental_search_context_is_retained_across_four_turns() -> None:
     repo = MagicMock()
     project_service = MagicMock()
@@ -54,7 +53,6 @@ def test_rental_search_context_is_retained_across_four_turns() -> None:
     assert conversation_key != "", "a conversation_key should be threaded through turns"
 
 
-@pytest.mark.xfail(strict=True, reason="Known context-loss defect: short reply is not tied to prior question")
 def test_short_response_is_contextualized() -> None:
     repo = MagicMock()
     svc = CommunicationService(
@@ -94,7 +92,6 @@ def test_short_response_is_contextualized() -> None:
     assert "budget" in reply.lower()
 
 
-@pytest.mark.xfail(strict=True, reason="Known context-loss defect: district is forgotten")
 def test_quartier_updates_existing_search() -> None:
     repo = MagicMock()
     svc = CommunicationService(
@@ -123,7 +120,6 @@ def test_quartier_updates_existing_search() -> None:
     assert "bonamoussadi" in reply.lower()
 
 
-@pytest.mark.xfail(strict=True, reason="Known context-loss defect: budget not replaced")
 def test_criterion_modification_replaces_old_value() -> None:
     repo = MagicMock()
     svc = CommunicationService(
@@ -138,7 +134,6 @@ def test_criterion_modification_replaces_old_value() -> None:
     assert "220000" in reply or "220" in reply
 
 
-@pytest.mark.xfail(strict=True, reason="Known context-loss defect: existing criteria are reasked")
 def test_no_criteria_are_reasked() -> None:
     ai_mock = MagicMock()
     ai_mock.build_request.return_value = MagicMock()
@@ -160,7 +155,6 @@ def test_no_criteria_are_reasked() -> None:
     assert question_marks <= 1, f"Expected at most 1 question mark, got {question_marks}"
 
 
-@pytest.mark.xfail(strict=True, reason="Known context-loss defect: multiple questions in single response")
 def test_one_single_next_question() -> None:
     ai_mock = MagicMock()
     ai_mock.build_request.return_value = MagicMock()
