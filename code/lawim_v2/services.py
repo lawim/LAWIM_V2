@@ -195,7 +195,6 @@ class LawimServices:
         from .conversation.state.resolver import ConversationResolver
 
         import sqlite3, os
-        from pathlib import Path
 
         class _ConvDB:
             def __init__(self, conn: sqlite3.Connection) -> None:
