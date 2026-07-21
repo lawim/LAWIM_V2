@@ -1,0 +1,34 @@
+from __future__ import annotations
+
+# Generation lifecycle
+GENERATION_REQUEST_CREATED = "generation_request_created"
+GENERATION_PROVIDER_SELECTED = "generation_provider_selected"
+GENERATION_PROVIDER_CALLED = "generation_provider_called"
+GENERATION_PROVIDER_SUCCEEDED = "generation_provider_succeeded"
+GENERATION_PROVIDER_FAILED = "generation_provider_failed"
+GENERATION_PROVIDER_TIMED_OUT = "generation_provider_timed_out"
+
+# Response validation
+GENERATION_RESPONSE_SCHEMA_INVALID = "generation_response_schema_invalid"
+GENERATION_RESPONSE_POLICY_INVALID = "generation_response_policy_invalid"
+GENERATION_RESPONSE_REPAIR_STARTED = "generation_response_repair_started"
+GENERATION_RESPONSE_REPAIR_SUCCEEDED = "generation_response_repair_succeeded"
+
+# Fallback
+GENERATION_INTERNAL_FALLBACK_USED = "generation_internal_fallback_used"
+GENERATION_RESPONSE_VALIDATED = "generation_response_validated"
+GENERATION_RESPONSE_DELIVERED = "generation_response_delivered"
+
+# Metrics
+GENERATION_TOTAL = "generation_total"
+GENERATION_PROVIDER_SUCCESS_TOTAL = "generation_provider_success_total"
+GENERATION_PROVIDER_FAILURE_TOTAL = "generation_provider_failure_total"
+GENERATION_PROVIDER_TIMEOUT_TOTAL = "generation_provider_timeout_total"
+GENERATION_SCHEMA_FAILURE_TOTAL = "generation_schema_failure_total"
+GENERATION_POLICY_FAILURE_TOTAL = "generation_policy_failure_total"
+GENERATION_REPAIR_TOTAL = "generation_repair_total"
+GENERATION_REPAIR_FAILURE_TOTAL = "generation_repair_failure_total"
+GENERATION_INTERNAL_FALLBACK_TOTAL = "generation_internal_fallback_total"
+GENERATION_DUPLICATE_DELIVERY_TOTAL = "generation_duplicate_delivery_total"
+GENERATION_LATENCY_SECONDS = "generation_latency_seconds"
+GENERATION_QUALITY_SCORE = "generation_quality_score"
