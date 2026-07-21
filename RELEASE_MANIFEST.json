@@ -1,15 +1,40 @@
 {
-  "release_version": "LAWIM_V2_MULTILINGUAL_RC1",
-  "git_commit": "",
-  "schema_version": "v17",
-  "translation_version": "1.0",
-  "terminology_version": "1.0",
-  "qa_catalog_version": "1.0.0",
-  "feature_flags": {
-    "ai_orchestrator": true,
-    "multilingual": true,
-    "qa_catalog": true
+  "release": "LAWIM_V2 Conversational Rebuild — Final Acceptance Candidate",
+  "version": "2.0.0-rc.1",
+  "commit": "1258fe19",
+  "date": "2026-07-21",
+  "tags": ["lawim-v2-controlled-response-generation-local"],
+  "components": {
+    "conversation_runtime": "Chantier 1 — Validated",
+    "qualification_engine": "Chantier 2 — Validated",
+    "conversation_policy": "Chantier 2.5 — Validated",
+    "conversation_memory": "Chantier 3 — Validated",
+    "case_management": "Chantier 3 — Validated",
+    "cross_channel_identity": "Chantier 3 — Validated",
+    "controlled_generation": "Chantier 4 — Validated",
+    "provider_orchestration": "Chantier 4 — Validated",
+    "response_validation": "Chantier 4 — Validated",
+    "internal_fallback": "Chantier 4 — Validated"
   },
-  "backup_reference": "/opt/lawim/backups/pre-hardening-20260716T183203Z.tar.gz",
-  "rollback_target": "70eb8498"
+  "test_results": {
+    "total": 519,
+    "passed": 519,
+    "failed": 0,
+    "error": 0,
+    "xfail": 0,
+    "xpass": 0,
+    "skipped": 0
+  },
+  "deployment": {
+    "ovh_deployed": false,
+    "user_accepted": false,
+    "production_verified": false
+  },
+  "known_limitations": [
+    "Cross-channel real test requires user terminal",
+    "PCM quality not evaluated by native speakers",
+    "WhatsApp real message test not executed",
+    "Telegram real message test not executed"
+  ],
+  "checksum_sha256": "TO_BE_COMPUTED_BEFORE_DEPLOYMENT"
 }
