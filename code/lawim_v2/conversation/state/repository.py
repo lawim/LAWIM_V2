@@ -23,7 +23,12 @@ class _ConnectionWrapper:
     def fetch_one(self, sql: str, params: object = ()) -> dict | None:
         cur = self.conn.execute(sql, params or ())
         row = cur.fetchone()
-        return dict(row) if row else None
+        if row is None:
+            return None
+        if hasattr(row, 'keys'):
+            return dict(row)
+        columns = [desc[0] for desc in cur.description]
+        return dict(zip(columns, row))
 
 
 _NEW_COLUMNS = [

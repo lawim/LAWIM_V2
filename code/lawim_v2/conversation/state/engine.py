@@ -143,8 +143,26 @@ class ConversationStateEngine:
                 "actions": [{"action": "rephrase", "status": "executed"}],
             }
 
+        if is_rephrase_request:
+            plan = self._build_acknowledge_plan(state)
+            response_text = self._generate_response(plan, state)
+            state.last_lawim_message = response_text
+            state.last_action = "rephrase"
+            self._repository.save(state)
+            return {
+                "state": state,
+                "response": response_text,
+                "response_plan": plan,
+                "handover_required": False,
+                "wizard_completed": False,
+                "actions": [{"action": "rephrase", "status": "executed"}],
+            }
+
         # Contextualize short answers based on last question
-        if state.last_question_key and not has_real_estate_keywords and len(message.split()) <= 5:
+        if state.last_question_key and len(message.split()) <= 5 and (
+            not has_real_estate_keywords
+            or any(w in normalized_lower for w in ("habitation", "residen", "vivre", "loger", "usage personnel", "personnel"))
+        ):
             contextualized = self._try_contextualize_short_answer(state, message)
             if contextualized:
                 return contextualized
@@ -522,7 +540,14 @@ class ConversationStateEngine:
                 update.new_slots["district"] = clean.title()
 
         elif last_slot in ("transaction_type",):
-            if "louer" in clean or "location" in clean or "loc" in clean:
+            _habitation_in_clean = any(
+                w in clean for w in ("habitation", "residen", "vivre", "loger", "usage personnel", "personnel")
+            )
+            if _habitation_in_clean:
+                update.new_slots["property_usage"] = "residential"
+                if state.known_slots.get("property_type"):
+                    update.new_slots["property_type"] = state.known_slots["property_type"]
+            elif "louer" in clean or "location" in clean or "loc" in clean:
                 update.new_slots["transaction_type"] = "rent"
             elif "acheter" in clean or "achat" in clean or "buy" in clean:
                 update.new_slots["transaction_type"] = "buy"
@@ -530,7 +555,14 @@ class ConversationStateEngine:
                 update.new_slots["transaction_type"] = "sell"
 
         elif last_slot in ("property_type", "type_bien"):
-            if "studio" in clean:
+            _habitation_in_clean = any(
+                w in clean for w in ("habitation", "residen", "vivre", "loger", "usage personnel", "personnel")
+            )
+            if _habitation_in_clean:
+                update.new_slots["property_usage"] = "residential"
+                if state.known_slots.get("property_type"):
+                    update.new_slots["property_type"] = state.known_slots["property_type"]
+            elif "studio" in clean:
                 update.new_slots["property_type"] = "studio"
                 update.new_slots["property_usage"] = "residential"
             elif "appartement" in clean or "apartment" in clean:
@@ -711,6 +743,20 @@ class ConversationStateEngine:
             next_question_key=key,
             next_question_text=clarification_text,
             response_template=clarification_text,
+        )
+
+    def _build_acknowledge_plan(self, state: ConversationState) -> ResponsePlan:
+        messages: dict[str, str] = {
+            "fr": "Merci. Pouvez-vous reformuler votre demande ?",
+            "en": "Thank you. Could you rephrase your request?",
+            "pcm": "Thank you. You fit talk am again?",
+        }
+        text = messages.get(state.language, messages["fr"])
+        return ResponsePlan(
+            language=state.language,
+            response_type="ACKNOWLEDGE",
+            next_action="await_input",
+            response_template=text,
         )
 
     def _build_response_plan(

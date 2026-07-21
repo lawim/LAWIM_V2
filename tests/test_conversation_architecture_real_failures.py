@@ -35,7 +35,6 @@ def test_studio_in_conversation_is_real_estate() -> None:
     os.unlink(db)
 
 
-@pytest.mark.xfail(strict=True, reason="Residential use not retained as continuation")
 def test_residential_use_continues_studio_request() -> None:
     """After 'studio', 'pour habitation' must set residential use."""
     engine, db = _make_engine()
@@ -69,7 +68,6 @@ def test_french_conversation_is_not_translated() -> None:
 
 # ─── SCENARIO: I DON'T UNDERSTAND ─────────────────────────────────────────────
 
-@pytest.mark.xfail(strict=True, reason="Rephrase not implemented without state engine")
 def test_i_dont_understand_rephrases_last_question() -> None:
     """'Je ne comprends pas' must rephrase the last question."""
     engine, db = _make_engine()
