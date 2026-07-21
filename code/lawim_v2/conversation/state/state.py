@@ -44,6 +44,15 @@ class ConversationState:
     created_at: str = ""
     updated_at: str = ""
     version: int = 1
+    case_id: str | None = None
+    journey_code: str = ""
+    state_version: int = 1
+    expected_version: int | None = None
+    updated_by: str = "system"
+    change_source: str = ""
+
+    def increment_version(self) -> None:
+        self.state_version += 1
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -68,6 +77,11 @@ class ConversationState:
             "handover_status": self.handover_status,
             "wizard_session_id": self.wizard_session_id,
             "version": self.version,
+            "case_id": self.case_id,
+            "journey_code": self.journey_code,
+            "state_version": self.state_version,
+            "updated_by": self.updated_by,
+            "change_source": self.change_source,
         }
 
 
@@ -79,6 +93,7 @@ class ConversationStateUpdate:
     removed_slots: list[str] = field(default_factory=list)
     language_change: str | None = None
     reset_requested: bool = False
+    case_id: str | None = None
 
 
 @dataclass
