@@ -194,7 +194,8 @@ class LawimServices:
         from .conversation.state.repository import ConversationStateRepository
         from .conversation.state.resolver import ConversationResolver
 
-        import sqlite3, tempfile
+        import sqlite3, os
+        from pathlib import Path
 
         class _ConvDB:
             def __init__(self, conn: sqlite3.Connection) -> None:
@@ -210,7 +211,9 @@ class LawimServices:
                 row = cur.fetchone()
                 return dict(row) if row else None
 
-        _conv_db_path = tempfile.mktemp(suffix=".db", prefix="lawim_conv_")
+        _conv_dir = config.db_path.parent / "conversation"
+        _conv_dir.mkdir(parents=True, exist_ok=True)
+        _conv_db_path = str(_conv_dir / "state.sqlite3")
         _conv_conn = sqlite3.connect(_conv_db_path)
         _conv_conn.row_factory = sqlite3.Row
         _conv_db = _ConvDB(_conv_conn)

@@ -11,6 +11,16 @@ _FORBIDDEN_PHRASES = [
     "i cannot make business decisions",
     "je ne peux pas prendre de décisions commerciales",
     "provide more context for your request",
+    "voici quelques pistes",
+    "quartiers populaires",
+    "bouche-à-oreille",
+    "word of mouth",
+    "agences immobilières locales",
+    "real estate agencies",
+    "i understand you're looking",
+    "while i can't",
+    "can't directly list",
+    "can't directly manage",
 ]
 
 _REFERRAL_PLATFORMS = [
@@ -19,6 +29,10 @@ _REFERRAL_PLATFORMS = [
     "leboncoin",
     "facebook",
     "lamudi",
+    "afribaba",
+    "expat-dakar",
+    "meilleurs agents",
+    "paruvendu",
 ]
 
 _TRANSLATION_PATTERNS = [
