@@ -8,6 +8,17 @@ from .matrices import (
     ALL_MATRICES,
     MATRIX_INDEX,
 )
+from .priority_registry import (
+    QualificationJourneyDefinition,
+    QualificationSlotDefinition,
+    QualificationPriorityRegistry,
+)
+from .question_catalog import (
+    QUESTION_CATALOG,
+    get_question,
+    get_clarification,
+    has_language,
+)
 from .registry import (
     MatrixRegistry,
     MatrixValidationError,
@@ -50,4 +61,11 @@ __all__ = [
     "QualificationEvaluator",
     "EvaluationResult",
     "MissingField",
+    "QualificationJourneyDefinition",
+    "QualificationSlotDefinition",
+    "QualificationPriorityRegistry",
+    "QUESTION_CATALOG",
+    "get_question",
+    "get_clarification",
+    "has_language",
 ]

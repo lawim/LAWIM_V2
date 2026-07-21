@@ -117,3 +117,16 @@ class ConversationTurnDecision:
     handover_required: bool = False
     allowed_response_content: list[str] = field(default_factory=list)
     forbidden_response_content: list[str] = field(default_factory=list)
+
+
+@dataclass
+class QualificationDecision:
+    journey_code: str = ""
+    current_step: str = ""
+    completed_steps: list[str] = field(default_factory=list)
+    missing_required_slots: list[str] = field(default_factory=list)
+    next_slot: str = ""
+    next_question_key: str = ""
+    readiness_status: str = "not_started"
+    next_action: str = ""
+    reason: str = ""

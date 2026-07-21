@@ -4,11 +4,22 @@ from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
+from ..qualification.priority_registry import (
+    QualificationJourneyDefinition,
+    QualificationPriorityRegistry,
+    QualificationSlotDefinition,
+)
+from ..qualification.question_catalog import get_question as get_catalog_question
 from ..understanding.extractor import extract_all
 from ...knowledge_runtime.engine.wizard import ProgressiveWizard
 from .resolver import ConversationResolver
 from .repository import ConversationStateRepository
-from .state import ConversationState, ConversationStateUpdate, ResponsePlan
+from .state import (
+    ConversationState,
+    ConversationStateUpdate,
+    QualificationDecision,
+    ResponsePlan,
+)
 from .validator import ConversationResponseValidator
 
 
@@ -151,9 +162,9 @@ class ConversationStateEngine:
                 "actions": [],
             }
 
-        if "finalement" in message.lower():
-            state.known_slots.pop("budget_max", None)
-            state.known_slots.pop("budget_min", None)
+        correction = self._handle_correction(message, state)
+        if correction:
+            return correction
 
         extracted = extract_all(clean_message)
         update = self._extracted_to_update(extracted, message)
@@ -221,10 +232,20 @@ class ConversationStateEngine:
         from ..understanding.geography import KNOWN_NEIGHBORHOODS, NEIGHBORHOOD_TO_CITY
         result: dict[str, object] = {}
         slot = state.last_question_slot
-        if slot in ("budget_max", "budget", "budget_min"):
+        if slot in ("budget_max", "budget", "budget_min", "budget_xaf"):
             amount = normalize_amount(clean_message)
             if amount.confidence > 0 and amount.normalized_amount is not None:
                 result[slot] = amount.normalized_amount
+            else:
+                import re
+                budget_match = re.search(r'(\d[\d\s]{2,})\s*(?:fcf a|francs|cfa)?', clean_message, re.IGNORECASE)
+                if budget_match:
+                    val = int(re.sub(r'\s', '', budget_match.group(1)))
+                    result[slot] = val
+                elif re.match(r'^\d{4,}$', clean_message.strip()):
+                    result[slot] = int(clean_message.strip())
+                elif re.match(r'^(\d+)\s*k$', clean_message.strip(), re.IGNORECASE):
+                    result[slot] = int(re.match(r'^(\d+)\s*k$', clean_message.strip(), re.IGNORECASE).group(1)) * 1000
         if slot in ("neighborhood", "district", "city", "location"):
             lower = clean_message.lower()
             if lower in KNOWN_NEIGHBORHOODS:
@@ -234,7 +255,101 @@ class ConversationStateEngine:
                     result["city"] = city
             elif lower in {k.lower(): v for k, v in KNOWN_NEIGHBORHOODS.items()}:
                 pass
+            elif lower in ("akwa", "bonamoussadi", "makepe", "bali", "bonanjo", "bonapriso", "deido", "ndokoti", "bassa", "logbaba", "bepanda"):
+                result["district"] = lower.title()
+        if slot in ("bedrooms", "bedroom_count", "chambres"):
+            import re
+            bedroom_map = {"un": 1, "une": 1, "deux": 2, "trois": 3, "quatre": 4, "cinq": 5, "six": 6}
+            lower = clean_message.lower().strip()
+            if lower in bedroom_map:
+                result[slot] = bedroom_map[lower]
+            elif re.match(r'^\d+$', lower):
+                result[slot] = int(lower)
+        if slot in ("furnished", "meuble"):
+            lower = clean_message.lower().strip()
+            if lower in ("oui", "yes", "meublé", "meuble", "yeah", "d'accord", "ok"):
+                result[slot] = True
+            elif lower in ("non", "no", "pas meublé", "pas meuble", "vide", "nope"):
+                result[slot] = False
+        if slot in ("move_in_date", "availability_date", "preferred_date"):
+            import re
+            lower = clean_message.lower()
+            date_map = {
+                "le mois prochain": "next_month",
+                "dans 2 mois": "in_2_months",
+                "dans 3 mois": "in_3_months",
+                "ce mois-ci": "this_month",
+                "cette semaine": "this_week",
+                "la semaine prochaine": "next_week",
+                "dès que possible": "asap",
+                "asap": "asap",
+            }
+            if lower in date_map:
+                result[slot] = date_map[lower]
+            elif re.match(r'^\d{4}-\d{2}-\d{2}$', clean_message.strip()):
+                result[slot] = clean_message.strip()
+        if slot in ("confirmation", "consent"):
+            lower = clean_message.lower().strip()
+            if lower in ("oui", "yes", "ok", "d'accord", "d accord", "yeah", "confirmé", "confirme"):
+                result[slot] = True
+            elif lower in ("non", "no", "nope", "pas maintenant", "annuler"):
+                result[slot] = False
         return result
+
+    def _handle_correction(
+        self,
+        message: str,
+        state: ConversationState,
+    ) -> dict[str, Any] | None:
+        lower = message.lower().strip()
+        correction_keywords = {"finalement", "plutôt", "plutot", "je voulais dire", "je voulais plutôt", "correction", "rectification", "non pas", "pas ça", "je veux dire"}
+        has_correction = any(kw in lower for kw in correction_keywords)
+
+        if not has_correction:
+            return None
+
+        from ..understanding.extractor import extract_all
+        extracted = extract_all(message)
+        update = ConversationStateUpdate()
+        corrected_slots: dict[str, Any] = {}
+
+        for fact in extracted.get("facts", []):
+            field = fact.get("field")
+            value = fact.get("normalized_value") or fact.get("raw_value")
+            if field and value is not None:
+                corrected_slots[field] = value
+                if field in state.known_slots:
+                    update.corrected_slots[field] = state.known_slots[field]
+                update.new_slots[field] = value
+
+        if "finalement" in lower and "budget" in lower:
+            import re
+            nums = re.findall(r'[\d\s]{3,}', message)
+            if nums:
+                val = int(re.sub(r'\s', '', nums[0]))
+                if "budget_max" in state.known_slots:
+                    update.corrected_slots["budget_max"] = state.known_slots["budget_max"]
+                update.new_slots["budget_max"] = val
+                corrected_slots["budget_max"] = val
+            else:
+                amount_match = re.search(r'(\d[\d\s]{2,})\s*(?:fcf ?a|francs|cfa)?', message, re.IGNORECASE)
+                if amount_match:
+                    val = int(re.sub(r'\s', '', amount_match.group(1)))
+                    if "budget_max" in state.known_slots:
+                        update.corrected_slots["budget_max"] = state.known_slots["budget_max"]
+                    update.new_slots["budget_max"] = val
+                    corrected_slots["budget_max"] = val
+
+        if corrected_slots:
+            for key, new_value in corrected_slots.items():
+                state.known_slots[key] = new_value
+            state.updated_at = __import__("datetime").datetime.now(
+                __import__("datetime").timezone.utc
+            ).isoformat()
+            channel = getattr(state, 'channel', 'whatsapp')
+            return self._continue_with_wizard(state, corrected_slots, channel=channel)
+
+        return None
 
     def _extracted_to_update(
         self,
@@ -337,6 +452,10 @@ class ConversationStateEngine:
         }
 
     def _get_question_text(self, field: str, language: str) -> str:
+        catalog_key = f"qualification.{field}"
+        catalog_text = get_catalog_question(catalog_key, language)
+        if catalog_text:
+            return catalog_text
         QUESTIONS: dict[str, dict[str, str]] = {
             "intent": {"fr": "Que recherchez-vous ?", "en": "What are you looking for?", "pcm": "Wetin you dey find?"},
             "transaction_type": {"fr": "Souhaitez-vous acheter, louer ou vendre ?", "en": "Do you want to buy, rent or sell?", "pcm": "You want buy, rent or sell?"},
@@ -363,7 +482,6 @@ class ConversationStateEngine:
         clean = message.strip().lower().rstrip("!.,?;: ")
         update = ConversationStateUpdate()
 
-        # Map short answers to slots based on last_question_slot
         if last_slot in ("budget_xaf", "budget_max", "budget_min", "budget"):
             from ..understanding.extractor import extract_all
             extracted = extract_all(message)
@@ -373,19 +491,33 @@ class ConversationStateEngine:
                 if field and value is not None:
                     update.new_slots[field.replace("price_", "budget_")] = value
             if not update.new_slots:
-                # Try simple numeric extraction
                 import re
-                nums = re.findall(r'[\d\s]{3,}', message)
-                if nums:
-                    val = int(re.sub(r'\s', '', nums[0]))
+                budget_match = re.search(r'(\d[\d\s]{2,})\s*(?:fcf ?a|francs|cfa)?', message, re.IGNORECASE)
+                if budget_match:
+                    val = int(re.sub(r'\s', '', budget_match.group(1)))
                     update.new_slots[last_slot] = val
-                    update.new_slots["budget_period"] = "monthly"
+                elif re.match(r'^\d{4,}$', clean):
+                    update.new_slots[last_slot] = int(clean)
+                elif re.match(r'^(\d+)\s*k$', clean, re.IGNORECASE):
+                    val = int(re.match(r'^(\d+)\s*k$', clean, re.IGNORECASE).group(1)) * 1000
+                    update.new_slots[last_slot] = val
+                else:
+                    nums = re.findall(r'[\d\s]{3,}', message)
+                    if nums:
+                        val = int(re.sub(r'\s', '', nums[0]))
+                        update.new_slots[last_slot] = val
+            if last_slot in update.new_slots:
+                update.new_slots["budget_period"] = "monthly"
 
         elif last_slot in ("city", "ville"):
             update.new_slots["city"] = clean.title()
 
         elif last_slot in ("neighborhood", "district", "quartier"):
-            update.new_slots["district"] = clean.title()
+            known_districts = {"akwa", "bonamoussadi", "makepe", "bali", "bonanjo", "bonapriso", "deido", "ndokoti", "bassa", "logbaba", "bepanda", "nkolbisson", "mendong", "biyem-assi", "mfoundi", "bastos", "tsinga", "omnisports"}
+            if clean in known_districts:
+                update.new_slots["district"] = clean.title()
+            else:
+                update.new_slots["district"] = clean.title()
 
         elif last_slot in ("transaction_type",):
             if "louer" in clean or "location" in clean or "loc" in clean:
@@ -411,9 +543,9 @@ class ConversationStateEngine:
                 update.new_slots["property_type"] = "commercial"
 
         elif last_slot in ("furnished", "meuble"):
-            if clean in ("oui", "yes", "meublé", "meuble", "yeah"):
+            if clean in ("oui", "yes", "meublé", "meuble", "yeah", "d'accord", "d accord", "ok"):
                 update.new_slots["furnished"] = True
-            elif clean in ("non", "no", "pas meublé", "pas meuble", "vide", "nope"):
+            elif clean in ("non", "no", "pas meublé", "pas meuble", "vide", "nope", "pas"):
                 update.new_slots["furnished"] = False
 
         elif last_slot in ("property_usage", "usage"):
@@ -421,6 +553,38 @@ class ConversationStateEngine:
                 update.new_slots["property_usage"] = "residential"
             elif "commercial" in clean or "bureau" in clean or "professionnel" in clean:
                 update.new_slots["property_usage"] = "commercial"
+
+        elif last_slot in ("bedrooms", "bedroom_count", "chambres"):
+            bedroom_map = {"un": 1, "une": 1, "deux": 2, "trois": 3, "quatre": 4, "cinq": 5, "six": 6}
+            if clean in bedroom_map:
+                update.new_slots[last_slot] = bedroom_map[clean]
+            else:
+                import re
+                if re.match(r'^\d+$', clean):
+                    update.new_slots[last_slot] = int(clean)
+
+        elif last_slot in ("move_in_date", "availability_date", "preferred_date"):
+            import re
+            date_map = {
+                "le mois prochain": "next_month",
+                "dans 2 mois": "in_2_months",
+                "dans 3 mois": "in_3_months",
+                "ce mois-ci": "this_month",
+                "cette semaine": "this_week",
+                "la semaine prochaine": "next_week",
+                "dès que possible": "asap",
+                "asap": "asap",
+            }
+            if clean in date_map:
+                update.new_slots[last_slot] = date_map[clean]
+            elif re.match(r'^\d{4}-\d{2}-\d{2}$', clean):
+                update.new_slots[last_slot] = clean
+
+        elif last_slot in ("confirmation", "consent"):
+            if clean in ("oui", "yes", "ok", "d'accord", "d accord", "yeah", "confirmé", "confirme"):
+                update.new_slots[last_slot] = True
+            elif clean in ("non", "no", "nope", "pas maintenant", "annuler"):
+                update.new_slots[last_slot] = False
 
         if not update.new_slots:
             return None
@@ -519,6 +683,34 @@ class ConversationStateEngine:
             response_template=text,
         )
 
+    def _build_clarify_plan(
+        self,
+        state: ConversationState,
+        slot_key: str = "",
+    ) -> ResponsePlan:
+        key = slot_key or state.last_question_key or state.last_question_slot
+        question_key = ""
+        if key and not key.startswith("qualification."):
+            question_key = f"qualification.{key}"
+        else:
+            question_key = key
+        clarification_text = get_catalog_question(
+            question_key.replace("qualification.", "qualification.clarify."),
+            state.language,
+        )
+        if not clarification_text:
+            clarification_text = get_catalog_question(question_key, state.language)
+        if not clarification_text:
+            clarification_text = "Pourriez-vous reformuler votre réponse ?"
+        return ResponsePlan(
+            language=state.language,
+            response_type="CLARIFICATION",
+            next_action="CLARIFY_CURRENT_SLOT",
+            next_question_key=key,
+            next_question_text=clarification_text,
+            response_template=clarification_text,
+        )
+
     def _build_response_plan(
         self,
         state: ConversationState,
@@ -559,6 +751,13 @@ class ConversationStateEngine:
                 next_question_text=next_q_text,
                 response_template=next_q_text,
                 updated_slots=resolved_updated,
+            )
+
+        ambiguous = wizard_result.get("ambiguous", False)
+        if ambiguous:
+            return self._build_clarify_plan(
+                state,
+                slot_key=wizard_result.get("next_question_key", ""),
             )
 
         return ResponsePlan(
