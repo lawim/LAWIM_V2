@@ -705,12 +705,8 @@ class CommunicationService:
             return ""
 
     def _greeting_response(self, channel: str, language: str = "fr") -> str:
-        texts = {
-            "fr": "Bonjour et bienvenue sur LAWIM.\n\nJe peux vous accompagner pour rechercher, publier, louer, acheter ou vendre un bien immobilier. Que souhaitez-vous faire ?",
-            "en": "Hello and welcome to LAWIM.\n\nI can help you search for, list, rent, buy or sell a property. What would you like to do?",
-            "pcm": "Welcome for LAWIM.\n\nI fit help you find, post, rent, buy or sell property. Wetin you want do?",
-        }
-        base = texts.get(language, texts["fr"])
+        from ..conversation.policy.greetings import CANONICAL_GREETINGS
+        base = CANONICAL_GREETINGS.get(language, CANONICAL_GREETINGS["fr"])
         if channel in ("whatsapp", "telegram"):
             try:
                 return base + self._format_ai_footer(language, channel)

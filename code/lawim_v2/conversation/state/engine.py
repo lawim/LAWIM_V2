@@ -74,10 +74,12 @@ class ConversationStateEngine:
         repository: ConversationStateRepository,
         resolver: ConversationResolver,
         wizard: ProgressiveWizard | None = None,
+        policy = None,
     ) -> None:
         self._repository = repository
         self._resolver = resolver
         self._wizard = wizard
+        self._policy = policy
 
     def process_turn(
         self,
@@ -790,6 +792,17 @@ class ConversationStateEngine:
         return "Okay. You dey find " + ", ".join(parts) + "."
 
     def _generate_response(self, plan: ResponsePlan, state: ConversationState) -> str:
+        if self._policy is not None:
+            try:
+                dialogue_plan = self._policy.build_dialogue_plan(
+                    state=state,
+                    response_plan=plan,
+                    message=state.last_user_message,
+                )
+                return self._policy.internal_engine.generate(dialogue_plan)
+            except Exception:
+                pass
+
         if plan.response_template and not plan.updated_slots:
             return plan.response_template
         if plan.response_template and plan.updated_slots:
