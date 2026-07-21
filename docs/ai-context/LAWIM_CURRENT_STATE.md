@@ -1,48 +1,55 @@
 # LAWIM — État Actuel
 
 **Dernière mise à jour :** 2026-07-21
-**HEAD :** (branche `feature/controlled-response-generation-20260721`)
+**HEAD :** 1258fe19
+**Branche :** release/final-acceptance-and-ovh-readiness-20260721
+**Tags :** lawim-v2-controlled-response-generation-local
 
 ## Transport
 
-Le transport WhatsApp et Telegram fonctionne actuellement.
+WhatsApp et Telegram : TECHNICALLY_REACHABLE (non testé réellement ce chantier)
 
 - Green API : `authorized`
 - Telegram Bot `@lawim_bot` : `ok: true`
 - Webhooks configurés et endpoints opérationnels
-- Footer IA non-bloquant (try/except protège la réponse principale)
-- Footer réduit à ≤10 mots (FR/EN/PCM)
+- Footer IA : ACTIF (≤10 mots FR/EN/PCM, try/except protège réponse principale)
 - Parse_mode HTML Telegram avec fallback texte brut
 
-## Conversation Runtime
+## Conversation Runtime — État Final
 
-```
-Conversation Memory : PERSISTANTE
-Case Memory : ACTIVE
-Cross-Channel Continuity : VALIDÉE LOCALEMENT
-Identity Resolution : CONTRÔLÉE
-Memory Context Builder : ACTIF
-Handover Continuity : ACTIVE
-Retention Policy : DOCUMENTÉE
-Déploiement OVH : NON EFFECTUÉ
-Recette réelle : EN ATTENTE
-```
+| Composant | Statut |
+|-----------|--------|
+| Conversation Runtime (Chantier 1) | VALIDATED |
+| Qualification Engine (Chantier 2) | VALIDATED |
+| Dialogue Plan (Chantier 2.5) | ACTIVE |
+| Language Policy (Chantier 2.5) | ACTIVE |
+| Response Validator (Chantier 1) | ACTIVE |
+| Persona LAWIM (Chantier 2.5) | ACTIVE |
+| Conversation Memory (Chantier 3) | PERSISTANTE |
+| Case Memory (Chantier 3) | ACTIVE |
+| Cross-Channel Identity (Chantier 3) | CONTRÔLÉE |
+| Memory Context Builder (Chantier 3) | ACTIF |
+| Handover Continuity (Chantier 3) | ACTIVE |
+| Retention Policy (Chantier 3) | DOCUMENTÉE |
+| ControlledGenerationRequest (Chantier 4) | OBLIGATOIRE |
+| ProviderMemoryContext (Chantier 4) | LIMITÉ |
+| Provider Orchestrator (Chantier 4) | ACTIF |
+| DeepSeek (Chantier 4) | CONTRAINT |
+| OpenAI (Chantier 4) | CONTRAINT |
+| Gemini (Chantier 4) | CONTRAINT |
+| Response Validation (Chantier 4) | ACTIVE |
+| Internal Fallback (Chantier 4) | COMPLET |
+| XFAIL intégration (Chantier 4) | FERMÉS (2) |
+| System Inventory (Chantier 5) | COMPLET |
+| Release Candidate (Chantier 5) | PRÊT |
+| OVH Runbook (Chantier 5) | DOCUMENTÉ |
+| OVH Rollback (Chantier 5) | DOCUMENTÉ |
 
-## Contrôle de Génération
+## Tests
 
-```
-ControlledGenerationRequest : OBLIGATOIRE
-ProviderMemoryContext : LIMITÉ
-Provider Orchestrator : ACTIF
-DeepSeek : CONTRAINT
-OpenAI : CONTRAINT
-Gemini : CONTRAINT
-Response Validation : ACTIVE
-Internal Fallback : COMPLET
-Deux XFAIL d'intégration : FERMÉS
-Déploiement OVH : NON EFFECTUÉ
-Recette réelle : EN ATTENTE
-```
+- 519 tests PASS (conversation rebuild)
+- 0 FAILED, 0 ERROR, 0 XFAIL, 0 XPASS
+- 0 régressions
 
 ## Composants ajoutés (Chantier 3)
 
@@ -59,7 +66,7 @@ Recette réelle : EN ATTENTE
 - HandoverContinuityService (initiate → accept → resolve → return_to_lawim)
 - MemoryRetentionService + MemoryDeletionService + MemoryAnonymizationService
 - 22 observability events + 9 metrics
-- 124 new tests, 335 total (0 regression)
+- 124 new tests
 
 ## Composants ajoutés (Chantier 4)
 
@@ -75,8 +82,28 @@ Recette réelle : EN ATTENTE
 - 14 observability events + 12 metrics
 - Two XFAILs closed: test_residential_use_continues_studio_request, test_i_dont_understand_rephrases_last_question
 
-## Tests
+## Composants ajoutés (Chantier 5)
 
-- 385+ tests PASS (exact count depends on new tests)
-- 0 XFAIL
-- 0 régressions
+- System inventory complet (services, conteneurs, endpoints, providers, canaux, DB)
+- Release manifest (RELEASE_MANIFEST.json)
+- Release candidate documenté
+- Rapport d'écart local/production
+- Runbook de déploiement OVH
+- Runbook de rollback OVH
+- Plan de smoke tests post-déploiement
+- Final local acceptance avec matrice de vérification (70 critères)
+
+## Déploiement OVH
+
+NON EFFECTUÉ
+
+Candidat de release préparé. Décision : READY_FOR_CONTROLLED_OVH_DEPLOYMENT.
+
+Le déploiement OVH constituera le premier déploiement de la reconstruction conversationnelle complète (Chantiers 1–5). Les runbooks de déploiement et rollback sont documentés et prêts à être exécutés.
+
+## Limitations connues
+
+1. PCM natif — Qualité non évaluée par des locuteurs natifs
+2. WhatsApp E2E réel — Test réel non exécuté
+3. Telegram E2E réel — Test réel non exécuté
+4. Cross-canal réel — Continuité non testée sur terminaux réels
