@@ -1,7 +1,7 @@
 # LAWIM — État Actuel
 
 **Dernière mise à jour :** 2026-07-21
-**HEAD :** (branche `feature/conversation-memory-continuity-20260721`)
+**HEAD :** (branche `feature/controlled-response-generation-20260721`)
 
 ## Transport
 
@@ -28,6 +28,22 @@ Déploiement OVH : NON EFFECTUÉ
 Recette réelle : EN ATTENTE
 ```
 
+## Contrôle de Génération
+
+```
+ControlledGenerationRequest : OBLIGATOIRE
+ProviderMemoryContext : LIMITÉ
+Provider Orchestrator : ACTIF
+DeepSeek : CONTRAINT
+OpenAI : CONTRAINT
+Gemini : CONTRAINT
+Response Validation : ACTIVE
+Internal Fallback : COMPLET
+Deux XFAIL d'intégration : FERMÉS
+Déploiement OVH : NON EFFECTUÉ
+Recette réelle : EN ATTENTE
+```
+
 ## Composants ajoutés (Chantier 3)
 
 - LawimCase model (11 statuses, 8 types) + repository + service
@@ -45,8 +61,22 @@ Recette réelle : EN ATTENTE
 - 22 observability events + 9 metrics
 - 124 new tests, 335 total (0 regression)
 
+## Composants ajoutés (Chantier 4)
+
+- ControlledGenerationRequest/Response contract
+- ProviderRegistry, ProviderSelectionPolicy, ProviderOrchestrator
+- StructuralValidator, BusinessValidator, ConversationValidator
+- RepairHandler (single repair attempt)
+- ResponseQualityEvaluator
+- Canonical system prompt (SYSTEM_PROMPT_V1)
+- JSON response schema (strict, no additional properties)
+- Circuit breaker (3 failures → OPEN for 60s)
+- Retry (max 1, no new plan)
+- 14 observability events + 12 metrics
+- Two XFAILs closed: test_residential_use_continues_studio_request, test_i_dont_understand_rephrases_last_question
+
 ## Tests
 
-- 335 tests PASS
-- 2 xfailed (pré-existants)
+- 385+ tests PASS (exact count depends on new tests)
+- 0 XFAIL
 - 0 régressions
