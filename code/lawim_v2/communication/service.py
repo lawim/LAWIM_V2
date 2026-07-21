@@ -605,25 +605,35 @@ class CommunicationService:
                 return f"+{digits}"
             return ""
 
+    def _format_agent_identity(self, language: str, channel: str) -> str:
+        return "🤖 LAWIM AI\n"
+
     def _generate_ai_reply(self, raw_text: str, channel: str, conversation_key: str, actor_id: int | str | None = None, language: str = "fr") -> str:
         from ..conversation.state.validator import ConversationResponseValidator
+        import logging as _logging
+        _log = _logging.getLogger("lawim_v2.communication.service")
         if not raw_text.strip():
             return ""
+
+        # --- Handover detection ---
         raw_lower = raw_text.strip().lower()
         handover_markers = ("parler à une personne", "parler a une personne", "humain", "conseiller", "équipe", "equipe", "assistance", "support")
         if any(marker in raw_lower for marker in handover_markers):
-            return "Je vous mets en relation avec un conseiller LAWIM. Merci de patienter."
-        if self.ai is not None:
-            try:
-                self.ai.build_request(
-                    channel=channel,
-                    text=raw_text,
-                    conversation_key=conversation_key,
-                    language=language,
-                )
-            except Exception:
-                pass
-        if self.conversation_state_engine is not None and isinstance(self.conversation_state_engine, ConversationStateEngine):
+            _log.info("_generate_ai_reply: handover path")
+            return (
+                "🤖 LAWIM AI\n\n"
+                "Je vous mets en relation avec un conseiller LAWIM. Merci de patienter."
+            )
+
+        # --- Agent identity prefix ---
+        def _prepend_identity(text: str) -> str:
+            return f"🤖 LAWIM AI\n\n{text}"
+
+        # --- Canonical state engine path — single mandatory pipeline ---
+        _engine_ok = self.conversation_state_engine is not None and isinstance(self.conversation_state_engine, ConversationStateEngine)
+        _log.info("_generate_ai_reply: engine_available=%s channel=%s msg=%.50s", _engine_ok, channel, raw_text)
+
+        if _engine_ok:
             try:
                 result = self.conversation_state_engine.process_turn(
                     actor_id=actor_id,
@@ -633,26 +643,41 @@ class CommunicationService:
                     language=language,
                 )
                 response_text = result.get("response", "")
+                _log.info("_generate_ai_reply: engine_response_len=%d has_content=%s", len(response_text), bool(response_text))
+
                 if response_text:
                     plan = result.get("response_plan")
                     if plan is not None:
                         from ..conversation.state.state import ResponsePlan
                         if isinstance(plan, ResponsePlan):
                             validated, status = ConversationResponseValidator().validate(response_text, plan)
+                            _log.info("_generate_ai_reply: validation_status=%s", status)
                             if status == "REPAIR":
                                 response_text = validated
+
+                    # Prepend AI identity
+                    response_text = _prepend_identity(response_text)
+
+                    # Append footer for WhatsApp / Telegram
                     if channel in ("whatsapp", "telegram"):
                         try:
                             response_text += self._format_ai_footer(language, channel)
                         except Exception:
                             pass
+
+                    _log.info("_generate_ai_reply: returning engine response")
                     return response_text
+                else:
+                    _log.warning("_generate_ai_reply: engine returned empty response — falling through")
             except Exception as exc:
                 self.repository.create_communication_log(
                     level="error",
                     message="ConversationStateEngine failed, falling back",
                     payload={"channel": channel, "error": str(exc)},
                 )
+                _log.error("_generate_ai_reply: engine exception", exc_info=True)
+
+        # --- Fallback: AI orchestrator (only if engine is unavailable or fails) ---
         if self.ai is not None:
             try:
                 request = self.ai.build_request(
@@ -668,6 +693,7 @@ class CommunicationService:
                     plan = ResponsePlan(maximum_questions=1)
                     validated, _ = ConversationResponseValidator().validate(response_text, plan)
                     response_text = validated
+                    response_text = _prepend_identity(response_text)
                     if channel in ("whatsapp", "telegram"):
                         try:
                             response_text += self._format_ai_footer(language, channel)
@@ -675,7 +701,7 @@ class CommunicationService:
                             pass
                     self.repository.create_communication_log(
                         level="info",
-                        message="AI reply generated for channel",
+                        message="AI orchestrator reply used",
                         payload={"channel": channel, "provider": outcome.response.provider, "language": language},
                     )
                     return response_text
@@ -685,7 +711,10 @@ class CommunicationService:
                     message="AI reply generation failed, using greeting fallback",
                     payload={"channel": channel, "error": str(exc)},
                 )
-        return self._greeting_response(channel, language)
+
+        # --- Last-resort greeting ---
+        greeting = self._greeting_response(channel, language)
+        return _prepend_identity(greeting)
 
     AI_FOOTER_TEXTS: dict[str, str] = {
         "fr": "ℹ️ Réponse assistée par LAWIM AI.",
