@@ -703,7 +703,6 @@ class CommunicationService:
             except Exception as exc:
                 self.repository.create_communication_log(
                     level="error",
-                    correlation_id=correlation_id,
                     message="ConversationStateEngine failed",
                     payload={"channel": channel, "error": str(exc)},
                 )
@@ -713,7 +712,6 @@ class CommunicationService:
         self._log_turn(correlation_id, channel, conversation_key, raw_text, "safety_response")
         self.repository.create_communication_log(
             level="warning",
-            correlation_id=correlation_id,
             message="Engine unavailable or failed — using safety response",
             payload={"channel": channel, "conversation_key": conversation_key},
         )

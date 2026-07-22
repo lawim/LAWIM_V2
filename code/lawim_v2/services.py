@@ -213,7 +213,7 @@ class LawimServices:
         _conv_dir = config.db_path.parent / "conversation"
         _conv_dir.mkdir(parents=True, exist_ok=True)
         _conv_db_path = str(_conv_dir / "state.sqlite3")
-        _conv_conn = sqlite3.connect(_conv_db_path)
+        _conv_conn = sqlite3.connect(_conv_db_path, check_same_thread=False)
         _conv_conn.row_factory = sqlite3.Row
         _conv_db = _ConvDB(_conv_conn)
         _conv_repo = ConversationStateRepository(_conv_db)
