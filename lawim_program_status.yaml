@@ -1,0 +1,191 @@
+project:
+  name: LAWIM
+  current_version: V2
+  target_version: V3
+  target_architecture: LROS
+  repository_status: active
+  head: 9ec78e63
+  branch: feature/action-execution-engine-20260722
+  origin: git@github-lawim:lawim/LAWIM_V2.git
+
+architecture:
+  paradigm: project_centric_event_driven
+  source_of_truth: ProjectProfile
+  decision_authority: ProjectBrain
+  execution_authority: ActionExecutionEngine
+  llm_business_decisions_allowed: false
+  channel_independent_runtime: true
+  v2_must_remain_operational: true
+  shadow_migration_required: true
+
+programs:
+  A:
+    name: LROS Foundation
+    status: complete
+    commit: cf633f5f
+    tag: (none specified)
+    description: LAWIM Runtime Operating System kernel
+    components:
+      - RuntimeAPI
+      - RuntimeDirector
+      - RuntimeScheduler
+      - RuntimeRegistry
+      - RuntimeStateMachine
+      - RuntimePersistence
+      - Timeline
+      - RuntimeAudit
+      - RuntimeMetrics
+      - EventBus
+      - ProjectRuntime
+      - EngineBase
+  B:
+    name: Project Profile & Field Registry
+    status: complete
+    commit: 46fbbc49
+    tag: lawim-v3-program-b-project-profile-complete
+    description: Project profile, field registry, deterministic merge engine
+    components:
+      - ProjectProfile
+      - AbstractProjectProfile
+      - FieldRegistry
+      - FieldDefinitions
+      - ProfilePatch
+      - MergeEngine
+      - ConflictResolution
+      - HistorySnapshots
+      - CompletenessCalculator
+      - Normalizers
+      - Validators
+      - Profile types (rental_search, purchase_search, sale_project, construction_project, land_project)
+  C:
+    name: Qualification & Decision Engine
+    status: complete
+    commit: 86b449b9
+    tag: lawim-v3-program-c-qualification-decision-complete
+    description: Qualification engine, decision engine, project brain
+    components:
+      - QualificationEngine
+      - RequirementRegistry
+      - DecisionEngine
+      - ProjectBrain
+      - HumanHandoverEvaluator
+      - ActionRegistry
+      - RuleEvaluator
+      - Guards
+  C5:
+    name: Action Execution Engine
+    status: complete_with_baseline_verification_pending
+    commit: 18de07d2
+    tag: (none)
+    description: Reliable action execution with idempotency, recovery, retry
+    components:
+      - ExecutionEngine
+      - ExecutionDispatcher
+      - ActionHandlerRegistry
+      - IdempotencyManager
+      - ActionLockManager
+      - ActionLeaseManager
+      - ExecutionVerifier
+      - AuditTrail
+      - EventCollector
+      - MetricsCollector
+      - ExecutionWorker
+      - RetryPolicy
+      - RecoveryManager
+      - DeadLetterQueue
+      - Outbox
+      - Snapshots
+      - Timeout
+      - Compensation
+    notes: >
+      276 C.5 tests PASS, 434 A+B+C+C.5 tests PASS.
+      3 V2 baseline tests fail on both 86b449b9 and 18de07d2 (PREEXISTING_CONFIRMED).
+      See reports/programs/PROGRAM-C5-STATUS.md
+  D:
+    name: Domain Runtime Engines
+    status: complete
+    description: Domain-specific execution engines for matching, visits, CRM,
+      notifications, documents, verification, transactions, payments
+    components:
+      - MatchingRuntime
+      - VisitRuntime
+      - CRMRuntime
+      - NotificationRuntime
+      - DocumentRuntime
+      - VerificationRuntime
+      - TransactionRuntime
+      - PaymentRuntime
+      - DomainRuntimeConfig (feature flags, all disabled by default)
+      - DomainRegistration (shadow mode by default)
+      - V2 Adapters (8 domains)
+    tests: 68 PASS (domain) + 506 total (A+B+C+C.5+D)
+    notes: >
+      All domain runtimes implement DomainRuntime base contract.
+      No LLM dependencies, no channel dependencies.
+      Shadow mode prevents all external effects by default.
+      V2 adapters transform data only, no real V2 calls.
+    components:
+      - MatchingEngine (planned)
+      - VisitEngine (planned)
+      - CRMEngine (planned)
+      - NotificationEngine (planned)
+      - DocumentEngine (planned)
+      - VerificationEngine (planned)
+      - TransactionEngine (planned)
+      - PaymentEngine (planned)
+  E:
+    name: Cross-Channel Continuity & Full Omnichannel
+    status: planned
+    description: Full cross-channel identity resolution, continuity, and omnichannel experience
+  F:
+    name: Advanced Search & Hybrid Matching
+    status: planned
+    description: Advanced search orchestration with hybrid matching algorithms
+  G:
+    name: Transaction Pipeline & Payment Integration
+    status: planned
+    description: Transaction step pipeline with Financial Core and Campay integration
+  H:
+    name: Document Intelligence & GED Automation
+    status: planned
+    description: Document lifecycle automation, OCR, intelligence, and GED integration
+  I:
+    name: Admin Cockpits & Dashboard Suite
+    status: planned
+    description: Administrative cockpits, dashboards, and KPI visualization
+  J:
+    name: Analytics, Observability & Alerting
+    status: planned
+    description: Advanced analytics, production observability, and alerting
+  K:
+    name: Learning & Knowledge Engine
+    status: planned
+    description: Machine learning, knowledge base, and continuous learning
+  L:
+    name: AI Agent Integration & Multi-Provider Governance
+    status: planned
+    description: AI agent framework, multi-provider governance, and fallback optimization
+  M:
+    name: Production Readiness & Performance Optimization
+    status: planned
+    description: Performance optimization, scaling, and production hardening
+  N:
+    name: Operations Industrialization
+    status: planned
+    description: Operations automation, backup, disaster recovery, and maintenance
+
+last_verified_at: 2026-07-22
+verified_head_pending_commit: 18de07d2
+verified_by: repository_audit
+test_count:
+  domain_tests: 68
+  execution_tests: 276
+  program_a_tests: 38
+  program_b_tests: 84
+  program_c_tests: 36
+  validator_tests: 4
+  total: 506
+v2_baseline:
+  preexisting_failures: 3
+  confirmed_on_baseline: 86b449b9
+  status: PREEXISTING_CONFIRMED
