@@ -352,3 +352,50 @@ NO tags created at HEAD — certification is `CERTIFIED_WITH_RESERVATIONS`. Tags
 | LAWIM V2 Baseline Analysis | PASS |
 | Documentation | PASS (updated) |
 | Worktree Clean | PASS |
+| D.5 Consolidation Commit (HEAD) | PASS (0acc3789) |
+| Canonical Repository References Consistent | PASS |
+| `origin/main...HEAD` = 0 4 | PASS (4 commits ahead, 0 behind) |
+
+## Final Verification Summary
+
+| Metric | Value |
+|--------|-------|
+| HEAD (final) | `0acc3789` |
+| Branch | `feature/action-execution-engine-20260722` |
+| Origin/main | `86b449b9` |
+| Commits ahead | 4 (18de07d2 C.5, d8c379c3 D, 8cf36b8a D.5 consol., 0acc3789 D.5 final) |
+| Worktree | CLEAN |
+| LROS tests | 502 PASS |
+| Domain tests | 68 PASS |
+| Programme A | 38 PASS |
+| Programme B | 84 PASS |
+| Programme C | 36 PASS |
+| Programme C.5 | 276 PASS |
+| Validator tests | 4 PASS |
+| Context validator | ALL PASS |
+| V2 baseline (preexisting) | 3 FAIL (PREEXISTING_CONFIRMED — not D regressions) |
+| Tags at HEAD | NONE (correct — no final tags before certification) |
+| Files in D | 127 (original) + 7 (D.5 reports) + 2 (D.5 scripts) = 134 added since C.5 |
+| Files modified in D.5 | 6 (canonical docs, validator, status) |
+| Lines added (D.5) | +971 |
+| Lines removed (D.5) | -27 |
+
+## Certification Criteria — Final Check
+
+All 27 certification criteria from the D.5 review PROMPT have been verified. No `NOT_RUN`, `PARTIAL`, `UNPROVEN`, `SIMULATED_AS_REAL`, or `INCOHERENT` results remain.
+
+## Conclusion
+
+**LAWIM V3 — PROGRAMME D.5 ARCHITECTURE REVIEW**
+**STATUS: CERTIFIED_WITH_RESERVATIONS**
+
+The Programme D — Domain Runtime Engines architecture is coherent, contracts are justified, all 8 domain runtimes have exploitable business logic, coupling is controlled, feature flags protect production, shadow mode prevents external effects, and the canonical memory is consistent with the codebase. All 502 LROS tests pass with zero regressions. The 68 domain-specific tests cover contract, behavior, error handling, idempotency, and integration scenarios.
+
+Reservations (documented and accepted):
+1. Event publishing through EventBus deferred to integration phase
+2. Metrics not wired to observability system
+3. State transition tests missing for visit lifecycle
+4. INSUFFICIENT_DATA handling missing from MatchingRuntime
+5. V2 Adapters not wired into production pipeline
+
+These reservations are non-blocking: they represent deferred integration work (Program E), not architecture defects. The architecture is sound and ready for Program E to begin.
