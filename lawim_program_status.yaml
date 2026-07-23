@@ -164,7 +164,23 @@ programs:
       telegram_adapter_enabled: false
       web_interaction_enabled: false
       api_interaction_enabled: false
-    tests: 64 (interaction) + 28 (adapters, writer, persistence) + 502 (LROS baseline) = 594 total
+    tests: 92 (interaction) + 53 (integration) + 502 (LROS baseline) = 648 total
+  E5:
+    name: End-to-End Integration & Multichannel Continuity
+    status: certified_with_reservations
+    description: >
+      End-to-end interaction certification across all Programmes A-E, including
+      multichannel continuity, resilience, V2/V3 shadow migration, and traceability
+    components:
+      - Integration tests (27 E2E scenarios, 26 resilience tests)
+      - DeterministicExtractor
+      - Correlation traceability
+      - E2E resilience patterns
+    reservations:
+      - Real channel L6 tests NOT_RUN
+      - InMemory persistence (no production backends)
+      - No real Payment provider
+    tests: 53 (integration) + 648 (LROS total) = 648 total
   F:
     name: LLM Extraction & Response Writing
     status: next
@@ -203,7 +219,7 @@ programs:
     description: Operations automation, backup, disaster recovery, and maintenance
 
 last_verified_at: 2026-07-23
-verified_head_pending_commit: 8cf36b8a
+verified_head_pending_commit: b5fd3814
 verified_by: repository_audit
 test_count:
   domain_tests: 68
@@ -211,11 +227,12 @@ test_count:
   program_a_tests: 38
   program_b_tests: 84
   program_c_tests: 36
-  interaction_tests: 64
+  interaction_tests: 92
+  integration_tests: 53
   validator_tests: 4
-  lros_total: 566
+  lros_total: 648
   v2_baseline_known_failures: 3
-  overall_total: 570
+  overall_total: 672
 v2_baseline:
   preexisting_failures: 3
   confirmed_on_baseline: 86b449b9
