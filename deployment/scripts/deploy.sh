@@ -1,51 +1,48 @@
 #!/usr/bin/env bash
-# Deployment entrypoint for LAWIM V2
-# Handles startup, migrations, and service orchestration
+set -euo pipefail
 
-set -e
+LAWIM_VERSION="${LAWIM_VERSION:-$(git rev-parse --short HEAD)}"
+COMPOSE_FILE="deployment/compose/docker-compose.prod.yml"
+ENV_FILE="deployment/secrets/production.env"
+DEPLOY_LOG="deployment/journal/deploy-$(date +%Y%m%d-%H%M%S).log"
 
-ENVIRONMENT=${ENVIRONMENT:-development}
-COMPOSE_FILE="deployment/compose/docker-compose.${ENVIRONMENT}.yml"
+mkdir -p deployment/journal
 
-echo "================================"
-echo "LAWIM V2 Deployment"
-echo "Environment: $ENVIRONMENT"
-echo "================================"
+echo "[$(date -Iseconds)] LAWIM Production Deployment v${LAWIM_VERSION}" | tee -a "${DEPLOY_LOG}"
+echo "[$(date -Iseconds)] Compose file: ${COMPOSE_FILE}" | tee -a "${DEPLOY_LOG}"
+echo "[$(date -Iseconds)] Env file: ${ENV_FILE}" | tee -a "${DEPLOY_LOG}"
 
-# Load environment variables
-if [ -f "deployment/.env.${ENVIRONMENT}" ]; then
-    export $(cat "deployment/.env.${ENVIRONMENT}" | grep -v '^#' | xargs)
-    echo "✓ Loaded environment: deployment/.env.${ENVIRONMENT}"
-else
-    echo "✗ Environment file not found: deployment/.env.${ENVIRONMENT}"
+if [ ! -f "${ENV_FILE}" ]; then
+    echo "[ERROR] ${ENV_FILE} not found. Create it from deployment/secrets/.env.example" | tee -a "${DEPLOY_LOG}"
     exit 1
 fi
 
-# Create networks if not exists
-docker network create lawim-network 2>/dev/null || true
+echo "[$(date -Iseconds)] Pulling images..." | tee -a "${DEPLOY_LOG}"
+docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" pull
 
-# Start services
-echo ""
-echo "Starting services (${ENVIRONMENT})..."
-docker-compose -f "$COMPOSE_FILE" up -d
+echo "[$(date -Iseconds)] Running database migrations..." | tee -a "${DEPLOY_LOG}"
+docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" run --rm app \
+    python3 -m lawim_runtime.production.migrate
 
-# Wait for services to be healthy
-echo ""
-echo "Waiting for services to be healthy..."
+echo "[$(date -Iseconds)] Starting services..." | tee -a "${DEPLOY_LOG}"
+docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" up -d
+
+echo "[$(date -Iseconds)] Waiting for health checks..." | tee -a "${DEPLOY_LOG}"
 sleep 10
 
-# Run health checks
-echo ""
-echo "Running health checks..."
-if docker-compose -f "$COMPOSE_FILE" exec -T backend python deployment/health/health_checker.py; then
-    echo "✓ All services healthy"
-else
-    echo "✗ Some services unhealthy"
-    docker-compose -f "$COMPOSE_FILE" logs --tail=50
-    exit 1
-fi
+for i in $(seq 1 12); do
+    STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/health 2>/dev/null || echo "000")
+    if [ "${STATUS}" = "200" ]; then
+        echo "[$(date -Iseconds)] Health check OK (attempt ${i})" | tee -a "${DEPLOY_LOG}"
+        break
+    fi
+    echo "[$(date -Iseconds)] Waiting... (attempt ${i}, status=${STATUS})" | tee -a "${DEPLOY_LOG}"
+    sleep 5
+done
 
-echo ""
-echo "================================"
-echo "✓ Deployment successful!"
-echo "================================"
+echo "[$(date -Iseconds)] Deployment complete." | tee -a "${DEPLOY_LOG}"
+echo "=== Image versions ===" | tee -a "${DEPLOY_LOG}"
+docker compose -f "${COMPOSE_FILE}" images | tee -a "${DEPLOY_LOG}"
+
+echo "=== Running containers ===" | tee -a "${DEPLOY_LOG}"
+docker compose -f "${COMPOSE_FILE}" ps | tee -a "${DEPLOY_LOG}"
