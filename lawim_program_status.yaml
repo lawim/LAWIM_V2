@@ -227,9 +227,33 @@ programs:
     tests: 37 (intelligence) + 15 (E-F integration) + 648 (LROS) = 700 total
     last_verified_at: 2026-07-23
   G:
-    name: Full Migration, V2 Retirement & Production Readiness
-    status: next
-    description: Full migration to V3, V2 retirement, production readiness, payment integration
+    name: Production Readiness & Operational Certification
+    status: complete_with_reservations
+    description: >
+      Production configuration with env validation, real AI provider adapters
+      (OpenAI, Anthropic, DeepSeek, Gemini) gated by flags/budget/circuit-breaker,
+      SQLite persistence stores, Prometheus/Grafana observability, health checks,
+      resilience patterns (circuit breaker, retry, rate limiter), deployment with
+      Docker Compose (6 services), 12 production tests
+    components:
+      - ProductionConfig (env validation, feature flags, budget)
+      - OpenAIProvider (IMPLEMENTED)
+      - AnthropicProvider (IMPLEMENTED)
+      - DeepSeekProvider (IMPLEMENTED)
+      - GeminiProvider (IMPLEMENTED)
+      - DeterministicProvider (PASS, default mode)
+      - CircuitBreaker / RetryPolicy / RateLimiter
+      - SQLiteSessionStore / SQLiteProfileStore
+      - HealthChecker (liveness, readiness)
+      - Prometheus + Grafana configuration
+      - Docker Compose production (6 services)
+    reservations:
+      - WhatsApp/Telegram real L6 NOT_RUN
+      - Campay NOT_RUN
+      - CI/CD NOT_CONFIGURED
+      - Migrations NOT_CONFIGURED
+      - Real LLM calls NOT_RUN
+    tests: 18 (production) + 700 (LROS) = 718 total
   H:
     name: Document Intelligence & GED Automation
     status: planned
@@ -272,10 +296,11 @@ test_count:
   integration_tests: 68
   intelligence_tests: 37
   ef_integration_tests: 15
+  production_tests: 18
   validator_tests: 4
-  lros_total: 700
+  lros_total: 718
   v2_baseline_known_failures: 3
-  overall_total: 724
+  overall_total: 742
 v2_baseline:
   preexisting_failures: 3
   confirmed_on_baseline: 86b449b9
