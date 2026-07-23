@@ -17,12 +17,10 @@ services:
     ports:
       - "${LAWIM_PORT:-3000}:3000"
     env_file:
-      - ../secrets/production.env
+      - /home/abel/.config/lawim/.env.production
     environment:
       APP_ENV: production
       LOG_LEVEL: info
-      LAWIM_DB_DRIVER: postgresql
-      LAWIM_DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       LROS_AI_INTELLIGENCE_ENABLED: "${LROS_AI_INTELLIGENCE_ENABLED:-false}"
       LROS_AI_EXTRACTION_ENABLED: "${LROS_AI_EXTRACTION_ENABLED:-false}"
       LROS_AI_RESPONSE_WRITER_ENABLED: "${LROS_AI_RESPONSE_WRITER_ENABLED:-false}"
