@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LAWIM Demo World V1 Schema",
+  "type": "object",
+  "required": ["dataset", "coverage", "users", "organizations", "properties", "services", "scenarios"],
+  "properties": {
+    "dataset": {
+      "type": "object",
+      "required": ["id", "version", "status", "created_at"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^LAWIM_DEMO_WORLD_V1$"},
+        "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+        "status": {"type": "string", "enum": ["IN_PROGRESS", "VALIDATED"]}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["roles", "professions", "property_types", "cities"]
+    },
+    "users": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "full_name", "role"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^DEMO-USER-"},
+          "role": {"type": "string", "enum": ["client", "owner", "agent", "commercial", "admin", "support"]}
+        }
+      }
+    },
+    "properties": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "city", "property_type", "price", "title", "owner_id"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^DEMO-PROPERTY-"},
+          "price": {"type": "number", "minimum": 1},
+          "bedrooms": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "provider_id"]
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["scenario_id", "title", "category", "status"],
+        "properties": {
+          "scenario_id": {"type": "string", "pattern": "^SCENARIO-"},
+          "status": {"type": "string", "enum": ["READY", "INCOMPLETE", "DRAFT"]}
+        }
+      }
+    }
+  }
+}
