@@ -40,18 +40,38 @@ def build():
     props = []
     # Yaoundé ~50 properties
     for i, district in enumerate(_NEIGHBORHOODS_YDE):
-        for j in range(3):
-            idx = i * 3 + j + 1
+        max_props = 6 if i < 5 else 3  # 6 properties for first 5 districts, 3 for others
+        for j in range(max_props):
+            idx = i * max_props + j + 1
             if idx > 50: break
             ptype = "APARTMENT" if j % 3 == 0 else "HOUSE" if j % 3 == 1 else "STUDIO"
-            price = 150_000 + (hash(district) % 350_000)
+            price = 100_000 + (hash(f"yde-{district}-{j}") % 400_000)
+            if district == "Mvan" and j < 2:
+                price = 180_000 + j * 40000
+            elif district == "Mvan" and j == 2:
+                price = 300_000
+                ptype = "APARTMENT"
+            elif district == "Mvan" and j == 3:
+                price = 220_000
+            elif district == "Mvan" and j == 4:
+                price = 350_000
+                ptype = "APARTMENT"
+            elif district == "Mvan" and j == 5:
+                price = 200_000
             name = _NAMES[(idx * 7) % len(_NAMES)]
+            status = "active" if idx % 10 != 0 else "suspended"
+            if district == "Mvan" and j == 4:
+                status = "suspended"
+            available = True if idx % 5 != 0 else False
+            if district == "Mvan" and j == 5:
+                available = False
             props.append({
                 "id": _bid("YDE", idx), "city": "Yaoundé", "district": district,
                 "property_type": ptype, "price": price, "currency": "XAF",
-                "bedrooms": (idx % 4) + 1, "title": _PROPERTY_TEMPLATES[ptype][0].format(name=name),
-                "status": "active", "owner_id": _uid("OWNER", (idx % 4) + 1),
-                "features": ["parking"] if idx % 2 == 0 else [], "available": True,
+                "bedrooms": 2 if district == "Mvan" and j in (0, 3, 5) else (idx % 4) + 1,
+                "title": _PROPERTY_TEMPLATES[ptype][0].format(name=name),
+                "status": status, "owner_id": _uid("OWNER", (idx % 4) + 1),
+                "features": ["parking"] if idx % 2 == 0 else [], "available": available,
             })
     # Douala ~25 properties
     for i, district in enumerate(_NEIGHBORHOODS_DLA):
@@ -68,6 +88,22 @@ def build():
                 "status": "active", "owner_id": _uid("OWNER", (idx % 3) + 1),
                 "features": [], "available": True,
             })
+    # LAND properties (5-7 across cities)
+    land_locations = [
+        ("Yaoundé", "Nkoabang", 15_000_000), ("Yaoundé", "Odza", 12_000_000), ("Yaoundé", "Mvan", 8_000_000),
+        ("Douala", "Logbaba", 10_000_000), ("Bafoussam", "Djeleng", 5_000_000), ("Kribi", "Lobe", 7_000_000),
+        ("Yaoundé", "Nkolbisson", 6_000_000),
+    ]
+    for li, (lcity, ldistrict, lprice) in enumerate(land_locations):
+        props.append({
+            "id": _bid("LND", li+1), "city": lcity, "district": ldistrict,
+            "property_type": "LAND", "price": lprice, "currency": "XAF",
+            "bedrooms": 0, "title": f"Terrain à {ldistrict}, {lcity}",
+            "status": "active" if li % 3 != 0 else "suspended",
+            "owner_id": _uid("OWNER", (li % 4) + 1), "features": ["borné"] if li % 2 == 0 else [],
+            "available": li % 4 != 0, "surface_m2": 500 + li * 200,
+        })
+
     # Other cities ~25 properties
     other_cities = [("Bafoussam", _NEIGHBORHOODS_BFS), ("Kribi", _NEIGHBORHOODS_KRI), ("Limbé", _NEIGHBORHOODS_LIM)]
     for city, hoods in other_cities:
