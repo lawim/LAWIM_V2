@@ -26,6 +26,14 @@ class DomainRuntimeConfig:
     shadow_mode: bool = True
     log_divergences: bool = True
 
+    ai_intelligence_enabled: bool = False
+    ai_extraction_enabled: bool = False
+    ai_response_writer_enabled: bool = False
+    ai_knowledge_enabled: bool = False
+    ai_rag_enabled: bool = False
+    ai_shadow_mode: bool = True
+    ai_provider_calls_enabled: bool = False
+
     @property
     def any_enabled(self) -> bool:
         return any([

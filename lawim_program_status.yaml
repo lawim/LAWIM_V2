@@ -194,6 +194,8 @@ programs:
       - AIIntelligenceGateway
       - StructuredExtractionEngine
       - LLM Gateway / ProviderRegistry
+      - DeterministicProvider
+      - External provider adapters (NOT_IMPLEMENTED)
       - PromptRegistry / PromptRenderer
       - PromptInjectionDetector
       - KnowledgeGateway
@@ -202,6 +204,13 @@ programs:
       - DataClassification / RedactionPolicy
       - AIEvaluator
       - AIMetrics
+      - AIIntegrationPolicy
+      - CandidateUpdateFactory
+      - AIDivergenceAnalyzer
+    integration:
+      - Orchestrator wired: _build_response_plan calls AI gateway and writer
+      - Feature flags in DomainRuntimeConfig (7 flags, all default false)
+      - 15 E-F integration tests PASS
     feature_flags:
       ai_intelligence_enabled: false
       ai_extraction_enabled: false
@@ -211,15 +220,16 @@ programs:
       ai_shadow_mode: true
       ai_provider_calls_enabled: false
     reservations:
-      - Real LLM providers L6 NOT_RUN
+      - External provider adapters NOT_IMPLEMENTED (only DeterministicProvider exists)
+      - External provider calls NOT_RUN
       - RAG not production-grade
       - No real provider evaluation available
-    tests: 37 (intelligence) + 648 (LROS) = 685 total
+    tests: 37 (intelligence) + 15 (E-F integration) + 648 (LROS) = 700 total
     last_verified_at: 2026-07-23
   G:
     name: Full Migration, V2 Retirement & Production Readiness
     status: next
-    description: Transaction step pipeline with Financial Core and Campay integration
+    description: Full migration to V3, V2 retirement, production readiness, payment integration
   H:
     name: Document Intelligence & GED Automation
     status: planned
@@ -259,12 +269,13 @@ test_count:
   program_b_tests: 84
   program_c_tests: 36
   interaction_tests: 92
-  integration_tests: 53
+  integration_tests: 68
   intelligence_tests: 37
+  ef_integration_tests: 15
   validator_tests: 4
-  lros_total: 685
+  lros_total: 700
   v2_baseline_known_failures: 3
-  overall_total: 709
+  overall_total: 724
 v2_baseline:
   preexisting_failures: 3
   confirmed_on_baseline: 86b449b9
