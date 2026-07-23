@@ -9,5 +9,6 @@
 | D | Domain Runtime Engines | CERTIFIED_WITH_RESERVATIONS |
 | E | Interaction Platform & Channels | COMPLETE |
 | E.5 | End-to-End Integration & Multichannel Continuity | CERTIFIED_WITH_RESERVATIONS |
-| F | LLM Extraction & Response Writing | NEXT |
+| F | AI Intelligence Platform | COMPLETE_WITH_RESERVATIONS |
+| G | Full Migration & V2 Retirement | NEXT |
 | G | Full Migration & V2 Retirement | PENDING |

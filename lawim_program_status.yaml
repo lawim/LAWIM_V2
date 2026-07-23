@@ -182,12 +182,43 @@ programs:
       - No real Payment provider
     tests: 53 (integration) + 648 (LROS total) = 648 total
   F:
-    name: LLM Extraction & Response Writing
-    status: next
-    description: LLM-based extraction, natural language generation, provider orchestration, RAG, linguistic memory
+    name: AI Intelligence Platform
+    status: complete_with_reservations
+    description: >
+      AI intelligence gateway, structured extraction engine, LLM provider
+      gateway with registry, prompt governance with versioning, knowledge
+      engine with source trust, AI response writer with validation and
+      deterministic fallback, prompt injection defense, data classification,
+      evaluation framework, AI observability
+    components:
+      - AIIntelligenceGateway
+      - StructuredExtractionEngine
+      - LLM Gateway / ProviderRegistry
+      - PromptRegistry / PromptRenderer
+      - PromptInjectionDetector
+      - KnowledgeGateway
+      - AIResponseWriter
+      - ResponseValidator / ForbiddenClaimDetector
+      - DataClassification / RedactionPolicy
+      - AIEvaluator
+      - AIMetrics
+    feature_flags:
+      ai_intelligence_enabled: false
+      ai_extraction_enabled: false
+      ai_response_writer_enabled: false
+      ai_knowledge_enabled: false
+      ai_rag_enabled: false
+      ai_shadow_mode: true
+      ai_provider_calls_enabled: false
+    reservations:
+      - Real LLM providers L6 NOT_RUN
+      - RAG not production-grade
+      - No real provider evaluation available
+    tests: 37 (intelligence) + 648 (LROS) = 685 total
+    last_verified_at: 2026-07-23
   G:
-    name: Transaction Pipeline & Payment Integration
-    status: planned
+    name: Full Migration, V2 Retirement & Production Readiness
+    status: next
     description: Transaction step pipeline with Financial Core and Campay integration
   H:
     name: Document Intelligence & GED Automation
@@ -229,10 +260,11 @@ test_count:
   program_c_tests: 36
   interaction_tests: 92
   integration_tests: 53
+  intelligence_tests: 37
   validator_tests: 4
-  lros_total: 648
+  lros_total: 685
   v2_baseline_known_failures: 3
-  overall_total: 672
+  overall_total: 709
 v2_baseline:
   preexisting_failures: 3
   confirmed_on_baseline: 86b449b9
