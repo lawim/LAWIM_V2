@@ -12,6 +12,16 @@ from lawim_v2.conversation.state.repository import ConversationStateRepository a
 from lawim_v2.conversation.state.resolver import ConversationResolver as _CR
 
 
+def _make_cse() -> tuple[ConversationStateEngine, _CSR, str]:
+    db = tempfile.mktemp(suffix=".db")
+    conn = sqlite3.connect(db)
+    conn.row_factory = sqlite3.Row
+    state_repo = _CSR(conn)
+    resolver = _CR()
+    cse = _CSE(state_repo, resolver)
+    return cse, state_repo, db
+
+
 def _make_svc(**kwargs) -> CommunicationService:
     db = tempfile.mktemp(suffix=".db")
     conn = sqlite3.connect(db)
@@ -39,8 +49,7 @@ def _make_svc(**kwargs) -> CommunicationService:
 
 
 def test_rental_search_context_is_retained_across_four_turns() -> None:
-    ai_mock = MagicMock()
-    svc = _make_svc(ai_orchestrator=ai_mock)
+    cse, state_repo, _ = _make_cse()
     turns = [
         "Bonjour",
         "Je cherche un appartement à Douala",
@@ -48,16 +57,23 @@ def test_rental_search_context_is_retained_across_four_turns() -> None:
         "Je préfère le quartier Bonamoussadi",
     ]
     for text in turns:
-        svc.process_green_api_webhook(
-            payload={
-                "typeWebhook": "incomingMessageReceived",
-                "idMessage": f"test-{turns.index(text)}",
-                "senderData": {"chatId": "237691234567@c.us", "sender": "237691234567", "senderName": "Test"},
-                "messageData": {"typeMessage": "textMessage", "textMessageData": {"textMessage": text}},
-            },
-            headers={},
+        cse.process_turn(
+            actor_id="test",
+            channel="whatsapp",
+            external_conversation_id="+237691234567",
+            message=text,
+            language="fr",
         )
-    assert ai_mock.build_request.call_count >= 4
+    state = state_repo.load("whatsapp", "+237691234567")
+    assert state is not None, "state must exist after 4 turns"
+    assert hasattr(state, "known_slots"), "state must have known_slots"
+    known = state.known_slots
+    assert "city" in known, f"city must be in known_slots: {known}"
+    assert known["city"] == "Douala", f"city should be Douala: {known}"
+    assert "property_type" in known, f"property_type must be in known_slots: {known}"
+    assert known["property_type"] == "APARTMENT", f"property_type should be APARTMENT: {known}"
+    assert "neighborhood" in known, f"neighborhood must be in known_slots: {known}"
+    assert known["neighborhood"] == "Bonamoussadi", f"neighborhood should be Bonamoussadi: {known}"
 
 
 def test_short_response_is_contextualized() -> None:

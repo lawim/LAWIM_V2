@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import sqlite3
+import tempfile
 from unittest.mock import MagicMock
 
 import pytest
 
 from lawim_v2.communication.service import CommunicationService
+from lawim_v2.conversation.state.engine import ConversationStateEngine as _CSE
+from lawim_v2.conversation.state.repository import ConversationStateRepository as _CSR
+from lawim_v2.conversation.state.resolver import ConversationResolver as _CR
 
 
 @pytest.fixture
@@ -14,6 +19,12 @@ def svc() -> CommunicationService:
     repo.create_communication_event.return_value = {"id": 1}
     repo.create_communication_message.return_value = {"id": 100, "body": "", "status": "delivered"}
     repo.create_communication_log.return_value = {"id": 1}
+    db = tempfile.mktemp(suffix=".db")
+    conn = sqlite3.connect(db)
+    conn.row_factory = sqlite3.Row
+    state_repo = _CSR(conn)
+    resolver = _CR()
+    cse = _CSE(state_repo, resolver)
     return CommunicationService(
         repository=repo,
         project_service=MagicMock(),
@@ -21,6 +32,7 @@ def svc() -> CommunicationService:
         config=MagicMock(),
         ai_orchestrator=None,
         disclaimer_manager=MagicMock(),
+        conversation_state_engine=cse,
     )
 
 
