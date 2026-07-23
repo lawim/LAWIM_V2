@@ -86,6 +86,10 @@ def test_missing_file_produces_fail() -> None:
             "- Un service sain ne prouve pas le fonctionnement du parcours metier. Le parcours metier necessite une validation de bout en bout.\n"
         )
 
+        # Create domain runtime dirs (so they don't cause false failures)
+        for d in ["lawim_runtime/domains/base", "lawim_runtime/domains/matching"]:
+            (tmp / d).mkdir(parents=True, exist_ok=True)
+
         # Create only SOME report files (leave many missing to trigger FAIL)
         for rel in [
             "reports/programs/PROGRAM-A-SUMMARY.md",
@@ -169,12 +173,17 @@ def test_invalid_commit_produces_fail() -> None:
             "  D:\n    name: D\n    status: in_progress\n"
         )
 
+        for d in ["lawim_runtime/domains/base", "lawim_runtime/domains/matching"]:
+            (tmp / d).mkdir(parents=True, exist_ok=True)
+
         for rel in [
             "reports/programs/PROGRAM-A-SUMMARY.md",
             "reports/programs/PROGRAM-B-SUMMARY.md",
             "reports/programs/PROGRAM-C-SUMMARY.md",
             "reports/programs/PROGRAM-C5-STATUS.md",
             "reports/programs/PROGRAM-D-SPECIFICATION.md",
+            "reports/programs/PROGRAM-D-REPORT.md",
+            "reports/programs/PROGRAM-D5-REPORT.md",
             "reports/programs/ROADMAP-V3.md",
             "reports/programs/OPENCODE-SESSION-BOOTSTRAP.md",
             "reports/programs/AGENT-REVIEW-CHECKLIST.md",
@@ -182,6 +191,13 @@ def test_invalid_commit_produces_fail() -> None:
             "reports/architecture/LAWIM-ARCHITECTURE-MAP.md",
             "reports/architecture/LAWIM-VALIDATION-LEVELS.md",
             "reports/architecture/LAWIM-CONTEXT-AUDIT.md",
+            "reports/architecture/LAWIM-PROGRAM-D5-INITIAL-AUDIT.md",
+            "reports/architecture/LAWIM-PROGRAM-D-FILE-JUSTIFICATION.md",
+            "reports/architecture/LAWIM-PROGRAM-D-DEPENDENCY-MAP.md",
+            "reports/architecture/LAWIM-PROGRAM-D-TEST-QUALITY.md",
+            "reports/architecture/LAWIM-PROGRAM-D-SIMPLIFICATION-REPORT.md",
+            "lawim_runtime/domains/config.py",
+            "lawim_runtime/domains/registration.py",
         ]:
             f = tmp / rel
             f.parent.mkdir(parents=True, exist_ok=True)
@@ -254,12 +270,17 @@ def test_invalid_status_produces_fail() -> None:
             "  D:\n    name: D\n    status: in_progress\n"
         )
 
+        for d in ["lawim_runtime/domains/base", "lawim_runtime/domains/matching"]:
+            (tmp / d).mkdir(parents=True, exist_ok=True)
+
         for rel in [
             "reports/programs/PROGRAM-A-SUMMARY.md",
             "reports/programs/PROGRAM-B-SUMMARY.md",
             "reports/programs/PROGRAM-C-SUMMARY.md",
             "reports/programs/PROGRAM-C5-STATUS.md",
             "reports/programs/PROGRAM-D-SPECIFICATION.md",
+            "reports/programs/PROGRAM-D-REPORT.md",
+            "reports/programs/PROGRAM-D5-REPORT.md",
             "reports/programs/ROADMAP-V3.md",
             "reports/programs/OPENCODE-SESSION-BOOTSTRAP.md",
             "reports/programs/AGENT-REVIEW-CHECKLIST.md",
@@ -267,6 +288,13 @@ def test_invalid_status_produces_fail() -> None:
             "reports/architecture/LAWIM-ARCHITECTURE-MAP.md",
             "reports/architecture/LAWIM-VALIDATION-LEVELS.md",
             "reports/architecture/LAWIM-CONTEXT-AUDIT.md",
+            "reports/architecture/LAWIM-PROGRAM-D5-INITIAL-AUDIT.md",
+            "reports/architecture/LAWIM-PROGRAM-D-FILE-JUSTIFICATION.md",
+            "reports/architecture/LAWIM-PROGRAM-D-DEPENDENCY-MAP.md",
+            "reports/architecture/LAWIM-PROGRAM-D-TEST-QUALITY.md",
+            "reports/architecture/LAWIM-PROGRAM-D-SIMPLIFICATION-REPORT.md",
+            "lawim_runtime/domains/config.py",
+            "lawim_runtime/domains/registration.py",
         ]:
             f = tmp / rel
             f.parent.mkdir(parents=True, exist_ok=True)

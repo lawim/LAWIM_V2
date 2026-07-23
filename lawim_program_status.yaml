@@ -4,7 +4,7 @@ project:
   target_version: V3
   target_architecture: LROS
   repository_status: active
-  head: 9ec78e63
+  head: d8c379c3
   branch: feature/action-execution-engine-20260722
   origin: git@github-lawim:lawim/LAWIM_V2.git
 
@@ -103,7 +103,8 @@ programs:
       See reports/programs/PROGRAM-C5-STATUS.md
   D:
     name: Domain Runtime Engines
-    status: complete
+    status: pending_certification_review
+    commit: d8c379c3
     description: Domain-specific execution engines for matching, visits, CRM,
       notifications, documents, verification, transactions, payments
     components:
@@ -124,15 +125,6 @@ programs:
       No LLM dependencies, no channel dependencies.
       Shadow mode prevents all external effects by default.
       V2 adapters transform data only, no real V2 calls.
-    components:
-      - MatchingEngine (planned)
-      - VisitEngine (planned)
-      - CRMEngine (planned)
-      - NotificationEngine (planned)
-      - DocumentEngine (planned)
-      - VerificationEngine (planned)
-      - TransactionEngine (planned)
-      - PaymentEngine (planned)
   E:
     name: Cross-Channel Continuity & Full Omnichannel
     status: planned
@@ -174,8 +166,8 @@ programs:
     status: planned
     description: Operations automation, backup, disaster recovery, and maintenance
 
-last_verified_at: 2026-07-22
-verified_head_pending_commit: 18de07d2
+last_verified_at: 2026-07-23
+verified_head_pending_commit: d8c379c3
 verified_by: repository_audit
 test_count:
   domain_tests: 68

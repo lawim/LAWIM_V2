@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Any
 
 from lawim_runtime.domains.base.context import DomainRuntimeContext
@@ -123,7 +124,7 @@ class VisitRuntime(DomainRuntime):
             }
         record.scheduled_date = scheduled_date
         record.status = VisitStatus.SCHEDULED
-        record.updated_at = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
+        record.updated_at = datetime.now(timezone.utc).isoformat()
         return {
             "status": VisitStatus.SCHEDULED.value,
             "visit_id": record.visit_id,
@@ -149,7 +150,7 @@ class VisitRuntime(DomainRuntime):
                 "error": f"visit {visit_id} already in terminal state {record.status.value}",
             }
         record.status = VisitStatus.CANCELLED
-        record.updated_at = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
+        record.updated_at = datetime.now(timezone.utc).isoformat()
         return {
             "status": VisitStatus.CANCELLED.value,
             "visit_id": record.visit_id,

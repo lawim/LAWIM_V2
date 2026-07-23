@@ -26,6 +26,8 @@ REQUIRED_FILES: list[str] = [
     "reports/programs/PROGRAM-C-SUMMARY.md",
     "reports/programs/PROGRAM-C5-STATUS.md",
     "reports/programs/PROGRAM-D-SPECIFICATION.md",
+    "reports/programs/PROGRAM-D-REPORT.md",
+    "reports/programs/PROGRAM-D5-REPORT.md",
     "reports/programs/ROADMAP-V3.md",
     "reports/programs/OPENCODE-SESSION-BOOTSTRAP.md",
     "reports/programs/AGENT-REVIEW-CHECKLIST.md",
@@ -33,11 +35,17 @@ REQUIRED_FILES: list[str] = [
     "reports/architecture/LAWIM-ARCHITECTURE-MAP.md",
     "reports/architecture/LAWIM-VALIDATION-LEVELS.md",
     "reports/architecture/LAWIM-CONTEXT-AUDIT.md",
+    "reports/architecture/LAWIM-PROGRAM-D5-INITIAL-AUDIT.md",
+    "reports/architecture/LAWIM-PROGRAM-D-FILE-JUSTIFICATION.md",
+    "reports/architecture/LAWIM-PROGRAM-D-DEPENDENCY-MAP.md",
+    "reports/architecture/LAWIM-PROGRAM-D-TEST-QUALITY.md",
+    "reports/architecture/LAWIM-PROGRAM-D-SIMPLIFICATION-REPORT.md",
 ]
 
 VALID_STATUSES = frozenset({
     "not_started", "planned", "in_progress", "blocked",
     "complete", "complete_with_baseline_verification_pending",
+    "pending_certification_review", "certified_with_reservations",
 })
 
 REQUIRED_PROGRAMS = frozenset({"A", "B", "C", "C5", "D"})
@@ -47,6 +55,7 @@ EXPECTED_COMMITS = {
     "B": "46fbbc49",
     "C": "86b449b9",
     "C5": "18de07d2",
+    "D": "d8c379c3",
 }
 
 AGENTS_REQUIRED_SECTIONS = {
@@ -183,7 +192,41 @@ else:
     fail("Cannot verify commits — YAML unavailable or file missing")
 
 # ---------------------------------------------------------------------------
-# 4. AGENTS.md required sections
+# 4. Domain Runtime file existence
+# ---------------------------------------------------------------------------
+print("\n=== Domain runtime files ===")
+DOMAIN_RUNTIME_DIRS = [
+    "lawim_runtime/domains/base",
+    "lawim_runtime/domains/matching",
+    "lawim_runtime/domains/visit",
+    "lawim_runtime/domains/crm",
+    "lawim_runtime/domains/notification",
+    "lawim_runtime/domains/document",
+    "lawim_runtime/domains/verification",
+    "lawim_runtime/domains/transaction",
+    "lawim_runtime/domains/payment",
+    "lawim_runtime/domains/adapters",
+]
+for d in DOMAIN_RUNTIME_DIRS:
+    p = ROOT / d
+    if p.is_dir():
+        pass_(f"{d}/ exists")
+    else:
+        fail(f"{d}/ missing")
+
+DOMAIN_RUNTIME_FILES = [
+    "lawim_runtime/domains/config.py",
+    "lawim_runtime/domains/registration.py",
+]
+for f in DOMAIN_RUNTIME_FILES:
+    p = ROOT / f
+    if p.exists():
+        pass_(f"{f} exists")
+    else:
+        fail(f"{f} missing")
+
+# ---------------------------------------------------------------------------
+# 5. AGENTS.md required sections
 # ---------------------------------------------------------------------------
 print("\n=== AGENTS.md sections ===")
 agents_path = ROOT / "AGENTS.md"
@@ -207,7 +250,7 @@ else:
     fail("AGENTS.md not found")
 
 # ---------------------------------------------------------------------------
-# 5. LAWIM_CONTEXT.md 8 canonical statements
+# 6. LAWIM_CONTEXT.md 8 canonical statements
 # ---------------------------------------------------------------------------
 print("\n=== LAWIM_CONTEXT.md canonical statements ===")
 context_path = ROOT / "LAWIM_CONTEXT.md"

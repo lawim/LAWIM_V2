@@ -75,5 +75,5 @@ The following equivalences are strictly forbidden. No report, tag, commit messag
 | B (ProjectProfile) | L3 | Integration tests with LROS pass |
 | C (Qualification + Decision) | L3 | Integration tests with Program B pass |
 | C.5 (Action Execution) | L3 | 276 tests pass; 3 pre-existing V2 baseline failures confirmed |
-| D (Domain Engines) | L0 | Code not yet written |
+| D (Domain Engines) | L2 | 68 domain tests pass, 502 total LROS tests pass |
 | V2 Conversation Runtime | L7 | Production-verified on WhatsApp and Telegram |

@@ -121,7 +121,6 @@ class PaymentRuntime(DomainRuntime):
             idempotency_key=idempotency_key,
         )
         self._repository.save_payment(payment)
-        self._metrics.payments_succeeded += 0
         return {
             "status": PaymentStatus.PENDING.value,
             "payment_id": payment.payment_id,
