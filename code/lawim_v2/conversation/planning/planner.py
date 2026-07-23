@@ -148,6 +148,17 @@ class Planner:
 
         if state == ConversationState.VISIT_PENDING:
             decision.action = ActionType.REQUEST_VISIT.value
+            selected_property = getattr(conversation, 'selected_property_id', None) or conversation.facts.get_latest_confirmed("selected_property_id")
+            if not selected_property:
+                decision.action = ActionType.UPDATE_FACT.value
+                decision.response_type = "visit_without_property"
+                decision.next_question_text = (
+                    "Aucun logement précis n'a encore été sélectionné. Je vais d'abord rechercher les biens "
+                    "correspondant à vos critères, puis vous pourrez choisir celui que vous souhaitez visiter."
+                    if state.language == "fr" else
+                    "No specific property has been selected yet. I will first search for properties "
+                    "matching your criteria, then you can choose which one to visit."
+                )
             return decision
 
         if state == ConversationState.VISIT_CONFIRMED:

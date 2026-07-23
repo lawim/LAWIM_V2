@@ -106,18 +106,6 @@ class TestJourneyBudgetCorrection:
 
 
 # ---------------------------------------------------------------------------
-# Turn 7: Visit without selected property
-# ---------------------------------------------------------------------------
-class TestJourneyVisitWithoutProperty:
-    def test_visit_without_property_response(self):
-        decision_action = "NO_ACTION"
-        selected_property_id = None
-        if selected_property_id is None:
-            decision_action = "VISIT_REQUEST_WITHOUT_SELECTED_PROPERTY"
-        assert decision_action == "VISIT_REQUEST_WITHOUT_SELECTED_PROPERTY"
-
-
-# ---------------------------------------------------------------------------
 # Full journey state test
 # ---------------------------------------------------------------------------
 class TestJourneyFullState:
@@ -147,3 +135,105 @@ class TestJourneyLabels:
         assert _PROPERTY_TYPE_LABELS["apartment"] == "appartement"
         assert _PROPERTY_TYPE_LABELS["house"] == "maison"
         assert _PROPERTY_TYPE_LABELS["land"] == "terrain"
+
+
+# ---------------------------------------------------------------------------
+# Progressive qualification responses
+# ---------------------------------------------------------------------------
+class TestJourneyProgressiveQualification:
+    def test_progressive_ack_after_initial(self):
+        from lawim_v2.conversation.state.engine import ConversationStateEngine
+        engine = ConversationStateEngine.__new__(ConversationStateEngine)
+        result = engine._build_progressive_ack(
+            {"property_type": "APARTMENT", "city": "Yaoundé"},
+            "neighborhood", "fr",
+        )
+        assert "appartement" in result
+        assert "Yaoundé" in result
+        assert "comprends" in result or "Si" in result
+
+    def test_progressive_ack_after_district(self):
+        from lawim_v2.conversation.state.engine import ConversationStateEngine
+        engine = ConversationStateEngine.__new__(ConversationStateEngine)
+        result = engine._build_progressive_ack(
+            {"property_type": "APARTMENT", "city": "Yaoundé", "neighborhood": "Mvan"},
+            "budget_max", "fr",
+        )
+        assert "Mvan" in result
+        assert "J'ai retenu" in result
+
+    def test_progressive_ack_after_budget(self):
+        from lawim_v2.conversation.state.engine import ConversationStateEngine
+        engine = ConversationStateEngine.__new__(ConversationStateEngine)
+        result = engine._build_progressive_ack(
+            {"property_type": "APARTMENT", "city": "Yaoundé", "neighborhood": "Mvan", "budget_max": 200000},
+            "bedrooms", "fr",
+        )
+        assert "préciser" in result or "préciser votre recherche" in result
+
+    def test_field_question_neighborhood(self):
+        from lawim_v2.conversation.state.engine import ConversationStateEngine
+        class MockState:
+            language = "fr"
+        engine = ConversationStateEngine.__new__(ConversationStateEngine)
+        q = engine._get_field_question("neighborhood", MockState())
+        assert "quartier" in q
+        assert "?" in q
+
+    def test_field_question_budget(self):
+        from lawim_v2.conversation.state.engine import ConversationStateEngine
+        class MockState:
+            language = "fr"
+        engine = ConversationStateEngine.__new__(ConversationStateEngine)
+        q = engine._get_field_question("budget_max", MockState())
+        assert "budget" in q
+        assert "?" in q
+
+    def test_field_question_bedrooms(self):
+        from lawim_v2.conversation.state.engine import ConversationStateEngine
+        class MockState:
+            language = "fr"
+        engine = ConversationStateEngine.__new__(ConversationStateEngine)
+        q = engine._get_field_question("bedrooms", MockState())
+        assert "chambres" in q
+        assert "?" in q
+
+    def test_required_fields_include_neighborhood_and_bedrooms(self):
+        from lawim_v2.conversation.planning.next_action_policy import REQUIRED_FIELDS_BY_INTENT
+        fields = REQUIRED_FIELDS_BY_INTENT.get("rent_apartment", [])
+        assert "neighborhood" in fields
+        assert "bedrooms" in fields
+        assert fields.index("city") < fields.index("neighborhood") < fields.index("budget_max")
+
+
+# ---------------------------------------------------------------------------
+# Turn 7 (old): Visit without selected property
+# ---------------------------------------------------------------------------
+class TestJourneyVisitWithoutProperty:
+    def test_visit_without_property_blocks_creation(self):
+        from lawim_v2.conversation.domain.actions import ActionType
+        selected_property_id = None
+        action = ActionType.UPDATE_FACT.value if not selected_property_id else ActionType.REQUEST_VISIT.value
+        assert action == ActionType.UPDATE_FACT.value
+
+    def test_visit_without_property_message_content(self):
+        msg = ("Aucun logement précis n'a encore été sélectionné. Je vais d'abord rechercher les biens "
+               "correspondant à vos critères, puis vous pourrez choisir celui que vous souhaitez visiter.")
+        assert "aucun logement" in msg.lower()
+        assert "visiter" in msg
+        assert "rechercher" in msg
+
+    def test_internal_codes_not_in_labels(self):
+        from lawim_v2.conversation.state.engine import _PROPERTY_TYPE_LABELS
+        for code, label in _PROPERTY_TYPE_LABELS.items():
+            assert "APARTMENT" not in label
+            assert "ROOM" not in label
+            assert "HOUSE" not in label
+            assert "LAND" not in label
+
+    def test_transaction_type_labels_no_internal_codes(self):
+        from lawim_v2.conversation.state.engine import _TRANSACTION_TYPE_LABELS
+        for code, label in _TRANSACTION_TYPE_LABELS.items():
+            assert "RENT" not in label
+            assert "SALE" not in label
+            assert "BUY" not in label

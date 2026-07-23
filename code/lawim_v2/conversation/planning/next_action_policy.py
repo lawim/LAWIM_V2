@@ -7,18 +7,18 @@ from ..domain.conversation import Conversation
 from ..domain.states import ConversationState
 
 REQUIRED_FIELDS_BY_INTENT: dict[str, list[str]] = {
-    "rent_apartment": ["property_type", "budget_max", "city"],
-    "rent_studio": ["property_type", "budget_max", "city"],
-    "rent_room": ["property_type", "budget_max", "city"],
-    "rent_house": ["property_type", "budget_max", "city"],
-    "rent_villa": ["property_type", "budget_max", "city"],
-    "rent_commercial": ["property_type", "budget_max", "city"],
-    "buy_land": ["property_type", "budget_max", "city", "surface_min"],
-    "buy_house": ["property_type", "budget_max", "city"],
-    "buy_apartment": ["property_type", "budget_max", "city"],
-    "buy_villa": ["property_type", "budget_max", "city"],
-    "buy_commercial": ["property_type", "budget_max", "city"],
-    "buy_building": ["property_type", "budget_max", "city"],
+    "rent_apartment": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "rent_studio": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "rent_room": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "rent_house": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "rent_villa": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "rent_commercial": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "buy_land": ["property_type", "city", "neighborhood", "budget_max", "surface_min"],
+    "buy_house": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "buy_apartment": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "buy_villa": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "buy_commercial": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
+    "buy_building": ["property_type", "city", "neighborhood", "budget_max", "bedrooms"],
     "sell_land": ["property_type", "location", "surface"],
     "sell_house": ["property_type", "location", "surface"],
     "sell_apartment": ["property_type", "location", "surface"],
@@ -47,6 +47,7 @@ FIELD_LABELS: dict[str, str] = {
     "budget_max": "budget maximum",
     "budget_min": "budget minimum",
     "city": "ville",
+    "neighborhood": "quartier",
     "location": "localisation",
     "surface_min": "surface minimale",
     "surface_max": "surface maximale",
@@ -57,6 +58,21 @@ FIELD_LABELS: dict[str, str] = {
     "urgency": "urgence",
     "timeline": "calendrier souhaité",
     "description": "description",
+}
+
+FIELD_QUESTIONS_FR: dict[str, str] = {
+    "neighborhood": "Dans quel quartier souhaitez-vous orienter votre recherche ?",
+    "budget_max": "Quel est votre budget mensuel maximal ?",
+    "bedrooms": "Combien de chambres souhaitez-vous ?",
+}
+
+PROPERTY_TYPE_QUESTIONS_FR: dict[str, str] = {
+    "APARTMENT": "appartement",
+    "STUDIO": "studio",
+    "HOUSE": "maison",
+    "VILLA": "villa",
+    "LAND": "terrain",
+    "COMMERCIAL": "local commercial",
 }
 
 

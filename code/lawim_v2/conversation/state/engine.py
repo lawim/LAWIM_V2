@@ -871,23 +871,68 @@ class ConversationStateEngine:
 
         if plan.response_template and not plan.updated_slots:
             return plan.response_template
+
+        next_field = getattr(plan, 'expected_input', None) or ''
+
+        if plan.updated_slots and next_field:
+            ack = self._build_progressive_ack(plan.updated_slots, next_field, state.language)
+            question = self._get_field_question(next_field, state)
+            if ack and question:
+                return f"{ack}\n\n{question}"
+            if question:
+                return question
+            if ack:
+                return ack
+
         if plan.response_template and plan.updated_slots:
             ack = self._build_acknowledgement_text(plan.updated_slots, state.language)
             if ack:
                 return f"{ack}\n\n{plan.response_template}"
             return plan.response_template
+
         if plan.next_question_text:
             ack = self._build_acknowledgement_text(plan.acknowledgement_facts, state.language)
             if ack:
                 return f"{ack}\n\n{plan.next_question_text}"
             return plan.next_question_text
+
         if plan.acknowledgement_facts:
             ack = self._build_acknowledgement_text(plan.acknowledgement_facts, state.language)
             if ack:
                 return ack
+
         messages: dict[str, str] = {
             "fr": "Merci. Continuez a nous fournir les informations necessaires.",
             "en": "Thank you. Please continue providing the required information.",
             "pcm": "Thank you. Abeg continue to give us di information wey we need.",
         }
         return messages.get(state.language, messages["fr"])
+
+    def _build_progressive_ack(self, slots: dict[str, Any], next_field: str, language: str) -> str:
+        if language != "fr":
+            return self._build_acknowledgement_text(slots, language)
+        prop = slots.get("property_type", "")
+        city = slots.get("city", "")
+        neighborhood = slots.get("neighborhood", "")
+        budget = slots.get("budget_max") or slots.get("budget", "")
+        bedrooms = slots.get("bedrooms") or slots.get("bedroom_count", 0)
+
+        if prop and city and not neighborhood and next_field == "neighborhood":
+            label = _PROPERTY_TYPE_LABELS.get(str(prop).lower(), str(prop))
+            return f"Si je vous comprends bien, vous recherchez un {label} à {city}."
+        if neighborhood and next_field == "budget_max":
+            return f"J'ai retenu {neighborhood} comme quartier."
+        if budget and next_field == "bedrooms":
+            return "Pour bien préciser votre recherche,"
+        return self._build_acknowledgement_text(slots, language)
+
+    def _get_field_question(self, field: str, state: ConversationState) -> str:
+        from ..planning.next_action_policy import FIELD_QUESTIONS_FR, PROPERTY_TYPE_QUESTIONS_FR
+        if state.language == "fr":
+            if field == "budget_max":
+                return "Quel est votre budget mensuel maximal ?"
+            if field == "neighborhood":
+                return "Dans quel quartier souhaitez-vous orienter votre recherche ?"
+            if field == "bedrooms":
+                return "Combien de chambres souhaitez-vous ?"
+        return ""
