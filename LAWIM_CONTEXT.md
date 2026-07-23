@@ -416,7 +416,8 @@ Migration follows four phases, with V2 remaining operational throughout.
 - **Description:** Interaction gateway, identity resolution, session management, project resolution, message normalization, deduplication, correlation, interaction orchestrator, response planning, delivery management, V2/V3 routing, divergence analysis
 - **Components:** InteractionEnvelope, IdentityResolver, ProjectResolver, SessionManager, MessageNormalizer, InteractionDeduplicator, CorrelationManager, InteractionOrchestrator, InteractionResponsePlan, DeliveryManager, InteractionModeRouter, InteractionDivergenceAnalyzer
 - **Feature flags:** interaction_gateway_enabled=false, whatsapp_adapter_enabled=false, telegram_adapter_enabled=false (all disabled by default)
-- **Tests:** 64 interaction tests PASS, 566 total LROS tests PASS
+- **Components:** InteractionEnvelope, InteractionGateway, IdentityResolver, ProjectResolver, SessionManager, MessageNormalizer, InteractionDeduplicator, CorrelationManager, InteractionOrchestrator, InteractionResponsePlan, ResponseWriter, DeliveryManager, InteractionModeRouter, InteractionDivergenceAnalyzer, InteractionMetrics, InteractionAuditor, WhatsAppAdapter, TelegramAdapter, WebAPIAdapter, SessionRepository, ChannelIdentityRepository, DeduplicationRepository, DeliveryRepository
+- **Tests:** 92 interaction tests PASS, 595 total LROS tests PASS
 - **Reservations D.5 addressed:** EventBus integration, metrics, visit transitions, matching INSUFFICIENT_DATA, V2 adapters wiring
 
 ---

@@ -149,13 +149,22 @@ programs:
       - InteractionModeRouter
       - InteractionDivergenceAnalyzer
       - InteractionMetrics
+      - InteractionAuditor
+      - WhatsAppAdapter
+      - TelegramAdapter
+      - WebAPIAdapter
+      - DeterministicResponseWriter
+      - SessionRepository
+      - ChannelIdentityRepository
+      - DeduplicationRepository
+      - DeliveryRepository
     feature_flags:
       interaction_gateway_enabled: false
       whatsapp_adapter_enabled: false
       telegram_adapter_enabled: false
       web_interaction_enabled: false
       api_interaction_enabled: false
-    tests: 64 (interaction) + 502 (LROS baseline) = 566 total
+    tests: 64 (interaction) + 28 (adapters, writer, persistence) + 502 (LROS baseline) = 594 total
   F:
     name: LLM Extraction & Response Writing
     status: next

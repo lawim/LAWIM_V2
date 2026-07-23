@@ -52,3 +52,12 @@ class OutboundChannelAdapter(ABC):
 
 class ChannelAdapter(InboundChannelAdapter, OutboundChannelAdapter, ABC):
     channel_name: str = ""
+
+
+__all__ = [
+    "ChannelDeliveryRequest",
+    "ChannelDeliveryResult",
+    "InboundChannelAdapter",
+    "OutboundChannelAdapter",
+    "ChannelAdapter",
+]
