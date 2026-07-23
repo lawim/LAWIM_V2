@@ -1,0 +1,1627 @@
+dataset:
+  id: LAWIM_DEMO_WORLD_V1
+  version: 1.0.0
+  status: IN_PROGRESS
+  description: Univers de démonstration complet de LAWIM.
+  created_at: '2026-07-23'
+  updated_at: '2026-07-23'
+coverage:
+  roles:
+  - client
+  - owner
+  - agent
+  - admin
+  - support
+  - commercial
+  - property_manager
+  professions:
+  - architect
+  - notary
+  - surveyor
+  - lawyer
+  - builder
+  - electrician
+  - plumber
+  property_types:
+  - APARTMENT
+  - HOUSE
+  - STUDIO
+  - VILLA
+  - LAND
+  - COMMERCIAL
+  - ROOM
+  transaction_types:
+  - RENT
+  - BUY
+  - SELL
+  - CONSTRUCT
+  cities:
+  - Yaoundé
+  - Douala
+  - Bafoussam
+  - Kribi
+  - Limbé
+  scenarios:
+  - SCENARIO-RENT-MVAN-001
+  - SCENARIO-RENT-MVAN-002
+  - SCENARIO-BUY-BASTOS-001
+  - SCENARIO-LAND-NKOABANG-001
+  - SCENARIO-ARCHITECT-YAOUNDE-001
+  - SCENARIO-NOTARY-YAOUNDE-001
+cities:
+- id: CITY-YDE-001
+  name: Yaoundé
+  region: Centre
+  districts:
+  - Mvan
+  - Bastos
+  - Odza
+  - Nlongkak
+  - Tsinga
+  - Ngousso
+  - Essos
+  - Mendong
+  - Biyem-Assi
+  - Nkoabang
+  - Emana
+  - Etoug-Ebe
+  - Ekounou
+  - Messassi
+  - Nkolbisson
+  - Nkolfoulou
+- id: CITY-DLA-001
+  name: Douala
+  region: Littoral
+  districts:
+  - Akwa
+  - Bonanjo
+  - Bonapriso
+  - Deido
+  - Makepe
+  - Bonamoussadi
+  - Logbaba
+  - Bassa
+  - Nylon
+- id: CITY-BFS-001
+  name: Bafoussam
+  region: Ouest
+  districts:
+  - Djeleng
+  - Kouogouo
+  - Tamdja
+  - Banengo
+- id: CITY-KRI-001
+  name: Kribi
+  region: Sud
+  districts:
+  - Mpangou
+  - Bebamboue
+  - Lobe
+- id: CITY-LIM-001
+  name: Limbé
+  region: Sud-Ouest
+  districts:
+  - Bota
+  - Mile 2
+  - Mile 4
+  - Mokunda
+users:
+- id: DEMO-USER-CLIENT-001
+  full_name: Jean Dupont
+  role: client
+  city: Yaoundé
+  preferred_language: fr
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+- id: DEMO-USER-CLIENT-002
+  full_name: Alice Mbarga
+  role: client
+  city: Douala
+  preferred_language: fr
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+- id: DEMO-USER-CLIENT-003
+  full_name: Pierre Kamga
+  role: client
+  city: Yaoundé
+  preferred_language: fr
+  profile_status: active
+  verification_status: unverified
+  consent_status: pending
+- id: DEMO-USER-CLIENT-004
+  full_name: Marie Ngo Bissa
+  role: client
+  city: Bafoussam
+  preferred_language: fr
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+- id: DEMO-USER-CLIENT-005
+  full_name: Paul Etoundi
+  role: client
+  city: Douala
+  preferred_language: fr
+  profile_status: active
+  verification_status: unverified
+  consent_status: denied
+- id: DEMO-USER-OWNER-001
+  full_name: Thomas Mvogo
+  role: owner
+  city: Yaoundé
+  preferred_language: fr
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+  has_multiple_properties: true
+- id: DEMO-USER-OWNER-002
+  full_name: Christine Eyanga
+  role: owner
+  city: Yaoundé
+  preferred_language: fr
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+- id: DEMO-USER-OWNER-003
+  full_name: Joseph Obama
+  role: owner
+  city: Douala
+  preferred_language: fr
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+- id: DEMO-USER-OWNER-004
+  full_name: Suzanne Mbah
+  role: owner
+  city: Yaoundé
+  preferred_language: fr
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+- id: DEMO-USER-AGENT-001
+  full_name: Luc Tchinda
+  role: agent
+  city: Yaoundé
+  preferred_language: fr
+  profile_status: active
+  verification_status: verified
+  organization_id: DEMO-ORG-AGENCY-001
+- id: DEMO-USER-AGENT-002
+  full_name: Rosalie Nkwi
+  role: agent
+  city: Yaoundé
+  preferred_language: fr
+  profile_status: active
+  verification_status: verified
+  organization_id: DEMO-ORG-AGENCY-001
+- id: DEMO-USER-AGENT-003
+  full_name: Emmanuel Simo
+  role: agent
+  city: Douala
+  preferred_language: fr
+  profile_status: suspended
+  verification_status: unverified
+  organization_id: DEMO-ORG-AGENCY-002
+- id: DEMO-USER-COMMERCIAL-001
+  full_name: Fabrice Noah
+  role: commercial
+  city: Yaoundé
+  preferred_language: fr
+  profile_status: active
+  verification_status: verified
+organizations:
+- id: DEMO-ORG-AGENCY-001
+  name: DEMO Agence Centrale
+  category: real_estate_agency
+  city: Yaoundé
+  district: Mvan
+  status: active
+- id: DEMO-ORG-AGENCY-002
+  name: DEMO Immo Services
+  category: real_estate_agency
+  city: Douala
+  district: Bonanjo
+  status: active
+- id: DEMO-ORG-NOTARY-001
+  name: DEMO Étude Notariale
+  category: notary
+  city: Yaoundé
+  district: Bastos
+  status: active
+- id: DEMO-ORG-ARCHI-001
+  name: DEMO Architecture Studio
+  category: architecture
+  city: Yaoundé
+  district: Nlongkak
+  status: active
+- id: DEMO-ORG-LEGAL-001
+  name: DEMO Cabinet Juridique
+  category: legal
+  city: Yaoundé
+  district: Bastos
+  status: active
+- id: DEMO-ORG-CONSTRUCT-001
+  name: DEMO Bâtir Plus
+  category: construction
+  city: Yaoundé
+  district: Mendong
+  status: active
+- id: DEMO-ORG-SURVEY-001
+  name: DEMO Géomètre Expert
+  category: surveying
+  city: Yaoundé
+  district: Odza
+  status: active
+- id: DEMO-ORG-MAINT-001
+  name: DEMO Maintenance Pro
+  category: maintenance
+  city: Yaoundé
+  district: Essos
+  status: active
+- id: DEMO-ORG-MOVER-001
+  name: DEMO Déménagement Express
+  category: moving
+  city: Yaoundé
+  district: Nkoabang
+  status: active
+- id: DEMO-ORG-FINANCE-001
+  name: DEMO Conseil Finance
+  category: financial
+  city: Yaoundé
+  district: Bastos
+  status: active
+professional_profiles:
+- id: DEMO-PRO-ARCH-001
+  organization_id: DEMO-ORG-ARCHI-001
+  profession: architect
+  title: Architecte principal
+  years_experience: 12
+  verified: true
+  available: true
+- id: DEMO-PRO-NOTARY-001
+  organization_id: DEMO-ORG-NOTARY-001
+  profession: notary
+  title: Notaire
+  years_experience: 20
+  verified: true
+  available: true
+- id: DEMO-PRO-SURVEYOR-001
+  organization_id: DEMO-ORG-SURVEY-001
+  profession: surveyor
+  title: Géomètre expert
+  years_experience: 15
+  verified: true
+  available: true
+- id: DEMO-PRO-LAWYER-001
+  organization_id: DEMO-ORG-LEGAL-001
+  profession: lawyer
+  title: Avocat en immobilier
+  years_experience: 18
+  verified: true
+  available: true
+- id: DEMO-PRO-BUILDER-001
+  organization_id: DEMO-ORG-CONSTRUCT-001
+  profession: builder
+  title: Chef de chantier
+  years_experience: 22
+  verified: true
+  available: true
+- id: DEMO-PRO-ELECTRICIAN-001
+  organization_id: DEMO-ORG-CONSTRUCT-001
+  profession: electrician
+  title: Électricien
+  years_experience: 8
+  verified: true
+  available: true
+- id: DEMO-PRO-PLUMBER-001
+  organization_id: DEMO-ORG-MAINT-001
+  profession: plumber
+  title: Plombier
+  years_experience: 10
+  verified: true
+  available: true
+services:
+- id: DEMO-SERVICE-001
+  name: Consultation architecturale initiale
+  provider_id: DEMO-PRO-ARCH-001
+  price: 150000
+- id: DEMO-SERVICE-002
+  name: Plan de construction
+  provider_id: DEMO-PRO-ARCH-001
+  price: 500000
+- id: DEMO-SERVICE-003
+  name: Suivi de chantier
+  provider_id: DEMO-PRO-ARCH-001
+  price: 800000
+- id: DEMO-SERVICE-004
+  name: Vérification de titre foncier
+  provider_id: DEMO-PRO-NOTARY-001
+  price: 200000
+- id: DEMO-SERVICE-005
+  name: Acte de vente
+  provider_id: DEMO-PRO-NOTARY-001
+  price: 350000
+- id: DEMO-SERVICE-006
+  name: Bornage de terrain
+  provider_id: DEMO-PRO-SURVEYOR-001
+  price: 250000
+- id: DEMO-SERVICE-007
+  name: Levé topographique
+  provider_id: DEMO-PRO-SURVEYOR-001
+  price: 400000
+- id: DEMO-SERVICE-008
+  name: Conseil juridique
+  provider_id: DEMO-PRO-LAWYER-001
+  price: 100000
+- id: DEMO-SERVICE-009
+  name: Gros œuvre
+  provider_id: DEMO-PRO-BUILDER-001
+  price: 2500000
+- id: DEMO-SERVICE-010
+  name: Installation électrique
+  provider_id: DEMO-PRO-ELECTRICIAN-001
+  price: 150000
+- id: DEMO-SERVICE-011
+  name: Plomberie
+  provider_id: DEMO-PRO-PLUMBER-001
+  price: 100000
+properties:
+- id: DEMO-PROPERTY-YDE-001
+  city: Yaoundé
+  district: Mvan
+  property_type: APARTMENT
+  price: 283430
+  currency: XAF
+  bedrooms: 2
+  title: Résidence Bellevue
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-002
+  city: Yaoundé
+  district: Mvan
+  property_type: HOUSE
+  price: 283430
+  currency: XAF
+  bedrooms: 3
+  title: Villa du Marché
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-003
+  city: Yaoundé
+  district: Mvan
+  property_type: STUDIO
+  price: 283430
+  currency: XAF
+  bedrooms: 4
+  title: Studio du Lac
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-004
+  city: Yaoundé
+  district: Bastos
+  property_type: APARTMENT
+  price: 256545
+  currency: XAF
+  bedrooms: 1
+  title: Résidence des Fleurs
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-005
+  city: Yaoundé
+  district: Bastos
+  property_type: HOUSE
+  price: 256545
+  currency: XAF
+  bedrooms: 2
+  title: Villa des Eaux
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-006
+  city: Yaoundé
+  district: Bastos
+  property_type: STUDIO
+  price: 256545
+  currency: XAF
+  bedrooms: 3
+  title: Studio des Cocotiers
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-007
+  city: Yaoundé
+  district: Odza
+  property_type: APARTMENT
+  price: 340444
+  currency: XAF
+  bedrooms: 4
+  title: Résidence du Paradis
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-008
+  city: Yaoundé
+  district: Odza
+  property_type: HOUSE
+  price: 340444
+  currency: XAF
+  bedrooms: 1
+  title: Villa Diana
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-009
+  city: Yaoundé
+  district: Odza
+  property_type: STUDIO
+  price: 340444
+  currency: XAF
+  bedrooms: 2
+  title: Studio Soleil
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-010
+  city: Yaoundé
+  district: Nlongkak
+  property_type: APARTMENT
+  price: 425635
+  currency: XAF
+  bedrooms: 3
+  title: Résidence Royal
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-011
+  city: Yaoundé
+  district: Nlongkak
+  property_type: HOUSE
+  price: 425635
+  currency: XAF
+  bedrooms: 4
+  title: Villa Beau Séjour
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-012
+  city: Yaoundé
+  district: Nlongkak
+  property_type: STUDIO
+  price: 425635
+  currency: XAF
+  bedrooms: 1
+  title: Studio Bleu
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-013
+  city: Yaoundé
+  district: Tsinga
+  property_type: APARTMENT
+  price: 420661
+  currency: XAF
+  bedrooms: 2
+  title: Résidence Princier
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-014
+  city: Yaoundé
+  district: Tsinga
+  property_type: HOUSE
+  price: 420661
+  currency: XAF
+  bedrooms: 3
+  title: Villa les Manguiers
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-015
+  city: Yaoundé
+  district: Tsinga
+  property_type: STUDIO
+  price: 420661
+  currency: XAF
+  bedrooms: 4
+  title: Studio Vert
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-016
+  city: Yaoundé
+  district: Ngousso
+  property_type: APARTMENT
+  price: 364408
+  currency: XAF
+  bedrooms: 1
+  title: Résidence du Stade
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-017
+  city: Yaoundé
+  district: Ngousso
+  property_type: HOUSE
+  price: 364408
+  currency: XAF
+  bedrooms: 2
+  title: Villa Saint Michel
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-018
+  city: Yaoundé
+  district: Ngousso
+  property_type: STUDIO
+  price: 364408
+  currency: XAF
+  bedrooms: 3
+  title: Studio du Centre
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-019
+  city: Yaoundé
+  district: Essos
+  property_type: APARTMENT
+  price: 326998
+  currency: XAF
+  bedrooms: 4
+  title: Résidence de la Gare
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-020
+  city: Yaoundé
+  district: Essos
+  property_type: HOUSE
+  price: 326998
+  currency: XAF
+  bedrooms: 1
+  title: Villa des Acacias
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-021
+  city: Yaoundé
+  district: Essos
+  property_type: STUDIO
+  price: 326998
+  currency: XAF
+  bedrooms: 2
+  title: Studio Bellevue
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-022
+  city: Yaoundé
+  district: Mendong
+  property_type: APARTMENT
+  price: 285666
+  currency: XAF
+  bedrooms: 3
+  title: Résidence du Marché
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-023
+  city: Yaoundé
+  district: Mendong
+  property_type: HOUSE
+  price: 285666
+  currency: XAF
+  bedrooms: 4
+  title: Villa du Lac
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-024
+  city: Yaoundé
+  district: Mendong
+  property_type: STUDIO
+  price: 285666
+  currency: XAF
+  bedrooms: 1
+  title: Studio des Fleurs
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-025
+  city: Yaoundé
+  district: Biyem-Assi
+  property_type: APARTMENT
+  price: 367449
+  currency: XAF
+  bedrooms: 2
+  title: Résidence des Eaux
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-026
+  city: Yaoundé
+  district: Biyem-Assi
+  property_type: HOUSE
+  price: 367449
+  currency: XAF
+  bedrooms: 3
+  title: Villa des Cocotiers
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-027
+  city: Yaoundé
+  district: Biyem-Assi
+  property_type: STUDIO
+  price: 367449
+  currency: XAF
+  bedrooms: 4
+  title: Studio du Paradis
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-028
+  city: Yaoundé
+  district: Nkoabang
+  property_type: APARTMENT
+  price: 395069
+  currency: XAF
+  bedrooms: 1
+  title: Résidence Diana
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-029
+  city: Yaoundé
+  district: Nkoabang
+  property_type: HOUSE
+  price: 395069
+  currency: XAF
+  bedrooms: 2
+  title: Villa Soleil
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-030
+  city: Yaoundé
+  district: Nkoabang
+  property_type: STUDIO
+  price: 395069
+  currency: XAF
+  bedrooms: 3
+  title: Studio Royal
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-031
+  city: Yaoundé
+  district: Emana
+  property_type: APARTMENT
+  price: 252725
+  currency: XAF
+  bedrooms: 4
+  title: Résidence Beau Séjour
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-032
+  city: Yaoundé
+  district: Emana
+  property_type: HOUSE
+  price: 252725
+  currency: XAF
+  bedrooms: 1
+  title: Villa Bleu
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-033
+  city: Yaoundé
+  district: Emana
+  property_type: STUDIO
+  price: 252725
+  currency: XAF
+  bedrooms: 2
+  title: Studio Princier
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-034
+  city: Yaoundé
+  district: Etoug-Ebe
+  property_type: APARTMENT
+  price: 253377
+  currency: XAF
+  bedrooms: 3
+  title: Résidence les Manguiers
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-035
+  city: Yaoundé
+  district: Etoug-Ebe
+  property_type: HOUSE
+  price: 253377
+  currency: XAF
+  bedrooms: 4
+  title: Villa Vert
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-036
+  city: Yaoundé
+  district: Etoug-Ebe
+  property_type: STUDIO
+  price: 253377
+  currency: XAF
+  bedrooms: 1
+  title: Studio du Stade
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-037
+  city: Yaoundé
+  district: Ekounou
+  property_type: APARTMENT
+  price: 457845
+  currency: XAF
+  bedrooms: 2
+  title: Résidence Saint Michel
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-038
+  city: Yaoundé
+  district: Ekounou
+  property_type: HOUSE
+  price: 457845
+  currency: XAF
+  bedrooms: 3
+  title: Villa du Centre
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-039
+  city: Yaoundé
+  district: Ekounou
+  property_type: STUDIO
+  price: 457845
+  currency: XAF
+  bedrooms: 4
+  title: Studio de la Gare
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-040
+  city: Yaoundé
+  district: Messassi
+  property_type: APARTMENT
+  price: 378965
+  currency: XAF
+  bedrooms: 1
+  title: Résidence des Acacias
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-041
+  city: Yaoundé
+  district: Messassi
+  property_type: HOUSE
+  price: 378965
+  currency: XAF
+  bedrooms: 2
+  title: Villa Bellevue
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-042
+  city: Yaoundé
+  district: Messassi
+  property_type: STUDIO
+  price: 378965
+  currency: XAF
+  bedrooms: 3
+  title: Studio du Marché
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-043
+  city: Yaoundé
+  district: Nkolbisson
+  property_type: APARTMENT
+  price: 221581
+  currency: XAF
+  bedrooms: 4
+  title: Résidence du Lac
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-044
+  city: Yaoundé
+  district: Nkolbisson
+  property_type: HOUSE
+  price: 221581
+  currency: XAF
+  bedrooms: 1
+  title: Villa des Fleurs
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-045
+  city: Yaoundé
+  district: Nkolbisson
+  property_type: STUDIO
+  price: 221581
+  currency: XAF
+  bedrooms: 2
+  title: Studio des Eaux
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-046
+  city: Yaoundé
+  district: Nkolfoulou
+  property_type: APARTMENT
+  price: 430671
+  currency: XAF
+  bedrooms: 3
+  title: Résidence des Cocotiers
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-YDE-047
+  city: Yaoundé
+  district: Nkolfoulou
+  property_type: HOUSE
+  price: 430671
+  currency: XAF
+  bedrooms: 4
+  title: Villa du Paradis
+  status: active
+  owner_id: DEMO-USER-OWNER-004
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-048
+  city: Yaoundé
+  district: Nkolfoulou
+  property_type: STUDIO
+  price: 430671
+  currency: XAF
+  bedrooms: 1
+  title: Studio Diana
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: true
+- id: DEMO-PROPERTY-DLA-001
+  city: Douala
+  district: Akwa
+  property_type: APARTMENT
+  price: 399593
+  currency: XAF
+  bedrooms: 2
+  title: Résidence de la Gare
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-002
+  city: Douala
+  district: Akwa
+  property_type: APARTMENT
+  price: 589304
+  currency: XAF
+  bedrooms: 3
+  title: Résidence du Centre
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-003
+  city: Douala
+  district: Akwa
+  property_type: HOUSE
+  price: 204004
+  currency: XAF
+  bedrooms: 4
+  title: Villa Saint Michel
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-004
+  city: Douala
+  district: Bonanjo
+  property_type: APARTMENT
+  price: 529775
+  currency: XAF
+  bedrooms: 1
+  title: Résidence du Stade
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-005
+  city: Douala
+  district: Bonanjo
+  property_type: APARTMENT
+  price: 399550
+  currency: XAF
+  bedrooms: 2
+  title: Résidence Vert
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-006
+  city: Douala
+  district: Bonanjo
+  property_type: HOUSE
+  price: 539942
+  currency: XAF
+  bedrooms: 3
+  title: Villa les Manguiers
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-007
+  city: Douala
+  district: Bonapriso
+  property_type: APARTMENT
+  price: 312628
+  currency: XAF
+  bedrooms: 4
+  title: Résidence Princier
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-008
+  city: Douala
+  district: Bonapriso
+  property_type: APARTMENT
+  price: 272031
+  currency: XAF
+  bedrooms: 1
+  title: Résidence Bleu
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-009
+  city: Douala
+  district: Bonapriso
+  property_type: HOUSE
+  price: 451291
+  currency: XAF
+  bedrooms: 2
+  title: Villa Beau Séjour
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-010
+  city: Douala
+  district: Deido
+  property_type: APARTMENT
+  price: 238573
+  currency: XAF
+  bedrooms: 3
+  title: Résidence Royal
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-011
+  city: Douala
+  district: Deido
+  property_type: APARTMENT
+  price: 380286
+  currency: XAF
+  bedrooms: 4
+  title: Résidence Soleil
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-012
+  city: Douala
+  district: Deido
+  property_type: HOUSE
+  price: 388105
+  currency: XAF
+  bedrooms: 1
+  title: Villa Diana
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-013
+  city: Douala
+  district: Makepe
+  property_type: APARTMENT
+  price: 540106
+  currency: XAF
+  bedrooms: 2
+  title: Résidence du Paradis
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-014
+  city: Douala
+  district: Makepe
+  property_type: APARTMENT
+  price: 334123
+  currency: XAF
+  bedrooms: 3
+  title: Résidence des Cocotiers
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-015
+  city: Douala
+  district: Makepe
+  property_type: HOUSE
+  price: 357895
+  currency: XAF
+  bedrooms: 4
+  title: Villa des Eaux
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-016
+  city: Douala
+  district: Bonamoussadi
+  property_type: APARTMENT
+  price: 413721
+  currency: XAF
+  bedrooms: 1
+  title: Résidence des Fleurs
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-017
+  city: Douala
+  district: Bonamoussadi
+  property_type: APARTMENT
+  price: 389438
+  currency: XAF
+  bedrooms: 2
+  title: Résidence du Lac
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-018
+  city: Douala
+  district: Bonamoussadi
+  property_type: HOUSE
+  price: 229844
+  currency: XAF
+  bedrooms: 3
+  title: Villa du Marché
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-019
+  city: Douala
+  district: Logbaba
+  property_type: APARTMENT
+  price: 596965
+  currency: XAF
+  bedrooms: 4
+  title: Résidence Bellevue
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-020
+  city: Douala
+  district: Logbaba
+  property_type: APARTMENT
+  price: 554886
+  currency: XAF
+  bedrooms: 1
+  title: Résidence des Acacias
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-021
+  city: Douala
+  district: Logbaba
+  property_type: HOUSE
+  price: 488338
+  currency: XAF
+  bedrooms: 2
+  title: Villa de la Gare
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-022
+  city: Douala
+  district: Bassa
+  property_type: APARTMENT
+  price: 355151
+  currency: XAF
+  bedrooms: 3
+  title: Résidence du Centre
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-023
+  city: Douala
+  district: Bassa
+  property_type: APARTMENT
+  price: 495826
+  currency: XAF
+  bedrooms: 4
+  title: Résidence Saint Michel
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-024
+  city: Douala
+  district: Bassa
+  property_type: HOUSE
+  price: 349283
+  currency: XAF
+  bedrooms: 1
+  title: Villa du Stade
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-DLA-025
+  city: Douala
+  district: Nylon
+  property_type: APARTMENT
+  price: 389020
+  currency: XAF
+  bedrooms: 2
+  title: Résidence Vert
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-BAF-001
+  city: Bafoussam
+  district: Djeleng
+  property_type: HOUSE
+  price: 260306
+  currency: XAF
+  bedrooms: 2
+  title: Villa Beau Séjour
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-BAF-002
+  city: Bafoussam
+  district: Djeleng
+  property_type: APARTMENT
+  price: 260306
+  currency: XAF
+  bedrooms: 3
+  title: Résidence du Marché
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-BAF-003
+  city: Bafoussam
+  district: Kouogouo
+  property_type: HOUSE
+  price: 142141
+  currency: XAF
+  bedrooms: 1
+  title: Villa Princier
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-BAF-004
+  city: Bafoussam
+  district: Kouogouo
+  property_type: APARTMENT
+  price: 142141
+  currency: XAF
+  bedrooms: 2
+  title: Résidence des Fleurs
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: false
+- id: DEMO-PROPERTY-BAF-005
+  city: Bafoussam
+  district: Tamdja
+  property_type: HOUSE
+  price: 269719
+  currency: XAF
+  bedrooms: 3
+  title: Villa Vert
+  status: suspended
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-BAF-006
+  city: Bafoussam
+  district: Tamdja
+  property_type: APARTMENT
+  price: 269719
+  currency: XAF
+  bedrooms: 1
+  title: Résidence des Cocotiers
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-BAF-007
+  city: Bafoussam
+  district: Banengo
+  property_type: HOUSE
+  price: 215949
+  currency: XAF
+  bedrooms: 2
+  title: Villa Saint Michel
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-BAF-008
+  city: Bafoussam
+  district: Banengo
+  property_type: APARTMENT
+  price: 215949
+  currency: XAF
+  bedrooms: 3
+  title: Résidence Diana
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: false
+- id: DEMO-PROPERTY-KRI-001
+  city: Kribi
+  district: Mpangou
+  property_type: HOUSE
+  price: 170047
+  currency: XAF
+  bedrooms: 2
+  title: Villa Beau Séjour
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-KRI-002
+  city: Kribi
+  district: Mpangou
+  property_type: APARTMENT
+  price: 170047
+  currency: XAF
+  bedrooms: 3
+  title: Résidence du Marché
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-KRI-003
+  city: Kribi
+  district: Bebamboue
+  property_type: HOUSE
+  price: 267846
+  currency: XAF
+  bedrooms: 1
+  title: Villa Princier
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-KRI-004
+  city: Kribi
+  district: Bebamboue
+  property_type: APARTMENT
+  price: 267846
+  currency: XAF
+  bedrooms: 2
+  title: Résidence des Fleurs
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: false
+- id: DEMO-PROPERTY-KRI-005
+  city: Kribi
+  district: Lobe
+  property_type: HOUSE
+  price: 123028
+  currency: XAF
+  bedrooms: 3
+  title: Villa Vert
+  status: suspended
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-KRI-006
+  city: Kribi
+  district: Lobe
+  property_type: APARTMENT
+  price: 123028
+  currency: XAF
+  bedrooms: 1
+  title: Résidence des Cocotiers
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-LIM-001
+  city: Limbé
+  district: Bota
+  property_type: HOUSE
+  price: 170133
+  currency: XAF
+  bedrooms: 2
+  title: Villa Beau Séjour
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-LIM-002
+  city: Limbé
+  district: Bota
+  property_type: APARTMENT
+  price: 170133
+  currency: XAF
+  bedrooms: 3
+  title: Résidence du Marché
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-LIM-003
+  city: Limbé
+  district: Mile 2
+  property_type: HOUSE
+  price: 336633
+  currency: XAF
+  bedrooms: 1
+  title: Villa Princier
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-LIM-004
+  city: Limbé
+  district: Mile 2
+  property_type: APARTMENT
+  price: 336633
+  currency: XAF
+  bedrooms: 2
+  title: Résidence des Fleurs
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: false
+- id: DEMO-PROPERTY-LIM-005
+  city: Limbé
+  district: Mile 4
+  property_type: HOUSE
+  price: 207629
+  currency: XAF
+  bedrooms: 3
+  title: Villa Vert
+  status: suspended
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: true
+- id: DEMO-PROPERTY-LIM-006
+  city: Limbé
+  district: Mile 4
+  property_type: APARTMENT
+  price: 207629
+  currency: XAF
+  bedrooms: 1
+  title: Résidence des Cocotiers
+  status: active
+  owner_id: DEMO-USER-OWNER-001
+  features: []
+  available: true
+- id: DEMO-PROPERTY-LIM-007
+  city: Limbé
+  district: Mokunda
+  property_type: HOUSE
+  price: 212468
+  currency: XAF
+  bedrooms: 2
+  title: Villa Saint Michel
+  status: active
+  owner_id: DEMO-USER-OWNER-002
+  features: []
+  available: true
+- id: DEMO-PROPERTY-LIM-008
+  city: Limbé
+  district: Mokunda
+  property_type: APARTMENT
+  price: 212468
+  currency: XAF
+  bedrooms: 3
+  title: Résidence Diana
+  status: active
+  owner_id: DEMO-USER-OWNER-003
+  features: []
+  available: false
+negative_cases:
+- id: NEG-NO-MATCH-001
+  description: Aucun bien ne correspond aux critères (budget trop bas)
+  scenario: SCENARIO-RENT-MVAN-001
+- id: NEG-NO-CONSENT-001
+  description: Propriétaire sans consentement pour mise en relation
+  user: DEMO-USER-OWNER-003
+- id: NEG-SUSPENDED-001
+  description: Bien suspendu sélectionné par erreur
+  property:
+  - DEMO-PROPERTY-BAF-005
+- id: NEG-DUPLICATE-CONNECTION-001
+  description: Double tentative de connexion sur le même match
+- id: NEG-BLOCKED-USER-001
+  description: Utilisateur bloqué tente une recherche
+  user: DEMO-USER-AGENT-003
+scenarios:
+- scenario_id: SCENARIO-RENT-MVAN-001
+  title: Location appartement 2 chambres à Mvan
+  category: property_rental
+  status: READY
+  personas:
+  - DEMO-USER-CLIENT-001
+  - DEMO-USER-OWNER-001
+  - DEMO-USER-AGENT-001
+  properties:
+  - DEMO-PROPERTY-YDE-001
+  - DEMO-PROPERTY-YDE-002
+  - DEMO-PROPERTY-YDE-003
+  services: []
+  start_messages:
+  - Bonjour, je cherche un appartement à louer à Yaoundé.
+  - À Mvan.
+  - Mon budget maximal est de 200 000 F par mois.
+  - Je veux deux chambres.
+  - Finalement, mon budget maximal est de 250 000 F.
+- scenario_id: SCENARIO-RENT-MVAN-002
+  title: Location studio à Mvan
+  category: property_rental
+  status: READY
+  personas:
+  - DEMO-USER-CLIENT-002
+  - DEMO-USER-OWNER-002
+  properties:
+  - DEMO-PROPERTY-YDE-005
+  services: []
+- scenario_id: SCENARIO-BUY-BASTOS-001
+  title: Achat maison à Bastos
+  category: property_purchase
+  status: READY
+  personas:
+  - DEMO-USER-CLIENT-003
+  - DEMO-USER-OWNER-003
+  - DEMO-PRO-NOTARY-001
+  properties:
+  - DEMO-PROPERTY-YDE-004
+  services:
+  - DEMO-SERVICE-004
+  - DEMO-SERVICE-005
+- scenario_id: SCENARIO-LAND-NKOABANG-001
+  title: Achat terrain à Nkoabang
+  category: land_purchase
+  status: READY
+  personas:
+  - DEMO-USER-CLIENT-001
+  - DEMO-USER-OWNER-004
+  - DEMO-PRO-SURVEYOR-001
+  properties: []
+  services:
+  - DEMO-SERVICE-006
+  - DEMO-SERVICE-007
+- scenario_id: SCENARIO-ARCHITECT-YAOUNDE-001
+  title: Recherche d'architecte à Yaoundé
+  category: professional_search
+  status: READY
+  personas:
+  - DEMO-USER-CLIENT-002
+  - DEMO-PRO-ARCH-001
+  properties: []
+  services:
+  - DEMO-SERVICE-001
+  - DEMO-SERVICE-002
+  - DEMO-SERVICE-003
+- scenario_id: SCENARIO-NOTARY-YAOUNDE-001
+  title: Consultation notariale
+  category: professional_search
+  status: READY
+  personas:
+  - DEMO-USER-CLIENT-004
+  - DEMO-PRO-NOTARY-001
+  properties: []
+  services:
+  - DEMO-SERVICE-004
+  - DEMO-SERVICE-005
