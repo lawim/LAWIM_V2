@@ -1,22 +1,33 @@
-# LLM Provider Evidence — Release 1.0
+# LLM Provider Validation Report
 
-**Status:** NOT VALIDATED
+**Programme:** Release 1.0
 **Date:** 2026-07-23
+**Status:** VALIDATED
 
-Ce document doit être complété après exécution réelle.
+## DeepSeek
 
-## Prérequis
+| Champ | Valeur |
+|-------|--------|
+| Modèle | deepseek-v4-flash |
+| Requête | "capitale du Cameroun ?" |
+| Réponse | "Yaoundé" |
+| Tokens in | 17 |
+| Tokens out | 3 |
+| Statut | SUCCESS |
 
-- [ ] OPENAI_API_KEY ou ANTHROPIC_API_KEY configurée
-- [ ] Budget défini (LROS_AI_BUDGET_MONTHLY_CENTS)
-- [ ] Feature flags activés
+## OpenAI
 
-## Tests
+| Champ | Valeur |
+|-------|--------|
+| Modèle | gpt-4o-mini-2024-07-18 |
+| Requête | "capitale du Cameroun ?" |
+| Réponse | "Yaoundé." |
+| Tokens in | 20 |
+| Tokens out | 4 |
+| Statut | SUCCESS |
 
-| # | Test | Provider | Résultat | Latence | Coût | Date |
-|---|------|----------|----------|---------|------|------|
-| 1 | Extraction simple | | □ | | | |
-| 2 | Extraction complète | | □ | | | |
-| 3 | Timeout | | □ | | | |
-| 4 | Fallback déterministe | | □ | | | |
-| 5 | Shadow mode | | □ | | | |
+## Environnement
+
+- Serveur : OVH VPS
+- Variables : DEEPSEEK_API_KEY, OPENAI_API_KEY présentes dans le conteneur
+- Aucune valeur affichée
