@@ -16,12 +16,12 @@
 
 | Document | Issue | Action |
 |----------|-------|--------|
-| `LAWIM_CONTEXT.md` | HEAD reported as 18de07d2 instead of d8c379c3 | CORRECTED to d8c379c3 |
+| `LAWIM_CONTEXT.md` | HEAD reported as 18de07d2 instead of d8c379c3 | CORRECTED to d8c379c3 (then 8cf36b8a in D.5) |
 | `LAWIM_CONTEXT.md` | Last updated date 2026-07-22 | CORRECTED to 2026-07-23 |
-| `lawim_program_status.yaml` | head reported as 9ec78e63 instead of d8c379c3 | CORRECTED to d8c379c3 |
-| `lawim_program_status.yaml` | D status was `complete` | CORRECTED to `pending_certification_review` |
+| `lawim_program_status.yaml` | head reported as 9ec78e63 instead of d8c379c3 | CORRECTED to d8c379c3 (then 8cf36b8a in D.5) |
+| `lawim_program_status.yaml` | D status was `complete` | CORRECTED to `pending_certification_review` (then `certified_with_reservations` in D.5) |
 | `lawim_program_status.yaml` | last_verified_at 2026-07-22 | CORRECTED to 2026-07-23 |
-| `lawim_program_status.yaml` | verified_head_pending_commit 18de07d2 | CORRECTED to d8c379c3 |
+| `lawim_program_status.yaml` | verified_head_pending_commit 18de07d2 | CORRECTED to d8c379c3 (then 8cf36b8a in D.5) |
 | `LAWIM-VALIDATION-LEVELS.md` | D at L0 (code not written) | CORRECTED to L2 (tests pass) |
 
 ## Files Considered for Removal (Retained)

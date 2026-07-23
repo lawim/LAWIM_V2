@@ -10,15 +10,15 @@
 | Property | Value |
 |----------|-------|
 | **Branch** | `feature/action-execution-engine-20260722` |
-| **HEAD** | `d8c379c3` |
+| **HEAD** | `8cf36b8a` |
 | **origin/main** | `86b449b9` |
 | **Behind origin/main** | 0 |
-| **Ahead of origin/main** | 2 |
+| **Ahead of origin/main** | 3 |
 
 ## HEAD Confirmation
 
-- Commit `d8c379c3` is present and is the current HEAD.
-- Commit message: `feat(lros): add domain runtime engines and canonical LAWIM agent governance`
+- Commit `8cf36b8a` is present and is the current HEAD.
+- Commit message: `refactor(lros): consolidate and certify programme D domain runtime architecture`
 
 ## Programme C.5 Reference Commit
 
@@ -31,12 +31,14 @@ The original Programme C reference is `86b449b9` (origin/main, tagged `lawim-v3-
 ## Commits since origin/main (86b449b9)
 
 ```
+8cf36b8a refactor(lros): consolidate and certify programme D domain runtime architecture
 d8c379c3 feat(lros): add domain runtime engines and canonical LAWIM agent governance
 18de07d2 feat(lros): add reliable action execution engine with idempotency and recovery
 ```
 
 C.5 (18de07d2) added 75 files.
 D (d8c379c3) added 127 files.
+D.5 (8cf36b8a) added 15 files, modified 134 from D.
 
 ## Worktree
 
@@ -54,7 +56,7 @@ NO tags at HEAD. This is correct — Programme D must not receive its final tags
 
 | Check | Status |
 |-------|--------|
-| HEAD matches expected | PASS (`d8c379c3`) |
+| HEAD matches expected | PASS (`8cf36b8a`) |
 | Branch correct | PASS (`feature/action-execution-engine-20260722`) |
 | C.5 reference identified | PASS (`18de07d2`) |
 | D files identified | PASS (127 files) |
@@ -63,6 +65,6 @@ NO tags at HEAD. This is correct — Programme D must not receive its final tags
 | No tags at HEAD | PASS |
 | origin/main...HEAD = 0 0 | PASS |
 
-## Files Added by Programme D (18de07d2..d8c379c3)
+## Files Added by Programme D (18de07d2..8cf36b8a)
 
-127 files, 9912 lines added, 16 lines modified.
+134 files, 10856 lines added, 16 lines modified (127 by D at d8c379c3 + 7 new reports and 2 scripts by D.5 at 8cf36b8a).

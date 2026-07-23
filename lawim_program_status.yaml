@@ -4,7 +4,7 @@ project:
   target_version: V3
   target_architecture: LROS
   repository_status: active
-  head: d8c379c3
+  head: 8cf36b8a
   branch: feature/action-execution-engine-20260722
   origin: git@github-lawim:lawim/LAWIM_V2.git
 
@@ -103,8 +103,8 @@ programs:
       See reports/programs/PROGRAM-C5-STATUS.md
   D:
     name: Domain Runtime Engines
-    status: pending_certification_review
-    commit: d8c379c3
+    status: certified_with_reservations
+    commit: 8cf36b8a
     description: Domain-specific execution engines for matching, visits, CRM,
       notifications, documents, verification, transactions, payments
     components:
@@ -167,7 +167,7 @@ programs:
     description: Operations automation, backup, disaster recovery, and maintenance
 
 last_verified_at: 2026-07-23
-verified_head_pending_commit: d8c379c3
+verified_head_pending_commit: 8cf36b8a
 verified_by: repository_audit
 test_count:
   domain_tests: 68
@@ -176,7 +176,9 @@ test_count:
   program_b_tests: 84
   program_c_tests: 36
   validator_tests: 4
-  total: 506
+  lros_total: 502
+  v2_baseline_known_failures: 3
+  overall_total: 506
 v2_baseline:
   preexisting_failures: 3
   confirmed_on_baseline: 86b449b9

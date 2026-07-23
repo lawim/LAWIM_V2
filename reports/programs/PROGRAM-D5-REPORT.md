@@ -9,6 +9,10 @@
 
 `d8c379c3` — `feat(lros): add domain runtime engines and canonical LAWIM agent governance`
 
+## 1b. HEAD After Consolidation
+
+`8cf36b8a` — `refactor(lros): consolidate and certify programme D domain runtime architecture`
+
 ## 2. Branch
 
 `feature/action-execution-engine-20260722`
@@ -287,27 +291,27 @@ M  lawim_runtime/domains/visit/runtime.py
 M  reports/architecture/LAWIM-VALIDATION-LEVELS.md
 ```
 
-Plus 6 new report files.
+Plus 6 new report files and 2 new script files.
 
 ## 48. Lines Added
 
-Approximately +900 (reports)
+Approximately +900 (reports and scripts) in D.5 commit `8cf36b8a`.
 
 ## 49. Lines Removed
 
-7 lines (bug fixes, no-op removal, minor cleanups)
+27 lines (bug fixes, no-op removal, minor cleanups, dead code removal)
 
 ## 50. Commit Final
 
-`d8c379c3` — NO new commits created. The certification review is documented but does not change the feature branch.
+`8cf36b8a` — D.5 consolidation commit: HEAD corrections, bug fixes, and all D.5 reports.
 
 ## 51. Sync
 
-Branch is 0 commits behind origin/main, 2 ahead. No push required for review.
+Branch is 0 commits behind origin/main, 3 ahead. No push required for review.
 
 ## 52. HEAD Final
 
-`d8c379c3` (unchanged)
+`8cf36b8a` — consolidation commit with all D.5 corrections applied.
 
 ## 53. Worktree Final
 
@@ -315,7 +319,7 @@ CLEAN. All changes committed and verified.
 
 ## 54. Tags
 
-NO tags created — certification is `CERTIFIED_WITH_RESERVATIONS`, not unconditional.
+NO tags created at HEAD — certification is `CERTIFIED_WITH_RESERVATIONS`. Tags will be created after merge into main.
 
 ## Certification Criteria Matrix
 

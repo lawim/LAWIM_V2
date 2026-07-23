@@ -55,7 +55,7 @@ EXPECTED_COMMITS = {
     "B": "46fbbc49",
     "C": "86b449b9",
     "C5": "18de07d2",
-    "D": "d8c379c3",
+    "D": "8cf36b8a",
 }
 
 AGENTS_REQUIRED_SECTIONS = {

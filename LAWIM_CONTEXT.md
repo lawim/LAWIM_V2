@@ -2,7 +2,7 @@
 
 **Version:** 3.0.0-alpha
 **Last Updated:** 2026-07-23
-**HEAD:** d8c379c3
+**HEAD:** 8cf36b8a
 **Branch:** feature/action-execution-engine-20260722
 **Repository:** git@github-lawim:lawim/LAWIM_V2.git
 
@@ -401,7 +401,7 @@ Migration follows four phases, with V2 remaining operational throughout.
 
 ### Program D — Domain Runtime Engines
 - **Status:** certified_with_reservations (Programme D.5 review: 2026-07-23)
-- **Commit:** d8c379c3
+- **Commit:** 8cf36b8a
 - **Description:** Domain-specific execution engines for matching, visits, CRM, notifications, documents, verification, transactions, payments
 - Each engine extends DomainRuntime base contract and registers with DomainRuntimeRegistry
 - Engines are wrapped in ActionHandlers for ActionExecutionEngine integration
