@@ -62,9 +62,28 @@ def _detect_language(text: str) -> str | None:
     return None
 
 _GREETING_RESPONSES: dict[str, str] = {
-    "fr": "Bonjour et bienvenue sur LAWIM.\n\nJe peux vous accompagner pour rechercher, publier, louer, acheter ou vendre un bien immobilier. Que souhaitez-vous faire ?",
-    "en": "Hello and welcome to LAWIM.\n\nI can help you search for, list, rent, buy or sell a property. What would you like to do?",
-    "pcm": "Welcome for LAWIM.\n\nI fit help you find, post, rent, buy or sell property. Wetin you want do?",
+    "fr": "🤖 LAWIM AI\n\nBonjour et bienvenue sur LAWIM.\n\nVeuillez décrire votre projet immobilier du jour en quelques lignes : achat, vente, location, terrain, gestion ou autre besoin.\n\n──────────────\nℹ️ Réponse assistée par LAWIM AI.",
+    "en": "🤖 LAWIM AI\n\nHello and welcome to LAWIM.\n\nPlease describe your real estate project in a few lines: buying, selling, renting, land, management or other needs.\n\n──────────────\nℹ️ Response assisted by LAWIM AI.",
+    "pcm": "🤖 LAWIM AI\n\nWelcome for LAWIM.\n\nAbeg describe your property project small: buy, sell, rent, land, management or wetin you want do.\n\n──────────────\nℹ️ LAWIM AI dey help you with answer.",
+}
+
+_PROPERTY_TYPE_LABELS: dict[str, str] = {
+    "apartment": "appartement",
+    "studio": "studio",
+    "house": "maison",
+    "villa": "villa",
+    "land": "terrain",
+    "commercial": "commercial",
+    "office": "bureau",
+    "warehouse": "entrepôt",
+    "room": "chambre",
+}
+
+_TRANSACTION_TYPE_LABELS: dict[str, str] = {
+    "rent": "location",
+    "sale": "vente",
+    "buy": "achat",
+    "sell": "vente",
 }
 
 
@@ -822,7 +841,8 @@ class ConversationStateEngine:
             if key in ("budget_max", "budget"):
                 parts.append(f"avec un budget de {value} FCFA")
             elif key == "property_type":
-                parts.append(f"de type {value}")
+                label = _PROPERTY_TYPE_LABELS.get(str(value).lower(), str(value))
+                parts.append(f"de type {label}")
             elif key == "city":
                 parts.append(f"à {value}")
             elif key == "neighborhood":
@@ -832,10 +852,10 @@ class ConversationStateEngine:
         if not parts:
             return ""
         if language == "fr":
-            return "Très bien. Vous recherchez " + ", ".join(parts) + "."
+            return "Je récapitule : vous recherchez " + ", ".join(parts) + "."
         if language == "en":
-            return "Very well. You are looking for " + ", ".join(parts) + "."
-        return "Okay. You dey find " + ", ".join(parts) + "."
+            return "Let me summarize: you are looking for " + ", ".join(parts) + "."
+        return "Make I tell you wetin you find: " + ", ".join(parts) + "."
 
     def _generate_response(self, plan: ResponsePlan, state: ConversationState) -> str:
         if self._policy is not None:

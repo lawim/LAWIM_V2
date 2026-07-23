@@ -10,6 +10,7 @@ AMOUNT_PATTERNS = [
     re.compile(r"(\d+)\s*(?:milliers?\s*)?(?:de\s*)?(?:f\s*cfa|fcfa|francs?\s*cfa|xaf)", re.IGNORECASE),
     re.compile(r"(\d+[.,]\d+)\s*(?:millions?|m)\s*(?:f\s*cfa|fca|xaf)?", re.IGNORECASE),
     re.compile(r"(\d+(?:\s*\d+)*)\s*(?:f\s*cfa|fcfa|francs?\s*cfa|xaf)", re.IGNORECASE),
+    re.compile(r"(\d+(?:\s*\d+)*)\s*[fF](?:\s|$|\.|,|;|par|le|la|les|mois|an)", re.IGNORECASE),
     re.compile(r"(\d+[.,]\d+)\s*(?:f\s*cfa|fcfa|francs?\s*cfa|xaf)", re.IGNORECASE),
     re.compile(r"(\d+(?:\s*\d+)*)\s*(?:euros?|\u20ac|usd|\$)", re.IGNORECASE),
     re.compile(r"(\d+)\s*(?:millions?|m)\s*(?:frs?)?", re.IGNORECASE),
@@ -27,7 +28,14 @@ AMOUNT_WORDS = {
     "cent": 100,
     "cinquante": 50,
     "cent mille": 100_000,
+    "deux cent mille": 200_000,
+    "trois cent mille": 300_000,
+    "quatre cent mille": 400_000,
+    "cinq cent mille": 500_000,
     "cinq cents": 500,
+    "deux cents": 200,
+    "trois cents": 300,
+    "quatre cents": 400,
 }
 
 AMBIGUOUS_PATTERNS = [
@@ -41,6 +49,7 @@ class AmountResult:
     raw_value: str
     normalized_amount: int | None = None
     currency: str = "XAF"
+    period: str = ""
     confidence: float = 1.0
     ambiguity: bool = False
     ambiguity_reason: str | None = None
@@ -114,12 +123,18 @@ def normalize_amount(raw: str) -> AmountResult:
             elif "mille" in lower_cleaned or "k" in lower_cleaned:
                 if "cent mille" in lower_cleaned:
                     num *= 100_000
-                elif num < 100:
+                elif num < 1000:
                     num *= 1_000
             elif "cent" in lower_cleaned and "cent mille" not in lower_cleaned:
                 pass
 
             currency = _detect_currency(cleaned)
+
+            period = ""
+            if re.search(r'par mois|mensuel|/mois|monthly', lower_cleaned):
+                period = "monthly"
+            elif re.search(r'par an|annuel|/an|yearly|année', lower_cleaned):
+                period = "yearly"
 
             if "cent" in lower_cleaned and num < 10:
                 num *= 100
@@ -128,6 +143,7 @@ def normalize_amount(raw: str) -> AmountResult:
                 raw_value=raw,
                 normalized_amount=num,
                 currency=currency,
+                period=period,
                 confidence=1.0,
             )
 

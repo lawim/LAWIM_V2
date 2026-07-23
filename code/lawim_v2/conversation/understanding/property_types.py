@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -96,6 +97,10 @@ def normalize_property_type(raw: str) -> PropertyTypeResult:
 
     for key, value in PROPERTY_TYPES.items():
         if key in cleaned or cleaned in key:
+            if key in ("chambre", "chambre meublee", "chambre meublée", "chambre a louer"):
+                if re.search(r'\b(\d+|deux|trois|quatre|cinq|six|sept|huit|neuf|dix)\s+chambres?\b', cleaned):
+                    continue
+
             return PropertyTypeResult(
                 raw_value=raw,
                 normalized_type=value,

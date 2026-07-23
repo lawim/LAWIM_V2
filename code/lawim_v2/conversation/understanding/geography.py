@@ -77,6 +77,7 @@ HIERARCHY: dict[str, dict[str, Any]] = {
 KNOWN_CITIES: dict[str, str] = {
     "douala": "Douala",
     "yaounde": "Yaoundé",
+    "yaoundé": "Yaoundé",
     "garoua": "Garoua",
     "bafoussam": "Bafoussam",
     "bamenda": "Bamenda",
