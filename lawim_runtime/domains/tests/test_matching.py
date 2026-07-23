@@ -56,6 +56,9 @@ def test_matching_no_match():
     ])
     result = _execute_op(runtime, "START_MATCHING", {
         "property_type": "house",
+        "bedrooms": 5,
+        "city": "Bamenda",
+        "max_budget": 50000,
     })
     assert result["status"] == MatchingStatus.NO_MATCH.value
     assert result["total_count"] == 0
@@ -111,3 +114,56 @@ def test_matching_policy_defaults():
     assert MATCHING_POLICY.max_attempts == 2
     assert MATCHING_POLICY.timeout_seconds == 120
     assert MATCHING_POLICY.shadow_mode is True
+
+
+def test_matching_insufficient_data():
+    runtime = MatchingRuntime()
+    runtime.load_properties([
+        {"property_id": "p1", "property_type": "apartment", "city": "Douala"},
+    ])
+
+    req = DomainRuntimeRequest(
+        action_code="START_MATCHING",
+        parameters={},
+        correlation_id="corr-insufficient",
+    )
+    ctx = runtime._build_context(req)
+    result = runtime.execute_op(req, ctx)
+
+    assert result["status"] == MatchingStatus.INSUFFICIENT_DATA.value
+    assert "missing_fields" in result
+    assert "reason_codes" in result
+    assert result.get("matching_not_started") is True
+
+
+def test_matching_insufficient_data_validation():
+    runtime = MatchingRuntime()
+    req = DomainRuntimeRequest(action_code="START_MATCHING", parameters={})
+    errors = runtime.validate(req)
+    assert any("INSUFFICIENT_DATA" in e for e in errors)
+
+
+def test_matching_verify_insufficient_data_output():
+    runtime = MatchingRuntime()
+    output = {
+        "status": MatchingStatus.INSUFFICIENT_DATA.value,
+        "missing_fields": ["property_type", "city", "max_budget"],
+        "reason_codes": ["missing_criteria"],
+        "matching_not_started": True,
+        "total_count": 0,
+        "matches": [],
+    }
+    assert runtime.verify(DomainRuntimeRequest(action_code="START_MATCHING"), output) is True
+
+
+def test_matching_empty_properties():
+    runtime = MatchingRuntime()
+    runtime.load_properties([])
+    result = _execute_op(runtime, "START_MATCHING", {
+        "property_type": "apartment",
+        "city": "Douala",
+        "max_budget": 200000,
+    })
+    assert result["status"] == MatchingStatus.NO_MATCH.value
+    assert result["total_count"] == 0
+    assert result["matches"] == []

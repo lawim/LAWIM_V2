@@ -31,6 +31,11 @@ class MatchingRuntime(DomainRuntime):
         action = request.action_code
         params = request.parameters
 
+        if action in ("START_PRELIMINARY_MATCHING", "START_MATCHING"):
+            insufficient = self._execute_check_insufficient_data(params)
+            if insufficient:
+                return insufficient
+
         if action == "START_PRELIMINARY_MATCHING":
             return self._execute_preliminary(params)
         elif action == "START_MATCHING":
@@ -193,6 +198,39 @@ class MatchingRuntime(DomainRuntime):
             "matches": present,
         }
 
+    REQUIRED_FIELDS: dict[str, list[str]] = {
+        "START_PRELIMINARY_MATCHING": ["property_type", "city"],
+        "START_MATCHING": ["property_type", "city", "max_budget"],
+        "REFINE_MATCHING": ["features"],
+        "PRESENT_MATCHES": [],
+    }
+
+    MINIMUM_CRITERIA_FIELDS: list[str] = ["property_type", "city", "max_budget"]
+
+    def _check_insufficient_data(self, params: dict[str, Any], action: str) -> list[str]:
+        missing: list[str] = []
+        required = self.REQUIRED_FIELDS.get(action, [])
+        for field in required:
+            if not params.get(field):
+                missing.append(field)
+        return missing
+
+    def _execute_check_insufficient_data(self, params: dict[str, Any]) -> dict[str, Any] | None:
+        missing: list[str] = []
+        for field in self.MINIMUM_CRITERIA_FIELDS:
+            if not params.get(field):
+                missing.append(field)
+        if missing and len(missing) >= 2:
+            return {
+                "status": MatchingStatus.INSUFFICIENT_DATA.value,
+                "missing_fields": missing,
+                "reason_codes": ["missing_criteria"],
+                "matching_not_started": True,
+                "total_count": 0,
+                "matches": [],
+            }
+        return None
+
     def _score_criteria(self, prop: dict[str, Any], criteria: dict[str, Any]) -> float:
         total = 0.0
         for key, value in criteria.items():
@@ -211,6 +249,9 @@ class MatchingRuntime(DomainRuntime):
         if action in ("START_PRELIMINARY_MATCHING", "START_MATCHING"):
             if not params.get("property_type") and not params.get("city"):
                 errors.append("property_type or city is required for matching")
+            missing = self._check_insufficient_data(params, action)
+            if missing and len(missing) >= 2:
+                errors.append(f"INSUFFICIENT_DATA: missing fields: {', '.join(missing)}")
         if "min_budget" in params and "max_budget" in params:
             min_b = params.get("min_budget", 0)
             max_b = params.get("max_budget", 0)
@@ -223,6 +264,8 @@ class MatchingRuntime(DomainRuntime):
             return False
         if "status" not in output:
             return False
+        if output.get("status") == MatchingStatus.INSUFFICIENT_DATA.value:
+            return "missing_fields" in output and "reason_codes" in output
         if output.get("status") == MatchingStatus.MATCH_FOUND.value:
             matches = output.get("matches", [])
             if not isinstance(matches, list):

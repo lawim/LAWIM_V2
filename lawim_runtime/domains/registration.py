@@ -58,6 +58,10 @@ _HANDLER_DEFINITIONS: list[tuple[str, str, list[str]]] = [
         "REQUEST_VISIT_AVAILABILITY",
         "CREATE_VISIT_REQUEST",
         "SCHEDULE_VISIT",
+        "CONFIRM_VISIT",
+        "COMPLETE_VISIT",
+        "NO_SHOW_VISIT",
+        "RESCHEDULE_VISIT",
         "CANCEL_VISIT",
     ]),
     ("crm", "crm_handler", [

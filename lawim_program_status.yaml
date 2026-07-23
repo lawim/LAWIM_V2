@@ -126,13 +126,40 @@ programs:
       Shadow mode prevents all external effects by default.
       V2 adapters transform data only, no real V2 calls.
   E:
-    name: Cross-Channel Continuity & Full Omnichannel
-    status: planned
-    description: Full cross-channel identity resolution, continuity, and omnichannel experience
+    name: Interaction Platform & Channels
+    status: complete
+    description: >
+      Interaction gateway, identity resolution, session management, project
+      resolution, message normalization, deduplication, correlation, interaction
+      orchestrator, response planning, delivery management, V2/V3 routing,
+      divergence analysis, EventBus integration, visit transitions,
+      matching INSUFFICIENT_DATA handling
+    components:
+      - InteractionGateway
+      - InteractionEnvelope
+      - IdentityResolver
+      - ProjectResolver
+      - SessionManager
+      - MessageNormalizer
+      - InteractionDeduplicator
+      - CorrelationManager
+      - InteractionOrchestrator
+      - InteractionResponsePlan
+      - DeliveryManager
+      - InteractionModeRouter
+      - InteractionDivergenceAnalyzer
+      - InteractionMetrics
+    feature_flags:
+      interaction_gateway_enabled: false
+      whatsapp_adapter_enabled: false
+      telegram_adapter_enabled: false
+      web_interaction_enabled: false
+      api_interaction_enabled: false
+    tests: 64 (interaction) + 502 (LROS baseline) = 566 total
   F:
-    name: Advanced Search & Hybrid Matching
-    status: planned
-    description: Advanced search orchestration with hybrid matching algorithms
+    name: LLM Extraction & Response Writing
+    status: next
+    description: LLM-based extraction, natural language generation, provider orchestration, RAG, linguistic memory
   G:
     name: Transaction Pipeline & Payment Integration
     status: planned
@@ -175,10 +202,11 @@ test_count:
   program_a_tests: 38
   program_b_tests: 84
   program_c_tests: 36
+  interaction_tests: 64
   validator_tests: 4
-  lros_total: 502
+  lros_total: 566
   v2_baseline_known_failures: 3
-  overall_total: 506
+  overall_total: 570
 v2_baseline:
   preexisting_failures: 3
   confirmed_on_baseline: 86b449b9

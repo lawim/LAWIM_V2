@@ -18,6 +18,10 @@ class VisitRuntime(DomainRuntime):
         "REQUEST_VISIT_AVAILABILITY",
         "CREATE_VISIT_REQUEST",
         "SCHEDULE_VISIT",
+        "CONFIRM_VISIT",
+        "COMPLETE_VISIT",
+        "NO_SHOW_VISIT",
+        "RESCHEDULE_VISIT",
         "CANCEL_VISIT",
     ]
 
@@ -35,6 +39,14 @@ class VisitRuntime(DomainRuntime):
             return self._execute_create(params, request.idempotency_key)
         elif action == "SCHEDULE_VISIT":
             return self._execute_schedule(params)
+        elif action == "CONFIRM_VISIT":
+            return self._execute_confirm(params)
+        elif action == "COMPLETE_VISIT":
+            return self._execute_complete(params)
+        elif action == "NO_SHOW_VISIT":
+            return self._execute_no_show(params)
+        elif action == "RESCHEDULE_VISIT":
+            return self._execute_reschedule(params)
         elif action == "CANCEL_VISIT":
             return self._execute_cancel(params)
         else:
@@ -122,6 +134,9 @@ class VisitRuntime(DomainRuntime):
                 "status": VisitStatus.FAILED.value,
                 "error": f"visit {visit_id} not found",
             }
+        blocked = self._transition(record, VisitStatus.SCHEDULED)
+        if blocked:
+            return blocked
         record.scheduled_date = scheduled_date
         record.status = VisitStatus.SCHEDULED
         record.updated_at = datetime.now(timezone.utc).isoformat()
@@ -156,6 +171,84 @@ class VisitRuntime(DomainRuntime):
             "visit_id": record.visit_id,
         }
 
+    def _transition(self, record: VisitRecord, target: VisitStatus) -> dict[str, Any] | None:
+        allowed = {
+            "PENDING": ["SCHEDULED", "CANCELLED", "FAILED"],
+            "AVAILABILITY_CHECKING": ["PENDING", "SCHEDULED", "CANCELLED", "FAILED"],
+            "SCHEDULED": ["CONFIRMED", "CANCELLED", "FAILED", "NO_SHOW"],
+            "CONFIRMED": ["COMPLETED", "CANCELLED", "NO_SHOW", "FAILED"],
+            "COMPLETED": [],
+            "CANCELLED": [],
+            "NO_SHOW": [],
+            "REJECTED": [],
+            "FAILED": [],
+        }
+        current = record.status.value
+        if current not in allowed:
+            return {
+                "status": VisitStatus.FAILED.value,
+                "error": f"visit {record.visit_id} has unknown status {current}",
+            }
+        if target.value not in allowed[current]:
+            return {
+                "status": VisitStatus.FAILED.value,
+                "error": f"cannot transition visit {record.visit_id} from {current} to {target.value}",
+            }
+        return None
+
+    def _execute_confirm(self, params: dict[str, Any]) -> dict[str, Any]:
+        visit_id = params.get("visit_id", "")
+        record = self._visits.get(visit_id)
+        if not record:
+            return {"status": VisitStatus.FAILED.value, "error": f"visit {visit_id} not found"}
+        blocked = self._transition(record, VisitStatus.CONFIRMED)
+        if blocked:
+            return blocked
+        record.status = VisitStatus.CONFIRMED
+        record.updated_at = datetime.now(timezone.utc).isoformat()
+        return {"status": VisitStatus.CONFIRMED.value, "visit_id": record.visit_id}
+
+    def _execute_complete(self, params: dict[str, Any]) -> dict[str, Any]:
+        visit_id = params.get("visit_id", "")
+        record = self._visits.get(visit_id)
+        if not record:
+            return {"status": VisitStatus.FAILED.value, "error": f"visit {visit_id} not found"}
+        blocked = self._transition(record, VisitStatus.COMPLETED)
+        if blocked:
+            return blocked
+        record.status = VisitStatus.COMPLETED
+        record.updated_at = datetime.now(timezone.utc).isoformat()
+        return {"status": VisitStatus.COMPLETED.value, "visit_id": record.visit_id}
+
+    def _execute_no_show(self, params: dict[str, Any]) -> dict[str, Any]:
+        visit_id = params.get("visit_id", "")
+        record = self._visits.get(visit_id)
+        if not record:
+            return {"status": VisitStatus.FAILED.value, "error": f"visit {visit_id} not found"}
+        blocked = self._transition(record, VisitStatus.NO_SHOW)
+        if blocked:
+            return blocked
+        record.status = VisitStatus.NO_SHOW
+        record.updated_at = datetime.now(timezone.utc).isoformat()
+        return {"status": VisitStatus.NO_SHOW.value, "visit_id": record.visit_id}
+
+    def _execute_reschedule(self, params: dict[str, Any]) -> dict[str, Any]:
+        visit_id = params.get("visit_id", "")
+        new_date = params.get("scheduled_date", "")
+        record = self._visits.get(visit_id)
+        if not record:
+            return {"status": VisitStatus.FAILED.value, "error": f"visit {visit_id} not found"}
+        if not new_date:
+            return {"status": VisitStatus.FAILED.value, "error": "scheduled_date is required for reschedule"}
+        if record.status != VisitStatus.SCHEDULED:
+            return {
+                "status": VisitStatus.FAILED.value,
+                "error": f"cannot reschedule visit {visit_id} from {record.status.value}",
+            }
+        record.scheduled_date = new_date
+        record.updated_at = datetime.now(timezone.utc).isoformat()
+        return {"status": VisitStatus.SCHEDULED.value, "visit_id": record.visit_id, "scheduled_date": record.scheduled_date}
+
     def _find_duplicate(self, property_id: str, requester: str) -> VisitRecord | None:
         for record in self._visits.values():
             if record.property_id == property_id and record.requester == requester:
@@ -169,10 +262,8 @@ class VisitRuntime(DomainRuntime):
         action = request.action_code
         if action in ("REQUEST_VISIT_AVAILABILITY", "CREATE_VISIT_REQUEST", "SCHEDULE_VISIT") and not params.get("property_id"):
             errors.append("property_id is required for visit operations")
-        if action == "SCHEDULE_VISIT" and not params.get("visit_id"):
-            errors.append("visit_id is required for SCHEDULE_VISIT")
-        if action == "CANCEL_VISIT" and not params.get("visit_id"):
-            errors.append("visit_id is required for CANCEL_VISIT")
+        if action in ("SCHEDULE_VISIT", "CONFIRM_VISIT", "COMPLETE_VISIT", "NO_SHOW_VISIT", "RESCHEDULE_VISIT", "CANCEL_VISIT") and not params.get("visit_id"):
+            errors.append(f"visit_id is required for {action}")
         visit_type = params.get("visit_type", "")
         if visit_type and visit_type not in ("physical", "virtual"):
             errors.append("visit_type must be 'physical' or 'virtual'")

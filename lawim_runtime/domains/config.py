@@ -14,6 +14,15 @@ class DomainRuntimeConfig:
     transaction_enabled: bool = False
     payment_enabled: bool = False
 
+    interaction_gateway_enabled: bool = False
+    whatsapp_adapter_enabled: bool = False
+    telegram_adapter_enabled: bool = False
+    web_interaction_enabled: bool = False
+    api_interaction_enabled: bool = False
+
+    whatsapp_shadow_mode: bool = True
+    telegram_shadow_mode: bool = True
+
     shadow_mode: bool = True
     log_divergences: bool = True
 
@@ -31,4 +40,5 @@ class DomainRuntimeConfig:
         ])
 
 
+DEFAULT_CONFIG = DomainRuntimeConfig()
 DEFAULT_DOMAIN_CONFIG = DomainRuntimeConfig()
