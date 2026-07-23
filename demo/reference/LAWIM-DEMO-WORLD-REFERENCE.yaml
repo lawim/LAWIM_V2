@@ -587,7 +587,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: APARTMENT
-  price: 294295
+  price: 425048
   currency: XAF
   bedrooms: 4
   title: Résidence du Paradis
@@ -599,7 +599,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: HOUSE
-  price: 171525
+  price: 148693
   currency: XAF
   bedrooms: 1
   title: Maison Diana
@@ -612,7 +612,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: STUDIO
-  price: 263351
+  price: 463341
   currency: XAF
   bedrooms: 2
   title: Studio Soleil
@@ -624,7 +624,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: APARTMENT
-  price: 162560
+  price: 389167
   currency: XAF
   bedrooms: 3
   title: Résidence Royal
@@ -637,7 +637,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: HOUSE
-  price: 245409
+  price: 348724
   currency: XAF
   bedrooms: 4
   title: Maison Beau Séjour
@@ -649,7 +649,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: STUDIO
-  price: 484483
+  price: 417764
   currency: XAF
   bedrooms: 1
   title: Studio Bleu
@@ -662,7 +662,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: APARTMENT
-  price: 312470
+  price: 374458
   currency: XAF
   bedrooms: 2
   title: Résidence Princier
@@ -674,7 +674,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: HOUSE
-  price: 159182
+  price: 373521
   currency: XAF
   bedrooms: 3
   title: Maison les Manguiers
@@ -687,7 +687,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: STUDIO
-  price: 460925
+  price: 154143
   currency: XAF
   bedrooms: 4
   title: Studio Vert
@@ -699,7 +699,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: APARTMENT
-  price: 229275
+  price: 455085
   currency: XAF
   bedrooms: 1
   title: Résidence du Stade
@@ -712,7 +712,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: HOUSE
-  price: 446590
+  price: 271513
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
@@ -724,7 +724,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: STUDIO
-  price: 189248
+  price: 192622
   currency: XAF
   bedrooms: 3
   title: Studio du Centre
@@ -737,7 +737,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: APARTMENT
-  price: 304232
+  price: 493850
   currency: XAF
   bedrooms: 4
   title: Résidence de la Gare
@@ -749,7 +749,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: HOUSE
-  price: 482129
+  price: 418761
   currency: XAF
   bedrooms: 1
   title: Maison des Acacias
@@ -762,7 +762,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: STUDIO
-  price: 203296
+  price: 217483
   currency: XAF
   bedrooms: 2
   title: Studio Bellevue
@@ -774,7 +774,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: APARTMENT
-  price: 451303
+  price: 308304
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -787,7 +787,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: HOUSE
-  price: 385852
+  price: 156738
   currency: XAF
   bedrooms: 4
   title: Maison du Lac
@@ -799,7 +799,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: STUDIO
-  price: 180649
+  price: 160960
   currency: XAF
   bedrooms: 1
   title: Studio des Fleurs
@@ -812,7 +812,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: APARTMENT
-  price: 361028
+  price: 313857
   currency: XAF
   bedrooms: 2
   title: Résidence des Eaux
@@ -824,7 +824,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: HOUSE
-  price: 413100
+  price: 256083
   currency: XAF
   bedrooms: 3
   title: Maison des Cocotiers
@@ -837,7 +837,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: STUDIO
-  price: 461944
+  price: 399747
   currency: XAF
   bedrooms: 4
   title: Studio du Paradis
@@ -849,7 +849,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: APARTMENT
-  price: 260914
+  price: 266586
   currency: XAF
   bedrooms: 1
   title: Résidence Diana
@@ -862,7 +862,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: HOUSE
-  price: 347574
+  price: 336700
   currency: XAF
   bedrooms: 2
   title: Maison Soleil
@@ -874,195 +874,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: STUDIO
-  price: 456562
-  currency: XAF
-  bedrooms: 3
-  title: Studio Royal
-  status: suspended
-  owner_id: DEMO-USER-OWNER-001
-  features:
-  - parking
-  available: false
-- id: DEMO-PROPERTY-YDE-016
-  city: Yaoundé
-  district: Ngousso
-  property_type: APARTMENT
-  price: 289892
-  currency: XAF
-  bedrooms: 1
-  title: Résidence du Stade
-  status: active
-  owner_id: DEMO-USER-OWNER-002
-  features:
-  - parking
-  available: true
-- id: DEMO-PROPERTY-YDE-017
-  city: Yaoundé
-  district: Ngousso
-  property_type: HOUSE
-  price: 226154
-  currency: XAF
-  bedrooms: 2
-  title: Maison Saint Michel
-  status: active
-  owner_id: DEMO-USER-OWNER-003
-  features: []
-  available: true
-- id: DEMO-PROPERTY-YDE-018
-  city: Yaoundé
-  district: Ngousso
-  property_type: STUDIO
-  price: 357767
-  currency: XAF
-  bedrooms: 3
-  title: Studio du Centre
-  status: active
-  owner_id: DEMO-USER-OWNER-004
-  features:
-  - parking
-  available: true
-- id: DEMO-PROPERTY-YDE-019
-  city: Yaoundé
-  district: Essos
-  property_type: APARTMENT
-  price: 267754
-  currency: XAF
-  bedrooms: 4
-  title: Résidence de la Gare
-  status: active
-  owner_id: DEMO-USER-OWNER-005
-  features: []
-  available: true
-- id: DEMO-PROPERTY-YDE-020
-  city: Yaoundé
-  district: Essos
-  property_type: HOUSE
-  price: 407931
-  currency: XAF
-  bedrooms: 1
-  title: Maison des Acacias
-  status: suspended
-  owner_id: DEMO-USER-OWNER-001
-  features:
-  - parking
-  available: false
-- id: DEMO-PROPERTY-YDE-021
-  city: Yaoundé
-  district: Essos
-  property_type: STUDIO
-  price: 297739
-  currency: XAF
-  bedrooms: 2
-  title: Studio Bellevue
-  status: active
-  owner_id: DEMO-USER-OWNER-002
-  features: []
-  available: true
-- id: DEMO-PROPERTY-YDE-022
-  city: Yaoundé
-  district: Mendong
-  property_type: APARTMENT
-  price: 473125
-  currency: XAF
-  bedrooms: 3
-  title: Résidence du Marché
-  status: active
-  owner_id: DEMO-USER-OWNER-003
-  features:
-  - parking
-  available: true
-- id: DEMO-PROPERTY-YDE-023
-  city: Yaoundé
-  district: Mendong
-  property_type: HOUSE
-  price: 314605
-  currency: XAF
-  bedrooms: 4
-  title: Maison du Lac
-  status: active
-  owner_id: DEMO-USER-OWNER-004
-  features: []
-  available: true
-- id: DEMO-PROPERTY-YDE-024
-  city: Yaoundé
-  district: Mendong
-  property_type: STUDIO
-  price: 176115
-  currency: XAF
-  bedrooms: 1
-  title: Studio des Fleurs
-  status: active
-  owner_id: DEMO-USER-OWNER-005
-  features:
-  - parking
-  available: true
-- id: DEMO-PROPERTY-YDE-025
-  city: Yaoundé
-  district: Biyem-Assi
-  property_type: APARTMENT
-  price: 131575
-  currency: XAF
-  bedrooms: 2
-  title: Résidence des Eaux
-  status: active
-  owner_id: DEMO-USER-OWNER-001
-  features: []
-  available: false
-- id: DEMO-PROPERTY-YDE-026
-  city: Yaoundé
-  district: Biyem-Assi
-  property_type: HOUSE
-  price: 434567
-  currency: XAF
-  bedrooms: 3
-  title: Maison des Cocotiers
-  status: active
-  owner_id: DEMO-USER-OWNER-002
-  features:
-  - parking
-  available: true
-- id: DEMO-PROPERTY-YDE-027
-  city: Yaoundé
-  district: Biyem-Assi
-  property_type: STUDIO
-  price: 274704
-  currency: XAF
-  bedrooms: 4
-  title: Studio du Paradis
-  status: active
-  owner_id: DEMO-USER-OWNER-003
-  features: []
-  available: true
-- id: DEMO-PROPERTY-YDE-028
-  city: Yaoundé
-  district: Nkoabang
-  property_type: APARTMENT
-  price: 274873
-  currency: XAF
-  bedrooms: 1
-  title: Résidence Diana
-  status: active
-  owner_id: DEMO-USER-OWNER-004
-  features:
-  - parking
-  available: true
-- id: DEMO-PROPERTY-YDE-029
-  city: Yaoundé
-  district: Nkoabang
-  property_type: HOUSE
-  price: 180387
-  currency: XAF
-  bedrooms: 2
-  title: Maison Soleil
-  status: active
-  owner_id: DEMO-USER-OWNER-005
-  features: []
-  available: true
-- id: DEMO-PROPERTY-YDE-030
-  city: Yaoundé
-  district: Nkoabang
-  property_type: STUDIO
-  price: 470977
+  price: 240311
   currency: XAF
   bedrooms: 3
   title: Studio Royal
@@ -1073,9 +885,9 @@ properties:
   available: false
 - id: DEMO-PROPERTY-YDE-031
   city: Yaoundé
-  district: Emana
+  district: Ngousso
   property_type: APARTMENT
-  price: 158067
+  price: 272287
   currency: XAF
   bedrooms: 4
   title: Résidence Beau Séjour
@@ -1085,9 +897,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-032
   city: Yaoundé
-  district: Emana
+  district: Ngousso
   property_type: HOUSE
-  price: 283470
+  price: 352290
   currency: XAF
   bedrooms: 1
   title: Maison Bleu
@@ -1098,9 +910,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-033
   city: Yaoundé
-  district: Emana
+  district: Ngousso
   property_type: STUDIO
-  price: 189412
+  price: 398190
   currency: XAF
   bedrooms: 2
   title: Studio Princier
@@ -1110,9 +922,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-034
   city: Yaoundé
-  district: Etoug-Ebe
+  district: Essos
   property_type: APARTMENT
-  price: 336761
+  price: 319875
   currency: XAF
   bedrooms: 3
   title: Résidence les Manguiers
@@ -1123,9 +935,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-035
   city: Yaoundé
-  district: Etoug-Ebe
+  district: Essos
   property_type: HOUSE
-  price: 359549
+  price: 119282
   currency: XAF
   bedrooms: 4
   title: Maison Vert
@@ -1135,9 +947,9 @@ properties:
   available: false
 - id: DEMO-PROPERTY-YDE-036
   city: Yaoundé
-  district: Etoug-Ebe
+  district: Essos
   property_type: STUDIO
-  price: 272852
+  price: 498437
   currency: XAF
   bedrooms: 1
   title: Studio du Stade
@@ -1148,9 +960,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-037
   city: Yaoundé
-  district: Ekounou
+  district: Mendong
   property_type: APARTMENT
-  price: 390825
+  price: 308893
   currency: XAF
   bedrooms: 2
   title: Résidence Saint Michel
@@ -1160,9 +972,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-038
   city: Yaoundé
-  district: Ekounou
+  district: Mendong
   property_type: HOUSE
-  price: 225269
+  price: 106772
   currency: XAF
   bedrooms: 3
   title: Maison du Centre
@@ -1173,9 +985,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-039
   city: Yaoundé
-  district: Ekounou
+  district: Mendong
   property_type: STUDIO
-  price: 266628
+  price: 109946
   currency: XAF
   bedrooms: 4
   title: Studio de la Gare
@@ -1185,9 +997,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-040
   city: Yaoundé
-  district: Messassi
+  district: Biyem-Assi
   property_type: APARTMENT
-  price: 485897
+  price: 301444
   currency: XAF
   bedrooms: 1
   title: Résidence des Acacias
@@ -1198,9 +1010,9 @@ properties:
   available: false
 - id: DEMO-PROPERTY-YDE-041
   city: Yaoundé
-  district: Messassi
+  district: Biyem-Assi
   property_type: HOUSE
-  price: 272016
+  price: 382574
   currency: XAF
   bedrooms: 2
   title: Maison Bellevue
@@ -1210,9 +1022,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-042
   city: Yaoundé
-  district: Messassi
+  district: Biyem-Assi
   property_type: STUDIO
-  price: 232315
+  price: 393902
   currency: XAF
   bedrooms: 3
   title: Studio du Marché
@@ -1223,9 +1035,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-043
   city: Yaoundé
-  district: Nkolbisson
+  district: Nkoabang
   property_type: APARTMENT
-  price: 137133
+  price: 393355
   currency: XAF
   bedrooms: 4
   title: Résidence du Lac
@@ -1235,9 +1047,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-044
   city: Yaoundé
-  district: Nkolbisson
+  district: Nkoabang
   property_type: HOUSE
-  price: 122902
+  price: 146705
   currency: XAF
   bedrooms: 1
   title: Maison des Fleurs
@@ -1248,9 +1060,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-045
   city: Yaoundé
-  district: Nkolbisson
+  district: Nkoabang
   property_type: STUDIO
-  price: 230667
+  price: 177936
   currency: XAF
   bedrooms: 2
   title: Studio des Eaux
@@ -1260,9 +1072,9 @@ properties:
   available: false
 - id: DEMO-PROPERTY-YDE-046
   city: Yaoundé
-  district: Nkolfoulou
+  district: Emana
   property_type: APARTMENT
-  price: 320379
+  price: 302115
   currency: XAF
   bedrooms: 3
   title: Résidence des Cocotiers
@@ -1273,9 +1085,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-047
   city: Yaoundé
-  district: Nkolfoulou
+  district: Emana
   property_type: HOUSE
-  price: 369729
+  price: 344852
   currency: XAF
   bedrooms: 4
   title: Maison du Paradis
@@ -1285,9 +1097,9 @@ properties:
   available: true
 - id: DEMO-PROPERTY-YDE-048
   city: Yaoundé
-  district: Nkolfoulou
+  district: Emana
   property_type: STUDIO
-  price: 395465
+  price: 260755
   currency: XAF
   bedrooms: 1
   title: Studio Diana
@@ -1296,11 +1108,36 @@ properties:
   features:
   - parking
   available: true
+- id: DEMO-PROPERTY-YDE-049
+  city: Yaoundé
+  district: Etoug-Ebe
+  property_type: APARTMENT
+  price: 105242
+  currency: XAF
+  bedrooms: 2
+  title: Résidence Soleil
+  status: active
+  owner_id: DEMO-USER-OWNER-005
+  features: []
+  available: true
+- id: DEMO-PROPERTY-YDE-050
+  city: Yaoundé
+  district: Etoug-Ebe
+  property_type: HOUSE
+  price: 373576
+  currency: XAF
+  bedrooms: 3
+  title: Maison Royal
+  status: suspended
+  owner_id: DEMO-USER-OWNER-001
+  features:
+  - parking
+  available: false
 - id: DEMO-PROPERTY-DLA-001
   city: Douala
   district: Akwa
   property_type: APARTMENT
-  price: 228440
+  price: 530509
   currency: XAF
   bedrooms: 2
   title: Résidence de la Gare
@@ -1312,7 +1149,7 @@ properties:
   city: Douala
   district: Akwa
   property_type: APARTMENT
-  price: 349837
+  price: 523837
   currency: XAF
   bedrooms: 3
   title: Résidence du Centre
@@ -1324,7 +1161,7 @@ properties:
   city: Douala
   district: Akwa
   property_type: HOUSE
-  price: 294926
+  price: 325703
   currency: XAF
   bedrooms: 4
   title: Maison Saint Michel
@@ -1336,7 +1173,7 @@ properties:
   city: Douala
   district: Bonanjo
   property_type: APARTMENT
-  price: 543869
+  price: 581981
   currency: XAF
   bedrooms: 1
   title: Résidence du Stade
@@ -1348,7 +1185,7 @@ properties:
   city: Douala
   district: Bonanjo
   property_type: APARTMENT
-  price: 463060
+  price: 481975
   currency: XAF
   bedrooms: 2
   title: Résidence Vert
@@ -1360,7 +1197,7 @@ properties:
   city: Douala
   district: Bonanjo
   property_type: HOUSE
-  price: 443123
+  price: 282963
   currency: XAF
   bedrooms: 3
   title: Maison les Manguiers
@@ -1372,7 +1209,7 @@ properties:
   city: Douala
   district: Bonapriso
   property_type: APARTMENT
-  price: 525564
+  price: 262571
   currency: XAF
   bedrooms: 4
   title: Résidence Princier
@@ -1384,7 +1221,7 @@ properties:
   city: Douala
   district: Bonapriso
   property_type: APARTMENT
-  price: 479618
+  price: 319626
   currency: XAF
   bedrooms: 1
   title: Résidence Bleu
@@ -1396,7 +1233,7 @@ properties:
   city: Douala
   district: Bonapriso
   property_type: HOUSE
-  price: 325800
+  price: 323108
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -1408,7 +1245,7 @@ properties:
   city: Douala
   district: Deido
   property_type: APARTMENT
-  price: 555662
+  price: 396444
   currency: XAF
   bedrooms: 3
   title: Résidence Royal
@@ -1420,7 +1257,7 @@ properties:
   city: Douala
   district: Deido
   property_type: APARTMENT
-  price: 249364
+  price: 206298
   currency: XAF
   bedrooms: 4
   title: Résidence Soleil
@@ -1432,7 +1269,7 @@ properties:
   city: Douala
   district: Deido
   property_type: HOUSE
-  price: 556067
+  price: 211497
   currency: XAF
   bedrooms: 1
   title: Maison Diana
@@ -1444,7 +1281,7 @@ properties:
   city: Douala
   district: Makepe
   property_type: APARTMENT
-  price: 327431
+  price: 444810
   currency: XAF
   bedrooms: 2
   title: Résidence du Paradis
@@ -1456,7 +1293,7 @@ properties:
   city: Douala
   district: Makepe
   property_type: APARTMENT
-  price: 547261
+  price: 338751
   currency: XAF
   bedrooms: 3
   title: Résidence des Cocotiers
@@ -1468,7 +1305,7 @@ properties:
   city: Douala
   district: Makepe
   property_type: HOUSE
-  price: 410452
+  price: 387327
   currency: XAF
   bedrooms: 4
   title: Maison des Eaux
@@ -1480,7 +1317,7 @@ properties:
   city: Douala
   district: Bonamoussadi
   property_type: APARTMENT
-  price: 259015
+  price: 246772
   currency: XAF
   bedrooms: 1
   title: Résidence des Fleurs
@@ -1492,7 +1329,7 @@ properties:
   city: Douala
   district: Bonamoussadi
   property_type: APARTMENT
-  price: 528551
+  price: 309187
   currency: XAF
   bedrooms: 2
   title: Résidence du Lac
@@ -1504,7 +1341,7 @@ properties:
   city: Douala
   district: Bonamoussadi
   property_type: HOUSE
-  price: 587050
+  price: 420353
   currency: XAF
   bedrooms: 3
   title: Maison du Marché
@@ -1516,7 +1353,7 @@ properties:
   city: Douala
   district: Logbaba
   property_type: APARTMENT
-  price: 490030
+  price: 426743
   currency: XAF
   bedrooms: 4
   title: Résidence Bellevue
@@ -1528,7 +1365,7 @@ properties:
   city: Douala
   district: Logbaba
   property_type: APARTMENT
-  price: 302635
+  price: 467553
   currency: XAF
   bedrooms: 1
   title: Résidence des Acacias
@@ -1540,7 +1377,7 @@ properties:
   city: Douala
   district: Logbaba
   property_type: HOUSE
-  price: 293239
+  price: 587619
   currency: XAF
   bedrooms: 2
   title: Maison de la Gare
@@ -1552,7 +1389,7 @@ properties:
   city: Douala
   district: Bassa
   property_type: APARTMENT
-  price: 377744
+  price: 576339
   currency: XAF
   bedrooms: 3
   title: Résidence du Centre
@@ -1564,7 +1401,7 @@ properties:
   city: Douala
   district: Bassa
   property_type: APARTMENT
-  price: 261904
+  price: 353672
   currency: XAF
   bedrooms: 4
   title: Résidence Saint Michel
@@ -1576,7 +1413,7 @@ properties:
   city: Douala
   district: Bassa
   property_type: HOUSE
-  price: 369251
+  price: 236038
   currency: XAF
   bedrooms: 1
   title: Maison du Stade
@@ -1588,7 +1425,7 @@ properties:
   city: Douala
   district: Nylon
   property_type: APARTMENT
-  price: 379061
+  price: 534920
   currency: XAF
   bedrooms: 2
   title: Résidence Vert
@@ -1695,7 +1532,7 @@ properties:
   city: Bafoussam
   district: Djeleng
   property_type: HOUSE
-  price: 338533
+  price: 300893
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -1707,7 +1544,7 @@ properties:
   city: Bafoussam
   district: Djeleng
   property_type: APARTMENT
-  price: 338533
+  price: 300893
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -1719,7 +1556,7 @@ properties:
   city: Bafoussam
   district: Kouogouo
   property_type: HOUSE
-  price: 233749
+  price: 209653
   currency: XAF
   bedrooms: 1
   title: Maison Princier
@@ -1731,7 +1568,7 @@ properties:
   city: Bafoussam
   district: Kouogouo
   property_type: APARTMENT
-  price: 233749
+  price: 209653
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
@@ -1743,7 +1580,7 @@ properties:
   city: Bafoussam
   district: Tamdja
   property_type: HOUSE
-  price: 162469
+  price: 171042
   currency: XAF
   bedrooms: 3
   title: Maison Vert
@@ -1755,7 +1592,7 @@ properties:
   city: Bafoussam
   district: Tamdja
   property_type: APARTMENT
-  price: 162469
+  price: 171042
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
@@ -1767,7 +1604,7 @@ properties:
   city: Bafoussam
   district: Banengo
   property_type: HOUSE
-  price: 183112
+  price: 284272
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
@@ -1779,7 +1616,7 @@ properties:
   city: Bafoussam
   district: Banengo
   property_type: APARTMENT
-  price: 183112
+  price: 284272
   currency: XAF
   bedrooms: 3
   title: Résidence Diana
@@ -1791,7 +1628,7 @@ properties:
   city: Kribi
   district: Mpangou
   property_type: HOUSE
-  price: 269076
+  price: 321783
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -1803,7 +1640,7 @@ properties:
   city: Kribi
   district: Mpangou
   property_type: APARTMENT
-  price: 269076
+  price: 321783
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -1815,7 +1652,7 @@ properties:
   city: Kribi
   district: Bebamboue
   property_type: HOUSE
-  price: 145097
+  price: 311759
   currency: XAF
   bedrooms: 1
   title: Maison Princier
@@ -1827,7 +1664,7 @@ properties:
   city: Kribi
   district: Bebamboue
   property_type: APARTMENT
-  price: 145097
+  price: 311759
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
@@ -1839,7 +1676,7 @@ properties:
   city: Kribi
   district: Lobe
   property_type: HOUSE
-  price: 296512
+  price: 114343
   currency: XAF
   bedrooms: 3
   title: Maison Vert
@@ -1851,7 +1688,7 @@ properties:
   city: Kribi
   district: Lobe
   property_type: APARTMENT
-  price: 296512
+  price: 114343
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
@@ -1863,7 +1700,7 @@ properties:
   city: Limbé
   district: Bota
   property_type: HOUSE
-  price: 184145
+  price: 109213
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -1875,7 +1712,7 @@ properties:
   city: Limbé
   district: Bota
   property_type: APARTMENT
-  price: 184145
+  price: 109213
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -1887,7 +1724,7 @@ properties:
   city: Limbé
   district: Mile 2
   property_type: HOUSE
-  price: 199848
+  price: 108734
   currency: XAF
   bedrooms: 1
   title: Maison Princier
@@ -1899,7 +1736,7 @@ properties:
   city: Limbé
   district: Mile 2
   property_type: APARTMENT
-  price: 199848
+  price: 108734
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
@@ -1911,7 +1748,7 @@ properties:
   city: Limbé
   district: Mile 4
   property_type: HOUSE
-  price: 202401
+  price: 288501
   currency: XAF
   bedrooms: 3
   title: Maison Vert
@@ -1923,7 +1760,7 @@ properties:
   city: Limbé
   district: Mile 4
   property_type: APARTMENT
-  price: 202401
+  price: 288501
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
@@ -1935,7 +1772,7 @@ properties:
   city: Limbé
   district: Mokunda
   property_type: HOUSE
-  price: 143368
+  price: 186380
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
@@ -1947,7 +1784,7 @@ properties:
   city: Limbé
   district: Mokunda
   property_type: APARTMENT
-  price: 143368
+  price: 186380
   currency: XAF
   bedrooms: 3
   title: Résidence Diana
@@ -1955,6 +1792,725 @@ properties:
   owner_id: DEMO-USER-OWNER-004
   features: []
   available: false
+property_media:
+- id: DEMO-MEDIA-001
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-001
+  media_type: photo
+  path: demo/media/property-demo-property-yde-001.jpg
+  mime_type: image/jpeg
+  status: UNAVAILABLE
+  is_primary: true
+  position: 1
+  checksum: demo-DEMO-MEDIA-001-sha256
+- id: DEMO-MEDIA-002
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-002
+  media_type: photo
+  path: demo/media/property-demo-property-yde-002.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 2
+  checksum: demo-DEMO-MEDIA-002-sha256
+- id: DEMO-MEDIA-003
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-003
+  media_type: photo
+  path: demo/media/property-demo-property-yde-003.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 3
+  checksum: demo-DEMO-MEDIA-003-sha256
+- id: DEMO-MEDIA-004
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-004
+  media_type: photo
+  path: demo/media/property-demo-property-yde-004.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 4
+  checksum: demo-DEMO-MEDIA-004-sha256
+- id: DEMO-MEDIA-005
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-005
+  media_type: photo
+  path: demo/media/property-demo-property-yde-005.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 5
+  checksum: demo-DEMO-MEDIA-005-sha256
+- id: DEMO-MEDIA-006
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-006
+  media_type: photo
+  path: demo/media/property-demo-property-yde-006.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+  checksum: demo-DEMO-MEDIA-006-sha256
+- id: DEMO-MEDIA-007
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-007
+  media_type: photo
+  path: demo/media/property-demo-property-yde-007.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 2
+  checksum: demo-DEMO-MEDIA-007-sha256
+- id: DEMO-MEDIA-008
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-008
+  media_type: photo
+  path: demo/media/property-demo-property-yde-008.jpg
+  mime_type: image/jpeg
+  status: UNAVAILABLE
+  is_primary: false
+  position: 3
+  checksum: demo-DEMO-MEDIA-008-sha256
+- id: DEMO-MEDIA-009
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-009
+  media_type: photo
+  path: demo/media/property-demo-property-yde-009.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 4
+  checksum: demo-DEMO-MEDIA-009-sha256
+- id: DEMO-MEDIA-010
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-010
+  media_type: photo
+  path: demo/media/property-demo-property-yde-010.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 5
+  checksum: demo-DEMO-MEDIA-010-sha256
+- id: DEMO-MEDIA-011
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-011
+  media_type: photo
+  path: demo/media/property-demo-property-yde-011.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+  checksum: demo-DEMO-MEDIA-011-sha256
+- id: DEMO-MEDIA-012
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-012
+  media_type: photo
+  path: demo/media/property-demo-property-yde-012.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 2
+  checksum: demo-DEMO-MEDIA-012-sha256
+- id: DEMO-MEDIA-013
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-013
+  media_type: photo
+  path: demo/media/property-demo-property-yde-013.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 3
+  checksum: demo-DEMO-MEDIA-013-sha256
+- id: DEMO-MEDIA-014
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-014
+  media_type: photo
+  path: demo/media/property-demo-property-yde-014.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 4
+  checksum: demo-DEMO-MEDIA-014-sha256
+- id: DEMO-MEDIA-015
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-015
+  media_type: photo
+  path: demo/media/property-demo-property-yde-015.jpg
+  mime_type: image/jpeg
+  status: UNAVAILABLE
+  is_primary: false
+  position: 5
+  checksum: demo-DEMO-MEDIA-015-sha256
+- id: DEMO-MEDIA-016
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-016
+  media_type: photo
+  path: demo/media/property-demo-property-yde-016.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+  checksum: demo-DEMO-MEDIA-016-sha256
+- id: DEMO-MEDIA-017
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-017
+  media_type: photo
+  path: demo/media/property-demo-property-yde-017.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 2
+  checksum: demo-DEMO-MEDIA-017-sha256
+- id: DEMO-MEDIA-018
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-018
+  media_type: photo
+  path: demo/media/property-demo-property-yde-018.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 3
+  checksum: demo-DEMO-MEDIA-018-sha256
+- id: DEMO-MEDIA-019
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-019
+  media_type: photo
+  path: demo/media/property-demo-property-yde-019.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 4
+  checksum: demo-DEMO-MEDIA-019-sha256
+- id: DEMO-MEDIA-020
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-020
+  media_type: photo
+  path: demo/media/property-demo-property-yde-020.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 5
+  checksum: demo-DEMO-MEDIA-020-sha256
+- id: DEMO-MEDIA-021
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-021
+  media_type: photo
+  path: demo/media/property-demo-property-yde-021.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+  checksum: demo-DEMO-MEDIA-021-sha256
+- id: DEMO-MEDIA-022
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-022
+  media_type: photo
+  path: demo/media/property-demo-property-yde-022.jpg
+  mime_type: image/jpeg
+  status: UNAVAILABLE
+  is_primary: false
+  position: 2
+  checksum: demo-DEMO-MEDIA-022-sha256
+- id: DEMO-MEDIA-023
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-023
+  media_type: photo
+  path: demo/media/property-demo-property-yde-023.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 3
+  checksum: demo-DEMO-MEDIA-023-sha256
+- id: DEMO-MEDIA-024
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-024
+  media_type: photo
+  path: demo/media/property-demo-property-yde-024.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 4
+  checksum: demo-DEMO-MEDIA-024-sha256
+- id: DEMO-MEDIA-025
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-025
+  media_type: photo
+  path: demo/media/property-demo-property-yde-025.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 5
+  checksum: demo-DEMO-MEDIA-025-sha256
+- id: DEMO-MEDIA-026
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-026
+  media_type: photo
+  path: demo/media/property-demo-property-yde-026.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+  checksum: demo-DEMO-MEDIA-026-sha256
+- id: DEMO-MEDIA-027
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-027
+  media_type: photo
+  path: demo/media/property-demo-property-yde-027.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 2
+  checksum: demo-DEMO-MEDIA-027-sha256
+- id: DEMO-MEDIA-028
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-028
+  media_type: photo
+  path: demo/media/property-demo-property-yde-028.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 3
+  checksum: demo-DEMO-MEDIA-028-sha256
+- id: DEMO-MEDIA-029
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-029
+  media_type: photo
+  path: demo/media/property-demo-property-yde-029.jpg
+  mime_type: image/jpeg
+  status: UNAVAILABLE
+  is_primary: false
+  position: 4
+  checksum: demo-DEMO-MEDIA-029-sha256
+- id: DEMO-MEDIA-030
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-030
+  media_type: photo
+  path: demo/media/property-demo-property-yde-030.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 5
+  checksum: demo-DEMO-MEDIA-030-sha256
+- id: DEMO-MEDIA-031
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-031
+  media_type: photo
+  path: demo/media/property-demo-property-yde-031.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+  checksum: demo-DEMO-MEDIA-031-sha256
+- id: DEMO-MEDIA-032
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-032
+  media_type: photo
+  path: demo/media/property-demo-property-yde-032.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 2
+  checksum: demo-DEMO-MEDIA-032-sha256
+- id: DEMO-MEDIA-033
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-033
+  media_type: photo
+  path: demo/media/property-demo-property-yde-033.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 3
+  checksum: demo-DEMO-MEDIA-033-sha256
+- id: DEMO-MEDIA-034
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-034
+  media_type: photo
+  path: demo/media/property-demo-property-yde-034.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 4
+  checksum: demo-DEMO-MEDIA-034-sha256
+- id: DEMO-MEDIA-035
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-035
+  media_type: photo
+  path: demo/media/property-demo-property-yde-035.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 5
+  checksum: demo-DEMO-MEDIA-035-sha256
+- id: DEMO-MEDIA-036
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-036
+  media_type: photo
+  path: demo/media/property-demo-property-yde-036.jpg
+  mime_type: image/jpeg
+  status: UNAVAILABLE
+  is_primary: true
+  position: 1
+  checksum: demo-DEMO-MEDIA-036-sha256
+- id: DEMO-MEDIA-037
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-037
+  media_type: photo
+  path: demo/media/property-demo-property-yde-037.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 2
+  checksum: demo-DEMO-MEDIA-037-sha256
+- id: DEMO-MEDIA-038
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-038
+  media_type: photo
+  path: demo/media/property-demo-property-yde-038.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 3
+  checksum: demo-DEMO-MEDIA-038-sha256
+- id: DEMO-MEDIA-039
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-039
+  media_type: photo
+  path: demo/media/property-demo-property-yde-039.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 4
+  checksum: demo-DEMO-MEDIA-039-sha256
+- id: DEMO-MEDIA-040
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-040
+  media_type: photo
+  path: demo/media/property-demo-property-yde-040.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 5
+  checksum: demo-DEMO-MEDIA-040-sha256
+- id: DEMO-MEDIA-041
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-041
+  media_type: photo
+  path: demo/media/property-demo-property-yde-041.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+  checksum: demo-DEMO-MEDIA-041-sha256
+- id: DEMO-MEDIA-042
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-042
+  media_type: photo
+  path: demo/media/property-demo-property-yde-042.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 2
+  checksum: demo-DEMO-MEDIA-042-sha256
+- id: DEMO-MEDIA-043
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-043
+  media_type: photo
+  path: demo/media/property-demo-property-yde-043.jpg
+  mime_type: image/jpeg
+  status: UNAVAILABLE
+  is_primary: false
+  position: 3
+  checksum: demo-DEMO-MEDIA-043-sha256
+- id: DEMO-MEDIA-044
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-044
+  media_type: photo
+  path: demo/media/property-demo-property-yde-044.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 4
+  checksum: demo-DEMO-MEDIA-044-sha256
+- id: DEMO-MEDIA-045
+  owner_type: property
+  owner_id: DEMO-PROPERTY-YDE-045
+  media_type: photo
+  path: demo/media/property-demo-property-yde-045.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: false
+  position: 5
+  checksum: demo-DEMO-MEDIA-045-sha256
+- id: DEMO-MEDIA-PRO-001
+  owner_type: professional
+  owner_id: DEMO-PRO-ARCH-001
+  media_type: photo
+  path: demo/media/professional-demo-pro-arch-001.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+- id: DEMO-MEDIA-PRO-002
+  owner_type: professional
+  owner_id: DEMO-PRO-NOTARY-001
+  media_type: photo
+  path: demo/media/professional-demo-pro-notary-001.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+- id: DEMO-MEDIA-PRO-003
+  owner_type: professional
+  owner_id: DEMO-PRO-BUILDER-001
+  media_type: photo
+  path: demo/media/professional-demo-pro-builder-001.jpg
+  mime_type: image/jpeg
+  status: VALID
+  is_primary: true
+  position: 1
+- id: DEMO-MEDIA-ORG-001
+  owner_type: organization
+  owner_id: DEMO-ORG-AGENCY-001
+  media_type: logo
+  path: demo/media/logo-demo-org-agency-001.png
+  mime_type: image/png
+  status: VALID
+  is_primary: true
+  position: 1
+- id: DEMO-MEDIA-ORG-001
+  owner_type: organization
+  owner_id: DEMO-ORG-ARCHI-001
+  media_type: logo
+  path: demo/media/logo-demo-org-archi-001.png
+  mime_type: image/png
+  status: VALID
+  is_primary: true
+  position: 1
+- id: DEMO-MEDIA-ORG-001
+  owner_type: organization
+  owner_id: DEMO-ORG-NOTARY-001
+  media_type: logo
+  path: demo/media/logo-demo-org-notary-001.png
+  mime_type: image/png
+  status: VALID
+  is_primary: true
+  position: 1
+documents:
+- id: DEMO-DOCUMENT-001
+  title: Titre foncier simulé
+  document_type: titre_foncier
+  owner_id: DEMO-PROPERTY-YDE-001
+  status: valid
+  path: demo/documents/titre_foncier-001.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-002
+  title: Attestation de propriété
+  document_type: attestation
+  owner_id: DEMO-PROPERTY-YDE-002
+  status: valid
+  path: demo/documents/attestation-002.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-003
+  title: Mandat de gestion
+  document_type: mandat_gestion
+  owner_id: DEMO-ORG-PROPERTYMGMT-001
+  status: valid
+  path: demo/documents/mandat_gestion-003.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-004
+  title: Mandat de vente
+  document_type: mandat_vente
+  owner_id: DEMO-PROPERTY-YDE-004
+  status: pending
+  path: demo/documents/mandat_vente-004.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-005
+  title: Bail location
+  document_type: bail
+  owner_id: DEMO-PROPERTY-YDE-005
+  status: valid
+  path: demo/documents/bail-005.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-006
+  title: Pièce d'identité (Jean Dupont)
+  document_type: id_card
+  owner_id: DEMO-USER-CLIENT-001
+  status: valid
+  path: demo/documents/id_card-006.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-007
+  title: Plan architectural
+  document_type: plan
+  owner_id: DEMO-PRO-ARCH-001
+  status: valid
+  path: demo/documents/plan-007.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-008
+  title: Devis construction
+  document_type: devis
+  owner_id: DEMO-PRO-BUILDER-001
+  status: pending
+  path: demo/documents/devis-008.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-009
+  title: Facture honoraires notaire
+  document_type: facture
+  owner_id: DEMO-PRO-NOTARY-001
+  status: valid
+  path: demo/documents/facture-009.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-010
+  title: Reçu de loyer
+  document_type: recu
+  owner_id: DEMO-PROPERTY-YDE-001
+  status: valid
+  path: demo/documents/recu-010.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-011
+  title: Rapport d'expertise
+  document_type: expertise
+  owner_id: DEMO-PROPERTY-LND-001
+  status: valid
+  path: demo/documents/expertise-011.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-012
+  title: Procès-verbal de visite
+  document_type: pv_visite
+  owner_id: DEMO-PROPERTY-YDE-007
+  status: pending
+  path: demo/documents/pv_visite-012.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-013
+  title: État des lieux
+  document_type: etat_lieux
+  owner_id: DEMO-PROPERTY-YDE-008
+  status: valid
+  path: demo/documents/etat_lieux-013.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-014
+  title: Promesse de vente
+  document_type: promesse_vente
+  owner_id: DEMO-PROPERTY-YDE-003
+  status: valid
+  path: demo/documents/promesse_vente-014.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-015
+  title: Contrat de prestation architecte
+  document_type: contrat_prestation
+  owner_id: DEMO-PRO-ARCH-001
+  status: valid
+  path: demo/documents/contrat_prestation-015.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+- id: DEMO-DOCUMENT-016
+  title: Attestation de vérification
+  document_type: attestation
+  owner_id: DEMO-PROPERTY-YDE-010
+  status: expired
+  path: demo/documents/attestation-016.pdf
+  mime_type: application/pdf
+  marker: DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE
+appointments:
+- id: DEMO-APPOINTMENT-001
+  status: confirmed
+  requester_id: DEMO-USER-CLIENT-001
+  provider_id: DEMO-PRO-ARCH-001
+  service_id: DEMO-SERVICE-001
+  scheduled_at: '2026-07-25T09:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-002
+  status: pending
+  requester_id: DEMO-USER-CLIENT-002
+  provider_id: DEMO-PRO-NOTARY-001
+  service_id: DEMO-SERVICE-005
+  scheduled_at: '2026-07-26T10:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-003
+  status: cancelled
+  requester_id: DEMO-USER-CLIENT-003
+  provider_id: DEMO-PRO-ARCH-001
+  service_id: null
+  scheduled_at: '2026-07-27T11:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-004
+  status: confirmed
+  requester_id: DEMO-USER-CLIENT-004
+  provider_id: DEMO-PRO-BUILDER-001
+  service_id: DEMO-SERVICE-009
+  scheduled_at: '2026-07-28T12:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-005
+  status: confirmed
+  requester_id: DEMO-USER-CLIENT-001
+  provider_id: DEMO-PRO-SURVEYOR-001
+  service_id: DEMO-SERVICE-006
+  scheduled_at: '2026-07-29T13:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-006
+  status: pending
+  requester_id: DEMO-USER-CLIENT-005
+  provider_id: DEMO-PRO-NOTARY-001
+  service_id: DEMO-SERVICE-004
+  scheduled_at: '2026-07-25T14:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-007
+  status: rescheduled
+  requester_id: DEMO-USER-CLIENT-006
+  provider_id: DEMO-PRO-PLUMBER-001
+  service_id: DEMO-SERVICE-011
+  scheduled_at: '2026-07-26T15:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-008
+  status: confirmed
+  requester_id: DEMO-USER-CLIENT-001
+  provider_id: DEMO-PRO-ELECTRICIAN-001
+  service_id: DEMO-SERVICE-010
+  scheduled_at: '2026-07-27T16:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-009
+  status: confirmed
+  requester_id: DEMO-USER-CLIENT-002
+  provider_id: DEMO-PRO-MOVER-001
+  service_id: DEMO-SERVICE-012
+  scheduled_at: '2026-07-28T09:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-010
+  status: confirmed
+  requester_id: DEMO-USER-CLIENT-003
+  provider_id: DEMO-PRO-FINANCE-001
+  service_id: DEMO-SERVICE-013
+  scheduled_at: '2026-07-29T10:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-011
+  status: confirmed
+  requester_id: DEMO-USER-CLIENT-004
+  provider_id: DEMO-PRO-INSURANCE-001
+  service_id: DEMO-SERVICE-014
+  scheduled_at: '2026-07-25T11:00:00+01:00'
+  duration_minutes: 60
+- id: DEMO-APPOINTMENT-012
+  status: no_show
+  requester_id: DEMO-USER-CLIENT-001
+  provider_id: DEMO-PRO-NOTARY-001
+  service_id: DEMO-SERVICE-004
+  scheduled_at: '2026-07-26T12:00:00+01:00'
+  duration_minutes: 60
 negative_cases:
 - id: NEG-NO-MATCH-001
   description: Aucun bien ne correspond aux critères (budget trop bas)

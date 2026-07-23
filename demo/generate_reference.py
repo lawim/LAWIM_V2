@@ -98,10 +98,11 @@ def build():
 
     # --- Properties (117, keeping existing algorithm) ---
     props = []
+    idx = 0
     for i, district in enumerate(_NEIGHBORHOODS_YDE):
         max_props = 6 if i < 5 else 3
         for j in range(max_props):
-            idx = i * max_props + j + 1
+            idx += 1
             if idx > 50: break
             ptype = "APARTMENT" if j % 3 == 0 else "HOUSE" if j % 3 == 1 else "STUDIO"
             price = 100_000 + (hash(f"yde-{district}-{j}") % 400_000)
@@ -124,14 +125,15 @@ def build():
                 "features": ["parking"] if idx % 2 == 0 else [], "available": available,
             })
 
+    dla_idx = 0
     for i, district in enumerate(_NEIGHBORHOODS_DLA):
         for j in range(3):
-            idx = i * 3 + j + 1
-            if idx > 25: break
+            dla_idx += 1
+            if dla_idx > 25: break
             ptype = "APARTMENT" if j < 2 else "HOUSE"
             price = 200_000 + (hash(f"dla-{district}-{j}") % 400_000)
-            name = _NAMES[(idx * 13) % len(_NAMES)]
-            props.append({"id": _bid("DLA", idx), "city": "Douala", "district": district, "property_type": ptype, "price": price, "currency": "XAF", "bedrooms": (idx % 4) + 1, "title": _PROPERTY_TEMPLATES[ptype][0].format(name=name), "status": "active", "owner_id": _uid("OWNER", (idx % 5) + 1), "features": [], "available": True})
+            name = _NAMES[(dla_idx * 13) % len(_NAMES)]
+            props.append({"id": _bid("DLA", dla_idx), "city": "Douala", "district": district, "property_type": ptype, "price": price, "currency": "XAF", "bedrooms": (dla_idx % 4) + 1, "title": _PROPERTY_TEMPLATES[ptype][0].format(name=name), "status": "active", "owner_id": _uid("OWNER", (dla_idx % 5) + 1), "features": [], "available": True})
 
     land_locations = [("Yaoundé","Nkoabang",15_000_000),("Yaoundé","Odza",12_000_000),("Yaoundé","Mvan",8_000_000),("Douala","Logbaba",10_000_000),("Bafoussam","Djeleng",5_000_000),("Kribi","Lobe",7_000_000),("Yaoundé","Nkolbisson",6_000_000)]
     for li, (lc, ld, lp) in enumerate(land_locations):
@@ -217,9 +219,101 @@ def build():
         "organizations": orgs,
         "services": services,
         "properties": props,
+        "property_media": _build_media(props),
+        "documents": _build_documents(),
+        "appointments": _build_appointments(),
         "negative_cases": neg_cases,
         "scenarios": scenarios,
     }
+
+
+def _build_media(props):
+    media = []
+    mime_types = {"APARTMENT": "image/jpeg", "HOUSE": "image/jpeg", "STUDIO": "image/jpeg", "LAND": "image/png"}
+    for i, p in enumerate(props[:45]):
+        mid = f"DEMO-MEDIA-{i+1:03d}"
+        is_primary = i % 5 == 0
+        status = "VALID" if i % 7 != 0 else "UNAVAILABLE"
+        media.append({
+            "id": mid, "owner_type": "property", "owner_id": p["id"],
+            "media_type": "photo", "path": f"demo/media/property-{p['id'].lower()}.jpg",
+            "mime_type": mime_types.get(p.get("property_type",""), "image/jpeg"),
+            "status": status, "is_primary": is_primary, "position": i % 5 + 1,
+            "checksum": f"demo-{mid}-sha256",
+        })
+    for i, pp_id in enumerate(["DEMO-PRO-ARCH-001","DEMO-PRO-NOTARY-001","DEMO-PRO-BUILDER-001"]):
+        media.append({
+            "id": f"DEMO-MEDIA-PRO-{i+1:03d}", "owner_type": "professional", "owner_id": pp_id,
+            "media_type": "photo", "path": f"demo/media/professional-{pp_id.lower()}.jpg",
+            "mime_type": "image/jpeg", "status": "VALID", "is_primary": True, "position": 1,
+        })
+    for oid in ["DEMO-ORG-AGENCY-001","DEMO-ORG-ARCHI-001","DEMO-ORG-NOTARY-001"]:
+        media.append({
+            "id": f"DEMO-MEDIA-ORG-{oid.split('-')[-1].lower()}", "owner_type": "organization", "owner_id": oid,
+            "media_type": "logo", "path": f"demo/media/logo-{oid.lower()}.png",
+            "mime_type": "image/png", "status": "VALID", "is_primary": True, "position": 1,
+        })
+    return media
+
+
+def _build_documents():
+    docs = []
+    doc_templates = [
+        ("Titre foncier simulé", "titre_foncier", "valid", "DEMO-PROPERTY-YDE-001"),
+        ("Attestation de propriété", "attestation", "valid", "DEMO-PROPERTY-YDE-002"),
+        ("Mandat de gestion", "mandat_gestion", "valid", "DEMO-ORG-PROPERTYMGMT-001"),
+        ("Mandat de vente", "mandat_vente", "pending", "DEMO-PROPERTY-YDE-004"),
+        ("Bail location", "bail", "valid", "DEMO-PROPERTY-YDE-005"),
+        ("Pièce d'identité (Jean Dupont)", "id_card", "valid", "DEMO-USER-CLIENT-001"),
+        ("Plan architectural", "plan", "valid", "DEMO-PRO-ARCH-001"),
+        ("Devis construction", "devis", "pending", "DEMO-PRO-BUILDER-001"),
+        ("Facture honoraires notaire", "facture", "valid", "DEMO-PRO-NOTARY-001"),
+        ("Reçu de loyer", "recu", "valid", "DEMO-PROPERTY-YDE-001"),
+        ("Rapport d'expertise", "expertise", "valid", "DEMO-PROPERTY-LND-001"),
+        ("Procès-verbal de visite", "pv_visite", "pending", "DEMO-PROPERTY-YDE-007"),
+        ("État des lieux", "etat_lieux", "valid", "DEMO-PROPERTY-YDE-008"),
+        ("Promesse de vente", "promesse_vente", "valid", "DEMO-PROPERTY-YDE-003"),
+        ("Contrat de prestation architecte", "contrat_prestation", "valid", "DEMO-PRO-ARCH-001"),
+        ("Attestation de vérification", "attestation", "expired", "DEMO-PROPERTY-YDE-010"),
+    ]
+    for i, (title, doc_type, status, owner) in enumerate(doc_templates):
+        docs.append({
+            "id": f"DEMO-DOCUMENT-{i+1:03d}", "title": title, "document_type": doc_type,
+            "owner_id": owner, "status": status,
+            "path": f"demo/documents/{doc_type}-{i+1:03d}.pdf",
+            "mime_type": "application/pdf",
+            "marker": "DOCUMENT DE DÉMONSTRATION — SANS VALEUR JURIDIQUE",
+        })
+    return docs
+
+
+def _build_appointments():
+    appts = []
+    now = "2026-07-25T10:00:00+01:00"
+    for i in range(12):
+        statuses = ["confirmed","pending","cancelled","confirmed","confirmed","pending","rescheduled","confirmed","confirmed","confirmed","confirmed","no_show"]
+        participants = [
+            ("DEMO-USER-CLIENT-001","DEMO-PRO-ARCH-001","DEMO-SERVICE-001"),
+            ("DEMO-USER-CLIENT-002","DEMO-PRO-NOTARY-001","DEMO-SERVICE-005"),
+            ("DEMO-USER-CLIENT-003","DEMO-PRO-ARCH-001",None),
+            ("DEMO-USER-CLIENT-004","DEMO-PRO-BUILDER-001","DEMO-SERVICE-009"),
+            ("DEMO-USER-CLIENT-001","DEMO-PRO-SURVEYOR-001","DEMO-SERVICE-006"),
+            ("DEMO-USER-CLIENT-005","DEMO-PRO-NOTARY-001","DEMO-SERVICE-004"),
+            ("DEMO-USER-CLIENT-006","DEMO-PRO-PLUMBER-001","DEMO-SERVICE-011"),
+            ("DEMO-USER-CLIENT-001","DEMO-PRO-ELECTRICIAN-001","DEMO-SERVICE-010"),
+            ("DEMO-USER-CLIENT-002","DEMO-PRO-MOVER-001","DEMO-SERVICE-012"),
+            ("DEMO-USER-CLIENT-003","DEMO-PRO-FINANCE-001","DEMO-SERVICE-013"),
+            ("DEMO-USER-CLIENT-004","DEMO-PRO-INSURANCE-001","DEMO-SERVICE-014"),
+            ("DEMO-USER-CLIENT-001","DEMO-PRO-NOTARY-001","DEMO-SERVICE-004"),
+        ]
+        p = participants[i]
+        appts.append({
+            "id": f"DEMO-APPOINTMENT-{i+1:03d}", "status": statuses[i],
+            "requester_id": p[0], "provider_id": p[1], "service_id": p[2],
+            "scheduled_at": f"2026-07-{(25+i%5):02d}T{(9+i%8):02d}:00:00+01:00",
+            "duration_minutes": 60,
+        })
+    return appts
 
 
 _PROPERTY_TEMPLATES = {
