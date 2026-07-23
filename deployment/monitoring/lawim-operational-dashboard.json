@@ -1,0 +1,79 @@
+{
+  "__inputs": [],
+  "__requires": [],
+  "title": "LAWIM — Operational Dashboard",
+  "uid": "lawim-operational",
+  "version": 1,
+  "timezone": "Africa/Douala",
+  "refresh": "30s",
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "title": "Conversations (24h)",
+      "type": "stat",
+      "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+      "targets": [{"expr": "increase(interaction_received_total[24h])"}],
+      "description": "Nombre total de messages reçus"
+    },
+    {
+      "title": "Projets créés (24h)",
+      "type": "stat",
+      "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4},
+      "targets": [{"expr": "increase(project_resolution_total[24h])"}]
+    },
+    {
+      "title": "Taux de succès",
+      "type": "stat",
+      "gridPos": {"x": 12, "y": 0, "w": 6, "h": 4},
+      "targets": [{"expr": "increase(interaction_processed_total[24h]) / increase(interaction_received_total[24h]) * 100"}],
+      "unit": "percent"
+    },
+    {
+      "title": "Latence moyenne",
+      "type": "stat",
+      "gridPos": {"x": 18, "y": 0, "w": 6, "h": 4},
+      "targets": [{"expr": "avg(interaction_latency_ms)}"}],
+      "unit": "ms"
+    },
+    {
+      "title": "Conversations dans le temps",
+      "type": "graph",
+      "gridPos": {"x": 0, "y": 5, "w": 12, "h": 8},
+      "targets": [{"expr": "rate(interaction_received_total[5m])"}],
+      "description": "Débit de messages reçus"
+    },
+    {
+      "title": "Erreurs",
+      "type": "graph",
+      "gridPos": {"x": 12, "y": 5, "w": 12, "h": 8},
+      "targets": [{"expr": "rate(interaction_failed_total[5m])"}],
+      "description": "Taux d'erreurs"
+    },
+    {
+      "title": "Coût IA estimé",
+      "type": "stat",
+      "gridPos": {"x": 0, "y": 14, "w": 8, "h": 4},
+      "targets": [{"expr": "increase(ai_cost_estimate[24h])"}],
+      "unit": "currencyXAF"
+    },
+    {
+      "title": "Temps de réponse p95",
+      "type": "stat",
+      "gridPos": {"x": 8, "y": 14, "w": 8, "h": 4},
+      "targets": [{"expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))"}]
+    },
+    {
+      "title": "Disponibilité",
+      "type": "stat",
+      "gridPos": {"x": 16, "y": 14, "w": 8, "h": 4},
+      "targets": [{"expr": "up{job='lawim-app'}"}],
+      "description": "1 = disponible, 0 = indisponible"
+    }
+  ]
+}
