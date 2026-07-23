@@ -60,3 +60,4 @@ data/*.db
 .DS_Store
 Thumbs.db
 deployment/secrets/
+code/data/
