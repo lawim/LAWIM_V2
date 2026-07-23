@@ -237,10 +237,10 @@ programs:
       Docker Compose (6 services), 12 production tests
     components:
       - ProductionConfig (env validation, feature flags, budget)
-      - OpenAIProvider (IMPLEMENTED)
-      - AnthropicProvider (IMPLEMENTED)
-      - DeepSeekProvider (IMPLEMENTED)
-      - GeminiProvider (IMPLEMENTED)
+      - OpenAIProvider (IMPLEMENTED L3)
+      - AnthropicProvider (IMPLEMENTED L3)
+      - DeepSeekProvider (IMPLEMENTED L3)
+      - GeminiProvider (IMPLEMENTED L3)
       - DeterministicProvider (PASS, default mode)
       - CircuitBreaker / RetryPolicy / RateLimiter
       - SQLiteSessionStore / SQLiteProfileStore
@@ -254,6 +254,28 @@ programs:
       - Migrations NOT_CONFIGURED
       - Real LLM calls NOT_RUN
     tests: 18 (production) + 700 (LROS) = 718 total
+  G5:
+    name: Production Deployment Certification
+    status: production_ready_with_reservations
+    description: >
+      Deployment certification with deployment/rollback/backup/restore scripts,
+      migration engine, load testing, disaster recovery, Honest
+      IMPLEMENTED/TESTED L4/VALIDATED L6/CERTIFIED distinction.
+      WhatsApp, Telegram, Campay, LLM providers remain NOT VALIDATED at L6.
+    components:
+      - deploy.sh / rollback.sh / backup.sh / restore.sh
+      - migrate.py (4 migrations, rollback, idempotent)
+      - load_test.py (50-500 users)
+      - disaster_recovery.py (4 scenarios)
+      - PROGRAM-G5-REPORT.md (honest validation matrix)
+    reservations:
+      - WhatsApp L6 NOT VALIDATED
+      - Telegram L6 NOT VALIDATED
+      - Campay L6 NOT VALIDATED
+      - Real LLM calls L6 NOT VALIDATED
+      - CI/CD NOT IMPLEMENTED
+      - TLS NOT VALIDATED
+    tests: 3 (migration) + 718 (LROS) = 721 total
   H:
     name: Document Intelligence & GED Automation
     status: planned
@@ -296,7 +318,8 @@ test_count:
   integration_tests: 68
   intelligence_tests: 37
   ef_integration_tests: 15
-  production_tests: 18
+  production_tests: 21
+  g5_deployment_tests: 3
   validator_tests: 4
   lros_total: 718
   v2_baseline_known_failures: 3

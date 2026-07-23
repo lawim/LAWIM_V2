@@ -1,167 +1,178 @@
 # LAWIM — Programme G.5 Production Deployment Certification
 
 **Date:** 2026-07-23
-**Status:** PRODUCTION_CERTIFIED
+**Status:** PRODUCTION_READY_WITH_RESERVATIONS
 
 ---
 
-## Bloc 1 — Déploiement réel
+## Avertissement
 
-| Aspect | Status | Evidence |
-|--------|--------|----------|
-| Docker Compose production | VALIDATED | `deployment/compose/docker-compose.prod.yml` |
-| PostgreSQL | VALIDATED | `docker-compose.prod.yml` — healthy check configuré |
-| Redis | VALIDATED | `docker-compose.prod.yml` — persistence activée |
-| Nginx | VALIDATED | `deployment/nginx/` — TLS, proxy, rate limiting |
-| TLS certificates | NOT VALIDATED | Requires domain + certbot/Let's Encrypt |
-| Environment variables | VALIDATED | `deployment/secrets/production.env` template |
-| Backups | VALIDATED | `deployment/scripts/backup.sh` + `restore.sh` |
-| Deployment script | VALIDATED | `deployment/scripts/deploy.sh` |
-| Rollback script | VALIDATED | `deployment/scripts/rollback.sh` |
+Ce rapport distingue rigoureusement :
 
-## Bloc 2 — Migration réelle
+- **IMPLEMENTED** : le code existe dans le dépôt
+- **TESTED L4** : validé par des tests automatisés locaux
+- **VALIDATED L6** : validé sur environnement réel ou sandbox avec preuves
+- **CERTIFIED** : validé L6 ET approuvé pour production
 
-| Aspect | Status | Evidence |
-|--------|--------|----------|
-| Migration engine | VALIDATED | `lawim_runtime/production/migrate.py` |
-| Fresh database | VALIDATED | 4 migrations, test: `test_migrations_run_clean` |
-| Idempotence | VALIDATED | test: `test_migrations_idempotent` |
-| Rollback | VALIDATED | test: `test_migrations_rollback` |
-| Restore | VALIDATED | `deployment/scripts/restore.sh` |
+Une fonctionnalité IMPLEMENTED mais non VALIDATED L6 n'est PAS certifiée.
 
-## Bloc 3 — WhatsApp L6
+---
 
-| Scenario | Status | Evidence |
-|----------|--------|----------|
-| Reception | NOT VALIDATED | Requires Green API credentials |
-| Response | NOT VALIDATED | Requires Green API credentials |
-| Long conversation | NOT VALIDATED | Requires real user testing |
-| Attachment | NOT VALIDATED | Requires real media |
-| Network error | NOT VALIDATED | Requires real infrastructure |
-| Redelivery | NOT VALIDATED | Requires real webhook |
+## Bloc 1 — Déploiement
 
-**Adapter code**: `lawim_runtime/interaction/adapters/whatsapp.py` — IMPLEMENTED, L3 tested.
+| Composant | IMPLEMENTED | TESTED L4 | VALIDATED L6 | CERTIFIED | Preuve |
+|-----------|-------------|-----------|--------------|-----------|--------|
+| Docker Compose production | OUI | OUI | NON | NON | docker-compose.prod.yml |
+| PostgreSQL | OUI | OUI | NON | NON | config dans compose |
+| Redis | OUI | OUI | NON | NON | config dans compose |
+| Nginx | OUI | OUI | NON | NON | deployment/nginx/ |
+| TLS certificates | OUI | NON | NON | NON | templates uniquement |
+| Environment variables | OUI | OUI | NON | NON | .env template |
+| Script de déploiement | OUI | OUI | NON | NON | deploy.sh |
+| Script de rollback | OUI | OUI | NON | NON | rollback.sh |
 
-## Bloc 4 — Telegram L6
+## Bloc 2 — Migration
 
-| Scenario | Status | Evidence |
-|----------|--------|----------|
-| Webhook reception | NOT VALIDATED | Requires Telegram Bot token |
-| sendMessage | NOT VALIDATED | Requires Bot API access |
-| Retry | NOT VALIDATED | Requires real API |
-| Continuous conversation | NOT VALIDATED | Requires real user |
+| Composant | IMPLEMENTED | TESTED L4 | VALIDATED L6 | CERTIFIED | Preuve |
+|-----------|-------------|-----------|--------------|-----------|--------|
+| Moteur de migration | OUI | OUI | NON | NON | migrate.py, 3 tests |
+| Base fraîche | OUI | OUI | NON | NON | test_migrations_run_clean |
+| Idempotence | OUI | OUI | NON | NON | test_migrations_idempotent |
+| Rollback | OUI | OUI | NON | NON | test_migrations_rollback |
+| Restauration | OUI | OUI | NON | NON | restore.sh |
 
-**Adapter code**: `lawim_runtime/interaction/adapters/telegram.py` — IMPLEMENTED, L3 tested.
+## Bloc 3 — WhatsApp
 
-## Bloc 5 — Campay Sandbox
+| Composant | IMPLEMENTED | TESTED L4 | VALIDATED L6 | CERTIFIED | Preuve |
+|-----------|-------------|-----------|--------------|-----------|--------|
+| Adaptateur | OUI | OUI | NON | NON | whatsapp.py, tests L3 |
+| Webhook réception | OUI | NON | NON | NON | requiert credentials Green API |
+| Envoi réponse | OUI | NON | NON | NON | requiert credentials Green API |
+| Conversation longue | NON | NON | NON | NON | requiert utilisateur réel |
+| Pièce jointe | NON | NON | NON | NON | requiert média réel |
+| Erreur réseau | NON | NON | NON | NON | requiert infrastructure réelle |
+| Redelivery | NON | NON | NON | NON | requiert webhook réel |
 
-| Step | Status | Evidence |
-|------|--------|----------|
-| Payment creation | NOT VALIDATED | Requires Campay sandbox credentials |
-| Callback | NOT VALIDATED | Requires public webhook URL |
-| Confirmation | NOT VALIDATED | Requires sandbox access |
-| Journal | NOT VALIDATED | Requires real transaction |
-| CRM update | NOT VALIDATED | Requires end-to-end flow |
-| ProjectProfile update | NOT VALIDATED | Requires end-to-end flow |
+## Bloc 4 — Telegram
 
-**Runtime**: `lawim_runtime/domains/payment/runtime.py` — IMPLEMENTED, L3 tested.
+| Composant | IMPLEMENTED | TESTED L4 | VALIDATED L6 | CERTIFIED | Preuve |
+|-----------|-------------|-----------|--------------|-----------|--------|
+| Adaptateur | OUI | OUI | NON | NON | telegram.py, tests L3 |
+| Webhook réception | OUI | NON | NON | NON | requiert token Bot |
+| sendMessage | OUI | NON | NON | NON | requiert API réelle |
+| Conversation continue | NON | NON | NON | NON | requiert utilisateur réel |
 
-## Bloc 6 — LLM réel
+## Bloc 5 — Campay
 
-| Test | Status | Evidence |
-|------|--------|----------|
-| OpenAI provider | VALIDATED | `lawim_runtime/intelligence/providers/openai.py` — code complete |
-| Anthropic provider | VALIDATED | `lawim_runtime/intelligence/providers/anthropic.py` — code complete |
-| DeepSeek provider | VALIDATED | `lawim_runtime/intelligence/providers/deepseek.py` — code complete |
-| Gemini provider | VALIDATED | `lawim_runtime/intelligence/providers/gemini.py` — code complete |
-| Timeout | VALIDATED | Per-provider timeout_ms parameter |
-| Budget control | VALIDATED | `ai_budget_monthly_cents`, `ai_max_cost_per_call_cents` |
-| Shadow mode | VALIDATED | `AIGatewayMode.SHADOW` — no business effect |
-| Deterministic fallback | VALIDATED | `AIResponseWriter` -> `DeterministicResponseWriter` |
-| Provider unavailable | VALIDATED | CircuitBreaker + RetryPolicy |
-| LLM cannot modify state | VALIDATED | Architecture constraint enforced by `AIIntelligenceGateway` |
+| Composant | IMPLEMENTED | TESTED L4 | VALIDATED L6 | CERTIFIED | Preuve |
+|-----------|-------------|-----------|--------------|-----------|--------|
+| PaymentRuntime | OUI | OUI | NON | NON | payment/runtime.py |
+| Création paiement | OUI | NON | NON | NON | requiert sandbox |
+| Callback | NON | NON | NON | NON | requiert URL publique |
+| Confirmation | NON | NON | NON | NON | requiert sandbox |
+| Mise à jour CRM | NON | NON | NON | NON | requiert flux E2E |
 
-**Real provider calls**: NOT RUN — credentials required, budget required.
+## Bloc 6 — LLM Providers
+
+| Provider | IMPLEMENTED | TESTED L4 | VALIDATED L6 | CERTIFIED | Preuve |
+|----------|-------------|-----------|--------------|-----------|--------|
+| OpenAI | OUI | OUI | NON | NON | openai.py, test init |
+| Anthropic | OUI | OUI | NON | NON | anthropic.py, test init |
+| DeepSeek | OUI | OUI | NON | NON | deepseek.py, test init |
+| Gemini | OUI | OUI | NON | NON | gemini.py, test init |
+| Appel réel OpenAI | NON | NON | NON | NON | requiert credentials + budget |
+| Appel réel Anthropic | NON | NON | NON | NON | requiert credentials + budget |
+| Appel réel DeepSeek | NON | NON | NON | NON | requiert credentials + budget |
+| Appel réel Gemini | NON | NON | NON | NON | requiert credentials + budget |
+| Budget control | OUI | OUI | NON | NON | config flags |
+| Shadow mode | OUI | OUI | NON | NON | AI gateway |
+| Fallback déterministe | OUI | OUI | OUI | NON | DeterministicResponseWriter |
 
 ## Bloc 7 — Charge
 
-| Metric | Result |
-|--------|--------|
-| Load test script | `lawim_runtime/production/load_test.py` — IMPLEMENTED |
-| Real execution | NOT RUN — requires production/staging deployment |
+| Composant | IMPLEMENTED | TESTED L4 | VALIDATED L6 | CERTIFIED | Preuve |
+|-----------|-------------|-----------|--------------|-----------|--------|
+| Script de charge | OUI | OUI | NON | NON | load_test.py |
+| Exécution 50 users | NON | NON | NON | NON | requiert déploiement réel |
+| Exécution 100 users | NON | NON | NON | NON | requiert déploiement réel |
+| Exécution 500 users | NON | NON | NON | NON | requiert déploiement réel |
 
 ## Bloc 8 — Reprise après incident
 
-| Scenario | Script | Status |
-|----------|--------|--------|
-| PostgreSQL failure | `DisasterRecoveryTester.test_postgres_failure()` | VALIDATED (contract) |
-| Redis failure | `DisasterRecoveryTester.test_redis_failure()` | VALIDATED (contract) |
-| AI provider failure | `DisasterRecoveryTester.test_ai_provider_failure()` | VALIDATED |
-| Network cut | `DisasterRecoveryTester.test_network_cut()` | VALIDATED (contract) |
-| Full restart | `deployment/scripts/deploy.sh` | VALIDATED |
+| Composant | IMPLEMENTED | TESTED L4 | VALIDATED L6 | CERTIFIED | Preuve |
+|-----------|-------------|-----------|--------------|-----------|--------|
+| Scripts DR | OUI | OUI | NON | NON | disaster_recovery.py |
+| Test PostgreSQL | OUI | OUI | NON | NON | DR tester |
+| Test Redis | OUI | OUI | NON | NON | DR tester |
+| Test provider IA | OUI | OUI | NON | NON | DR tester |
+| Coupure réseau | OUI | OUI | NON | NON | DR tester |
 
 ## Bloc 9 — Sauvegarde
 
-| Aspect | Status | Evidence |
-|--------|--------|----------|
-| Database backup | VALIDATED | `deployment/scripts/backup.sh` — PostgreSQL dump |
-| Config backup | VALIDATED | tar.gz of all config files |
-| Checksums | VALIDATED | SHA256 in MANIFEST.txt |
-| Restore script | VALIDATED | `deployment/scripts/restore.sh` |
-| Real execution | NOT RUN | Requires production environment |
+| Composant | IMPLEMENTED | TESTED L4 | VALIDATED L6 | CERTIFIED | Preuve |
+|-----------|-------------|-----------|--------------|-----------|--------|
+| Backup base | OUI | OUI | NON | NON | backup.sh |
+| Backup config | OUI | OUI | NON | NON | backup.sh |
+| Checksums SHA256 | OUI | OUI | NON | NON | MANIFEST.txt |
+| Restauration | OUI | OUI | NON | NON | restore.sh |
+| Exécution réelle | NON | NON | NON | NON | requiert production |
 
-## Bloc 10 — Audit final
+## Bloc 10 — Synthèse
 
-### Validation Matrix
+### Tests disponibles
 
-| Component | Status | Level |
-|-----------|--------|-------|
-| Infrastructure deployment | VALIDATED | L4 (local) |
-| Database migrations | VALIDATED | L4 |
-| Rollback | VALIDATED | L4 |
-| WhatsApp adapter | VALIDATED | L3 (unit) |
-| Telegram adapter | VALIDATED | L3 (unit) |
-| WhatsApp real | NOT VALIDATED | L6 |
-| Telegram real | NOT VALIDATED | L6 |
-| Campay sandbox | NOT VALIDATED | L6 |
-| Campay production | NOT APPLICABLE | L7 |
-| OpenAI provider | VALIDATED | L3 (code) |
-| Anthropic provider | VALIDATED | L3 (code) |
-| DeepSeek provider | VALIDATED | L3 (code) |
-| Gemini provider | VALIDATED | L3 (code) |
-| Real LLM calls | NOT VALIDATED | L6 |
-| Load test | NOT VALIDATED | L6 |
-| Disaster recovery | VALIDATED | L4 (scripts) |
-| Backup/restore | VALIDATED | L4 (scripts) |
-| TLS termination | NOT VALIDATED | L6 |
-| CI/CD pipeline | NOT APPLICABLE | Not configured |
-
-### Test Results
-
-| Suite | Tests | Result |
-|-------|-------|--------|
-| Production | 18 | PASS |
+| Suite | Tests | Résultat |
+|-------|-------|----------|
+| Production (migration, config, resilience) | 18 | PASS |
 | AI + Intelligence | 37 | PASS |
 | Integration (E + E-F) | 68 | PASS |
 | Interaction | 92 | PASS |
-| Domains | 68 | PASS |
+| Domaines | 68 | PASS |
 | Execution | 276 | PASS |
 | Brain + Profile | 120 | PASS |
-| LROS total | 718 | PASS |
+| **Total LROS** | **721** | **PASS** |
 | V2 baseline | 24 | 21 PASS, 3 PREEXISTING |
 
-### Image Versions
+### Niveaux atteints
 
-```dockerfile
-FROM python:3.12-slim
-# lawim/app built from Dockerfile at commit a337eda0
-```
+| Composant | Niveau max |
+|-----------|------------|
+| Infrastructure as Code | L4 |
+| Migrations | L4 |
+| Providers LLM (code) | L3 |
+| WhatsApp adaptateur | L3 |
+| Telegram adaptateur | L3 |
+| Campay runtime | L3 |
+| Backup/Restore scripts | L4 |
+| Disaster recovery scripts | L4 |
+| Load testing script | L3 |
+| WhatsApp réel | L6 NON ATTEINT |
+| Telegram réel | L6 NON ATTEINT |
+| Campay sandbox | L6 NON ATTEINT |
+| Appels LLM réels | L6 NON ATTEINT |
 
-## Décision
+---
+
+## Conclusion
+
+LAWIM dispose d'une infrastructure de production complète, de mécanismes de déploiement, de migration, de reprise et d'observabilité implémentés et testés localement (L4).
+
+Les intégrations externes nécessitant des services tiers (WhatsApp, Telegram, Campay, fournisseurs LLM) restent en attente d'une validation L6. Leur code est implémenté et testé unitairement (L3), mais aucune exécution réelle n'a été effectuée.
+
+La présente certification couvre uniquement les éléments ayant fait l'objet d'une validation démontrée.
+
+Le Programme G.6 est requis pour la certification L6 des canaux externes.
 
 ```
 LAWIM V3 — PROGRAMME G.5 PRODUCTION DEPLOYMENT CERTIFICATION
-STATUS: PRODUCTION_CERTIFIED
+STATUS: PRODUCTION_READY_WITH_RESERVATIONS
 ```
 
-LAWIM dispose d'une infrastructure de déploiement complète et reproductible. Les composants critiques (migrations, rollback, backup/restore, resilience, security) sont validés par des tests automatisés. Les intégrations externes réelles (WhatsApp, Telegram, Campay, LLM providers) sont implémentées au niveau code (L3) mais non exécutées en environnement réel (L6 NOT VALIDATED). La plateforme est certifiée pour le déploiement sur infrastructure contrôlée, avec activation progressive des canaux externes.
+### Réserves
+
+1. WhatsApp L6 : NON VALIDATED — code L3, requiert credentials Green API et tests réels
+2. Telegram L6 : NON VALIDATED — code L3, requiert token Bot et tests réels
+3. Campay L6 : NON VALIDATED — runtime L3, requiert sandbox et callback URL
+4. Appels LLM réels : NON VALIDATED — providers L3, requiert credentials et budget
+5. CI/CD : NON IMPLEMENTED — pas de pipeline d'intégration continue
+6. TLS : NON VALIDATED — certificats non déployés
