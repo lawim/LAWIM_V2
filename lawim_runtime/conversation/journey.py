@@ -44,6 +44,9 @@ class ResponseType(str, Enum):
     GREETING = "GREETING"
 
 
+NON_BUSINESS_INTENTS = {"", "greeting", "unknown", "language_switch", "complaint",
+                         "unsupported_request", "small_talk"}
+
 QUESTION_PRIORITY: dict[str, list[str]] = {
     "property_search": ["transaction_type", "property_type", "city", "district", "budget_max", "bedrooms", "move_in_date"],
     "owner_registration": ["property_type", "city", "transaction_type", "price", "bedrooms"],
@@ -269,7 +272,7 @@ class ConversationJourneyOrchestrator:
 
         # 1. Intent detection
         intent_result = self._intent.detect(text)
-        if state.current_intent and intent_result.intent in ("greeting", "unknown"):
+        if state.current_intent and intent_result.intent in ("greeting", "unknown", "unsupported_request"):
             intent_result.intent = state.current_intent
             intent_result.confidence = 0.8
         result.intent = intent_result
@@ -287,9 +290,13 @@ class ConversationJourneyOrchestrator:
         else:
             # Update current intent from non-greeting, non-digression intent
             # (preserve main intent through digressions)
+            SAFETY_INTENTS = {"hacking", "fraud_report", "privacy_request", "data_deletion"}
             is_question = any(m in _normalize(text) for m in 
                 ["comment", "pourquoi", "est-ce que", "c'est quoi", "combien", "frais", "payant", "gratuit"])
-            if intent_result.intent not in ("greeting", "unknown") and not is_question:
+            if intent_result.intent not in NON_BUSINESS_INTENTS and not is_question:
+                state.current_intent = intent_result.intent
+            # Safety intents always override regardless of question detection
+            if intent_result.intent in SAFETY_INTENTS:
                 state.current_intent = intent_result.intent
 
         # 2. Entity extraction (always runs)
@@ -365,7 +372,7 @@ class ConversationJourneyOrchestrator:
         result.response_plan = response_plan
 
         if state.journey_status not in (JourneyStatus.ACTION_COMPLETED, JourneyStatus.ACTION_FAILED):
-            can_be_ready = qual_result.level == QualificationLevel.READY_FOR_DECISION and state.current_intent not in ("", "greeting", "unknown")
+            can_be_ready = qual_result.level == QualificationLevel.READY_FOR_DECISION and state.current_intent not in NON_BUSINESS_INTENTS
             state.journey_status = JourneyStatus.QUALIFYING if (qual_result.missing_fields or not can_be_ready) else JourneyStatus.READY_FOR_ACTION
         state.last_facts_snapshot = dict(state.confirmed_facts)
         state.version += 1

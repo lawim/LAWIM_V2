@@ -13,27 +13,69 @@ class IntentResult:
     needs_clarification: bool = False
 
 
-REAL_ESTATE_INTENTS = {
-    "property_search": {
-        "rent", "buy", "invest", "find", "cherche", "recherche", "location", "achat",
-        "louer", "acheter", "appartement", "maison", "studio", "terrain", "villa",
-        "chambre", "pieces", "f2", "f3", "f4", "t2", "t3", "t4", "logement",
+# Priority-based intent hierarchy. Higher priority intents are checked first
+# and can override lower-priority matches.
+INTENT_PRIORITY: list[tuple[str, set[str], str]] = [
+    # Safety and privacy (highest priority)
+    ("hacking", {"hack", "pirate", "crack", "steal", "breach", "intrusion",
+                 "cyber", "attack", "malware", "virus", "ransomware"}, "SAFETY"),
+    ("fraud_report", {"fraud", "scam", "spam", "fake", "cheat", "phishing",
+                      "arnaque", "escroquerie", "fraude"}, "SAFETY"),
+    ("privacy_request", {"private number", "personal data", "private info",
+                         "privacy", "confidentialite", "private contact",
+                         "proprietaire numero", "owner number", "owner phone",
+                         "proprietaire telephone"}, "PRIVACY"),
+    ("data_deletion", {"delete all", "remove all", "supprime toutes", "delete my account",
+                       "remove my data", "erase my data", "supprime mon compte"}, "PRIVACY"),
+    # Account and support
+    ("account_delete", {"account delete", "delete account", "supprimer compte",
+                        "close account", "fermer compte"}, "ACCOUNT"),
+    ("support_request", {"help", "aide", "support", "assistance", "problem",
+                         "probleme", "bug", "error", "erreur", "not working",
+                         "ne marche pas", "ne fonctionne pas"}, "SUPPORT"),
+    ("human_handover", {"parler a une personne", "talk to a person", "conseiller",
+                        "advisor", "agent humain", "humain", "operator", "speak to"},
+                        "SUPPORT"),
+    # Visit and transaction
+    ("visit_cancel", {"annuler visite", "cancel visit", "annulation visite",
+                      "ne viendrai pas", "wont come"}, "VISIT"),
+    ("visit_reschedule", {"reprogrammer", "reschedule", "decaler", "postposer",
+                          "reporter visite", "change date"}, "VISIT"),
+    ("visit_request", {"visit", "visite", "visiter", "see property",
+                       "voir le bien", "voir la maison"}, "VISIT"),
+    ("payment_question", {"pay", "payer", "payment", "paiement", "payer mon loyer",
+                          "pay rent", "monthly payment", "mensualite"}, "PAYMENT"),
+    # Document and legal
+    ("document_request", {"document", "papier", "piece", "document needed",
+                          "what documents", "quels documents", "documents requis"}, "DOCUMENT"),
+    ("legal_question", {"legal", "juridique", "loi", "law", "contract", "contrat",
+                        "bail", "lease", "droit", "droits"}, "DOCUMENT"),
+    # Property owner
+    ("owner_listing", {"publish", "publier", "owner", "proprietaire", "annonce",
+                       "listing", "post property", "ajouter mon bien"}, "OWNER"),
+    ("owner_listing_update", {"modifier annonce", "update listing", "edit property",
+                              "changer prix", "change price", "modifier prix"}, "OWNER"),
+    ("owner_listing_remove", {"remove listing", "supprimer annonce", "delete listing",
+                              "retirer mon bien", "bien deja loue", "bien deja vendu",
+                              "already rented", "already sold"}, "OWNER"),
+    ("agent_registration", {"agent", "agence", "broker", "courtier", "register agent",
+                            "inscription agent"}, "OWNER"),
+    # Property search (broad, should not override higher priorities)
+    ("property_search", {"rent", "buy", "invest", "cherche", "recherche",
+        "location", "achat", "louer", "acheter", "appartement", "maison", "studio",
+        "terrain", "villa", "chambre", "pieces", "f2", "f3", "f4", "logement",
         "appart", "bureau", "local", "commercial", "immeuble", "duplex",
-        "recherch", "recherchons", "cherchons", "veut", "veux", "voudrais",
-        "besoin", "recherche", "property", "flat", "apartment", "house", "rental",
-        "looking", "search", "wan", "find", "need", "looking for", "looking", "for rent",
-        "for sale", "i am looking", "i want", "je cherche", "je veux", "nous cherchons",
-    },
-    "visit_request": {"visit", "visite", "voir", "visiter", "visit_request"},
-    "payment": {"pay", "payer", "payment", "paiement", "paiement"},
-    "estimate": {"estimate", "estim", "evalu", "evaluer", "prix", "combien"},
-    "support": {"help", "aide", "support", "assistance", "problem", "probleme", "bug"},
-    "owner_registration": {"owner", "proprietaire", "publish", "publier", "owner_registration"},
-    "agent_registration": {"agent", "agence", "broker", "courtier"},
-    "complaint": {"complaint", "plainte", "reclam", "reclamation"},
-    "information": {"info", "information", "question", "renseignement"},
-    "greeting": {"bonjour", "salut", "hello", "hi", "bonsoir", "good morning", "bjr", "slt"},
-}
+        "veut", "veux", "voudrais", "besoin", "property", "flat",
+        "apartment", "house", "rental", "looking", "search", "wan", "need",
+        "i am looking", "i want", "je cherche", "je veux", "nous cherchons",
+        "plot", "land", "shop place", "modern room", "i di find",
+        "looking for", "for rent", "for sale", "a louer", "a vendre",
+        "a acheter", "recherchons", "cherchons"}, "PROPERTY"),
+    ("complaint", {"complaint", "plainte", "reclam", "reclamation",
+                   "insatisfait", "dissatisfied", "tres mecontent"}, "GENERAL"),
+    ("greeting", {"bonjour", "salut", "hello", "hi", "bonsoir", "good morning",
+                  "bjr", "slt", "hey", "good evening"}, "GENERAL"),
+]
 
 
 class IntentEngine:
@@ -42,22 +84,41 @@ class IntentEngine:
         if not text or not text.strip():
             return IntentResult(intent="unknown", confidence=0.0)
         text_lower = text.lower().strip()
-        words = set(text_lower.split())
+
         best_intent = "unknown"
+        best_category = ""
         best_score = 0.0
-        # Normalize by fixed denominator to avoid penalizing rich keyword sets
-        norm = 5.0
-        for intent, keywords in REAL_ESTATE_INTENTS.items():
+
+        for intent_name, keywords, category in INTENT_PRIORITY:
+            if not keywords:
+                continue
             matches = sum(1 for kw in keywords if kw in text_lower)
-            score = min(matches / norm, 1.0)
-            # Apply small discount for greeting to avoid overshadowing business intents
-            if intent == "greeting":
-                score *= 0.8
-            if score > best_score:
-                best_score = score
-                best_intent = intent
+            if matches == 0:
+                continue
+            # Score based on matches and keyword set size
+            norm = min(len(keywords), 8.0)
+            score = matches / norm
+            # Higher priority intents (earlier in list) get boost
+            priority_levels = len(INTENT_PRIORITY)
+            current_index = next(i for i, (n, _, _) in enumerate(INTENT_PRIORITY) if n == intent_name)
+            priority_boost = 1.0 + (priority_levels - current_index) / priority_levels * 0.5
+            adjusted_score = score * priority_boost
+
+            if adjusted_score > best_score:
+                best_score = adjusted_score
+                best_intent = intent_name
+                best_category = category
+            elif adjusted_score == best_score and current_index < next(
+                i for i, (n, _, _) in enumerate(INTENT_PRIORITY) if n == best_intent
+            ):
+                best_intent = intent_name
+                best_category = category
+
+        confidence = min(best_score * 1.2, 1.0)
+
         return IntentResult(
             intent=best_intent,
-            confidence=min(best_score * 1.5, 1.0),
-            needs_clarification=best_score < 0.15,
+            sub_intent=best_category,
+            confidence=confidence,
+            needs_clarification=confidence < 0.2,
         )

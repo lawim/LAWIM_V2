@@ -15,8 +15,25 @@ class QualificationLevel(str, Enum):
 
 REQUIRED_FIELDS_BY_INTENT: dict[str, list[str]] = {
     "property_search": ["transaction_type", "property_type", "city", "budget_max"],
+    "fraud_report": [],
+    "hacking": [],
+    "privacy_request": [],
+    "data_deletion": [],
+    "support_request": [],
+    "human_handover": [],
     "visit_request": ["property_type", "city", "bedrooms"],
-    "owner_registration": ["property_type", "city", "budget_max"],
+    "visit_cancel": [],
+    "visit_reschedule": [],
+    "payment_question": [],
+    "document_request": [],
+    "legal_question": [],
+    "owner_listing": ["property_type", "city", "transaction_type", "price"],
+    "owner_listing_update": ["property_type", "city"],
+    "owner_listing_remove": [],
+    "agent_registration": [],
+    "complaint": [],
+    "language_switch": [],
+    "unsupported_request": [],
 }
 
 

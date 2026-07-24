@@ -1,64 +1,64 @@
 # Intent Confusion Matrix
 
-| Expected \ Actual | greeting | owner_registration | payment | property_search | support | unknown | visit_request |
-|---|---|---|---|---|---|---|---|
-**account_delete** | 0 | 0 | 0 | 5 | 0 | 0 | 0 |
-**agency** | 0 | 0 | 0 | 3 | 0 | 0 | 0 |
-**ambiguous_intent** | 0 | 0 | 0 | 3 | 0 | 0 | 0 |
-**ambiguous_request** | 0 | 0 | 0 | 3 | 0 | 2 | 0 |
-**authentication** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**availability** | 0 | 0 | 0 | 5 | 0 | 0 | 0 |
-**budget_change** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**budget_clarification** | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
-**buyer** | 0 | 0 | 0 | 3 | 0 | 0 | 0 |
-**commercial_search** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**commission** | 0 | 0 | 0 | 5 | 0 | 0 | 0 |
-**complaint** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**conversation_resume** | 0 | 0 | 0 | 5 | 0 | 0 | 0 |
-**crm_followup** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**crm_relationship** | 0 | 0 | 0 | 4 | 0 | 1 | 0 |
-**document_analysis** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**document_request** | 0 | 0 | 0 | 3 | 0 | 0 | 0 |
-**documents_finance** | 8 | 0 | 8 | 4 | 0 | 9 | 0 |
-**faq** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**fraud_report** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**fraud_warning** | 0 | 0 | 1 | 1 | 0 | 0 | 1 |
-**greeting** | 3 | 0 | 0 | 0 | 0 | 0 | 0 |
-**human_handover** | 0 | 0 | 0 | 5 | 0 | 0 | 0 |
-**land_search** | 0 | 0 | 0 | 3 | 0 | 0 | 0 |
-**language_switch** | 0 | 0 | 0 | 20 | 0 | 0 | 0 |
-**legal_question** | 0 | 0 | 0 | 5 | 0 | 1 | 0 |
-**listing_remove** | 0 | 0 | 0 | 4 | 0 | 0 | 0 |
-**location_change** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**location_clarification** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**matching** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**no_results** | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
-**notification** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**offer** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**offer_negotiation** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**owner** | 0 | 0 | 0 | 3 | 0 | 0 | 0 |
-**owner_listing** | 0 | 0 | 0 | 18 | 0 | 1 | 0 |
-**payment_question** | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
-**pricing** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**privacy** | 0 | 1 | 0 | 1 | 0 | 2 | 0 |
-**progressive_qualification** | 0 | 0 | 0 | 43 | 0 | 0 | 0 |
-**property_photos** | 0 | 0 | 0 | 4 | 0 | 0 | 0 |
-**property_sale** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**property_search** | 0 | 0 | 0 | 171 | 0 | 0 | 0 |
-**purchase_search** | 0 | 0 | 0 | 3 | 0 | 0 | 0 |
-**receipt** | 0 | 0 | 0 | 4 | 0 | 0 | 0 |
-**recommendation** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**refund** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**rental_search** | 0 | 0 | 0 | 4 | 0 | 0 | 0 |
-**resume_search** | 0 | 0 | 0 | 3 | 0 | 0 | 0 |
-**seller** | 0 | 0 | 0 | 4 | 0 | 0 | 0 |
-**support** | 0 | 0 | 0 | 1 | 0 | 1 | 0 |
-**support_safety** | 1 | 2 | 2 | 6 | 0 | 22 | 0 |
-**tenant** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**transaction** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**unsupported_request** | 0 | 1 | 0 | 0 | 1 | 1 | 0 |
-**valuation** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**visit_cancel** | 0 | 0 | 0 | 2 | 0 | 0 | 0 |
-**visit_incident** | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-**visit_request** | 0 | 0 | 0 | 4 | 0 | 0 | 1 |
-**visit_transaction** | 0 | 0 | 0 | 16 | 0 | 6 | 8 |
+| Expected \ Actual | account_delete | data_deletion | document_request | greeting | hacking | legal_question | owner_listing | payment_question | privacy_request | property_search | unknown | visit_request |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+**account_delete** | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**agency** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 | 0 | 0 |
+**ambiguous_intent** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 | 0 | 0 |
+**ambiguous_request** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 | 2 | 0 |
+**authentication** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**availability** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 5 | 0 | 0 |
+**budget_change** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**budget_clarification** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
+**buyer** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 | 0 | 0 |
+**commercial_search** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**commission** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 5 | 0 | 0 |
+**complaint** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**conversation_resume** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 5 | 0 | 0 |
+**crm_followup** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**crm_relationship** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 4 | 1 | 0 |
+**document_analysis** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**document_request** | 0 | 0 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**documents_finance** | 0 | 0 | 1 | 0 | 0 | 14 | 0 | 10 | 0 | 1 | 3 | 0 |
+**faq** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**fraud_report** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**fraud_warning** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 1 |
+**greeting** | 0 | 0 | 0 | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+**human_handover** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 5 | 0 | 0 |
+**land_search** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 | 0 | 0 |
+**language_switch** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 20 | 0 | 0 |
+**legal_question** | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 | 0 | 4 | 0 | 0 |
+**listing_remove** | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 3 | 0 | 0 |
+**location_change** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**location_clarification** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**matching** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**no_results** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
+**notification** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**offer** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**offer_negotiation** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**owner** | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 2 | 0 | 0 |
+**owner_listing** | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 17 | 1 | 0 |
+**payment_question** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
+**pricing** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**privacy** | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 | 1 | 1 | 0 |
+**progressive_qualification** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 43 | 0 | 0 |
+**property_photos** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 4 | 0 | 0 |
+**property_sale** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**property_search** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 171 | 0 | 0 |
+**purchase_search** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 | 0 | 0 |
+**receipt** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 4 | 0 | 0 |
+**recommendation** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**refund** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**rental_search** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 4 | 0 | 0 |
+**resume_search** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 | 0 | 0 |
+**seller** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 4 | 0 | 0 |
+**support** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 |
+**support_safety** | 0 | 4 | 0 | 1 | 4 | 0 | 0 | 2 | 3 | 6 | 13 | 0 |
+**tenant** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**transaction** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 2 | 0 | 0 |
+**unsupported_request** | 0 | 0 | 0 | 0 | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+**valuation** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**visit_cancel** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 |
+**visit_incident** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+**visit_request** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 3 | 0 | 2 |
+**visit_transaction** | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 15 | 6 | 9 |

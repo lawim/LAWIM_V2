@@ -10,7 +10,7 @@ def test_owner_registration_journey():
 
     # Turn 1: Initial request
     r = orch.process("J'ai une maison à louer à Odza.", state)
-    assert r.intent.intent in ("owner_registration", "property_search")
+    assert r.intent.intent in ("owner_listing", "property_search")
     state = r.state
 
     # Turn 2-5: Fill in details
