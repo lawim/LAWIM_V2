@@ -30,7 +30,13 @@ TRANSACTION_TYPES = {
 }
 
 CITIES = {"yaound\u00e9": "Yaounde", "yaounde": "Yaounde", "douala": "Douala", "bafoussam": "Bafoussam",
-          "kribi": "Kribi", "limb\u00e9": "Limbe"}
+          "bafang": "Bafang", "bamenda": "Bamenda", "buea": "Buea",
+          "limbe": "Limbe", "limb\u00e9": "Limbe", "kribi": "Kribi", "ebolowa": "Ebolowa",
+          "bertoua": "Bertoua", "garoua": "Garoua", "maroua": "Maroua",
+          "ngaound\u00e9r\u00e9": "Ngaoundere", "ngaoundere": "Ngaoundere",
+          "mbalmayo": "Mbalmayo", "ed\u00e9a": "Edea", "edea": "Edea",
+          "nkongsamba": "Nkongsamba", "foumban": "Foumban", "dschang": "Dschang",
+          "kumba": "Kumba", "sangm\u00e9lima": "Sangmelima", "sangmelima": "Sangmelima"}
 
 DISTRICTS = {"mvan": "Mvan", "bastos": "Bastos", "odza": "Odza", "nlongkak": "Nlongkak",
              "tsinga": "Tsinga", "ngousso": "Ngousso", "essos": "Essos",
@@ -62,17 +68,38 @@ class EntityExtractionEngine:
                 result.entities["transaction_type"] = en
                 break
 
-        # City — try known cities first, then accept any capitalized word after "à"
+        # City — try known cities first
         for fr_key, en_val in CITIES.items():
             if fr_key in lower:
                 result.entities["city"] = en_val
                 break
         if "city" not in result.entities:
-            # Fallback: capture any word after "à" as city
-            city_fallback = re.search(r"\ba\s+([A-Za-z\u00C0-\u024F][A-Za-z\u00C0-\u024F]+)", text)
+            # Try "à Paris" or "in Limbe" patterns — but filter non-city terms
+            city_fallback = re.search(r"\b(?:à|a|in)\s+([A-Za-z\u00C0-\u024F]{3,})", text)
             if city_fallback:
                 raw = city_fallback.group(1)
-                # Capitalize first letter
+                raw_lower = raw.lower()
+                # Reject if it's a known non-city word
+                NON_CITIES = {"house","apartment","studio","villa","land","plot","office","commercial",
+                    "space","warehouse","modern","room","person","owner","property","building","shop",
+                    "flat","store","home","rent","buy","sale","need","want","look","find","search",
+                    "town","city","place","area","zone","sector","quarter","neighborhood","region",
+                    "this","that","these","those","some","any","every","each","both","all","few",
+                    "many","much","more","less","most","least","here","there","where","what","which",
+                    "your","their","our","its","his","her","our","my","your","good","nice","best",
+                    "new","old","big","small","large","small","great","real","first","last","next","same"}
+                # Also skip known districts to avoid city/district confusion
+                known_districts = {k.lower() for k in DISTRICTS}
+                if raw_lower in NON_CITIES or raw_lower in known_districts:
+                    pass  # Don't extract non-cities or districts as cities
+                else:
+                    result.entities["city"] = raw[0].upper() + raw[1:]
+                    result.entities["city_raw"] = raw
+        if "city" not in result.entities:
+            # Try matching after known French prepositions for city context
+            city_fallback2 = re.search(r"\b(?:ville\s+de|pres\s+de|a\s+cote\s+de|dans\s+(?:le\s+)?)\s*([A-Za-z\u00C0-\u024F]{3,})", text)
+            if city_fallback2:
+                raw = city_fallback2.group(1)
                 result.entities["city"] = raw[0].upper() + raw[1:]
                 result.entities["city_raw"] = raw
 
