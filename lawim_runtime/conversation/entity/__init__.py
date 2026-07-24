@@ -62,11 +62,19 @@ class EntityExtractionEngine:
                 result.entities["transaction_type"] = en
                 break
 
-        # City
+        # City — try known cities first, then accept any capitalized word after "à"
         for fr_key, en_val in CITIES.items():
             if fr_key in lower:
                 result.entities["city"] = en_val
                 break
+        if "city" not in result.entities:
+            # Fallback: capture any word after "à" as city
+            city_fallback = re.search(r"\ba\s+([A-Za-z\u00C0-\u024F][A-Za-z\u00C0-\u024F]+)", text)
+            if city_fallback:
+                raw = city_fallback.group(1)
+                # Capitalize first letter
+                result.entities["city"] = raw[0].upper() + raw[1:]
+                result.entities["city_raw"] = raw
 
         # District
         for fr_key, en_val in DISTRICTS.items():
@@ -101,15 +109,21 @@ class EntityExtractionEngine:
             result.missing.append("city")
         if "transaction_type" not in result.entities:
             result.missing.append("transaction_type")
+        # Studio doesn't require bedrooms
+        if result.entities.get("property_type") == "studio":
+            result.missing = [m for m in result.missing if m != "bedrooms"]
 
         return result
 
     def _extract_budget(self, text: str) -> int | None:
         patterns = [
+            (r"(\d[\d\s]*)\s*(?:millions?\s*(?:FCFA|fcfa|francs?)?)", 1_000_000),
+            (r"(\d[\d\s]*)\s*(?:milliards?\s*(?:FCFA|fcfa|francs?)?)", 1_000_000_000),
             (r"(\d[\d\s]*)\s*(?:FCFA|fcfa|francs?|f\s*cfa|xaf|F)", 1),
             (r"(\d[\d\s]*)\s*(?:euros?|\u20ac|usd|\$)", 1),
-            (r"(\d[\d\s]*)\s*(?:k|mille)", 1000),
+            (r"(\d[\d\s]*)\s*(?:k|mille)(?:\s*FCFA|\s*fcfa|\s*francs?)?", 1000),
             (r"(?:budget|prix|jusqu['\u2019]?[a\u00e0]?|maximum|max|montant)\s*(?:de\s*)?(\d[\d\s]*)(?!\s*(?:ans|mois|jours?|heures?))", 1),
+            (r"\b(\d{1,3}(?:\s\d{3})+)\b", 1),
         ]
         for pat, multiplier in patterns:
             m = re.search(pat, text)
@@ -119,9 +133,13 @@ class EntityExtractionEngine:
                     return int(cleaned) * multiplier
                 except ValueError:
                     pass
-        amt_words = re.search(r"(?:deux|trois|quatre|cinq|six|sept|huit|neuf)\s*(?:cents?\s*)?mille", text)
+        # Word patterns for "mille" without digits
+        amt_words = re.search(r"(\d+)\s*(?:cents?\s*)?mille", text)
         if amt_words:
-            return 100_000
+            return int(amt_words.group(1)) * 1000
+        amt_million = re.search(r"(?:deux|trois|quatre|cinq|six|sept|huit|neuf)\s*(?:cents?\s*)?(?:millions?|milliards?)", text)
+        if amt_million:
+            return 100_000_000
         return None
 
     def _extract_bedrooms(self, text: str) -> int | None:
