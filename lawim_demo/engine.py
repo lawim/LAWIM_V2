@@ -12,6 +12,7 @@ from typing import Any
 
 REQUIRED_SECTIONS = ["users", "professional_profiles", "organizations", "properties", "services", "scenarios", "negative_cases"]
 OPTIONAL_SECTIONS = ["property_media", "documents", "appointments", "visits", "search_profiles", "matches", "connections", "conversations", "messages", "consents", "notifications"]
+REFERENCE_ONLY_SECTIONS = ["scenarios", "negative_cases"]  # validated but not persisted
 
 
 def _find_db() -> str:
@@ -158,6 +159,8 @@ class DemoWorldEngine:
             return counts
 
         for sec_name, table_name in sections_order:
+            if sec_name in REFERENCE_ONLY_SECTIONS:
+                continue
             items = self._data.get(sec_name, [])
             if not isinstance(items, list):
                 continue
@@ -203,6 +206,8 @@ class DemoWorldEngine:
             db_counts[r["demo_section"]] = r["cnt"]
 
         for sec in yaml_counts:
+            if sec in REFERENCE_ONLY_SECTIONS:
+                continue
             yc = yaml_counts[sec]
             dc = db_counts.get(sec, 0)
             if yc != dc:
@@ -324,14 +329,21 @@ def main() -> None:
 
     elif args.command == "report":
         r = engine.report()
+        total_yaml = sum(r['counts'].values())
+        persistable = sum(v for k, v in r['counts'].items() if k not in REFERENCE_ONLY_SECTIONS)
+        ref_only = sum(v for k, v in r['counts'].items() if k in REFERENCE_ONLY_SECTIONS)
         print(f"LAWIM Demo World Report")
         print(f"  Dataset: {r['dataset'].get('id')} v{r['dataset'].get('version')}")
         print(f"  Status: {r['dataset'].get('status')}")
+        print(f"  YAML entities: {total_yaml}")
+        print(f"  Persistable entities: {persistable}")
+        print(f"  Reference-only entities: {ref_only} ({', '.join(k for k in r['counts'] if k in REFERENCE_ONLY_SECTIONS)})")
         for sec, cnt in sorted(r['counts'].items()):
-            print(f"  {sec}: {cnt}")
+            tag = " [REFERENCE_ONLY]" if sec in REFERENCE_ONLY_SECTIONS else ""
+            print(f"  {sec}: {cnt}{tag}")
         print(f"  Cities: {json.dumps(r['cities'])}")
         print(f"  Property types: {json.dumps(r['property_types'])}")
-        print(f"  Scenarios READY: {r['scenarios_ready']}")
+        print(f"  Scenarios READY: {r['scenarios_ready']}{' [REFERENCE_ONLY]' if 'scenarios' in REFERENCE_ONLY_SECTIONS else ''}")
         sys.exit(0)
 
 

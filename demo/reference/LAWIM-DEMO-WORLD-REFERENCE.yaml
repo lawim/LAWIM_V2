@@ -587,7 +587,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: APARTMENT
-  price: 425048
+  price: 418658
   currency: XAF
   bedrooms: 4
   title: Résidence du Paradis
@@ -599,7 +599,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: HOUSE
-  price: 148693
+  price: 351977
   currency: XAF
   bedrooms: 1
   title: Maison Diana
@@ -612,7 +612,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: STUDIO
-  price: 463341
+  price: 247139
   currency: XAF
   bedrooms: 2
   title: Studio Soleil
@@ -624,7 +624,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: APARTMENT
-  price: 389167
+  price: 207390
   currency: XAF
   bedrooms: 3
   title: Résidence Royal
@@ -637,7 +637,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: HOUSE
-  price: 348724
+  price: 201684
   currency: XAF
   bedrooms: 4
   title: Maison Beau Séjour
@@ -649,7 +649,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: STUDIO
-  price: 417764
+  price: 285975
   currency: XAF
   bedrooms: 1
   title: Studio Bleu
@@ -662,7 +662,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: APARTMENT
-  price: 374458
+  price: 173851
   currency: XAF
   bedrooms: 2
   title: Résidence Princier
@@ -674,7 +674,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: HOUSE
-  price: 373521
+  price: 366166
   currency: XAF
   bedrooms: 3
   title: Maison les Manguiers
@@ -687,7 +687,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: STUDIO
-  price: 154143
+  price: 203715
   currency: XAF
   bedrooms: 4
   title: Studio Vert
@@ -699,7 +699,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: APARTMENT
-  price: 455085
+  price: 166991
   currency: XAF
   bedrooms: 1
   title: Résidence du Stade
@@ -712,7 +712,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: HOUSE
-  price: 271513
+  price: 481614
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
@@ -724,7 +724,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: STUDIO
-  price: 192622
+  price: 487636
   currency: XAF
   bedrooms: 3
   title: Studio du Centre
@@ -737,7 +737,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: APARTMENT
-  price: 493850
+  price: 149645
   currency: XAF
   bedrooms: 4
   title: Résidence de la Gare
@@ -749,7 +749,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: HOUSE
-  price: 418761
+  price: 179508
   currency: XAF
   bedrooms: 1
   title: Maison des Acacias
@@ -762,7 +762,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: STUDIO
-  price: 217483
+  price: 243162
   currency: XAF
   bedrooms: 2
   title: Studio Bellevue
@@ -774,7 +774,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: APARTMENT
-  price: 308304
+  price: 419598
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -787,7 +787,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: HOUSE
-  price: 156738
+  price: 453310
   currency: XAF
   bedrooms: 4
   title: Maison du Lac
@@ -799,7 +799,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: STUDIO
-  price: 160960
+  price: 462444
   currency: XAF
   bedrooms: 1
   title: Studio des Fleurs
@@ -812,7 +812,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: APARTMENT
-  price: 313857
+  price: 117210
   currency: XAF
   bedrooms: 2
   title: Résidence des Eaux
@@ -824,7 +824,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: HOUSE
-  price: 256083
+  price: 391946
   currency: XAF
   bedrooms: 3
   title: Maison des Cocotiers
@@ -837,7 +837,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: STUDIO
-  price: 399747
+  price: 320175
   currency: XAF
   bedrooms: 4
   title: Studio du Paradis
@@ -849,7 +849,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: APARTMENT
-  price: 266586
+  price: 108067
   currency: XAF
   bedrooms: 1
   title: Résidence Diana
@@ -862,7 +862,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: HOUSE
-  price: 336700
+  price: 337390
   currency: XAF
   bedrooms: 2
   title: Maison Soleil
@@ -874,7 +874,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: STUDIO
-  price: 240311
+  price: 368863
   currency: XAF
   bedrooms: 3
   title: Studio Royal
@@ -887,7 +887,7 @@ properties:
   city: Yaoundé
   district: Ngousso
   property_type: APARTMENT
-  price: 272287
+  price: 141811
   currency: XAF
   bedrooms: 4
   title: Résidence Beau Séjour
@@ -899,7 +899,7 @@ properties:
   city: Yaoundé
   district: Ngousso
   property_type: HOUSE
-  price: 352290
+  price: 425524
   currency: XAF
   bedrooms: 1
   title: Maison Bleu
@@ -912,7 +912,7 @@ properties:
   city: Yaoundé
   district: Ngousso
   property_type: STUDIO
-  price: 398190
+  price: 445789
   currency: XAF
   bedrooms: 2
   title: Studio Princier
@@ -924,7 +924,7 @@ properties:
   city: Yaoundé
   district: Essos
   property_type: APARTMENT
-  price: 319875
+  price: 339882
   currency: XAF
   bedrooms: 3
   title: Résidence les Manguiers
@@ -937,7 +937,7 @@ properties:
   city: Yaoundé
   district: Essos
   property_type: HOUSE
-  price: 119282
+  price: 300801
   currency: XAF
   bedrooms: 4
   title: Maison Vert
@@ -949,7 +949,7 @@ properties:
   city: Yaoundé
   district: Essos
   property_type: STUDIO
-  price: 498437
+  price: 131686
   currency: XAF
   bedrooms: 1
   title: Studio du Stade
@@ -962,7 +962,7 @@ properties:
   city: Yaoundé
   district: Mendong
   property_type: APARTMENT
-  price: 308893
+  price: 393631
   currency: XAF
   bedrooms: 2
   title: Résidence Saint Michel
@@ -974,7 +974,7 @@ properties:
   city: Yaoundé
   district: Mendong
   property_type: HOUSE
-  price: 106772
+  price: 213340
   currency: XAF
   bedrooms: 3
   title: Maison du Centre
@@ -987,7 +987,7 @@ properties:
   city: Yaoundé
   district: Mendong
   property_type: STUDIO
-  price: 109946
+  price: 152819
   currency: XAF
   bedrooms: 4
   title: Studio de la Gare
@@ -999,7 +999,7 @@ properties:
   city: Yaoundé
   district: Biyem-Assi
   property_type: APARTMENT
-  price: 301444
+  price: 166235
   currency: XAF
   bedrooms: 1
   title: Résidence des Acacias
@@ -1012,7 +1012,7 @@ properties:
   city: Yaoundé
   district: Biyem-Assi
   property_type: HOUSE
-  price: 382574
+  price: 385945
   currency: XAF
   bedrooms: 2
   title: Maison Bellevue
@@ -1024,7 +1024,7 @@ properties:
   city: Yaoundé
   district: Biyem-Assi
   property_type: STUDIO
-  price: 393902
+  price: 410654
   currency: XAF
   bedrooms: 3
   title: Studio du Marché
@@ -1037,7 +1037,7 @@ properties:
   city: Yaoundé
   district: Nkoabang
   property_type: APARTMENT
-  price: 393355
+  price: 164602
   currency: XAF
   bedrooms: 4
   title: Résidence du Lac
@@ -1049,7 +1049,7 @@ properties:
   city: Yaoundé
   district: Nkoabang
   property_type: HOUSE
-  price: 146705
+  price: 123606
   currency: XAF
   bedrooms: 1
   title: Maison des Fleurs
@@ -1062,7 +1062,7 @@ properties:
   city: Yaoundé
   district: Nkoabang
   property_type: STUDIO
-  price: 177936
+  price: 449413
   currency: XAF
   bedrooms: 2
   title: Studio des Eaux
@@ -1074,7 +1074,7 @@ properties:
   city: Yaoundé
   district: Emana
   property_type: APARTMENT
-  price: 302115
+  price: 488053
   currency: XAF
   bedrooms: 3
   title: Résidence des Cocotiers
@@ -1087,7 +1087,7 @@ properties:
   city: Yaoundé
   district: Emana
   property_type: HOUSE
-  price: 344852
+  price: 128284
   currency: XAF
   bedrooms: 4
   title: Maison du Paradis
@@ -1099,7 +1099,7 @@ properties:
   city: Yaoundé
   district: Emana
   property_type: STUDIO
-  price: 260755
+  price: 346078
   currency: XAF
   bedrooms: 1
   title: Studio Diana
@@ -1112,7 +1112,7 @@ properties:
   city: Yaoundé
   district: Etoug-Ebe
   property_type: APARTMENT
-  price: 105242
+  price: 350400
   currency: XAF
   bedrooms: 2
   title: Résidence Soleil
@@ -1124,7 +1124,7 @@ properties:
   city: Yaoundé
   district: Etoug-Ebe
   property_type: HOUSE
-  price: 373576
+  price: 492925
   currency: XAF
   bedrooms: 3
   title: Maison Royal
@@ -1137,7 +1137,7 @@ properties:
   city: Douala
   district: Akwa
   property_type: APARTMENT
-  price: 530509
+  price: 457103
   currency: XAF
   bedrooms: 2
   title: Résidence de la Gare
@@ -1149,7 +1149,7 @@ properties:
   city: Douala
   district: Akwa
   property_type: APARTMENT
-  price: 523837
+  price: 444266
   currency: XAF
   bedrooms: 3
   title: Résidence du Centre
@@ -1161,7 +1161,7 @@ properties:
   city: Douala
   district: Akwa
   property_type: HOUSE
-  price: 325703
+  price: 549609
   currency: XAF
   bedrooms: 4
   title: Maison Saint Michel
@@ -1173,7 +1173,7 @@ properties:
   city: Douala
   district: Bonanjo
   property_type: APARTMENT
-  price: 581981
+  price: 539730
   currency: XAF
   bedrooms: 1
   title: Résidence du Stade
@@ -1185,7 +1185,7 @@ properties:
   city: Douala
   district: Bonanjo
   property_type: APARTMENT
-  price: 481975
+  price: 440434
   currency: XAF
   bedrooms: 2
   title: Résidence Vert
@@ -1197,7 +1197,7 @@ properties:
   city: Douala
   district: Bonanjo
   property_type: HOUSE
-  price: 282963
+  price: 400052
   currency: XAF
   bedrooms: 3
   title: Maison les Manguiers
@@ -1209,7 +1209,7 @@ properties:
   city: Douala
   district: Bonapriso
   property_type: APARTMENT
-  price: 262571
+  price: 574181
   currency: XAF
   bedrooms: 4
   title: Résidence Princier
@@ -1221,7 +1221,7 @@ properties:
   city: Douala
   district: Bonapriso
   property_type: APARTMENT
-  price: 319626
+  price: 464594
   currency: XAF
   bedrooms: 1
   title: Résidence Bleu
@@ -1233,7 +1233,7 @@ properties:
   city: Douala
   district: Bonapriso
   property_type: HOUSE
-  price: 323108
+  price: 579207
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -1245,7 +1245,7 @@ properties:
   city: Douala
   district: Deido
   property_type: APARTMENT
-  price: 396444
+  price: 521340
   currency: XAF
   bedrooms: 3
   title: Résidence Royal
@@ -1257,7 +1257,7 @@ properties:
   city: Douala
   district: Deido
   property_type: APARTMENT
-  price: 206298
+  price: 289923
   currency: XAF
   bedrooms: 4
   title: Résidence Soleil
@@ -1269,7 +1269,7 @@ properties:
   city: Douala
   district: Deido
   property_type: HOUSE
-  price: 211497
+  price: 558058
   currency: XAF
   bedrooms: 1
   title: Maison Diana
@@ -1281,7 +1281,7 @@ properties:
   city: Douala
   district: Makepe
   property_type: APARTMENT
-  price: 444810
+  price: 493394
   currency: XAF
   bedrooms: 2
   title: Résidence du Paradis
@@ -1293,7 +1293,7 @@ properties:
   city: Douala
   district: Makepe
   property_type: APARTMENT
-  price: 338751
+  price: 349740
   currency: XAF
   bedrooms: 3
   title: Résidence des Cocotiers
@@ -1305,7 +1305,7 @@ properties:
   city: Douala
   district: Makepe
   property_type: HOUSE
-  price: 387327
+  price: 503940
   currency: XAF
   bedrooms: 4
   title: Maison des Eaux
@@ -1317,7 +1317,7 @@ properties:
   city: Douala
   district: Bonamoussadi
   property_type: APARTMENT
-  price: 246772
+  price: 307512
   currency: XAF
   bedrooms: 1
   title: Résidence des Fleurs
@@ -1329,7 +1329,7 @@ properties:
   city: Douala
   district: Bonamoussadi
   property_type: APARTMENT
-  price: 309187
+  price: 347101
   currency: XAF
   bedrooms: 2
   title: Résidence du Lac
@@ -1341,7 +1341,7 @@ properties:
   city: Douala
   district: Bonamoussadi
   property_type: HOUSE
-  price: 420353
+  price: 406756
   currency: XAF
   bedrooms: 3
   title: Maison du Marché
@@ -1353,7 +1353,7 @@ properties:
   city: Douala
   district: Logbaba
   property_type: APARTMENT
-  price: 426743
+  price: 346363
   currency: XAF
   bedrooms: 4
   title: Résidence Bellevue
@@ -1365,7 +1365,7 @@ properties:
   city: Douala
   district: Logbaba
   property_type: APARTMENT
-  price: 467553
+  price: 214972
   currency: XAF
   bedrooms: 1
   title: Résidence des Acacias
@@ -1377,7 +1377,7 @@ properties:
   city: Douala
   district: Logbaba
   property_type: HOUSE
-  price: 587619
+  price: 238106
   currency: XAF
   bedrooms: 2
   title: Maison de la Gare
@@ -1389,7 +1389,7 @@ properties:
   city: Douala
   district: Bassa
   property_type: APARTMENT
-  price: 576339
+  price: 567792
   currency: XAF
   bedrooms: 3
   title: Résidence du Centre
@@ -1401,7 +1401,7 @@ properties:
   city: Douala
   district: Bassa
   property_type: APARTMENT
-  price: 353672
+  price: 545154
   currency: XAF
   bedrooms: 4
   title: Résidence Saint Michel
@@ -1413,7 +1413,7 @@ properties:
   city: Douala
   district: Bassa
   property_type: HOUSE
-  price: 236038
+  price: 217860
   currency: XAF
   bedrooms: 1
   title: Maison du Stade
@@ -1425,7 +1425,7 @@ properties:
   city: Douala
   district: Nylon
   property_type: APARTMENT
-  price: 534920
+  price: 295375
   currency: XAF
   bedrooms: 2
   title: Résidence Vert
@@ -1532,7 +1532,7 @@ properties:
   city: Bafoussam
   district: Djeleng
   property_type: HOUSE
-  price: 300893
+  price: 213252
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -1544,7 +1544,7 @@ properties:
   city: Bafoussam
   district: Djeleng
   property_type: APARTMENT
-  price: 300893
+  price: 213252
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -1556,7 +1556,7 @@ properties:
   city: Bafoussam
   district: Kouogouo
   property_type: HOUSE
-  price: 209653
+  price: 315413
   currency: XAF
   bedrooms: 1
   title: Maison Princier
@@ -1568,7 +1568,7 @@ properties:
   city: Bafoussam
   district: Kouogouo
   property_type: APARTMENT
-  price: 209653
+  price: 315413
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
@@ -1580,7 +1580,7 @@ properties:
   city: Bafoussam
   district: Tamdja
   property_type: HOUSE
-  price: 171042
+  price: 223666
   currency: XAF
   bedrooms: 3
   title: Maison Vert
@@ -1592,7 +1592,7 @@ properties:
   city: Bafoussam
   district: Tamdja
   property_type: APARTMENT
-  price: 171042
+  price: 223666
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
@@ -1604,7 +1604,7 @@ properties:
   city: Bafoussam
   district: Banengo
   property_type: HOUSE
-  price: 284272
+  price: 197417
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
@@ -1616,7 +1616,7 @@ properties:
   city: Bafoussam
   district: Banengo
   property_type: APARTMENT
-  price: 284272
+  price: 197417
   currency: XAF
   bedrooms: 3
   title: Résidence Diana
@@ -1628,7 +1628,7 @@ properties:
   city: Kribi
   district: Mpangou
   property_type: HOUSE
-  price: 321783
+  price: 141674
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -1640,7 +1640,7 @@ properties:
   city: Kribi
   district: Mpangou
   property_type: APARTMENT
-  price: 321783
+  price: 141674
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -1652,7 +1652,7 @@ properties:
   city: Kribi
   district: Bebamboue
   property_type: HOUSE
-  price: 311759
+  price: 223303
   currency: XAF
   bedrooms: 1
   title: Maison Princier
@@ -1664,7 +1664,7 @@ properties:
   city: Kribi
   district: Bebamboue
   property_type: APARTMENT
-  price: 311759
+  price: 223303
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
@@ -1676,7 +1676,7 @@ properties:
   city: Kribi
   district: Lobe
   property_type: HOUSE
-  price: 114343
+  price: 322805
   currency: XAF
   bedrooms: 3
   title: Maison Vert
@@ -1688,7 +1688,7 @@ properties:
   city: Kribi
   district: Lobe
   property_type: APARTMENT
-  price: 114343
+  price: 322805
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
@@ -1700,7 +1700,7 @@ properties:
   city: Limbé
   district: Bota
   property_type: HOUSE
-  price: 109213
+  price: 259696
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -1712,7 +1712,7 @@ properties:
   city: Limbé
   district: Bota
   property_type: APARTMENT
-  price: 109213
+  price: 259696
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -1724,7 +1724,7 @@ properties:
   city: Limbé
   district: Mile 2
   property_type: HOUSE
-  price: 108734
+  price: 118330
   currency: XAF
   bedrooms: 1
   title: Maison Princier
@@ -1736,7 +1736,7 @@ properties:
   city: Limbé
   district: Mile 2
   property_type: APARTMENT
-  price: 108734
+  price: 118330
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
@@ -1748,7 +1748,7 @@ properties:
   city: Limbé
   district: Mile 4
   property_type: HOUSE
-  price: 288501
+  price: 336761
   currency: XAF
   bedrooms: 3
   title: Maison Vert
@@ -1760,7 +1760,7 @@ properties:
   city: Limbé
   district: Mile 4
   property_type: APARTMENT
-  price: 288501
+  price: 336761
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
@@ -1772,7 +1772,7 @@ properties:
   city: Limbé
   district: Mokunda
   property_type: HOUSE
-  price: 186380
+  price: 221217
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
@@ -1784,7 +1784,7 @@ properties:
   city: Limbé
   district: Mokunda
   property_type: APARTMENT
-  price: 186380
+  price: 221217
   currency: XAF
   bedrooms: 3
   title: Résidence Diana
@@ -2270,7 +2270,7 @@ property_media:
   status: VALID
   is_primary: true
   position: 1
-- id: DEMO-MEDIA-ORG-001
+- id: DEMO-MEDIA-ORG-LOGO-001
   owner_type: organization
   owner_id: DEMO-ORG-AGENCY-001
   media_type: logo
@@ -2279,7 +2279,7 @@ property_media:
   status: VALID
   is_primary: true
   position: 1
-- id: DEMO-MEDIA-ORG-001
+- id: DEMO-MEDIA-ORG-LOGO-002
   owner_type: organization
   owner_id: DEMO-ORG-ARCHI-001
   media_type: logo
@@ -2288,7 +2288,7 @@ property_media:
   status: VALID
   is_primary: true
   position: 1
-- id: DEMO-MEDIA-ORG-001
+- id: DEMO-MEDIA-ORG-LOGO-003
   owner_type: organization
   owner_id: DEMO-ORG-NOTARY-001
   media_type: logo

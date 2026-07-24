@@ -247,9 +247,9 @@ def _build_media(props):
             "media_type": "photo", "path": f"demo/media/professional-{pp_id.lower()}.jpg",
             "mime_type": "image/jpeg", "status": "VALID", "is_primary": True, "position": 1,
         })
-    for oid in ["DEMO-ORG-AGENCY-001","DEMO-ORG-ARCHI-001","DEMO-ORG-NOTARY-001"]:
+    for i, oid in enumerate(["DEMO-ORG-AGENCY-001","DEMO-ORG-ARCHI-001","DEMO-ORG-NOTARY-001"]):
         media.append({
-            "id": f"DEMO-MEDIA-ORG-{oid.split('-')[-1].lower()}", "owner_type": "organization", "owner_id": oid,
+            "id": f"DEMO-MEDIA-ORG-LOGO-{i+1:03d}", "owner_type": "organization", "owner_id": oid,
             "media_type": "logo", "path": f"demo/media/logo-{oid.lower()}.png",
             "mime_type": "image/png", "status": "VALID", "is_primary": True, "position": 1,
         })

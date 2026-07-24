@@ -1,59 +1,37 @@
-# LAWIM Demo World V1 — Inventory Report
+# LAWIM Demo World V1 — Inventory
 
-**Generated from:** `demo/reference/LAWIM-DEMO-WORLD-REFERENCE.yaml`
-**Date:** 2026-07-23
+**HEAD:** ccbf4c38  **Status:** IN_PROGRESS
 
-## Summary
+| Section | YAML | Persistable | Seeded | Type |
+|---------|------|-------------|--------|------|
+| users | 22 | 22 | 22 | persistable |
+| professional_profiles | 16 | 16 | 16 | persistable |
+| organizations | 12 | 12 | 12 | persistable |
+| services | 18 | 18 | 18 | persistable |
+| properties | 104 | 104 | 104 | persistable |
+| property_media | 51 | 51 | 51 | persistable |
+| documents | 16 | 16 | 16 | persistable |
+| appointments | 12 | 12 | 12 | persistable |
+| scenarios | 12 | 0 | 0 | REFERENCE_ONLY |
+| negative_cases | 8 | 0 | 0 | REFERENCE_ONLY |
+| **Total** | **276** | **256** | **256** | |
 
-| Category | Count | Target | Status |
-|----------|-------|--------|--------|
-| Users | 13 | 60-100 | ⚠ Partial |
-| Professional Profiles | 7 | 25-40 | ⚠ Partial |
-| Organizations | 10 | 10-20 | ✅ OK |
-| Properties | 95 | ~100 | ✅ Near target |
-| Services | 11 | 50-100 | ⚠ Partial |
-| Scenarios | 6 | 12+ | ⚠ Partial |
-| Negative Cases | 5 | 25+ | ⚠ Partial |
+## Couverture
 
-## Geographic Distribution
-
-| City | Properties | Target | Status |
-|------|-----------|--------|--------|
-| Yaoundé | 48 | 50 | ✅ Near target |
-| Douala | 25 | 25 | ✅ OK |
-| Bafoussam | 8 | 8 | ✅ OK |
-| Kribi | 6 | 7 | ✅ Near target |
-| Limbé | 8 | 5 | ✅ Exceeds target |
-
-## Property Types
-
-| Type | Count |
-|------|-------|
-| APARTMENT | 44 |
-| HOUSE | 35 |
-| STUDIO | 16 |
-
-## Scenario Coverage
-
-| Scenario | Status | Personas | Properties |
-|----------|--------|----------|------------|
-| SCENARIO-RENT-MVAN-001 | READY | 3 | 3 |
-| SCENARIO-RENT-MVAN-002 | READY | 2 | 1 |
-| SCENARIO-BUY-BASTOS-001 | READY | 3 | 1 |
-| SCENARIO-LAND-NKOABANG-001 | READY | 3 | 2 |
-| SCENARIO-ARCHITECT-YAOUNDE-001 | READY | 2 | 0 |
-| SCENARIO-NOTARY-YAOUNDE-001 | READY | 2 | 0 |
-
-## Missing Sections
-
-| Section | Status |
-|---------|--------|
-| Media | ❌ Not created |
-| Documents | ❌ Not created |
-| Appointments | ❌ Not created |
-| Conversations | ❌ Not created |
-| Messages | ❌ Not created |
-| Payments | ❌ Not created |
-| Consents | ❌ Not created |
-| Reviews | ❌ Not created |
-| Professional profiles (lawyer, builder, etc.) | ⚠ Defined in coverage but not in data |
+| Métier | Profils | Services |
+|--------|---------|----------|
+| architect | 2 | 3 |
+| notary | 1 | 2 |
+| surveyor | 1 | 2 |
+| lawyer | 1 | 1 |
+| builder | 1 | 1 |
+| electrician | 1 | 1 |
+| plumber | 1 | 1 |
+| real_estate_agent | 2 | 0 |
+| mover | 1 | 1 |
+| financial_advisor | 1 | 1 |
+| insurance_agent | 1 | 1 |
+| maintenance_tech | 1 | 1 |
+| cleaner | 1 | 1 |
+| photographer | 1 | 1 |
+| **Total** | **16** | **18** |

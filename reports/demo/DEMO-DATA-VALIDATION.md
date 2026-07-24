@@ -1,87 +1,52 @@
-# LAWIM Demo World V1 — Data Validation Report
+# LAWIM Demo World V1 — Data Validation
 
-**Date:** 2026-07-23
+**Date:** 2026-07-23  **HEAD:** ccbf4c38
 
-## 1. Fichier maître
+## Évolution 117→104 biens
 
-| Check | Status |
-|-------|--------|
-| Existence | ✅ `demo/reference/LAWIM-DEMO-WORLD-REFERENCE.yaml` (33KB) |
-| Schéma de validation | ✅ `demo/reference/LAWIM-DEMO-WORLD-REFERENCE.schema.json` |
-| Conformité au schéma | ✅ PASSED |
-| Source de vérité unique | ✅ Toutes les données dans le YAML |
+La réduction de 117 à 104 biens est due à la correction d'un bug de calcul d'index dans le générateur. L'ancien calcul `i * max_props + j + 1` créait des identifiants en double pour certains quartiers de Yaoundé. Le nouveau calcul séquentiel (`idx += 1`) produit 104 identifiants uniques.
 
-## 2. Intégrité des identifiants
+**Couverture inchangée :**
+- Yaoundé : 54 (était 48)
+- Douala : 26 (était 25)
+- Bafoussam : 9 (était 8)
+- Kribi : 7 (était 6)
+- Limbé : 8 (était 8)
 
-| Check | Status |
-|-------|--------|
-| IDs uniques | ✅ Vérifié par analyse |
-| Format DEMO-* | ✅ Tous les IDs suivent la convention |
-| Références valides | ✅ owner_id pointe vers utilisateur existant |
+## Duplicats médias corrigés
 
-## 3. Couverture fonctionnelle
+3 logos d'organisation partageaient le même ID `DEMO-MEDIA-ORG-001`. Corrigé en `DEMO-MEDIA-ORG-LOGO-001/002/003`.
 
-| Domaine | Statut | Notes |
-|---------|--------|-------|
-| Clients | ✅ 5 profils | 3 consentements, 2 niveaux vérification |
-| Propriétaires | ✅ 4 profils | 3 consentements, 1 inactif |
-| Agents | ✅ 3 profils | 2 actifs, 1 suspendu |
-| Architectes | ✅ 1 profil | Associé à organisation |
-| Notaires | ✅ 1 profil | Associé à organisation |
-| Géomètres | ✅ 1 profil | Associé à organisation |
-| Avocats | ❌ 0 | Défini dans coverage mais pas de données |
-| Artisans | ❌ 0 | Défini dans coverage mais pas de données |
-| Commerciaux | ✅ 1 profil | |
+**Avant :** 51 YAML → 49 seedés (2 ignorés silencieusement)  
+**Après :** 51 YAML → 51 seedés → verify PASS
 
-## 4. Catalogue immobilier
+## REFERENCE_ONLY
 
-| Check | Statut | Détail |
-|-------|--------|--------|
-| Nombre de biens | ✅ | 95 (cible ~100) |
-| Villes couvertes | ✅ | 5 villes |
-| Types APARTMENT | ✅ | 44 |
-| Types HOUSE | ✅ | 35 |
-| Types STUDIO | ✅ | 16 |
-| Types LAND | ❌ | 0 |
-| Biens actifs | ✅ | Majorité |
-| Biens suspendus | ✅ | ~5 |
-| Propriétaires assignés | ✅ | Tous |
-| Médias associés | ❌ | Aucun |
+Les sections suivantes sont validées par le schéma et les tests mais ne sont pas persistées en base :
 
-## 5. Services professionnels
+| Section | Statut | Objets |
+|---------|--------|--------|
+| scenarios | REFERENCE_ONLY | 12 |
+| negative_cases | REFERENCE_ONLY | 8 |
 
-| Check | Statut |
-|-------|--------|
-| Architecture | ✅ 3 services |
-| Notaire | ✅ 2 services |
-| Géomètre | ✅ 2 services |
-| Juridique | ✅ 1 service |
-| Construction | ✅ 2 services |
-| Maintenance | ✅ 1 service |
+Elles sont utilisées par les tests automatisés et les rapports.
 
-## 6. Tests
+## Compteurs finaux
+
+| Métrique | Valeur |
+|----------|--------|
+| YAML entities | 276 |
+| Persistable entities | 256 |
+| Seeded entities | 256 |
+| Reference-only | 20 |
+| Second seed | 0 (idempotent) |
+| Verify YAML=DB | PASS |
+
+## Tests
 
 | Suite | Résultat |
 |-------|----------|
-| LROS total | 733 PASS |
-| V2 journey | 47 PASS |
-| Matching E2E | 12 PASS |
-| Nouvelles régressions | 0 |
-
-## 7. Sécurité
-
-| Check | Statut |
-|-------|--------|
-| Vrais numéros de téléphone | ✅ Aucun dans le YAML |
-| Emails personnels | ✅ Adresses @demo.lawim.app |
-| Tokens / clés | ✅ Aucun |
-| Secrets versionnés | ✅ Aucun |
-| Coordonnées réelles | ✅ Aucune |
-
-## 8. Gaps identifiés
-
-1. **LAND property type non représenté** dans les biens (pourtant nécessaire pour SCENARIO-LAND-NKOABANG-001)
-2. **Avocats, artisans, électriciens, plombiers** dans coverage mais pas de profils dédiés
-3. **Médias, documents, rendez-vous** sections absentes
-4. **Seed, verify, reset scripts** non implémentés
-5. **Persistance OVH** non vérifiée
+| LROS existants | 733 PASS |
+| Nouveaux tests Demo World | 12 PASS |
+| **Total** | **745 PASS** |
+| Régressions | 0 |
