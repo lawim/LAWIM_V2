@@ -93,17 +93,17 @@ class EntityExtractionEngine:
 
     def _extract_budget(self, text: str) -> int | None:
         patterns = [
-            r"(\d[\d\s]*)\s*(?:FCFA|fcfa|francs?|f\s*cfa|xaf|F)",
-            r"(\d[\d\s]*)\s*(?:euros?|\u20ac|usd|\$)",
-            r"(\d[\d\s]*)\s*(?:k|mille)",
-            r"(?:budget|prix|jusqu['\u2019]?[a\u00e0]?|maximum|max|montant)\s*(?:de\s*)?(\d[\d\s]*)(?!\s*(?:ans|mois|jours?|heures?))",
+            (r"(\d[\d\s]*)\s*(?:FCFA|fcfa|francs?|f\s*cfa|xaf|F)", 1),
+            (r"(\d[\d\s]*)\s*(?:euros?|\u20ac|usd|\$)", 1),
+            (r"(\d[\d\s]*)\s*(?:k|mille)", 1000),
+            (r"(?:budget|prix|jusqu['\u2019]?[a\u00e0]?|maximum|max|montant)\s*(?:de\s*)?(\d[\d\s]*)(?!\s*(?:ans|mois|jours?|heures?))", 1),
         ]
-        for pat in patterns:
+        for pat, multiplier in patterns:
             m = re.search(pat, text)
             if m:
                 cleaned = m.group(1).replace(" ", "")
                 try:
-                    return int(cleaned)
+                    return int(cleaned) * multiplier
                 except ValueError:
                     pass
         amt_words = re.search(r"(?:deux|trois|quatre|cinq|six|sept|huit|neuf)\s*(?:cents?\s*)?mille", text)
@@ -117,6 +117,6 @@ class EntityExtractionEngine:
             return int(m.group(1))
         for word, num in FRENCH_NUMBERS.items():
             pat = rf"{word}\s*(?:chambres?|pi[e\u00e8]ces?)"
-            if re.search(pat, text):
+            if re.search(pat, text, re.IGNORECASE):
                 return num
         return None
