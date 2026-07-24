@@ -28,9 +28,9 @@ PROPERTY_TYPES = {
     "house": "house", "apartment": "apartment", "flat": "apartment",
     "land": "land", "plot": "land", "office": "office",
     "commercial": "commercial", "warehouse": "warehouse", "building": "building",
-    "shop": "commercial", "store": "commercial", "room": "room",
-    # Pidgin
-    "shop place": "commercial", "modern room": "room",
+    "shop": "commercial", "store": "commercial",
+    # Pidgin (avoid "room" which falsely matches "bedroom")
+    "shop place": "commercial",
     "self-contained": "studio",
 }
 
@@ -72,14 +72,16 @@ class EntityExtractionEngine:
             return result
         lower = text.lower()
 
-        # Property type
-        for fr, en in PROPERTY_TYPES.items():
+        # Property type (check longest keys first to avoid substring false matches)
+        sorted_pt = sorted(PROPERTY_TYPES.items(), key=lambda x: -len(x[0]))
+        for fr, en in sorted_pt:
             if fr in lower:
                 result.entities["property_type"] = en
                 break
 
-        # Transaction type
-        for fr, en in TRANSACTION_TYPES.items():
+        # Transaction type (check longest keys first)
+        sorted_tt = sorted(TRANSACTION_TYPES.items(), key=lambda x: -len(x[0]))
+        for fr, en in sorted_tt:
             if fr in lower:
                 result.entities["transaction_type"] = en
                 break
@@ -97,13 +99,16 @@ class EntityExtractionEngine:
                 raw_lower = raw.lower()
                 # Reject if it's a known non-city word
                 NON_CITIES = {"house","apartment","studio","villa","land","plot","office","commercial",
-                    "space","warehouse","modern","room","person","owner","property","building","shop",
-                    "flat","store","home","rent","buy","sale","need","want","look","find","search",
-                    "town","city","place","area","zone","sector","quarter","neighborhood","region",
-                    "this","that","these","those","some","any","every","each","both","all","few",
-                    "many","much","more","less","most","least","here","there","where","what","which",
-                    "your","their","our","its","his","her","our","my","your","good","nice","best",
-                    "new","old","big","small","large","small","great","real","first","last","next","same"}
+                "space","warehouse","modern","room","person","owner","property","building","shop",
+                "flat","store","home","rent","buy","sale","need","want","look","find","search",
+                "town","city","place","area","zone","sector","quarter","neighborhood","region",
+                "this","that","these","those","some","any","every","each","both","all","few",
+                "many","much","more","less","most","least","here","there","where","what","which",
+                "your","their","our","its","his","her","our","my","your","good","nice","best",
+                "new","old","big","small","large","small","great","real","first","last","next","same",
+                "living","dining","bath","kitchen","bedroom","bedrooms","balcony","terrace","garden",
+                "yard","garage","parking","basement","attic","entrance","exit","door","window",
+                "floor","level","storey","office","workspace","studio","loft","cellar"}
                 # Also skip known districts to avoid city/district confusion
                 known_districts = {k.lower() for k in DISTRICTS}
                 if raw_lower in NON_CITIES or raw_lower in known_districts:

@@ -133,6 +133,40 @@ CITY_DISPLAY: dict[str, str] = {
     "Limbe": "Limbe",
 }
 
+QUESTION_TEMPLATES_EN: dict[str, str] = {
+    "transaction_type": "Are you looking to rent, buy or sell?",
+    "property_type": "What type of property are you looking for? (apartment, house, studio...)",
+    "city": "In which city are you looking?",
+    "district": "Which area or neighborhood do you prefer?",
+    "budget_max": "What is your maximum monthly budget?",
+    "bedrooms": "How many bedrooms do you need?",
+    "move_in_date": "When would you like to move in?",
+    "price": "What price are you considering?",
+    "preferred_date": "What date do you prefer for the visit?",
+}
+
+QUESTION_TEMPLATES_PCM: dict[str, str] = {
+    "transaction_type": "You want rent, buy or sell?",
+    "property_type": "Which kind of property you want? (apartment, house, studio...)",
+    "city": "Which city you dey look?",
+    "district": "Which area you prefer?",
+    "budget_max": "How much you fit pay per month?",
+    "bedrooms": "How many bedroom you need?",
+    "move_in_date": "When you want enter?",
+    "price": "How much you think?",
+    "preferred_date": "Which date you want for visit?",
+}
+
+def _qt(state: "JourneyState", field: str) -> str:
+    """Get question text in the conversation's language."""
+    lang = getattr(state, "_lang", "fr")
+    if lang == "pcm":
+        return QUESTION_TEMPLATES_PCM.get(field, f"Abeg tell me {field} ?")
+    elif lang == "en":
+        return QUESTION_TEMPLATES_EN.get(field, f"Could you tell me {field} ?")
+    return QUESTION_TEMPLATES_FR.get(field, f"Pouvez-vous indiquer {field} ?")
+
+
 CONFIRMATION_KEYWORDS = [
     "oui", "enregistre", "valide", "confirme", "vas-y", "vas y", "d'accord", "ok",
     "bien", "procède", "procédez", "je confirme", "je valide", "envoie",
@@ -284,7 +318,9 @@ EN_KEYWORDS = {"hello","i","am","looking","for","rent","buy","house","apartment"
     "bedroom","city","thank","please","need","want","the","in","at","find","have","would","could",
     "my","your","our","their","its","his","her","a","an","this","that","these","those","is","are"}
 PCM_KEYWORDS = {"i","di","dey","wan","find","for","na","ma","my","make","give","come","go",
-    "dem","them","dis","dat","abi","wey","sabi","pikin","chop","done","been","wuna","una","not"}
+    "dem","them","dis","dat","abi","wey","sabi","pikin","chop","done","been","wuna","una","not",
+    "no","be","de","don","get","put","take","talk","say","tell","ask","see","look","watch",
+    "haus","padi","broda","sista","mami","dadi","tory","waka","kom","komot",}  # PCM-specific terms
 
 
 def _detect_language(text: str) -> str:
@@ -307,6 +343,50 @@ def _response_lang(state: "JourneyState", text: str) -> str:
     if detected != "fr":
         setattr(state, "_lang", detected)
     return detected
+
+
+_LANG_MSGS: dict[str, dict[str, str]] = {
+    "fr": {
+        "registered": "Votre demande a bien été enregistrée. Puis-je vous aider avec autre chose ?",
+        "updating": "Je mets à jour votre demande",
+        "failed": "Je n'ai pas pu enregistrer votre demande pour le moment. Vous pouvez réessayer plus tard.",
+        "already_known": "J'ai déjà pris en compte ces informations.",
+        "complete_ask": "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+        "recap": "Je récapitule votre recherche",
+        "proceeding": "Je procède à la recherche des biens correspondants.",
+        "correction": "Je prends note de votre correction",
+        "note": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+        "empty_input": "Je n'ai pas compris votre message. Pouvez-vous reformuler ?",
+    },
+    "en": {
+        "registered": "Your request has been registered. Can I help you with anything else?",
+        "updating": "I am updating your request",
+        "failed": "I could not save your request at this time. Please try again later.",
+        "already_known": "I already have this information.",
+        "complete_ask": "Your search information is complete. Should I register it?",
+        "recap": "Here is your search summary",
+        "proceeding": "I will proceed with the search.",
+        "correction": "I note your correction",
+        "note": "I have noted your information. Continue when you are ready.",
+        "empty_input": "I did not understand your message. Could you rephrase?",
+    },
+    "pcm": {
+        "registered": "Your request don register. I fit help you with something?",
+        "updating": "I dey update your request",
+        "failed": "I no fit save your request now. Try again later.",
+        "already_known": "I don get this information before.",
+        "complete_ask": "Your search complete. I go register am?",
+        "recap": "Here na your search",
+        "proceeding": "I go look for property.",
+        "correction": "I don hear say you change",
+        "note": "I don note your information. Continue when you ready.",
+        "empty_input": "I no understand your message. Abeg explain again?",
+    },
+}
+
+def _msg(state: "JourneyState", key: str) -> str:
+    lang = getattr(state, "_lang", "fr") or "fr"
+    return _LANG_MSGS.get(lang, _LANG_MSGS["fr"]).get(key, _LANG_MSGS["fr"][key])
 
 
 _LANDMARK_PATTERN = _build_landmark_pattern()
@@ -342,7 +422,7 @@ class ConversationJourneyOrchestrator:
             result.error = "empty_input"
             result.response_plan = ResponsePlan(
                 response_type=ResponseType.ACKNOWLEDGE_AND_CONTINUE,
-                message="Je n'ai pas compris votre message. Pouvez-vous reformuler ?",
+                message=_msg(state, "empty_input"),
             )
             return result
 
@@ -481,7 +561,7 @@ class ConversationJourneyOrchestrator:
                 result.response_plan = ResponsePlan(
                     response_type=ResponseType.ASK_MISSING_INFORMATION,
                     question_field=missing,
-                    question_text=QUESTION_TEMPLATES_FR.get(missing, f"Pouvez-vous indiquer {missing} ?"),
+                    question_text=_qt(state, missing),
                     message="D'accord, je conserve les informations actuelles.",
                 )
             else:
@@ -583,7 +663,7 @@ class ConversationJourneyOrchestrator:
             result.response_plan = ResponsePlan(
                 response_type=ResponseType.ASK_MISSING_INFORMATION,
                 question_field=missing,
-                question_text=QUESTION_TEMPLATES_FR.get(missing, f"Pouvez-vous indiquer {missing} ?"),
+                question_text=_qt(state, missing),
                 message=f"Merci, je note {label}.",
             )
         else:
@@ -636,40 +716,47 @@ class ConversationJourneyOrchestrator:
         if biz_completed and biz_success:
             if qual.level == QualificationLevel.READY_FOR_DECISION and not facts_changed:
                 plan.response_type = ResponseType.CONFIRM_BUSINESS_ACTION
-                plan.message = "Votre demande a bien été enregistrée. Puis-je vous aider avec autre chose ?"
+                plan.message = _msg(state, "registered")
                 return plan
             if facts_changed and recap_text:
                 plan.response_type = ResponseType.CONFIRM_BUSINESS_ACTION
-                plan.message = "Je mets à jour votre demande : " + recap_text + "."
+                plan.message = _msg(state, "updating") + " : " + recap_text + "."
                 return plan
 
         # Level 2 — business action failed
         if biz_completed and not biz_success:
             plan.response_type = ResponseType.REPORT_ACTION_FAILURE
-            plan.message = "Je n'ai pas pu enregistrer votre demande pour le moment. Vous pouvez réessayer plus tard."
+            plan.message = _msg(state, "failed")
             return plan
 
         if qual.level == QualificationLevel.READY_FOR_DECISION:
             plan.response_type = ResponseType.CONFIRM_QUALIFICATION
             if not facts_changed and state.last_facts_snapshot:
                 if state.missing_fields:
-                    plan.message = "J'ai déjà pris en compte ces informations. " + self._next_question_message(state)
+                    plan.message = _msg(state, "already_known") + " " + self._next_question_message(state)
                 else:
-                    plan.message = "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?"
+                    plan.message = _msg(state, "complete_ask")
                 return plan
             if recap_text:
-                plan.message = "Je récapitule votre recherche : " + recap_text + ". Je procède à la recherche des biens correspondants."
+                plan.message = _msg(state, "recap") + " : " + recap_text + ". " + _msg(state, "proceeding")
             return plan
 
         if corrections:
             corr = corrections[0]
             plan.facts_to_acknowledge = {corr["field"]: corr["new"]}
             plan.response_type = ResponseType.ACKNOWLEDGE_AND_CONTINUE
-            plan.message = f"Je prends note de votre correction : {corr['field']} passe à {corr['new']}."
+            # Use user-friendly field names
+            field_labels = {"budget_max": "budget", "city": "ville", "transaction_type": "transaction",
+                           "property_type": "type de bien", "bedrooms": "nombre de chambres",
+                           "district": "quartier", "move_in_date": "date d'entrée"}
+            fname = field_labels.get(corr["field"], corr["field"])
+            old_v = corr["old"]
+            new_v = corr["new"]
+            plan.message = _msg(state, "correction") + f" : {fname} passe de {old_v} à {new_v}."
             missing = self._next_question(state, qual)
             if missing:
                 plan.question_field = missing
-                plan.question_text = QUESTION_TEMPLATES_FR.get(missing, f"Pouvez-vous préciser {missing} ?")
+                plan.question_text = _qt(state, missing)
                 plan.response_type = ResponseType.ASK_MISSING_INFORMATION
             return plan
 
@@ -677,8 +764,8 @@ class ConversationJourneyOrchestrator:
         if missing:
             plan.response_type = ResponseType.ASK_MISSING_INFORMATION
             plan.question_field = missing
-            plan.question_text = QUESTION_TEMPLATES_FR.get(missing, f"Pouvez-vous indiquer {missing} ?")
-            ack = self._build_acknowledgement(state)
+            plan.question_text = _qt(state, missing)
+            ack = self._build_acknowledgement(state, lang=getattr(state, "_lang", "fr"))
             if ack:
                 plan.facts_to_acknowledge = state.confirmed_facts
                 plan.message = ack
@@ -686,9 +773,9 @@ class ConversationJourneyOrchestrator:
 
         plan.response_type = ResponseType.CONFIRM_QUALIFICATION
         if not plan.message and state.missing_fields:
-            plan.message = "Pouvez-vous preciser " + ", ".join(state.missing_fields[:3]) + " ?"
+            plan.message = _msg(state, "note")
         elif not plan.message:
-            plan.message = "Je prends note de vos informations. Continuez lorsque vous serez prets."
+            plan.message = _msg(state, "note")
         return plan
 
     def _trans_label(self, lang: str) -> dict[str, str]:
@@ -738,13 +825,20 @@ class ConversationJourneyOrchestrator:
     def _next_question_message(self, state: JourneyState) -> str:
         if state.missing_fields:
             field = state.missing_fields[0]
-            return QUESTION_TEMPLATES_FR.get(field, f"Pouvez-vous indiquer {field} ?")
+            lang = getattr(state, "_lang", "fr")
+            if lang == "pcm": templates = QUESTION_TEMPLATES_PCM
+            elif lang == "en": templates = QUESTION_TEMPLATES_EN
+            else: templates = QUESTION_TEMPLATES_FR
+            return templates.get(field, f"Can you tell me {field} ?")
         return ""
 
     def _next_question(self, state: JourneyState, qual: QualificationResult) -> str:
         if not qual.missing_fields:
             return ""
-        priority = QUESTION_PRIORITY.get(state.current_intent, list(QUESTION_TEMPLATES_FR.keys()))
+        lang = getattr(state, "_lang", "fr")
+        if lang == "pcm": priority = QUESTION_PRIORITY.get(state.current_intent, list(QUESTION_TEMPLATES_PCM.keys()))
+        elif lang == "en": priority = QUESTION_PRIORITY.get(state.current_intent, list(QUESTION_TEMPLATES_EN.keys()))
+        else: priority = QUESTION_PRIORITY.get(state.current_intent, list(QUESTION_TEMPLATES_FR.keys()))
         for field in priority:
             if field in qual.missing_fields and field != state.last_question_field:
                 state.last_question_field = field
