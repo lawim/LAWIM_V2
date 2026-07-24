@@ -95,7 +95,8 @@ class EntityExtractionEngine:
         patterns = [
             r"(\d[\d\s]*)\s*(?:FCFA|fcfa|francs?|f\s*cfa|xaf|F)",
             r"(\d[\d\s]*)\s*(?:euros?|\u20ac|usd|\$)",
-            r"(\d+)\s*(?:k|mille)",
+            r"(\d[\d\s]*)\s*(?:k|mille)",
+            r"(?:budget|prix|jusqu['\u2019]?[a\u00e0]?|maximum|max|montant)\s*(?:de\s*)?(\d[\d\s]*)(?!\s*(?:ans|mois|jours?|heures?))",
         ]
         for pat in patterns:
             m = re.search(pat, text)
