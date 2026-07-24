@@ -2,12 +2,13 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-OFFICIAL_USER_ROLES: tuple[str, ...] = ("admin", "manager", "operator", "partner", "user")
+OFFICIAL_USER_ROLES: tuple[str, ...] = ("admin", "manager", "operator", "partner", "user",
+    "commercial", "auditor", "super_admin", "service_provider")
 
 USER_ROLE_ALIASES: dict[str, str] = {
     "admin": "admin",
     "administrator": "admin",
-    "superadmin": "admin",
+    "superadmin": "super_admin",
     "director": "admin",
     "root": "admin",
     "manager": "manager",
@@ -61,6 +62,15 @@ USER_ROLE_ALIASES: dict[str, str] = {
     "particulier": "user",
     "private": "user",
     "requester": "user",
+    # V3 roles mapped to themselves
+    "commercial": "commercial",
+    "auditor": "auditor",
+    "super_admin": "super_admin",
+    "service_provider": "service_provider",
+    "property_manager": "user",
+    "doc_manager": "user",
+    "finance_manager": "user",
+    "visit_manager": "user",
 }
 
 USER_ROLE_VALUES: tuple[str, ...] = tuple(dict.fromkeys((*OFFICIAL_USER_ROLES, *USER_ROLE_ALIASES.keys())))
@@ -71,6 +81,10 @@ ROLE_LABELS_FR: dict[str, str] = {
     "operator": "Opérateur LAWIM",
     "partner": "Partenaire",
     "user": "Utilisateur",
+    "commercial": "Commercial LAWIM",
+    "auditor": "Auditeur",
+    "super_admin": "Super Administrateur",
+    "service_provider": "Prestataire de services",
 }
 
 
