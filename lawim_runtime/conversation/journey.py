@@ -215,6 +215,7 @@ class JourneyState:
     next_step: str = ""
     version: int = 1
     last_facts_snapshot: dict[str, Any] = field(default_factory=dict)
+    awaiting_business_confirmation: bool = False
 
 
 @dataclass
@@ -527,15 +528,25 @@ class ConversationJourneyOrchestrator:
                 if biz_result:
                     state.business_object_ids.update(biz_result)
                     state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
-            elif not already_completed and is_confirmation and is_ready:
+            elif not already_completed and is_confirmation and is_ready and state.awaiting_business_confirmation:
                 biz_result = self._execute_business_action(state)
                 if biz_result:
                     state.business_object_ids.update(biz_result)
                     state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
+                    state.awaiting_business_confirmation = False
 
         # 10. Build response plan
         response_plan = self._build_response_plan(state, qual_result, corrections, entity_result, lang=current_lang)
         result.response_plan = response_plan
+
+        # Set awaiting_business_confirmation when facts complete and recap/ask shown
+        if (response_plan and response_plan.response_type == ResponseType.CONFIRM_QUALIFICATION
+            and not state.business_object_ids
+            and qual_result.level == QualificationLevel.READY_FOR_DECISION
+            and not qual_result.missing_fields):
+            state.awaiting_business_confirmation = True
+        if corrections:
+            state.awaiting_business_confirmation = False
 
         if state.journey_status not in (JourneyStatus.ACTION_COMPLETED, JourneyStatus.ACTION_FAILED):
             can_be_ready = qual_result.level == QualificationLevel.READY_FOR_DECISION and state.current_intent not in NON_BUSINESS_INTENTS
