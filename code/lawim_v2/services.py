@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+
 from dataclasses import dataclass
 from http import HTTPStatus
 from pathlib import Path
@@ -224,7 +226,13 @@ class LawimServices:
 
         # Program F engine (primary) with real business service
         _conv_pf_db_path = str(_conv_dir / "program_f_state.sqlite3")
-        _conv_biz_service = MarketplacePropertySearchAdapter(repository)
+        _pg_url = os.environ.get("LAWIM_DATABASE_URL", "")
+        if _pg_url:
+            _conv_biz_service = MarketplacePropertySearchAdapter(database_url=_pg_url)
+            _log.info("Business repository: postgresql (marketplace_service_requests)")
+        else:
+            _conv_biz_service = MarketplacePropertySearchAdapter(repository=repository)
+            _log.warning("Business repository: sqlite (fallback — no DATABASE_URL)")
         try:
             _conv_engine_pf = ProgramFEngineAdapter(
                 db_path=_conv_pf_db_path,

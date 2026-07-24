@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from datetime import datetime, timezone
 from typing import Any
 
@@ -15,11 +16,88 @@ except ImportError:
     PropertySearchService = None  # type: ignore[assignment, misc]
 
 
-class MarketplacePropertySearchAdapter:
+class _PostgresMarketplaceRepository:
+    def __init__(self, database_url: str) -> None:
+        self._database_url = database_url
+        self._conn = self._connect()
+
+    def _connect(self):
+        import psycopg2
+        return psycopg2.connect(self._database_url)
+
+    def create_marketplace_request(
+        self, *, title, description, category, city, country,
+        budget_min, budget_max, currency, criteria, status, user_id,
+    ) -> dict[str, Any]:
+        import uuid
+        now = datetime.now(timezone.utc).isoformat()
+        key = f"pf-req-{uuid.uuid4().hex[:10]}"
+        criteria_json = criteria
+        c = self._conn.cursor()
+        c.execute(
+            """INSERT INTO marketplace_service_requests
+               (request_key, user_id, title, description, category, city, country,
+                budget_min, budget_max, currency, status, criteria_json,
+                submitted_at, created_at, updated_at)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+               RETURNING id""",
+            (key, user_id, title, description, category, city, country,
+             budget_min, budget_max, currency, status,
+             _json_dumps(criteria_json) if isinstance(criteria_json, dict) else criteria_json,
+             now, now, now),
+        )
+        row = c.fetchone()
+        self._conn.commit()
+        return {"id": row[0], "request_key": key}
+
+    def close(self) -> None:
+        try:
+            self._conn.close()
+        except Exception:
+            pass
+
+
+def _json_dumps(obj: Any) -> str:
+    import json
+    return json.dumps(obj, ensure_ascii=False, default=str)
+
+
+class _SQLiteMarketplaceRepository:
     def __init__(self, repository: Any) -> None:
+        self._repository = repository
+
+    def create_marketplace_request(
+        self, *, title, description, category, city, country,
+        budget_min, budget_max, currency, criteria, status, user_id,
+    ) -> dict[str, Any]:
+        return dict(self._repository.create_marketplace_request(
+            title=title, description=description, category=category,
+            city=city, country=country, budget_min=budget_min,
+            budget_max=budget_max, currency=currency, criteria=criteria,
+            status=status, user_id=user_id,
+        ))
+
+
+class MarketplacePropertySearchAdapter:
+    def __init__(
+        self,
+        repository: Any = None,
+        database_url: str = "",
+    ) -> None:
         if not HAS_PORT:
             raise ImportError("lawim_runtime BusinessActionResult required")
+
+        if database_url:
+            _log.info("Using PostgreSQL marketplace repository")
+            self._delegate = _PostgresMarketplaceRepository(database_url)
+        elif repository is not None:
+            _log.warning("Using SQLite marketplace repository (no DATABASE_URL provided)")
+            self._delegate = _SQLiteMarketplaceRepository(repository)
+        else:
+            raise ValueError("Either repository or database_url must be provided")
+
         self._repository = repository
+        self._database_url = database_url
 
     def create_search_request(
         self,
@@ -77,7 +155,7 @@ class MarketplacePropertySearchAdapter:
                 "idempotency_key": idempotency_key,
             }
 
-            result = self._repository.create_marketplace_request(
+            result = self._delegate.create_marketplace_request(
                 title=title,
                 description=description,
                 category="rental" if transaction_type == "rent" else "sale",
@@ -93,6 +171,8 @@ class MarketplacePropertySearchAdapter:
 
             object_id = str(result.get("id", ""))
             if object_id:
+                _log.info("Business object created id=%s type=marketplace_service_request repo=%s",
+                          object_id, "postgresql" if self._database_url else "sqlite")
                 return BusinessActionResult(
                     success=True,
                     action="create_property_search",

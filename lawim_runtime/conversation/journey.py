@@ -4,6 +4,7 @@ import copy
 import json
 import logging
 import re
+import unicodedata
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
 from enum import Enum
@@ -201,6 +202,34 @@ CLARIFICATION_LANDMARKS: dict[str, str] = {
 }
 
 
+def _normalize(text: str) -> str:
+    """Strip accents and lowercase for matching, preserving original for display."""
+    nfkd = unicodedata.normalize("NFKD", text)
+    return "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
+
+
+def _build_landmark_pattern() -> re.Pattern:
+    raw = (
+        r"(?:"
+        r"à côté (?:du|de la|de l['’]|des)?"
+        r"|a cote (?:du|de la|de l['’]|des)?"
+        r"|près de l['’]?"
+        r"|pres de l['’]?"
+        r"|proche (?:du|de la|de l['’]|des)?"
+        r"|vers (?:le|la|l['’])?"
+        r"|autour (?:du|de la|de l['’])?"
+        r"|au (?:niveau du|niveau de la)?"
+        r"|dans le secteur"
+        r"|dans la zone"
+        r")\s*"
+        r"(.{3,80})$"
+    )
+    return re.compile(raw, re.IGNORECASE | re.DOTALL)
+
+
+_LANDMARK_PATTERN = _build_landmark_pattern()
+
+
 class ConversationJourneyOrchestrator:
     def __init__(
         self,
@@ -384,24 +413,28 @@ class ConversationJourneyOrchestrator:
 
         if not clarification_field:
             # Try landmarks — capture the full landmark name from text
+            lower_norm = _normalize(text)
             for fr_key, en_val in CLARIFICATION_LANDMARKS.items():
-                if fr_key in lower:
-                    # Extract a meaningful phrase: look for patterns like
-                    # "près de l'Hôpital central", "vers le Marché central"
-                    # after the trigger word "près de", "vers", "à côté de", "proche du"
-                    import re as _re
-                    landmark_match = _re.search(
-                        rf"(?:près de (l['’])?|vers (le|la|l['’])?|à côté (du|de la|de l['’])?|proche (du|de la|de l['’])?|au (niveau du|niveau de la)?)\s*(.{{3,40}}?)$",
-                        text, _re.IGNORECASE
-                    )
+                if _normalize(fr_key) in lower_norm:
+                    # Use the regex to capture the full landmark phrase
+                    landmark_match = _LANDMARK_PATTERN.search(text)
                     if landmark_match:
-                        raw = landmark_match.group(0).strip().rstrip(".,!?;")
+                        raw = landmark_match.group(1).strip().rstrip(".,!?;")
                         clarification_field = "proximity_reference"
                         clarification_value = raw
                     else:
                         clarification_field = "proximity_reference"
                         clarification_value = en_val
                     break
+
+            if not clarification_field:
+                # Try capturing any location phrase after ambiguous triggers
+                landmark_match = _LANDMARK_PATTERN.search(text)
+                if landmark_match:
+                    raw = landmark_match.group(1).strip().rstrip(".,!?;")
+                    if len(raw) >= 3:
+                        clarification_field = "proximity_reference"
+                        clarification_value = raw
 
         if not clarification_field:
             # Check if unrelated answer (digression during clarification)
@@ -465,7 +498,7 @@ class ConversationJourneyOrchestrator:
         if not state.confirmed_facts:
             return False
         question_markers = ["comment", "pourquoi", "est-ce que", "c'est quoi", "combien coûte", "frais", "payant", "gratuit"]
-        lower = text.lower()
+        lower = _normalize(text)
         for marker in question_markers:
             if marker in lower:
                 return True
@@ -480,8 +513,8 @@ class ConversationJourneyOrchestrator:
         return "Je prends note de votre question. Pouvons-nous reprendre là où nous étions ?"
 
     def _detect_ambiguity(self, text: str, entity: EntityResult) -> bool:
-        ambiguous = ["proche", "pas loin", "près", "vers", "du côté de", "quelque part"]
-        lower = text.lower()
+        ambiguous = ["proche", "pres", "pas loin", "près", "vers", "du côté de", "quelque part", "a cote", "autour"]
+        lower = _normalize(text)
         for word in ambiguous:
             if word in lower and "city" not in entity.entities and "district" not in entity.entities:
                 return True
