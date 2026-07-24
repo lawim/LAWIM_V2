@@ -29,7 +29,7 @@ TRANSACTION_TYPES = {
     "vente": "sell", "vendre": "sell", "investir": "invest",
 }
 
-CITIES = {"yaound\u00e9": "Yaounde", "douala": "Douala", "bafoussam": "Bafoussam",
+CITIES = {"yaound\u00e9": "Yaounde", "yaounde": "Yaounde", "douala": "Douala", "bafoussam": "Bafoussam",
           "kribi": "Kribi", "limb\u00e9": "Limbe"}
 
 DISTRICTS = {"mvan": "Mvan", "bastos": "Bastos", "odza": "Odza", "nlongkak": "Nlongkak",
