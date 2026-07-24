@@ -258,6 +258,10 @@ class ConversationJourneyOrchestrator:
 
         if not text or not text.strip():
             result.error = "empty_input"
+            result.response_plan = ResponsePlan(
+                response_type=ResponseType.ACKNOWLEDGE_AND_CONTINUE,
+                message="Je n'ai pas compris votre message. Pouvez-vous reformuler ?",
+            )
             return result
 
         if state is None:
@@ -361,7 +365,8 @@ class ConversationJourneyOrchestrator:
         result.response_plan = response_plan
 
         if state.journey_status not in (JourneyStatus.ACTION_COMPLETED, JourneyStatus.ACTION_FAILED):
-            state.journey_status = JourneyStatus.QUALIFYING if qual_result.missing_fields else JourneyStatus.READY_FOR_ACTION
+            can_be_ready = qual_result.level == QualificationLevel.READY_FOR_DECISION and state.current_intent not in ("", "greeting", "unknown")
+            state.journey_status = JourneyStatus.QUALIFYING if (qual_result.missing_fields or not can_be_ready) else JourneyStatus.READY_FOR_ACTION
         state.last_facts_snapshot = dict(state.confirmed_facts)
         state.version += 1
         result.state = state
@@ -586,6 +591,10 @@ class ConversationJourneyOrchestrator:
             return plan
 
         plan.response_type = ResponseType.CONFIRM_QUALIFICATION
+        if not plan.message and state.missing_fields:
+            plan.message = "Pouvez-vous preciser " + ", ".join(state.missing_fields[:3]) + " ?"
+        elif not plan.message:
+            plan.message = "Je prends note de vos informations. Continuez lorsque vous serez prets."
         return plan
 
     def _format_facts(self, facts: dict[str, Any]) -> list[str]:
