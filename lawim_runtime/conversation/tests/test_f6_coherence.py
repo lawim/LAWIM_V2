@@ -13,11 +13,46 @@ from lawim_runtime.conversation.journey import (
     JourneyStatus,
     QualificationLevel,
     CONFIRMATION_KEYWORDS,
+    BusinessActionResult,
+    PropertySearchService,
 )
 
 
 def _orch() -> ConversationJourneyOrchestrator:
     return ConversationJourneyOrchestrator()
+
+
+def _orch_biz() -> tuple[ConversationJourneyOrchestrator, _TestBusinessService]:
+    svc = _TestBusinessService()
+    orch = ConversationJourneyOrchestrator(property_search_service=svc)
+    return orch, svc
+
+
+class _TestBusinessService:
+    def __init__(self) -> None:
+        self._created: list[dict[str, object]] = []
+
+    def create_search_request(
+        self,
+        *,
+        conversation_id: str,
+        user_id: str | None = None,
+        channel: str = "web",
+        facts: dict[str, object] | None = None,
+        idempotency_key: str = "",
+    ) -> BusinessActionResult:
+        self._created.append({
+            "conversation_id": conversation_id,
+            "facts": facts,
+            "idempotency_key": idempotency_key,
+        })
+        return BusinessActionResult(
+            success=True,
+            action="create_property_search",
+            object_type="test_request",
+            object_id=f"test-{len(self._created)}",
+            message="Recherche créée",
+        )
 
 
 class TestMoveInDateExtraction:
@@ -148,16 +183,16 @@ class TestBusinessConfirmation:
         assert len(state.business_object_ids) == 0
 
     def test_update_message_requires_successful_persistent_update(self):
-        orch = _orch()
+        orch, svc = _orch_biz()
         state = JourneyState()
         orch.process("Je cherche un appartement à louer à Yaoundé.", state)
         orch.process("150 000 FCFA.", state)
         orch.process("Deux chambres.", state)
         orch.process("Oui, enregistrez.", state)
+        assert len(svc._created) == 1, "business service should have been called"
         r = orch.process("Budget max 200 000 finalement.", state)
-        msg = r.response_plan.message if r.response_plan else ""
         assert state.business_object_ids, "business action should exist"
-        print(f"  update msg: {msg}")
+        assert len(svc._created) == 2, "correction should call service again"
 
     def test_business_failure_never_returns_registered_message(self):
         orch = _orch()
@@ -170,24 +205,25 @@ class TestBusinessConfirmation:
         assert "enregistrée" not in str(state.business_object_ids)
 
     def test_business_success_can_return_registered_message(self):
-        orch = _orch()
+        orch, svc = _orch_biz()
         state = JourneyState()
         orch.process("Je cherche un appartement à louer à Yaoundé.", state)
         orch.process("150 000 FCFA.", state)
         orch.process("Deux chambres.", state)
         r = orch.process("Oui, enregistrez.", state)
         msg = r.response_plan.message if r.response_plan else ""
-        assert "enregistrée" in msg.lower() or "SUCCESS"
+        assert "enregistrée" in msg.lower() or "Bien" in msg
+        assert len(svc._created) >= 1
 
     def test_confirmation_keywords_trigger_action(self):
         for kw in ["oui", "enregistre", "valide", "confirme", "vas-y", "ok", "je confirme"]:
-            orch = _orch()
+            orch, svc = _orch_biz()
             state = JourneyState()
             orch.process("Je cherche un appartement à louer à Yaoundé.", state)
             orch.process("150 000 FCFA.", state)
             orch.process("Deux chambres.", state)
             orch.process(kw, state)
-            assert len(state.business_object_ids) > 0, f"keyword '{kw}' should trigger action"
+            assert len(svc._created) > 0, f"keyword '{kw}' should trigger action"
 
     def test_business_action_does_not_fire_without_confirmation(self):
         orch = _orch()

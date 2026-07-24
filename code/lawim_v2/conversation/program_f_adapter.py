@@ -79,11 +79,14 @@ class ProgramFEngineAdapter:
         self,
         repository: _SQLiteJourneyRepository | None = None,
         db_path: str = "",
+        property_search_service: Any = None,
     ) -> None:
         if not HAS_PROGRAM_F:
             _log.error("Program F engine not available — install lawim_runtime")
             raise ImportError("lawim_runtime package required for ProgramFEngineAdapter")
-        self._orchestrator = ConversationJourneyOrchestrator()
+        self._orchestrator = ConversationJourneyOrchestrator(
+            property_search_service=property_search_service,
+        )
         self._repository = repository or _SQLiteJourneyRepository(db_path=db_path)
 
     def process_turn(

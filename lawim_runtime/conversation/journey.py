@@ -3,10 +3,11 @@ from __future__ import annotations
 import copy
 import json
 import logging
+import re
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any
+from typing import Any, Protocol
 from uuid import uuid4
 
 from .intent import IntentEngine, IntentResult
@@ -87,6 +88,29 @@ CONFIRMATION_KEYWORDS = [
     "oui", "enregistre", "valide", "confirme", "vas-y", "vas y", "d'accord", "ok",
     "bien", "procède", "procédez", "je confirme", "je valide", "envoie",
 ]
+
+
+@dataclass
+class BusinessActionResult:
+    success: bool = False
+    action: str = ""
+    object_type: str | None = None
+    object_id: str | None = None
+    message: str | None = None
+    error_code: str | None = None
+
+
+class PropertySearchService(Protocol):
+    def create_search_request(
+        self,
+        *,
+        conversation_id: str,
+        user_id: str | None = None,
+        channel: str = "web",
+        facts: dict[str, Any] | None = None,
+        idempotency_key: str = "",
+    ) -> BusinessActionResult:
+        ...
 
 
 @dataclass
@@ -185,6 +209,7 @@ class ConversationJourneyOrchestrator:
         memory: ConversationMemory | None = None,
         qualification_engine: QualificationEngine | None = None,
         llm_adapter: LLMAdapter | None = None,
+        property_search_service: PropertySearchService | None = None,
     ) -> None:
         self._intent = intent_engine or IntentEngine()
         self._entity = entity_engine or EntityExtractionEngine()
@@ -192,6 +217,7 @@ class ConversationJourneyOrchestrator:
         self._qualification = qualification_engine or QualificationEngine()
         self._llm = llm_adapter
         self._fusion = FactFusionEngine()
+        self._property_search_service = property_search_service
 
     def process(
         self,
@@ -219,11 +245,16 @@ class ConversationJourneyOrchestrator:
             state.current_intent = intent_result.intent
             if intent_result.intent == "greeting":
                 state.journey_status = JourneyStatus.QUALIFYING
+                setattr(state, "_channel", channel)
                 result.response_plan = ResponsePlan(
                     response_type=ResponseType.GREETING,
                     message="\U0001f916 LAWIM AI\n\nBonjour et bienvenue sur LAWIM. Veuillez décrire votre projet immobilier du jour en quelques lignes : achat, vente, location, terrain, gestion ou autre besoin.",
                 )
                 return result
+        else:
+            # Update current intent from non-greeting intent
+            if intent_result.intent not in ("greeting", "unknown"):
+                state.current_intent = intent_result.intent
 
         # 2. Entity extraction (always runs)
         entity_result = self._entity.extract(text)
@@ -274,14 +305,15 @@ class ConversationJourneyOrchestrator:
         result.qualification = qual_result
         self._memory.set_qualification(qual_result.level.value)
 
-        # 9. Check for explicit user confirmation to execute business action
-        if state.journey_status in (JourneyStatus.READY_FOR_ACTION, JourneyStatus.QUALIFYING):
+        # 9. Check for explicit user confirmation or corrections to execute business action
+        if state.journey_status in (JourneyStatus.READY_FOR_ACTION, JourneyStatus.QUALIFYING, JourneyStatus.ACTION_COMPLETED):
             lower = text.lower().strip()
             is_confirmation = any(kw in lower for kw in CONFIRMATION_KEYWORDS)
             already_completed = bool(state.business_object_ids)
             is_ready = qual_result.level == QualificationLevel.READY_FOR_DECISION
 
             if already_completed and corrections:
+                # Correction after business action completed — re-execute
                 biz_result = self._execute_business_action(state)
                 if biz_result:
                     state.business_object_ids.update(biz_result)
@@ -442,7 +474,7 @@ class ConversationJourneyOrchestrator:
     def _answer_digression(self, text: str) -> str:
         lower = text.lower()
         if "frais" in lower or "payant" in lower or "gratuit" in lower:
-            return "Les visites sont généralement gratuites. Certains propriétaires ou agences peuvent demander une participation symbolique. Je vous conseille de vérifier directement avec le propriétaire au moment de la visite."
+            return "Les conditions d'une visite peuvent dépendre du bien ou du partenaire concerné. Elles doivent vous être précisées avant toute visite."
         if "document" in lower or "papier" in lower:
             return "Les documents habituellement demandés sont une pièce d'identité, un justificatif de revenus et parfois un garant. Chaque propriétaire peut avoir ses propres exigences."
         return "Je prends note de votre question. Pouvons-nous reprendre là où nous étions ?"
@@ -580,25 +612,33 @@ class ConversationJourneyOrchestrator:
         return ""
 
     def _execute_business_action(self, state: JourneyState) -> dict[str, Any] | None:
-        try:
-            facts = state.confirmed_facts
-            intent = state.current_intent
-            if intent == "property_search":
+        if self._property_search_service is None:
+            return None
+        facts = state.confirmed_facts
+        intent = state.current_intent
+        if intent == "property_search":
+            conv_id = state.conversation_id
+            idem_key = f"pf:{conv_id}:property_search"
+            result = self._property_search_service.create_search_request(
+                conversation_id=conv_id,
+                channel=getattr(state, "_channel", "web"),
+                facts=facts,
+                idempotency_key=idem_key,
+            )
+            if result.success:
                 return {
                     "success": True,
-                    "action": "search_created",
-                    "search_id": uuid4().hex[:16],
-                    "message": "Recherche enregistrée",
+                    "action": result.action,
+                    "object_type": result.object_type or "property_search_request",
+                    "object_id": result.object_id or "",
+                    "message": result.message or "",
                 }
-            elif intent == "owner_registration":
+            else:
                 return {
-                    "success": True,
-                    "action": "property_registered",
-                    "property_id": uuid4().hex[:16],
-                    "message": "Bien enregistré",
+                    "success": False,
+                    "action": result.action,
+                    "error": result.error_code or "business_error",
                 }
-        except Exception as e:
-            return {"success": False, "action": "failed", "error": str(e)}
         return None
 
     def load_state(self, state: JourneyState) -> None:

@@ -194,6 +194,7 @@ class LawimServices:
         from .conversation.state.repository import ConversationStateRepository
         from .conversation.state.resolver import ConversationResolver
         from .conversation.program_f_adapter import ProgramFEngineAdapter
+        from .conversation.marketplace_adapter import MarketplacePropertySearchAdapter
 
         import sqlite3, os
 
@@ -221,10 +222,14 @@ class LawimServices:
         _conv_resolver = ConversationResolver()
         _conv_engine_v2 = ConversationStateEngine(_conv_repo, _conv_resolver)
 
-        # Program F engine (primary)
+        # Program F engine (primary) with real business service
         _conv_pf_db_path = str(_conv_dir / "program_f_state.sqlite3")
+        _conv_biz_service = MarketplacePropertySearchAdapter(repository)
         try:
-            _conv_engine_pf = ProgramFEngineAdapter(db_path=_conv_pf_db_path)
+            _conv_engine_pf = ProgramFEngineAdapter(
+                db_path=_conv_pf_db_path,
+                property_search_service=_conv_biz_service,
+            )
             _log.info("ProgramFEngineAdapter activated as primary engine (db=%s)", _conv_pf_db_path)
         except ImportError:
             _conv_engine_pf = None
