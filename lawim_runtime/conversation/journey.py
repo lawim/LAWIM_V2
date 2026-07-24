@@ -313,36 +313,82 @@ def _build_landmark_pattern() -> re.Pattern:
 
 FR_KEYWORDS = {"bonjour","je","cherche","louer","acheter","appartement","maison","studio","terrain",
     "budget","mois","chambre","ville","quartier","merci","veux","peux","dans","sur","avec","nous",
-    "votre","nos","mes","vos","ses","son","sa","leur","leurs","cet","cette","ces","mon","ton"}
+    "votre","nos","mes","vos","ses","son","sa","leur","leurs","cet","cette","ces","mon","ton",
+    "tres","beaucoup","aussi","encore","enregistrez","confirme","valide","envoie",
+    "bien","appart","pieces","location","achat","vendre","investir","visite","prix","recherche"}
 EN_KEYWORDS = {"hello","i","am","looking","for","rent","buy","house","apartment","budget","month",
     "bedroom","city","thank","please","need","want","the","in","at","find","have","would","could",
-    "my","your","our","their","its","his","her","a","an","this","that","these","those","is","are"}
-PCM_KEYWORDS = {"i","di","dey","wan","find","for","na","ma","my","make","give","come","go",
-    "dem","them","dis","dat","abi","wey","sabi","pikin","chop","done","been","wuna","una","not",
-    "no","be","de","don","get","put","take","talk","say","tell","ask","see","look","watch",
-    "haus","padi","broda","sista","mami","dadi","tory","waka","kom","komot",}  # PCM-specific terms
+    "my","your","our","their","its","his","her","a","an","this","that","these","those","is","are",
+    "not","don't","wont","can't","will","shall","may","might","must","should","register","confirm"}
+# PCM: prioritize strong markers. Avoid words shared with English.
+PCM_STRONG = {"no be","abeg","wey dey","how much e be","make i","i wan","i di","i dey","i don",
+              "wetin","na","dem","una","wuna","sabi","pikin","kom","waka","tory"}
+PCM_KEYWORDS = {"i","di","dey","wan","na","ma","my","make","dem","abi","wey","sabi",
+    "pikin","chop","done","been","wuna","una","no","be","de","don","get","put","kom",
+    "haus","padi","broda","sista","mami","dadi","tory","waka","komot","wetin","abeg"}
 
 
 def _detect_language(text: str) -> str:
+    """Detect language from text. Returns confidence per language."""
     words = set(text.lower().split())
-    fs = len(words & FR_KEYWORDS)
-    es = len(words & EN_KEYWORDS)
-    ps = len(words & PCM_KEYWORDS)
-    if ps > es and ps > fs: return "pcm"
-    if es > fs: return "en"
-    return "fr"
+    text_lower = text.lower()
+    # PCM strong markers (multi-word)
+    pcm_strong = sum(1 for m in PCM_STRONG if m in text_lower)
+    pcm_score = pcm_strong * 5  # Boost strong markers
+    # Count keywords per language
+    for w in words:
+        if w in PCM_KEYWORDS: pcm_score += 1
+    en_score = sum(1 for w in words if w in EN_KEYWORDS)
+    fr_score = sum(1 for w in words if w in FR_KEYWORDS)
+    
+    # PCM: strong markers alone decide
+    if pcm_strong >= 1:
+        return "pcm"
+    # If PCM has meaningful presence, give it priority
+    if pcm_score >= 3 and pcm_score >= en_score:
+        return "pcm"
+    # French vs English: most keywords wins, ties go to French
+    if fr_score > en_score:
+        return "fr"
+    if en_score > fr_score:
+        return "en"
+    return "fr"  # Default
 
 
-_LANG_CACHE: dict[str, str] = {}
 def _response_lang(state: "JourneyState", text: str) -> str:
-    """Get the response language based on state and current message."""
+    """Get the response language based on state history and current message."""
     explicit = getattr(state, "_lang", "")
-    if explicit:
-        return explicit
     detected = _detect_language(text)
-    if detected != "fr":
+    
+    if not explicit:
+        # First message
         setattr(state, "_lang", detected)
-    return detected
+        return detected
+    
+    msg_words = set(text.lower().split())
+    text_lower = text.lower()
+    pcm_strong = sum(1 for m in PCM_STRONG if m in text_lower)
+    en_score = sum(1 for w in msg_words if w in EN_KEYWORDS)
+    fr_score = sum(1 for w in msg_words if w in FR_KEYWORDS)
+    pcm_score = pcm_strong * 5 + sum(1 for w in msg_words if w in PCM_KEYWORDS)
+    
+    # Strong PCM evidence overrides current language
+    if pcm_strong >= 1:
+        setattr(state, "_lang", "pcm")
+        return "pcm"
+    
+    # English: require substantial evidence to switch from non-EN
+    if explicit != "en" and en_score >= 4 and en_score >= fr_score * 2:
+        setattr(state, "_lang", "en")
+        return "en"
+    
+    # French: require substantial evidence to switch from non-FR
+    if explicit != "fr" and fr_score >= 4 and fr_score >= en_score * 2:
+        setattr(state, "_lang", "fr")
+        return "fr"
+    
+    # Short/ambiguous: keep current language
+    return explicit
 
 
 _LANG_MSGS: dict[str, dict[str, str]] = {

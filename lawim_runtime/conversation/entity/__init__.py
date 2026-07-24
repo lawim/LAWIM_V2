@@ -79,10 +79,14 @@ class EntityExtractionEngine:
                 result.entities["property_type"] = en
                 break
 
-        # Transaction type (check longest keys first)
+        # Transaction type (check longest keys first, with negation handling)
         sorted_tt = sorted(TRANSACTION_TYPES.items(), key=lambda x: -len(x[0]))
         for fr, en in sorted_tt:
             if fr in lower:
+                # Check negation patterns: don't want to rent, not for rent, no be rent
+                negation_before = re.search(rf"(?:don't|dont|not|no|não|ne |ne |no be|i no)\s+(?:want\s+)?(?:to\s+)?(?:for\s+)?{re.escape(fr)}", text, re.IGNORECASE)
+                if negation_before:
+                    continue  # Skip negated transaction
                 result.entities["transaction_type"] = en
                 break
 
