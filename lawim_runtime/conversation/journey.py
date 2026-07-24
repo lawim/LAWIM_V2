@@ -281,8 +281,11 @@ class ConversationJourneyOrchestrator:
                 )
                 return result
         else:
-            # Update current intent from non-greeting intent
-            if intent_result.intent not in ("greeting", "unknown"):
+            # Update current intent from non-greeting, non-digression intent
+            # (preserve main intent through digressions)
+            is_question = any(m in _normalize(text) for m in 
+                ["comment", "pourquoi", "est-ce que", "c'est quoi", "combien", "frais", "payant", "gratuit"])
+            if intent_result.intent not in ("greeting", "unknown") and not is_question:
                 state.current_intent = intent_result.intent
 
         # 2. Entity extraction (always runs)
