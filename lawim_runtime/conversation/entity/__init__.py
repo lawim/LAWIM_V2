@@ -36,7 +36,9 @@ DISTRICTS = {"mvan": "Mvan", "bastos": "Bastos", "odza": "Odza", "nlongkak": "Nl
              "tsinga": "Tsinga", "ngousso": "Ngousso", "essos": "Essos",
              "mendong": "Mendong", "biyem-assi": "Biyem-Assi", "biyem assi": "Biyem-Assi",
              "makepe": "Makepe", "bonanjo": "Bonanjo", "bonamoussadi": "Bonamoussadi",
-             "akwa": "Akwa"}
+             "akwa": "Akwa", "melen": "Melen", "ngoa": "Ngoa",
+             "ekoumdoum": "Ekoumdoum", "mokolo": "Mokolo", "mimboman": "Mimboman",
+             "nyalla": "Nyalla", "carrière": "Carrière", "carriere": "Carrière"}
 
 
 class EntityExtractionEngine:
@@ -81,6 +83,11 @@ class EntityExtractionEngine:
         if bedrooms:
             result.entities["bedrooms"] = bedrooms
 
+        # Move-in date
+        move_in = self._extract_move_in_date(text)
+        if move_in:
+            result.entities["move_in_date"] = move_in
+
         # Determine missing info
         if "property_type" not in result.entities:
             result.missing.append("property_type")
@@ -119,4 +126,18 @@ class EntityExtractionEngine:
             pat = rf"{word}\s*(?:chambres?|pi[e\u00e8]ces?)"
             if re.search(pat, text, re.IGNORECASE):
                 return num
+        return None
+
+    FRENCH_MONTHS = r"(janvier|f\u00e9vrier|fevrier|mars|avril|mai|juin|juillet|ao\u00fbt|aout|septembre|octobre|novembre|d\u00e9cembre|decembre)"
+
+    def _extract_move_in_date(self, text: str) -> str | None:
+        patterns = [
+            re.compile(rf"(?:pour|en|d\u00e8s|des|dans|d\u2019ici|avant)\s+(?:le\s+)?(?:mois\s+de\s+)?{self.FRENCH_MONTHS}(?:\s*\d{{4}})?(?:\b|$|\.|,)", re.IGNORECASE),
+            re.compile(rf"(?:rentr\u00e9e?|entrer?|emm\u00e9nager?|commencer)\s+(?:d\u00e8s\s+|en\s+|pour\s+)?{self.FRENCH_MONTHS}(?:\s*\d{{4}})?(?:\b|$|\.|,)", re.IGNORECASE),
+            re.compile(rf"\b{self.FRENCH_MONTHS}(?:\s*\d{{4}})?(?:\b|$|\.|,)", re.IGNORECASE),
+        ]
+        for pat in patterns:
+            m = pat.search(text)
+            if m:
+                return m.group(0).strip()
         return None

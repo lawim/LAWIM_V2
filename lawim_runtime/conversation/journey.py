@@ -60,6 +60,11 @@ QUESTION_TEMPLATES_FR: dict[str, str] = {
     "preferred_date": "Quelle date préférez-vous pour la visite ?",
 }
 
+CONFIRMATION_KEYWORDS = [
+    "oui", "enregistre", "valide", "confirme", "vas-y", "vas y", "d'accord", "ok",
+    "bien", "procède", "procédez", "je confirme", "je valide", "envoie",
+]
+
 
 @dataclass
 class JourneyState:
@@ -77,6 +82,7 @@ class JourneyState:
     business_object_ids: dict[str, str] = field(default_factory=dict)
     next_step: str = ""
     version: int = 1
+    last_facts_snapshot: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -119,6 +125,32 @@ class FactFusionEngine:
             if key in existing and existing[key] != value:
                 corrections.append({"field": key, "old": existing[key], "new": value})
         return corrections
+
+
+CLARIFICATION_DISTRICTS: dict[str, str] = {
+    "centre-ville": "Centre-Ville", "centre ville": "Centre-Ville",
+    "mvan": "Mvan", "bastos": "Bastos", "odza": "Odza",
+    "nlongkak": "Nlongkak", "tsinga": "Tsinga", "ngousso": "Ngousso",
+    "essos": "Essos", "mendong": "Mendong", "biyem-assi": "Biyem-Assi",
+    "biyem assi": "Biyem-Assi", "makepe": "Makepe",
+    "bonanjo": "Bonanjo", "bonamoussadi": "Bonamoussadi",
+    "akwa": "Akwa", "melen": "Melen", "ngoa": "Ngoa",
+    "ekoumdoum": "Ekoumdoum", "tam-tam": "Tam-Tam",
+    "mokolo": "Mokolo", "mimboman": "Mimboman",
+    "nyalla": "Nyalla", "carrière": "Carrière",
+    "carriere": "Carrière",
+}
+
+CLARIFICATION_LANDMARKS: dict[str, str] = {
+    "hôpital": "hôpital", "hopital": "hôpital", "centre de santé": "centre de santé",
+    "marché": "marché", "marche": "marché",
+    "lycée": "lycée", "école": "école", "ecole": "école", "université": "université",
+    "carrefour": "carrefour",
+    "axe": "axe", "route": "axe",
+    "gare": "gare", "aéroport": "aéroport",
+    "banque": "banque",
+    "église": "église", "mosquée": "mosquée",
+}
 
 
 class ConversationJourneyOrchestrator:
@@ -169,27 +201,41 @@ class ConversationJourneyOrchestrator:
                 )
                 return result
 
-        # 2. Entity extraction
+        # 2. Entity extraction (always runs)
         entity_result = self._entity.extract(text)
         result.entities = entity_result
 
-        # 3. Check for digression (question not matching current journey)
+        # 3. Fact fusion (always runs, regardless of journey status)
+        corrections = self._fusion.detect_correction(state.confirmed_facts, entity_result.entities)
+        state.confirmed_facts = self._fusion.fuse(state.confirmed_facts, entity_result.entities, state.fact_history)
+
+        # 4. Memory update (always runs)
+        self._memory.add_entry("user", text, intent_result.intent, entity_result.entities)
+        if entity_result.entities:
+            self._memory.update_preferences(entity_result.entities)
+
+        # 5. Handle WAITING_FOR_CLARIFICATION (resolve ambiguity)
+        if state.journey_status == JourneyStatus.WAITING_FOR_CLARIFICATION:
+            return self._handle_clarification(text, entity_result, state, result)
+
+        # 6. Check for digression
         is_digression = self._detect_digression(text, entity_result, state)
-        if is_digression and state.journey_status == JourneyStatus.QUALIFYING:
+        if is_digression and state.journey_status != JourneyStatus.ACTION_COMPLETED:
             state.digression = {"question": text, "answer": self._answer_digression(text)}
+            if state.journey_status == JourneyStatus.READY_FOR_ACTION:
+                state.journey_status = JourneyStatus.QUALIFYING
+            result.state = state
             result.response_plan = ResponsePlan(
                 response_type=ResponseType.ANSWER_DIGRESSION_AND_RESUME,
                 message=state.digression["answer"],
             )
             return result
 
-        # 4. Fact fusion
-        corrections = self._fusion.detect_correction(state.confirmed_facts, entity_result.entities)
-        state.confirmed_facts = self._fusion.fuse(state.confirmed_facts, entity_result.entities, state.fact_history)
-
-        # 5. Detect ambiguity
+        # 7. Detect ambiguity
         if self._detect_ambiguity(text, entity_result):
             state.journey_status = JourneyStatus.WAITING_FOR_CLARIFICATION
+            state.last_facts_snapshot = dict(state.confirmed_facts)
+            result.state = state
             result.response_plan = ResponsePlan(
                 response_type=ResponseType.ASK_CLARIFICATION,
                 question_field="location_precision",
@@ -198,34 +244,152 @@ class ConversationJourneyOrchestrator:
             result.needs_clarification = True
             return result
 
-        # 6. Memory update
-        self._memory.add_entry("user", text, intent_result.intent, entity_result.entities)
-        if entity_result.entities:
-            self._memory.update_preferences(entity_result.entities)
-
-        # 7. Qualification
+        # 8. Qualification
         qual_result = self._qualification.evaluate(state.current_intent, state.confirmed_facts)
         state.missing_fields = qual_result.missing_fields
         result.qualification = qual_result
         self._memory.set_qualification(qual_result.level.value)
 
-        # 8. Build response plan
+        # 9. Check for explicit user confirmation to execute business action
+        if state.journey_status in (JourneyStatus.READY_FOR_ACTION, JourneyStatus.QUALIFYING):
+            lower = text.lower().strip()
+            is_confirmation = any(kw in lower for kw in CONFIRMATION_KEYWORDS)
+            already_completed = bool(state.business_object_ids)
+            is_ready = qual_result.level == QualificationLevel.READY_FOR_DECISION
+
+            if already_completed and corrections:
+                biz_result = self._execute_business_action(state)
+                if biz_result:
+                    state.business_object_ids.update(biz_result)
+                    state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
+            elif not already_completed and is_confirmation and is_ready:
+                biz_result = self._execute_business_action(state)
+                if biz_result:
+                    state.business_object_ids.update(biz_result)
+                    state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
+
+        # 10. Build response plan
         response_plan = self._build_response_plan(state, qual_result, corrections, entity_result)
         result.response_plan = response_plan
 
-        # 9. If qualified, attempt business action
-        if qual_result.level in (QualificationLevel.QUALIFIED, QualificationLevel.READY_FOR_DECISION) and not state.business_object_ids:
-            biz_result = self._execute_business_action(state)
-            if biz_result:
-                state.business_object_ids.update(biz_result)
-                state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
-
-        state.journey_status = JourneyStatus.QUALIFYING if qual_result.missing_fields else JourneyStatus.READY_FOR_ACTION
+        if state.journey_status not in (JourneyStatus.ACTION_COMPLETED, JourneyStatus.ACTION_FAILED):
+            state.journey_status = JourneyStatus.QUALIFYING if qual_result.missing_fields else JourneyStatus.READY_FOR_ACTION
+        state.last_facts_snapshot = dict(state.confirmed_facts)
         state.version += 1
         result.state = state
         result.memory = self._memory.get_context()
         self._memory.add_entry("assistant", response_plan.message if response_plan else "")
 
+        return result
+
+    def _handle_clarification(self, text: str, entity: EntityResult, state: JourneyState, result: OrchestrationResult) -> OrchestrationResult:
+        lower = text.lower().strip()
+        affirmation = lower in ("oui", "d'accord", "ok", "bien", "dac", "si", "exactement", "voilà", "ça marche")
+        if affirmation:
+            state.journey_status = JourneyStatus.QUALIFYING
+            qual_result = self._qualification.evaluate(state.current_intent, state.confirmed_facts)
+            state.missing_fields = qual_result.missing_fields
+            result.qualification = qual_result
+            missing = self._next_question(state, qual_result)
+            if missing:
+                result.response_plan = ResponsePlan(
+                    response_type=ResponseType.ASK_MISSING_INFORMATION,
+                    question_field=missing,
+                    question_text=QUESTION_TEMPLATES_FR.get(missing, f"Pouvez-vous indiquer {missing} ?"),
+                    message="D'accord, je conserve les informations actuelles.",
+                )
+            else:
+                result.response_plan = ResponsePlan(
+                    response_type=ResponseType.CONFIRM_QUALIFICATION,
+                    message="D'accord, je conserve les informations actuelles.",
+                )
+            result.state = state
+            return result
+
+        # Try entity engine first (may extract city or district from the answer)
+        has_district = "district" in entity.entities
+        has_city = "city" in entity.entities
+        clarification_field = None
+        clarification_value = None
+
+        if has_district:
+            clarification_field = "district"
+            clarification_value = entity.entities["district"]
+        elif has_city:
+            clarification_field = "city"
+            clarification_value = entity.entities["city"]
+        else:
+            # Try known districts
+            for fr_key, en_val in CLARIFICATION_DISTRICTS.items():
+                if fr_key in lower:
+                    clarification_field = "district"
+                    clarification_value = en_val
+                    break
+
+        if not clarification_field:
+            # Try landmarks
+            for fr_key, en_val in CLARIFICATION_LANDMARKS.items():
+                if fr_key in lower:
+                    clarification_field = "proximity_reference"
+                    clarification_value = f"près de {en_val}"
+                    break
+
+        if not clarification_field:
+            # Check if unrelated answer (digression during clarification)
+            is_new_digression = self._detect_digression(text, entity, state)
+            if is_new_digression:
+                state.digression = {"question": text, "answer": self._answer_digression(text)}
+                result.state = state
+                result.response_plan = ResponsePlan(
+                    response_type=ResponseType.ANSWER_DIGRESSION_AND_RESUME,
+                    message=state.digression["answer"],
+                )
+                state.journey_status = JourneyStatus.WAITING_FOR_CLARIFICATION
+                return result
+            # Unresolved — ask again with different wording
+            state.journey_status = JourneyStatus.WAITING_FOR_CLARIFICATION
+            result.state = state
+            retry_count = getattr(state, "_clarification_retry", 0) + 1
+            setattr(state, "_clarification_retry", retry_count)
+            retry_messages = [
+                "Je n'ai pas bien compris. Pouvez-vous préciser le nom d'un quartier, d'un point de repère ou d'un axe routier ?",
+                "Je n'arrive pas à identifier le lieu. Donnez-moi le nom d'un quartier, d'un marché ou d'un carrefour connu.",
+                "Pouvez-vous être plus précis ? Un quartier, une rue ou un bâtiment connu m'aiderait.",
+            ]
+            question_text = retry_messages[min(retry_count - 1, len(retry_messages) - 1)]
+            result.response_plan = ResponsePlan(
+                response_type=ResponseType.ASK_CLARIFICATION,
+                question_field="location_precision",
+                question_text=question_text,
+            )
+            result.needs_clarification = True
+            return result
+
+        # Handle the resolved clarification
+        state.confirmed_facts = self._fusion.fuse(state.confirmed_facts, {clarification_field: clarification_value}, state.fact_history)
+        state.journey_status = JourneyStatus.QUALIFYING
+        result.state = state
+
+        qual_result = self._qualification.evaluate(state.current_intent, state.confirmed_facts)
+        state.missing_fields = qual_result.missing_fields
+        result.qualification = qual_result
+
+        label = clarification_value or "ce lieu"
+        missing = self._next_question(state, qual_result)
+        if missing:
+            result.response_plan = ResponsePlan(
+                response_type=ResponseType.ASK_MISSING_INFORMATION,
+                question_field=missing,
+                question_text=QUESTION_TEMPLATES_FR.get(missing, f"Pouvez-vous indiquer {missing} ?"),
+                message=f"Merci, je note {label}.",
+            )
+        else:
+            result.response_plan = ResponsePlan(
+                response_type=ResponseType.CONFIRM_QUALIFICATION,
+                message=f"Merci, je note {label}.",
+            )
+        state.last_facts_snapshot = dict(state.confirmed_facts)
+        state.version += 1
         return result
 
     def _detect_digression(self, text: str, entity: EntityResult, state: JourneyState) -> bool:
@@ -257,24 +421,39 @@ class ConversationJourneyOrchestrator:
     def _build_response_plan(self, state: JourneyState, qual: QualificationResult, corrections: list[dict[str, Any]], entity: EntityResult) -> ResponsePlan:
         plan = ResponsePlan(language="fr")
 
+        facts = state.confirmed_facts
+        facts_changed = bool(corrections) or (state.last_facts_snapshot and facts != state.last_facts_snapshot)
+        biz_completed = bool(state.business_object_ids)
+        biz_success = biz_completed and state.business_object_ids.get("success") == True
+
+        # Level 3 — business action succeeded with confirmed persistence
+        if biz_completed and biz_success:
+            if qual.level == QualificationLevel.READY_FOR_DECISION and not facts_changed:
+                plan.response_type = ResponseType.CONFIRM_BUSINESS_ACTION
+                plan.message = "Votre demande a bien été enregistrée. Puis-je vous aider avec autre chose ?"
+                return plan
+            if facts_changed:
+                parts = self._format_facts(facts)
+                plan.response_type = ResponseType.CONFIRM_BUSINESS_ACTION
+                plan.message = "Je mets à jour votre demande : " + ", ".join(parts) + "."
+                return plan
+
+        # Level 2 — business action failed
+        if biz_completed and not biz_success:
+            plan.response_type = ResponseType.REPORT_ACTION_FAILURE
+            plan.message = "Je n'ai pas pu enregistrer votre demande pour le moment. Vous pouvez réessayer plus tard."
+            return plan
+
         if qual.level == QualificationLevel.READY_FOR_DECISION:
             plan.response_type = ResponseType.CONFIRM_QUALIFICATION
-            facts = state.confirmed_facts
-            parts = []
-            if "property_type" in facts:
-                labels = {"apartment": "appartement", "house": "maison", "studio": "studio", "land": "terrain"}
-                parts.append(f"un {labels.get(facts['property_type'], facts['property_type'])}")
-            if "bedrooms" in facts:
-                parts.append(f"{facts['bedrooms']} chambres")
-            if "transaction_type" in facts:
-                t = {"rent": "louer", "buy": "acheter", "sell": "vendre"}
-                parts.append(f"à {t.get(facts['transaction_type'], facts['transaction_type'])}")
-            if "city" in facts:
-                parts.append(f"à {facts['city']}")
-            if "district" in facts:
-                parts.append(f"dans le quartier {facts['district']}")
-            if "budget_max" in facts:
-                parts.append(f"avec un budget de {facts['budget_max']} FCFA")
+            if not facts_changed:
+                # Level 1 — conversational state only, no business action claimed
+                if state.missing_fields:
+                    plan.message = "J'ai déjà pris en compte ces informations. " + self._next_question_message(state)
+                else:
+                    plan.message = "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?"
+                return plan
+            parts = self._format_facts(facts)
             plan.message = "Je récapitule votre recherche : " + ", ".join(parts) + ". Je procède à la recherche des biens correspondants."
             return plan
 
@@ -303,6 +482,32 @@ class ConversationJourneyOrchestrator:
 
         plan.response_type = ResponseType.CONFIRM_QUALIFICATION
         return plan
+
+    def _format_facts(self, facts: dict[str, Any]) -> list[str]:
+        parts = []
+        if "property_type" in facts:
+            labels = {"apartment": "appartement", "house": "maison", "studio": "studio", "land": "terrain"}
+            parts.append(f"un {labels.get(facts['property_type'], facts['property_type'])}")
+        if "bedrooms" in facts:
+            parts.append(f"{facts['bedrooms']} chambres")
+        if "transaction_type" in facts:
+            t = {"rent": "louer", "buy": "acheter", "sell": "vendre"}
+            parts.append(f"à {t.get(facts['transaction_type'], facts['transaction_type'])}")
+        if "city" in facts:
+            parts.append(f"à {facts['city']}")
+        if "district" in facts:
+            parts.append(f"dans le quartier {facts['district']}")
+        if "budget_max" in facts:
+            parts.append(f"avec un budget de {facts['budget_max']} FCFA")
+        if "move_in_date" in facts:
+            parts.append(f"emménagement {facts['move_in_date']}")
+        return parts
+
+    def _next_question_message(self, state: JourneyState) -> str:
+        if state.missing_fields:
+            field = state.missing_fields[0]
+            return QUESTION_TEMPLATES_FR.get(field, f"Pouvez-vous indiquer {field} ?")
+        return ""
 
     def _next_question(self, state: JourneyState, qual: QualificationResult) -> str:
         if not qual.missing_fields:
