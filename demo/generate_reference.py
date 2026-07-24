@@ -80,7 +80,11 @@ def build():
         users.append({"id": uid_noauth, "full_name": name_noauth, "role": role, "city": city, "organization_id": org, "profile_status": "inactive", "verification_status": "unverified", "consent_status": "pending", "can_login": False, "is_demo_data": True, "demo_dataset_id": "LAWIM_DEMO_WORLD_V1"})
 
     # Professional users (service_provider role)
-    pro_auth_names = [("ARCH", "Pierre Atangana"), ("ARCH", "Marie Ekwé"), ("NOTARY", "Jean Meka"), ("SURVEYOR", "Chantal Ngo")]
+    pro_auth_names = [("ARCH", "Pierre Atangana"), ("ARCH", "Marie Ekwé"), ("NOTARY", "Jean Meka"), ("SURVEYOR", "Chantal Ngo"),
+                      ("LAWYER", "Me Paul Biyong"), ("BUILDER", "David Tchami"), ("ELECTRICIAN", "Joseph Mvogo"),
+                      ("PLUMBER", "Robert Nkwi"), ("MOVER", "Marcel Simo"), ("FINANCE", "Henri Ngo Bissa"),
+                      ("INSURANCE", "Claire Eyanga"), ("MAINT", "Luc Mbarga"), ("CLEANER", "Marie Ekwe"),
+                      ("PHOTO", "Pierre Obama")]
     for idx, (prefix, name) in enumerate(pro_auth_names, 1):
         uid = f"DEMO-USER-PRO-{prefix}-AUTH-{idx:03d}"
         users.append({"id": uid, "full_name": name, "role": "service_provider", "city": "Yaoundé", "profile_status": "active", "verification_status": "verified", "can_login": True, "is_demo_data": True, "demo_dataset_id": "LAWIM_DEMO_WORLD_V1"})
@@ -114,24 +118,32 @@ def build():
         ("ARCH", 2, "architect", "DEMO-USER-PRO-ARCH-AUTH-002", _oid("ARCHI", 1), 6, True, True),
         ("NOTARY", 1, "notary", "DEMO-USER-PRO-NOTARY-AUTH-001", _oid("NOTARY", 1), 20, True, True),
         ("SURVEYOR", 1, "surveyor", "DEMO-USER-PRO-SURVEYOR-AUTH-001", _oid("SURVEY", 1), 15, True, True),
-        ("LAWYER", 1, "lawyer", "DEMO-USER-PRO-LAWYER-NOAUTH-001", _oid("LEGAL", 1), 18, True, True),
-        ("BUILDER", 1, "builder", None, _oid("CONSTRUCT", 1), 22, True, True),
-        ("ELECTRICIAN", 1, "electrician", None, _oid("CONSTRUCT", 1), 8, True, True),
-        ("PLUMBER", 1, "plumber", None, _oid("MAINT", 1), 10, True, True),
+        ("LAWYER", 1, "lawyer", "DEMO-USER-PRO-LAWYER-AUTH-001", _oid("LEGAL", 1), 18, True, True),
+        ("LAWYER", 2, "lawyer", "DEMO-USER-PRO-LAWYER-NOAUTH-001", _oid("LEGAL", 1), 5, False, False),
+        ("BUILDER", 1, "builder", "DEMO-USER-PRO-BUILDER-AUTH-001", _oid("CONSTRUCT", 1), 22, True, True),
+        ("BUILDER", 2, "builder", "DEMO-USER-PRO-BUILDER-NOAUTH-001", _oid("CONSTRUCT", 1), 3, False, False),
+        ("ELECTRICIAN", 1, "electrician", "DEMO-USER-PRO-ELECTRICIAN-AUTH-001", _oid("CONSTRUCT", 1), 8, True, True),
+        ("ELECTRICIAN", 2, "electrician", "DEMO-USER-PRO-ELECTRICIAN-NOAUTH-001", _oid("CONSTRUCT", 1), 2, False, False),
+        ("PLUMBER", 1, "plumber", "DEMO-USER-PRO-PLUMBER-AUTH-001", _oid("MAINT", 1), 10, True, True),
+        ("PLUMBER", 2, "plumber", "DEMO-USER-PRO-PLUMBER-NOAUTH-001", _oid("MAINT", 1), 1, False, False),
         ("AGENT", 1, "real_estate_agent", "DEMO-USER-AGENT-AUTH-001", _oid("AGENCY", 1), 7, True, True),
         ("AGENT", 2, "real_estate_agent", "DEMO-USER-AGENT-AUTH-002", _oid("AGENCY", 1), 5, True, True),
-        ("MOVER", 1, "mover", None, _oid("MOVER", 1), 9, True, True),
-        ("FINANCE", 1, "financial_advisor", None, _oid("FINANCE", 1), 11, True, True),
-        ("INSURANCE", 1, "insurance_agent", None, _oid("FINANCE", 1), 14, True, True),
-        ("MAINT", 1, "maintenance_tech", None, _oid("MAINT", 1), 6, True, True),
-        ("CLEANER", 1, "cleaner", None, _oid("MAINT", 1), 4, True, False),
-        ("PHOTO", 1, "photographer", None, _oid("AGENCY", 1), 5, True, True),
+        ("MOVER", 1, "mover", "DEMO-USER-PRO-MOVER-AUTH-001", _oid("MOVER", 1), 9, True, True),
+        ("MOVER", 2, "mover", "DEMO-USER-PRO-MOVER-NOAUTH-001", _oid("MOVER", 1), 2, False, False),
+        ("FINANCE", 1, "financial_advisor", "DEMO-USER-PRO-FINANCE-AUTH-001", _oid("FINANCE", 1), 11, True, True),
+        ("FINANCE", 2, "financial_advisor", "DEMO-USER-PRO-FINANCE-NOAUTH-001", _oid("FINANCE", 1), 3, False, False),
+        ("INSURANCE", 1, "insurance_agent", "DEMO-USER-PRO-INSURANCE-AUTH-001", _oid("FINANCE", 1), 14, True, True),
+        ("INSURANCE", 2, "insurance_agent", "DEMO-USER-PRO-INSURANCE-NOAUTH-001", _oid("FINANCE", 1), 4, False, False),
+        ("MAINT", 1, "maintenance_tech", "DEMO-USER-PRO-MAINT-AUTH-001", _oid("MAINT", 1), 6, True, True),
+        ("MAINT", 2, "maintenance_tech", "DEMO-USER-PRO-MAINT-NOAUTH-001", _oid("MAINT", 1), 2, False, False),
+        ("CLEANER", 1, "cleaner", "DEMO-USER-PRO-CLEANER-AUTH-001", _oid("MAINT", 1), 4, True, False),
+        ("CLEANER", 2, "cleaner", "DEMO-USER-PRO-CLEANER-NOAUTH-001", _oid("MAINT", 1), 1, False, False),
+        ("PHOTO", 1, "photographer", "DEMO-USER-PRO-PHOTO-AUTH-001", _oid("AGENCY", 1), 5, True, True),
+        ("PHOTO", 2, "photographer", "DEMO-USER-PRO-PHOTO-NOAUTH-001", _oid("AGENCY", 1), 2, False, False),
     ]
     profs = []
     for prefix, n, prof, uid, oid, exp, verified, available in pro_data:
-        p_entry = {"id": _pnid(prefix, n), "profession": prof, "user_id": uid, "organization_id": oid, "years_experience": exp, "verified": verified, "available": available, "can_receive_connection": True, "can_receive_appointment": True, "can_receive_message": True}
-        if not uid:
-            p_entry["can_receive_connection"] = False
+        p_entry = {"id": _pnid(prefix, n), "profession": prof, "user_id": uid, "organization_id": oid, "years_experience": exp, "verified": verified, "available": available, "can_receive_connection": verified, "can_receive_appointment": verified, "can_receive_message": verified}
         profs.append(p_entry)
 
     # --- Organizations (12) ---

@@ -517,6 +517,186 @@ users:
   can_login: false
   is_demo_data: true
   demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-LAWYER-AUTH-005
+  full_name: Me Paul Biyong
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-LAWYER-NOAUTH-005
+  full_name: Me Paul Biyong (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-BUILDER-AUTH-006
+  full_name: David Tchami
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-BUILDER-NOAUTH-006
+  full_name: David Tchami (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-ELECTRICIAN-AUTH-007
+  full_name: Joseph Mvogo
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-ELECTRICIAN-NOAUTH-007
+  full_name: Joseph Mvogo (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-PLUMBER-AUTH-008
+  full_name: Robert Nkwi
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-PLUMBER-NOAUTH-008
+  full_name: Robert Nkwi (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-MOVER-AUTH-009
+  full_name: Marcel Simo
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-MOVER-NOAUTH-009
+  full_name: Marcel Simo (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-FINANCE-AUTH-010
+  full_name: Henri Ngo Bissa
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-FINANCE-NOAUTH-010
+  full_name: Henri Ngo Bissa (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-INSURANCE-AUTH-011
+  full_name: Claire Eyanga
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-INSURANCE-NOAUTH-011
+  full_name: Claire Eyanga (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-MAINT-AUTH-012
+  full_name: Luc Mbarga
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-MAINT-NOAUTH-012
+  full_name: Luc Mbarga (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-CLEANER-AUTH-013
+  full_name: Marie Ekwe
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-CLEANER-NOAUTH-013
+  full_name: Marie Ekwe (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-PHOTO-AUTH-014
+  full_name: Pierre Obama
+  role: service_provider
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-PHOTO-NOAUTH-014
+  full_name: Pierre Obama (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
 - id: DEMO-TEAM-SUPERADMIN-AUTH-001
   full_name: Super Admin LAWIM
   role: super_admin
@@ -775,6 +955,86 @@ auth_credentials_metadata:
   email: pro.surveyor.auth.004@demo.lawim.local
   phone_alias: '+23760003004'
   password_source: generated
+- demo_reference_id: DEMO-USER-PRO-LAWYER-AUTH-005
+  full_name: Me Paul Biyong
+  role: service_provider
+  can_login: true
+  username: pro.lawyer.auth.005
+  email: pro.lawyer.auth.005@demo.lawim.local
+  phone_alias: '+23760003005'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-BUILDER-AUTH-006
+  full_name: David Tchami
+  role: service_provider
+  can_login: true
+  username: pro.builder.auth.006
+  email: pro.builder.auth.006@demo.lawim.local
+  phone_alias: '+23760003006'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-ELECTRICIAN-AUTH-007
+  full_name: Joseph Mvogo
+  role: service_provider
+  can_login: true
+  username: pro.electrician.auth.007
+  email: pro.electrician.auth.007@demo.lawim.local
+  phone_alias: '+23760003007'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-PLUMBER-AUTH-008
+  full_name: Robert Nkwi
+  role: service_provider
+  can_login: true
+  username: pro.plumber.auth.008
+  email: pro.plumber.auth.008@demo.lawim.local
+  phone_alias: '+23760003008'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-MOVER-AUTH-009
+  full_name: Marcel Simo
+  role: service_provider
+  can_login: true
+  username: pro.mover.auth.009
+  email: pro.mover.auth.009@demo.lawim.local
+  phone_alias: '+23760003009'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-FINANCE-AUTH-010
+  full_name: Henri Ngo Bissa
+  role: service_provider
+  can_login: true
+  username: pro.finance.auth.010
+  email: pro.finance.auth.010@demo.lawim.local
+  phone_alias: '+23760003010'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-INSURANCE-AUTH-011
+  full_name: Claire Eyanga
+  role: service_provider
+  can_login: true
+  username: pro.insurance.auth.011
+  email: pro.insurance.auth.011@demo.lawim.local
+  phone_alias: '+23760003011'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-MAINT-AUTH-012
+  full_name: Luc Mbarga
+  role: service_provider
+  can_login: true
+  username: pro.maint.auth.012
+  email: pro.maint.auth.012@demo.lawim.local
+  phone_alias: '+23760003012'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-CLEANER-AUTH-013
+  full_name: Marie Ekwe
+  role: service_provider
+  can_login: true
+  username: pro.cleaner.auth.013
+  email: pro.cleaner.auth.013@demo.lawim.local
+  phone_alias: '+23760003013'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-PHOTO-AUTH-014
+  full_name: Pierre Obama
+  role: service_provider
+  can_login: true
+  username: pro.photo.auth.014
+  email: pro.photo.auth.014@demo.lawim.local
+  phone_alias: '+23760003014'
+  password_source: generated
 - demo_reference_id: DEMO-TEAM-SUPERADMIN-AUTH-001
   full_name: Super Admin LAWIM
   role: super_admin
@@ -993,7 +1253,7 @@ professional_profiles:
   can_receive_message: true
 - id: DEMO-PRO-LAWYER-001
   profession: lawyer
-  user_id: DEMO-USER-PRO-LAWYER-NOAUTH-001
+  user_id: DEMO-USER-PRO-LAWYER-AUTH-001
   organization_id: DEMO-ORG-LEGAL-001
   years_experience: 18
   verified: true
@@ -1001,36 +1261,76 @@ professional_profiles:
   can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-LAWYER-002
+  profession: lawyer
+  user_id: DEMO-USER-PRO-LAWYER-NOAUTH-001
+  organization_id: DEMO-ORG-LEGAL-001
+  years_experience: 5
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 - id: DEMO-PRO-BUILDER-001
   profession: builder
-  user_id: null
+  user_id: DEMO-USER-PRO-BUILDER-AUTH-001
   organization_id: DEMO-ORG-CONSTRUCT-001
   years_experience: 22
   verified: true
   available: true
-  can_receive_connection: false
+  can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-BUILDER-002
+  profession: builder
+  user_id: DEMO-USER-PRO-BUILDER-NOAUTH-001
+  organization_id: DEMO-ORG-CONSTRUCT-001
+  years_experience: 3
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 - id: DEMO-PRO-ELECTRICIAN-001
   profession: electrician
-  user_id: null
+  user_id: DEMO-USER-PRO-ELECTRICIAN-AUTH-001
   organization_id: DEMO-ORG-CONSTRUCT-001
   years_experience: 8
   verified: true
   available: true
-  can_receive_connection: false
+  can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-ELECTRICIAN-002
+  profession: electrician
+  user_id: DEMO-USER-PRO-ELECTRICIAN-NOAUTH-001
+  organization_id: DEMO-ORG-CONSTRUCT-001
+  years_experience: 2
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 - id: DEMO-PRO-PLUMBER-001
   profession: plumber
-  user_id: null
+  user_id: DEMO-USER-PRO-PLUMBER-AUTH-001
   organization_id: DEMO-ORG-MAINT-001
   years_experience: 10
   verified: true
   available: true
-  can_receive_connection: false
+  can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-PLUMBER-002
+  profession: plumber
+  user_id: DEMO-USER-PRO-PLUMBER-NOAUTH-001
+  organization_id: DEMO-ORG-MAINT-001
+  years_experience: 1
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 - id: DEMO-PRO-AGENT-001
   profession: real_estate_agent
   user_id: DEMO-USER-AGENT-AUTH-001
@@ -1053,64 +1353,124 @@ professional_profiles:
   can_receive_message: true
 - id: DEMO-PRO-MOVER-001
   profession: mover
-  user_id: null
+  user_id: DEMO-USER-PRO-MOVER-AUTH-001
   organization_id: DEMO-ORG-MOVER-001
   years_experience: 9
   verified: true
   available: true
-  can_receive_connection: false
+  can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-MOVER-002
+  profession: mover
+  user_id: DEMO-USER-PRO-MOVER-NOAUTH-001
+  organization_id: DEMO-ORG-MOVER-001
+  years_experience: 2
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 - id: DEMO-PRO-FINANCE-001
   profession: financial_advisor
-  user_id: null
+  user_id: DEMO-USER-PRO-FINANCE-AUTH-001
   organization_id: DEMO-ORG-FINANCE-001
   years_experience: 11
   verified: true
   available: true
-  can_receive_connection: false
+  can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-FINANCE-002
+  profession: financial_advisor
+  user_id: DEMO-USER-PRO-FINANCE-NOAUTH-001
+  organization_id: DEMO-ORG-FINANCE-001
+  years_experience: 3
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 - id: DEMO-PRO-INSURANCE-001
   profession: insurance_agent
-  user_id: null
+  user_id: DEMO-USER-PRO-INSURANCE-AUTH-001
   organization_id: DEMO-ORG-FINANCE-001
   years_experience: 14
   verified: true
   available: true
-  can_receive_connection: false
+  can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-INSURANCE-002
+  profession: insurance_agent
+  user_id: DEMO-USER-PRO-INSURANCE-NOAUTH-001
+  organization_id: DEMO-ORG-FINANCE-001
+  years_experience: 4
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 - id: DEMO-PRO-MAINT-001
   profession: maintenance_tech
-  user_id: null
+  user_id: DEMO-USER-PRO-MAINT-AUTH-001
   organization_id: DEMO-ORG-MAINT-001
   years_experience: 6
   verified: true
   available: true
-  can_receive_connection: false
+  can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-MAINT-002
+  profession: maintenance_tech
+  user_id: DEMO-USER-PRO-MAINT-NOAUTH-001
+  organization_id: DEMO-ORG-MAINT-001
+  years_experience: 2
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 - id: DEMO-PRO-CLEANER-001
   profession: cleaner
-  user_id: null
+  user_id: DEMO-USER-PRO-CLEANER-AUTH-001
   organization_id: DEMO-ORG-MAINT-001
   years_experience: 4
   verified: true
   available: false
-  can_receive_connection: false
+  can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-CLEANER-002
+  profession: cleaner
+  user_id: DEMO-USER-PRO-CLEANER-NOAUTH-001
+  organization_id: DEMO-ORG-MAINT-001
+  years_experience: 1
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 - id: DEMO-PRO-PHOTO-001
   profession: photographer
-  user_id: null
+  user_id: DEMO-USER-PRO-PHOTO-AUTH-001
   organization_id: DEMO-ORG-AGENCY-001
   years_experience: 5
   verified: true
   available: true
-  can_receive_connection: false
+  can_receive_connection: true
   can_receive_appointment: true
   can_receive_message: true
+- id: DEMO-PRO-PHOTO-002
+  profession: photographer
+  user_id: DEMO-USER-PRO-PHOTO-NOAUTH-001
+  organization_id: DEMO-ORG-AGENCY-001
+  years_experience: 2
+  verified: false
+  available: false
+  can_receive_connection: false
+  can_receive_appointment: false
+  can_receive_message: false
 organizations:
 - id: DEMO-ORG-AGENCY-001
   name: DEMO Agence Centrale
@@ -1331,7 +1691,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: APARTMENT
-  price: 394732
+  price: 322264
   currency: XAF
   bedrooms: 4
   title: Résidence du Paradis
@@ -1343,7 +1703,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: HOUSE
-  price: 193562
+  price: 299067
   currency: XAF
   bedrooms: 1
   title: Maison Diana
@@ -1356,7 +1716,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: STUDIO
-  price: 223966
+  price: 251108
   currency: XAF
   bedrooms: 2
   title: Studio Soleil
@@ -1368,7 +1728,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: APARTMENT
-  price: 206783
+  price: 304515
   currency: XAF
   bedrooms: 3
   title: Résidence Royal
@@ -1381,7 +1741,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: HOUSE
-  price: 320678
+  price: 101725
   currency: XAF
   bedrooms: 4
   title: Maison Beau Séjour
@@ -1393,7 +1753,7 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: STUDIO
-  price: 203747
+  price: 424178
   currency: XAF
   bedrooms: 1
   title: Studio Bleu
@@ -1406,7 +1766,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: APARTMENT
-  price: 126892
+  price: 352515
   currency: XAF
   bedrooms: 2
   title: Résidence Princier
@@ -1418,7 +1778,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: HOUSE
-  price: 489822
+  price: 176370
   currency: XAF
   bedrooms: 3
   title: Maison les Manguiers
@@ -1431,7 +1791,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: STUDIO
-  price: 420452
+  price: 400096
   currency: XAF
   bedrooms: 4
   title: Studio Vert
@@ -1443,7 +1803,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: APARTMENT
-  price: 101389
+  price: 383716
   currency: XAF
   bedrooms: 1
   title: Résidence du Stade
@@ -1456,7 +1816,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: HOUSE
-  price: 458837
+  price: 115747
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
@@ -1468,7 +1828,7 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: STUDIO
-  price: 330788
+  price: 398594
   currency: XAF
   bedrooms: 3
   title: Studio du Centre
@@ -1481,7 +1841,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: APARTMENT
-  price: 108386
+  price: 134910
   currency: XAF
   bedrooms: 4
   title: Résidence de la Gare
@@ -1493,7 +1853,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: HOUSE
-  price: 308256
+  price: 449119
   currency: XAF
   bedrooms: 1
   title: Maison des Acacias
@@ -1506,7 +1866,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: STUDIO
-  price: 162540
+  price: 347232
   currency: XAF
   bedrooms: 2
   title: Studio Bellevue
@@ -1518,7 +1878,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: APARTMENT
-  price: 139608
+  price: 195814
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -1531,7 +1891,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: HOUSE
-  price: 246432
+  price: 330946
   currency: XAF
   bedrooms: 4
   title: Maison du Lac
@@ -1543,7 +1903,7 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: STUDIO
-  price: 457436
+  price: 428601
   currency: XAF
   bedrooms: 1
   title: Studio des Fleurs
@@ -1556,7 +1916,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: APARTMENT
-  price: 216675
+  price: 454114
   currency: XAF
   bedrooms: 2
   title: Résidence des Eaux
@@ -1568,7 +1928,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: HOUSE
-  price: 310415
+  price: 145124
   currency: XAF
   bedrooms: 3
   title: Maison des Cocotiers
@@ -1581,7 +1941,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: STUDIO
-  price: 447036
+  price: 321473
   currency: XAF
   bedrooms: 4
   title: Studio du Paradis
@@ -1593,7 +1953,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: APARTMENT
-  price: 170987
+  price: 106741
   currency: XAF
   bedrooms: 1
   title: Résidence Diana
@@ -1606,7 +1966,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: HOUSE
-  price: 124757
+  price: 309527
   currency: XAF
   bedrooms: 2
   title: Maison Soleil
@@ -1618,7 +1978,7 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: STUDIO
-  price: 170265
+  price: 213742
   currency: XAF
   bedrooms: 3
   title: Studio Royal
@@ -1631,7 +1991,7 @@ properties:
   city: Yaoundé
   district: Ngousso
   property_type: APARTMENT
-  price: 230208
+  price: 188964
   currency: XAF
   bedrooms: 4
   title: Résidence Beau Séjour
@@ -1643,7 +2003,7 @@ properties:
   city: Yaoundé
   district: Ngousso
   property_type: HOUSE
-  price: 209043
+  price: 180304
   currency: XAF
   bedrooms: 1
   title: Maison Bleu
@@ -1656,7 +2016,7 @@ properties:
   city: Yaoundé
   district: Ngousso
   property_type: STUDIO
-  price: 165275
+  price: 362877
   currency: XAF
   bedrooms: 2
   title: Studio Princier
@@ -1668,7 +2028,7 @@ properties:
   city: Yaoundé
   district: Essos
   property_type: APARTMENT
-  price: 102785
+  price: 210128
   currency: XAF
   bedrooms: 3
   title: Résidence les Manguiers
@@ -1681,7 +2041,7 @@ properties:
   city: Yaoundé
   district: Essos
   property_type: HOUSE
-  price: 480090
+  price: 387098
   currency: XAF
   bedrooms: 4
   title: Maison Vert
@@ -1693,7 +2053,7 @@ properties:
   city: Yaoundé
   district: Essos
   property_type: STUDIO
-  price: 166881
+  price: 312104
   currency: XAF
   bedrooms: 1
   title: Studio du Stade
@@ -1706,7 +2066,7 @@ properties:
   city: Yaoundé
   district: Mendong
   property_type: APARTMENT
-  price: 459306
+  price: 280394
   currency: XAF
   bedrooms: 2
   title: Résidence Saint Michel
@@ -1718,7 +2078,7 @@ properties:
   city: Yaoundé
   district: Mendong
   property_type: HOUSE
-  price: 130849
+  price: 385950
   currency: XAF
   bedrooms: 3
   title: Maison du Centre
@@ -1731,7 +2091,7 @@ properties:
   city: Yaoundé
   district: Mendong
   property_type: STUDIO
-  price: 120315
+  price: 303993
   currency: XAF
   bedrooms: 4
   title: Studio de la Gare
@@ -1743,7 +2103,7 @@ properties:
   city: Yaoundé
   district: Biyem-Assi
   property_type: APARTMENT
-  price: 158084
+  price: 186650
   currency: XAF
   bedrooms: 1
   title: Résidence des Acacias
@@ -1756,7 +2116,7 @@ properties:
   city: Yaoundé
   district: Biyem-Assi
   property_type: HOUSE
-  price: 489937
+  price: 492074
   currency: XAF
   bedrooms: 2
   title: Maison Bellevue
@@ -1768,7 +2128,7 @@ properties:
   city: Yaoundé
   district: Biyem-Assi
   property_type: STUDIO
-  price: 369543
+  price: 332846
   currency: XAF
   bedrooms: 3
   title: Studio du Marché
@@ -1781,7 +2141,7 @@ properties:
   city: Yaoundé
   district: Nkoabang
   property_type: APARTMENT
-  price: 290948
+  price: 424245
   currency: XAF
   bedrooms: 4
   title: Résidence du Lac
@@ -1793,7 +2153,7 @@ properties:
   city: Yaoundé
   district: Nkoabang
   property_type: HOUSE
-  price: 141729
+  price: 277626
   currency: XAF
   bedrooms: 1
   title: Maison des Fleurs
@@ -1806,7 +2166,7 @@ properties:
   city: Yaoundé
   district: Nkoabang
   property_type: STUDIO
-  price: 326065
+  price: 388276
   currency: XAF
   bedrooms: 2
   title: Studio des Eaux
@@ -1818,7 +2178,7 @@ properties:
   city: Yaoundé
   district: Emana
   property_type: APARTMENT
-  price: 314089
+  price: 243596
   currency: XAF
   bedrooms: 3
   title: Résidence des Cocotiers
@@ -1831,7 +2191,7 @@ properties:
   city: Yaoundé
   district: Emana
   property_type: HOUSE
-  price: 244563
+  price: 334420
   currency: XAF
   bedrooms: 4
   title: Maison du Paradis
@@ -1843,7 +2203,7 @@ properties:
   city: Yaoundé
   district: Emana
   property_type: STUDIO
-  price: 252042
+  price: 131814
   currency: XAF
   bedrooms: 1
   title: Studio Diana
@@ -1856,7 +2216,7 @@ properties:
   city: Yaoundé
   district: Etoug-Ebe
   property_type: APARTMENT
-  price: 260462
+  price: 191401
   currency: XAF
   bedrooms: 2
   title: Résidence Soleil
@@ -1868,7 +2228,7 @@ properties:
   city: Yaoundé
   district: Etoug-Ebe
   property_type: HOUSE
-  price: 178910
+  price: 114541
   currency: XAF
   bedrooms: 3
   title: Maison Royal
@@ -1881,7 +2241,7 @@ properties:
   city: Douala
   district: Akwa
   property_type: APARTMENT
-  price: 244559
+  price: 500822
   currency: XAF
   bedrooms: 2
   title: Résidence de la Gare
@@ -1893,7 +2253,7 @@ properties:
   city: Douala
   district: Akwa
   property_type: APARTMENT
-  price: 448371
+  price: 431691
   currency: XAF
   bedrooms: 3
   title: Résidence du Centre
@@ -1905,7 +2265,7 @@ properties:
   city: Douala
   district: Akwa
   property_type: HOUSE
-  price: 395880
+  price: 240243
   currency: XAF
   bedrooms: 4
   title: Maison Saint Michel
@@ -1917,7 +2277,7 @@ properties:
   city: Douala
   district: Bonanjo
   property_type: APARTMENT
-  price: 511550
+  price: 245294
   currency: XAF
   bedrooms: 1
   title: Résidence du Stade
@@ -1929,7 +2289,7 @@ properties:
   city: Douala
   district: Bonanjo
   property_type: APARTMENT
-  price: 372399
+  price: 480682
   currency: XAF
   bedrooms: 2
   title: Résidence Vert
@@ -1941,7 +2301,7 @@ properties:
   city: Douala
   district: Bonanjo
   property_type: HOUSE
-  price: 526793
+  price: 540008
   currency: XAF
   bedrooms: 3
   title: Maison les Manguiers
@@ -1953,7 +2313,7 @@ properties:
   city: Douala
   district: Bonapriso
   property_type: APARTMENT
-  price: 442576
+  price: 351984
   currency: XAF
   bedrooms: 4
   title: Résidence Princier
@@ -1965,7 +2325,7 @@ properties:
   city: Douala
   district: Bonapriso
   property_type: APARTMENT
-  price: 424462
+  price: 361277
   currency: XAF
   bedrooms: 1
   title: Résidence Bleu
@@ -1977,7 +2337,7 @@ properties:
   city: Douala
   district: Bonapriso
   property_type: HOUSE
-  price: 417941
+  price: 589575
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -1989,7 +2349,7 @@ properties:
   city: Douala
   district: Deido
   property_type: APARTMENT
-  price: 368286
+  price: 276940
   currency: XAF
   bedrooms: 3
   title: Résidence Royal
@@ -2001,7 +2361,7 @@ properties:
   city: Douala
   district: Deido
   property_type: APARTMENT
-  price: 476304
+  price: 492630
   currency: XAF
   bedrooms: 4
   title: Résidence Soleil
@@ -2013,7 +2373,7 @@ properties:
   city: Douala
   district: Deido
   property_type: HOUSE
-  price: 486551
+  price: 412412
   currency: XAF
   bedrooms: 1
   title: Maison Diana
@@ -2025,7 +2385,7 @@ properties:
   city: Douala
   district: Makepe
   property_type: APARTMENT
-  price: 268491
+  price: 292292
   currency: XAF
   bedrooms: 2
   title: Résidence du Paradis
@@ -2037,7 +2397,7 @@ properties:
   city: Douala
   district: Makepe
   property_type: APARTMENT
-  price: 365934
+  price: 240461
   currency: XAF
   bedrooms: 3
   title: Résidence des Cocotiers
@@ -2049,7 +2409,7 @@ properties:
   city: Douala
   district: Makepe
   property_type: HOUSE
-  price: 458907
+  price: 250597
   currency: XAF
   bedrooms: 4
   title: Maison des Eaux
@@ -2061,7 +2421,7 @@ properties:
   city: Douala
   district: Bonamoussadi
   property_type: APARTMENT
-  price: 266465
+  price: 328911
   currency: XAF
   bedrooms: 1
   title: Résidence des Fleurs
@@ -2073,7 +2433,7 @@ properties:
   city: Douala
   district: Bonamoussadi
   property_type: APARTMENT
-  price: 467764
+  price: 267120
   currency: XAF
   bedrooms: 2
   title: Résidence du Lac
@@ -2085,7 +2445,7 @@ properties:
   city: Douala
   district: Bonamoussadi
   property_type: HOUSE
-  price: 286067
+  price: 517663
   currency: XAF
   bedrooms: 3
   title: Maison du Marché
@@ -2097,7 +2457,7 @@ properties:
   city: Douala
   district: Logbaba
   property_type: APARTMENT
-  price: 226012
+  price: 215907
   currency: XAF
   bedrooms: 4
   title: Résidence Bellevue
@@ -2109,7 +2469,7 @@ properties:
   city: Douala
   district: Logbaba
   property_type: APARTMENT
-  price: 376527
+  price: 400656
   currency: XAF
   bedrooms: 1
   title: Résidence des Acacias
@@ -2121,7 +2481,7 @@ properties:
   city: Douala
   district: Logbaba
   property_type: HOUSE
-  price: 536796
+  price: 406314
   currency: XAF
   bedrooms: 2
   title: Maison de la Gare
@@ -2133,7 +2493,7 @@ properties:
   city: Douala
   district: Bassa
   property_type: APARTMENT
-  price: 373637
+  price: 448065
   currency: XAF
   bedrooms: 3
   title: Résidence du Centre
@@ -2145,7 +2505,7 @@ properties:
   city: Douala
   district: Bassa
   property_type: APARTMENT
-  price: 431684
+  price: 569074
   currency: XAF
   bedrooms: 4
   title: Résidence Saint Michel
@@ -2157,7 +2517,7 @@ properties:
   city: Douala
   district: Bassa
   property_type: HOUSE
-  price: 273067
+  price: 291082
   currency: XAF
   bedrooms: 1
   title: Maison du Stade
@@ -2169,7 +2529,7 @@ properties:
   city: Douala
   district: Nylon
   property_type: APARTMENT
-  price: 359205
+  price: 292791
   currency: XAF
   bedrooms: 2
   title: Résidence Vert
@@ -2276,7 +2636,7 @@ properties:
   city: Bafoussam
   district: Djeleng
   property_type: HOUSE
-  price: 153499
+  price: 180551
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -2288,7 +2648,7 @@ properties:
   city: Bafoussam
   district: Djeleng
   property_type: APARTMENT
-  price: 153499
+  price: 180551
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -2300,7 +2660,7 @@ properties:
   city: Bafoussam
   district: Kouogouo
   property_type: HOUSE
-  price: 210776
+  price: 282749
   currency: XAF
   bedrooms: 1
   title: Maison Princier
@@ -2312,7 +2672,7 @@ properties:
   city: Bafoussam
   district: Kouogouo
   property_type: APARTMENT
-  price: 210776
+  price: 282749
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
@@ -2324,7 +2684,7 @@ properties:
   city: Bafoussam
   district: Tamdja
   property_type: HOUSE
-  price: 232775
+  price: 171819
   currency: XAF
   bedrooms: 3
   title: Maison Vert
@@ -2336,7 +2696,7 @@ properties:
   city: Bafoussam
   district: Tamdja
   property_type: APARTMENT
-  price: 232775
+  price: 171819
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
@@ -2348,7 +2708,7 @@ properties:
   city: Bafoussam
   district: Banengo
   property_type: HOUSE
-  price: 121632
+  price: 108121
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
@@ -2360,7 +2720,7 @@ properties:
   city: Bafoussam
   district: Banengo
   property_type: APARTMENT
-  price: 121632
+  price: 108121
   currency: XAF
   bedrooms: 3
   title: Résidence Diana
@@ -2372,7 +2732,7 @@ properties:
   city: Kribi
   district: Mpangou
   property_type: HOUSE
-  price: 133081
+  price: 205415
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -2384,7 +2744,7 @@ properties:
   city: Kribi
   district: Mpangou
   property_type: APARTMENT
-  price: 133081
+  price: 205415
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -2396,7 +2756,7 @@ properties:
   city: Kribi
   district: Bebamboue
   property_type: HOUSE
-  price: 209107
+  price: 116902
   currency: XAF
   bedrooms: 1
   title: Maison Princier
@@ -2408,7 +2768,7 @@ properties:
   city: Kribi
   district: Bebamboue
   property_type: APARTMENT
-  price: 209107
+  price: 116902
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
@@ -2420,7 +2780,7 @@ properties:
   city: Kribi
   district: Lobe
   property_type: HOUSE
-  price: 296440
+  price: 273367
   currency: XAF
   bedrooms: 3
   title: Maison Vert
@@ -2432,7 +2792,7 @@ properties:
   city: Kribi
   district: Lobe
   property_type: APARTMENT
-  price: 296440
+  price: 273367
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
@@ -2444,7 +2804,7 @@ properties:
   city: Limbé
   district: Bota
   property_type: HOUSE
-  price: 332192
+  price: 142173
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
@@ -2456,7 +2816,7 @@ properties:
   city: Limbé
   district: Bota
   property_type: APARTMENT
-  price: 332192
+  price: 142173
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
@@ -2468,7 +2828,7 @@ properties:
   city: Limbé
   district: Mile 2
   property_type: HOUSE
-  price: 325258
+  price: 175155
   currency: XAF
   bedrooms: 1
   title: Maison Princier
@@ -2480,7 +2840,7 @@ properties:
   city: Limbé
   district: Mile 2
   property_type: APARTMENT
-  price: 325258
+  price: 175155
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
@@ -2492,7 +2852,7 @@ properties:
   city: Limbé
   district: Mile 4
   property_type: HOUSE
-  price: 232088
+  price: 197795
   currency: XAF
   bedrooms: 3
   title: Maison Vert
@@ -2504,7 +2864,7 @@ properties:
   city: Limbé
   district: Mile 4
   property_type: APARTMENT
-  price: 232088
+  price: 197795
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
@@ -2516,7 +2876,7 @@ properties:
   city: Limbé
   district: Mokunda
   property_type: HOUSE
-  price: 109728
+  price: 137462
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
@@ -2528,7 +2888,7 @@ properties:
   city: Limbé
   district: Mokunda
   property_type: APARTMENT
-  price: 109728
+  price: 137462
   currency: XAF
   bedrooms: 3
   title: Résidence Diana
