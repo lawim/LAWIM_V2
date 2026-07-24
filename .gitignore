@@ -61,3 +61,4 @@ data/*.db
 Thumbs.db
 deployment/secrets/
 code/data/
+.demo/

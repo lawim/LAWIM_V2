@@ -12,7 +12,7 @@ from typing import Any
 
 REQUIRED_SECTIONS = ["users", "professional_profiles", "organizations", "properties", "services", "scenarios", "negative_cases"]
 OPTIONAL_SECTIONS = ["property_media", "documents", "appointments", "visits", "search_profiles", "matches", "connections", "conversations", "messages", "consents", "notifications"]
-REFERENCE_ONLY_SECTIONS = ["scenarios", "negative_cases"]  # validated but not persisted
+REFERENCE_ONLY_SECTIONS = ["scenarios", "negative_cases", "auth_credentials_metadata", "team_members"]
 
 
 def _find_db() -> str:
@@ -260,7 +260,7 @@ class DemoWorldEngine:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="LAWIM Demo World Management")
-    parser.add_argument("command", choices=["validate", "seed", "verify", "reset", "reseed", "report"])
+    parser.add_argument("command", choices=["validate", "seed", "verify", "reset", "reseed", "report", "credentials", "destroy"])
     parser.add_argument("--dataset", default="LAWIM_DEMO_WORLD_V1")
     parser.add_argument("--db", default=None)
     parser.add_argument("--yaml", default="demo/reference/LAWIM-DEMO-WORLD-REFERENCE.yaml")
@@ -344,6 +344,55 @@ def main() -> None:
         print(f"  Cities: {json.dumps(r['cities'])}")
         print(f"  Property types: {json.dumps(r['property_types'])}")
         print(f"  Scenarios READY: {r['scenarios_ready']}{' [REFERENCE_ONLY]' if 'scenarios' in REFERENCE_ONLY_SECTIONS else ''}")
+        sys.exit(0)
+
+    elif args.command == "credentials":
+        auth_users = engine._data.get("auth_credentials_metadata", [])
+        out_dir = ".demo"
+        os.makedirs(out_dir, exist_ok=True)
+        md_path = os.path.join(out_dir, "LAWIM-DEMO-CREDENTIALS.local.md")
+        csv_path = os.path.join(out_dir, "LAWIM-DEMO-CREDENTIALS.local.csv")
+        password = "Demo@2026!"
+        with open(md_path, "w") as f:
+            f.write("# LAWIM Demo Credentials (LOCAL ONLY — NEVER COMMIT)\n\n")
+            f.write("> DONNÉES DE DÉMONSTRATION UNIQUEMENT\n")
+            f.write("> NE PAS UTILISER EN PRODUCTION\n")
+            f.write("> NE PAS COMMITER\n")
+            f.write("> À SUPPRIMER APRÈS VALIDATION\n\n")
+            f.write("| Reference ID | Name | Role | Username | Email | Phone | Password |\n")
+            f.write("|---|---|---|---|---|---|---|\n")
+            for u in auth_users:
+                if u.get("can_login"):
+                    f.write(f"| {u['demo_reference_id']} | {u.get('full_name','')} | {u.get('role','')} | {u.get('username','')} | {u.get('email','')} | {u.get('phone_alias','')} | {password} |\n")
+        with open(csv_path, "w") as f:
+            f.write("demo_reference_id,full_name,role,username,email,phone_alias,password\n")
+            for u in auth_users:
+                if u.get("can_login"):
+                    f.write(f"{u['demo_reference_id']},{u.get('full_name','')},{u.get('role','')},{u.get('username','')},{u.get('email','')},{u.get('phone_alias','')},{password}\n")
+        print(f"Credentials generated: {md_path} ({sum(1 for u in auth_users if u.get('can_login'))} accounts)")
+        print(f"CSV: {csv_path}")
+        sys.exit(0)
+
+    elif args.command == "destroy":
+        dataset_id = args.dataset
+        if not args.dry_run:
+            confirm = input(f"Destroy dataset {dataset_id}? Type dataset ID to confirm: ").strip()
+            if confirm != dataset_id:
+                print("Destroy cancelled.")
+                sys.exit(1)
+        conn = _get_conn(args.db)
+        dry = " (dry-run)" if args.dry_run else ""
+        totals = {}
+        for sec in ["demo_registry"]:
+            cnt = conn.execute(f"SELECT COUNT(*) FROM {sec} WHERE demo_dataset_id=?", (dataset_id,)).fetchone()[0]
+            totals[sec] = cnt
+            if not args.dry_run:
+                conn.execute(f"DELETE FROM {sec} WHERE demo_dataset_id=?", (dataset_id,))
+        if not args.dry_run:
+            conn.commit()
+        conn.close()
+        total = sum(totals.values())
+        print(f"DESTROY{dry}: {total} objects removed for dataset {dataset_id}")
         sys.exit(0)
 
 

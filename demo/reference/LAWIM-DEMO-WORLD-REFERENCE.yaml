@@ -2,8 +2,8 @@ dataset:
   id: LAWIM_DEMO_WORLD_V1
   version: 1.0.0
   status: IN_PROGRESS
-  description: Univers de démonstration complet LAWIM — 25 users, 16 pros, 12 orgs,
-    117 biens, 18 services, 12 scénarios, 8 cas négatifs.
+  description: Univers de démonstration complet LAWIM — auth/noauth pairs, 14 professions,
+    team members.
   created_at: '2026-07-23'
   updated_at: '2026-07-23'
 coverage:
@@ -14,6 +14,13 @@ coverage:
   - service_provider
   - commercial
   - admin
+  - super_admin
+  - moderator
+  - auditor
+  - finance_manager
+  - doc_manager
+  - property_manager
+  - visit_manager
   professions:
   - architect
   - notary
@@ -93,203 +100,907 @@ cities:
   - Mile 4
   - Mokunda
 users:
-- id: DEMO-USER-CLIENT-001
+- id: DEMO-USER-CLIENT-AUTH-001
   full_name: Jean Dupont
   role: client
   city: Yaoundé
+  organization_id: null
   profile_status: active
   verification_status: verified
   consent_status: granted
+  can_login: true
   preferred_language: fr
-- id: DEMO-USER-CLIENT-002
-  full_name: Alice Mbarga
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-NOAUTH-001
+  full_name: Client sans accès
   role: client
   city: Yaoundé
+  organization_id: null
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-AUTH-002
+  full_name: Alice Mbarga
+  role: client
+  city: Douala
+  organization_id: null
   profile_status: active
   verification_status: verified
   consent_status: granted
+  can_login: true
   preferred_language: fr
-- id: DEMO-USER-CLIENT-003
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-NOAUTH-002
+  full_name: Alice (noauth)
+  role: client
+  city: Douala
+  organization_id: null
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-AUTH-003
   full_name: Pierre Kamga
   role: client
   city: Yaoundé
+  organization_id: null
   profile_status: active
   verification_status: verified
   consent_status: granted
+  can_login: true
   preferred_language: fr
-- id: DEMO-USER-CLIENT-004
-  full_name: Marie Ngo Bissa
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-NOAUTH-003
+  full_name: Pierre (noauth)
   role: client
   city: Yaoundé
+  organization_id: null
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-AUTH-004
+  full_name: Marie Ngo Bissa
+  role: client
+  city: Bafoussam
+  organization_id: null
   profile_status: active
   verification_status: verified
   consent_status: granted
+  can_login: true
   preferred_language: fr
-- id: DEMO-USER-CLIENT-005
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-NOAUTH-004
+  full_name: Marie (noauth)
+  role: client
+  city: Bafoussam
+  organization_id: null
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-AUTH-005
   full_name: Paul Etoundi
   role: client
   city: Douala
+  organization_id: null
   profile_status: active
   verification_status: verified
   consent_status: granted
+  can_login: true
   preferred_language: fr
-- id: DEMO-USER-CLIENT-006
-  full_name: Sarah Nkwi
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-NOAUTH-005
+  full_name: Paul (noauth)
   role: client
   city: Douala
-  profile_status: active
-  verification_status: unverified
-  consent_status: granted
-  preferred_language: fr
-- id: DEMO-USER-CLIENT-007
-  full_name: Robert Tchinda
-  role: client
-  city: Bafoussam
+  organization_id: null
   profile_status: inactive
   verification_status: unverified
   consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-AUTH-006
+  full_name: Sarah Nkwi
+  role: client
+  city: Yaoundé
+  organization_id: null
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+  can_login: true
   preferred_language: fr
-- id: DEMO-USER-CLIENT-008
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-NOAUTH-006
+  full_name: Sarah (noauth)
+  role: client
+  city: Yaoundé
+  organization_id: null
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-AUTH-007
+  full_name: Robert Tchinda
+  role: client
+  city: Yaoundé
+  organization_id: null
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+  can_login: true
+  preferred_language: fr
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-NOAUTH-007
+  full_name: Robert (noauth)
+  role: client
+  city: Yaoundé
+  organization_id: null
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-AUTH-008
   full_name: Esther Mvogo
   role: client
   city: Bafoussam
+  organization_id: null
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+  can_login: true
+  preferred_language: fr
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-CLIENT-NOAUTH-008
+  full_name: Esther (noauth)
+  role: client
+  city: Bafoussam
+  organization_id: null
   profile_status: inactive
   verification_status: unverified
-  consent_status: denied
-  preferred_language: fr
-- id: DEMO-USER-OWNER-001
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-OWNER-AUTH-001
   full_name: Thomas Mvogo
   role: owner
   city: Yaoundé
+  organization_id: null
   profile_status: active
   verification_status: verified
   consent_status: granted
-  has_multiple_properties: true
-- id: DEMO-USER-OWNER-002
+  can_login: true
+  preferred_language: fr
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-OWNER-NOAUTH-001
+  full_name: Thomas (noauth)
+  role: owner
+  city: Yaoundé
+  organization_id: null
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-OWNER-AUTH-002
   full_name: Christine Eyanga
   role: owner
   city: Yaoundé
+  organization_id: null
   profile_status: active
   verification_status: verified
   consent_status: granted
-  has_multiple_properties: false
-- id: DEMO-USER-OWNER-003
-  full_name: Suzanne Mbah
+  can_login: true
+  preferred_language: fr
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-OWNER-NOAUTH-002
+  full_name: Christine (noauth)
   role: owner
   city: Yaoundé
-  profile_status: active
-  verification_status: verified
-  consent_status: granted
-  has_multiple_properties: false
-- id: DEMO-USER-OWNER-004
+  organization_id: null
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-OWNER-AUTH-003
   full_name: Joseph Obama
   role: owner
   city: Douala
+  organization_id: null
   profile_status: active
-  verification_status: unverified
-  consent_status: pending
-  has_multiple_properties: false
-- id: DEMO-USER-OWNER-005
-  full_name: Beatrice Simo
+  verification_status: verified
+  consent_status: granted
+  can_login: true
+  preferred_language: fr
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-OWNER-NOAUTH-003
+  full_name: Joseph (noauth)
   role: owner
-  city: Bafoussam
+  city: Douala
+  organization_id: null
   profile_status: inactive
   verification_status: unverified
-  consent_status: denied
-  has_multiple_properties: false
-- id: DEMO-USER-AGENT-001
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-OWNER-AUTH-004
+  full_name: Suzanne Mbah
+  role: owner
+  city: Yaoundé
+  organization_id: null
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+  can_login: true
+  preferred_language: fr
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-OWNER-NOAUTH-004
+  full_name: Suzanne (noauth)
+  role: owner
+  city: Yaoundé
+  organization_id: null
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-AGENT-AUTH-001
   full_name: Luc Tchinda
   role: agent
   city: Yaoundé
   organization_id: DEMO-ORG-AGENCY-001
   profile_status: active
   verification_status: verified
-- id: DEMO-USER-AGENT-002
+  consent_status: granted
+  can_login: true
+  preferred_language: fr
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-AGENT-NOAUTH-001
+  full_name: Luc (noauth)
+  role: agent
+  city: Yaoundé
+  organization_id: DEMO-ORG-AGENCY-001
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-AGENT-AUTH-002
   full_name: Rosalie Nkwi
   role: agent
   city: Yaoundé
   organization_id: DEMO-ORG-AGENCY-001
   profile_status: active
   verification_status: verified
-- id: DEMO-USER-AGENT-003
+  consent_status: granted
+  can_login: true
+  preferred_language: fr
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-AGENT-NOAUTH-002
+  full_name: Rosalie (noauth)
+  role: agent
+  city: Yaoundé
+  organization_id: DEMO-ORG-AGENCY-001
+  profile_status: inactive
+  verification_status: unverified
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-AGENT-AUTH-003
   full_name: Emmanuel Simo
   role: agent
   city: Douala
   organization_id: DEMO-ORG-AGENCY-002
-  profile_status: suspended
+  profile_status: active
+  verification_status: verified
+  consent_status: granted
+  can_login: true
+  preferred_language: fr
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-AGENT-NOAUTH-003
+  full_name: Emmanuel (noauth)
+  role: agent
+  city: Douala
+  organization_id: DEMO-ORG-AGENCY-002
+  profile_status: inactive
   verification_status: unverified
-- id: DEMO-USER-PRO-001
+  consent_status: pending
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-ARCH-AUTH-001
   full_name: Pierre Atangana
   role: service_provider
   city: Yaoundé
   profile_status: active
   verification_status: verified
-- id: DEMO-USER-PRO-002
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-ARCH-NOAUTH-001
+  full_name: Pierre Atangana (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-ARCH-AUTH-002
   full_name: Marie Ekwé
   role: service_provider
   city: Yaoundé
   profile_status: active
   verification_status: verified
-- id: DEMO-USER-PRO-003
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-ARCH-NOAUTH-002
+  full_name: Marie Ekwé (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-NOTARY-AUTH-003
   full_name: Jean Meka
   role: service_provider
   city: Yaoundé
   profile_status: active
   verification_status: verified
-- id: DEMO-USER-PRO-004
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-NOTARY-NOAUTH-003
+  full_name: Jean Meka (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-SURVEYOR-AUTH-004
   full_name: Chantal Ngo
   role: service_provider
   city: Yaoundé
   profile_status: active
   verification_status: verified
-- id: DEMO-USER-SUPPORT-001
-  full_name: Fabrice Noah
-  role: commercial
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-USER-PRO-SURVEYOR-NOAUTH-004
+  full_name: Chantal Ngo (noauth)
+  role: service_provider
+  city: Yaoundé
+  profile_status: inactive
+  verification_status: unverified
+  can_login: false
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-SUPERADMIN-AUTH-001
+  full_name: Super Admin LAWIM
+  role: super_admin
   city: Yaoundé
   profile_status: active
   verification_status: verified
-- id: DEMO-USER-ADMIN-001
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-ADMIN-AUTH-001
   full_name: Admin LAWIM
   role: admin
   city: Yaoundé
   profile_status: active
   verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-SUPPORT-AUTH-001
+  full_name: Fabrice Noah
+  role: commercial
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-COMMERCIAL-AUTH-001
+  full_name: Commercial LAWIM
+  role: commercial
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-MODERATOR-AUTH-001
+  full_name: Moderateur LAWIM
+  role: moderator
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-AUDITOR-AUTH-001
+  full_name: Auditeur LAWIM
+  role: auditor
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-FINANCE-AUTH-001
+  full_name: Gestionnaire financier
+  role: finance_manager
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-DOCS-AUTH-001
+  full_name: Gestionnaire documentaire
+  role: doc_manager
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-PROPERTY-AUTH-001
+  full_name: Gestionnaire des biens
+  role: property_manager
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+- id: DEMO-TEAM-VISITS-AUTH-001
+  full_name: Gestionnaire des visites
+  role: visit_manager
+  city: Yaoundé
+  profile_status: active
+  verification_status: verified
+  can_login: true
+  is_demo_data: true
+  demo_dataset_id: LAWIM_DEMO_WORLD_V1
+auth_credentials_metadata:
+- demo_reference_id: DEMO-USER-CLIENT-AUTH-001
+  full_name: Jean Dupont
+  role: client
+  can_login: true
+  username: client.auth.001
+  email: client.auth.001@demo.lawim.local
+  phone_alias: '+23760000001'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-CLIENT-AUTH-002
+  full_name: Alice Mbarga
+  role: client
+  can_login: true
+  username: client.auth.002
+  email: client.auth.002@demo.lawim.local
+  phone_alias: '+23760000002'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-CLIENT-AUTH-003
+  full_name: Pierre Kamga
+  role: client
+  can_login: true
+  username: client.auth.003
+  email: client.auth.003@demo.lawim.local
+  phone_alias: '+23760000003'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-CLIENT-AUTH-004
+  full_name: Marie Ngo Bissa
+  role: client
+  can_login: true
+  username: client.auth.004
+  email: client.auth.004@demo.lawim.local
+  phone_alias: '+23760000004'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-CLIENT-AUTH-005
+  full_name: Paul Etoundi
+  role: client
+  can_login: true
+  username: client.auth.005
+  email: client.auth.005@demo.lawim.local
+  phone_alias: '+23760000005'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-CLIENT-AUTH-006
+  full_name: Sarah Nkwi
+  role: client
+  can_login: true
+  username: client.auth.006
+  email: client.auth.006@demo.lawim.local
+  phone_alias: '+23760000006'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-CLIENT-AUTH-007
+  full_name: Robert Tchinda
+  role: client
+  can_login: true
+  username: client.auth.007
+  email: client.auth.007@demo.lawim.local
+  phone_alias: '+23760000007'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-CLIENT-AUTH-008
+  full_name: Esther Mvogo
+  role: client
+  can_login: true
+  username: client.auth.008
+  email: client.auth.008@demo.lawim.local
+  phone_alias: '+23760000008'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-OWNER-AUTH-001
+  full_name: Thomas Mvogo
+  role: owner
+  can_login: true
+  username: owner.auth.001
+  email: owner.auth.001@demo.lawim.local
+  phone_alias: '+23760000001'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-OWNER-AUTH-002
+  full_name: Christine Eyanga
+  role: owner
+  can_login: true
+  username: owner.auth.002
+  email: owner.auth.002@demo.lawim.local
+  phone_alias: '+23760000002'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-OWNER-AUTH-003
+  full_name: Joseph Obama
+  role: owner
+  can_login: true
+  username: owner.auth.003
+  email: owner.auth.003@demo.lawim.local
+  phone_alias: '+23760000003'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-OWNER-AUTH-004
+  full_name: Suzanne Mbah
+  role: owner
+  can_login: true
+  username: owner.auth.004
+  email: owner.auth.004@demo.lawim.local
+  phone_alias: '+23760000004'
+  password_source: generated
+  organization_id: null
+- demo_reference_id: DEMO-USER-AGENT-AUTH-001
+  full_name: Luc Tchinda
+  role: agent
+  can_login: true
+  username: agent.auth.001
+  email: agent.auth.001@demo.lawim.local
+  phone_alias: '+23760000001'
+  password_source: generated
+  organization_id: DEMO-ORG-AGENCY-001
+- demo_reference_id: DEMO-USER-AGENT-AUTH-002
+  full_name: Rosalie Nkwi
+  role: agent
+  can_login: true
+  username: agent.auth.002
+  email: agent.auth.002@demo.lawim.local
+  phone_alias: '+23760000002'
+  password_source: generated
+  organization_id: DEMO-ORG-AGENCY-001
+- demo_reference_id: DEMO-USER-AGENT-AUTH-003
+  full_name: Emmanuel Simo
+  role: agent
+  can_login: true
+  username: agent.auth.003
+  email: agent.auth.003@demo.lawim.local
+  phone_alias: '+23760000003'
+  password_source: generated
+  organization_id: DEMO-ORG-AGENCY-002
+- demo_reference_id: DEMO-USER-PRO-ARCH-AUTH-001
+  full_name: Pierre Atangana
+  role: service_provider
+  can_login: true
+  username: pro.arch.auth.001
+  email: pro.arch.auth.001@demo.lawim.local
+  phone_alias: '+23760003001'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-ARCH-AUTH-002
+  full_name: Marie Ekwé
+  role: service_provider
+  can_login: true
+  username: pro.arch.auth.002
+  email: pro.arch.auth.002@demo.lawim.local
+  phone_alias: '+23760003002'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-NOTARY-AUTH-003
+  full_name: Jean Meka
+  role: service_provider
+  can_login: true
+  username: pro.notary.auth.003
+  email: pro.notary.auth.003@demo.lawim.local
+  phone_alias: '+23760003003'
+  password_source: generated
+- demo_reference_id: DEMO-USER-PRO-SURVEYOR-AUTH-004
+  full_name: Chantal Ngo
+  role: service_provider
+  can_login: true
+  username: pro.surveyor.auth.004
+  email: pro.surveyor.auth.004@demo.lawim.local
+  phone_alias: '+23760003004'
+  password_source: generated
+- demo_reference_id: DEMO-TEAM-SUPERADMIN-AUTH-001
+  full_name: Super Admin LAWIM
+  role: super_admin
+  can_login: true
+  username: team.superadmin.auth.001
+  email: team.superadmin.auth.001@demo.lawim.local
+  phone_alias: '+2376000501'
+  password_source: generated
+  permissions: &id001
+  - all
+- demo_reference_id: DEMO-TEAM-ADMIN-AUTH-001
+  full_name: Admin LAWIM
+  role: admin
+  can_login: true
+  username: team.admin.auth.001
+  email: team.admin.auth.001@demo.lawim.local
+  phone_alias: '+2376000502'
+  password_source: generated
+  permissions: &id002
+  - users:read
+  - users:write
+  - properties:read
+  - properties:write
+  - settings:read
+  - settings:write
+- demo_reference_id: DEMO-TEAM-SUPPORT-AUTH-001
+  full_name: Fabrice Noah
+  role: commercial
+  can_login: true
+  username: team.support.auth.001
+  email: team.support.auth.001@demo.lawim.local
+  phone_alias: '+2376000503'
+  password_source: generated
+  permissions: &id003
+  - users:read
+  - properties:read
+  - tickets:read
+  - tickets:write
+- demo_reference_id: DEMO-TEAM-COMMERCIAL-AUTH-001
+  full_name: Commercial LAWIM
+  role: commercial
+  can_login: true
+  username: team.commercial.auth.001
+  email: team.commercial.auth.001@demo.lawim.local
+  phone_alias: '+2376000504'
+  password_source: generated
+  permissions: &id004
+  - properties:read
+  - properties:write
+  - leads:read
+  - leads:write
+- demo_reference_id: DEMO-TEAM-MODERATOR-AUTH-001
+  full_name: Moderateur LAWIM
+  role: moderator
+  can_login: true
+  username: team.moderator.auth.001
+  email: team.moderator.auth.001@demo.lawim.local
+  phone_alias: '+2376000505'
+  password_source: generated
+  permissions: &id005
+  - properties:read
+  - properties:moderate
+  - users:read
+- demo_reference_id: DEMO-TEAM-AUDITOR-AUTH-001
+  full_name: Auditeur LAWIM
+  role: auditor
+  can_login: true
+  username: team.auditor.auth.001
+  email: team.auditor.auth.001@demo.lawim.local
+  phone_alias: '+2376000506'
+  password_source: generated
+  permissions: &id006
+  - audit:read
+  - users:read
+  - properties:read
+- demo_reference_id: DEMO-TEAM-FINANCE-AUTH-001
+  full_name: Gestionnaire financier
+  role: finance_manager
+  can_login: true
+  username: team.finance.auth.001
+  email: team.finance.auth.001@demo.lawim.local
+  phone_alias: '+2376000507'
+  password_source: generated
+  permissions: &id007
+  - payments:read
+  - payments:write
+  - invoices:read
+- demo_reference_id: DEMO-TEAM-DOCS-AUTH-001
+  full_name: Gestionnaire documentaire
+  role: doc_manager
+  can_login: true
+  username: team.docs.auth.001
+  email: team.docs.auth.001@demo.lawim.local
+  phone_alias: '+2376000508'
+  password_source: generated
+  permissions: &id008
+  - documents:read
+  - documents:write
+  - users:read
+- demo_reference_id: DEMO-TEAM-PROPERTY-AUTH-001
+  full_name: Gestionnaire des biens
+  role: property_manager
+  can_login: true
+  username: team.property.auth.001
+  email: team.property.auth.001@demo.lawim.local
+  phone_alias: '+2376000509'
+  password_source: generated
+  permissions: &id009
+  - properties:read
+  - properties:write
+  - media:read
+  - media:write
+- demo_reference_id: DEMO-TEAM-VISITS-AUTH-001
+  full_name: Gestionnaire des visites
+  role: visit_manager
+  can_login: true
+  username: team.visits.auth.001
+  email: team.visits.auth.001@demo.lawim.local
+  phone_alias: '+2376000510'
+  password_source: generated
+  permissions: &id010
+  - visits:read
+  - visits:write
+  - users:read
+team_members:
+- id: DEMO-TEAM-SUPERADMIN-AUTH-001
+  full_name: Super Admin LAWIM
+  role: super_admin
+  permissions: *id001
+  team: LAWIM Operations
+- id: DEMO-TEAM-ADMIN-AUTH-001
+  full_name: Admin LAWIM
+  role: admin
+  permissions: *id002
+  team: LAWIM Operations
+- id: DEMO-TEAM-SUPPORT-AUTH-001
+  full_name: Fabrice Noah
+  role: commercial
+  permissions: *id003
+  team: LAWIM Operations
+- id: DEMO-TEAM-COMMERCIAL-AUTH-001
+  full_name: Commercial LAWIM
+  role: commercial
+  permissions: *id004
+  team: LAWIM Operations
+- id: DEMO-TEAM-MODERATOR-AUTH-001
+  full_name: Moderateur LAWIM
+  role: moderator
+  permissions: *id005
+  team: LAWIM Operations
+- id: DEMO-TEAM-AUDITOR-AUTH-001
+  full_name: Auditeur LAWIM
+  role: auditor
+  permissions: *id006
+  team: LAWIM Operations
+- id: DEMO-TEAM-FINANCE-AUTH-001
+  full_name: Gestionnaire financier
+  role: finance_manager
+  permissions: *id007
+  team: LAWIM Operations
+- id: DEMO-TEAM-DOCS-AUTH-001
+  full_name: Gestionnaire documentaire
+  role: doc_manager
+  permissions: *id008
+  team: LAWIM Operations
+- id: DEMO-TEAM-PROPERTY-AUTH-001
+  full_name: Gestionnaire des biens
+  role: property_manager
+  permissions: *id009
+  team: LAWIM Operations
+- id: DEMO-TEAM-VISITS-AUTH-001
+  full_name: Gestionnaire des visites
+  role: visit_manager
+  permissions: *id010
+  team: LAWIM Operations
 professional_profiles:
 - id: DEMO-PRO-ARCH-001
   profession: architect
-  user_id: DEMO-USER-PRO-001
+  user_id: DEMO-USER-PRO-ARCH-AUTH-001
   organization_id: DEMO-ORG-ARCHI-001
   years_experience: 12
   verified: true
   available: true
+  can_receive_connection: true
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-ARCH-002
   profession: architect
-  user_id: DEMO-USER-PRO-002
+  user_id: DEMO-USER-PRO-ARCH-AUTH-002
   organization_id: DEMO-ORG-ARCHI-001
   years_experience: 6
   verified: true
   available: true
+  can_receive_connection: true
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-NOTARY-001
   profession: notary
-  user_id: DEMO-USER-PRO-003
+  user_id: DEMO-USER-PRO-NOTARY-AUTH-001
   organization_id: DEMO-ORG-NOTARY-001
   years_experience: 20
   verified: true
   available: true
+  can_receive_connection: true
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-SURVEYOR-001
   profession: surveyor
-  user_id: DEMO-USER-PRO-004
+  user_id: DEMO-USER-PRO-SURVEYOR-AUTH-001
   organization_id: DEMO-ORG-SURVEY-001
   years_experience: 15
   verified: true
   available: true
+  can_receive_connection: true
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-LAWYER-001
   profession: lawyer
-  user_id: null
+  user_id: DEMO-USER-PRO-LAWYER-NOAUTH-001
   organization_id: DEMO-ORG-LEGAL-001
   years_experience: 18
   verified: true
   available: true
+  can_receive_connection: true
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-BUILDER-001
   profession: builder
   user_id: null
@@ -297,6 +1008,9 @@ professional_profiles:
   years_experience: 22
   verified: true
   available: true
+  can_receive_connection: false
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-ELECTRICIAN-001
   profession: electrician
   user_id: null
@@ -304,6 +1018,9 @@ professional_profiles:
   years_experience: 8
   verified: true
   available: true
+  can_receive_connection: false
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-PLUMBER-001
   profession: plumber
   user_id: null
@@ -311,20 +1028,29 @@ professional_profiles:
   years_experience: 10
   verified: true
   available: true
+  can_receive_connection: false
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-AGENT-001
   profession: real_estate_agent
-  user_id: DEMO-USER-AGENT-001
+  user_id: DEMO-USER-AGENT-AUTH-001
   organization_id: DEMO-ORG-AGENCY-001
   years_experience: 7
   verified: true
   available: true
+  can_receive_connection: true
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-AGENT-002
   profession: real_estate_agent
-  user_id: DEMO-USER-AGENT-002
+  user_id: DEMO-USER-AGENT-AUTH-002
   organization_id: DEMO-ORG-AGENCY-001
   years_experience: 5
   verified: true
   available: true
+  can_receive_connection: true
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-MOVER-001
   profession: mover
   user_id: null
@@ -332,6 +1058,9 @@ professional_profiles:
   years_experience: 9
   verified: true
   available: true
+  can_receive_connection: false
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-FINANCE-001
   profession: financial_advisor
   user_id: null
@@ -339,6 +1068,9 @@ professional_profiles:
   years_experience: 11
   verified: true
   available: true
+  can_receive_connection: false
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-INSURANCE-001
   profession: insurance_agent
   user_id: null
@@ -346,6 +1078,9 @@ professional_profiles:
   years_experience: 14
   verified: true
   available: true
+  can_receive_connection: false
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-MAINT-001
   profession: maintenance_tech
   user_id: null
@@ -353,6 +1088,9 @@ professional_profiles:
   years_experience: 6
   verified: true
   available: true
+  can_receive_connection: false
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-CLEANER-001
   profession: cleaner
   user_id: null
@@ -360,6 +1098,9 @@ professional_profiles:
   years_experience: 4
   verified: true
   available: false
+  can_receive_connection: false
+  can_receive_appointment: true
+  can_receive_message: true
 - id: DEMO-PRO-PHOTO-001
   profession: photographer
   user_id: null
@@ -367,6 +1108,9 @@ professional_profiles:
   years_experience: 5
   verified: true
   available: true
+  can_receive_connection: false
+  can_receive_appointment: true
+  can_receive_message: true
 organizations:
 - id: DEMO-ORG-AGENCY-001
   name: DEMO Agence Centrale
@@ -504,7 +1248,7 @@ services:
   price: 80000
 - id: DEMO-SERVICE-018
   name: Recherche et mise en relation
-  provider_id: DEMO-USER-AGENT-001
+  provider_id: DEMO-USER-AGENT-AUTH-001
   category: real_estate
   price: 0
 properties:
@@ -517,7 +1261,7 @@ properties:
   bedrooms: 2
   title: Résidence Bellevue
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-002
@@ -529,7 +1273,7 @@ properties:
   bedrooms: 3
   title: Maison du Marché
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: true
@@ -542,7 +1286,7 @@ properties:
   bedrooms: 4
   title: Résidence du Lac
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-004
@@ -554,7 +1298,7 @@ properties:
   bedrooms: 2
   title: Résidence des Fleurs
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -567,7 +1311,7 @@ properties:
   bedrooms: 2
   title: Résidence des Eaux
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: false
 - id: DEMO-PROPERTY-YDE-006
@@ -579,7 +1323,7 @@ properties:
   bedrooms: 2
   title: Studio des Cocotiers
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: false
@@ -587,24 +1331,24 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: APARTMENT
-  price: 418658
+  price: 394732
   currency: XAF
   bedrooms: 4
   title: Résidence du Paradis
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-008
   city: Yaoundé
   district: Bastos
   property_type: HOUSE
-  price: 351977
+  price: 193562
   currency: XAF
   bedrooms: 1
   title: Maison Diana
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -612,24 +1356,24 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: STUDIO
-  price: 247139
+  price: 223966
   currency: XAF
   bedrooms: 2
   title: Studio Soleil
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-010
   city: Yaoundé
   district: Bastos
   property_type: APARTMENT
-  price: 207390
+  price: 206783
   currency: XAF
   bedrooms: 3
   title: Résidence Royal
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: false
@@ -637,24 +1381,24 @@ properties:
   city: Yaoundé
   district: Bastos
   property_type: HOUSE
-  price: 201684
+  price: 320678
   currency: XAF
   bedrooms: 4
   title: Maison Beau Séjour
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-012
   city: Yaoundé
   district: Bastos
   property_type: STUDIO
-  price: 285975
+  price: 203747
   currency: XAF
   bedrooms: 1
   title: Studio Bleu
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -662,24 +1406,24 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: APARTMENT
-  price: 173851
+  price: 126892
   currency: XAF
   bedrooms: 2
   title: Résidence Princier
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-014
   city: Yaoundé
   district: Odza
   property_type: HOUSE
-  price: 366166
+  price: 489822
   currency: XAF
   bedrooms: 3
   title: Maison les Manguiers
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: true
@@ -687,24 +1431,24 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: STUDIO
-  price: 203715
+  price: 420452
   currency: XAF
   bedrooms: 4
   title: Studio Vert
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: false
 - id: DEMO-PROPERTY-YDE-016
   city: Yaoundé
   district: Odza
   property_type: APARTMENT
-  price: 166991
+  price: 101389
   currency: XAF
   bedrooms: 1
   title: Résidence du Stade
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -712,24 +1456,24 @@ properties:
   city: Yaoundé
   district: Odza
   property_type: HOUSE
-  price: 481614
+  price: 458837
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-018
   city: Yaoundé
   district: Odza
   property_type: STUDIO
-  price: 487636
+  price: 330788
   currency: XAF
   bedrooms: 3
   title: Studio du Centre
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: true
@@ -737,24 +1481,24 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: APARTMENT
-  price: 149645
+  price: 108386
   currency: XAF
   bedrooms: 4
   title: Résidence de la Gare
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-020
   city: Yaoundé
   district: Nlongkak
   property_type: HOUSE
-  price: 179508
+  price: 308256
   currency: XAF
   bedrooms: 1
   title: Maison des Acacias
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: false
@@ -762,24 +1506,24 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: STUDIO
-  price: 243162
+  price: 162540
   currency: XAF
   bedrooms: 2
   title: Studio Bellevue
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-022
   city: Yaoundé
   district: Nlongkak
   property_type: APARTMENT
-  price: 419598
+  price: 139608
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: true
@@ -787,24 +1531,24 @@ properties:
   city: Yaoundé
   district: Nlongkak
   property_type: HOUSE
-  price: 453310
+  price: 246432
   currency: XAF
   bedrooms: 4
   title: Maison du Lac
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-024
   city: Yaoundé
   district: Nlongkak
   property_type: STUDIO
-  price: 462444
+  price: 457436
   currency: XAF
   bedrooms: 1
   title: Studio des Fleurs
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -812,24 +1556,24 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: APARTMENT
-  price: 117210
+  price: 216675
   currency: XAF
   bedrooms: 2
   title: Résidence des Eaux
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: false
 - id: DEMO-PROPERTY-YDE-026
   city: Yaoundé
   district: Tsinga
   property_type: HOUSE
-  price: 391946
+  price: 310415
   currency: XAF
   bedrooms: 3
   title: Maison des Cocotiers
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: true
@@ -837,24 +1581,24 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: STUDIO
-  price: 320175
+  price: 447036
   currency: XAF
   bedrooms: 4
   title: Studio du Paradis
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-028
   city: Yaoundé
   district: Tsinga
   property_type: APARTMENT
-  price: 108067
+  price: 170987
   currency: XAF
   bedrooms: 1
   title: Résidence Diana
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -862,24 +1606,24 @@ properties:
   city: Yaoundé
   district: Tsinga
   property_type: HOUSE
-  price: 337390
+  price: 124757
   currency: XAF
   bedrooms: 2
   title: Maison Soleil
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-030
   city: Yaoundé
   district: Tsinga
   property_type: STUDIO
-  price: 368863
+  price: 170265
   currency: XAF
   bedrooms: 3
   title: Studio Royal
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: false
@@ -887,24 +1631,24 @@ properties:
   city: Yaoundé
   district: Ngousso
   property_type: APARTMENT
-  price: 141811
+  price: 230208
   currency: XAF
   bedrooms: 4
   title: Résidence Beau Séjour
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-032
   city: Yaoundé
   district: Ngousso
   property_type: HOUSE
-  price: 425524
+  price: 209043
   currency: XAF
   bedrooms: 1
   title: Maison Bleu
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -912,24 +1656,24 @@ properties:
   city: Yaoundé
   district: Ngousso
   property_type: STUDIO
-  price: 445789
+  price: 165275
   currency: XAF
   bedrooms: 2
   title: Studio Princier
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-034
   city: Yaoundé
   district: Essos
   property_type: APARTMENT
-  price: 339882
+  price: 102785
   currency: XAF
   bedrooms: 3
   title: Résidence les Manguiers
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: true
@@ -937,24 +1681,24 @@ properties:
   city: Yaoundé
   district: Essos
   property_type: HOUSE
-  price: 300801
+  price: 480090
   currency: XAF
   bedrooms: 4
   title: Maison Vert
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: false
 - id: DEMO-PROPERTY-YDE-036
   city: Yaoundé
   district: Essos
   property_type: STUDIO
-  price: 131686
+  price: 166881
   currency: XAF
   bedrooms: 1
   title: Studio du Stade
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -962,24 +1706,24 @@ properties:
   city: Yaoundé
   district: Mendong
   property_type: APARTMENT
-  price: 393631
+  price: 459306
   currency: XAF
   bedrooms: 2
   title: Résidence Saint Michel
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-038
   city: Yaoundé
   district: Mendong
   property_type: HOUSE
-  price: 213340
+  price: 130849
   currency: XAF
   bedrooms: 3
   title: Maison du Centre
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: true
@@ -987,24 +1731,24 @@ properties:
   city: Yaoundé
   district: Mendong
   property_type: STUDIO
-  price: 152819
+  price: 120315
   currency: XAF
   bedrooms: 4
   title: Studio de la Gare
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-040
   city: Yaoundé
   district: Biyem-Assi
   property_type: APARTMENT
-  price: 166235
+  price: 158084
   currency: XAF
   bedrooms: 1
   title: Résidence des Acacias
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: false
@@ -1012,24 +1756,24 @@ properties:
   city: Yaoundé
   district: Biyem-Assi
   property_type: HOUSE
-  price: 385945
+  price: 489937
   currency: XAF
   bedrooms: 2
   title: Maison Bellevue
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-042
   city: Yaoundé
   district: Biyem-Assi
   property_type: STUDIO
-  price: 410654
+  price: 369543
   currency: XAF
   bedrooms: 3
   title: Studio du Marché
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: true
@@ -1037,24 +1781,24 @@ properties:
   city: Yaoundé
   district: Nkoabang
   property_type: APARTMENT
-  price: 164602
+  price: 290948
   currency: XAF
   bedrooms: 4
   title: Résidence du Lac
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-044
   city: Yaoundé
   district: Nkoabang
   property_type: HOUSE
-  price: 123606
+  price: 141729
   currency: XAF
   bedrooms: 1
   title: Maison des Fleurs
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -1062,24 +1806,24 @@ properties:
   city: Yaoundé
   district: Nkoabang
   property_type: STUDIO
-  price: 449413
+  price: 326065
   currency: XAF
   bedrooms: 2
   title: Studio des Eaux
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: false
 - id: DEMO-PROPERTY-YDE-046
   city: Yaoundé
   district: Emana
   property_type: APARTMENT
-  price: 488053
+  price: 314089
   currency: XAF
   bedrooms: 3
   title: Résidence des Cocotiers
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: true
@@ -1087,24 +1831,24 @@ properties:
   city: Yaoundé
   district: Emana
   property_type: HOUSE
-  price: 128284
+  price: 244563
   currency: XAF
   bedrooms: 4
   title: Maison du Paradis
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-048
   city: Yaoundé
   district: Emana
   property_type: STUDIO
-  price: 346078
+  price: 252042
   currency: XAF
   bedrooms: 1
   title: Studio Diana
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - parking
   available: true
@@ -1112,24 +1856,24 @@ properties:
   city: Yaoundé
   district: Etoug-Ebe
   property_type: APARTMENT
-  price: 350400
+  price: 260462
   currency: XAF
   bedrooms: 2
   title: Résidence Soleil
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-YDE-050
   city: Yaoundé
   district: Etoug-Ebe
   property_type: HOUSE
-  price: 492925
+  price: 178910
   currency: XAF
   bedrooms: 3
   title: Maison Royal
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - parking
   available: false
@@ -1137,300 +1881,300 @@ properties:
   city: Douala
   district: Akwa
   property_type: APARTMENT
-  price: 457103
+  price: 244559
   currency: XAF
   bedrooms: 2
   title: Résidence de la Gare
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-002
   city: Douala
   district: Akwa
   property_type: APARTMENT
-  price: 444266
+  price: 448371
   currency: XAF
   bedrooms: 3
   title: Résidence du Centre
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-003
   city: Douala
   district: Akwa
   property_type: HOUSE
-  price: 549609
+  price: 395880
   currency: XAF
   bedrooms: 4
   title: Maison Saint Michel
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-004
   city: Douala
   district: Bonanjo
   property_type: APARTMENT
-  price: 539730
+  price: 511550
   currency: XAF
   bedrooms: 1
   title: Résidence du Stade
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-005
   city: Douala
   district: Bonanjo
   property_type: APARTMENT
-  price: 440434
+  price: 372399
   currency: XAF
   bedrooms: 2
   title: Résidence Vert
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-006
   city: Douala
   district: Bonanjo
   property_type: HOUSE
-  price: 400052
+  price: 526793
   currency: XAF
   bedrooms: 3
   title: Maison les Manguiers
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-007
   city: Douala
   district: Bonapriso
   property_type: APARTMENT
-  price: 574181
+  price: 442576
   currency: XAF
   bedrooms: 4
   title: Résidence Princier
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-008
   city: Douala
   district: Bonapriso
   property_type: APARTMENT
-  price: 464594
+  price: 424462
   currency: XAF
   bedrooms: 1
   title: Résidence Bleu
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-009
   city: Douala
   district: Bonapriso
   property_type: HOUSE
-  price: 579207
+  price: 417941
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-010
   city: Douala
   district: Deido
   property_type: APARTMENT
-  price: 521340
+  price: 368286
   currency: XAF
   bedrooms: 3
   title: Résidence Royal
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-011
   city: Douala
   district: Deido
   property_type: APARTMENT
-  price: 289923
+  price: 476304
   currency: XAF
   bedrooms: 4
   title: Résidence Soleil
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-012
   city: Douala
   district: Deido
   property_type: HOUSE
-  price: 558058
+  price: 486551
   currency: XAF
   bedrooms: 1
   title: Maison Diana
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-013
   city: Douala
   district: Makepe
   property_type: APARTMENT
-  price: 493394
+  price: 268491
   currency: XAF
   bedrooms: 2
   title: Résidence du Paradis
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-014
   city: Douala
   district: Makepe
   property_type: APARTMENT
-  price: 349740
+  price: 365934
   currency: XAF
   bedrooms: 3
   title: Résidence des Cocotiers
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-015
   city: Douala
   district: Makepe
   property_type: HOUSE
-  price: 503940
+  price: 458907
   currency: XAF
   bedrooms: 4
   title: Maison des Eaux
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-016
   city: Douala
   district: Bonamoussadi
   property_type: APARTMENT
-  price: 307512
+  price: 266465
   currency: XAF
   bedrooms: 1
   title: Résidence des Fleurs
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-017
   city: Douala
   district: Bonamoussadi
   property_type: APARTMENT
-  price: 347101
+  price: 467764
   currency: XAF
   bedrooms: 2
   title: Résidence du Lac
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-018
   city: Douala
   district: Bonamoussadi
   property_type: HOUSE
-  price: 406756
+  price: 286067
   currency: XAF
   bedrooms: 3
   title: Maison du Marché
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-019
   city: Douala
   district: Logbaba
   property_type: APARTMENT
-  price: 346363
+  price: 226012
   currency: XAF
   bedrooms: 4
   title: Résidence Bellevue
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-020
   city: Douala
   district: Logbaba
   property_type: APARTMENT
-  price: 214972
+  price: 376527
   currency: XAF
   bedrooms: 1
   title: Résidence des Acacias
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-021
   city: Douala
   district: Logbaba
   property_type: HOUSE
-  price: 238106
+  price: 536796
   currency: XAF
   bedrooms: 2
   title: Maison de la Gare
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-022
   city: Douala
   district: Bassa
   property_type: APARTMENT
-  price: 567792
+  price: 373637
   currency: XAF
   bedrooms: 3
   title: Résidence du Centre
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-023
   city: Douala
   district: Bassa
   property_type: APARTMENT
-  price: 545154
+  price: 431684
   currency: XAF
   bedrooms: 4
   title: Résidence Saint Michel
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-024
   city: Douala
   district: Bassa
   property_type: HOUSE
-  price: 217860
+  price: 273067
   currency: XAF
   bedrooms: 1
   title: Maison du Stade
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: true
 - id: DEMO-PROPERTY-DLA-025
   city: Douala
   district: Nylon
   property_type: APARTMENT
-  price: 295375
+  price: 359205
   currency: XAF
   bedrooms: 2
   title: Résidence Vert
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-LND-001
@@ -1442,7 +2186,7 @@ properties:
   bedrooms: 0
   title: Terrain à Nkoabang, Yaoundé
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - borné
   available: false
@@ -1456,7 +2200,7 @@ properties:
   bedrooms: 0
   title: Terrain à Odza, Yaoundé
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
   surface_m2: 700
@@ -1469,7 +2213,7 @@ properties:
   bedrooms: 0
   title: Terrain à Mvan, Yaoundé
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - borné
   available: true
@@ -1483,7 +2227,7 @@ properties:
   bedrooms: 0
   title: Terrain à Logbaba, Douala
   status: suspended
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
   surface_m2: 1100
@@ -1496,7 +2240,7 @@ properties:
   bedrooms: 0
   title: Terrain à Djeleng, Bafoussam
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features:
   - borné
   available: false
@@ -1510,7 +2254,7 @@ properties:
   bedrooms: 0
   title: Terrain à Lobe, Kribi
   status: active
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
   surface_m2: 1500
@@ -1523,7 +2267,7 @@ properties:
   bedrooms: 0
   title: Terrain à Nkolbisson, Yaoundé
   status: suspended
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features:
   - borné
   available: true
@@ -1532,264 +2276,264 @@ properties:
   city: Bafoussam
   district: Djeleng
   property_type: HOUSE
-  price: 213252
+  price: 153499
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-BAF-002
   city: Bafoussam
   district: Djeleng
   property_type: APARTMENT
-  price: 213252
+  price: 153499
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-BAF-003
   city: Bafoussam
   district: Kouogouo
   property_type: HOUSE
-  price: 315413
+  price: 210776
   currency: XAF
   bedrooms: 1
   title: Maison Princier
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-BAF-004
   city: Bafoussam
   district: Kouogouo
   property_type: APARTMENT
-  price: 315413
+  price: 210776
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: false
 - id: DEMO-PROPERTY-BAF-005
   city: Bafoussam
   district: Tamdja
   property_type: HOUSE
-  price: 223666
+  price: 232775
   currency: XAF
   bedrooms: 3
   title: Maison Vert
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-BAF-006
   city: Bafoussam
   district: Tamdja
   property_type: APARTMENT
-  price: 223666
+  price: 232775
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-BAF-007
   city: Bafoussam
   district: Banengo
   property_type: HOUSE
-  price: 197417
+  price: 121632
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-BAF-008
   city: Bafoussam
   district: Banengo
   property_type: APARTMENT
-  price: 197417
+  price: 121632
   currency: XAF
   bedrooms: 3
   title: Résidence Diana
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: false
 - id: DEMO-PROPERTY-KRI-001
   city: Kribi
   district: Mpangou
   property_type: HOUSE
-  price: 141674
+  price: 133081
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-KRI-002
   city: Kribi
   district: Mpangou
   property_type: APARTMENT
-  price: 141674
+  price: 133081
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-KRI-003
   city: Kribi
   district: Bebamboue
   property_type: HOUSE
-  price: 223303
+  price: 209107
   currency: XAF
   bedrooms: 1
   title: Maison Princier
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-KRI-004
   city: Kribi
   district: Bebamboue
   property_type: APARTMENT
-  price: 223303
+  price: 209107
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: false
 - id: DEMO-PROPERTY-KRI-005
   city: Kribi
   district: Lobe
   property_type: HOUSE
-  price: 322805
+  price: 296440
   currency: XAF
   bedrooms: 3
   title: Maison Vert
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-KRI-006
   city: Kribi
   district: Lobe
   property_type: APARTMENT
-  price: 322805
+  price: 296440
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-LIM-001
   city: Limbé
   district: Bota
   property_type: HOUSE
-  price: 259696
+  price: 332192
   currency: XAF
   bedrooms: 2
   title: Maison Beau Séjour
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-LIM-002
   city: Limbé
   district: Bota
   property_type: APARTMENT
-  price: 259696
+  price: 332192
   currency: XAF
   bedrooms: 3
   title: Résidence du Marché
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-LIM-003
   city: Limbé
   district: Mile 2
   property_type: HOUSE
-  price: 118330
+  price: 325258
   currency: XAF
   bedrooms: 1
   title: Maison Princier
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-LIM-004
   city: Limbé
   district: Mile 2
   property_type: APARTMENT
-  price: 118330
+  price: 325258
   currency: XAF
   bedrooms: 2
   title: Résidence des Fleurs
   status: active
-  owner_id: DEMO-USER-OWNER-005
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: false
 - id: DEMO-PROPERTY-LIM-005
   city: Limbé
   district: Mile 4
   property_type: HOUSE
-  price: 336761
+  price: 232088
   currency: XAF
   bedrooms: 3
   title: Maison Vert
   status: suspended
-  owner_id: DEMO-USER-OWNER-001
+  owner_id: DEMO-USER-OWNER-AUTH-002
   features: []
   available: true
 - id: DEMO-PROPERTY-LIM-006
   city: Limbé
   district: Mile 4
   property_type: APARTMENT
-  price: 336761
+  price: 232088
   currency: XAF
   bedrooms: 1
   title: Résidence des Cocotiers
   status: active
-  owner_id: DEMO-USER-OWNER-002
+  owner_id: DEMO-USER-OWNER-AUTH-003
   features: []
   available: true
 - id: DEMO-PROPERTY-LIM-007
   city: Limbé
   district: Mokunda
   property_type: HOUSE
-  price: 221217
+  price: 109728
   currency: XAF
   bedrooms: 2
   title: Maison Saint Michel
   status: active
-  owner_id: DEMO-USER-OWNER-003
+  owner_id: DEMO-USER-OWNER-AUTH-004
   features: []
   available: true
 - id: DEMO-PROPERTY-LIM-008
   city: Limbé
   district: Mokunda
   property_type: APARTMENT
-  price: 221217
+  price: 109728
   currency: XAF
   bedrooms: 3
   title: Résidence Diana
   status: active
-  owner_id: DEMO-USER-OWNER-004
+  owner_id: DEMO-USER-OWNER-AUTH-001
   features: []
   available: false
 property_media:
@@ -2341,7 +3085,7 @@ documents:
 - id: DEMO-DOCUMENT-006
   title: Pièce d'identité (Jean Dupont)
   document_type: id_card
-  owner_id: DEMO-USER-CLIENT-001
+  owner_id: DEMO-USER-CLIENT-AUTH-001
   status: valid
   path: demo/documents/id_card-006.pdf
   mime_type: application/pdf
@@ -2429,84 +3173,84 @@ documents:
 appointments:
 - id: DEMO-APPOINTMENT-001
   status: confirmed
-  requester_id: DEMO-USER-CLIENT-001
+  requester_id: DEMO-USER-CLIENT-AUTH-001
   provider_id: DEMO-PRO-ARCH-001
   service_id: DEMO-SERVICE-001
   scheduled_at: '2026-07-25T09:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-002
   status: pending
-  requester_id: DEMO-USER-CLIENT-002
+  requester_id: DEMO-USER-CLIENT-AUTH-002
   provider_id: DEMO-PRO-NOTARY-001
   service_id: DEMO-SERVICE-005
   scheduled_at: '2026-07-26T10:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-003
   status: cancelled
-  requester_id: DEMO-USER-CLIENT-003
+  requester_id: DEMO-USER-CLIENT-AUTH-003
   provider_id: DEMO-PRO-ARCH-001
   service_id: null
   scheduled_at: '2026-07-27T11:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-004
   status: confirmed
-  requester_id: DEMO-USER-CLIENT-004
+  requester_id: DEMO-USER-CLIENT-AUTH-004
   provider_id: DEMO-PRO-BUILDER-001
   service_id: DEMO-SERVICE-009
   scheduled_at: '2026-07-28T12:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-005
   status: confirmed
-  requester_id: DEMO-USER-CLIENT-001
+  requester_id: DEMO-USER-CLIENT-AUTH-001
   provider_id: DEMO-PRO-SURVEYOR-001
   service_id: DEMO-SERVICE-006
   scheduled_at: '2026-07-29T13:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-006
   status: pending
-  requester_id: DEMO-USER-CLIENT-005
+  requester_id: DEMO-USER-CLIENT-AUTH-005
   provider_id: DEMO-PRO-NOTARY-001
   service_id: DEMO-SERVICE-004
   scheduled_at: '2026-07-25T14:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-007
   status: rescheduled
-  requester_id: DEMO-USER-CLIENT-006
+  requester_id: DEMO-USER-CLIENT-AUTH-006
   provider_id: DEMO-PRO-PLUMBER-001
   service_id: DEMO-SERVICE-011
   scheduled_at: '2026-07-26T15:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-008
   status: confirmed
-  requester_id: DEMO-USER-CLIENT-001
+  requester_id: DEMO-USER-CLIENT-AUTH-001
   provider_id: DEMO-PRO-ELECTRICIAN-001
   service_id: DEMO-SERVICE-010
   scheduled_at: '2026-07-27T16:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-009
   status: confirmed
-  requester_id: DEMO-USER-CLIENT-002
+  requester_id: DEMO-USER-CLIENT-AUTH-002
   provider_id: DEMO-PRO-MOVER-001
   service_id: DEMO-SERVICE-012
   scheduled_at: '2026-07-28T09:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-010
   status: confirmed
-  requester_id: DEMO-USER-CLIENT-003
+  requester_id: DEMO-USER-CLIENT-AUTH-003
   provider_id: DEMO-PRO-FINANCE-001
   service_id: DEMO-SERVICE-013
   scheduled_at: '2026-07-29T10:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-011
   status: confirmed
-  requester_id: DEMO-USER-CLIENT-004
+  requester_id: DEMO-USER-CLIENT-AUTH-004
   provider_id: DEMO-PRO-INSURANCE-001
   service_id: DEMO-SERVICE-014
   scheduled_at: '2026-07-25T11:00:00+01:00'
   duration_minutes: 60
 - id: DEMO-APPOINTMENT-012
   status: no_show
-  requester_id: DEMO-USER-CLIENT-001
+  requester_id: DEMO-USER-CLIENT-AUTH-001
   provider_id: DEMO-PRO-NOTARY-001
   service_id: DEMO-SERVICE-004
   scheduled_at: '2026-07-26T12:00:00+01:00'
@@ -2517,7 +3261,7 @@ negative_cases:
   scenario: SCENARIO-0001
 - id: NEG-NO-CONSENT-001
   description: Propriétaire sans consentement pour mise en relation
-  user: DEMO-USER-OWNER-005
+  user: DEMO-USER-OWNER-AUTH-003
 - id: NEG-SUSPENDED-001
   description: Bien suspendu sélectionné
   property:
@@ -2526,7 +3270,7 @@ negative_cases:
   description: Double tentative de connexion sur le même match
 - id: NEG-BLOCKED-USER-001
   description: Utilisateur suspendu tente une recherche
-  user: DEMO-USER-AGENT-003
+  user: DEMO-USER-AGENT-AUTH-003
 - id: NEG-UNAVAILABLE-PRO-001
   description: Professionnel indisponible pour une mission
   professional: DEMO-PRO-CLEANER-001
@@ -2540,9 +3284,9 @@ scenarios:
   category: property_rental
   status: READY
   personas:
-  - DEMO-USER-CLIENT-001
-  - DEMO-USER-OWNER-001
-  - DEMO-USER-AGENT-001
+  - DEMO-USER-CLIENT-AUTH-001
+  - DEMO-USER-OWNER-AUTH-001
+  - DEMO-USER-AGENT-AUTH-001
   properties:
   - DEMO-PROPERTY-YDE-001
   - DEMO-PROPERTY-YDE-002
@@ -2554,8 +3298,8 @@ scenarios:
   category: property_rental
   status: READY
   personas:
-  - DEMO-USER-CLIENT-002
-  - DEMO-USER-OWNER-002
+  - DEMO-USER-CLIENT-AUTH-002
+  - DEMO-USER-OWNER-AUTH-002
   properties:
   - DEMO-PROPERTY-YDE-005
   services: []
@@ -2564,8 +3308,8 @@ scenarios:
   category: property_purchase
   status: READY
   personas:
-  - DEMO-USER-CLIENT-003
-  - DEMO-USER-OWNER-003
+  - DEMO-USER-CLIENT-AUTH-003
+  - DEMO-USER-OWNER-AUTH-003
   - DEMO-PRO-NOTARY-001
   properties:
   - DEMO-PROPERTY-YDE-004
@@ -2577,8 +3321,8 @@ scenarios:
   category: land_purchase
   status: READY
   personas:
-  - DEMO-USER-CLIENT-001
-  - DEMO-USER-OWNER-004
+  - DEMO-USER-CLIENT-AUTH-001
+  - DEMO-USER-OWNER-AUTH-004
   - DEMO-PRO-SURVEYOR-001
   properties:
   - DEMO-PROPERTY-LND-001
@@ -2592,7 +3336,7 @@ scenarios:
   category: professional_search
   status: READY
   personas:
-  - DEMO-USER-CLIENT-002
+  - DEMO-USER-CLIENT-AUTH-002
   - DEMO-PRO-ARCH-001
   properties: []
   services:
@@ -2604,7 +3348,7 @@ scenarios:
   category: professional_search
   status: READY
   personas:
-  - DEMO-USER-CLIENT-004
+  - DEMO-USER-CLIENT-AUTH-004
   - DEMO-PRO-NOTARY-001
   properties: []
   services:
@@ -2615,7 +3359,7 @@ scenarios:
   category: renovation
   status: READY
   personas:
-  - DEMO-USER-CLIENT-005
+  - DEMO-USER-CLIENT-AUTH-005
   - DEMO-PRO-BUILDER-001
   - DEMO-PRO-ELECTRICIAN-001
   properties:
@@ -2628,7 +3372,7 @@ scenarios:
   category: maintenance
   status: READY
   personas:
-  - DEMO-USER-CLIENT-006
+  - DEMO-USER-CLIENT-AUTH-006
   - DEMO-PRO-PLUMBER-001
   properties: []
   services:
@@ -2639,7 +3383,7 @@ scenarios:
   category: professional_search
   status: READY
   personas:
-  - DEMO-USER-CLIENT-003
+  - DEMO-USER-CLIENT-AUTH-003
   - DEMO-PRO-SURVEYOR-001
   properties: []
   services:
@@ -2649,7 +3393,7 @@ scenarios:
   category: moving
   status: READY
   personas:
-  - DEMO-USER-CLIENT-007
+  - DEMO-USER-CLIENT-AUTH-007
   - DEMO-PRO-MOVER-001
   properties: []
   services:
@@ -2659,7 +3403,7 @@ scenarios:
   category: financial
   status: READY
   personas:
-  - DEMO-USER-CLIENT-001
+  - DEMO-USER-CLIENT-AUTH-001
   - DEMO-PRO-FINANCE-001
   properties: []
   services:
@@ -2669,8 +3413,8 @@ scenarios:
   category: property_management
   status: READY
   personas:
-  - DEMO-USER-OWNER-001
-  - DEMO-USER-AGENT-001
+  - DEMO-USER-OWNER-AUTH-001
+  - DEMO-USER-AGENT-AUTH-001
   properties:
   - DEMO-PROPERTY-YDE-007
   services:

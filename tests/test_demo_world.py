@@ -35,7 +35,7 @@ class TestDemoWorldReference:
     def test_user_ids_are_unique(self, demo_data):
         users = demo_data.get("users", [])
         ids = [u["id"] for u in users]
-        assert len(set(ids)) == len(ids)
+        assert len(set(ids)) == len(ids), f"Expected unique IDs, got {len(ids)} total, {len(set(ids))} unique"
 
     def test_owner_references_exist(self, demo_data):
         user_ids = {u["id"] for u in demo_data.get("users", [])}

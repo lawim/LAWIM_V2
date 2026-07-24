@@ -14,6 +14,8 @@ _NEIGHBORHOODS_LIM = ["Bota", "Mile 2", "Mile 4", "Mokunda"]
 _NAMES = ["des Acacias", "du Lac", "des Cocotiers", "Soleil", "Bleu", "Vert", "du Centre", "Bellevue", "des Fleurs", "du Paradis", "Royal", "Princier", "du Stade", "de la Gare", "du Marché", "des Eaux", "Diana", "Beau Séjour", "les Manguiers", "Saint Michel"]
 
 def _uid(role, n):
+    if role in ("OWNER", "AGENT", "CLIENT"):
+        return f"DEMO-USER-{role}-AUTH-{n:03d}"
     return f"DEMO-USER-{role.upper()}-{n:03d}"
 
 def _pid(prof, n):
@@ -31,44 +33,93 @@ def _oid(cat, n):
 def _scid(n):
     return f"SCENARIO-{n:04d}"
 
+def _mid(n):
+    return f"DEMO-MEDIA-{n:03d}"
+
+def _pnid(prefix, n):
+    return f"DEMO-PRO-{prefix.upper()}-{n:03d}"
+
 def build():
-    # --- Users (25 total) ---
     users = []
-    for i in range(1, 9):  # 8 clients
-        status = "active" if i <= 6 else "inactive"
-        verif = "verified" if i <= 5 else "unverified"
-        consent = "granted" if i <= 6 else ("pending" if i == 7 else "denied")
-        city = "Yaoundé" if i <= 4 else "Douala" if i <= 6 else "Bafoussam"
-        users.append({"id": _uid("CLIENT", i), "full_name": ["Jean Dupont","Alice Mbarga","Pierre Kamga","Marie Ngo Bissa","Paul Etoundi","Sarah Nkwi","Robert Tchinda","Esther Mvogo"][i-1], "role": "client", "city": city, "profile_status": status, "verification_status": verif, "consent_status": consent, "preferred_language": "fr"})
+    auth_users = []  # auth credentials metadata
+    team_members = []
 
-    for i in range(1, 6):  # 5 owners
-        city = "Yaoundé" if i <= 3 else "Douala" if i == 4 else "Bafoussam"
-        multi = i == 1
-        consent = "granted" if i <= 3 else ("pending" if i == 4 else "denied")
-        users.append({"id": _uid("OWNER", i), "full_name": ["Thomas Mvogo","Christine Eyanga","Suzanne Mbah","Joseph Obama","Beatrice Simo"][i-1], "role": "owner", "city": city, "profile_status": "active" if i <= 4 else "inactive", "verification_status": "verified" if i <= 3 else "unverified", "consent_status": consent, "has_multiple_properties": multi})
+    # --- Auth/Noauth pairs for each category ---
+    auth_categories = [
+        # (prefix, role, name_auth, name_noauth, city, org)
+        # Clients
+        ("CLIENT", "client", "Jean Dupont", "Client sans accès", "Yaoundé", None),
+        ("CLIENT", "client", "Alice Mbarga", "Alice (noauth)", "Douala", None),
+        ("CLIENT", "client", "Pierre Kamga", "Pierre (noauth)", "Yaoundé", None),
+        ("CLIENT", "client", "Marie Ngo Bissa", "Marie (noauth)", "Bafoussam", None),
+        ("CLIENT", "client", "Paul Etoundi", "Paul (noauth)", "Douala", None),
+        ("CLIENT", "client", "Sarah Nkwi", "Sarah (noauth)", "Yaoundé", None),
+        ("CLIENT", "client", "Robert Tchinda", "Robert (noauth)", "Yaoundé", None),
+        ("CLIENT", "client", "Esther Mvogo", "Esther (noauth)", "Bafoussam", None),
+        # Owners
+        ("OWNER", "owner", "Thomas Mvogo", "Thomas (noauth)", "Yaoundé", None),
+        ("OWNER", "owner", "Christine Eyanga", "Christine (noauth)", "Yaoundé", None),
+        ("OWNER", "owner", "Joseph Obama", "Joseph (noauth)", "Douala", None),
+        ("OWNER", "owner", "Suzanne Mbah", "Suzanne (noauth)", "Yaoundé", None),
+        # Agents
+        ("AGENT", "agent", "Luc Tchinda", "Luc (noauth)", "Yaoundé", "DEMO-ORG-AGENCY-001"),
+        ("AGENT", "agent", "Rosalie Nkwi", "Rosalie (noauth)", "Yaoundé", "DEMO-ORG-AGENCY-001"),
+        ("AGENT", "agent", "Emmanuel Simo", "Emmanuel (noauth)", "Douala", "DEMO-ORG-AGENCY-002"),
+    ]
 
-    for i in range(1, 4):  # 3 agents
-        users.append({"id": _uid("AGENT", i), "full_name": ["Luc Tchinda","Rosalie Nkwi","Emmanuel Simo"][i-1], "role": "agent", "city": "Yaoundé" if i <= 2 else "Douala", "organization_id": _oid("AGENCY", 1) if i <= 2 else _oid("AGENCY", 2), "profile_status": "active" if i <= 2 else "suspended", "verification_status": "verified" if i <= 2 else "unverified"})
+    auth_idx = {"CLIENT": 0, "OWNER": 0, "AGENT": 0}
+    for prefix, role, name_auth, name_noauth, city, org in auth_categories:
+        auth_idx[prefix] += 1
+        ref = auth_idx[prefix]
+        uid_auth = f"DEMO-USER-{prefix}-AUTH-{ref:03d}"
+        uid_noauth = f"DEMO-USER-{prefix}-NOAUTH-{ref:03d}"
+        # Auth user
+        users.append({"id": uid_auth, "full_name": name_auth, "role": role, "city": city, "organization_id": org, "profile_status": "active", "verification_status": "verified", "consent_status": "granted", "can_login": True, "preferred_language": "fr", "is_demo_data": True, "demo_dataset_id": "LAWIM_DEMO_WORLD_V1"})
+        auth_users.append({"demo_reference_id": uid_auth, "full_name": name_auth, "role": role, "can_login": True, "username": f"{prefix.lower()}.auth.{ref:03d}", "email": f"{prefix.lower()}.auth.{ref:03d}@demo.lawim.local", "phone_alias": f"+2376000{ref:04d}", "password_source": "generated", "organization_id": org})
+        # Noauth user
+        users.append({"id": uid_noauth, "full_name": name_noauth, "role": role, "city": city, "organization_id": org, "profile_status": "inactive", "verification_status": "unverified", "consent_status": "pending", "can_login": False, "is_demo_data": True, "demo_dataset_id": "LAWIM_DEMO_WORLD_V1"})
 
-    for i in range(1, 5):  # 4 pros (SERVICE_PROVIDER role)
-        users.append({"id": _uid("PRO", i), "full_name": ["Pierre Atangana","Marie Ekwé","Jean Meka","Chantal Ngo"][i-1], "role": "service_provider", "city": "Yaoundé", "profile_status": "active", "verification_status": "verified"})
+    # Professional users (service_provider role)
+    pro_auth_names = [("ARCH", "Pierre Atangana"), ("ARCH", "Marie Ekwé"), ("NOTARY", "Jean Meka"), ("SURVEYOR", "Chantal Ngo")]
+    for idx, (prefix, name) in enumerate(pro_auth_names, 1):
+        uid = f"DEMO-USER-PRO-{prefix}-AUTH-{idx:03d}"
+        users.append({"id": uid, "full_name": name, "role": "service_provider", "city": "Yaoundé", "profile_status": "active", "verification_status": "verified", "can_login": True, "is_demo_data": True, "demo_dataset_id": "LAWIM_DEMO_WORLD_V1"})
+        auth_users.append({"demo_reference_id": uid, "full_name": name, "role": "service_provider", "can_login": True, "username": f"pro.{prefix.lower()}.auth.{idx:03d}", "email": f"pro.{prefix.lower()}.auth.{idx:03d}@demo.lawim.local", "phone_alias": f"+237600030{idx:02d}", "password_source": "generated"})
+        uid_no = f"DEMO-USER-PRO-{prefix}-NOAUTH-{idx:03d}"
+        users.append({"id": uid_no, "full_name": f"{name} (noauth)", "role": "service_provider", "city": "Yaoundé", "profile_status": "inactive", "verification_status": "unverified", "can_login": False, "is_demo_data": True, "demo_dataset_id": "LAWIM_DEMO_WORLD_V1"})
 
-    # 2 support/admin
-    users.append({"id": _uid("SUPPORT", 1), "full_name": "Fabrice Noah", "role": "commercial", "city": "Yaoundé", "profile_status": "active", "verification_status": "verified"})
-    users.append({"id": _uid("ADMIN", 1), "full_name": "Admin LAWIM", "role": "admin", "city": "Yaoundé", "profile_status": "active", "verification_status": "verified"})
+    # Team members
+    team_defs = [
+        ("SUPERADMIN", "Super Admin LAWIM", "super_admin", ["all"]),
+        ("ADMIN", "Admin LAWIM", "admin", ["users:read", "users:write", "properties:read", "properties:write", "settings:read", "settings:write"]),
+        ("SUPPORT", "Fabrice Noah", "commercial", ["users:read", "properties:read", "tickets:read", "tickets:write"]),
+        ("COMMERCIAL", "Commercial LAWIM", "commercial", ["properties:read", "properties:write", "leads:read", "leads:write"]),
+        ("MODERATOR", "Moderateur LAWIM", "moderator", ["properties:read", "properties:moderate", "users:read"]),
+        ("AUDITOR", "Auditeur LAWIM", "auditor", ["audit:read", "users:read", "properties:read"]),
+        ("FINANCE", "Gestionnaire financier", "finance_manager", ["payments:read", "payments:write", "invoices:read"]),
+        ("DOCS", "Gestionnaire documentaire", "doc_manager", ["documents:read", "documents:write", "users:read"]),
+        ("PROPERTY", "Gestionnaire des biens", "property_manager", ["properties:read", "properties:write", "media:read", "media:write"]),
+        ("VISITS", "Gestionnaire des visites", "visit_manager", ["visits:read", "visits:write", "users:read"]),
+    ]
+    for prefix, name, role, perms in team_defs:
+        uid = f"DEMO-TEAM-{prefix}-AUTH-001"
+        users.append({"id": uid, "full_name": name, "role": role, "city": "Yaoundé", "profile_status": "active", "verification_status": "verified", "can_login": True, "is_demo_data": True, "demo_dataset_id": "LAWIM_DEMO_WORLD_V1"})
+        auth_users.append({"demo_reference_id": uid, "full_name": name, "role": role, "can_login": True, "username": f"team.{prefix.lower()}.auth.001", "email": f"team.{prefix.lower()}.auth.001@demo.lawim.local", "phone_alias": f"+23760005{team_defs.index((prefix,name,role,perms))+1:02d}", "password_source": "generated", "permissions": perms})
+        team_members.append({"id": uid, "full_name": name, "role": role, "permissions": perms, "team": "LAWIM Operations"})
+        uid_no = f"DEMO-TEAM-{prefix}-NOAUTH-001"
 
-    # --- Professional Profiles (16) ---
+    # --- Professional Profiles (all with user_id) ---
     pro_data = [
-        ("ARCH", 1, "architect", _uid("PRO", 1), _oid("ARCHI", 1), 12, True, True),
-        ("ARCH", 2, "architect", _uid("PRO", 2), _oid("ARCHI", 1), 6, True, True),
-        ("NOTARY", 1, "notary", _uid("PRO", 3), _oid("NOTARY", 1), 20, True, True),
-        ("SURVEYOR", 1, "surveyor", _uid("PRO", 4), _oid("SURVEY", 1), 15, True, True),
-        ("LAWYER", 1, "lawyer", None, _oid("LEGAL", 1), 18, True, True),
+        ("ARCH", 1, "architect", "DEMO-USER-PRO-ARCH-AUTH-001", _oid("ARCHI", 1), 12, True, True),
+        ("ARCH", 2, "architect", "DEMO-USER-PRO-ARCH-AUTH-002", _oid("ARCHI", 1), 6, True, True),
+        ("NOTARY", 1, "notary", "DEMO-USER-PRO-NOTARY-AUTH-001", _oid("NOTARY", 1), 20, True, True),
+        ("SURVEYOR", 1, "surveyor", "DEMO-USER-PRO-SURVEYOR-AUTH-001", _oid("SURVEY", 1), 15, True, True),
+        ("LAWYER", 1, "lawyer", "DEMO-USER-PRO-LAWYER-NOAUTH-001", _oid("LEGAL", 1), 18, True, True),
         ("BUILDER", 1, "builder", None, _oid("CONSTRUCT", 1), 22, True, True),
         ("ELECTRICIAN", 1, "electrician", None, _oid("CONSTRUCT", 1), 8, True, True),
         ("PLUMBER", 1, "plumber", None, _oid("MAINT", 1), 10, True, True),
-        ("AGENT", 1, "real_estate_agent", _uid("AGENT", 1), _oid("AGENCY", 1), 7, True, True),
-        ("AGENT", 2, "real_estate_agent", _uid("AGENT", 2), _oid("AGENCY", 1), 5, True, True),
+        ("AGENT", 1, "real_estate_agent", "DEMO-USER-AGENT-AUTH-001", _oid("AGENCY", 1), 7, True, True),
+        ("AGENT", 2, "real_estate_agent", "DEMO-USER-AGENT-AUTH-002", _oid("AGENCY", 1), 5, True, True),
         ("MOVER", 1, "mover", None, _oid("MOVER", 1), 9, True, True),
         ("FINANCE", 1, "financial_advisor", None, _oid("FINANCE", 1), 11, True, True),
         ("INSURANCE", 1, "insurance_agent", None, _oid("FINANCE", 1), 14, True, True),
@@ -78,7 +129,10 @@ def build():
     ]
     profs = []
     for prefix, n, prof, uid, oid, exp, verified, available in pro_data:
-        profs.append({"id": _pid(prefix, n), "profession": prof, "user_id": uid, "organization_id": oid, "years_experience": exp, "verified": verified, "available": available})
+        p_entry = {"id": _pnid(prefix, n), "profession": prof, "user_id": uid, "organization_id": oid, "years_experience": exp, "verified": verified, "available": available, "can_receive_connection": True, "can_receive_appointment": True, "can_receive_message": True}
+        if not uid:
+            p_entry["can_receive_connection"] = False
+        profs.append(p_entry)
 
     # --- Organizations (12) ---
     orgs = [
@@ -121,7 +175,7 @@ def build():
                 "property_type": ptype, "price": price, "currency": "XAF",
                 "bedrooms": 2 if district == "Mvan" and j in (0, 3, 5) else (idx % 4) + 1,
                 "title": _PROPERTY_TEMPLATES[ptype][0].format(name=name),
-                "status": status, "owner_id": _uid("OWNER", (idx % 5) + 1),
+                "status": status, "owner_id": _uid("OWNER", (idx % 4) + 1),
                 "features": ["parking"] if idx % 2 == 0 else [], "available": available,
             })
 
@@ -133,11 +187,11 @@ def build():
             ptype = "APARTMENT" if j < 2 else "HOUSE"
             price = 200_000 + (hash(f"dla-{district}-{j}") % 400_000)
             name = _NAMES[(dla_idx * 13) % len(_NAMES)]
-            props.append({"id": _bid("DLA", dla_idx), "city": "Douala", "district": district, "property_type": ptype, "price": price, "currency": "XAF", "bedrooms": (dla_idx % 4) + 1, "title": _PROPERTY_TEMPLATES[ptype][0].format(name=name), "status": "active", "owner_id": _uid("OWNER", (dla_idx % 5) + 1), "features": [], "available": True})
+            props.append({"id": _bid("DLA", dla_idx), "city": "Douala", "district": district, "property_type": ptype, "price": price, "currency": "XAF", "bedrooms": (dla_idx % 4) + 1, "title": _PROPERTY_TEMPLATES[ptype][0].format(name=name), "status": "active", "owner_id": _uid("OWNER", (dla_idx % 4) + 1), "features": [], "available": True})
 
     land_locations = [("Yaoundé","Nkoabang",15_000_000),("Yaoundé","Odza",12_000_000),("Yaoundé","Mvan",8_000_000),("Douala","Logbaba",10_000_000),("Bafoussam","Djeleng",5_000_000),("Kribi","Lobe",7_000_000),("Yaoundé","Nkolbisson",6_000_000)]
     for li, (lc, ld, lp) in enumerate(land_locations):
-        props.append({"id": _bid("LND", li+1), "city": lc, "district": ld, "property_type": "LAND", "price": lp, "currency": "XAF", "bedrooms": 0, "title": f"Terrain à {ld}, {lc}", "status": "active" if li%3!=0 else "suspended", "owner_id": _uid("OWNER", (li%5)+1), "features": ["borné"] if li%2==0 else [], "available": li%4!=0, "surface_m2": 500+li*200})
+        props.append({"id": _bid("LND", li+1), "city": lc, "district": ld, "property_type": "LAND", "price": lp, "currency": "XAF", "bedrooms": 0, "title": f"Terrain à {ld}, {lc}", "status": "active" if li%3!=0 else "suspended", "owner_id": _uid("OWNER", (li%4)+1), "features": ["borné"] if li%2==0 else [], "available": li%4!=0, "surface_m2": 500+li*200})
 
     for ci, (city, hoods) in enumerate([("Bafoussam",_NEIGHBORHOODS_BFS),("Kribi",_NEIGHBORHOODS_KRI),("Limbé",_NEIGHBORHOODS_LIM)]):
         for di, district in enumerate(hoods):
@@ -147,7 +201,7 @@ def build():
                 ptype = "HOUSE" if j==0 else "APARTMENT"
                 price = 100_000 + (hash(f"{city}-{district}") % 250_000)
                 name = _NAMES[(idx*17)%len(_NAMES)]
-                props.append({"id": _bid(city[:3].upper(), idx), "city": city, "district": district, "property_type": ptype, "price": price, "currency": "XAF", "bedrooms": (idx%3)+1, "title": _PROPERTY_TEMPLATES[ptype][0].format(name=name), "status": "active" if idx%5!=0 else "suspended", "owner_id": _uid("OWNER", (idx%5)+1), "features": [], "available": idx%4!=0})
+                props.append({"id": _bid(city[:3].upper(), idx), "city": city, "district": district, "property_type": ptype, "price": price, "currency": "XAF", "bedrooms": (idx%3)+1, "title": _PROPERTY_TEMPLATES[ptype][0].format(name=name), "status": "active" if idx%5!=0 else "suspended", "owner_id": _uid("OWNER", (idx%4)+1), "features": [], "available": idx%4!=0})
 
     # --- Services (18) ---
     services = [
@@ -190,7 +244,7 @@ def build():
     # --- Negative cases (8) ---
     neg_cases = [
         {"id": "NEG-NO-MATCH-001", "description": "Aucun bien ne correspond aux critères (budget trop bas)", "scenario": _scid(1)},
-        {"id": "NEG-NO-CONSENT-001", "description": "Propriétaire sans consentement pour mise en relation", "user": _uid("OWNER", 5)},
+        {"id": "NEG-NO-CONSENT-001", "description": "Propriétaire sans consentement pour mise en relation", "user": _uid("OWNER", 3)},
         {"id": "NEG-SUSPENDED-001", "description": "Bien suspendu sélectionné", "property": [p["id"] for p in props if p.get("status")=="suspended"][:1]},
         {"id": "NEG-DUPLICATE-CONNECTION-001", "description": "Double tentative de connexion sur le même match"},
         {"id": "NEG-BLOCKED-USER-001", "description": "Utilisateur suspendu tente une recherche", "user": _uid("AGENT", 3)},
@@ -200,9 +254,9 @@ def build():
     ]
 
     return {
-        "dataset": {"id": "LAWIM_DEMO_WORLD_V1", "version": "1.0.0", "status": "IN_PROGRESS", "description": "Univers de démonstration complet LAWIM — 25 users, 16 pros, 12 orgs, 117 biens, 18 services, 12 scénarios, 8 cas négatifs.", "created_at": "2026-07-23", "updated_at": "2026-07-23"},
+        "dataset": {"id": "LAWIM_DEMO_WORLD_V1", "version": "1.0.0", "status": "IN_PROGRESS", "description": "Univers de démonstration complet LAWIM — auth/noauth pairs, 14 professions, team members.", "created_at": "2026-07-23", "updated_at": "2026-07-23"},
         "coverage": {
-            "roles": ["client", "owner", "agent", "service_provider", "commercial", "admin"],
+            "roles": ["client", "owner", "agent", "service_provider", "commercial", "admin", "super_admin", "moderator", "auditor", "finance_manager", "doc_manager", "property_manager", "visit_manager"],
             "professions": ["architect", "notary", "surveyor", "lawyer", "builder", "electrician", "plumber", "real_estate_agent", "mover", "financial_advisor", "insurance_agent", "maintenance_tech", "cleaner", "photographer"],
             "property_types": ["APARTMENT", "HOUSE", "STUDIO", "LAND"],
             "cities": ["Yaoundé", "Douala", "Bafoussam", "Kribi", "Limbé"],
@@ -215,6 +269,8 @@ def build():
             {"id": "CITY-LIM-001", "name": "Limbé", "districts": _NEIGHBORHOODS_LIM},
         ],
         "users": users,
+        "auth_credentials_metadata": auth_users,
+        "team_members": team_members,
         "professional_profiles": profs,
         "organizations": orgs,
         "services": services,
@@ -264,7 +320,7 @@ def _build_documents():
         ("Mandat de gestion", "mandat_gestion", "valid", "DEMO-ORG-PROPERTYMGMT-001"),
         ("Mandat de vente", "mandat_vente", "pending", "DEMO-PROPERTY-YDE-004"),
         ("Bail location", "bail", "valid", "DEMO-PROPERTY-YDE-005"),
-        ("Pièce d'identité (Jean Dupont)", "id_card", "valid", "DEMO-USER-CLIENT-001"),
+        ("Pièce d'identité (Jean Dupont)", "id_card", "valid", "DEMO-USER-CLIENT-AUTH-001"),
         ("Plan architectural", "plan", "valid", "DEMO-PRO-ARCH-001"),
         ("Devis construction", "devis", "pending", "DEMO-PRO-BUILDER-001"),
         ("Facture honoraires notaire", "facture", "valid", "DEMO-PRO-NOTARY-001"),
@@ -293,18 +349,18 @@ def _build_appointments():
     for i in range(12):
         statuses = ["confirmed","pending","cancelled","confirmed","confirmed","pending","rescheduled","confirmed","confirmed","confirmed","confirmed","no_show"]
         participants = [
-            ("DEMO-USER-CLIENT-001","DEMO-PRO-ARCH-001","DEMO-SERVICE-001"),
-            ("DEMO-USER-CLIENT-002","DEMO-PRO-NOTARY-001","DEMO-SERVICE-005"),
-            ("DEMO-USER-CLIENT-003","DEMO-PRO-ARCH-001",None),
-            ("DEMO-USER-CLIENT-004","DEMO-PRO-BUILDER-001","DEMO-SERVICE-009"),
-            ("DEMO-USER-CLIENT-001","DEMO-PRO-SURVEYOR-001","DEMO-SERVICE-006"),
-            ("DEMO-USER-CLIENT-005","DEMO-PRO-NOTARY-001","DEMO-SERVICE-004"),
-            ("DEMO-USER-CLIENT-006","DEMO-PRO-PLUMBER-001","DEMO-SERVICE-011"),
-            ("DEMO-USER-CLIENT-001","DEMO-PRO-ELECTRICIAN-001","DEMO-SERVICE-010"),
-            ("DEMO-USER-CLIENT-002","DEMO-PRO-MOVER-001","DEMO-SERVICE-012"),
-            ("DEMO-USER-CLIENT-003","DEMO-PRO-FINANCE-001","DEMO-SERVICE-013"),
-            ("DEMO-USER-CLIENT-004","DEMO-PRO-INSURANCE-001","DEMO-SERVICE-014"),
-            ("DEMO-USER-CLIENT-001","DEMO-PRO-NOTARY-001","DEMO-SERVICE-004"),
+            ("DEMO-USER-CLIENT-AUTH-001","DEMO-PRO-ARCH-001","DEMO-SERVICE-001"),
+            ("DEMO-USER-CLIENT-AUTH-002","DEMO-PRO-NOTARY-001","DEMO-SERVICE-005"),
+            ("DEMO-USER-CLIENT-AUTH-003","DEMO-PRO-ARCH-001",None),
+            ("DEMO-USER-CLIENT-AUTH-004","DEMO-PRO-BUILDER-001","DEMO-SERVICE-009"),
+            ("DEMO-USER-CLIENT-AUTH-001","DEMO-PRO-SURVEYOR-001","DEMO-SERVICE-006"),
+            ("DEMO-USER-CLIENT-AUTH-005","DEMO-PRO-NOTARY-001","DEMO-SERVICE-004"),
+            ("DEMO-USER-CLIENT-AUTH-006","DEMO-PRO-PLUMBER-001","DEMO-SERVICE-011"),
+            ("DEMO-USER-CLIENT-AUTH-001","DEMO-PRO-ELECTRICIAN-001","DEMO-SERVICE-010"),
+            ("DEMO-USER-CLIENT-AUTH-002","DEMO-PRO-MOVER-001","DEMO-SERVICE-012"),
+            ("DEMO-USER-CLIENT-AUTH-003","DEMO-PRO-FINANCE-001","DEMO-SERVICE-013"),
+            ("DEMO-USER-CLIENT-AUTH-004","DEMO-PRO-INSURANCE-001","DEMO-SERVICE-014"),
+            ("DEMO-USER-CLIENT-AUTH-001","DEMO-PRO-NOTARY-001","DEMO-SERVICE-004"),
         ]
         p = participants[i]
         appts.append({
