@@ -3,7 +3,10 @@ from __future__ import annotations
 import copy
 import json
 import logging
+import os
+import sqlite3
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 _log = logging.getLogger("lawim_v2.conversation.program_f_adapter")
@@ -21,32 +24,67 @@ except ImportError:
     _log.warning("lawim_runtime not available — Program F engine disabled")
 
 
-class _MemoryJourneyRepository:
-    _shared: dict[str, dict[str, Any]] = {}
+class _SQLiteJourneyRepository:
+    def __init__(self, db_path: str = "") -> None:
+        if not db_path:
+            _data_dir = Path(os.getenv("LAWIM_DB_PATH", "data/runtime/lawim.sqlite3")).expanduser().parent
+            _conv_dir = _data_dir / "conversation"
+            _conv_dir.mkdir(parents=True, exist_ok=True)
+            db_path = str(_conv_dir / "program_f_state.sqlite3")
+        self._conn = sqlite3.connect(db_path, check_same_thread=False)
+        self._conn.row_factory = sqlite3.Row
+        self._init_db()
 
-    def __init__(self) -> None:
-        self._states = self._shared
+    def _init_db(self) -> None:
+        self._conn.execute("""
+            CREATE TABLE IF NOT EXISTS program_f_state (
+                conversation_id TEXT PRIMARY KEY,
+                state_json TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            )
+        """)
+        self._conn.commit()
 
     def load(self, conversation_id: str) -> dict[str, Any] | None:
-        return self._states.get(conversation_id)
+        cur = self._conn.execute(
+            "SELECT state_json FROM program_f_state WHERE conversation_id = ?",
+            (conversation_id,),
+        )
+        row = cur.fetchone()
+        if row is None:
+            return None
+        try:
+            return json.loads(row["state_json"])
+        except (json.JSONDecodeError, KeyError):
+            _log.warning("corrupt state for conversation %s", conversation_id)
+            return None
 
     def save(self, conversation_id: str, data: dict[str, Any]) -> None:
-        self._states[conversation_id] = data
+        self._conn.execute(
+            "INSERT OR REPLACE INTO program_f_state (conversation_id, state_json, updated_at) VALUES (?, ?, ?)",
+            (conversation_id, json.dumps(data, default=str), datetime.now(timezone.utc).isoformat()),
+        )
+        self._conn.commit()
 
     def delete(self, conversation_id: str) -> None:
-        self._states.pop(conversation_id, None)
+        self._conn.execute("DELETE FROM program_f_state WHERE conversation_id = ?", (conversation_id,))
+        self._conn.commit()
+
+    def close(self) -> None:
+        self._conn.close()
 
 
 class ProgramFEngineAdapter:
     def __init__(
         self,
-        repository: _MemoryJourneyRepository | None = None,
+        repository: _SQLiteJourneyRepository | None = None,
+        db_path: str = "",
     ) -> None:
         if not HAS_PROGRAM_F:
             _log.error("Program F engine not available — install lawim_runtime")
             raise ImportError("lawim_runtime package required for ProgramFEngineAdapter")
         self._orchestrator = ConversationJourneyOrchestrator()
-        self._repository = repository or _MemoryJourneyRepository()
+        self._repository = repository or _SQLiteJourneyRepository(db_path=db_path)
 
     def process_turn(
         self,

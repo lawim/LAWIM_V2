@@ -222,9 +222,10 @@ class LawimServices:
         _conv_engine_v2 = ConversationStateEngine(_conv_repo, _conv_resolver)
 
         # Program F engine (primary)
+        _conv_pf_db_path = str(_conv_dir / "program_f_state.sqlite3")
         try:
-            _conv_engine_pf = ProgramFEngineAdapter()
-            _log.info("ProgramFEngineAdapter activated as primary engine")
+            _conv_engine_pf = ProgramFEngineAdapter(db_path=_conv_pf_db_path)
+            _log.info("ProgramFEngineAdapter activated as primary engine (db=%s)", _conv_pf_db_path)
         except ImportError:
             _conv_engine_pf = None
             _log.warning("Program F engine unavailable — falling back to V2")
