@@ -19,14 +19,30 @@ FRENCH_NUMBERS = {
 }
 
 PROPERTY_TYPES = {
-    "appartement": "apartment", "appart": "apartment", "studio": "studio",
-    "maison": "house", "villa": "villa", "terrain": "land", "bureau": "office",
+    "appartement": "apartment", "appart": "apartment",
+    "studio": "studio",
+    "maison": "house", "villa": "villa",
+    "terrain": "land", "bureau": "office",
     "local": "commercial", "entrep\u00f4t": "warehouse", "duplex": "duplex",
+    # English
+    "house": "house", "apartment": "apartment", "flat": "apartment",
+    "land": "land", "plot": "land", "office": "office",
+    "commercial": "commercial", "warehouse": "warehouse", "building": "building",
+    "shop": "commercial", "store": "commercial", "room": "room",
+    # Pidgin
+    "shop place": "commercial", "modern room": "room",
+    "self-contained": "studio",
 }
 
 TRANSACTION_TYPES = {
     "location": "rent", "louer": "rent", "achat": "buy", "acheter": "buy",
     "vente": "sell", "vendre": "sell", "investir": "invest",
+    # English
+    "rent": "rent", "buy": "buy", "sell": "sell", "purchase": "buy",
+    "lease": "rent", "for rent": "rent", "for sale": "sell", "for buy": "buy",
+    # Pidgin
+    "na rent": "rent", "na buy": "buy", "make i rent": "rent",
+    "wan rent": "rent", "wan buy": "buy",
 }
 
 CITIES = {"yaound\u00e9": "Yaounde", "yaounde": "Yaounde", "douala": "Douala", "bafoussam": "Bafoussam",
@@ -148,8 +164,8 @@ class EntityExtractionEngine:
             (r"(\d[\d\s]*)\s*(?:milliards?\s*(?:FCFA|fcfa|francs?)?)", 1_000_000_000),
             (r"(\d[\d\s]*)\s*(?:FCFA|fcfa|francs?|f\s*cfa|xaf|F)", 1),
             (r"(\d[\d\s]*)\s*(?:euros?|\u20ac|usd|\$)", 1),
-            (r"(\d[\d\s]*)\s*(?:k|mille)(?:\s*FCFA|\s*fcfa|\s*francs?)?", 1000),
-            (r"(?:budget|prix|jusqu['\u2019]?[a\u00e0]?|maximum|max|montant)\s*(?:de\s*)?(\d[\d\s]*)(?!\s*(?:ans|mois|jours?|heures?))", 1),
+            (r"(\d[\d\s]*)\s*(?:k|mille|thousand|thousands)(?:\s*FCFA|\s*francs?|\s*fcfa)?", 1000),
+            (r"(?:budget|prix|jusqu['\u2019]?[a\u00e0]?|maximum|max|montant|ma budget|ma budget na|ma money)\s*(?:de\s*)?(\d[\d\s]*)(?!\s*(?:ans|mois|jours?|heures?|years?|months?))", 1),
             (r"\b(\d{1,3}(?:\s\d{3})+)\b", 1),
         ]
         for pat, multiplier in patterns:
@@ -170,13 +186,19 @@ class EntityExtractionEngine:
         return None
 
     def _extract_bedrooms(self, text: str) -> int | None:
-        m = re.search(r"(\d+)\s*(?:chambres?|pi[e\u00e8]ces?)", text)
+        m = re.search(r"(\d+)\s*(?:chambres?|pi[e\u00e8]ces?|bedrooms?|rooms?)", text)
         if m:
             return int(m.group(1))
+        # English/Pidgin: "two bedroom", "three rooms"
         for word, num in FRENCH_NUMBERS.items():
-            pat = rf"{word}\s*(?:chambres?|pi[e\u00e8]ces?)"
+            pat = rf"{word}\s*(?:chambres?|pi[e\u00e8]ces?|bedrooms?|rooms?)"
             if re.search(pat, text, re.IGNORECASE):
                 return num
+        # "one bedroom", "two-bedroom"
+        for eng_word in [("one",1),("two",2),("three",3),("four",4),("five",5),("six",6)]:
+            pat = rf"{eng_word[0]}[\s-]?(?:bedroom|room)"
+            if re.search(pat, text, re.IGNORECASE):
+                return eng_word[1]
         return None
 
     FRENCH_MONTHS = r"(janvier|f\u00e9vrier|fevrier|mars|avril|mai|juin|juillet|ao\u00fbt|aout|septembre|octobre|novembre|d\u00e9cembre|decembre)"

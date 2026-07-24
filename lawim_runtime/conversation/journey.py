@@ -72,12 +72,57 @@ TRANSACTION_LABELS_FR: dict[str, str] = {
     "invest": "pour investir",
 }
 
+TRANSACTION_LABELS_EN: dict[str, str] = {
+    "rent": "for rent",
+    "buy": "to buy",
+    "sell": "for sale",
+    "invest": "to invest",
+}
+
+TRANSACTION_LABELS_PCM: dict[str, str] = {
+    "rent": "for rent",
+    "buy": "for buy",
+    "sell": "for sale",
+    "invest": "for invest",
+}
+
 PROPERTY_LABELS_FR: dict[str, str] = {
     "apartment": "un appartement",
     "house": "une maison",
     "studio": "un studio",
     "land": "un terrain",
     "commercial": "un local commercial",
+    "office": "un bureau",
+    "warehouse": "un entrepôt",
+    "building": "un immeuble",
+    "room": "une chambre",
+    "villa": "une villa",
+}
+
+PROPERTY_LABELS_EN: dict[str, str] = {
+    "apartment": "an apartment",
+    "house": "a house",
+    "studio": "a studio",
+    "land": "land",
+    "commercial": "a commercial space",
+    "office": "an office",
+    "warehouse": "a warehouse",
+    "building": "a building",
+    "room": "a room",
+    "villa": "a villa",
+}
+
+PROPERTY_LABELS_PCM: dict[str, str] = {
+    "apartment": "apartment",
+    "house": "house",
+    "studio": "studio",
+    "land": "land",
+    "commercial": "shop place",
+    "office": "office",
+    "warehouse": "warehouse",
+    "building": "building",
+    "room": "room",
+    "villa": "villa",
 }
 
 CITY_DISPLAY: dict[str, str] = {
@@ -91,6 +136,8 @@ CITY_DISPLAY: dict[str, str] = {
 CONFIRMATION_KEYWORDS = [
     "oui", "enregistre", "valide", "confirme", "vas-y", "vas y", "d'accord", "ok",
     "bien", "procède", "procédez", "je confirme", "je valide", "envoie",
+    "yes", "register", "confirm", "go ahead", "enregistrez", "save",
+    "make i go", "yes oh",
 ]
 
 
@@ -230,6 +277,38 @@ def _build_landmark_pattern() -> re.Pattern:
     return re.compile(raw, re.IGNORECASE | re.DOTALL)
 
 
+FR_KEYWORDS = {"bonjour","je","cherche","louer","acheter","appartement","maison","studio","terrain",
+    "budget","mois","chambre","ville","quartier","merci","veux","peux","dans","sur","avec","nous",
+    "votre","nos","mes","vos","ses","son","sa","leur","leurs","cet","cette","ces","mon","ton"}
+EN_KEYWORDS = {"hello","i","am","looking","for","rent","buy","house","apartment","budget","month",
+    "bedroom","city","thank","please","need","want","the","in","at","find","have","would","could",
+    "my","your","our","their","its","his","her","a","an","this","that","these","those","is","are"}
+PCM_KEYWORDS = {"i","di","dey","wan","find","for","na","ma","my","make","give","come","go",
+    "dem","them","dis","dat","abi","wey","sabi","pikin","chop","done","been","wuna","una","not"}
+
+
+def _detect_language(text: str) -> str:
+    words = set(text.lower().split())
+    fs = len(words & FR_KEYWORDS)
+    es = len(words & EN_KEYWORDS)
+    ps = len(words & PCM_KEYWORDS)
+    if ps > es and ps > fs: return "pcm"
+    if es > fs: return "en"
+    return "fr"
+
+
+_LANG_CACHE: dict[str, str] = {}
+def _response_lang(state: "JourneyState", text: str) -> str:
+    """Get the response language based on state and current message."""
+    explicit = getattr(state, "_lang", "")
+    if explicit:
+        return explicit
+    detected = _detect_language(text)
+    if detected != "fr":
+        setattr(state, "_lang", detected)
+    return detected
+
+
 _LANDMARK_PATTERN = _build_landmark_pattern()
 
 
@@ -282,6 +361,10 @@ class ConversationJourneyOrchestrator:
             if intent_result.intent == "greeting":
                 state.journey_status = JourneyStatus.QUALIFYING
                 setattr(state, "_channel", channel)
+                # Detect language from greeting
+                lang = _detect_language(text)
+                if lang != "fr":
+                    setattr(state, "_lang", lang)
                 result.response_plan = ResponsePlan(
                     response_type=ResponseType.GREETING,
                     message="\U0001f916 LAWIM AI\n\nBonjour et bienvenue sur LAWIM. Veuillez décrire votre projet immobilier du jour en quelques lignes : achat, vente, location, terrain, gestion ou autre besoin.",
@@ -302,6 +385,9 @@ class ConversationJourneyOrchestrator:
         # 2. Entity extraction (always runs)
         entity_result = self._entity.extract(text)
         result.entities = entity_result
+
+        # Detect language for response
+        current_lang = _response_lang(state, text)
 
         # 3. Fact fusion (always runs, regardless of journey status)
         corrections = self._fusion.detect_correction(state.confirmed_facts, entity_result.entities)
@@ -368,7 +454,7 @@ class ConversationJourneyOrchestrator:
                     state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
 
         # 10. Build response plan
-        response_plan = self._build_response_plan(state, qual_result, corrections, entity_result)
+        response_plan = self._build_response_plan(state, qual_result, corrections, entity_result, lang=current_lang)
         result.response_plan = response_plan
 
         if state.journey_status not in (JourneyStatus.ACTION_COMPLETED, JourneyStatus.ACTION_FAILED):
@@ -535,11 +621,12 @@ class ConversationJourneyOrchestrator:
                 return True
         return False
 
-    def _build_response_plan(self, state: JourneyState, qual: QualificationResult, corrections: list[dict[str, Any]], entity: EntityResult) -> ResponsePlan:
-        plan = ResponsePlan(language="fr")
+    def _build_response_plan(self, state: JourneyState, qual: QualificationResult, corrections: list[dict[str, Any]], entity: EntityResult, lang: str = "fr") -> ResponsePlan:
+        plan = ResponsePlan(language=lang)
+        tl = self._trans_label(lang)
 
         facts = state.confirmed_facts
-        original_recap = self._format_facts(facts)
+        original_recap = self._format_facts(facts, lang=lang)
         recap_text = ", ".join(original_recap) if original_recap else ""
         facts_changed = bool(corrections) or (state.last_facts_snapshot and facts != state.last_facts_snapshot)
         biz_completed = bool(state.business_object_ids)
@@ -604,28 +691,48 @@ class ConversationJourneyOrchestrator:
             plan.message = "Je prends note de vos informations. Continuez lorsque vous serez prets."
         return plan
 
-    def _format_facts(self, facts: dict[str, Any]) -> list[str]:
+    def _trans_label(self, lang: str) -> dict[str, str]:
+        if lang == "pcm": return TRANSACTION_LABELS_PCM
+        if lang == "en": return TRANSACTION_LABELS_EN
+        return TRANSACTION_LABELS_FR
+
+    def _prop_label(self, lang: str) -> dict[str, str]:
+        if lang == "pcm": return PROPERTY_LABELS_PCM
+        if lang == "en": return PROPERTY_LABELS_EN
+        return PROPERTY_LABELS_FR
+
+    def _format_facts(self, facts: dict[str, Any], lang: str = "fr") -> list[str]:
         parts = []
+        tl = self._trans_label(lang)
+        pl = self._prop_label(lang)
         if "property_type" in facts:
-            plabel = PROPERTY_LABELS_FR.get(facts["property_type"], facts["property_type"])
+            plabel = pl.get(facts["property_type"], facts["property_type"])
             parts.append(plabel)
         if "bedrooms" in facts:
-            parts.append(f"{facts['bedrooms']} chambres")
+            if lang == "fr":
+                parts.append(f"{facts['bedrooms']} chambres")
+            elif lang == "pcm":
+                parts.append(f"{facts['bedrooms']} room")
+            else:
+                parts.append(f"{facts['bedrooms']} bedrooms")
         if "transaction_type" in facts:
-            tlabel = TRANSACTION_LABELS_FR.get(facts["transaction_type"], facts["transaction_type"])
+            tlabel = tl.get(facts["transaction_type"], facts["transaction_type"])
             parts.append(tlabel)
         if "city" in facts:
             cdisplay = CITY_DISPLAY.get(facts["city"], facts["city"])
-            parts.append(f"à {cdisplay}")
+            parts.append(f"à {cdisplay}" if lang == "fr" else f"in {cdisplay}")
         if "preferred_areas" in facts and isinstance(facts["preferred_areas"], list) and facts["preferred_areas"]:
             areas = ", ".join(facts["preferred_areas"])
-            parts.append(f"dans le secteur {areas}")
+            parts.append(f"dans le secteur {areas}" if lang == "fr" else f"in {areas}")
         elif "district" in facts:
-            parts.append(f"dans le quartier {facts['district']}")
+            parts.append(f"dans le quartier {facts['district']}" if lang == "fr" else f"in {facts['district']}")
         if "budget_max" in facts:
-            parts.append(f"avec un budget de {facts['budget_max']} FCFA")
+            if lang == "fr":
+                parts.append(f"avec un budget de {facts['budget_max']} FCFA")
+            else:
+                parts.append(f"budget {facts['budget_max']} FCFA")
         if "move_in_date" in facts:
-            parts.append(f"emménagement {facts['move_in_date']}")
+            parts.append(f"emménagement {facts['move_in_date']}" if lang == "fr" else f"move-in {facts['move_in_date']}")
         return parts
 
     def _next_question_message(self, state: JourneyState) -> str:
@@ -648,18 +755,24 @@ class ConversationJourneyOrchestrator:
                 return field
         return qual.missing_fields[0] if qual.missing_fields else ""
 
-    def _build_acknowledgement(self, state: JourneyState) -> str:
+    def _build_acknowledgement(self, state: JourneyState, lang: str = "fr") -> str:
         facts = state.confirmed_facts
         parts = []
         if "city" in facts:
+            tl = self._trans_label(lang)
+            pl = self._prop_label(lang)
             ttype = facts.get("transaction_type", "")
-            tlabel = TRANSACTION_LABELS_FR.get(ttype, ttype) if ttype else "louer"
-            parts.append(f"J'ai noté que vous cherchez {tlabel}")
+            tlabel = tl.get(ttype, ttype) if ttype else ("pour " + ("louer" if lang == "fr" else "rent"))
+            if lang == "fr":
+                parts.append(f"J'ai noté que vous cherchez {tlabel}")
+            elif lang == "pcm":
+                parts.append(f"I don see say you want {tlabel}")
+            else:
+                parts.append(f"I noted you are looking {tlabel}")
             if "property_type" in facts:
-                plabel = PROPERTY_LABELS_FR.get(facts["property_type"], facts["property_type"])
-                parts.append(plabel)
+                parts.append(pl.get(facts["property_type"], facts["property_type"]))
             cdisplay = CITY_DISPLAY.get(facts.get("city", ""), facts.get("city", ""))
-            parts.append(f"à {cdisplay}")
+            parts.append(f"à {cdisplay}" if lang == "fr" else f"for {cdisplay}")
             return " ".join(parts) + "."
         return ""
 
