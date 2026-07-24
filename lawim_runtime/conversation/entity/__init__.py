@@ -37,6 +37,7 @@ DISTRICTS = {"mvan": "Mvan", "bastos": "Bastos", "odza": "Odza", "nlongkak": "Nl
              "mendong": "Mendong", "biyem-assi": "Biyem-Assi", "biyem assi": "Biyem-Assi",
              "makepe": "Makepe", "bonanjo": "Bonanjo", "bonamoussadi": "Bonamoussadi",
              "akwa": "Akwa", "melen": "Melen", "ngoa": "Ngoa",
+             "ngoa-ekellé": "Ngoa-Ekellé", "ngoa-ekelle": "Ngoa-Ekellé",
              "ekoumdoum": "Ekoumdoum", "mokolo": "Mokolo", "mimboman": "Mimboman",
              "nyalla": "Nyalla", "carrière": "Carrière", "carriere": "Carrière"}
 
@@ -72,6 +73,11 @@ class EntityExtractionEngine:
             if fr_key in lower:
                 result.entities["district"] = en_val
                 break
+
+        # Preferred areas (multiple)
+        preferred = self._extract_preferred_areas(text)
+        if preferred:
+            result.entities["preferred_areas"] = preferred
 
         # Budget
         budget = self._extract_budget(text)
@@ -140,4 +146,23 @@ class EntityExtractionEngine:
             m = pat.search(text)
             if m:
                 return m.group(0).strip()
+        return None
+
+    def _extract_preferred_areas(self, text: str) -> list[str] | None:
+        lower = text.lower()
+        known = sorted(
+            [(k.lower(), v) for k, v in DISTRICTS.items()],
+            key=lambda x: -len(x[0])
+        )
+        found: list[str] = []
+        matched_regions: list[str] = []
+        for raw_key, display_name in known:
+            if raw_key in lower:
+                # Avoid matching substrings already covered by longer matches
+                already_covered = any(raw_key in mr for mr in matched_regions)
+                if not already_covered:
+                    found.append(display_name)
+                    matched_regions.append(raw_key)
+        if len(found) >= 2:
+            return found
         return None

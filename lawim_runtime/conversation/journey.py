@@ -60,6 +60,29 @@ QUESTION_TEMPLATES_FR: dict[str, str] = {
     "preferred_date": "Quelle date préférez-vous pour la visite ?",
 }
 
+TRANSACTION_LABELS_FR: dict[str, str] = {
+    "rent": "à louer",
+    "buy": "à acheter",
+    "sell": "à vendre",
+    "invest": "pour investir",
+}
+
+PROPERTY_LABELS_FR: dict[str, str] = {
+    "apartment": "un appartement",
+    "house": "une maison",
+    "studio": "un studio",
+    "land": "un terrain",
+    "commercial": "un local commercial",
+}
+
+CITY_DISPLAY: dict[str, str] = {
+    "Yaounde": "Yaoundé",
+    "Douala": "Douala",
+    "Bafoussam": "Bafoussam",
+    "Kribi": "Kribi",
+    "Limbe": "Limbe",
+}
+
 CONFIRMATION_KEYWORDS = [
     "oui", "enregistre", "valide", "confirme", "vas-y", "vas y", "d'accord", "ok",
     "bien", "procède", "procédez", "je confirme", "je valide", "envoie",
@@ -135,6 +158,7 @@ CLARIFICATION_DISTRICTS: dict[str, str] = {
     "biyem assi": "Biyem-Assi", "makepe": "Makepe",
     "bonanjo": "Bonanjo", "bonamoussadi": "Bonamoussadi",
     "akwa": "Akwa", "melen": "Melen", "ngoa": "Ngoa",
+    "ngoa-ekellé": "Ngoa-Ekellé", "ngoa-ekelle": "Ngoa-Ekellé",
     "ekoumdoum": "Ekoumdoum", "tam-tam": "Tam-Tam",
     "mokolo": "Mokolo", "mimboman": "Mimboman",
     "nyalla": "Nyalla", "carrière": "Carrière",
@@ -327,11 +351,24 @@ class ConversationJourneyOrchestrator:
                     break
 
         if not clarification_field:
-            # Try landmarks
+            # Try landmarks — capture the full landmark name from text
             for fr_key, en_val in CLARIFICATION_LANDMARKS.items():
                 if fr_key in lower:
-                    clarification_field = "proximity_reference"
-                    clarification_value = f"près de {en_val}"
+                    # Extract a meaningful phrase: look for patterns like
+                    # "près de l'Hôpital central", "vers le Marché central"
+                    # after the trigger word "près de", "vers", "à côté de", "proche du"
+                    import re as _re
+                    landmark_match = _re.search(
+                        rf"(?:près de (l['’])?|vers (le|la|l['’])?|à côté (du|de la|de l['’])?|proche (du|de la|de l['’])?|au (niveau du|niveau de la)?)\s*(.{{3,40}}?)$",
+                        text, _re.IGNORECASE
+                    )
+                    if landmark_match:
+                        raw = landmark_match.group(0).strip().rstrip(".,!?;")
+                        clarification_field = "proximity_reference"
+                        clarification_value = raw
+                    else:
+                        clarification_field = "proximity_reference"
+                        clarification_value = en_val
                     break
 
         if not clarification_field:
@@ -422,6 +459,8 @@ class ConversationJourneyOrchestrator:
         plan = ResponsePlan(language="fr")
 
         facts = state.confirmed_facts
+        original_recap = self._format_facts(facts)
+        recap_text = ", ".join(original_recap) if original_recap else ""
         facts_changed = bool(corrections) or (state.last_facts_snapshot and facts != state.last_facts_snapshot)
         biz_completed = bool(state.business_object_ids)
         biz_success = biz_completed and state.business_object_ids.get("success") == True
@@ -432,10 +471,9 @@ class ConversationJourneyOrchestrator:
                 plan.response_type = ResponseType.CONFIRM_BUSINESS_ACTION
                 plan.message = "Votre demande a bien été enregistrée. Puis-je vous aider avec autre chose ?"
                 return plan
-            if facts_changed:
-                parts = self._format_facts(facts)
+            if facts_changed and recap_text:
                 plan.response_type = ResponseType.CONFIRM_BUSINESS_ACTION
-                plan.message = "Je mets à jour votre demande : " + ", ".join(parts) + "."
+                plan.message = "Je mets à jour votre demande : " + recap_text + "."
                 return plan
 
         # Level 2 — business action failed
@@ -446,15 +484,14 @@ class ConversationJourneyOrchestrator:
 
         if qual.level == QualificationLevel.READY_FOR_DECISION:
             plan.response_type = ResponseType.CONFIRM_QUALIFICATION
-            if not facts_changed:
-                # Level 1 — conversational state only, no business action claimed
+            if not facts_changed and state.last_facts_snapshot:
                 if state.missing_fields:
                     plan.message = "J'ai déjà pris en compte ces informations. " + self._next_question_message(state)
                 else:
                     plan.message = "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?"
                 return plan
-            parts = self._format_facts(facts)
-            plan.message = "Je récapitule votre recherche : " + ", ".join(parts) + ". Je procède à la recherche des biens correspondants."
+            if recap_text:
+                plan.message = "Je récapitule votre recherche : " + recap_text + ". Je procède à la recherche des biens correspondants."
             return plan
 
         if corrections:
@@ -486,16 +523,20 @@ class ConversationJourneyOrchestrator:
     def _format_facts(self, facts: dict[str, Any]) -> list[str]:
         parts = []
         if "property_type" in facts:
-            labels = {"apartment": "appartement", "house": "maison", "studio": "studio", "land": "terrain"}
-            parts.append(f"un {labels.get(facts['property_type'], facts['property_type'])}")
+            plabel = PROPERTY_LABELS_FR.get(facts["property_type"], facts["property_type"])
+            parts.append(plabel)
         if "bedrooms" in facts:
             parts.append(f"{facts['bedrooms']} chambres")
         if "transaction_type" in facts:
-            t = {"rent": "louer", "buy": "acheter", "sell": "vendre"}
-            parts.append(f"à {t.get(facts['transaction_type'], facts['transaction_type'])}")
+            tlabel = TRANSACTION_LABELS_FR.get(facts["transaction_type"], facts["transaction_type"])
+            parts.append(tlabel)
         if "city" in facts:
-            parts.append(f"à {facts['city']}")
-        if "district" in facts:
+            cdisplay = CITY_DISPLAY.get(facts["city"], facts["city"])
+            parts.append(f"à {cdisplay}")
+        if "preferred_areas" in facts and isinstance(facts["preferred_areas"], list) and facts["preferred_areas"]:
+            areas = ", ".join(facts["preferred_areas"])
+            parts.append(f"dans le secteur {areas}")
+        elif "district" in facts:
             parts.append(f"dans le quartier {facts['district']}")
         if "budget_max" in facts:
             parts.append(f"avec un budget de {facts['budget_max']} FCFA")
@@ -527,11 +568,14 @@ class ConversationJourneyOrchestrator:
         facts = state.confirmed_facts
         parts = []
         if "city" in facts:
-            parts.append(f"J'ai noté que vous cherchez à {facts.get('transaction_type', 'louer')}")
+            ttype = facts.get("transaction_type", "")
+            tlabel = TRANSACTION_LABELS_FR.get(ttype, ttype) if ttype else "louer"
+            parts.append(f"J'ai noté que vous cherchez {tlabel}")
             if "property_type" in facts:
-                labels = {"apartment": "un appartement", "house": "une maison", "studio": "un studio", "land": "un terrain"}
-                parts.append(labels.get(facts["property_type"], facts["property_type"]))
-            parts.append(f"à {facts['city']}")
+                plabel = PROPERTY_LABELS_FR.get(facts["property_type"], facts["property_type"])
+                parts.append(plabel)
+            cdisplay = CITY_DISPLAY.get(facts.get("city", ""), facts.get("city", ""))
+            parts.append(f"à {cdisplay}")
             return " ".join(parts) + "."
         return ""
 
