@@ -193,6 +193,7 @@ class LawimServices:
         from .conversation.state.engine import ConversationStateEngine
         from .conversation.state.repository import ConversationStateRepository
         from .conversation.state.resolver import ConversationResolver
+        from .conversation.program_f_adapter import ProgramFEngineAdapter
 
         import sqlite3, os
 
@@ -218,7 +219,15 @@ class LawimServices:
         _conv_db = _ConvDB(_conv_conn)
         _conv_repo = ConversationStateRepository(_conv_db)
         _conv_resolver = ConversationResolver()
-        _conv_engine = ConversationStateEngine(_conv_repo, _conv_resolver)
+        _conv_engine_v2 = ConversationStateEngine(_conv_repo, _conv_resolver)
+
+        # Program F engine (primary)
+        try:
+            _conv_engine_pf = ProgramFEngineAdapter()
+            _log.info("ProgramFEngineAdapter activated as primary engine")
+        except ImportError:
+            _conv_engine_pf = None
+            _log.warning("Program F engine unavailable — falling back to V2")
 
         self.communication = CommunicationService(
             repository,
@@ -228,7 +237,8 @@ class LawimServices:
             maintenance=self.maintenance,
             ai_orchestrator=self.ai,
             disclaimer_manager=disclaimer,
-            conversation_state_engine=_conv_engine,
+            conversation_state_engine=_conv_engine_v2,
+            program_f_engine=_conv_engine_pf,
         )
         from .analytics.service import AnalyticsService
 

@@ -11,6 +11,7 @@ COPY requirements.txt requirements-postgresql.txt ./
 RUN pip install --no-cache-dir -r requirements.txt -r requirements-postgresql.txt
 
 COPY code/lawim_v2 ./lawim_v2
+COPY lawim_runtime ./lawim_runtime
 COPY pyproject.toml ./
 
 ENV PYTHONUNBUFFERED=1

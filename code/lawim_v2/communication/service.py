@@ -252,6 +252,7 @@ class CommunicationService:
         ai_orchestrator=None,
         disclaimer_manager=None,
         conversation_state_engine: ConversationStateEngine | None = None,
+        program_f_engine=None,
     ) -> None:
         self.repository = repository
         self.projects = project_service
@@ -261,6 +262,7 @@ class CommunicationService:
         self.ai = ai_orchestrator
         self.disclaimer = disclaimer_manager
         self.conversation_state_engine = conversation_state_engine
+        self.program_f_engine = program_f_engine
         self.engine = CommunicationPlatformEngine()
         self.notifications = NotificationService(repository)
         self.email = EmailService(repository)
@@ -654,13 +656,24 @@ class CommunicationService:
         def _prepend_identity(text: str) -> str:
             return f"🤖 LAWIM AI\n\n{text}"
 
-        # --- Canonical state engine path — SINGLE mandatory pipeline ---
-        _engine_ok = self.conversation_state_engine is not None and isinstance(self.conversation_state_engine, ConversationStateEngine)
-        self._log_turn(correlation_id, channel, conversation_key, raw_text, "engine_check", engine_ok=_engine_ok)
+        # --- Canonical state engine path — Program F with V2 fallback ---
+        _pf_ok = self.program_f_engine is not None and hasattr(self.program_f_engine, "process_turn")
+        _v2_ok = self.conversation_state_engine is not None and isinstance(self.conversation_state_engine, ConversationStateEngine)
 
-        if _engine_ok:
+        _engine_source = None
+        if _pf_ok:
+            _engine_source = "program_f"
+            _engine = self.program_f_engine
+        elif _v2_ok:
+            _engine_source = "v2"
+            _engine = self.conversation_state_engine
+
+        self._log_turn(correlation_id, channel, conversation_key, raw_text, "engine_check",
+                       engine_source=_engine_source, pf_ok=_pf_ok, v2_ok=_v2_ok)
+
+        if _engine_source:
             try:
-                result = self.conversation_state_engine.process_turn(
+                result = _engine.process_turn(
                     actor_id=actor_id,
                     channel=channel,
                     external_conversation_id=conversation_key,
