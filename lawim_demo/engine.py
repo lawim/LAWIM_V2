@@ -10,6 +10,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from .ports import DemoUserPort, DemoAuthPort, DemoPropertyPort
+from .adapters import V2UserAdapter, V2AuthAdapter, V2PropertyAdapter
+
 REQUIRED_SECTIONS = ["users", "professional_profiles", "organizations", "properties", "services", "scenarios", "negative_cases"]
 OPTIONAL_SECTIONS = ["property_media", "documents", "appointments", "visits", "search_profiles", "matches", "connections", "conversations", "messages", "consents", "notifications"]
 REFERENCE_ONLY_SECTIONS = ["scenarios", "negative_cases", "auth_credentials_metadata", "team_members"]
@@ -45,40 +48,6 @@ def _get_conn(db_path: str | None = None):
             UNIQUE(demo_dataset_id, demo_section, demo_reference_id)
         )
     """)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS demo_properties (
-            reference_id TEXT PRIMARY KEY,
-            dataset_id TEXT NOT NULL,
-            property_id TEXT NOT NULL,
-            title TEXT,
-            city TEXT,
-            district TEXT,
-            price REAL,
-            property_type TEXT,
-            status TEXT,
-            owner_id TEXT,
-            available INTEGER DEFAULT 1
-        )
-    """)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS demo_users (
-            reference_id TEXT PRIMARY KEY,
-            dataset_id TEXT NOT NULL,
-            full_name TEXT,
-            role TEXT,
-            city TEXT,
-            profile_status TEXT
-        )
-    """)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS demo_organizations (
-            reference_id TEXT PRIMARY KEY,
-            dataset_id TEXT NOT NULL,
-            name TEXT,
-            category TEXT,
-            city TEXT
-        )
-    """)
     return conn
 
 
@@ -105,29 +74,16 @@ class DemoWorldEngine:
         for sec in REQUIRED_SECTIONS:
             if sec not in self._data:
                 errors.append(f"Missing required section: {sec}")
-        ids: dict[str, set[str]] = {}
-        for sec in REQUIRED_SECTIONS + OPTIONAL_SECTIONS:
-            items = self._data.get(sec, [])
-            if not isinstance(items, list):
-                continue
-            for item in items:
-                rid = item.get("id") or item.get("reference_id") or item.get("property_id") or ""
-                if not rid:
-                    continue
-                ids.setdefault(sec, set()).add(rid)
-        # Verify references
         refs: dict[str, dict[str, Any]] = {}
         for sec in REQUIRED_SECTIONS + OPTIONAL_SECTIONS:
             for item in self._data.get(sec, []):
                 rid = item.get("id") or item.get("reference_id") or ""
                 if rid:
                     refs[rid] = item
-        # Check property owner references
         for p in self._data.get("properties", []):
             oid = p.get("owner_id", "")
             if oid and oid not in refs:
                 errors.append(f"Property {p.get('id')} references unknown owner: {oid}")
-        # Check professional org references
         for pp in self._data.get("professional_profiles", []):
             oid = pp.get("organization_id", "")
             if oid and oid not in refs:
@@ -139,48 +95,64 @@ class DemoWorldEngine:
         counts: dict[str, int] = {}
         dataset_id = self._dataset_id
         now = datetime.now(timezone.utc).isoformat()
+        db_path = self._db_path or _find_db()
+        ua = V2UserAdapter(db_path)
+        pa = V2PropertyAdapter(db_path)
 
         sections_order = [
-            ("cities", "cities"),
-            ("users", "demo_users"),
-            ("organizations", "demo_organizations"),
-            ("professional_profiles", "demo_professionals"),
-            ("services", "demo_services"),
-            ("properties", "demo_properties"),
-            ("property_media", "demo_media"),
-            ("documents", "demo_documents"),
-            ("appointments", "demo_appointments"),
+            ("users",),
+            ("organizations",),
+            ("professional_profiles",),
+            ("services",),
+            ("properties",),
+            ("property_media",),
+            ("documents",),
+            ("appointments",),
         ]
 
         if dry_run:
-            for sec_name, _ in sections_order:
+            for (sec_name,) in sections_order:
                 items = self._data.get(sec_name, [])
                 counts[sec_name] = len(items) if isinstance(items, list) else 0
             return counts
 
-        for sec_name, table_name in sections_order:
-            if sec_name in REFERENCE_ONLY_SECTIONS:
+        # Seed users into real V2 users table
+        for u in self._data.get("users", []):
+            ref_id = u.get("id", "")
+            if not ref_id:
+                continue
+            existing = conn.execute("SELECT 1 FROM demo_registry WHERE demo_reference_id=? AND demo_dataset_id=?", (ref_id, dataset_id)).fetchone()
+            if existing:
+                continue
+            email = f"{ref_id.lower()}@demo.lawim.local"
+            password = "Demo@2026!" if u.get("can_login") else None
+            uid = ua.create_or_update(
+                ref_id=ref_id, email=email, full_name=u.get("full_name", ""),
+                role=u.get("role", "user"), password=password,
+                can_login=bool(u.get("can_login", False)),
+                account_status=u.get("profile_status", "active"),
+            )
+            conn.execute("INSERT OR IGNORE INTO demo_registry (demo_reference_id, demo_dataset_id, demo_section, object_type, object_id, created_at) VALUES (?,?,?,?,?,?)",
+                         (ref_id, dataset_id, "users", "user", uid, now))
+            counts["users"] = counts.get("users", 0) + 1
+
+        # Seed other sections into demo_registry
+        for (sec_name,) in sections_order:
+            if sec_name in REFERENCE_ONLY_SECTIONS or sec_name == "users":
                 continue
             items = self._data.get(sec_name, [])
             if not isinstance(items, list):
                 continue
-            created = 0
             for item in items:
                 ref_id = item.get("id") or item.get("reference_id") or ""
                 if not ref_id:
                     continue
-                existing = conn.execute(
-                    "SELECT 1 FROM demo_registry WHERE demo_reference_id=? AND demo_dataset_id=?",
-                    (ref_id, dataset_id),
-                ).fetchone()
+                existing = conn.execute("SELECT 1 FROM demo_registry WHERE demo_reference_id=? AND demo_dataset_id=?", (ref_id, dataset_id)).fetchone()
                 if existing:
                     continue
-                conn.execute(
-                    "INSERT OR IGNORE INTO demo_registry (demo_reference_id, demo_dataset_id, demo_section, object_type, object_id, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-                    (ref_id, dataset_id, sec_name, sec_name, ref_id, now),
-                )
-                created += 1
-            counts[sec_name] = created
+                conn.execute("INSERT OR IGNORE INTO demo_registry (demo_reference_id, demo_dataset_id, demo_section, object_type, object_id, created_at) VALUES (?,?,?,?,?,?)",
+                             (ref_id, dataset_id, sec_name, sec_name, ref_id, now))
+                counts[sec_name] = counts.get(sec_name, 0) + 1
 
         conn.commit()
         conn.close()
@@ -198,10 +170,7 @@ class DemoWorldEngine:
             if isinstance(yaml_items, list):
                 yaml_counts[sec] = len(yaml_items)
 
-        rows = conn.execute(
-            "SELECT demo_section, COUNT(*) as cnt FROM demo_registry WHERE demo_dataset_id=? GROUP BY demo_section",
-            (dataset_id,),
-        ).fetchall()
+        rows = conn.execute("SELECT demo_section, COUNT(*) as cnt FROM demo_registry WHERE demo_dataset_id=? GROUP BY demo_section", (dataset_id,)).fetchall()
         for r in rows:
             db_counts[r["demo_section"]] = r["cnt"]
 
@@ -214,28 +183,21 @@ class DemoWorldEngine:
                 errors.append(f"Section {sec}: YAML has {yc}, DB has {dc}")
 
         conn.close()
-        return {
-            "dataset_id": dataset_id,
-            "yaml_counts": yaml_counts,
-            "db_counts": db_counts,
-            "errors": errors,
-            "valid": len(errors) == 0,
-        }
+        return {"dataset_id": dataset_id, "yaml_counts": yaml_counts, "db_counts": db_counts, "errors": errors, "valid": len(errors) == 0}
 
     def reset(self, dry_run: bool = False) -> dict[str, int]:
         conn = _get_conn(self._db_path)
         dataset_id = self._dataset_id
         if dry_run:
-            counts = conn.execute(
-                "SELECT demo_section, COUNT(*) as cnt FROM demo_registry WHERE demo_dataset_id=? GROUP BY demo_section",
-                (dataset_id,),
-            ).fetchall()
+            counts = conn.execute("SELECT demo_section, COUNT(*) as cnt FROM demo_registry WHERE demo_dataset_id=? GROUP BY demo_section", (dataset_id,)).fetchall()
             conn.close()
             return {r["demo_section"]: r["cnt"] for r in counts}
-
-        deleted = conn.execute(
-            "DELETE FROM demo_registry WHERE demo_dataset_id=?", (dataset_id,)
-        ).rowcount
+        # Delete from real V2 tables
+        rows = conn.execute("SELECT object_type, object_id FROM demo_registry WHERE demo_dataset_id=?", (dataset_id,)).fetchall()
+        for r in rows:
+            if r["object_type"] == "user":
+                conn.execute("DELETE FROM users WHERE id=? AND is_demo_data=1", (r["object_id"],))
+        deleted = conn.execute("DELETE FROM demo_registry WHERE demo_dataset_id=?", (dataset_id,)).rowcount
         conn.commit()
         conn.close()
         return {"deleted_total": deleted}
@@ -248,7 +210,6 @@ class DemoWorldEngine:
         for p in props:
             cities[p.get("city", "?")] = cities.get(p.get("city", "?"), 0) + 1
             types[p.get("property_type", "?")] = types.get(p.get("property_type", "?"), 0) + 1
-
         return {
             "dataset": data.get("dataset", {}),
             "counts": {k: len(v) for k, v in data.items() if isinstance(v, list)},
@@ -304,9 +265,11 @@ def main() -> None:
         sys.exit(0)
 
     elif args.command == "reset":
-        if not args.dry_run and input("Confirm reset of LAWIM_DEMO_WORLD_V1? (y/N): ").lower() != "y":
-            print("Reset cancelled.")
-            sys.exit(0)
+        if not args.dry_run:
+            confirm = input("Confirm reset of LAWIM_DEMO_WORLD_V1? (y/N): ").strip().lower()
+            if confirm != "y":
+                print("Reset cancelled.")
+                sys.exit(0)
         result = engine.reset(dry_run=args.dry_run)
         if args.dry_run:
             print(f"DRY RUN: would delete {sum(result.values())} objects")
@@ -347,30 +310,25 @@ def main() -> None:
         sys.exit(0)
 
     elif args.command == "credentials":
-        auth_users = engine._data.get("auth_credentials_metadata", [])
+        import hashlib, base64
+        password = "Demo@2026!"
         out_dir = ".demo"
         os.makedirs(out_dir, exist_ok=True)
         md_path = os.path.join(out_dir, "LAWIM-DEMO-CREDENTIALS.local.md")
         csv_path = os.path.join(out_dir, "LAWIM-DEMO-CREDENTIALS.local.csv")
-        password = "Demo@2026!"
+        auth_users = engine._data.get("auth_credentials_metadata", [])
         with open(md_path, "w") as f:
-            f.write("# LAWIM Demo Credentials (LOCAL ONLY — NEVER COMMIT)\n\n")
-            f.write("> DONNÉES DE DÉMONSTRATION UNIQUEMENT\n")
-            f.write("> NE PAS UTILISER EN PRODUCTION\n")
-            f.write("> NE PAS COMMITER\n")
-            f.write("> À SUPPRIMER APRÈS VALIDATION\n\n")
-            f.write("| Reference ID | Name | Role | Username | Email | Phone | Password |\n")
-            f.write("|---|---|---|---|---|---|---|\n")
+            f.write("# LAWIM Demo Credentials (LOCAL ONLY — NEVER COMMIT)\n\n> DONNÉES DE DÉMONSTRATION UNIQUEMENT\n\n")
+            f.write("| Reference | Name | Role | Login | Status |\n|---|---|---|---|---|\n")
             for u in auth_users:
                 if u.get("can_login"):
-                    f.write(f"| {u['demo_reference_id']} | {u.get('full_name','')} | {u.get('role','')} | {u.get('username','')} | {u.get('email','')} | {u.get('phone_alias','')} | {password} |\n")
+                    f.write(f"| {u['demo_reference_id']} | {u.get('full_name','')} | {u.get('role','')} | {u.get('username','')} | active |\n")
         with open(csv_path, "w") as f:
-            f.write("demo_reference_id,full_name,role,username,email,phone_alias,password\n")
+            f.write("reference,full_name,role,username,status\n")
             for u in auth_users:
                 if u.get("can_login"):
-                    f.write(f"{u['demo_reference_id']},{u.get('full_name','')},{u.get('role','')},{u.get('username','')},{u.get('email','')},{u.get('phone_alias','')},{password}\n")
+                    f.write(f"{u['demo_reference_id']},{u.get('full_name','')},{u.get('role','')},{u.get('username','')},active\n")
         print(f"Credentials generated: {md_path} ({sum(1 for u in auth_users if u.get('can_login'))} accounts)")
-        print(f"CSV: {csv_path}")
         sys.exit(0)
 
     elif args.command == "destroy":
@@ -382,16 +340,17 @@ def main() -> None:
                 sys.exit(1)
         conn = _get_conn(args.db)
         dry = " (dry-run)" if args.dry_run else ""
-        totals = {}
-        for sec in ["demo_registry"]:
-            cnt = conn.execute(f"SELECT COUNT(*) FROM {sec} WHERE demo_dataset_id=?", (dataset_id,)).fetchone()[0]
-            totals[sec] = cnt
-            if not args.dry_run:
-                conn.execute(f"DELETE FROM {sec} WHERE demo_dataset_id=?", (dataset_id,))
+        total = 0
         if not args.dry_run:
+            rows = conn.execute("SELECT object_type, object_id FROM demo_registry WHERE demo_dataset_id=?", (dataset_id,)).fetchall()
+            for r in rows:
+                if r["object_type"] == "user":
+                    conn.execute("DELETE FROM users WHERE id=? AND is_demo_data=1", (r["object_id"],))
+            total = conn.execute("DELETE FROM demo_registry WHERE demo_dataset_id=?", (dataset_id,)).rowcount
             conn.commit()
+        else:
+            total = conn.execute("SELECT COUNT(*) FROM demo_registry WHERE demo_dataset_id=?", (dataset_id,)).fetchone()[0]
         conn.close()
-        total = sum(totals.values())
         print(f"DESTROY{dry}: {total} objects removed for dataset {dataset_id}")
         sys.exit(0)
 
