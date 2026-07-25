@@ -172,7 +172,7 @@ QUESTION_TEMPLATES_PCM: dict[str, str] = {
 
 def _qt(state: "JourneyState", field: str) -> str:
     """Get question text in the conversation's language."""
-    lang = getattr(state, "_lang", "fr")
+    lang = getattr(state, "_conversation_lang", "fr")
     if lang == "pcm":
         return QUESTION_TEMPLATES_PCM.get(field, f"Abeg tell me {field} ?")
     elif lang == "en":
@@ -339,68 +339,90 @@ PCM_KEYWORDS = {"i","di","dey","wan","find","for","na","ma","my","make","give","
 
 
 def _detect_language(text: str) -> str:
+    """Detect language from text. Returns 'fr', 'en', 'pcm', or 'unknown'."""
     words = set(text.lower().split())
-    fs = len(words & FR_KEYWORDS)
-    es = len(words & EN_KEYWORDS)
-    ps = len(words & PCM_KEYWORDS)
-    if ps > es and ps > fs: return "pcm"
-    if es > fs: return "en"
-    return "fr"
-
+    text_lower = text.lower()
+    
+    # Explicit switch patterns
+    for p in ['please continue in english','speak english','use english','continue en anglais',
+              'switch to english','english please','talk for english','please communicate in english']:
+        if p in text_lower: return "en"
+    for p in ['continue en français','parle français','utilise le français','continue en francais']:
+        if p in text_lower: return "fr"
+    for p in ['abeg talk for pidgin','make we talk pidgin','speak pidgin','continue for pidgin']:
+        if p in text_lower: return "pcm"
+    
+    # PCM strong markers
+    pcm_kw = {"no be","abeg","wey dey","make i","i wan","i di","i dey","i don",
+              "wetin","na","dem","una","wuna","sabi","pikin","kom","dey","make i go"}
+    pcm_hits = sum(1 for m in pcm_kw if m in text_lower)
+    if pcm_hits >= 2: return "pcm"
+    
+    # Count keywords (excluding domain terms common to all languages)
+    domain = {"house","apartment","studio","villa","land","plot","office","commercial","room",
+              "shop","warehouse","building","rent","buy","sale","budget","bedroom","bedrooms",
+              "property","month","price","visit","yes","no","oui","non","flat"}
+    fr_kw = {"bonjour","je","cherche","louer","acheter","appartement","maison","studio","terrain",
+             "budget","mois","chambre","ville","quartier","merci","veux","peux","dans","sur","avec",
+             "nous","enregistrez","confirme","valide","envoie","bien","appart","pieces","location",
+             "achat","vendre","investir","visite","prix","recherche","tres","beaucoup","aussi","encore"}
+    en_kw = {"hello","i","am","looking","for","rent","buy","house","apartment","budget","month",
+             "bedroom","city","thank","please","need","want","the","in","at","find","have","would",
+             "could","my","your","our","their","its","his","her","not","will","shall","may","must",
+             "should","register","confirm","looking for","search","need","want to","would like"}
+    
+    fs = sum(1 for w in words if w in fr_kw)
+    es = sum(1 for w in words if w in en_kw)
+    ps = pcm_hits + sum(1 for w in words if w in pcm_kw)
+    
+    if fs >= 2 and fs > es and fs > ps: return "fr"
+    if es >= 2 and es > fs and es > ps: return "en"
+    if ps >= 1 and ps >= es and ps >= fs: return "pcm"
+    if fs >= 1 and es == 0 and ps == 0: return "fr"
+    if es >= 1 and fs == 0 and ps == 0: return "en"
+    return "unknown"
 
 _LANG_CACHE: dict[str, str] = {}
 def _response_lang(state: "JourneyState", text: str) -> str:
-    """Get the response language based on state and current message."""
-    explicit = getattr(state, "_lang", "")
-    if explicit:
-        return explicit
+    """Get the response language based on conversation history."""
+    if not hasattr(state, "_conversation_lang") or not state._conversation_lang:
+        state._conversation_lang = "fr"
+    
     detected = _detect_language(text)
-    if detected != "fr":
-        setattr(state, "_lang", detected)
-    return detected
+    conv_lang = state._conversation_lang
+    text_lower = text.lower()
+    
+    # Explicit switch
+    for p in ['please continue in english','speak english','use english','continue en anglais']:
+        if p in text_lower: state._conversation_lang = "en"; return "en"
+    for p in ['continue en français','parle français','utilise le français']:
+        if p in text_lower: state._conversation_lang = "fr"; return "fr"
+    for p in ['abeg talk for pidgin','make we talk pidgin','speak pidgin']:
+        if p in text_lower: state._conversation_lang = "pcm"; return "pcm"
+    
+    # Strong detected signal overrides
+    if detected != "unknown" and detected != conv_lang:
+        # First message: accept detected language immediately
+        is_first = not hasattr(state, "_lang_established")
+        if is_first:
+            setattr(state, "_lang_established", True)
+            state._conversation_lang = detected
+            return detected
+        # Subsequent messages: require non-domain evidence
+        words = set(text.lower().split())
+        domain = {"house","apartment","studio","villa","land","plot","office","room","shop",
+                  "rent","buy","sale","budget","bedroom","bedrooms","property","month","price"}
+        nondomain = words - domain
+        if len(nondomain) >= 2 and len(text.strip()) >= 10:
+            state._conversation_lang = detected
+            return detected
+    
+    # Short/mixed: keep conversation language
+    return conv_lang
 
-
-_LANG_MSGS: dict[str, dict[str, str]] = {
-    "fr": {
-        "registered": "Votre demande a bien été enregistrée. Puis-je vous aider avec autre chose ?",
-        "updating": "Je mets à jour votre demande",
-        "failed": "Je n'ai pas pu enregistrer votre demande pour le moment. Vous pouvez réessayer plus tard.",
-        "already_known": "J'ai déjà pris en compte ces informations.",
-        "complete_ask": "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
-        "recap": "Je récapitule votre recherche",
-        "proceeding": "Je procède à la recherche des biens correspondants.",
-        "correction": "Je prends note de votre correction",
-        "note": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
-        "empty_input": "Je n'ai pas compris votre message. Pouvez-vous reformuler ?",
-    },
-    "en": {
-        "registered": "Your request has been registered. Can I help you with anything else?",
-        "updating": "I am updating your request",
-        "failed": "I could not save your request at this time. Please try again later.",
-        "already_known": "I already have this information.",
-        "complete_ask": "Your search information is complete. Should I register it?",
-        "recap": "Here is your search summary",
-        "proceeding": "I will proceed with the search.",
-        "correction": "I note your correction",
-        "note": "I have noted your information. Continue when you are ready.",
-        "empty_input": "I did not understand your message. Could you rephrase?",
-    },
-    "pcm": {
-        "registered": "Your request don register. I fit help you with something?",
-        "updating": "I dey update your request",
-        "failed": "I no fit save your request now. Try again later.",
-        "already_known": "I don get this information before.",
-        "complete_ask": "Your search complete. I go register am?",
-        "recap": "Here na your search",
-        "proceeding": "I go look for property.",
-        "correction": "I don hear say you change",
-        "note": "I don note your information. Continue when you ready.",
-        "empty_input": "I no understand your message. Abeg explain again?",
-    },
-}
 
 def _msg(state: "JourneyState", key: str) -> str:
-    lang = getattr(state, "_lang", "fr") or "fr"
+    lang = getattr(state, "_conversation_lang", "fr") or "fr"
     return _LANG_MSGS.get(lang, _LANG_MSGS["fr"]).get(key, _LANG_MSGS["fr"][key])
 
 
@@ -459,7 +481,7 @@ class ConversationJourneyOrchestrator:
                 # Detect language from greeting
                 lang = _detect_language(text)
                 if lang != "fr":
-                    setattr(state, "_lang", lang)
+                    setattr(state, "_conversation_lang", lang)
                 result.response_plan = ResponsePlan(
                     response_type=ResponseType.GREETING,
                     message="\U0001f916 LAWIM AI\n\nBonjour et bienvenue sur LAWIM. Veuillez décrire votre projet immobilier du jour en quelques lignes : achat, vente, location, terrain, gestion ou autre besoin.",
@@ -814,7 +836,7 @@ class ConversationJourneyOrchestrator:
             plan.response_type = ResponseType.ASK_MISSING_INFORMATION
             plan.question_field = missing
             plan.question_text = _qt(state, missing)
-            ack = self._build_acknowledgement(state, lang=getattr(state, "_lang", "fr"))
+            ack = self._build_acknowledgement(state, lang=getattr(state, "_conversation_lang", "fr"))
             if ack:
                 plan.facts_to_acknowledge = state.confirmed_facts
                 plan.message = ack
@@ -874,7 +896,7 @@ class ConversationJourneyOrchestrator:
     def _next_question_message(self, state: JourneyState) -> str:
         if state.missing_fields:
             field = state.missing_fields[0]
-            lang = getattr(state, "_lang", "fr")
+            lang = getattr(state, "_conversation_lang", "fr")
             if lang == "pcm": templates = QUESTION_TEMPLATES_PCM
             elif lang == "en": templates = QUESTION_TEMPLATES_EN
             else: templates = QUESTION_TEMPLATES_FR
@@ -884,7 +906,7 @@ class ConversationJourneyOrchestrator:
     def _next_question(self, state: JourneyState, qual: QualificationResult) -> str:
         if not qual.missing_fields:
             return ""
-        lang = getattr(state, "_lang", "fr")
+        lang = getattr(state, "_conversation_lang", "fr")
         if lang == "pcm": priority = QUESTION_PRIORITY.get(state.current_intent, list(QUESTION_TEMPLATES_PCM.keys()))
         elif lang == "en": priority = QUESTION_PRIORITY.get(state.current_intent, list(QUESTION_TEMPLATES_EN.keys()))
         else: priority = QUESTION_PRIORITY.get(state.current_intent, list(QUESTION_TEMPLATES_FR.keys()))
@@ -956,3 +978,43 @@ class ConversationJourneyOrchestrator:
 
     def get_memory(self) -> ConversationMemory:
         return self._memory
+
+_LANG_MSGS: dict[str, dict[str, str]] = {
+    "fr": {
+        "registered": "Votre demande a bien été enregistrée. Puis-je vous aider avec autre chose ?",
+        "updating": "Je mets à jour votre demande",
+        "failed": "Je n'ai pas pu enregistrer votre demande pour le moment. Vous pouvez réessayer plus tard.",
+        "already_known": "J'ai déjà pris en compte ces informations.",
+        "complete_ask": "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+        "recap": "Je récapitule votre recherche",
+        "proceeding": "Je procède à la recherche des biens correspondants.",
+        "correction": "Je prends note de votre correction",
+        "note": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+        "empty_input": "Je n'ai pas compris votre message. Pouvez-vous reformuler ?",
+    },
+    "en": {
+        "registered": "Your request has been registered. Can I help you with anything else?",
+        "updating": "I am updating your request",
+        "failed": "I could not save your request at this time. Please try again later.",
+        "already_known": "I already have this information.",
+        "complete_ask": "Your search information is complete. Should I register it?",
+        "recap": "Here is your search summary",
+        "proceeding": "I will proceed with the search.",
+        "correction": "I note your correction",
+        "note": "I have noted your information. Continue when you are ready.",
+        "empty_input": "I did not understand your message. Could you rephrase?",
+    },
+    "pcm": {
+        "registered": "Your request don register. I fit help you with something?",
+        "updating": "I dey update your request",
+        "failed": "I no fit save your request now. Try again later.",
+        "already_known": "I don get this information before.",
+        "complete_ask": "Your search complete. I go register am?",
+        "recap": "Here na your search",
+        "proceeding": "I go look for property.",
+        "correction": "I don hear say you change",
+        "note": "I don note your information. Continue when you ready.",
+        "empty_input": "I no understand your message. Abeg explain again?",
+    },
+}
+

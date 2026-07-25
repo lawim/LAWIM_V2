@@ -37,7 +37,7 @@ add("FR_RENT_001","fr",["Bonjour, je cherche un appartement a louer a Yaounde.",
 
 add("FR_RENT_002","fr",["Je veux une maison a louer a Douala.","Budget 150 mille.",
     "Trois chambres a Bonamoussadi.","Oui."],
-    {"property_type":"house","transaction_type":"rent","city":"Douala","budget_max":150000,"bedrooms":3})
+    {"property_type":"house","transaction_type":"rent","city":"Douala","budget_max":150000,"bedrooms":3}, expected_biz=True)
 
 add("FR_RENT_003","fr",["Bonjour, studio a louer a Yaounde.","Budget 100 000.",
     "Oui je confirme."], {"property_type":"studio","transaction_type":"rent","city":"Yaounde","budget_max":100000}, expected_biz=True)
@@ -47,7 +47,7 @@ add("FR_BUY_001","fr",["Je cherche un terrain a vendre a Mbalmayo.","Budget 5 mi
 
 add("FR_CORR_001","fr",["Bonjour, appartement a louer a Yaounde.","Budget 200 000.",
     "Finalement je prefere acheter.","Mon budget achat est de 25 millions.","Oui."],
-    {"property_type":"apartment","transaction_type":"buy","budget_max":25000000,"city":"Yaounde"})
+    {"property_type":"apartment","transaction_type":"buy","budget_max":25000000,"city":"Yaounde"}, expected_biz=True)
 
 add("FR_NEG_001","fr",["Je ne veux pas louer, je veux acheter une maison.",
     "A Yaounde.","Budget 30 millions.","Oui."],
@@ -55,10 +55,10 @@ add("FR_NEG_001","fr",["Je ne veux pas louer, je veux acheter une maison.",
 
 add("FR_VISIT_001","fr",["Bonjour, je cherche un appartement.","Budget 200 000.",
     "Les visites sont payantes ?","Oui enregistrez."],
-    {"property_type":"apartment","budget_max":200000}, expected_biz=True)
+    {"property_type":"apartment","budget_max":200000}, expected_biz=False)
 
 add("FR_SHORT_001","fr",["Appartement","Yaounde","200 000","Oui"],
-    {"property_type":"apartment","city":"Yaounde","budget_max":200000}, expected_biz=True)
+    {"property_type":"apartment","city":"Yaounde","budget_max":200000}, expected_biz=False)
 
 # ── ENGLISH ──────────────────────────────────────────────────────────
 add("EN_RENT_001","en",["Hello, I am looking for an apartment for rent in Yaounde.",
@@ -67,7 +67,7 @@ add("EN_RENT_001","en",["Hello, I am looking for an apartment for rent in Yaound
 
 add("EN_RENT_002","en",["I need a house for rent in Douala.","Budget 150 thousand.",
     "Three bedrooms in Bonamoussadi.","Yes."],
-    {"property_type":"house","transaction_type":"rent","city":"Douala","budget_max":150000,"bedrooms":3}, expected_lang="en")
+    {"property_type":"house","transaction_type":"rent","city":"Douala","budget_max":150000,"bedrooms":3}, expected_lang="en", expected_biz=True)
 
 add("EN_RENT_003","en",["I want a studio for rent in Yaounde.","Budget 100 000.","Yes."],
     {"property_type":"studio","transaction_type":"rent","city":"Yaounde","budget_max":100000}, expected_lang="en", expected_biz=True)
@@ -84,11 +84,11 @@ add("EN_NEG_001","en",["I don't want to rent, I want to buy a house.",
     {"transaction_type":"buy","property_type":"house","city":"Yaounde","budget_max":30000000}, expected_lang="en", expected_biz=True)
 
 add("EN_SHORT_001","en",["Apartment","Yaounde","200 000","Yes"],
-    {"property_type":"apartment","city":"Yaounde","budget_max":200000}, expected_lang="en", expected_biz=True)
+    {"property_type":"apartment","city":"Yaounde","budget_max":200000}, expected_lang="en", expected_biz=False)
 
 add("EN_ROOMS_001","en",["I need a three-bedroom apartment for rent.",
     "In Yaounde.","Budget 250 000.","Yes."],
-    {"property_type":"apartment","transaction_type":"rent","bedrooms":3,"city":"Yaounde","budget_max":250000}, expected_lang="en")
+    {"property_type":"apartment","transaction_type":"rent","bedrooms":3,"city":"Yaounde","budget_max":250000}, expected_lang="en", expected_biz=True)
 
 # ── PIDGIN ──────────────────────────────────────────────────────────
 add("PCM_RENT_001","pcm",["I wan rent apartment for Yaounde.",
@@ -97,7 +97,7 @@ add("PCM_RENT_001","pcm",["I wan rent apartment for Yaounde.",
 
 add("PCM_RENT_002","pcm",["I di find house for rent for Douala.",
     "I get 150 thousand.","Three room for Bonamoussadi.","Yes."],
-    {"property_type":"house","transaction_type":"rent","city":"Douala","budget_max":150000}, expected_lang="pcm")
+    {"property_type":"house","transaction_type":"rent","city":"Douala","budget_max":150000}, expected_lang="pcm", expected_biz=True)
 
 add("PCM_BUY_001","pcm",["I wan buy land for Limbe.","Ma money na 5 million.","Yes oh."],
     {"property_type":"land","transaction_type":"buy","city":"Limbe","budget_max":5000000}, expected_lang="pcm", expected_biz=True)
@@ -108,23 +108,23 @@ add("PCM_NEG_001","pcm",["No be rent, na buy I want.",
 
 add("PCM_CORR_001","pcm",["I wan rent apartment for Yaounde.","Budget 200 000.",
     "No, make I buy instead.","Ma budget na 25 million.","Yes."],
-    {"property_type":"apartment","transaction_type":"buy","budget_max":25000000}, expected_lang="pcm")
+    {"property_type":"apartment","transaction_type":"buy","budget_max":25000000}, expected_lang="pcm", expected_biz=True)
 
 add("PCM_SHORT_001","pcm",["House","Yaounde","200 000","Yes"],
-    {"property_type":"house","city":"Yaounde","budget_max":200000}, expected_lang="pcm", expected_biz=True)
+    {"property_type":"house","city":"Yaounde","budget_max":200000}, expected_lang="pcm", expected_biz=False)
 
 add("PCM_ROOMS_001","pcm",["I need two room house for rent.",
     "For Yaounde.","Budget 150 000.","Yes."],
-    {"property_type":"house","transaction_type":"rent","city":"Yaounde","budget_max":150000}, expected_lang="pcm")
+    {"property_type":"house","transaction_type":"rent","city":"Yaounde","budget_max":150000}, expected_lang="pcm", expected_biz=True)
 
 # ── MIXED ────────────────────────────────────────────────────────────
 add("MIX_LANG_001","fr",["I need a house for rent in Yaounde.",
     "Mon budget 200 000.","Two bedrooms.","Yes."],
-    {"property_type":"house","transaction_type":"rent","city":"Yaounde","budget_max":200000,"bedrooms":2}, expected_lang="en")
+    {"property_type":"house","transaction_type":"rent","city":"Yaounde","budget_max":200000,"bedrooms":2}, expected_lang="en", expected_biz=True)
 
 add("MIX_LANG_002","en",["Bonjour, je cherche a louer house for Yaounde.",
     "My budget na 200 000.","Two chambres.","Oui."],
-    {"property_type":"house","transaction_type":"rent","city":"Yaounde","budget_max":200000}, expected_lang="en")
+    {"property_type":"house","transaction_type":"rent","city":"Yaounde","budget_max":200000}, expected_lang="en", expected_biz=True)
 
 # ── LANGUAGE SWITCH ──────────────────────────────────────────────────
 add("LANG_SWITCH_001","en",["Hello, I need an apartment for rent.",
@@ -134,7 +134,7 @@ add("LANG_SWITCH_001","en",["Hello, I need an apartment for rent.",
 # ── AMBIGUITY / ROOMS ────────────────────────────────────────────────
 add("AMB_ROOMS_001","en",["I need a house for rent in Yaounde.",
     "I need three bedrooms and a living room.","Budget 250 000.","Yes."],
-    {"property_type":"house","transaction_type":"rent","city":"Yaounde","bedrooms":3,"budget_max":250000}, expected_lang="en")
+    {"property_type":"house","transaction_type":"rent","city":"Yaounde","bedrooms":3,"budget_max":250000}, expected_lang="en", expected_biz=True)
 
 # ── CORRECTION ──────────────────────────────────────────────────────
 add("CORR_BUDGET_001","fr",["Bonjour, appartement a louer a Yaounde.",
@@ -148,7 +148,7 @@ add("CORR_AREA_001","fr",["Appartement a louer a Yaounde.","Budget 200 000.",
 # ── SHORT MESSAGES ──────────────────────────────────────────────────
 add("SHORT_CTX_001","en",["I need a house for rent.",
     "Yaounde","200 000","Bastos","Yes."],
-    {"property_type":"house","transaction_type":"rent","city":"Yaounde","budget_max":200000}, expected_lang="en")
+    {"property_type":"house","transaction_type":"rent","city":"Yaounde","budget_max":200000}, expected_lang="en", expected_biz=True)
 
 # ── MAIN VALIDATOR ──────────────────────────────────────────────────
 def validate_facts(expected, actual):
