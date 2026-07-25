@@ -1,5 +1,5 @@
 # G.5-D Validation Report
-**HEAD:** 0427abea
+**HEAD:** 1cc37bf4
 **Branch:** feature/program-g5d-regression-recovery-20260724
 
 ## Baseline (d2502275)
@@ -7,8 +7,8 @@
 
 ## Current Results
 **Scenarios:** 30
-**PASS:** 19
-**FAIL:** 11
+**PASS:** 20
+**FAIL:** 10
 **Business expected:** 24
 **Business created:** 24
 **Business unexpected:** 0
@@ -17,10 +17,10 @@
 ## Normalized Metrics
 | Metric | Value |
 |--------|------:|
-| Scenarios PASS | 19 |
-| Scenarios FAIL | 11 |
+| Scenarios PASS | 20 |
+| Scenarios FAIL | 10 |
 | Language drift turns | 26 |
-| Entity false positives | 1 |
+| Entity false positives | 0 |
 | Entity missed | 0 |
 | Missing confirmations | 0 |
 | Business objects created | 24 |
@@ -43,7 +43,7 @@
 | EN_RENT_003 | en | PASS | - | Y | ACTION_COMPLETED |
 | EN_BUY_001 | en | PASS | - | Y | ACTION_COMPLETED |
 | EN_CORR_001 | en | PASS | - | N | QUALIFYING |
-| EN_NEG_001 | en | FAIL | ENTITY_FALSE_POSITIVE:transaction_type=expected=buy,got=rent | Y | ACTION_COMPLETED |
+| EN_NEG_001 | en | PASS | - | Y | ACTION_COMPLETED |
 | EN_SHORT_001 | en | PASS | - | N | QUALIFYING |
 | EN_ROOMS_001 | en | PASS | - | Y | ACTION_COMPLETED |
 | PCM_RENT_001 | pcm | FAIL | LANGUAGE_DRIFT:turn=2,expected=pcm,got=en; LANGUAGE_DRIFT:turn=3,expected=pcm,got=en; LANGUAGE_DRIFT:turn=4,expected=pcm,got=en | Y | ACTION_COMPLETED |
@@ -65,4 +65,3 @@
 | Category | Count |
 |----------|------:|
 | LANGUAGE_DRIFT | 26 |
-| ENTITY_FALSE_POSITIVE | 1 |
