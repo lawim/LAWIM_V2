@@ -1,6 +1,6 @@
 # Revue complète — Programme G.5
 
-**HEAD :** e2891e08
+**HEAD :** 423abb9e
 **Branche :** feature/program-g5d-regression-recovery-20260724
 **Date :** 2026-07-24T17:45:00Z
 **Worktree :** CLEAN
