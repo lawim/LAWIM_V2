@@ -31,6 +31,19 @@ class JourneyStatus(str, Enum):
     CANCELLED = "CANCELLED"
 
 
+class PendingUserAction(str, Enum):
+    NONE = "NONE"
+    PROVIDE_PROPERTY_TYPE = "PROVIDE_PROPERTY_TYPE"
+    PROVIDE_TRANSACTION_TYPE = "PROVIDE_TRANSACTION_TYPE"
+    PROVIDE_LOCATION = "PROVIDE_LOCATION"
+    PROVIDE_BUDGET = "PROVIDE_BUDGET"
+    PROVIDE_BEDROOMS = "PROVIDE_BEDROOMS"
+    CLARIFY_AMBIGUITY = "CLARIFY_AMBIGUITY"
+    CONFIRM_FIELD_VALUE = "CONFIRM_FIELD_VALUE"
+    CONFIRM_LANGUAGE_SWITCH = "CONFIRM_LANGUAGE_SWITCH"
+    CONFIRM_BUSINESS_CREATION = "CONFIRM_BUSINESS_CREATION"
+
+
 class ResponseType(str, Enum):
     ACKNOWLEDGE_AND_CONTINUE = "ACKNOWLEDGE_AND_CONTINUE"
     ASK_CLARIFICATION = "ASK_CLARIFICATION"
@@ -216,6 +229,7 @@ class JourneyState:
     version: int = 1
     last_facts_snapshot: dict[str, Any] = field(default_factory=dict)
     awaiting_business_confirmation: bool = False
+    pending_user_action: str = "NONE"
 
 
 @dataclass
@@ -515,42 +529,60 @@ class ConversationJourneyOrchestrator:
         result.qualification = qual_result
         self._memory.set_qualification(qual_result.level.value)
 
-        # 9. Build response plan (before confirmation check, so awaiting is current)
+        # Save pending action BEFORE processing (what user is responding to)
+        pending_before = state.pending_user_action
+
+        # 9. Build response plan for this turn
         response_plan = self._build_response_plan(state, qual_result, corrections, entity_result, lang=current_lang)
         result.response_plan = response_plan
 
-        # Update awaiting_business_confirmation based on new state
-        if corrections:
-            state.awaiting_business_confirmation = False
-        elif (response_plan and response_plan.response_type == ResponseType.CONFIRM_QUALIFICATION
+        # 10. Determine pending_after based on what we just asked
+        # Only set CONFIRM_BUSINESS_CREATION when the system explicitly asks
+        # for confirmation (complete_ask message), not for intermediate recaps
+        is_final_ask = False
+        if response_plan and response_plan.message:
+            msg_lower = response_plan.message.lower()
+            is_final_ask = any(p in msg_lower for p in [
+                "souhaitez-vous", "should i register", "i go register",
+                "souhaitez-vous que je l'enregistre"
+            ])
+        if (response_plan and response_plan.response_type == ResponseType.CONFIRM_QUALIFICATION
               and not state.business_object_ids
               and qual_result.level == QualificationLevel.READY_FOR_DECISION
-              and not qual_result.missing_fields):
-            state.awaiting_business_confirmation = True
+              and not qual_result.missing_fields
+              and is_final_ask):
+            state.pending_user_action = PendingUserAction.CONFIRM_BUSINESS_CREATION.value
+        elif response_plan and response_plan.response_type == ResponseType.ASK_CLARIFICATION:
+            state.pending_user_action = PendingUserAction.CLARIFY_AMBIGUITY.value
+        elif response_plan and response_plan.response_type == ResponseType.ASK_MISSING_INFORMATION:
+            state.pending_user_action = PendingUserAction.CONFIRM_FIELD_VALUE.value
+        else:
+            state.pending_user_action = PendingUserAction.NONE.value
 
-        # 10. Check for explicit user confirmation or corrections to execute business action
+        # 11. Business action uses pending_before (what user was actually responding to)
+        can_create = (pending_before == PendingUserAction.CONFIRM_BUSINESS_CREATION.value
+                      and not state.business_object_ids
+                      and qual_result.level == QualificationLevel.READY_FOR_DECISION
+                      and not qual_result.missing_fields)
+
         if state.journey_status in (JourneyStatus.READY_FOR_ACTION, JourneyStatus.QUALIFYING, JourneyStatus.ACTION_COMPLETED):
             lower = text.lower().strip()
             is_confirmation = any(kw in lower for kw in CONFIRMATION_KEYWORDS)
-            already_completed = bool(state.business_object_ids)
-            is_ready = qual_result.level == QualificationLevel.READY_FOR_DECISION
 
-            if already_completed and corrections:
-                # Correction after business action completed — re-execute
+            if state.business_object_ids and corrections:
                 biz_result = self._execute_business_action(state)
                 if biz_result:
                     state.business_object_ids.update(biz_result)
                     state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
-                    response_plan = self._build_response_plan(state, qual_result, corrections, entity_result, lang=current_lang)
+                    response_plan = self._build_response_plan(state, qual_result, [], entity_result, lang=current_lang)
                     result.response_plan = response_plan
-            elif not already_completed and is_confirmation and is_ready and state.awaiting_business_confirmation:
+            elif can_create and is_confirmation:
                 biz_result = self._execute_business_action(state)
                 if biz_result:
                     state.business_object_ids.update(biz_result)
                     state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
-                    state.awaiting_business_confirmation = False
-                    # Rebuild response plan to reflect new status
-                    response_plan = self._build_response_plan(state, qual_result, corrections, entity_result, lang=current_lang)
+                    state.pending_user_action = PendingUserAction.NONE.value
+                    response_plan = self._build_response_plan(state, qual_result, [], entity_result, lang=current_lang)
                     result.response_plan = response_plan
 
         if state.journey_status not in (JourneyStatus.ACTION_COMPLETED, JourneyStatus.ACTION_FAILED):
@@ -724,7 +756,15 @@ class ConversationJourneyOrchestrator:
         facts = state.confirmed_facts
         original_recap = self._format_facts(facts, lang=lang)
         recap_text = ", ".join(original_recap) if original_recap else ""
-        facts_changed = bool(corrections) or (state.last_facts_snapshot and facts != state.last_facts_snapshot)
+        # facts_changed only considers REQUIRED fields (bedrooms, district, move_in_date are optional)
+        from .qualification import REQUIRED_FIELDS_BY_INTENT as _rfi
+        _req = set(_rfi.get(state.current_intent, []))
+        if _req:
+            _prev = {k: state.last_facts_snapshot.get(k) for k in _req} if state.last_facts_snapshot else {}
+            _curr = {k: facts.get(k) for k in _req}
+            facts_changed = _prev and _curr != _prev
+        else:
+            facts_changed = bool(corrections) or (state.last_facts_snapshot and facts != state.last_facts_snapshot)
         biz_completed = bool(state.business_object_ids)
         biz_success = biz_completed and state.business_object_ids.get("success") == True
 
