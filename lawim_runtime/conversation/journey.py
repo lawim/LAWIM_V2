@@ -537,22 +537,13 @@ class ConversationJourneyOrchestrator:
         result.response_plan = response_plan
 
         # 10. Determine pending_after based on what we just asked
-        # Only set CONFIRM_BUSINESS_CREATION when the system explicitly asks
-        # for confirmation (complete_ask message), not for intermediate recaps
-        is_final_ask = False
-        if response_plan and response_plan.message:
-            msg_lower = response_plan.message.lower()
-            is_final_ask = any(p in msg_lower for p in [
-                "souhaitez-vous", "should i register", "i go register",
-                "souhaitez-vous que je l'enregistre"
-            ])
         if (response_plan and response_plan.response_type == ResponseType.CONFIRM_QUALIFICATION
               and not state.business_object_ids
               and qual_result.level == QualificationLevel.READY_FOR_DECISION
-              and not qual_result.missing_fields
-              and is_final_ask):
+              and not qual_result.missing_fields):
             state.pending_user_action = PendingUserAction.CONFIRM_BUSINESS_CREATION.value
         elif response_plan and response_plan.response_type == ResponseType.ASK_CLARIFICATION:
+            state.pending_user_action = PendingUserAction.CLARIFY_AMBIGUITY.value
             state.pending_user_action = PendingUserAction.CLARIFY_AMBIGUITY.value
         elif response_plan and response_plan.response_type == ResponseType.ASK_MISSING_INFORMATION:
             state.pending_user_action = PendingUserAction.CONFIRM_FIELD_VALUE.value
@@ -756,15 +747,7 @@ class ConversationJourneyOrchestrator:
         facts = state.confirmed_facts
         original_recap = self._format_facts(facts, lang=lang)
         recap_text = ", ".join(original_recap) if original_recap else ""
-        # facts_changed only considers REQUIRED fields (bedrooms, district, move_in_date are optional)
-        from .qualification import REQUIRED_FIELDS_BY_INTENT as _rfi
-        _req = set(_rfi.get(state.current_intent, []))
-        if _req:
-            _prev = {k: state.last_facts_snapshot.get(k) for k in _req} if state.last_facts_snapshot else {}
-            _curr = {k: facts.get(k) for k in _req}
-            facts_changed = _prev and _curr != _prev
-        else:
-            facts_changed = bool(corrections) or (state.last_facts_snapshot and facts != state.last_facts_snapshot)
+        facts_changed = bool(corrections) or (state.last_facts_snapshot and facts != state.last_facts_snapshot)
         biz_completed = bool(state.business_object_ids)
         biz_success = biz_completed and state.business_object_ids.get("success") == True
 
