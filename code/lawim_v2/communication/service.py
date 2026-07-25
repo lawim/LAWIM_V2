@@ -5,7 +5,7 @@ import re
 from ..observability import METRICS
 from ..maintenance import MAINTENANCE_FLAGS, MAINTENANCE_RESPONSE, MaintenanceService, MaintenanceSubmission
 from ..project_service import ProjectPermissionDenied, ProjectService
-from ..conversation.state.engine import ConversationStateEngine
+# from ..conversation.state.engine import ConversationStateEngine  # LEGACY_DISABLED
 from ..financial.engines import normalize_mobile_money_number
 from . import dto as cdto
 from .delivery import mask_delivery_recipient
@@ -251,7 +251,7 @@ class CommunicationService:
         maintenance: MaintenanceService | None = None,
         ai_orchestrator=None,
         disclaimer_manager=None,
-        conversation_state_engine: ConversationStateEngine | None = None,
+        conversation_state_engine: Any | None = None,  # LEGACY_DISABLED
         program_f_engine=None,
     ) -> None:
         self.repository = repository
@@ -282,7 +282,7 @@ class CommunicationService:
     def _auto_create_state_engine() -> ConversationStateEngine:
         import sqlite3
         import tempfile
-        from ..conversation.state.engine import ConversationStateEngine as _Engine
+        # from ..conversation.state.engine import ConversationStateEngine  # LEGACY_DISABLED as _Engine
         from ..conversation.state.repository import ConversationStateRepository
         from ..conversation.state.resolver import ConversationResolver
 
