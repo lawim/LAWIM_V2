@@ -84,10 +84,9 @@ class MarketplacePropertySearchAdapter:
         repository: Any = None,
         database_url: str = "",
     ) -> None:
-        if not HAS_PORT:
-            raise ImportError("lawim_runtime BusinessActionResult required")
-
         if database_url:
+            if not HAS_PORT:
+                raise ImportError("lawim_runtime BusinessActionResult required")
             _log.info("Using PostgreSQL marketplace repository")
             self._delegate = _PostgresMarketplaceRepository(database_url)
         elif repository is not None:

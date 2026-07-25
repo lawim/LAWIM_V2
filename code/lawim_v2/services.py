@@ -205,10 +205,14 @@ class LawimServices:
         _conv_dir.mkdir(parents=True, exist_ok=True)
         _conv_pf_db_path = str(_conv_dir / "program_f_state.sqlite3")
         _pg_url = os.environ.get("LAWIM_DATABASE_URL", "")
+        _conv_biz_service = None
         if _pg_url:
-            _conv_biz_service = MarketplacePropertySearchAdapter(database_url=_pg_url)
-            logger.info("Business repository: postgresql (marketplace_service_requests)")
-        else:
+            try:
+                _conv_biz_service = MarketplacePropertySearchAdapter(database_url=_pg_url)
+                logger.info("Business repository: postgresql (marketplace_service_requests)")
+            except ImportError:
+                logger.warning("PostgreSQL marketplace adapter requires lawim_runtime — falling back to SQLite")
+        if _conv_biz_service is None:
             _conv_biz_service = MarketplacePropertySearchAdapter(repository=repository)
             logger.warning("Business repository: sqlite (fallback — no DATABASE_URL)")
         try:
