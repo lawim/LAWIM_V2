@@ -1,10 +1,11 @@
 # LAWIM — Project Master Context
 
 ## Metadata
-- **HEAD :** 41468bbe
-- **Branche active :** feature/program-g5d-regression-recovery-20260724
+- **HEAD :** 1056ec68
+- **Branche active :** feature/lawim-v1-definitive-cleanup-20260725
 - **Branche de production :** main
-- **Tags de release :** lawim-v3-program-f-conversation-engine-complete (HEAD ~6377708a)
+- **Tags de release :** lawim-v3-program-f-conversation-engine-complete, lawim-v1-runtime-clean, lawim-v1-pre-cleanup-20260725-160240
+- **Tags de preuve :** lawim-pre-runtime-consolidation-20260725-143856, lawim-pre-consolidation-20260725-143856, lawim-v1-pre-cleanup-20260725-160240
 - **Remote :** git@github-lawim:lawim/LAWIM_V2.git
 
 ## Architecture canonique
@@ -14,7 +15,7 @@
 |---|---|---|
 | **ConversationJourneyOrchestrator** | lawim_runtime/conversation/journey.py:432 | **CANONIQUE** |
 | ProgramFEngineAdapter (adapter) | code/lawim_v2/conversation/program_f_adapter.py | **CANONIQUE** |
-| ConversationStateEngine (V2 fallback) | code/lawim_v2/conversation/state/engine.py | Fallback (PF indisponible) |
+| ConversationStateEngine (V2 legacy) | ~~code/lawim_v2/conversation/state/engine.py~~ | **SUPPRIME** (cleanup 1056ec68) |
 | IntentEngine | lawim_runtime/conversation/intent/__init__.py | **CANONIQUE** |
 | EntityExtractionEngine | lawim_runtime/conversation/entity/__init__.py | **CANONIQUE** |
 | QualificationEngine | lawim_runtime/conversation/qualification/__init__.py | **CANONIQUE** |
@@ -33,13 +34,8 @@
 | Deploiement OVH | deployment/scripts/deploy_program_f_acceptance.sh | **CANONIQUE** |
 | Acceptance Web | deployment/scripts/acceptance_program_f_web.py | **CANONIQUE** |
 | Validation gold corpus | scripts/g5_validate_corpus.py | **CANONIQUE** |
-| Generation G.4 corpus | scripts/g4_generate_corpus.py | Historique (G.4) |
-| Execution G.4 batch | scripts/g4_run_batch.py | Historique (G.4) |
-| Evaluation G.4R | scripts/g4r_evaluate.py | Historique (G.4R) |
-| Validation G.3 | scripts/g3_evaluate.py | Historique (G.3) |
-| Generation G corpus | scripts/program_g_generate.py | Historique (G.0) |
-| Run historique G.2 | scripts/g2_run_historical.py | Historique (G.2) |
 | Validation G.5 | scripts/g5_validate_corpus.py | **CANONIQUE** |
+| Admin reset password | scripts/admin_reset_password.py | **CANONIQUE** |
 
 ### Docker Compose
 | Environnement | Fichier | Statut |

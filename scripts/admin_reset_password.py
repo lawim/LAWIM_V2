@@ -8,8 +8,12 @@ from pathlib import Path
 from typing import Sequence
 
 ROOT = Path(__file__).resolve().parent.parent
-if str(ROOT / "code") not in sys.path:
-    sys.path.insert(0, str(ROOT / "code"))
+_P = str(ROOT / "code")
+if _P not in sys.path:
+    sys.path.insert(0, _P)
+_P = str(ROOT)
+if _P not in sys.path:
+    sys.path.insert(0, _P)
 
 from lawim_v2.config import AppConfig
 from lawim_v2.errors import NotFoundError, RepositoryError

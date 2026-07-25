@@ -23,7 +23,10 @@ def _script_env(
     db_driver: str | None = None,
     db_fallback: bool | None = None,
 ) -> dict[str, str]:
+    effective_driver = db_driver or config.db_driver
+    effective_database_url = database_url if database_url is not None else config.database_url
     env = dict(os.environ)
+    env.setdefault("PYTHONPATH", str(ROOT))
     env.update(
         {
             "APP_ENV": config.app_env,
@@ -31,10 +34,10 @@ def _script_env(
             "LOG_LEVEL": config.log_level,
             "LAWIM_HOST": config.host,
             "LAWIM_PORT": str(config.port),
-            "LAWIM_DB_DRIVER": db_driver or config.db_driver,
+            "LAWIM_DB_DRIVER": effective_driver,
             "LAWIM_DB_PATH": str(config.db_path),
             "LAWIM_MEDIA_STORAGE_PATH": str(config.media_storage_path),
-            "LAWIM_DATABASE_URL": database_url if database_url is not None else config.database_url,
+            "LAWIM_DATABASE_URL": effective_database_url if effective_driver == "postgresql" else "",
             "LAWIM_DB_FALLBACK": "true" if (config.db_fallback if db_fallback is None else db_fallback) else "false",
             "PUBLIC_BASE_URL": config.public_base_url,
             "SECRET_PROVIDER": config.secret_provider,
