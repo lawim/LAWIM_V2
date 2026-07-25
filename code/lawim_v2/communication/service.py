@@ -279,7 +279,7 @@ class CommunicationService:
         self.integrations = IntegrationService(repository)
 
     @staticmethod
-    def _auto_create_state_engine() -> ConversationStateEngine:
+    def _auto_create_state_engine() -> Any:  # LEGACY_DISABLED
         import sqlite3
         import tempfile
         # from ..conversation.state.engine import ConversationStateEngine  # LEGACY_DISABLED as _Engine
@@ -658,7 +658,7 @@ class CommunicationService:
 
         # --- Canonical state engine path — Program F with V2 fallback ---
         _pf_ok = self.program_f_engine is not None and hasattr(self.program_f_engine, "process_turn")
-        _v2_ok = self.conversation_state_engine is not None and isinstance(self.conversation_state_engine, ConversationStateEngine)
+        _v2_ok = False  # LEGACY_DISABLED: ConversationStateEngine disabled
 
         _engine_source = None
         if _pf_ok:
