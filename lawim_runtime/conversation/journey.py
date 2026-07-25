@@ -327,8 +327,11 @@ def _build_landmark_pattern() -> re.Pattern:
 
 
 FR_KEYWORDS = {"bonjour","je","cherche","louer","acheter","appartement","maison","studio","terrain",
-    "budget","mois","chambre","ville","quartier","merci","veux","peux","dans","sur","avec","nous",
-    "votre","nos","mes","vos","ses","son","sa","leur","leurs","cet","cette","ces","mon","ton"}
+    "budget","mois","chambre","chambres","ville","quartier","merci","veux","peux","dans","sur","avec","nous",
+    "votre","nos","mes","vos","ses","son","sa","leur","leurs","cet","cette","ces","mon","ton",
+    "deux","trois","quatre","cinq","six","sept","huit","neuf","dix","finalement","maintenant",
+    "entre","ou","et","mais","donc","car","par","pour","sans","chez","apres",
+    "quel","quelle","quels","quelles","comment","combien","tres","beaucoup","aussi","encore"}
 EN_KEYWORDS = {"hello","i","am","looking","for","rent","buy","house","apartment","budget","month",
     "bedroom","city","thank","please","need","want","the","in","at","find","have","would","could",
     "my","your","our","their","its","his","her","a","an","this","that","these","those","is","are"}

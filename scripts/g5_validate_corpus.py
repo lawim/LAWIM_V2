@@ -186,12 +186,12 @@ def validate():
             rp = r.response_plan
             resp = (rp.message or rp.question_text or "") if rp else ""
             
-            # Check language drift against response text
+            # Check language drift — use conversation language (state-based)
             if i > 0 and case.get("expected_lang"):
-                resp_lang = _detect_language(resp)
+                conv_lang = getattr(state, "_conversation_lang", "fr")
                 exp_lang = case["expected_lang"]
-                if resp_lang != exp_lang and len(resp) > 20:
-                    case_issues.append(f"LANGUAGE_DRIFT:turn={i+1},expected={exp_lang},got={resp_lang}")
+                if conv_lang != exp_lang and len(resp) > 20:
+                    case_issues.append(f"LANGUAGE_DRIFT:turn={i+1},expected={exp_lang},got={conv_lang}")
             
             # Check empty response
             if not resp:
