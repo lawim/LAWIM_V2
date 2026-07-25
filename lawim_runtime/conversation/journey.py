@@ -537,10 +537,19 @@ class ConversationJourneyOrchestrator:
         result.response_plan = response_plan
 
         # 10. Determine pending_after based on what we just asked
+        # Only CONFIRM_BUSINESS_CREATION when the complete_ask message is shown
+        is_final_ask = False
+        if response_plan and response_plan.message:
+            m = response_plan.message.lower()
+            is_final_ask = any(p in m for p in [
+                "souhaitez-vous", "should i register", "i go register",
+                "votre demande a bien été", "your request has been"
+            ])
         if (response_plan and response_plan.response_type == ResponseType.CONFIRM_QUALIFICATION
               and not state.business_object_ids
               and qual_result.level == QualificationLevel.READY_FOR_DECISION
-              and not qual_result.missing_fields):
+              and not qual_result.missing_fields
+              and is_final_ask):
             state.pending_user_action = PendingUserAction.CONFIRM_BUSINESS_CREATION.value
         elif response_plan and response_plan.response_type == ResponseType.ASK_CLARIFICATION:
             state.pending_user_action = PendingUserAction.CLARIFY_AMBIGUITY.value
@@ -770,9 +779,10 @@ class ConversationJourneyOrchestrator:
 
         if qual.level == QualificationLevel.READY_FOR_DECISION:
             plan.response_type = ResponseType.CONFIRM_QUALIFICATION
-            if not facts_changed and state.last_facts_snapshot:
-                if state.missing_fields:
-                    plan.message = _msg(state, "already_known") + " " + self._next_question_message(state)
+            # Always append complete_ask when facts are complete
+            if not qual.missing_fields:
+                if recap_text and facts_changed:
+                    plan.message = _msg(state, "recap") + " : " + recap_text + ". " + _msg(state, "complete_ask")
                 else:
                     plan.message = _msg(state, "complete_ask")
                 return plan

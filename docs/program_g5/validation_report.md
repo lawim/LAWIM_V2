@@ -1,5 +1,5 @@
 # G.5-D Validation Report
-**HEAD:** 91335686
+**HEAD:** a50a12df
 **Branch:** feature/program-g5d-regression-recovery-20260724
 
 ## Baseline (d2502275)
