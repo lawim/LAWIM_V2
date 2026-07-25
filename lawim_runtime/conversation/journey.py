@@ -515,7 +515,20 @@ class ConversationJourneyOrchestrator:
         result.qualification = qual_result
         self._memory.set_qualification(qual_result.level.value)
 
-        # 9. Check for explicit user confirmation or corrections to execute business action
+        # 9. Build response plan (before confirmation check, so awaiting is current)
+        response_plan = self._build_response_plan(state, qual_result, corrections, entity_result, lang=current_lang)
+        result.response_plan = response_plan
+
+        # Update awaiting_business_confirmation based on new state
+        if corrections:
+            state.awaiting_business_confirmation = False
+        elif (response_plan and response_plan.response_type == ResponseType.CONFIRM_QUALIFICATION
+              and not state.business_object_ids
+              and qual_result.level == QualificationLevel.READY_FOR_DECISION
+              and not qual_result.missing_fields):
+            state.awaiting_business_confirmation = True
+
+        # 10. Check for explicit user confirmation or corrections to execute business action
         if state.journey_status in (JourneyStatus.READY_FOR_ACTION, JourneyStatus.QUALIFYING, JourneyStatus.ACTION_COMPLETED):
             lower = text.lower().strip()
             is_confirmation = any(kw in lower for kw in CONFIRMATION_KEYWORDS)
@@ -528,25 +541,17 @@ class ConversationJourneyOrchestrator:
                 if biz_result:
                     state.business_object_ids.update(biz_result)
                     state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
+                    response_plan = self._build_response_plan(state, qual_result, corrections, entity_result, lang=current_lang)
+                    result.response_plan = response_plan
             elif not already_completed and is_confirmation and is_ready and state.awaiting_business_confirmation:
                 biz_result = self._execute_business_action(state)
                 if biz_result:
                     state.business_object_ids.update(biz_result)
                     state.journey_status = JourneyStatus.ACTION_COMPLETED if biz_result.get("success") else JourneyStatus.ACTION_FAILED
                     state.awaiting_business_confirmation = False
-
-        # 10. Build response plan
-        response_plan = self._build_response_plan(state, qual_result, corrections, entity_result, lang=current_lang)
-        result.response_plan = response_plan
-
-        # Set awaiting_business_confirmation when facts complete and recap/ask shown
-        if (response_plan and response_plan.response_type == ResponseType.CONFIRM_QUALIFICATION
-            and not state.business_object_ids
-            and qual_result.level == QualificationLevel.READY_FOR_DECISION
-            and not qual_result.missing_fields):
-            state.awaiting_business_confirmation = True
-        if corrections:
-            state.awaiting_business_confirmation = False
+                    # Rebuild response plan to reflect new status
+                    response_plan = self._build_response_plan(state, qual_result, corrections, entity_result, lang=current_lang)
+                    result.response_plan = response_plan
 
         if state.journey_status not in (JourneyStatus.ACTION_COMPLETED, JourneyStatus.ACTION_FAILED):
             can_be_ready = qual_result.level == QualificationLevel.READY_FOR_DECISION and state.current_intent not in NON_BUSINESS_INTENTS
