@@ -289,7 +289,18 @@ def validate():
     print(f"Deterministic: YES (seed=42, isolated per scenario)")
     print(f"Report: {done_path}")
     
-    # Return non-zero if baseline regressed
+    # Return non-zero if baseline regressed (business barrier)
+    biz_unexpected = biz_created_total - biz_expected
+    biz_missing = biz_expected - biz_created_total
+    biz_ok = all((
+        biz_expected >= 17,
+        biz_created_total == biz_expected,
+        biz_unexpected == 0,
+        biz_missing == 0,
+    ))
+    if not biz_ok:
+        print(f"BUSINESS_BARRIER_FAIL: expected={biz_expected} created={biz_created_total} unexpected={biz_unexpected} missing={biz_missing}")
+        return 1
     if passes['PASS'] < 16:
         print("REGRESSION: PASS count below baseline 16")
         return 1
