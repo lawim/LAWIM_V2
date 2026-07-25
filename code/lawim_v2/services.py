@@ -195,56 +195,31 @@ class LawimServices:
 
         self.security = SecurityService(repository, self.projects, self.policy)
         from .communication.service import CommunicationService
-        from .conversation.state.engine import ConversationStateEngine
-        from .conversation.state.repository import ConversationStateRepository
-        from .conversation.state.resolver import ConversationResolver
         from .conversation.program_f_adapter import ProgramFEngineAdapter
         from .conversation.marketplace_adapter import MarketplacePropertySearchAdapter
 
         import sqlite3, os
 
-        class _ConvDB:
-            def __init__(self, conn: sqlite3.Connection) -> None:
-                self.conn = conn
-
-            def execute(self, sql: str, params: object = ()) -> object:
-                cur = self.conn.execute(sql, params or ())
-                self.conn.commit()
-                return cur
-
-            def fetch_one(self, sql: str, params: object = ()) -> dict | None:
-                cur = self.conn.execute(sql, params or ())
-                row = cur.fetchone()
-                return dict(row) if row else None
-
+        # Program F engine (primary) with real business service
         _conv_dir = config.db_path.parent / "conversation"
         _conv_dir.mkdir(parents=True, exist_ok=True)
-        _conv_db_path = str(_conv_dir / "state.sqlite3")
-        _conv_conn = sqlite3.connect(_conv_db_path, check_same_thread=False)
-        _conv_conn.row_factory = sqlite3.Row
-        _conv_db = _ConvDB(_conv_conn)
-        _conv_repo = ConversationStateRepository(_conv_db)
-        _conv_resolver = ConversationResolver()
-        _conv_engine_v2 = ConversationStateEngine(_conv_repo, _conv_resolver)
-
-        # Program F engine (primary) with real business service
         _conv_pf_db_path = str(_conv_dir / "program_f_state.sqlite3")
         _pg_url = os.environ.get("LAWIM_DATABASE_URL", "")
         if _pg_url:
             _conv_biz_service = MarketplacePropertySearchAdapter(database_url=_pg_url)
-            _log.info("Business repository: postgresql (marketplace_service_requests)")
+            logger.info("Business repository: postgresql (marketplace_service_requests)")
         else:
             _conv_biz_service = MarketplacePropertySearchAdapter(repository=repository)
-            _log.warning("Business repository: sqlite (fallback — no DATABASE_URL)")
+            logger.warning("Business repository: sqlite (fallback — no DATABASE_URL)")
         try:
             _conv_engine_pf = ProgramFEngineAdapter(
                 db_path=_conv_pf_db_path,
                 property_search_service=_conv_biz_service,
             )
-            _log.info("ProgramFEngineAdapter activated as primary engine (db=%s)", _conv_pf_db_path)
+            logger.info("ProgramFEngineAdapter activated as primary engine (db=%s)", _conv_pf_db_path)
         except ImportError:
             _conv_engine_pf = None
-            _log.warning("Program F engine unavailable — falling back to V2")
+            logger.warning("Program F engine unavailable — fallback disabled")
 
         self.communication = CommunicationService(
             repository,
@@ -254,7 +229,6 @@ class LawimServices:
             maintenance=self.maintenance,
             ai_orchestrator=self.ai,
             disclaimer_manager=disclaimer,
-            conversation_state_engine=_conv_engine_v2,
             program_f_engine=_conv_engine_pf,
         )
         from .analytics.service import AnalyticsService

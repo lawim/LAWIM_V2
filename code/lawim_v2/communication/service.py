@@ -5,7 +5,6 @@ import re
 from ..observability import METRICS
 from ..maintenance import MAINTENANCE_FLAGS, MAINTENANCE_RESPONSE, MaintenanceService, MaintenanceSubmission
 from ..project_service import ProjectPermissionDenied, ProjectService
-# from ..conversation.state.engine import ConversationStateEngine  # LEGACY_DISABLED
 from ..financial.engines import normalize_mobile_money_number
 from . import dto as cdto
 from .delivery import mask_delivery_recipient
@@ -251,7 +250,6 @@ class CommunicationService:
         maintenance: MaintenanceService | None = None,
         ai_orchestrator=None,
         disclaimer_manager=None,
-        conversation_state_engine: Any | None = None,  # LEGACY_DISABLED
         program_f_engine=None,
     ) -> None:
         self.repository = repository
@@ -261,7 +259,6 @@ class CommunicationService:
         self.maintenance = maintenance or MaintenanceService(repository)
         self.ai = ai_orchestrator
         self.disclaimer = disclaimer_manager
-        self.conversation_state_engine = conversation_state_engine
         self.program_f_engine = program_f_engine
         self.engine = CommunicationPlatformEngine()
         self.notifications = NotificationService(repository)
@@ -277,36 +274,6 @@ class CommunicationService:
         self.conversations = ConversationService(repository)
         self.analytics_service = AnalyticsService(repository)
         self.integrations = IntegrationService(repository)
-
-    @staticmethod
-    def _auto_create_state_engine() -> Any:  # LEGACY_DISABLED
-        import sqlite3
-        import tempfile
-        # from ..conversation.state.engine import ConversationStateEngine  # LEGACY_DISABLED as _Engine
-        from ..conversation.state.repository import ConversationStateRepository
-        from ..conversation.state.resolver import ConversationResolver
-
-        class _AutoDB:
-            def __init__(self, conn: sqlite3.Connection) -> None:
-                self.conn = conn
-
-            def execute(self, sql: str, params: object = ()) -> object:
-                cur = self.conn.execute(sql, params or ())
-                self.conn.commit()
-                return cur
-
-            def fetch_one(self, sql: str, params: object = ()) -> dict | None:
-                cur = self.conn.execute(sql, params or ())
-                row = cur.fetchone()
-                return dict(row) if row else None
-
-        db_path = tempfile.mktemp(suffix=".db", prefix="lawim_conv_auto_")
-        conn = sqlite3.connect(db_path)
-        conn.row_factory = sqlite3.Row
-        db = _AutoDB(conn)
-        repo = ConversationStateRepository(db)
-        resolver = ConversationResolver()
-        return _Engine(repo, resolver)
 
     def _require_auth(self, actor: dict[str, object] | None) -> None:
         if actor is None:
@@ -656,20 +623,13 @@ class CommunicationService:
         def _prepend_identity(text: str) -> str:
             return f"🤖 LAWIM AI\n\n{text}"
 
-        # --- Canonical state engine path — Program F with V2 fallback ---
+        # --- Canonical state engine path — Program F only ---
         _pf_ok = self.program_f_engine is not None and hasattr(self.program_f_engine, "process_turn")
-        _v2_ok = False  # LEGACY_DISABLED: ConversationStateEngine disabled
-
-        _engine_source = None
-        if _pf_ok:
-            _engine_source = "program_f"
-            _engine = self.program_f_engine
-        elif _v2_ok:
-            _engine_source = "v2"
-            _engine = self.conversation_state_engine
+        _engine_source = "program_f" if _pf_ok else None
+        _engine = self.program_f_engine if _pf_ok else None
 
         self._log_turn(correlation_id, channel, conversation_key, raw_text, "engine_check",
-                       engine_source=_engine_source, pf_ok=_pf_ok, v2_ok=_v2_ok)
+                       engine_source=_engine_source, pf_ok=_pf_ok)
 
         if _engine_source:
             try:
@@ -716,7 +676,7 @@ class CommunicationService:
             except Exception as exc:
                 self.repository.create_communication_log(
                     level="error",
-                    message="ConversationStateEngine failed",
+                    message="ProgramF engine failed",
                     payload={"channel": channel, "error": str(exc)},
                 )
                 self._log_turn(correlation_id, channel, conversation_key, raw_text, "engine_exception", error=str(exc))
