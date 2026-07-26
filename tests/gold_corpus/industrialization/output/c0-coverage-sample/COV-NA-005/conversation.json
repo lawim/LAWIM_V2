@@ -1,0 +1,58 @@
+{
+  "id": "COV-NA-005",
+  "category": "rental",
+  "channel": "web",
+  "language": "fr",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un studio \u00e0 louer \u00e0 Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "100 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Akwa.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emm\u00e9nager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En avril.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Non merci, pas maintenant.",
+      "intent": "REFUSE"
+    },
+    {
+      "role": "assistant",
+      "text": "D'accord, aucune demande n'a \u00e9t\u00e9 cr\u00e9\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

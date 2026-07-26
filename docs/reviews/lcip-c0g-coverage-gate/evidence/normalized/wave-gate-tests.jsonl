@@ -1,0 +1,6 @@
+{"test": "valid_campaign", "result": "WAVE_GATE_PASS"}
+{"test": "exact_duplicate", "result": "WAVE_GATE_FAIL"}
+{"test": "spec_errors_10pct", "result": "STOP_NEXT_WAVE"}
+{"test": "tautology", "result": "WAVE_GATE_FAIL"}
+{"test": "baseline_regression", "result": "STOP_NEXT_WAVE"}
+{"test": "execution_errors_gt_1pct", "result": "STOP_NEXT_WAVE"}

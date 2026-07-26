@@ -1,0 +1,68 @@
+{
+  "id": "MW-002",
+  "category": "rental",
+  "channel": "web",
+  "language": "fr",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement \u00e0 louer \u00e0 Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "150000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "2.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Akwa.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En juillet.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Enregistr\u00e9.",
+      "intent": "NONE"
+    }
+  ]
+}

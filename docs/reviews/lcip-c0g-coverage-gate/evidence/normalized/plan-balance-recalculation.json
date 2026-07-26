@@ -1,0 +1,41 @@
+{
+  "transactions": {
+    "rent": 206,
+    "buy": 152,
+    "sell": 114,
+    "visit": 149,
+    "investment": 144
+  },
+  "categories": {
+    "rental": 350,
+    "search": 152,
+    "seller": 114,
+    "visit": 149
+  },
+  "property_types": {
+    "studio": 75,
+    "room": 75,
+    "apartment": 94,
+    "house": 94,
+    "villa": 94,
+    "land": 93,
+    "office": 93,
+    "commercial": 93,
+    "any": 54
+  },
+  "languages": {
+    "pcm": 196,
+    "fr": 303,
+    "en": 266
+  },
+  "channels": {
+    "telegram": 274,
+    "web": 251,
+    "whatsapp": 240
+  },
+  "difficulties": {
+    "standard": 261,
+    "advanced": 261,
+    "expert": 243
+  }
+}

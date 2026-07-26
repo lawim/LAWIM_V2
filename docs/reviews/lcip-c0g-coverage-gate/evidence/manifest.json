@@ -1,0 +1,155 @@
+[
+  {
+    "control_id": "CG-0001",
+    "path": "normalized/archetype-audit.jsonl",
+    "size": 36517,
+    "sha256": "1e33942a2d9f054c6ea8db0801a1627b9d399fc928a101016d33bc35c46ae438",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0002",
+    "path": "normalized/archetype-duplicate-groups.jsonl",
+    "size": 1250,
+    "sha256": "960b8081240b9b71bbf17fa9e623f0dffd7be4168085cd27198c28d44cd304de",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0003",
+    "path": "normalized/baseline-200-rerun.json",
+    "size": 64,
+    "sha256": "40ca305ed1587993f9adfcce07a3f4d200510c2cf18c33970043e9403a1310ab",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0004",
+    "path": "normalized/complex-language-correction-results.jsonl",
+    "size": 360,
+    "sha256": "db8b541cf1264ceb42fc4311c91c817d1acff1ec31df2441af430c8f6f16fee5",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0005",
+    "path": "normalized/corpus-plan-audit.json",
+    "size": 873,
+    "sha256": "b3e8c05d383cc1fb60b95d7c031b8dddc591719e7a7c79f45680c9e46f5186f7",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0006",
+    "path": "normalized/coverage-sample-runtime-results.jsonl",
+    "size": 2120,
+    "sha256": "9a7fc133a1d4be70f510d76a31bf5216671a105600ff927e5e6c5d676fcfcf66",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0007",
+    "path": "normalized/coverage-sample-static-results.jsonl",
+    "size": 2120,
+    "sha256": "9a7fc133a1d4be70f510d76a31bf5216671a105600ff927e5e6c5d676fcfcf66",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0008",
+    "path": "normalized/determinism-results.jsonl",
+    "size": 1270,
+    "sha256": "b263324c723fa76c9c5d4eb66690fd82449fe5e804d62d21b193837a1199c34c",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0009",
+    "path": "normalized/expected-actual-gate.jsonl",
+    "size": 2055,
+    "sha256": "91a92b3ebd330e8e48137deb6aaf2fcd112dd2a412eb467478a7dd240536c054",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0010",
+    "path": "normalized/mini-wave-results.jsonl",
+    "size": 4316,
+    "sha256": "967ade784c065510509e7b58fef927e61e0934298a8a436bbd201f897f1dcd11",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0011",
+    "path": "normalized/no-action-results.jsonl",
+    "size": 310,
+    "sha256": "5863bc77ad8dfdccf8567adc89ca9f6f44ff047838307ba72a96ab08877f43a0",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0012",
+    "path": "normalized/plan-balance-recalculation.json",
+    "size": 630,
+    "sha256": "c4691b673c362f4ee5ac7462d3f070c9936c04c4ea436b6f2980ee887afede4a",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0013",
+    "path": "normalized/reference-sample-25-rerun.json",
+    "size": 55,
+    "sha256": "3c1dddb8e5285d6389980611271b0da60844bebe6f6129a6dde72f66f514a535",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0014",
+    "path": "normalized/repair-engine-audit.jsonl",
+    "size": 604,
+    "sha256": "ba6aa3c32b536c6e4709559d69f3fe5dd7c9d5809ccede9424a71eb3c72ab284",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0015",
+    "path": "normalized/restart-results.jsonl",
+    "size": 400,
+    "sha256": "5e3c64821823aeffb63879bf4f2fbdaba207a6a5876abbd7d20b1e8dc6fe2ee8",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0016",
+    "path": "normalized/statistics.json",
+    "size": 705,
+    "sha256": "6d3874097826810a7254073403083913d0c897ed3deb0e86d79600f1f410504d",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "CG-0017",
+    "path": "normalized/wave-gate-tests.jsonl",
+    "size": 344,
+    "sha256": "19e78afbfe5da4571714416db0e430cc5c9eb647e72094198dd48fcf30f890a2",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  }
+]

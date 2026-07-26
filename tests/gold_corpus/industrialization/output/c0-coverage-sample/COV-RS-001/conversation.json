@@ -1,0 +1,78 @@
+{
+  "id": "COV-RS-001",
+  "category": "rental",
+  "channel": "web",
+  "language": "fr",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement \u00e0 louer \u00e0 Yaound\u00e9.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "200 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "2.",
+      "intent": "unknown"
+    },
+    {
+      "role": "system",
+      "text": "SERVICE_RESTART",
+      "intent": "unknown"
+    },
+    {
+      "role": "user",
+      "text": "Je veux plut\u00f4t \u00e0 Douala.",
+      "intent": "CORRECTION"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier pr\u00e9f\u00e9rez-vous \u00e0 Douala ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Makepe.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emm\u00e9nager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En mai.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

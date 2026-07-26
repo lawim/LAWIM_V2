@@ -1,0 +1,15 @@
+{"conversation_id": "COV-NA-001", "type": "no_action", "objects": 0, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}
+{"conversation_id": "COV-NA-002", "type": "no_action", "objects": 0, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}
+{"conversation_id": "COV-NA-003", "type": "no_action", "objects": 0, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}
+{"conversation_id": "COV-NA-004", "type": "no_action", "objects": 0, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}
+{"conversation_id": "COV-NA-005", "type": "no_action", "objects": 0, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}
+{"conversation_id": "COV-RS-001", "type": "restart", "objects": 1, "runtime_called": true, "has_restart": true, "status": "RESTART_HANDLED"}
+{"conversation_id": "COV-RS-002", "type": "restart", "objects": 1, "runtime_called": true, "has_restart": true, "status": "RESTART_HANDLED"}
+{"conversation_id": "COV-RS-003", "type": "restart", "objects": 1, "runtime_called": true, "has_restart": true, "status": "RESTART_HANDLED"}
+{"conversation_id": "COV-RS-004", "type": "restart", "objects": 1, "runtime_called": true, "has_restart": true, "status": "RESTART_HANDLED"}
+{"conversation_id": "COV-RS-005", "type": "restart", "objects": 1, "runtime_called": true, "has_restart": true, "status": "RESTART_HANDLED"}
+{"conversation_id": "COV-CX-001", "type": "FR_to_EN", "objects": 1, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}
+{"conversation_id": "COV-CX-002", "type": "EN_to_FR", "objects": 1, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}
+{"conversation_id": "COV-CX-003", "type": "PCM_to_FR", "objects": 1, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}
+{"conversation_id": "COV-CX-004", "type": "double_correction", "objects": 1, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}
+{"conversation_id": "COV-CX-005", "type": "transaction_change", "objects": 1, "runtime_called": true, "has_restart": false, "status": "EXECUTED_OK"}

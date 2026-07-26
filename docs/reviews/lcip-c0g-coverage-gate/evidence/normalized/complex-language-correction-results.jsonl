@@ -1,0 +1,5 @@
+{"conversation_id": "COV-CX-001", "type": "FR_to_EN", "pass": true}
+{"conversation_id": "COV-CX-002", "type": "EN_to_FR", "pass": true}
+{"conversation_id": "COV-CX-003", "type": "PCM_to_FR", "pass": true}
+{"conversation_id": "COV-CX-004", "type": "double_correction", "pass": true}
+{"conversation_id": "COV-CX-005", "type": "transaction_change", "pass": true}

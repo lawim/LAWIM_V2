@@ -1,0 +1,15 @@
+{"conversation_id": "COV-NA-001", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-NA-002", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-NA-003", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-NA-004", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-NA-005", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-RS-001", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-RS-002", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-RS-003", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-RS-004", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-RS-005", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-CX-001", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-CX-002", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-CX-003", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-CX-004", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}
+{"conversation_id": "COV-CX-005", "separated": true, "expected_source": "GENERATED_SPECIFICATION", "actual_source": "RUNTIME_EXECUTION"}

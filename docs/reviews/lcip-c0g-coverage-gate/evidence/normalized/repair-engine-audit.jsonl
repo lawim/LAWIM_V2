@@ -1,0 +1,8 @@
+{"test": "placeholder", "auto_repairable": true, "result": "FIXED"}
+{"test": "dialogue_too_short", "auto_repairable": true, "result": "FIXED"}
+{"test": "missing_provenance", "auto_repairable": true, "result": "FIXED"}
+{"test": "insufficient_variation", "auto_repairable": true, "result": "FIXED"}
+{"test": "format_error", "auto_repairable": true, "result": "FIXED"}
+{"test": "business_contradiction", "auto_repairable": false, "result": "BLOCKED"}
+{"test": "deep_ambiguity", "auto_repairable": false, "result": "BLOCKED"}
+{"test": "runtime_behavior_error", "auto_repairable": false, "result": "BLOCKED"}
