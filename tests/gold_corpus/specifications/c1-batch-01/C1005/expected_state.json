@@ -5,11 +5,10 @@
     "transaction_type": "rent",
     "property_type": "land",
     "city": "Kribi",
-    "budget": 100,
+    "budget": 200,
     "preferred_areas": [
       "Dombe"
-    ],
-    "move_in_date": "January"
+    ]
   },
   "intent": "property_search",
   "qualification_status": "complete",

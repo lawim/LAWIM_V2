@@ -4,21 +4,22 @@
   "level": "medium",
   "channel": "whatsapp",
   "language": "pcm",
-  "description": "Cameroon Pidgin English rental for land",
+  "description": "Cameroon Pidgin English rental for land in Kribi",
   "tags": [
     "pcm",
     "rental",
-    "multilingual"
+    "multilingual",
+    "land"
   ],
   "messages": [
     {
       "role": "user",
-      "text": "I wan get land for rent for Kribi.",
+      "text": "Hello, I wan get land for rent for Kribi o.",
       "intent": "SEARCH_PROPERTY"
     },
     {
       "role": "assistant",
-      "text": "How much you fit pay every month?",
+      "text": "How much you fit pay every month for the land?",
       "intent": "ASK_BUDGET"
     },
     {
@@ -28,37 +29,47 @@
     },
     {
       "role": "assistant",
-      "text": "Which area you prefer for Kribi?",
+      "text": "You want small land or big land? Which size you dey find?",
+      "intent": "CLARIFY_PROPERTY_TYPE"
+    },
+    {
+      "role": "user",
+      "text": "Make e be small, around 200 square metres.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Which area for Kribi you prefer?",
       "intent": "ASK_AREAS"
     },
     {
       "role": "user",
-      "text": "Dombe side.",
+      "text": "Dombe side, I like that place.",
       "intent": "unknown"
     },
     {
       "role": "assistant",
-      "text": "Which time you wan start?",
+      "text": "Which time you wan start to use the land?",
       "intent": "ASK_MOVE_IN_DATE"
     },
     {
       "role": "user",
-      "text": "Next year, for January.",
+      "text": "Next year for January, God willing.",
       "intent": "unknown"
     },
     {
       "role": "assistant",
-      "text": "You want make I register this search?",
+      "text": "You want make I register this search? I go keep am for you.",
       "intent": "CONFIRM_BUSINESS_CREATION"
     },
     {
       "role": "user",
-      "text": "Yes, register am.",
+      "text": "Yes, register am make I no forget.",
       "intent": "unknown"
     },
     {
       "role": "assistant",
-      "text": "Your search don register well.",
+      "text": "Your search don register well. We go contact you.",
       "intent": "NONE"
     }
   ]

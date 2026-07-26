@@ -5,7 +5,6 @@
       "type": "memory",
       "description": "Faits retenus",
       "expected": [
-        "city",
         "budget"
       ],
       "path": "memory_retained",

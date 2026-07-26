@@ -36,6 +36,10 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-26 | LCIP C.1 — Real Dialogue Batch 01 | 3910c80e | feature/lcip-c1-real-dialogues-batch-01-20260726 | docs/reviews/lcip-c1-batch-01/REPORT.md | docs/reviews/lcip-c1-batch-01/details/ | docs/reviews/lcip-c1-batch-01/evidence/ | PASS |
 
+| 2026-07-26 | LCIP C.1A — Independent Audit | d2a7a6fc | feature/lcip-c1-real-dialogues-batch-01-20260726 | docs/reviews/lcip-c1a-independent-audit/REPORT.md | docs/reviews/lcip-c1a-independent-audit/details/ | docs/reviews/lcip-c1a-independent-audit/evidence/ | PARTIAL |
+
+| 2026-07-26 | LCIP C.1A-R — Batch Repair | d2a7a6fc | feature/lcip-c1-real-dialogues-batch-01-20260726 | docs/reviews/lcip-c1ar-batch-repair/REPORT.md | docs/reviews/lcip-c1ar-batch-repair/details/ | docs/reviews/lcip-c1ar-batch-repair/evidence/ | PASS |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*

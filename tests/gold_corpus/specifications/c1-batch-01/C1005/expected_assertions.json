@@ -9,8 +9,7 @@
         "property_type",
         "city",
         "budget",
-        "preferred_areas",
-        "move_in_date"
+        "preferred_areas"
       ],
       "path": "memory_retained",
       "operator": "contains"

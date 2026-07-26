@@ -1,8 +1,5 @@
 {
   "conversation_id": "C1005",
   "expected_business_action": "CREATE_SEARCH",
-  "expected_business_object_count": 1,
-  "final_ask_turn": null,
-  "consent_turn": null,
-  "has_restart": false
+  "expected_business_object_count": 1
 }

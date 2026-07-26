@@ -1,5 +1,2 @@
-# C1005 - Cameroon Pidgin English rental for land
-
-Generated for LCIP C.1 batch 01.
-Language: pcm
-Category: multilingual
+# C1005 - Cameroon Pidgin English rental for land in Kribi
+Repaired during LCIP C.1A-R.

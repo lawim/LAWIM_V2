@@ -1,5 +1,2 @@
-# C1015 - English visit request
-
-Generated for LCIP C.1 batch 01.
-Language: en
-Category: visit
+# C1015 - English visit request for a property in Douala
+Repaired during LCIP C.1A-R.
