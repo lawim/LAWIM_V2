@@ -28,7 +28,7 @@ COPY --chown=lawim:lawim code /app/code
 COPY --chown=lawim:lawim scripts/entrypoint.sh /app/entrypoint.sh
 
 RUN chmod +x /app/entrypoint.sh \
-    && pip install --no-cache-dev -r /app/requirements.txt -r /app/requirements-postgresql.txt \
+    && pip install --no-cache-dir -r /app/requirements.txt -r /app/requirements-postgresql.txt \
     && echo "${LAWIM_BUILD_SHA}" > /app/BUILD_SHA
 
 USER lawim
