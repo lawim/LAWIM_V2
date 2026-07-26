@@ -1,0 +1,22 @@
+{
+  "main_head": "cea3af122371c97e4230eb10418f800c0087c276",
+  "origin_main": "cea3af122371c97e4230eb10418f800c0087c276",
+  "tag": "lawim-lcip-corpus-200-certified",
+  "tag_target": "ebeee7e9dc4d9e7c04d7ad48f11dcadc9ffd07cf",
+  "worktree_clean": true,
+  "corpus_results": 200,
+  "fully_certified": 185,
+  "functional_text_variant": 15,
+  "creation_idempotence_pass": 198,
+  "no_action_stability_pass": 2,
+  "restart_pass": 16,
+  "tests_pass": 104,
+  "tests_fail": 0,
+  "merge_mode": "ff-only",
+  "final_verdicts": [
+    "LCIP_B5_CORPUS_200_CERTIFIED",
+    "LCIP_B5_ADMINISTRATIVE_CLOSURE_PASS",
+    "LCIP_B5_REPORTING_POLICY_PASS",
+    "LCIP_B5_TAG_TARGET_VERIFIED"
+  ]
+}

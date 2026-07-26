@@ -1,0 +1,63 @@
+[
+  {
+    "path": "docs/reviews/lcip-b5-corpus-200/evidence/normalized/corpus-200-results.jsonl",
+    "mission": "B.5",
+    "assertions": [
+      "B5-CLOSE-001"
+    ],
+    "size": 49390,
+    "sha256": "7ecb784a432def00dbcd1c3632f5f25f20a436516e556f08a1fbdbe486e74825",
+    "present": true
+  },
+  {
+    "path": "docs/reviews/lcip-b5g-independent-gate/evidence/normalized/status-recalculation.json",
+    "mission": "B.5G",
+    "assertions": [
+      "B5-CLOSE-002",
+      "B5-CLOSE-003"
+    ],
+    "size": 172,
+    "sha256": "3f59a1b78f069369960ff370f9a13e07101a7e314d39c91599604340885f2047",
+    "present": true
+  },
+  {
+    "path": "docs/reviews/lcip-b5g-independent-gate/evidence/normalized/idempotence-recalculation.json",
+    "mission": "B.5G",
+    "assertions": [
+      "B5-CLOSE-004"
+    ],
+    "size": 287,
+    "sha256": "68f9e8a1f4fb691e2aa5e0ae526a9e6ee42a83d8b8b00c8a3a212b675257f28f",
+    "present": true
+  },
+  {
+    "path": "docs/reviews/lcip-b5-corpus-200/evidence/normalized/no-object-scenarios.jsonl",
+    "mission": "B.5",
+    "assertions": [
+      "B5-CLOSE-005"
+    ],
+    "size": 590,
+    "sha256": "dd4fe0e449f15c02c9ce833085f0784b5905a8db3f8dc9c3382e598ac6559ef1",
+    "present": true
+  },
+  {
+    "path": "docs/reviews/lcip-b5g-independent-gate/evidence/normalized/restart-independent-audit.jsonl",
+    "mission": "B.5G",
+    "assertions": [
+      "B5-CLOSE-006"
+    ],
+    "size": 2128,
+    "sha256": "660ae4dacd975fa5e35a3b9595dae7c5090740d8b02afdd7647106991da04b5e",
+    "present": true
+  },
+  {
+    "path": "docs/reviews/lcip-b5g-independent-gate/evidence/raw/tests/final-gate-tests.xml",
+    "mission": "B.5G",
+    "assertions": [
+      "B5-CLOSE-007"
+    ],
+    "size": 15628,
+    "sha256": "7af5892345e1564972e1d5bd668c909dac6cdf5f1bf1c9c5822b4aad3f13747c",
+    "present": true
+  }
+]

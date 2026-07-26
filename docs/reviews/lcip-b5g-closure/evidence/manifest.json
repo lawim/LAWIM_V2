@@ -1,0 +1,178 @@
+[
+  {
+    "control_id": "CLOSE-000",
+    "path": "SHA256SUMS",
+    "type": "checksum_manifest",
+    "size": 15,
+    "sha256": "63ddb03c04384215d4361638b39695fa682c7feaa69df80de6ada7f43a49a229",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0001",
+    "path": "normalized/closure-state.json",
+    "type": "evidence",
+    "size": 671,
+    "sha256": "ffc30a2e57c31ba27e4f1a792824a7bb636c0c5d8a8aab744f7c2dc372024ed2",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0002",
+    "path": "normalized/final-verdicts.json",
+    "type": "evidence",
+    "size": 212,
+    "sha256": "c9d56cf0f5916becddac77edf6da1af76134b87b440b25bb6eebf3227d56dce6",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0003",
+    "path": "normalized/referenced-evidence.json",
+    "type": "evidence",
+    "size": 1811,
+    "sha256": "5a6b765925f98f583b31bcf5062bf5f16a735ba4c76515381b5088adfe76d4bd",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0004",
+    "path": "normalized/tag-target-analysis.json",
+    "type": "evidence",
+    "size": 612,
+    "sha256": "5383ff325fe6312cfdcac60be923710d45dbab5de5c4a25ee98246eaafebe8bf",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0005",
+    "path": "raw/git/git-branch.txt",
+    "type": "evidence",
+    "size": 5,
+    "sha256": "6403203dd5a0867eb14d104ee8a73730bd72dd9ad92e78d996a6dba0a5dcfc01",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0006",
+    "path": "raw/git/git-diff-name.txt",
+    "type": "evidence",
+    "size": 1003,
+    "sha256": "4965b058cc8cc483f90b9ddd3f009dd1d85c9f1e567e196cce8de952e4435a2d",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0007",
+    "path": "raw/git/git-diff-stat.txt",
+    "type": "evidence",
+    "size": 1157,
+    "sha256": "0dc7a20a021edfa7544bc6238eb5c025f47df02138b9afe040cdf22225a51a3e",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0008",
+    "path": "raw/git/git-head.txt",
+    "type": "evidence",
+    "size": 41,
+    "sha256": "4ff08d96c534d05a918c5db7de6f3f703fb30f3b5b13fec4fc063632be7387a4",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0009",
+    "path": "raw/git/git-log.txt",
+    "type": "evidence",
+    "size": 987,
+    "sha256": "ed79196968d83fc2415699bbd5de701059b8d4eed0cf2fe02ac2b226034d5e2e",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0010",
+    "path": "raw/git/git-origin-main.txt",
+    "type": "evidence",
+    "size": 41,
+    "sha256": "4ff08d96c534d05a918c5db7de6f3f703fb30f3b5b13fec4fc063632be7387a4",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0011",
+    "path": "raw/git/git-remote-tag.txt",
+    "type": "evidence",
+    "size": 83,
+    "sha256": "42453d34a7530e0cfafe5dc77a0566dc460de7dc55abb6f7968f627c2a8f652c",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0012",
+    "path": "raw/git/git-show-cea3af12.txt",
+    "type": "evidence",
+    "size": 1222,
+    "sha256": "972b2bfad48a1ae1ffb4f02ff677b1c24e52c7edb2213c7458402b83ad395a7a",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0013",
+    "path": "raw/git/git-show-ebeee7e9.txt",
+    "type": "evidence",
+    "size": 2685,
+    "sha256": "49d55e77060bf170e5d2b75e6afab8e0c50df1d804a68febf67bd02e06263eab",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0014",
+    "path": "raw/git/git-status.txt",
+    "type": "evidence",
+    "size": 12104,
+    "sha256": "a44c64cc514082f4c2b9a5885a3f0e12a2183766d9258c5b471c2361e6da96d8",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLOSE-0015",
+    "path": "raw/git/git-tag-target.txt",
+    "type": "evidence",
+    "size": 41,
+    "sha256": "dd8b3c3289c6f0a46cdb263e8e3142da8dc790f4bc00f03c2d1c09b4c70b0b1a",
+    "created_at": "2026-07-26T12:00:00Z",
+    "source_mission": "B.5G-D",
+    "category": "closure_evidence",
+    "generated_by": "opencode-agent"
+  }
+]

@@ -1,0 +1,15 @@
+normalized/closure-state.json: Réussi
+normalized/final-verdicts.json: Réussi
+normalized/referenced-evidence.json: Réussi
+normalized/tag-target-analysis.json: Réussi
+raw/git/git-branch.txt: Réussi
+raw/git/git-diff-name.txt: Réussi
+raw/git/git-diff-stat.txt: Réussi
+raw/git/git-head.txt: Réussi
+raw/git/git-log.txt: Réussi
+raw/git/git-origin-main.txt: Réussi
+raw/git/git-remote-tag.txt: Réussi
+raw/git/git-show-cea3af12.txt: Réussi
+raw/git/git-show-ebeee7e9.txt: Réussi
+raw/git/git-status.txt: Réussi
+raw/git/git-tag-target.txt: Réussi

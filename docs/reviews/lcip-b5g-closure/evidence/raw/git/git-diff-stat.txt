@@ -1,0 +1,19 @@
+ docs/reviews/REPORT_INDEX.md                       |  3 +-
+ docs/reviews/lcip-b5g-closure/REPORT.md            | 44 ++++++++++++++++++++++
+ docs/reviews/lcip-b5g-closure/TRACEABILITY.md      | 10 +++++
+ .../lcip-b5g-closure/details/checksum-details.md   |  6 +++
+ .../lcip-b5g-closure/details/corpus-details.md     |  2 +
+ .../details/discrepancy-resolution-details.md      | 11 ++++++
+ .../lcip-b5g-closure/details/logs-details.md       |  2 +
+ .../lcip-b5g-closure/details/merge-details.md      | 11 ++++++
+ .../lcip-b5g-closure/details/ovh-details.md        |  2 +
+ .../lcip-b5g-closure/details/postgresql-details.md |  2 +
+ .../lcip-b5g-closure/details/runtime-details.md    |  2 +
+ .../lcip-b5g-closure/details/sqlite-details.md     |  2 +
+ .../lcip-b5g-closure/details/tag-details.md        |  8 ++++
+ .../lcip-b5g-closure/details/telegram-details.md   |  2 +
+ .../lcip-b5g-closure/details/test-details.md       |  5 +++
+ .../lcip-b5g-closure/details/tests-details.md      |  2 +
+ .../lcip-b5g-closure/details/web-details.md        |  2 +
+ .../lcip-b5g-closure/details/whatsapp-details.md   |  2 +
+ 18 files changed, 117 insertions(+), 1 deletion(-)

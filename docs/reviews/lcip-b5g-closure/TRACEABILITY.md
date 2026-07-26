@@ -1,10 +1,13 @@
-# Traceability Matrix — LCIP B.5G-C Closure
+# Traceability Matrix — LCIP B.5G-D Definitive Closure
 
-| Assertion | Control | File |
-|-----------|---------|------|
-| 5 discrepancies resolved | DISC-0001 | details/discrepancy-resolution-details.md |
-| Checksums B.5 verified | CHK-0001 | details/checksum-details.md |
-| Checksums B.5G verified | CHK-0002 | details/checksum-details.md |
-| Tests PASS (main) | TEST-0001 | details/test-details.md |
-| Merge to main | MERGE-0001 | details/merge-details.md |
-| Tag created | TAG-0001 | details/tag-details.md |
+| Assertion | Control | File | SHA-256 |
+|-----------|---------|------|---------|
+| 200 IDs uniques | B5-CLOSE-001 | corpus-200-results.jsonl | 7ecb784a432def00 |
+| 185 pleinement certifiees | B5-CLOSE-002 | status-recalculation.json | 3f59a1b78f069369 |
+| 15 variantes textuelles | B5-CLOSE-003 | status-recalculation.json | 68f9e8a1f4fb691e |
+| 198 creations idempotentes | B5-CLOSE-004 | idempotence-recalculation.json | dd4fe0e449f15c02 |
+| 2 non-actions stables | B5-CLOSE-005 | no-object-scenarios.jsonl | 660ae4dacd975fa5 |
+| 16 restarts reussis | B5-CLOSE-006 | restart-independent-audit.jsonl | 7af5892345e15649 |
+| 104 tests reussis | B5-CLOSE-007 | final-gate-tests.xml | %s |
+| fusion ff-only | B5-CLOSE-008 | evidence/raw/git/ | N/A (raw git output) |
+| tag publie | B5-CLOSE-009 | evidence/raw/git/git-remote-tag.txt | N/A (raw git output) |
