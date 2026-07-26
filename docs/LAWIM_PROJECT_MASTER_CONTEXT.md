@@ -1,8 +1,8 @@
 # LAWIM — Project Master Context
 
 ## Metadata
-- **HEAD :** f9c5e5ee
-- **Origin/main :** f9c5e5ee
+- **HEAD :** e8cee707
+- **Origin/main :** e8cee707
 - **Branche active :** main
 - **Branche active secondaire :** maintenance/1.0.x
 - **Tags de release :** lawim-v1.0.0, lawim-v1.0.0-multichannel-accepted
@@ -131,7 +131,7 @@ Détail dans `docs/reviews/release/e39c2c51-disappeared-tests.json`.
 
 1. **Derives PCM** : Identifiées, à corriger dans LAWIM V1.1
 2. **PostgreSQL** : Operationnel sur OVH (`lawim-postgres` sain)
-3. **f9c5e5ee** : HEAD officiel de production (aligné local, GitHub, OVH)
+3. **e8cee707** : HEAD officiel de production (aligné local, GitHub, OVH)
 4. **Tags OVH** : Synchronisés (seuls lawim-v1.0.0 et lawim-v1.0.0-multichannel-accepted conservés)
 5. **Anciens scripts/répertoires** : Récupérables via Git (`git show d7cdd410:<path>`)
 
@@ -151,4 +151,4 @@ Rapport de vérification : `docs/reviews/release/e39c2c51-baseline-independent-v
 Certification finale : `docs/reviews/release/e39c2c51-baseline-final-certification.md`
 
 ## Prochaine etape recommandee
-- **LAWIM V1.1 — PCM STABILIZATION** (autorisé — baseline f9c5e5ee certifiée production)
+- **LAWIM V1.1 — PCM STABILIZATION** (autorisé — baseline e8cee707 certifiée production)
