@@ -2,6 +2,8 @@
 
 FROM python:3.12-slim
 
+ARG LAWIM_BUILD_SHA=unknown
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app/code:/app/lawim_runtime \
@@ -9,7 +11,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     LAWIM_PORT=3000 \
     LAWIM_DB_PATH=/app/data/runtime/lawim.sqlite3 \
     LAWIM_SEED_DEMO_DATA=true \
-    PATH="/app/code:${PATH}"
+    PATH="/app/code:${PATH}" \
+    LAWIM_BUILD_SHA=${LAWIM_BUILD_SHA}
+
+LABEL org.opencontainers.image.revision=${LAWIM_BUILD_SHA}
 
 WORKDIR /app
 
@@ -23,7 +28,8 @@ COPY --chown=lawim:lawim code /app/code
 COPY --chown=lawim:lawim scripts/entrypoint.sh /app/entrypoint.sh
 
 RUN chmod +x /app/entrypoint.sh \
-    && pip install --no-cache-dir -r /app/requirements.txt -r /app/requirements-postgresql.txt
+    && pip install --no-cache-dev -r /app/requirements.txt -r /app/requirements-postgresql.txt \
+    && echo "${LAWIM_BUILD_SHA}" > /app/BUILD_SHA
 
 USER lawim
 
