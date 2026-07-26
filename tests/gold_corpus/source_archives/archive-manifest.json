@@ -1,0 +1,68 @@
+[
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "size": 22591,
+    "sha256": "534fe46102550ded2df913c6da7b5deac9fcd72e61829e8c3a76166125eac762",
+    "status": "PRIMARY"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED (1).zip",
+    "size": 25539,
+    "sha256": "8dc4e70cd0bd7a940464b578f1bcb401088b35ad4841825d0d05e1a94c5ff76b",
+    "status": "DUPLICATE"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "size": 25539,
+    "sha256": "8dc4e70cd0bd7a940464b578f1bcb401088b35ad4841825d0d05e1a94c5ff76b",
+    "status": "PRIMARY"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_03_DETAILED.zip",
+    "size": 12490,
+    "sha256": "08950ee51ca4b8763e4e0be42b4affe23e0a4ee4322c8f35f124c1bb2003a1b6",
+    "status": "PRIMARY"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_04_DETAILED.zip",
+    "size": 12830,
+    "sha256": "b3d29295eae7b85f02a89752b6986e93225e63b09a05099f8c5414772707cad6",
+    "status": "PRIMARY"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_05_DETAILED.zip",
+    "size": 8610,
+    "sha256": "6ffd246693b35a2eebc84a0749e92228445c1e9eed781927c7ee4c2166cc4fee",
+    "status": "PRIMARY"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_06_DETAILED.zip",
+    "size": 8492,
+    "sha256": "686f850d52f9a9566209bea5b90ab2500ac070b3a2f7487f2324c636f073ffb8",
+    "status": "PRIMARY"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_07_DETAILED.zip",
+    "size": 8869,
+    "sha256": "c58eeba064f5a4a8e073ee5c48847f82d75b7cee3d600c7d6f6573ef3db6486b",
+    "status": "PRIMARY"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_08_DETAILED.zip",
+    "size": 9044,
+    "sha256": "235a1e0818a38e49e1140acb4300e177f2b78edebce710183918ea76e3fb3951",
+    "status": "PRIMARY"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_09_DETAILED.zip",
+    "size": 10138,
+    "sha256": "6934bad3ffc6499392f53248c53faba1a84aa72abb1c2048b5bfdb0b32150123",
+    "status": "PRIMARY"
+  },
+  {
+    "filename": "LAWIM_GOLD_CORPUS_BLOCK_10_DETAILED.zip",
+    "size": 12025,
+    "sha256": "ffc689d6585ca4d0ef46e9757a76167b157a51a920bd1f32c6235a5f6a3baf66",
+    "status": "PRIMARY"
+  }
+]
