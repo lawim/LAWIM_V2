@@ -1,0 +1,121 @@
+{
+  "transitions": [
+    {
+      "from": "A.3",
+      "to": "A.3R",
+      "authorized": true
+    },
+    {
+      "from": "A.3R",
+      "to": "A.3R Completion",
+      "authorized": true
+    },
+    {
+      "from": "B.1",
+      "to": "B.1R",
+      "authorized": true
+    },
+    {
+      "from": "B.1R",
+      "to": "B.2",
+      "authorized": true
+    },
+    {
+      "from": "B.2",
+      "to": "B.3",
+      "authorized": true
+    },
+    {
+      "from": "B.3",
+      "to": "B.4",
+      "authorized": true
+    },
+    {
+      "from": "B.4",
+      "to": "B.4R",
+      "authorized": true
+    },
+    {
+      "from": "B.4R",
+      "to": "B.4RC",
+      "authorized": true
+    },
+    {
+      "from": "B.4RC",
+      "to": "B.4RE",
+      "authorized": true
+    },
+    {
+      "from": "B.4RE",
+      "to": "B.4RF",
+      "authorized": true
+    },
+    {
+      "from": "B.4RF",
+      "to": "B.5",
+      "authorized": true
+    },
+    {
+      "from": "B.5",
+      "to": "B.5G",
+      "authorized": true
+    },
+    {
+      "from": "B.5G",
+      "to": "B.5G Closure",
+      "authorized": true
+    },
+    {
+      "from": "B.5G Closure",
+      "to": "C.1 Batch 01",
+      "authorized": true
+    },
+    {
+      "from": "C.1 Batch 01",
+      "to": "C.1A",
+      "authorized": true
+    },
+    {
+      "from": "C.1A",
+      "to": "C.1A-R",
+      "authorized": true
+    },
+    {
+      "from": "C.1A-R",
+      "to": "C.0",
+      "authorized": true
+    },
+    {
+      "from": "C.0",
+      "to": "C.0G",
+      "authorized": true
+    },
+    {
+      "from": "C.0G",
+      "to": "C.0G-R",
+      "authorized": true
+    },
+    {
+      "from": "C.0G-R",
+      "to": "W01",
+      "authorized": true
+    },
+    {
+      "from": "W01",
+      "to": "W02",
+      "authorized": true
+    },
+    {
+      "from": "W02",
+      "to": "W03",
+      "authorized": true
+    },
+    {
+      "from": "W03",
+      "to": "W04",
+      "authorized": "PENDING"
+    }
+  ],
+  "complete_chain": true,
+  "pending_transition": "W03\u2192W04"
+}

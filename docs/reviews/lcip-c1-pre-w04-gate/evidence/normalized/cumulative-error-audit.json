@@ -1,0 +1,8 @@
+{
+  "normalizer_errors": 0,
+  "comparator_errors": 0,
+  "tautology_detected": 0,
+  "specification_errors": 0,
+  "execution_errors": 0,
+  "proven_runtime_errors": 0
+}

@@ -1,0 +1,8 @@
+{
+  "baseline_real_certified": 200,
+  "reference_sample_certified": 25,
+  "industrial_w01_w03_certified": 600,
+  "current_certified_total": 825,
+  "w04_remaining": 165,
+  "target_certified_total": 990
+}

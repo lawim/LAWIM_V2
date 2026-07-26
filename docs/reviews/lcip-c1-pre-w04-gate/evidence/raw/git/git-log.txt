@@ -1,0 +1,30 @@
+cfdeba58 (HEAD -> feature/lcip-c1-wave-03-20260726, origin/feature/lcip-c1-wave-03-20260726) test(lcip): generate and certify industrial gold wave three
+1b266b2d (origin/feature/lcip-c1-wave-02-20260726, feature/lcip-c1-wave-02-20260726) test(lcip): generate and certify industrial gold wave two
+abb3c71e (origin/feature/lcip-c1-wave-01-20260726, feature/lcip-c1-wave-01-20260726) test(lcip): generate and certify industrial gold wave one
+1eae54ca (origin/feature/lcip-c0-industrialization-20260726, feature/lcip-c0-industrialization-20260726) test(lcip): rebalance industrial corpus plan and close coverage gate
+c51d392d test(lcip): validate industrial pipeline coverage before wave one
+2faaa5fb feat(lcip): build industrial gold conversation generation pipeline
+ef593a14 (origin/feature/lcip-c1-real-dialogues-batch-01-20260726, feature/lcip-c1-real-dialogues-batch-01-20260726) test(lcip): qualify batch 01 as industrialization validation sample
+d2a7a6fc test(lcip): reconstruct and certify first 25 template conversations
+3910c80e (origin/main, main) docs(lcip): complete corpus 200 certification closure evidence
+cea3af12 docs(lcip): closure report for corpus 200 certification
+ebeee7e9 (tag: lawim-lcip-corpus-200-certified, origin/feature/lcip-b5-corpus-200-certification-20260726, feature/lcip-b5-corpus-200-certification-20260726) docs(lcip): close corpus 200 independent certification gate
+06d21436 test(lcip): certify 200 real gold conversations
+2670f2be (origin/feature/lcip-b4r-spec-repair-20260726, feature/lcip-b4r-spec-repair-20260726) test(lcip): validate restart and idempotence for supervised pilot
+312d22ec test(lcip): execute supervised gold specification pilot
+8795a09b test(lcip): validate supervised gold specifications pilot
+e52b6c57 (origin/feature/lcip-b3-expected-actual-reconciliation-20260726, feature/lcip-b4-gold-spec-reconstruction-20260726, feature/lcip-b3-expected-actual-reconciliation-20260726) feat(lcip): B.3 canonical expected/actual reconciliation
+820fd751 test(lcip): B.2 runtime certification campaign — 200 real dialogues executed
+303f9ae6 feat(lcip): complete LCIP A.3R runtime certification engine with safeguards
+473b2722 docs(evidence): publish V1.1 production validation, gold corpus audit, evidence directory
+4d65582a (tag: lawim-v1.1.0, origin/feature/lawim-v1.1-gold-corpus-integration-20260726, feature/lawim-v1.1-pcm-stabilization-20260726, feature/lawim-v1.1-gold-corpus-integration-20260726) feat(gold-corpus): add validators, runners, certified blocks 01-02
+6bf7a1e4 (origin/feature/lawim-v1.1-pcm-stabilization-20260726) feat(gold-corpus): initial structure — schema, source manifest, replacement map
+89ca1149 feat(pcm): V1.1 PCM stabilization — detection, templates, corpus, tests
+28a9a6da (tag: lawim-v1.0.0-multichannel-accepted, tag: lawim-v1.0.0) docs(sync): normalize production sync to e8cee707 — rename report, update references, close todos
+e8cee707 docs(sync): global production sync report — f9c5e5ee aligned everywhere
+f9c5e5ee docs(certification): LAWIM V1 production certification — all channels PASS
+bd30d3c5 docs(baseline): final certification — 1383 explained, 107 tests listed, 23 capabilities matrix, master context updated
+e39c2c51 cleanup(v1): definitive baseline cleanup — remove dead branches, tags, tests, scripts, reports, docs, knowledge, datasets, compose, docker, env, mission tests
+d7cdd410 docs(release): LAWIM V1.0.0 final release report
+157fe41b (origin/feature/lawim-v1-definitive-cleanup-20260725) fix(deploy): include lawim_runtime in Docker image + graceful marketplace fallback
+154c7a8b docs(review): cleanup gate report e3aa0462

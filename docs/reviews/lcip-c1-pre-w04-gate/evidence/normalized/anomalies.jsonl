@@ -1,0 +1,1 @@
+{"id": "ANOM-001", "severity": "INFO", "description": "Early missions (A.1-B.3) use legacy SHA256SUMS format. Non-blocking.", "blocking": false}
