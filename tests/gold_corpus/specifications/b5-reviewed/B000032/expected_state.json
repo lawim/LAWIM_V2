@@ -1,0 +1,16 @@
+{
+  "conversation_id": "B000032",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "buy",
+    "property_type": "land",
+    "city": "Douala",
+    "budget": 18000,
+    "preferred_areas": [
+      "Makepe"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

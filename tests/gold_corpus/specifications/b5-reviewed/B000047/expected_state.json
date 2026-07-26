@@ -1,0 +1,16 @@
+{
+  "conversation_id": "B000047",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "budget": 15,
+    "preferred_areas": [
+      "Akwa"
+    ],
+    "move_in_date": "Mai"
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

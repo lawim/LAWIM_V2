@@ -1,0 +1,18 @@
+{
+  "conversation_id": "B000128",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "land",
+    "city": "Kribi",
+    "budget": 3,
+    "preferred_areas": [
+      "Dombe"
+    ],
+    "move_in_date": "Septembre",
+    "bedrooms": 3
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

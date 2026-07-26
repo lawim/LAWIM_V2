@@ -1,0 +1,17 @@
+{
+  "conversation_id": "B000140",
+  "language": "pcm",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Douala",
+    "move_in_date": "Mai",
+    "budget": 17000,
+    "preferred_areas": [
+      "Bonamoussadi"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

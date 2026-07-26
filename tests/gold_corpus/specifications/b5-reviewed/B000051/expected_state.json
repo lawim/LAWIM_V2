@@ -1,0 +1,12 @@
+{
+  "conversation_id": "B000051",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "studio",
+    "budget": 15
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

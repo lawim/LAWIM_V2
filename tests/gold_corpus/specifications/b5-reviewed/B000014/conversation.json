@@ -1,0 +1,79 @@
+{
+  "id": "B000014",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Location studio à Douala",
+  "tags": [
+    "location",
+    "qualification",
+    "confirmation",
+    "multi_area"
+  ],
+  "business_object": "studio",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0014",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Bonjour, je cherche un studio à louer à Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel souhaitez-vous consacrer à cette location ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "Mon budget maximum est de 250 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres souhaitez-vous ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "3 chambres.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quels quartiers préférez-vous à Douala ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi ou Akwa.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "À partir de quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En septembre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Récapitulatif : studio à louer à Douala, budget 250 000 FCFA, 3, zones Bonamoussadi ou Akwa, entrée en septembre. Souhaitez-vous que j’enregistre cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui, enregistrez-la.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre demande de recherche a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

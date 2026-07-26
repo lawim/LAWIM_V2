@@ -1,0 +1,17 @@
+{
+  "conversation_id": "B000185",
+  "language": "pcm",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Douala",
+    "budget": 130000,
+    "preferred_areas": [
+      "Makepe"
+    ],
+    "move_in_date": "Mai"
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

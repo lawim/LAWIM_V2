@@ -1,0 +1,16 @@
+{
+  "conversation_id": "B000162",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "apartment",
+    "city": "Kribi",
+    "budget": 180000,
+    "preferred_areas": [
+      "Dombe"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

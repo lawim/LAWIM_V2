@@ -1,0 +1,58 @@
+{
+  "id": "B000035",
+  "category": "purchase",
+  "level": "basic",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Achat terrain à Limbe",
+  "tags": [
+    "achat",
+    "qualification",
+    "confirmation"
+  ],
+  "business_object": "terrain",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0035",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux acheter un terrain à Limbe.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel est votre budget d’achat ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "Je peux aller jusqu’à 50 000 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Avez-vous des quartiers préférés ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Down Beach ou Mokunda.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : achat d’un terrain à Limbe, budget maximal 50 000 000 FCFA, zones Down Beach ou Mokunda. Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche d’achat a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

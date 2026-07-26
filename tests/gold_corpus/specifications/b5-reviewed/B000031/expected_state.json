@@ -1,0 +1,17 @@
+{
+  "conversation_id": "B000031",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "buy",
+    "property_type": "apartment",
+    "city": "Yaoundé",
+    "budget": 12000,
+    "preferred_areas": [
+      "Bastos",
+      "Mvan"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

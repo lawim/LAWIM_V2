@@ -1,0 +1,15 @@
+{
+  "conversation_id": "B000098",
+  "language": "pcm",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Bafoussam",
+    "budget": 2,
+    "bedrooms": 2,
+    "move_in_date": "September"
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

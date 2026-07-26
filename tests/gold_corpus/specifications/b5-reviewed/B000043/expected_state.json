@@ -1,0 +1,12 @@
+{
+  "conversation_id": "B000043",
+  "language": "fr",
+  "expected_facts": {
+    "property_type": "commercial",
+    "city": "Kribi",
+    "budget": 80000
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

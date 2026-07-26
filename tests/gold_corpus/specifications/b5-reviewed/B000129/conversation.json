@@ -1,0 +1,60 @@
+{
+  "id": "B000129",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "whatsapp",
+  "language": "en",
+  "description": "Correction After Recap #9",
+  "tags": [
+    "correction_after_recap",
+    "correction",
+    "state_consistency",
+    "explicit_confirmation",
+    "idempotence"
+  ],
+  "business_object": "maison",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B02-0129",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Location maison à Douala, 100 000 FCFA, Bonamoussadi, septembre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : location, maison, à Douala, budget 100 000 FCFA, 3 chambre(s), zones Bonamoussadi, entrée septembre. Souhaitez-vous enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Pas encore. Je veux finalement 4 chambres.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Nombre de chambres corrigé. Nouveau récapitulatif : location, maison, à Douala, budget 100 000 FCFA, 4 chambre(s), zones Bonamoussadi, entrée septembre. Enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Et l'entrée doit être en novembre, pas septembre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Date corrigée. Nouveau récapitulatif : location, maison, à Douala, budget 100 000 FCFA, 4 chambre(s), zones Bonamoussadi, entrée novembre. Enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

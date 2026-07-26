@@ -1,0 +1,79 @@
+{
+  "id": "B000100",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "whatsapp",
+  "language": "pcm",
+  "description": "PCM rental flow 100",
+  "tags": [
+    "pcm",
+    "multilingual",
+    "rental",
+    "short_messages"
+  ],
+  "business_object": "house",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0100",
+  "messages": [
+    {
+      "role": "user",
+      "text": "I wan rent house for Yaoundé.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "How much you fit pay every month?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "Ma budget na 100 thousand.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "How many bedroom you need?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "Na 1 bedroom.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Which area you prefer?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Ngoa-Ekellé",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Which time you wan enter the house?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "September.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "I don note am. You wan make I register this search?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Yes, register am.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Your search don register well.",
+      "intent": "NONE"
+    }
+  ]
+}

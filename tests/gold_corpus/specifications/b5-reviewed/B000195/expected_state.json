@@ -1,0 +1,16 @@
+{
+  "conversation_id": "B000195",
+  "language": "en",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "apartment",
+    "city": "Kribi",
+    "budget": 130000,
+    "preferred_areas": [
+      "Mboamanga"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

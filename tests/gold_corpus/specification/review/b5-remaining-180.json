@@ -1,0 +1,3098 @@
+{
+  "manifest": "b5-remaining-180",
+  "total_remaining": 180,
+  "conversations": [
+    {
+      "conversation_id": "B000003",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000006",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000007",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000008",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000009",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000010",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000011",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000012",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000013",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000014",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000015",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000016",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000017",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000018",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000019",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000020",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "location",
+        "qualification",
+        "confirmation",
+        "multi_area"
+      ]
+    },
+    {
+      "conversation_id": "B000022",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000023",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000024",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000025",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000026",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000027",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000028",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000029",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000030",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000031",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000032",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000033",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000034",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000035",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "purchase",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "achat",
+        "qualification",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000037",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "vente",
+        "propriétaire",
+        "consentement"
+      ]
+    },
+    {
+      "conversation_id": "B000038",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "vente",
+        "propriétaire",
+        "consentement"
+      ]
+    },
+    {
+      "conversation_id": "B000039",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "vente",
+        "propriétaire",
+        "consentement"
+      ]
+    },
+    {
+      "conversation_id": "B000040",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "vente",
+        "propriétaire",
+        "consentement"
+      ]
+    },
+    {
+      "conversation_id": "B000041",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "vente",
+        "propriétaire",
+        "consentement"
+      ]
+    },
+    {
+      "conversation_id": "B000042",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "vente",
+        "propriétaire",
+        "consentement"
+      ]
+    },
+    {
+      "conversation_id": "B000043",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "vente",
+        "propriétaire",
+        "consentement"
+      ]
+    },
+    {
+      "conversation_id": "B000044",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "vente",
+        "propriétaire",
+        "consentement"
+      ]
+    },
+    {
+      "conversation_id": "B000045",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "vente",
+        "propriétaire",
+        "consentement"
+      ]
+    },
+    {
+      "conversation_id": "B000046",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000047",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000048",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000049",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000050",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000051",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000052",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000053",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000054",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000055",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "visit",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "visite",
+        "rendez_vous",
+        "confirmation"
+      ]
+    },
+    {
+      "conversation_id": "B000058",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction",
+        "change_of_mind",
+        "no_premature_action"
+      ]
+    },
+    {
+      "conversation_id": "B000059",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction",
+        "change_of_mind",
+        "no_premature_action"
+      ]
+    },
+    {
+      "conversation_id": "B000060",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction",
+        "change_of_mind",
+        "no_premature_action"
+      ]
+    },
+    {
+      "conversation_id": "B000061",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction",
+        "change_of_mind",
+        "no_premature_action"
+      ]
+    },
+    {
+      "conversation_id": "B000062",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction",
+        "change_of_mind",
+        "no_premature_action"
+      ]
+    },
+    {
+      "conversation_id": "B000063",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction",
+        "change_of_mind",
+        "no_premature_action"
+      ]
+    },
+    {
+      "conversation_id": "B000064",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction",
+        "change_of_mind",
+        "no_premature_action"
+      ]
+    },
+    {
+      "conversation_id": "B000065",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction",
+        "change_of_mind",
+        "no_premature_action"
+      ]
+    },
+    {
+      "conversation_id": "B000067",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 18,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "clarification",
+        "ambiguity",
+        "progressive_qualification"
+      ]
+    },
+    {
+      "conversation_id": "B000068",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 18,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "clarification",
+        "ambiguity",
+        "progressive_qualification"
+      ]
+    },
+    {
+      "conversation_id": "B000069",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 18,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "clarification",
+        "ambiguity",
+        "progressive_qualification"
+      ]
+    },
+    {
+      "conversation_id": "B000070",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 18,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "clarification",
+        "ambiguity",
+        "progressive_qualification"
+      ]
+    },
+    {
+      "conversation_id": "B000071",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 18,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "clarification",
+        "ambiguity",
+        "progressive_qualification"
+      ]
+    },
+    {
+      "conversation_id": "B000072",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 18,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "clarification",
+        "ambiguity",
+        "progressive_qualification"
+      ]
+    },
+    {
+      "conversation_id": "B000073",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 18,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "clarification",
+        "ambiguity",
+        "progressive_qualification"
+      ]
+    },
+    {
+      "conversation_id": "B000074",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 18,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "clarification",
+        "ambiguity",
+        "progressive_qualification"
+      ]
+    },
+    {
+      "conversation_id": "B000075",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 18,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "clarification",
+        "ambiguity",
+        "progressive_qualification"
+      ]
+    },
+    {
+      "conversation_id": "B000078",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "refusal",
+        "cancellation",
+        "no_business_action"
+      ]
+    },
+    {
+      "conversation_id": "B000079",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "refusal",
+        "cancellation",
+        "no_business_action"
+      ]
+    },
+    {
+      "conversation_id": "B000080",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "refusal",
+        "cancellation",
+        "no_business_action"
+      ]
+    },
+    {
+      "conversation_id": "B000081",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "refusal",
+        "cancellation",
+        "no_business_action"
+      ]
+    },
+    {
+      "conversation_id": "B000082",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "refusal",
+        "cancellation",
+        "no_business_action"
+      ]
+    },
+    {
+      "conversation_id": "B000084",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart",
+        "persistence",
+        "no_repeated_questions"
+      ]
+    },
+    {
+      "conversation_id": "B000085",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart",
+        "persistence",
+        "no_repeated_questions"
+      ]
+    },
+    {
+      "conversation_id": "B000086",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart",
+        "persistence",
+        "no_repeated_questions"
+      ]
+    },
+    {
+      "conversation_id": "B000087",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart",
+        "persistence",
+        "no_repeated_questions"
+      ]
+    },
+    {
+      "conversation_id": "B000088",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart",
+        "persistence",
+        "no_repeated_questions"
+      ]
+    },
+    {
+      "conversation_id": "B000091",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "english",
+        "multilingual",
+        "rental"
+      ]
+    },
+    {
+      "conversation_id": "B000092",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "english",
+        "multilingual",
+        "rental"
+      ]
+    },
+    {
+      "conversation_id": "B000093",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "english",
+        "multilingual",
+        "rental"
+      ]
+    },
+    {
+      "conversation_id": "B000094",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "english",
+        "multilingual",
+        "rental"
+      ]
+    },
+    {
+      "conversation_id": "B000097",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "pcm",
+        "multilingual",
+        "rental",
+        "short_messages"
+      ]
+    },
+    {
+      "conversation_id": "B000098",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "pcm",
+        "multilingual",
+        "rental",
+        "short_messages"
+      ]
+    },
+    {
+      "conversation_id": "B000099",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "pcm",
+        "multilingual",
+        "rental",
+        "short_messages"
+      ]
+    },
+    {
+      "conversation_id": "B000100",
+      "source_block": 1,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "pcm",
+        "multilingual",
+        "rental",
+        "short_messages"
+      ]
+    },
+    {
+      "conversation_id": "B000102",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "single_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000103",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "single_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000104",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "single_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000105",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "single_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000106",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "single_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000107",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "single_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000108",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "single_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000109",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "single_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000110",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "single_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000112",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 14,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "double_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000113",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 14,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "double_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000114",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 14,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "double_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000115",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 14,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "double_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000116",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 14,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "double_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000117",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 14,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "double_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000118",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 14,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "double_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000119",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 14,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "double_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000120",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 14,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "double_fact_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000122",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction_after_recap",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000123",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction_after_recap",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000124",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction_after_recap",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000125",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction_after_recap",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000126",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction_after_recap",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000127",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction_after_recap",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000128",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction_after_recap",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000129",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction_after_recap",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000130",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "correction_after_recap",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000132",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "transaction_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000133",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "transaction_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000134",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "transaction_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000135",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "transaction_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000136",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "transaction_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000137",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "transaction_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000138",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "transaction_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000139",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "transaction_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000140",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "transaction_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000141",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000142",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000143",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000144",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000145",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000146",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000147",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000148",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000149",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000150",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "property_type_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000151",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000152",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000153",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000154",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000155",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000156",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000157",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000158",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000159",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000160",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "city_and_area_switch",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000161",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000162",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000163",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000164",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000165",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000166",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000167",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000168",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000169",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000170",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 8,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "undo_last_change",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000171",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000172",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000173",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000174",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000175",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000176",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000177",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000178",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 10,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000179",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000180",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 12,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "contradiction_resolution",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000181",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000182",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000183",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000184",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000185",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000186",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "whatsapp",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000187",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "web",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000188",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "fr",
+      "channel": "telegram",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000189",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000190",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 7,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "restart_after_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000191",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000192",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000193",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000194",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000195",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "telegram",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000196",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "whatsapp",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000197",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "web",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000198",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "telegram",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000199",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "en",
+      "channel": "whatsapp",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    },
+    {
+      "conversation_id": "B000200",
+      "source_block": 2,
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "category": "rental",
+      "language": "pcm",
+      "channel": "web",
+      "turn_count": 6,
+      "pilot_excluded_reason": "not_in_b4rc_pilot",
+      "placeholder_free": true,
+      "tags": [
+        "multilingual_correction",
+        "correction",
+        "state_consistency",
+        "explicit_confirmation",
+        "idempotence"
+      ]
+    }
+  ]
+}

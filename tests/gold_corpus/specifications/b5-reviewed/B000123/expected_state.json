@@ -1,0 +1,18 @@
+{
+  "conversation_id": "B000123",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Douala",
+    "budget": 4,
+    "preferred_areas": [
+      "Bonamoussadi"
+    ],
+    "move_in_date": "Septembre",
+    "bedrooms": 4
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

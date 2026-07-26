@@ -1,0 +1,16 @@
+{
+  "conversation_id": "B000070",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "studio",
+    "city": "Yaoundé",
+    "budget": 100000,
+    "preferred_areas": [
+      "Melen"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

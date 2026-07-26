@@ -1,0 +1,19 @@
+{
+  "conversation_id": "B000018",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "studio",
+    "city": "Douala",
+    "budget": 3,
+    "bedrooms": 3,
+    "preferred_areas": [
+      "Bonamoussadi",
+      "Akwa"
+    ],
+    "move_in_date": "Septembre"
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

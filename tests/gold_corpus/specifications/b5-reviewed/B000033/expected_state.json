@@ -1,0 +1,17 @@
+{
+  "conversation_id": "B000033",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "buy",
+    "property_type": "house",
+    "city": "Bafoussam",
+    "move_in_date": "Mai",
+    "budget": 25000,
+    "preferred_areas": [
+      "Tamdja"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

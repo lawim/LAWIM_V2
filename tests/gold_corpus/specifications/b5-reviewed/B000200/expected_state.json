@@ -1,0 +1,17 @@
+{
+  "conversation_id": "B000200",
+  "language": "pcm",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Douala",
+    "budget": 150,
+    "preferred_areas": [
+      "Bonamoussadi",
+      "Makepe"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

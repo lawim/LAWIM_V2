@@ -1,0 +1,13 @@
+{
+  "conversation_id": "B000030",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "buy",
+    "property_type": "house",
+    "move_in_date": "Mai",
+    "budget": 50000
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

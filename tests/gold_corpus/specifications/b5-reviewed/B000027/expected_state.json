@@ -1,0 +1,17 @@
+{
+  "conversation_id": "B000027",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "buy",
+    "property_type": "house",
+    "city": "Douala",
+    "move_in_date": "Mai",
+    "budget": 18000,
+    "preferred_areas": [
+      "Makepe"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

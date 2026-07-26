@@ -1,0 +1,15 @@
+{
+  "conversation_id": "B000042",
+  "language": "fr",
+  "expected_facts": {
+    "property_type": "apartment",
+    "city": "Bafoussam",
+    "preferred_areas": [
+      "Tamdja"
+    ],
+    "budget": 40000
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

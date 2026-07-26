@@ -1,0 +1,15 @@
+{
+  "conversation_id": "B000049",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "apartment",
+    "budget": 15,
+    "preferred_areas": [
+      "Mvan"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

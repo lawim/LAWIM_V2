@@ -1,0 +1,34 @@
+{
+  "assertions": [
+    {
+      "id": "B000003-MEM-001",
+      "type": "memory",
+      "description": "Faits retenus",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget",
+        "move_in_date"
+      ],
+      "path": "memory_retained",
+      "operator": "contains"
+    },
+    {
+      "id": "B000003-BIZ-001",
+      "type": "business",
+      "description": "Action metier",
+      "expected": "create_search_request",
+      "path": "next_action",
+      "operator": "eq"
+    },
+    {
+      "id": "B000003-LANG-001",
+      "type": "language",
+      "description": "Langue",
+      "expected": "fr",
+      "path": "responses_language",
+      "operator": "eq"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "conversation_id": "B000158",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Yaoundé",
+    "preferred_areas": [
+      "Melen"
+    ],
+    "move_in_date": "Mai",
+    "budget": 220000
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

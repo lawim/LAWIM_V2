@@ -1,0 +1,55 @@
+{
+  "id": "B000190",
+  "category": "rental",
+  "level": "expert",
+  "channel": "web",
+  "language": "pcm",
+  "description": "Restart After Correction #10",
+  "tags": [
+    "restart_after_correction",
+    "correction",
+    "state_consistency",
+    "explicit_confirmation",
+    "idempotence"
+  ],
+  "business_object": "terrain",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B02-0190",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un terrain à Kribi, budget 150 000 FCFA, quartier Dombe.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Récapitulatif : location, terrain, à Kribi, budget 150 000 FCFA, zones Dombe, entrée septembre. Enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Corrigez : 170 000 FCFA et Mboamanga.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Corrections prises en compte : location, terrain, à Kribi, budget 170 000 FCFA, zones Mboamanga, entrée septembre. Enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "system",
+      "text": "SERVICE_RESTART",
+      "intent": "unknown"
+    },
+    {
+      "role": "user",
+      "text": "Oui, enregistrez maintenant.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche corrigée a été enregistrée après reprise.",
+      "intent": "NONE"
+    }
+  ]
+}
