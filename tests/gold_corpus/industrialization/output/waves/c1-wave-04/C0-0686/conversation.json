@@ -1,0 +1,58 @@
+{
+  "id": "C0-0686",
+  "category": "rental",
+  "language": "fr",
+  "channel": "telegram",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement à louer à Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "200000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "1.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Non merci.",
+      "intent": "REFUSE"
+    },
+    {
+      "role": "assistant",
+      "text": "D'accord.",
+      "intent": "NONE"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "conversation_id": "C0-0677",
+  "expected_business_action": "CREATE_SEARCH",
+  "expected_business_object_count": 1
+}

@@ -1,0 +1,21 @@
+{
+  "total": 165,
+  "unique_ids": 165,
+  "unique_templates": 165,
+  "overlap_with_previous": 0,
+  "creation": 137,
+  "no_action": 28,
+  "restart": 20,
+  "fr": 111,
+  "en": 27,
+  "pcm": 27,
+  "web": 55,
+  "telegram": 55,
+  "whatsapp": 55,
+  "standard": 85,
+  "advanced": 48,
+  "expert": 32,
+  "explicit_correction_planned": 91,
+  "multi_correction_planned": 32,
+  "language_switch_planned": 54
+}

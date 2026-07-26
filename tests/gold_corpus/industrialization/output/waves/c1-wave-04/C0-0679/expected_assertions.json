@@ -1,0 +1,32 @@
+{
+  "assertions": [
+    {
+      "id": "C0-0679-MEM-001",
+      "type": "memory",
+      "description": "Faits",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city"
+      ],
+      "path": "memory_retained",
+      "operator": "contains"
+    },
+    {
+      "id": "C0-0679-BIZ-001",
+      "type": "business",
+      "description": "Action",
+      "expected": "create_search_request",
+      "path": "next_action",
+      "operator": "eq"
+    },
+    {
+      "id": "C0-0679-LANG-001",
+      "type": "language",
+      "description": "Langue",
+      "expected": "fr",
+      "path": "responses_language",
+      "operator": "eq"
+    }
+  ]
+}

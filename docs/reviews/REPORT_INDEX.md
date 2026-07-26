@@ -54,6 +54,8 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-26 | LCIP C.1 Pre-W04 Gate | cfdeba58 | feature/lcip-c1-wave-03-20260726 | docs/reviews/lcip-c1-pre-w04-gate/REPORT.md | docs/reviews/lcip-c1-pre-w04-gate/details/ | docs/reviews/lcip-c1-pre-w04-gate/evidence/ | PASS |
 
+| 2026-07-26 | LCIP C.1-W04 — Final Industrial Wave | 804b73b3 | feature/lcip-c1-wave-04-20260726 | docs/reviews/lcip-c1-wave-04/REPORT.md | docs/reviews/lcip-c1-wave-04/details/ | docs/reviews/lcip-c1-wave-04/evidence/ | PASS |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*
