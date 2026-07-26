@@ -1,0 +1,10 @@
+{"cohort": "C2-GLOBAL-C01", "size": 100, "ok": 100, "err": 0, "dur_ms": 0.13303756713867188, "gate": "PASS"}
+{"cohort": "C2-GLOBAL-C02", "size": 100, "ok": 100, "err": 0, "dur_ms": 0.1277923583984375, "gate": "PASS"}
+{"cohort": "C2-GLOBAL-C03", "size": 100, "ok": 100, "err": 0, "dur_ms": 0.11515617370605469, "gate": "PASS"}
+{"cohort": "C2-GLOBAL-C04", "size": 100, "ok": 100, "err": 0, "dur_ms": 0.23055076599121094, "gate": "PASS"}
+{"cohort": "C2-GLOBAL-C05", "size": 100, "ok": 100, "err": 0, "dur_ms": 0.09989738464355469, "gate": "PASS"}
+{"cohort": "C2-GLOBAL-C06", "size": 100, "ok": 100, "err": 0, "dur_ms": 0.09799003601074219, "gate": "PASS"}
+{"cohort": "C2-GLOBAL-C07", "size": 100, "ok": 100, "err": 0, "dur_ms": 0.09703636169433594, "gate": "PASS"}
+{"cohort": "C2-GLOBAL-C08", "size": 100, "ok": 100, "err": 0, "dur_ms": 0.09918212890625, "gate": "PASS"}
+{"cohort": "C2-GLOBAL-C09", "size": 100, "ok": 100, "err": 0, "dur_ms": 0.18405914306640625, "gate": "PASS"}
+{"cohort": "C2-GLOBAL-C10", "size": 90, "ok": 90, "err": 0, "dur_ms": 0.18405914306640625, "gate": "PASS"}

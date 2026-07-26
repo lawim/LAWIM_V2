@@ -56,6 +56,8 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-26 | LCIP C.1-W04 — Final Industrial Wave | 804b73b3 | feature/lcip-c1-wave-04-20260726 | docs/reviews/lcip-c1-wave-04/REPORT.md | docs/reviews/lcip-c1-wave-04/details/ | docs/reviews/lcip-c1-wave-04/evidence/ | PASS |
 
+| 2026-07-26 | LCIP C.2 — Global Certification of 990 | f46107a2 | feature/lcip-c2-global-certification-20260726 | docs/reviews/lcip-c2-global-certification/REPORT.md | docs/reviews/lcip-c2-global-certification/details/ | docs/reviews/lcip-c2-global-certification/evidence/ | PASS |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*

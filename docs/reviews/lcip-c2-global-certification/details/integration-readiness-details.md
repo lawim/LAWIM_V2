@@ -1,0 +1,1 @@
+# Integration Readiness Details.Md

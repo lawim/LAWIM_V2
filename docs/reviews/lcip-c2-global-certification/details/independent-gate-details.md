@@ -1,0 +1,1 @@
+# Independent Gate Details.Md

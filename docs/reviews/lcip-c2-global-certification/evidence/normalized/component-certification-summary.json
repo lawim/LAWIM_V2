@@ -1,0 +1,50 @@
+{
+  "BASELINE_200": {
+    "selected": 200,
+    "executed": 200,
+    "certified": 200,
+    "creation_pass": 200,
+    "no_action_pass": 0,
+    "restart_pass": 15
+  },
+  "REFERENCE_SAMPLE_25": {
+    "selected": 25,
+    "executed": 25,
+    "certified": 0,
+    "creation_pass": 0,
+    "no_action_pass": 0,
+    "restart_pass": 0
+  },
+  "WAVE_01": {
+    "selected": 200,
+    "executed": 200,
+    "certified": 200,
+    "creation_pass": 166,
+    "no_action_pass": 34,
+    "restart_pass": 24
+  },
+  "WAVE_02": {
+    "selected": 200,
+    "executed": 200,
+    "certified": 200,
+    "creation_pass": 166,
+    "no_action_pass": 34,
+    "restart_pass": 24
+  },
+  "WAVE_03": {
+    "selected": 200,
+    "executed": 200,
+    "certified": 200,
+    "creation_pass": 168,
+    "no_action_pass": 32,
+    "restart_pass": 25
+  },
+  "WAVE_04": {
+    "selected": 165,
+    "executed": 165,
+    "certified": 165,
+    "creation_pass": 137,
+    "no_action_pass": 28,
+    "restart_pass": 20
+  }
+}
