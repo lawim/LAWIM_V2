@@ -1,0 +1,10 @@
+{
+  "conversation_id": "C0-0413",
+  "language": "en",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "apartment",
+    "city": "Douala"
+  },
+  "next_action": "create_search_request"
+}
