@@ -1,0 +1,18 @@
+{
+  "c2_commit": "ce0ff04a",
+  "c2_checksums": "29/29 PASS",
+  "c2_independent_gate": "PASS",
+  "c2_certified": "990/990",
+  "v1_suite_found": true,
+  "v1_authoritative_command": "python3 -m pytest tests/test_conversation_*.py lawim_runtime/ -q -ra",
+  "v1_collected": 988,
+  "v1_passed": 988,
+  "v1_failed": 0,
+  "v1_exit": 0,
+  "lcip_collected": 104,
+  "lcip_passed": 104,
+  "lcip_failed": 0,
+  "lcip_exit": 0,
+  "worktree_clean": true,
+  "gate_verdict": "LCIP_C2G_PRE_MERGE_GATE_PASS"
+}

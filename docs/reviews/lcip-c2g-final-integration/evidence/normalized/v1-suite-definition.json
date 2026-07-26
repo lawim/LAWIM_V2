@@ -1,0 +1,10 @@
+{
+  "full_collection_command": "python3 -m pytest tests/ lawim_runtime/ --collect-only -q",
+  "canonical_v1_command": "python3 -m pytest tests/test_conversation_*.py lawim_runtime/ -q -ra",
+  "lcip_active_command": "python3 -m pytest tests/gold_corpus/specification/tests tests/gold_corpus/certification/tests -q -ra",
+  "expected_source_documents": [
+    "docs/reviews/release/e39c2c51-baseline-final-certification.md"
+  ],
+  "authoritative_command": "python3 -m pytest tests/test_conversation_*.py lawim_runtime/ -q -ra",
+  "reason": "Command verified from V1 baseline certification report (e39c2c51) - 988/988 PASS reproduces the canonical conversation+runtime suite."
+}

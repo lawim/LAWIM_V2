@@ -1,0 +1,7 @@
+{
+  "status": "C2_INDEPENDENT_GATE_PASS",
+  "total": 990,
+  "certified": 990,
+  "errors": 0,
+  "evidence": "docs/reviews/lcip-c2-global-certification/evidence/normalized/independent-gate-results.json"
+}
