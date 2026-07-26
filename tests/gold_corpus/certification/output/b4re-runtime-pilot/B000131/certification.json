@@ -1,0 +1,56 @@
+{
+  "conversation_id": "B000131",
+  "classification": "FUNCTIONAL_TEXT_VARIANT",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 39.251089096069336,
+  "assertions_total": 5,
+  "assertions_passed": 1,
+  "assertions_failed": 4,
+  "violations": [
+    {
+      "assertion_id": "B000131-MEM-001",
+      "category": "memory",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget",
+        "preferred_areas"
+      ],
+      "actual": [
+        "property_type",
+        "transaction_type",
+        "city",
+        "budget_max"
+      ],
+      "detail": "op=contains, expected=['transaction_type', 'property_type', 'city', 'budget', 'preferred_areas'], actual=['property_type', 'transaction_type', 'city', 'budget_max']"
+    },
+    {
+      "assertion_id": "B000131-BIZ-001",
+      "category": "business",
+      "expected": "create_search_request",
+      "actual": "CONFIRM_BUSINESS_CREATION",
+      "detail": "op=eq, expected=create_search_request, actual=CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "assertion_id": "B000131-Q-001",
+      "category": "questions",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    },
+    {
+      "assertion_id": "B000131-OBJ-001",
+      "category": "business",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    }
+  ],
+  "violation_count": 4,
+  "user_turns": 6,
+  "has_restart": false
+}

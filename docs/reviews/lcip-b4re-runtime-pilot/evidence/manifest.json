@@ -1,0 +1,245 @@
+[
+  {
+    "control_id": "EVID-0001",
+    "category": "evidence",
+    "path": "REPORT.md",
+    "size": 2484,
+    "sha256": "63dd686db1059300020bd4a2ffbe41db48fc893001d44eb3d9040d980829738c",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0002",
+    "category": "evidence",
+    "path": "TRACEABILITY.md",
+    "size": 1256,
+    "sha256": "bc11670671b5fbf6067a562624716d5529d2612a887cdfc6d77166242c65095b",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0003",
+    "category": "evidence",
+    "path": "details/business-safety-details.md",
+    "size": 319,
+    "sha256": "58d1b948edae238ea586870637c09b3bdfd7c8ab799f88102c51575e3e602809",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0004",
+    "category": "evidence",
+    "path": "details/conversation-results-details.md",
+    "size": 248,
+    "sha256": "d378cdf0765969ef95ad4a41cf821fa3c13398135a6d80092e9f7b1327347a7d",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0005",
+    "category": "evidence",
+    "path": "details/excluded-files-audit-details.md",
+    "size": 686,
+    "sha256": "b616ba5089f54eb9ff48af705b579a7c39882236e49471c28be2bc30040531a5",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0006",
+    "category": "evidence",
+    "path": "details/executability-details.md",
+    "size": 161,
+    "sha256": "5f7c4175a26adb51f622074ba80a8aaaaa807d1fe02135ec0f84a427ce007597",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0007",
+    "category": "evidence",
+    "path": "details/git-details.md",
+    "size": 239,
+    "sha256": "edd7af43a24cd2049a408be7310047d8b856ae0cb6b8f8eba7102402806673d0",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0008",
+    "category": "evidence",
+    "path": "details/idempotence-details.md",
+    "size": 183,
+    "sha256": "108ec67d9351fa1fc0480e9acb314efb06aabfca603dbf063a57e6dc284ab21c",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0009",
+    "category": "evidence",
+    "path": "details/limitations-details.md",
+    "size": 410,
+    "sha256": "85c56386468b599c0200953ac3c344989911c1efa9e723f8db969015c4868142",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0010",
+    "category": "evidence",
+    "path": "details/proven-runtime-errors-details.md",
+    "size": 207,
+    "sha256": "7ec92128bbc3e993d0c5941df469cc8ce387eb4eb2d4a8724c53625b7d397945",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0011",
+    "category": "evidence",
+    "path": "details/restart-details.md",
+    "size": 168,
+    "sha256": "1f82658867b27b1d277bb18abbf8caa71cd91e78740147d6c120f6dae1f931f8",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0012",
+    "category": "evidence",
+    "path": "details/review-provenance-details.md",
+    "size": 211,
+    "sha256": "ec566f1b0dfed9ed9626adbacd7b85c019c03b23b789505506c5adc1efeb5e05",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0013",
+    "category": "evidence",
+    "path": "details/reviewed-spec-adapter-details.md",
+    "size": 322,
+    "sha256": "3b0e567d826fdcc79d697ae030ae3376e411357e8c270453f86f9049b8eea7ab",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0014",
+    "category": "evidence",
+    "path": "details/runtime-execution-details.md",
+    "size": 445,
+    "sha256": "1c3c02b72cc2f398fbda2e4aed0a130d7f8c0f86f67f59eef0f8ae0e8a015729",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0015",
+    "category": "evidence",
+    "path": "details/two-case-smoke-details.md",
+    "size": 264,
+    "sha256": "191f14e8c58e4882023e7e7a968558ebc7140a7df0f0b17ac3f4d4e18e24e7db",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0016",
+    "category": "evidence",
+    "path": "evidence/normalized/business-results.jsonl",
+    "size": 5419,
+    "sha256": "d90e2e31cb81bc75de9f4b497dafa252e0680fb9ed5afd427fac164277d84141",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0017",
+    "category": "evidence",
+    "path": "evidence/normalized/executability-audit.jsonl",
+    "size": 3720,
+    "sha256": "351ee6203ff2004287468bc973ab9c2eb0ebaaab6023b518860c3c76be3b85ad",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0018",
+    "category": "evidence",
+    "path": "evidence/normalized/idempotence-results.jsonl",
+    "size": 4780,
+    "sha256": "4c9cb225df157cd8d68a039350f1f5c681bd3a4531abed20c19bcc0563bc38dd",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0019",
+    "category": "evidence",
+    "path": "evidence/normalized/performance.json",
+    "size": 408,
+    "sha256": "fe556692bf07bce7bb91ea205dbc69ba9238eccf6b2163b63f666c10b1b0af79",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0020",
+    "category": "evidence",
+    "path": "evidence/normalized/proven-runtime-errors.jsonl",
+    "size": 1840,
+    "sha256": "f1f44cf7493d8999edf5f597e4d0c64a5f8c875b35c559574ae28aef5beb5474",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0021",
+    "category": "evidence",
+    "path": "evidence/normalized/restart-results.jsonl",
+    "size": 3139,
+    "sha256": "c46e0dc005840bdc75d536582f087bd920e739b1e77ba66e3eddfa417079b4ad",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0022",
+    "category": "evidence",
+    "path": "evidence/normalized/runtime-call-trace.jsonl",
+    "size": 5786,
+    "sha256": "225f9e0ef77986b709f9c233f12714484d2ef03b1541b5ed75302c1995e8c916",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0023",
+    "category": "evidence",
+    "path": "evidence/normalized/runtime-results-20.jsonl",
+    "size": 8826,
+    "sha256": "30618ffe039cfc27025c04517008f318320928b302d76751d863d66d5d349aae",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0024",
+    "category": "evidence",
+    "path": "evidence/normalized/smoke-results.jsonl",
+    "size": 602,
+    "sha256": "3c1c7c549f9bbb3af00416ad5336a03cef46a64d7e84d1d6851cd07de1bc6134",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0025",
+    "category": "evidence",
+    "path": "evidence/normalized/statistics.json",
+    "size": 264,
+    "sha256": "353a479efe1775b354c8ea2b49e4bc8bd27753eaaec5c3a8c48bf4295316af51",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0026",
+    "category": "evidence",
+    "path": "evidence/raw/tests/b4re-stdout.txt",
+    "size": 688,
+    "sha256": "5cd094e16e442d811ebe9f563d539ee9b4842ec8104ee32890ffbeebe5e98b5a",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EVID-0027",
+    "category": "evidence",
+    "path": "evidence/raw/tests/b4re-tests.xml",
+    "size": 15628,
+    "sha256": "5d4ddb0ce070a4e7b3c48b336ac3c807aed8f2cd3264dd85eb49950bc713bc4b",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  }
+]

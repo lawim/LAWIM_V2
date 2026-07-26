@@ -1,0 +1,242 @@
+{
+  "conversation_id": "B000121",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 19.519805908203125,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Location maison à Douala, 100 000 FCFA, Bonamoussadi, septembre.",
+      "assistant_output": "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000121",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "district": "Bonamoussadi",
+          "budget_max": 100000,
+          "move_in_date": "septembre"
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 2,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "district": "Bonamoussadi",
+          "budget_max": 100000,
+          "move_in_date": "septembre"
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "district": "Bonamoussadi",
+        "budget_max": 100000,
+        "move_in_date": "septembre"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 5.011558532714844,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Pas encore. Je veux finalement 2 chambres.",
+      "assistant_output": "Je récapitule votre recherche : une maison, 2 chambres, à louer, à Douala, dans le quartier Bonamoussadi, avec un budget de 100000 FCFA, emménagement septembre. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000121",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "district": "Bonamoussadi",
+          "budget_max": 100000,
+          "move_in_date": "septembre",
+          "bedrooms": 2
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 3,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "district": "Bonamoussadi",
+          "budget_max": 100000,
+          "move_in_date": "septembre",
+          "bedrooms": 2
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "district": "Bonamoussadi",
+        "budget_max": 100000,
+        "move_in_date": "septembre",
+        "bedrooms": 2
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.596233367919922,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Et l'entrée doit être en novembre, pas septembre.",
+      "assistant_output": "Je récapitule votre recherche : une maison, 2 chambres, à louer, à Douala, dans le quartier Bonamoussadi, avec un budget de 100000 FCFA, emménagement en novembre. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000121",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "district": "Bonamoussadi",
+          "budget_max": 100000,
+          "move_in_date": "en novembre",
+          "bedrooms": 2
+        },
+        "fact_history": [
+          {
+            "field": "move_in_date",
+            "previous": "septembre",
+            "new": "en novembre",
+            "timestamp": "2026-07-26T13:15:13.925878+00:00"
+          }
+        ],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 4,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "district": "Bonamoussadi",
+          "budget_max": 100000,
+          "move_in_date": "en novembre",
+          "bedrooms": 2
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "district": "Bonamoussadi",
+        "budget_max": 100000,
+        "move_in_date": "en novembre",
+        "bedrooms": 2
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.681587219238281,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Oui.",
+      "assistant_output": "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000121",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "district": "Bonamoussadi",
+          "budget_max": 100000,
+          "move_in_date": "en novembre",
+          "bedrooms": 2
+        },
+        "fact_history": [
+          {
+            "field": "move_in_date",
+            "previous": "septembre",
+            "new": "en novembre",
+            "timestamp": "2026-07-26T13:15:13.925878+00:00"
+          }
+        ],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 5,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "district": "Bonamoussadi",
+          "budget_max": 100000,
+          "move_in_date": "en novembre",
+          "bedrooms": 2
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "district": "Bonamoussadi",
+        "budget_max": 100000,
+        "move_in_date": "en novembre",
+        "bedrooms": 2
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 5.230426788330078,
+      "error": null
+    }
+  ],
+  "runtime_errors": []
+}

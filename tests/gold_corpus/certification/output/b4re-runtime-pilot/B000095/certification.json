@@ -1,0 +1,67 @@
+{
+  "conversation_id": "B000095",
+  "classification": "FUNCTIONAL_TEXT_VARIANT",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 35.80641746520996,
+  "assertions_total": 5,
+  "assertions_passed": 0,
+  "assertions_failed": 5,
+  "violations": [
+    {
+      "assertion_id": "B000095-MEM-001",
+      "category": "memory",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget",
+        "bedrooms",
+        "preferred_areas",
+        "move_in_date"
+      ],
+      "actual": [
+        "property_type",
+        "transaction_type",
+        "city",
+        "budget_max",
+        "bedrooms",
+        "district"
+      ],
+      "detail": "op=contains, expected=['transaction_type', 'property_type', 'city', 'budget', 'bedrooms', 'preferred_areas', 'move_in_date'], actual=['property_type', 'transaction_type', 'city', 'budget_max', 'bedrooms', 'district']"
+    },
+    {
+      "assertion_id": "B000095-BIZ-001",
+      "category": "business",
+      "expected": "create_search_request",
+      "actual": "NONE",
+      "detail": "op=eq, expected=create_search_request, actual=NONE"
+    },
+    {
+      "assertion_id": "B000095-LANG-001",
+      "category": "language",
+      "expected": "pcm",
+      "actual": "fr",
+      "detail": "op=eq, expected=pcm, actual=fr"
+    },
+    {
+      "assertion_id": "B000095-Q-001",
+      "category": "questions",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    },
+    {
+      "assertion_id": "B000095-OBJ-001",
+      "category": "business",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    }
+  ],
+  "violation_count": 5,
+  "user_turns": 6,
+  "has_restart": false
+}

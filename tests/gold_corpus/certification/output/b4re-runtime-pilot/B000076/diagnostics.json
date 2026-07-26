@@ -1,0 +1,14 @@
+{
+  "conversation_id": "B000076",
+  "classification": "RUNTIME_BEHAVIOR_ERROR",
+  "executable": true,
+  "turn_count_expected": 6,
+  "turn_count_actual": 3,
+  "user_turn_count": 3,
+  "runtime_errors": [],
+  "assertion_breakdown": {
+    "total": 5,
+    "passed": 1,
+    "failed": 4
+  }
+}

@@ -1,0 +1,319 @@
+{
+  "conversation_id": "B000131",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 39.251089096069336,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un terrain à louer à Kribi.",
+      "assistant_output": "J'ai noté que vous cherchez à louer un terrain à Kribi.",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000131",
+        "journey_type": "",
+        "journey_status": "QUALIFYING",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "land",
+          "transaction_type": "rent",
+          "city": "Kribi"
+        },
+        "fact_history": [],
+        "missing_fields": [
+          "budget_max"
+        ],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 2,
+        "last_facts_snapshot": {
+          "property_type": "land",
+          "transaction_type": "rent",
+          "city": "Kribi"
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_FIELD_VALUE"
+      },
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Kribi"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 7.257938385009766,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "100 000 FCFA par mois.",
+      "assistant_output": "Je récapitule votre recherche : un terrain, à louer, à Kribi, avec un budget de 100000 FCFA. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000131",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "land",
+          "transaction_type": "rent",
+          "city": "Kribi",
+          "budget_max": 100000
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 3,
+        "last_facts_snapshot": {
+          "property_type": "land",
+          "transaction_type": "rent",
+          "city": "Kribi",
+          "budget_max": 100000
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Kribi",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 6.904125213623047,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Dombe",
+      "assistant_output": "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000131",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "land",
+          "transaction_type": "rent",
+          "city": "Kribi",
+          "budget_max": 100000
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 4,
+        "last_facts_snapshot": {
+          "property_type": "land",
+          "transaction_type": "rent",
+          "city": "Kribi",
+          "budget_max": 100000
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Kribi",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 5.459070205688477,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Finalement je veux acheter, pas louer.",
+      "assistant_output": "Je récapitule votre recherche : un terrain, à acheter, à Kribi, avec un budget de 100000 FCFA. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000131",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "land",
+          "transaction_type": "buy",
+          "city": "Kribi",
+          "budget_max": 100000
+        },
+        "fact_history": [
+          {
+            "field": "transaction_type",
+            "previous": "rent",
+            "new": "buy",
+            "timestamp": "2026-07-26T13:15:14.403320+00:00"
+          }
+        ],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 5,
+        "last_facts_snapshot": {
+          "property_type": "land",
+          "transaction_type": "buy",
+          "city": "Kribi",
+          "budget_max": 100000
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "buy",
+        "city": "Kribi",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 8.279085159301758,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "12 000 000 FCFA.",
+      "assistant_output": "Je récapitule votre recherche : un terrain, à acheter, à Kribi, avec un budget de 12000000 FCFA. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000131",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "land",
+          "transaction_type": "buy",
+          "city": "Kribi",
+          "budget_max": 12000000
+        },
+        "fact_history": [
+          {
+            "field": "transaction_type",
+            "previous": "rent",
+            "new": "buy",
+            "timestamp": "2026-07-26T13:15:14.403320+00:00"
+          },
+          {
+            "field": "budget_max",
+            "previous": 100000,
+            "new": 12000000,
+            "timestamp": "2026-07-26T13:15:14.411571+00:00"
+          }
+        ],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 6,
+        "last_facts_snapshot": {
+          "property_type": "land",
+          "transaction_type": "buy",
+          "city": "Kribi",
+          "budget_max": 12000000
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "buy",
+        "city": "Kribi",
+        "budget_max": 12000000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 5.341768264770508,
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Oui.",
+      "assistant_output": "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000131",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "land",
+          "transaction_type": "buy",
+          "city": "Kribi",
+          "budget_max": 12000000
+        },
+        "fact_history": [
+          {
+            "field": "transaction_type",
+            "previous": "rent",
+            "new": "buy",
+            "timestamp": "2026-07-26T13:15:14.403320+00:00"
+          },
+          {
+            "field": "budget_max",
+            "previous": 100000,
+            "new": 12000000,
+            "timestamp": "2026-07-26T13:15:14.411571+00:00"
+          }
+        ],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 7,
+        "last_facts_snapshot": {
+          "property_type": "land",
+          "transaction_type": "buy",
+          "city": "Kribi",
+          "budget_max": 12000000
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "buy",
+        "city": "Kribi",
+        "budget_max": 12000000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 6.009101867675781,
+      "error": null
+    }
+  ],
+  "runtime_errors": []
+}

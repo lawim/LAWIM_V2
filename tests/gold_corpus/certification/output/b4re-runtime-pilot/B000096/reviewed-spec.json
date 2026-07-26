@@ -1,0 +1,242 @@
+{
+  "conversation": {
+    "id": "B000096",
+    "category": "rental",
+    "level": "advanced",
+    "channel": "whatsapp",
+    "language": "pcm",
+    "description": "PCM rental flow 96",
+    "tags": [
+      "pcm",
+      "multilingual",
+      "rental",
+      "short_messages"
+    ],
+    "business_object": "house",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0096",
+    "messages": [
+      {
+        "role": "user",
+        "text": "I wan rent house for Douala.",
+        "intent": "SEARCH_PROPERTY"
+      },
+      {
+        "role": "assistant",
+        "text": "How much you fit pay every month?",
+        "intent": "ASK_BUDGET"
+      },
+      {
+        "role": "user",
+        "text": "Ma budget na 200 thousand.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "How many bedroom you need?",
+        "intent": "ASK_BEDROOMS"
+      },
+      {
+        "role": "user",
+        "text": "Na 3 bedroom.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Which area you prefer?",
+        "intent": "ASK_AREAS"
+      },
+      {
+        "role": "user",
+        "text": "Bonamoussadi",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Which time you wan enter the house?",
+        "intent": "ASK_MOVE_IN_DATE"
+      },
+      {
+        "role": "user",
+        "text": "September.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "I don note am. You wan make I register this search?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Yes, register am.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Your search don register well.",
+        "intent": "NONE"
+      }
+    ]
+  },
+  "expected_state": {
+    "conversation_id": "B000096",
+    "language": "pcm",
+    "expected_facts": {
+      "transaction_type": "rent",
+      "property_type": "house",
+      "city": "Douala",
+      "budget": 3,
+      "bedrooms": 3,
+      "preferred_areas": [
+        "Bonamoussadi"
+      ],
+      "move_in_date": "September"
+    },
+    "qualification_status": "complete",
+    "provenance": {
+      "transaction_type": {
+        "value": "rent",
+        "source_rule": "EXP-0001",
+        "confidence": 1.0
+      },
+      "property_type": {
+        "value": "house",
+        "source_rule": "EXP-0002",
+        "confidence": 1.0
+      },
+      "city": {
+        "value": "Douala",
+        "source_rule": "EXP-0003",
+        "confidence": 1.0
+      },
+      "budget": {
+        "value": 3,
+        "source_rule": "EXP-0004",
+        "confidence": 1.0
+      },
+      "bedrooms": {
+        "value": 3,
+        "source_rule": "EXP-0005",
+        "confidence": 1.0
+      },
+      "preferred_areas": {
+        "value": [
+          "Bonamoussadi"
+        ],
+        "source_rule": "EXP-0006",
+        "confidence": 1.0
+      },
+      "move_in_date": {
+        "value": "September",
+        "source_rule": "EXP-0000",
+        "confidence": 1.0
+      }
+    },
+    "intent": "property_search",
+    "next_action": "create_search_request"
+  },
+  "expected_business": {
+    "conversation_id": "B000096",
+    "expected_business_action": "CREATE_SEARCH",
+    "expected_business_object_count": 1,
+    "final_ask_turn": 10,
+    "consent_turn": null,
+    "required_facts_complete": false,
+    "correction_in_confirmation": false
+  },
+  "expected_language": {
+    "conversation_id": "B000096",
+    "language": "pcm",
+    "language_consistent": true
+  },
+  "expected_runtime": {
+    "conversation_id": "B000096",
+    "expected_turn_count": 12,
+    "expected_final_intent": "NONE",
+    "expected_business_action": "CREATE_SEARCH"
+  },
+  "expected_questions": {
+    "conversation_id": "B000096",
+    "total_questions": 5,
+    "maximum_questions": 5,
+    "questions": [
+      {
+        "turn": 2,
+        "question": "How much you fit pay every month?",
+        "expected_pending": "ASK_BUDGET"
+      },
+      {
+        "turn": 4,
+        "question": "How many bedroom you need?",
+        "expected_pending": "ASK_BEDROOMS"
+      },
+      {
+        "turn": 6,
+        "question": "Which area you prefer?",
+        "expected_pending": "ASK_AREAS"
+      },
+      {
+        "turn": 8,
+        "question": "Which time you wan enter the house?",
+        "expected_pending": "ASK_MOVE_IN_DATE"
+      },
+      {
+        "turn": 10,
+        "question": "I don note am. You wan make I register this search?",
+        "expected_pending": "CONFIRM_BUSINESS_CREATION"
+      }
+    ]
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "B000096-MEM-001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "B000096-BIZ-001",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "B000096-LANG-001",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "pcm",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "B000096-Q-001",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      },
+      {
+        "id": "B000096-OBJ-001",
+        "type": "business",
+        "description": "Le nombre d objets metier est correct",
+        "expected": 1,
+        "path": "business_object_count",
+        "operator": "eq"
+      }
+    ]
+  }
+}

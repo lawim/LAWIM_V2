@@ -1,0 +1,9 @@
+{
+  "conversation_id": "B000036",
+  "adapter": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "total_duration_ms": 28.77211570739746,
+  "call_count": 5,
+  "turn_count": 5,
+  "runtime_errors": []
+}

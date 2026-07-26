@@ -1,0 +1,12 @@
+{
+  "total_conversations": 20,
+  "total_runtime_calls": 110,
+  "total_user_turns": 110,
+  "total_duration_ms": 710.7956409454346,
+  "avg_duration_per_conversation_ms": 35.53978204727173,
+  "avg_duration_per_turn_ms": 6.461778554049405,
+  "min_duration_ms": 19.519805908203125,
+  "max_duration_ms": 72.44038581848145,
+  "adapter": "ProgramFEngineAdapter",
+  "orchestrator": "ConversationJourneyOrchestrator"
+}

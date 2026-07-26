@@ -1,0 +1,307 @@
+{
+  "conversation_id": "B000096",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 40.761709213256836,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "I wan rent house for Douala.",
+      "assistant_output": "I don see say you want for rent house for Douala.",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_whatsapp_gold_test_B000096",
+        "journey_type": "",
+        "journey_status": "QUALIFYING",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala"
+        },
+        "fact_history": [],
+        "missing_fields": [
+          "budget_max"
+        ],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 2,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala"
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_FIELD_VALUE"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 5.722999572753906,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Ma budget na 200 thousand.",
+      "assistant_output": "Here be your search summary : house, for rent, in Douala, budget 200000 FCFA. Your search information complete. You want make I register am?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_whatsapp_gold_test_B000096",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 3,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "NONE"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 200000
+      },
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 6.052970886230469,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Na 3 bedroom.",
+      "assistant_output": "Je récapitule votre recherche : une maison, 3 chambres, à louer, à Douala, avec un budget de 200000 FCFA. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_whatsapp_gold_test_B000096",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000,
+          "bedrooms": 3
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 4,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000,
+          "bedrooms": 3
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 200000,
+        "bedrooms": 3
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 11.374473571777344,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Bonamoussadi",
+      "assistant_output": "Je récapitule votre recherche : une maison, 3 chambres, à louer, à Douala, dans le quartier Bonamoussadi, avec un budget de 200000 FCFA. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_whatsapp_gold_test_B000096",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi"
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 5,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi"
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 200000,
+        "bedrooms": 3,
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 6.109952926635742,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "September.",
+      "assistant_output": "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_whatsapp_gold_test_B000096",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi"
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 6,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi"
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 200000,
+        "bedrooms": 3,
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.698753356933594,
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Yes, register am.",
+      "assistant_output": "Your search information complete. You want make I register am?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_whatsapp_gold_test_B000096",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi"
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 7,
+        "last_facts_snapshot": {
+          "property_type": "house",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 200000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi"
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "NONE"
+      },
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 200000,
+        "bedrooms": 3,
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 6.802558898925781,
+      "error": null
+    }
+  ],
+  "runtime_errors": []
+}

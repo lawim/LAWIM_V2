@@ -1,0 +1,117 @@
+{
+  "tautology_check": true,
+  "tautology_detail": "INDEPENDENT",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "assertions_total": 5,
+  "assertions_passed": 1,
+  "assertions_failed": 4,
+  "assertions": {
+    "B000101-MEM-001": {
+      "pass": false,
+      "assertion": "Les faits sont retenus en memoire",
+      "category": "memory",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget",
+        "move_in_date",
+        "bedrooms",
+        "preferred_areas"
+      ],
+      "actual": [
+        "property_type",
+        "transaction_type",
+        "city",
+        "budget_max",
+        "bedrooms",
+        "district",
+        "move_in_date"
+      ],
+      "detail": "op=contains, expected=['transaction_type', 'property_type', 'city', 'budget', 'move_in_date', 'bedrooms', 'preferred_areas'], actual=['property_type', 'transaction_type', 'city', 'budget_max', 'bedrooms', 'district', 'move_in_date']"
+    },
+    "B000101-BIZ-001": {
+      "pass": false,
+      "assertion": "L'action metier est correcte",
+      "category": "business",
+      "expected": "create_search_request",
+      "actual": "CONFIRM_BUSINESS_CREATION",
+      "detail": "op=eq, expected=create_search_request, actual=CONFIRM_BUSINESS_CREATION"
+    },
+    "B000101-LANG-001": {
+      "pass": true,
+      "assertion": "La langue de reponse est correcte",
+      "category": "language",
+      "expected": "fr",
+      "actual": "fr",
+      "detail": "op=eq, expected=fr, actual=fr"
+    },
+    "B000101-Q-001": {
+      "pass": false,
+      "assertion": "Au maximum une question par tour",
+      "category": "questions",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    },
+    "B000101-OBJ-001": {
+      "pass": false,
+      "assertion": "Le nombre d objets metier est correct",
+      "category": "business",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    }
+  },
+  "violations": [
+    {
+      "assertion_id": "B000101-MEM-001",
+      "category": "memory",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget",
+        "move_in_date",
+        "bedrooms",
+        "preferred_areas"
+      ],
+      "actual": [
+        "property_type",
+        "transaction_type",
+        "city",
+        "budget_max",
+        "bedrooms",
+        "district",
+        "move_in_date"
+      ],
+      "detail": "op=contains, expected=['transaction_type', 'property_type', 'city', 'budget', 'move_in_date', 'bedrooms', 'preferred_areas'], actual=['property_type', 'transaction_type', 'city', 'budget_max', 'bedrooms', 'district', 'move_in_date']"
+    },
+    {
+      "assertion_id": "B000101-BIZ-001",
+      "category": "business",
+      "expected": "create_search_request",
+      "actual": "CONFIRM_BUSINESS_CREATION",
+      "detail": "op=eq, expected=create_search_request, actual=CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "assertion_id": "B000101-Q-001",
+      "category": "questions",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    },
+    {
+      "assertion_id": "B000101-OBJ-001",
+      "category": "business",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    }
+  ],
+  "conversation_id": "B000101",
+  "total_duration_ms": 32.69243240356445
+}

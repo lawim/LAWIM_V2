@@ -1,0 +1,228 @@
+{
+  "conversation": {
+    "id": "B000021",
+    "category": "purchase",
+    "level": "basic",
+    "channel": "telegram",
+    "language": "fr",
+    "description": "Achat maison à Yaoundé",
+    "tags": [
+      "achat",
+      "qualification",
+      "confirmation"
+    ],
+    "business_object": "maison",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0021",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je veux acheter un maison à Yaoundé.",
+        "intent": "SEARCH_PROPERTY"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel est votre budget d’achat ?",
+        "intent": "ASK_BUDGET"
+      },
+      {
+        "role": "user",
+        "text": "Je peux aller jusqu’à 12 000 000 FCFA.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Avez-vous des quartiers préférés ?",
+        "intent": "ASK_AREAS"
+      },
+      {
+        "role": "user",
+        "text": "Bastos ou Mvan.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Combien de chambres minimum ?",
+        "intent": "ASK_BEDROOMS"
+      },
+      {
+        "role": "user",
+        "text": "Trois chambres minimum.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Je récapitule : achat d’un maison à Yaoundé, budget maximal 12 000 000 FCFA, zones Bastos ou Mvan, trois chambres minimum. Souhaitez-vous enregistrer cette recherche ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "La recherche d’achat a bien été enregistrée.",
+        "intent": "NONE"
+      }
+    ]
+  },
+  "expected_state": {
+    "conversation_id": "B000021",
+    "language": "fr",
+    "expected_facts": {
+      "transaction_type": "buy",
+      "property_type": "house",
+      "city": "Yaoundé",
+      "move_in_date": "Mai",
+      "budget": 12000,
+      "preferred_areas": [
+        "Bastos",
+        "Mvan"
+      ],
+      "bedrooms": 3
+    },
+    "qualification_status": "complete",
+    "provenance": {
+      "transaction_type": {
+        "value": "buy",
+        "source_rule": "EXP-0001",
+        "confidence": 1.0
+      },
+      "property_type": {
+        "value": "house",
+        "source_rule": "EXP-0002",
+        "confidence": 1.0
+      },
+      "city": {
+        "value": "Yaoundé",
+        "source_rule": "EXP-0003",
+        "confidence": 1.0
+      },
+      "move_in_date": {
+        "value": "Mai",
+        "source_rule": "EXP-0000",
+        "confidence": 1.0
+      },
+      "budget": {
+        "value": 12000,
+        "source_rule": "EXP-0004",
+        "confidence": 1.0
+      },
+      "preferred_areas": {
+        "value": [
+          "Bastos",
+          "Mvan"
+        ],
+        "source_rule": "EXP-0006",
+        "confidence": 1.0
+      },
+      "bedrooms": {
+        "value": 3,
+        "source_rule": "EXP-0005",
+        "confidence": 1.0
+      }
+    },
+    "intent": "property_search",
+    "next_action": "create_search_request"
+  },
+  "expected_business": {
+    "conversation_id": "B000021",
+    "expected_business_action": "CREATE_SEARCH",
+    "expected_business_object_count": 1,
+    "final_ask_turn": 8,
+    "consent_turn": 9,
+    "required_facts_complete": true,
+    "correction_in_confirmation": false
+  },
+  "expected_language": {
+    "conversation_id": "B000021",
+    "language": "fr",
+    "language_consistent": true
+  },
+  "expected_runtime": {
+    "conversation_id": "B000021",
+    "expected_turn_count": 10,
+    "expected_final_intent": "NONE",
+    "expected_business_action": "CREATE_SEARCH"
+  },
+  "expected_questions": {
+    "conversation_id": "B000021",
+    "total_questions": 4,
+    "maximum_questions": 4,
+    "questions": [
+      {
+        "turn": 2,
+        "question": "Quel est votre budget d’achat ?",
+        "expected_pending": "ASK_BUDGET"
+      },
+      {
+        "turn": 4,
+        "question": "Avez-vous des quartiers préférés ?",
+        "expected_pending": "ASK_AREAS"
+      },
+      {
+        "turn": 6,
+        "question": "Combien de chambres minimum ?",
+        "expected_pending": "ASK_BEDROOMS"
+      },
+      {
+        "turn": 8,
+        "question": "Je récapitule : achat d’un maison à Yaoundé, budget maximal 12 000 000 FCFA, zones Bastos ou Mvan, trois chambres minimum. Souhaitez-vous enregistrer cette recherche ?",
+        "expected_pending": "CONFIRM_BUSINESS_CREATION"
+      }
+    ]
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "B000021-MEM-001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "move_in_date",
+          "budget",
+          "preferred_areas",
+          "bedrooms"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "B000021-BIZ-001",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "B000021-LANG-001",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "B000021-Q-001",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      },
+      {
+        "id": "B000021-OBJ-001",
+        "type": "business",
+        "description": "Le nombre d objets metier est correct",
+        "expected": 1,
+        "path": "business_object_count",
+        "operator": "eq"
+      }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+[
+  {
+    "assertion_id": "B000066-MEM-001",
+    "category": "memory",
+    "expected": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "preferred_areas",
+      "move_in_date"
+    ],
+    "actual": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget_max",
+      "district"
+    ],
+    "detail": "op=contains, expected=['transaction_type', 'property_type', 'city', 'budget', 'preferred_areas', 'move_in_date'], actual=['transaction_type', 'property_type', 'city', 'budget_max', 'district']"
+  },
+  {
+    "assertion_id": "B000066-BIZ-001",
+    "category": "business",
+    "expected": "create_search_request",
+    "actual": "CONFIRM_BUSINESS_CREATION",
+    "detail": "op=eq, expected=create_search_request, actual=CONFIRM_BUSINESS_CREATION"
+  },
+  {
+    "assertion_id": "B000066-Q-001",
+    "category": "questions",
+    "expected": 1,
+    "actual": null,
+    "detail": "op=eq, expected=1, actual=None"
+  },
+  {
+    "assertion_id": "B000066-OBJ-001",
+    "category": "business",
+    "expected": 1,
+    "actual": null,
+    "detail": "op=eq, expected=1, actual=None"
+  }
+]

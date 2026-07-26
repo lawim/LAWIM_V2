@@ -1,0 +1,50 @@
+[
+  {
+    "assertion_id": "B000089-MEM-001",
+    "category": "memory",
+    "expected": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "preferred_areas",
+      "move_in_date"
+    ],
+    "actual": [
+      "property_type",
+      "transaction_type",
+      "city",
+      "bedrooms",
+      "district"
+    ],
+    "detail": "op=contains, expected=['transaction_type', 'property_type', 'city', 'budget', 'preferred_areas', 'move_in_date'], actual=['property_type', 'transaction_type', 'city', 'bedrooms', 'district']"
+  },
+  {
+    "assertion_id": "B000089-BIZ-001",
+    "category": "business",
+    "expected": "create_search_request",
+    "actual": "NONE",
+    "detail": "op=eq, expected=create_search_request, actual=NONE"
+  },
+  {
+    "assertion_id": "B000089-LANG-001",
+    "category": "language",
+    "expected": "en",
+    "actual": "fr",
+    "detail": "op=eq, expected=en, actual=fr"
+  },
+  {
+    "assertion_id": "B000089-Q-001",
+    "category": "questions",
+    "expected": 1,
+    "actual": null,
+    "detail": "op=eq, expected=1, actual=None"
+  },
+  {
+    "assertion_id": "B000089-OBJ-001",
+    "category": "business",
+    "expected": 1,
+    "actual": null,
+    "detail": "op=eq, expected=1, actual=None"
+  }
+]

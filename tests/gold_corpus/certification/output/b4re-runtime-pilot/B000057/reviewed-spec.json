@@ -1,0 +1,213 @@
+{
+  "conversation": {
+    "id": "B000057",
+    "category": "rental",
+    "level": "advanced",
+    "channel": "telegram",
+    "language": "fr",
+    "description": "Correction budget et zone 57",
+    "tags": [
+      "correction",
+      "change_of_mind",
+      "no_premature_action"
+    ],
+    "business_object": "appartement",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0057",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je cherche un appartement à louer à Yaoundé, budget 150 000 FCFA, deux chambres à Bastos.",
+        "intent": "SEARCH_PROPERTY"
+      },
+      {
+        "role": "assistant",
+        "text": "À partir de quand souhaitez-vous emménager ?",
+        "intent": "ASK_MOVE_IN_DATE"
+      },
+      {
+        "role": "user",
+        "text": "En octobre.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Je récapitule : appartement à Bastos, deux chambres, budget 150 000 FCFA, entrée en octobre. Souhaitez-vous enregistrer ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Non, corrigez : mon budget est 210 000 FCFA et je préfère Melen, pas Bastos.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Correction prise en compte : budget 210 000 FCFA, zone Melen. Souhaitez-vous maintenant enregistrer la recherche ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "La recherche corrigée a bien été enregistrée.",
+        "intent": "NONE"
+      }
+    ]
+  },
+  "expected_state": {
+    "conversation_id": "B000057",
+    "language": "fr",
+    "expected_facts": {
+      "transaction_type": "rent",
+      "property_type": "apartment",
+      "city": "Yaoundé",
+      "budget": 210000,
+      "bedrooms": 1,
+      "preferred_areas": [
+        "Melen",
+        "Bastos"
+      ],
+      "move_in_date": "Octobre"
+    },
+    "qualification_status": "complete",
+    "provenance": {
+      "transaction_type": {
+        "value": "rent",
+        "source_rule": "EXP-0001",
+        "confidence": 1.0
+      },
+      "property_type": {
+        "value": "apartment",
+        "source_rule": "EXP-0002",
+        "confidence": 1.0
+      },
+      "city": {
+        "value": "Yaoundé",
+        "source_rule": "EXP-0003",
+        "confidence": 1.0
+      },
+      "budget": {
+        "value": 210000,
+        "source_rule": "EXP-0004",
+        "confidence": 1.0
+      },
+      "bedrooms": {
+        "value": 1,
+        "source_rule": "EXP-0005",
+        "confidence": 1.0
+      },
+      "preferred_areas": {
+        "value": [
+          "Melen",
+          "Bastos"
+        ],
+        "source_rule": "EXP-0006",
+        "confidence": 1.0
+      },
+      "move_in_date": {
+        "value": "Octobre",
+        "source_rule": "EXP-0000",
+        "confidence": 1.0
+      }
+    },
+    "intent": "property_search",
+    "next_action": "create_search_request"
+  },
+  "expected_business": {
+    "conversation_id": "B000057",
+    "expected_business_action": "CREATE_SEARCH",
+    "expected_business_object_count": 1,
+    "final_ask_turn": 6,
+    "consent_turn": 7,
+    "required_facts_complete": true,
+    "correction_in_confirmation": true
+  },
+  "expected_language": {
+    "conversation_id": "B000057",
+    "language": "fr",
+    "language_consistent": true
+  },
+  "expected_runtime": {
+    "conversation_id": "B000057",
+    "expected_turn_count": 8,
+    "expected_final_intent": "NONE",
+    "expected_business_action": "CREATE_SEARCH"
+  },
+  "expected_questions": {
+    "conversation_id": "B000057",
+    "total_questions": 3,
+    "maximum_questions": 3,
+    "questions": [
+      {
+        "turn": 2,
+        "question": "À partir de quand souhaitez-vous emménager ?",
+        "expected_pending": "ASK_MOVE_IN_DATE"
+      },
+      {
+        "turn": 4,
+        "question": "Je récapitule : appartement à Bastos, deux chambres, budget 150 000 FCFA, entrée en octobre. Souhaitez-vous enregistrer ?",
+        "expected_pending": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "turn": 6,
+        "question": "Correction prise en compte : budget 210 000 FCFA, zone Melen. Souhaitez-vous maintenant enregistrer la recherche ?",
+        "expected_pending": "CONFIRM_BUSINESS_CREATION"
+      }
+    ]
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "B000057-MEM-001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "B000057-BIZ-001",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "B000057-LANG-001",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "B000057-Q-001",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      },
+      {
+        "id": "B000057-OBJ-001",
+        "type": "business",
+        "description": "Le nombre d objets metier est correct",
+        "expected": 1,
+        "path": "business_object_count",
+        "operator": "eq"
+      }
+    ]
+  }
+}

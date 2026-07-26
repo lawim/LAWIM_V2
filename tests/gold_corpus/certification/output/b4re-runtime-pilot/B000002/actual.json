@@ -1,0 +1,349 @@
+{
+  "conversation_id": "B000002",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 29.88290786743164,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Bonjour, je cherche un studio à louer à Douala.",
+      "assistant_output": "J'ai noté que vous cherchez à louer un studio à Douala.",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000002",
+        "journey_type": "",
+        "journey_status": "QUALIFYING",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala"
+        },
+        "fact_history": [],
+        "missing_fields": [
+          "budget_max"
+        ],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 2,
+        "last_facts_snapshot": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala"
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_FIELD_VALUE"
+      },
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 4.604816436767578,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Mon budget maximum est de 100 000 FCFA.",
+      "assistant_output": "Je récapitule votre recherche : un studio, à louer, à Douala, avec un budget de 100000 FCFA. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000002",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 3,
+        "last_facts_snapshot": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.680633544921875,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "3 chambres.",
+      "assistant_output": "Je récapitule votre recherche : un studio, 3 chambres, à louer, à Douala, avec un budget de 100000 FCFA. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000002",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000,
+          "bedrooms": 3
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 4,
+        "last_facts_snapshot": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000,
+          "bedrooms": 3
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 100000,
+        "bedrooms": 3
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.705667495727539,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Bonamoussadi ou Akwa.",
+      "assistant_output": "Je récapitule votre recherche : un studio, 3 chambres, à louer, à Douala, dans le secteur Bonamoussadi, Akwa, avec un budget de 100000 FCFA. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000002",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi",
+          "preferred_areas": [
+            "Bonamoussadi",
+            "Akwa"
+          ]
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 5,
+        "last_facts_snapshot": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi",
+          "preferred_areas": [
+            "Bonamoussadi",
+            "Akwa"
+          ]
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 100000,
+        "bedrooms": 3,
+        "district": "Bonamoussadi",
+        "preferred_areas": [
+          "Bonamoussadi",
+          "Akwa"
+        ]
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 5.856752395629883,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "En septembre.",
+      "assistant_output": "Je récapitule votre recherche : un studio, 3 chambres, à louer, à Douala, dans le secteur Bonamoussadi, Akwa, avec un budget de 100000 FCFA, emménagement En septembre. Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000002",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi",
+          "preferred_areas": [
+            "Bonamoussadi",
+            "Akwa"
+          ],
+          "move_in_date": "En septembre"
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 6,
+        "last_facts_snapshot": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi",
+          "preferred_areas": [
+            "Bonamoussadi",
+            "Akwa"
+          ],
+          "move_in_date": "En septembre"
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 100000,
+        "bedrooms": 3,
+        "district": "Bonamoussadi",
+        "preferred_areas": [
+          "Bonamoussadi",
+          "Akwa"
+        ],
+        "move_in_date": "En septembre"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.883527755737305,
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Oui, enregistrez-la.",
+      "assistant_output": "Les informations de votre recherche sont complètes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "intent_confidence": 0,
+      "state_after": {
+        "conversation_id": "pf_web_gold_test_B000002",
+        "journey_type": "",
+        "journey_status": "READY_FOR_ACTION",
+        "current_intent": "property_search",
+        "confirmed_facts": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi",
+          "preferred_areas": [
+            "Bonamoussadi",
+            "Akwa"
+          ],
+          "move_in_date": "En septembre"
+        },
+        "fact_history": [],
+        "missing_fields": [],
+        "last_question": "",
+        "last_question_field": "budget_max",
+        "last_user_answer": "",
+        "digression": null,
+        "business_object_ids": {},
+        "next_step": "",
+        "version": 7,
+        "last_facts_snapshot": {
+          "property_type": "studio",
+          "transaction_type": "rent",
+          "city": "Douala",
+          "budget_max": 100000,
+          "bedrooms": 3,
+          "district": "Bonamoussadi",
+          "preferred_areas": [
+            "Bonamoussadi",
+            "Akwa"
+          ],
+          "move_in_date": "En septembre"
+        },
+        "awaiting_business_confirmation": false,
+        "pending_user_action": "CONFIRM_BUSINESS_CREATION"
+      },
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 100000,
+        "bedrooms": 3,
+        "district": "Bonamoussadi",
+        "preferred_areas": [
+          "Bonamoussadi",
+          "Akwa"
+        ],
+        "move_in_date": "En septembre"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 5.151510238647461,
+      "error": null
+    }
+  ],
+  "runtime_errors": []
+}

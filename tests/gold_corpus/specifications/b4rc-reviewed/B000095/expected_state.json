@@ -51,5 +51,7 @@
       "source_rule": "EXP-0000",
       "confidence": 1.0
     }
-  }
+  },
+  "intent": "property_search",
+  "next_action": "create_search_request"
 }

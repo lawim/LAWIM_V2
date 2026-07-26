@@ -1,0 +1,12 @@
+{
+  "total_pilot": 20,
+  "runtime_executable": 20,
+  "runtime_executed": 20,
+  "runtime_calls": 110,
+  "user_turns": 110,
+  "FUNCTIONAL_TEXT_VARIANT": 20,
+  "tautology_detected": 0,
+  "normalizer_errors": 0,
+  "comparator_errors": 0,
+  "proven_runtime_errors": 0
+}

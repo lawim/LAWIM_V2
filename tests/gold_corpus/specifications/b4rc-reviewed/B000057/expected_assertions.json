@@ -1,25 +1,52 @@
 {
-  "conversation_id": "B000057",
   "assertions": [
     {
-      "id": "B000057-LANG-001",
-      "description": "Language is fr",
-      "expected": "fr"
+      "id": "B000057-MEM-001",
+      "type": "memory",
+      "description": "Les faits sont retenus en memoire",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget",
+        "bedrooms",
+        "preferred_areas",
+        "move_in_date"
+      ],
+      "path": "memory_retained",
+      "operator": "contains"
     },
     {
       "id": "B000057-BIZ-001",
-      "description": "Business action is CREATE_SEARCH",
-      "expected": "CREATE_SEARCH"
+      "type": "business",
+      "description": "L'action metier est correcte",
+      "expected": "create_search_request",
+      "path": "next_action",
+      "operator": "eq"
     },
     {
-      "id": "B000057-BIZ-002",
-      "description": "Business object count is 1",
-      "expected": 1
+      "id": "B000057-LANG-001",
+      "type": "language",
+      "description": "La langue de reponse est correcte",
+      "expected": "fr",
+      "path": "responses_language",
+      "operator": "eq"
     },
     {
-      "id": "B000057-LAST-001",
-      "description": "Last Assistant intent is NONE",
-      "expected": "NONE"
+      "id": "B000057-Q-001",
+      "type": "questions",
+      "description": "Au maximum une question par tour",
+      "expected": 1,
+      "path": "maximum_questions_per_turn",
+      "operator": "eq"
+    },
+    {
+      "id": "B000057-OBJ-001",
+      "type": "business",
+      "description": "Le nombre d objets metier est correct",
+      "expected": 1,
+      "path": "business_object_count",
+      "operator": "eq"
     }
   ]
 }

@@ -1,0 +1,68 @@
+{
+  "id": "B000021",
+  "category": "purchase",
+  "level": "basic",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Achat maison à Yaoundé",
+  "tags": [
+    "achat",
+    "qualification",
+    "confirmation"
+  ],
+  "business_object": "maison",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0021",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux acheter un maison à Yaoundé.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel est votre budget d’achat ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "Je peux aller jusqu’à 12 000 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Avez-vous des quartiers préférés ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bastos ou Mvan.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres minimum ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "Trois chambres minimum.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : achat d’un maison à Yaoundé, budget maximal 12 000 000 FCFA, zones Bastos ou Mvan, trois chambres minimum. Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche d’achat a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}
