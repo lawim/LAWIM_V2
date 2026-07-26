@@ -1,0 +1,4 @@
+{"cohort": "C1-W02-C01", "size": 50, "ok": 50, "err": 0, "dur_ms": 1904.3841361999512, "gate": "PASS"}
+{"cohort": "C1-W02-C02", "size": 50, "ok": 50, "err": 0, "dur_ms": 3674.8998165130615, "gate": "PASS"}
+{"cohort": "C1-W02-C03", "size": 50, "ok": 50, "err": 0, "dur_ms": 4543.254852294922, "gate": "PASS"}
+{"cohort": "C1-W02-C04", "size": 50, "ok": 50, "err": 0, "dur_ms": 4495.776414871216, "gate": "PASS"}

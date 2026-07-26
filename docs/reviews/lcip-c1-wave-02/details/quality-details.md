@@ -1,0 +1,1 @@
+# Quality Details.Md

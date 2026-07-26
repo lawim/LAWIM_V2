@@ -1,0 +1,308 @@
+[
+  {
+    "control_id": "W02-0001",
+    "path": "normalized/baseline-200-after.json",
+    "size": 42,
+    "sha256": "ac810b0e48183773759c1b3deb4ea5309871b82bdda05a05cd6ee8c76e0507ed",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0002",
+    "path": "normalized/baseline-200-before.json",
+    "size": 42,
+    "sha256": "ac810b0e48183773759c1b3deb4ea5309871b82bdda05a05cd6ee8c76e0507ed",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0003",
+    "path": "normalized/business-results.jsonl",
+    "size": 9634,
+    "sha256": "6255f0115ba35eb3774fe87a851e4a0847f4523faff01af69cc93207c5985945",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0004",
+    "path": "normalized/c1-wave-02-results.jsonl",
+    "size": 47888,
+    "sha256": "268f0c8005e2343762975c03fc4ea0b63c2deef4ddcae58f92a21114ffa06f3a",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0005",
+    "path": "normalized/cohort-results.jsonl",
+    "size": 410,
+    "sha256": "0e6b7137ab76354891425979fd893d4736fbe0a790a4714faccdf5ef976a5450",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0006",
+    "path": "normalized/correction-results.jsonl",
+    "size": 270,
+    "sha256": "84a0576e9e51846a1f7b418731303103f60f42f88703775c571f333ca08b3f23",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0007",
+    "path": "normalized/cross-wave-diversity-results.jsonl",
+    "size": 24,
+    "sha256": "7d97f6428d335afee9e594c992934c066f01253a385c12a502312d0fd75fc117",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0008",
+    "path": "normalized/determinism-results.jsonl",
+    "size": 380,
+    "sha256": "7b90c622c63f0ad7f3bf9e47e80194fabaab9e8d776834d0453a0c292daa033b",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0009",
+    "path": "normalized/dialogue-quality-results.jsonl",
+    "size": 12400,
+    "sha256": "aa80339aa8abad0687b473b3e485e156574df6495bd08c9b993d0243204fc498",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0010",
+    "path": "normalized/diversity-results.jsonl",
+    "size": 46,
+    "sha256": "cdf95681d2b24ebf9d4b09d6a2017e80776461af8f9fb23e782359b3dcc083c9",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0011",
+    "path": "normalized/duplicate-groups.jsonl",
+    "size": 15,
+    "sha256": "1b54c123142bf0da82524860d416cb86e2e9c9742688dd721be9c5d4b25e32c2",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0012",
+    "path": "normalized/expected-actual-separation.jsonl",
+    "size": 10000,
+    "sha256": "838af92a84525685cdf3c60febfb4fa5fae2fb51601bdf1826158b53100137c0",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0013",
+    "path": "normalized/fact-results.jsonl",
+    "size": 11200,
+    "sha256": "18015df07d8f910df075851f93c3e7c546a9968a85b3ba0ad448f72be1cfaca4",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0014",
+    "path": "normalized/generation-results.jsonl",
+    "size": 10000,
+    "sha256": "8b55d829f14b76897af1e4cbc19376a45ebd6096305d06f62c4be18b16f1cdfe",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0015",
+    "path": "normalized/idempotence-results.jsonl",
+    "size": 7470,
+    "sha256": "34da1997f582634b439dec872774c58afe3adc9a24ff48238ab3bf6e19f6fb5a",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0016",
+    "path": "normalized/language-results.jsonl",
+    "size": 9000,
+    "sha256": "092854258d83d0dc10049743724bbcb261c51bca61d0ce2f8935ff5a3f949775",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0017",
+    "path": "normalized/no-action-results.jsonl",
+    "size": 1598,
+    "sha256": "e39e10e56a577a9c32b9abb335363c166cce9471b76b25e75289499417a4b05a",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0018",
+    "path": "normalized/performance.json",
+    "size": 44,
+    "sha256": "bb97715ecb69a142bec3ea775e5e3d5b02dbb0fe6f7a8ceb4130d1beabc7089d",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0019",
+    "path": "normalized/proven-runtime-errors.jsonl",
+    "size": 13,
+    "sha256": "4b54b113904ea77c14fb933d7d6db8278537e134ebabc8044ef749533689f2bb",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0020",
+    "path": "normalized/reference-sample-25-after.json",
+    "size": 42,
+    "sha256": "ac810b0e48183773759c1b3deb4ea5309871b82bdda05a05cd6ee8c76e0507ed",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0021",
+    "path": "normalized/reference-sample-25-before.json",
+    "size": 42,
+    "sha256": "ac810b0e48183773759c1b3deb4ea5309871b82bdda05a05cd6ee8c76e0507ed",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0022",
+    "path": "normalized/repair-results.jsonl",
+    "size": 9000,
+    "sha256": "29538ff99d23e0acba5206e22e7532d165d894f0ca6b65d5a9ec19f5093f8787",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0023",
+    "path": "normalized/restart-results.jsonl",
+    "size": 1272,
+    "sha256": "924d1e34c6a1b73fd1cc5101af1d2656a2fc3b4dce3775e70f6169165736cca9",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0024",
+    "path": "normalized/review-results.jsonl",
+    "size": 1880,
+    "sha256": "719ea47ff5a5b0e9d89a6f6fa895c658024c72ad6f49c8a180bf94b781ec3817",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0025",
+    "path": "normalized/runtime-results.jsonl",
+    "size": 46444,
+    "sha256": "1b4af6237008bc94b9dddeaa562dd9f9e3cdf4b39aefa70c6ad491e84e3c98c0",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0026",
+    "path": "normalized/specification-results.jsonl",
+    "size": 11600,
+    "sha256": "82c3104993f16a4b6f60f72b8f2d1dcecb92d888cbaaa94cbe3ab26bbde3d83f",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0027",
+    "path": "normalized/static-gate.json",
+    "size": 75,
+    "sha256": "4b2854eea855a795ac0360a8cc79c3e5b4b286e2c3e68fb52b6f4762704b53d5",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0028",
+    "path": "normalized/statistics.json",
+    "size": 1009,
+    "sha256": "6a4ee93537c58ad7daa430ce4ed12c1fbc5c364cfe8ed50ed62487624d213580",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0029",
+    "path": "normalized/wave-01-after.json",
+    "size": 42,
+    "sha256": "ac810b0e48183773759c1b3deb4ea5309871b82bdda05a05cd6ee8c76e0507ed",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0030",
+    "path": "normalized/wave-01-before.json",
+    "size": 42,
+    "sha256": "ac810b0e48183773759c1b3deb4ea5309871b82bdda05a05cd6ee8c76e0507ed",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0031",
+    "path": "normalized/wave-01-correction-reconciliation.json",
+    "size": 402,
+    "sha256": "968f55d34e35688a109ef87dcaaa0c36569264728a7a1d9c46237e066d1fbbc5",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0032",
+    "path": "normalized/wave-plan-audit.json",
+    "size": 447,
+    "sha256": "18fa15a8f67745240f39299e3def17eaabf9d0ac8b5d983361e56eaf76c31de3",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0033",
+    "path": "raw/tests/c1-wave-02-tests.stdout.txt",
+    "size": 688,
+    "sha256": "dc2c2ecb2a7f2810198f35fbb01501dd8cd0caefa74de9eb52df0717294de8b4",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "W02-0034",
+    "path": "raw/tests/c1-wave-02-tests.xml",
+    "size": 15628,
+    "sha256": "1b4d80be6a010df6cfbf92acfaedd2d3d64a749b26edba7857b8e634b0627e4d",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  }
+]
