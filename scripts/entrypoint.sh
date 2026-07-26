@@ -41,7 +41,7 @@ config = AppConfig(
 )
 from lawim_v2.bootstrap import build_runtime
 runtime = build_runtime(config)
-runtime.start()
+print(f"LAWIM V2 runtime initialized. SHA={os.environ.get('LAWIM_BUILD_SHA', 'unknown')}")
 
 # Start a simple HTTP server for health checks
 import http.server, socketserver
