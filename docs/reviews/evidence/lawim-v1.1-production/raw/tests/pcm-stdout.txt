@@ -1,0 +1,44 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2
+configfile: pyproject.toml
+collecting ... collected 35 items
+
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-search-1] PASSED [  2%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-search-2] PASSED [  5%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-correction-1] PASSED [  8%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-refusal-1] PASSED [ 11%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-confirm-1] PASSED [ 14%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-clarify-1] PASSED [ 17%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-short-1] PASSED  [ 20%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-mixed-1] PASSED  [ 22%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[fr-false-positive-1] PASSED [ 25%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[en-false-positive-1] PASSED [ 28%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[fr-search-1] PASSED  [ 31%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[en-search-1] PASSED  [ 34%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-search-3] PASSED [ 37%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-search-4] PASSED [ 40%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[switch-fr-en-pcm] PASSED [ 42%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenario[pcm-search-5] PASSED [ 45%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-search-1] PASSED [ 48%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-search-2] PASSED [ 51%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-correction-1] SKIPPED [ 54%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-refusal-1] PASSED [ 57%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-confirm-1] SKIPPED [ 60%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-clarify-1] SKIPPED [ 62%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-short-1] SKIPPED [ 65%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-mixed-1] PASSED [ 68%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[fr-false-positive-1] PASSED [ 71%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[en-false-positive-1] SKIPPED [ 74%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[fr-search-1] PASSED [ 77%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[en-search-1] SKIPPED [ 80%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-search-3] PASSED [ 82%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-search-4] PASSED [ 85%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[switch-fr-en-pcm] SKIPPED [ 88%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_no_false_positive_fr[pcm-search-5] PASSED [ 91%]
+tests/test_pcm_v1_1_gold.py::test_all_scenarios_have_required_fields PASSED [ 94%]
+tests/test_pcm_v1_1_gold.py::test_all_scenarios_have_valid_ids PASSED    [ 97%]
+tests/test_pcm_v1_1_gold.py::test_pcm_gold_scenarios_count PASSED        [100%]
+
+======================== 28 passed, 7 skipped in 0.18s =========================

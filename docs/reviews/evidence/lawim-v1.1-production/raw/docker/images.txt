@@ -1,0 +1,5 @@
+Images:
+REPOSITORY    TAG         IMAGE ID       CREATED
+compose-app   latest      5956cff17bff   10 minutes ago
+postgres      16-alpine   e013e867e712   5 weeks ago
+redis         7-alpine    6ab0b6e73817   2 months ago

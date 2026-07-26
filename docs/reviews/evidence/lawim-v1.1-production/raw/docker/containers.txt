@@ -1,0 +1,6 @@
+Containers:
+NAMES            IMAGE                STATUS
+lawim-app        compose-app          Up 9 minutes (healthy)
+lawim-postgres   postgres:16-alpine   Up 19 hours (healthy)
+lawim-redis      redis:7-alpine       Up 19 hours (healthy)
+

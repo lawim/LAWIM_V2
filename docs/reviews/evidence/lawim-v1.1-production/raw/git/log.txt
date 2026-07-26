@@ -1,0 +1,5 @@
+4d65582a feat(gold-corpus): add validators, runners, certified blocks 01-02
+6bf7a1e4 feat(gold-corpus): initial structure — schema, source manifest, replacement map
+89ca1149 feat(pcm): V1.1 PCM stabilization — detection, templates, corpus, tests
+28a9a6da docs(sync): normalize production sync to e8cee707 — rename report, update references, close todos
+e8cee707 docs(sync): global production sync report — f9c5e5ee aligned everywhere

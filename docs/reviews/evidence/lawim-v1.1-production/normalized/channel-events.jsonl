@@ -1,0 +1,9 @@
+{"event_id":542,"channel":"telegram","type":"pcm","update_id":666001,"message_id":537,"accepted":true,"duplicate":false,"restart":false,"lang_detected":"pcm","canary_head":"4d65582a"}
+{"event_id":543,"channel":"whatsapp","type":"pcm","idMessage":"CANARY-PCM-001","message_id":539,"accepted":true,"duplicate":false,"restart":false,"lang_detected":"pcm","canary_head":"4d65582a"}
+{"event_id":545,"channel":"telegram","type":"language_switch","update_id":666002,"message_id":542,"accepted":true,"duplicate":false,"restart":false,"switch":"PCM->FR","canary_head":"4d65582a"}
+{"event_id":547,"channel":"telegram","type":"pcm_post_restart","update_id":666003,"message_id":545,"accepted":true,"duplicate":false,"restart":true,"lang_detected":"pcm","canary_head":"4d65582a"}
+{"event_id":548,"channel":"telegram","type":"pcm_production","update_id":555001,"message_id":547,"accepted":true,"duplicate":false,"restart":false,"lang_detected":"pcm","canary_head":"4d65582a"}
+{"event_id":549,"channel":"telegram","type":"language_switch","update_id":555002,"message_id":549,"accepted":true,"duplicate":false,"switch":"PCM->FR","canary_head":"4d65582a"}
+{"event_id":550,"channel":"whatsapp","type":"pcm_production","idMessage":"PCM-555-001","message_id":551,"accepted":true,"duplicate":false,"restart":false,"lang_detected":"pcm","canary_head":"4d65582a"}
+{"event_id":553,"channel":"telegram","type":"pcm_post_restart","update_id":555003,"message_id":555,"accepted":true,"duplicate":false,"restart":true,"lang_detected":"pcm","canary_head":"4d65582a"}
+{"event_id":554,"channel":"telegram","type":"final_pcm","update_id":777777,"message_id":557,"accepted":true,"duplicate":false,"restart":false,"lang_detected":"pcm","canary_head":"4d65582a"}
