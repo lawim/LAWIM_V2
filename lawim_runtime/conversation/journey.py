@@ -343,7 +343,8 @@ PCM_KEYWORDS = {"i","di","dey","wan","find","for","na","ma","my","make","give","
 
 def _detect_language(text: str) -> str:
     """Detect language from text. Returns 'fr', 'en', 'pcm', or 'unknown'."""
-    words = set(text.lower().split())
+    words = text.lower().split()
+    word_set = set(words)
     text_lower = text.lower()
     
     # Explicit switch patterns
@@ -352,31 +353,56 @@ def _detect_language(text: str) -> str:
         if p in text_lower: return "en"
     for p in ['continue en français','parle français','utilise le français','continue en francais']:
         if p in text_lower: return "fr"
-    for p in ['abeg talk for pidgin','make we talk pidgin','speak pidgin','continue for pidgin']:
+    for p in ['abeg talk for pidgin','make we talk pidgin','speak pidgin','continue for pidgin',
+              'talk for pidgin']:
         if p in text_lower: return "pcm"
     
-    # PCM strong markers
-    pcm_kw = {"no be","abeg","wey dey","make i","i wan","i di","i dey","i don",
-              "wetin","na","dem","una","wuna","sabi","pikin","kom","dey","make i go"}
-    pcm_hits = sum(1 for m in pcm_kw if m in text_lower)
-    if pcm_hits >= 2: return "pcm"
+    # PCM strong bigram markers (count bigrams in text, strip punctuation)
+    import re as _re
+    pcm_bigrams = {"no be","wey dey","make i","i wan","i di","i dey","i don","i go",
+                   "e dey","e don","na so","na which","how much","make we","i no",
+                   "no vex","na rent","na buy","don register","i fit","i sabi",
+                   "make dem","na my","na your","na di","wan make","wan buy",
+                   "wan rent","wan find","dey find","fit pay","go check","check am",
+                   "register am","create am","talk am","tell dem","make we go",
+                   "ma budget","ma money","ma house","ma land","ma car",
+                   "my money","my budget","my house","my land",
+                   "make e","e no","make am","make dem","no pass",
+                   "na correct","na good","na fine","na big"}
+    clean_words = [_re.sub(r'[^\w\s]', '', w) for w in words]
+    bigram_hits = 0
+    for i in range(len(clean_words) - 1):
+        if clean_words[i] and clean_words[i+1]:
+            bigram = clean_words[i] + " " + clean_words[i+1]
+            if bigram in pcm_bigrams:
+                bigram_hits += 1
+    if bigram_hits >= 2:
+        return "pcm"
+    # Single bigram + "i"/"na" + verb pattern is strong PCM
+    if bigram_hits >= 1 and ("i" in word_set or "na" in word_set) and len(words) >= 3:
+        pcm_verbs = {"wan","dey","fit","sabi","kom","komot","go","correct","continue","na"}
+        if word_set & pcm_verbs:
+            return "pcm"
     
-    # Count keywords (excluding domain terms common to all languages)
-    domain = {"house","apartment","studio","villa","land","plot","office","commercial","room",
-              "shop","warehouse","building","rent","buy","sale","budget","bedroom","bedrooms",
-              "property","month","price","visit","yes","no","oui","non","flat"}
+    # PCM single-word markers
+    pcm_single = {"abeg","wetin","sabi","komot","broda","sista","pikin","una","wuna","dey","abi","kom","ma"}
+    pcm_hits = bigram_hits + sum(1 for w in word_set if w in pcm_single)
+    
+    # Count keywords
     fr_kw = {"bonjour","je","cherche","louer","acheter","appartement","maison","studio","terrain",
              "budget","mois","chambre","ville","quartier","merci","veux","peux","dans","sur","avec",
              "nous","enregistrez","confirme","valide","envoie","bien","appart","pieces","location",
-             "achat","vendre","investir","visite","prix","recherche","tres","beaucoup","aussi","encore"}
+             "achat","vendre","investir","visite","prix","recherche","tres","beaucoup","aussi","encore",
+             "un","une","des","du","de","la","le","les","ce","cet","cette","ces","mes","tes",
+             "est","sont","fait","faire","mon","ton","son","ses","leur","leurs","à","au","aux"}
     en_kw = {"hello","i","am","looking","for","rent","buy","house","apartment","budget","month",
              "bedroom","city","thank","please","need","want","the","in","at","find","have","would",
              "could","my","your","our","their","its","his","her","not","will","shall","may","must",
-             "should","register","confirm","looking for","search","need","want to","would like"}
+             "should","register","confirm","search"}
     
-    fs = sum(1 for w in words if w in fr_kw)
-    es = sum(1 for w in words if w in en_kw)
-    ps = pcm_hits + sum(1 for w in words if w in pcm_kw)
+    fs = sum(1 for w in word_set if w in fr_kw)
+    es = sum(1 for w in word_set if w in en_kw)
+    ps = pcm_hits
     
     if fs >= 2 and fs > es and fs > ps: return "fr"
     if es >= 2 and es > fs and es > ps: return "en"
@@ -414,8 +440,17 @@ def _response_lang(state: "JourneyState", text: str) -> str:
         # Subsequent messages: require non-domain evidence
         words = set(text.lower().split())
         domain = {"house","apartment","studio","villa","land","plot","office","room","shop",
-                  "rent","buy","sale","budget","bedroom","bedrooms","property","month","price"}
+                  "rent","buy","sale","budget","bedroom","bedrooms","property","month","price",
+                  "city","area","place","home","flat","number","check","need","want","two",
+                  "three","four","five","first","second","next","last","new","old","big"}
         nondomain = words - domain
+        # PCM → EN: require strong English markers before switching
+        if conv_lang == "pcm" and detected == "en":
+            strong_en = {"hello","hi","thank","please","would","could","should","shall",
+                         "the","is","are","was","were","this","that","these","those"}
+            en_hits = sum(1 for w in nondomain if w in strong_en)
+            if en_hits < 2 and len(nondomain) < 3:
+                return conv_lang
         if len(nondomain) >= 2 and len(text.strip()) >= 10:
             state._conversation_lang = detected
             return detected
@@ -1008,16 +1043,16 @@ _LANG_MSGS: dict[str, dict[str, str]] = {
         "empty_input": "I did not understand your message. Could you rephrase?",
     },
     "pcm": {
-        "registered": "Your request don register. I fit help you with something?",
+        "registered": "Your request don register. I fit help you with anything else?",
         "updating": "I dey update your request",
         "failed": "I no fit save your request now. Try again later.",
         "already_known": "I don get this information before.",
-        "complete_ask": "Your search complete. I go register am?",
-        "recap": "Here na your search",
+        "complete_ask": "Your search information complete. You want make I register am?",
+        "recap": "Here be your search summary",
         "proceeding": "I go look for property.",
-        "correction": "I don hear say you change",
+        "correction": "I don hear say you change am",
         "note": "I don note your information. Continue when you ready.",
-        "empty_input": "I no understand your message. Abeg explain again?",
+        "empty_input": "I no understand your message. You fit explain again?",
     },
 }
 

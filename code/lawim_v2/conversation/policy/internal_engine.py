@@ -9,7 +9,7 @@ from .greetings import CANONICAL_GREETINGS
 _HANDOVER_MESSAGES: dict[str, str] = {
     "fr": "Je comprends. Je vais vous mettre en relation avec un conseiller LAWIM qui pourra vous assister.",
     "en": "I understand. I will connect you with a LAWIM advisor who can assist you.",
-    "pcm": "I sabi. I go connect you with LAWIM advisor wey fit help you.",
+    "pcm": "I understand. I go connect you with LAWIM advisor wey fit help you.",
 }
 
 
@@ -93,7 +93,7 @@ class LawimInternalResponseEngine:
             if parts:
                 base += ": " + ", ".join(parts)
         else:
-            base = "I don hammer your correction"
+            base = "I don note your correction"
             if parts:
                 base += ": " + ", ".join(parts)
         if plan.rendered_next_question:
@@ -109,7 +109,7 @@ class LawimInternalResponseEngine:
                 return "Merci ! Vos informations sont compl\u00e8tes. Je lance la recherche..."
             if lang == "en":
                 return "Thank you! Your information is complete. Starting search..."
-            return "Thank you! Your information don complete. I dey start search..."
+            return "Thank you! Your information complete. I go start search..."
         if act == "PUBLICATION_READY":
             return "Merci ! Votre annonce est pr\u00eate \u00e0 \u00eatre publi\u00e9e."
         if act == "VISIT_READY":
@@ -147,7 +147,7 @@ class LawimInternalResponseEngine:
             return "D\u00e9sol\u00e9, je n'ai pas pu traiter votre demande. Pouvez-vous reformuler ?"
         if lang == "en":
             return "Sorry, I could not process your request. Could you rephrase?"
-        return "Sorry, I no fit handle your request. Abeg talk am again."
+        return "Sorry, I no fit handle your request. You fit talk am again?"
 
     @staticmethod
     def _format_fact(key: str, value: Any, language: str) -> str:

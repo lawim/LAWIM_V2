@@ -642,13 +642,22 @@ class CommunicationService:
                 )
                 response_text = result.get("response", "")
                 plan = result.get("response_plan")
+                state = result.get("state")
+
+                # Determine effective language from engine state
+                effective_lang = language
+                if state is not None:
+                    conv_lang = getattr(state, "_conversation_lang", None) or getattr(state, "language", None)
+                    if conv_lang and conv_lang in ("fr", "en", "pcm"):
+                        effective_lang = conv_lang
 
                 self._log_turn(
                     correlation_id, channel, conversation_key, raw_text, "engine_result",
                     response_len=len(response_text), has_content=bool(response_text),
                     plan_type=type(plan).__name__ if plan else None,
-                    state_version=getattr(result.get("state"), "version", None),
-                    intent=getattr(result.get("state"), "current_intent", None),
+                    state_version=getattr(state, "version", None),
+                    intent=getattr(state, "current_intent", None),
+                    effective_lang=effective_lang,
                 )
 
                 if response_text:
@@ -665,7 +674,7 @@ class CommunicationService:
                     response_text = _prepend_identity(response_text)
                     if channel in ("whatsapp", "telegram"):
                         try:
-                            response_text += self._format_ai_footer(language, channel)
+                            response_text += self._format_ai_footer(effective_lang, channel)
                         except Exception:
                             pass
 
@@ -705,7 +714,7 @@ class CommunicationService:
     AI_FOOTER_TEXTS: dict[str, str] = {
         "fr": "ℹ️ Réponse assistée par LAWIM AI.",
         "en": "ℹ️ Response assisted by LAWIM AI.",
-        "pcm": "ℹ️ LAWIM AI help for this answer.",
+        "pcm": "ℹ️ LAWIM AI fit help for this answer.",
     }
 
     SAFETY_RESPONSE_TEXT: str = (
@@ -728,11 +737,6 @@ class CommunicationService:
     def _greeting_response(self, channel: str, language: str = "fr") -> str:
         from ..conversation.policy.greetings import CANONICAL_GREETINGS
         base = CANONICAL_GREETINGS.get(language, CANONICAL_GREETINGS["fr"])
-        if channel in ("whatsapp", "telegram"):
-            try:
-                return base + self._format_ai_footer(language, channel)
-            except Exception:
-                return base
         return base
 
     def _dispatch_maintenance_reply(

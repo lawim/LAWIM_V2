@@ -19,10 +19,10 @@ CANONICAL_GREETINGS: dict[str, str] = {
     ),
     "pcm": (
         "🤖 LAWIM AI\n\n"
-        "Welcome for LAWIM.\n\n"
-        "Abeg describe your property project small: "
-        "buy, sell, rent, land, management or wetin you want do.\n\n"
+        "Welcome to LAWIM.\n\n"
+        "Tell us your property project: "
+        "buy, sell, rent, land, management or any other property need.\n\n"
         "──────────────\n"
-        "ℹ️ LAWIM AI dey help you with answer."
+        "ℹ️ LAWIM AI fit help for this answer."
     ),
 }
