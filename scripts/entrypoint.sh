@@ -34,7 +34,8 @@ config = AppConfig(
     log_level=os.environ.get("LOG_LEVEL", "info"),
     public_base_url=os.environ.get("PUBLIC_BASE_URL", "https://api.lawim.app"),
     secret_provider=os.environ.get("LAWIM_SECRET_PROVIDER", "env"),
-    seed_demo_data=os.environ.get("LAWIM_SEED_DEMO_DATA", "true").lower() == "true",
+    seed_demo_data=False,
+    public_media=False,
     session_ttl_seconds=int(os.environ.get("SESSION_TTL_SECONDS", "86400")),
     media_storage_path=Path(os.environ.get("LAWIM_MEDIA_PATH", "/app/data/runtime/media")),
 )
