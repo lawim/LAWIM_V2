@@ -62,6 +62,8 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-26 | LCIP C.2P-R — Production Resume | dc9caee6 | main | docs/reviews/lcip-c2pr-production-resume/REPORT.md | docs/reviews/lcip-c2pr-production-resume/details/ | docs/reviews/lcip-c2pr-production-resume/evidence/ | PARTIAL |
 
+| 2026-07-26 | LCIP C.2PR-D — Runtime Deployment | 229d8cd3 | main | docs/reviews/lcip-c2prd-runtime-deployment/REPORT.md | details/ | evidence/ | PASS |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*

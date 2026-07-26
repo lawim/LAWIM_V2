@@ -1,0 +1,17 @@
+{
+  "git_sync": "PASS",
+  "image_sync": "PASS",
+  "container_sync": "PASS",
+  "runtime_checksum": "PASS",
+  "healthz": "PASS",
+  "readyz": "PASS",
+  "sqlite": "NOT_PROVEN",
+  "postgresql": "NOT_PROVEN",
+  "web": "NOT_PROVEN",
+  "telegram": "NOT_PROVEN",
+  "whatsapp": "NOT_PROVEN",
+  "restart": "NOT_PROVEN",
+  "idempotence": "NOT_PROVEN",
+  "logs": "NOT_PROVEN",
+  "gate_verdict": "C2PRD_PRODUCTION_VALIDATION_PARTIAL"
+}

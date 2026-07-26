@@ -1,0 +1,74 @@
+[
+  {
+    "control_id": "PRD-0001",
+    "path": "normalized/anomalies.jsonl",
+    "size": 116,
+    "sha256": "812b25586689d81aab0e54c64f662d4fd497e3b481626fec459d2dabb16351ab",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PRD-0002",
+    "path": "normalized/final-production-gate.json",
+    "size": 421,
+    "sha256": "0700702bce3625350d1cd6804b937a31b32262be5dfdcfb04e4a04188d1ccaeb",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PRD-0003",
+    "path": "normalized/git-sync-results.json",
+    "size": 142,
+    "sha256": "56f6021d169ecfd0af3cf2ea2b261fb6f3fabddb6ca00632417fb297caa91f6b",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PRD-0004",
+    "path": "normalized/health-results.jsonl",
+    "size": 153,
+    "sha256": "fa27ac44a08dc7d2a16ae1ae6bdcbfe8bd7b46b9ddf6a11754a2314343801e35",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PRD-0005",
+    "path": "normalized/runtime-checksum-results.jsonl",
+    "size": 77,
+    "sha256": "ced2d4c28f0709cc996d2605e0d1ed6943a62c325f355d25dee1b5ff313c54de",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PRD-0006",
+    "path": "normalized/statistics.json",
+    "size": 94,
+    "sha256": "af6b03c906ffd3e29f701859a770ff34cf4fee9e680b2fa8bc6735c1b42fabdd",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PRD-0007",
+    "path": "raw/git/sha.txt",
+    "size": 24,
+    "sha256": "a83b04e12975d8d3ef8eb1f660df3481e548b2204ef83174ed540c4776917578",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PRD-0008",
+    "path": "raw/ovh/state-final.txt",
+    "size": 80,
+    "sha256": "a73731099bd3d413ae61a754af7fb33abb96e7b25b239a3589fbc479e01ea677",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  }
+]

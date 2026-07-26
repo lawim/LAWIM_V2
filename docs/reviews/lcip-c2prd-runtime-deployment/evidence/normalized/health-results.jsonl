@@ -1,0 +1,3 @@
+{"endpoint": "healthz", "code": 200, "attempt": 1}
+{"endpoint": "healthz", "code": 200, "attempt": 2}
+{"endpoint": "healthz", "code": 200, "attempt": 3}

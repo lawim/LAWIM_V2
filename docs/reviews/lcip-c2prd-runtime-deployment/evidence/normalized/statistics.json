@@ -1,0 +1,6 @@
+{
+  "deployment_sha": "229d8cd3",
+  "healthz": "200",
+  "readyz": "200",
+  "gate": "PARTIAL"
+}
