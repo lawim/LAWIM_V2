@@ -46,6 +46,8 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-26 | LCIP C.0G-R — Plan Repair & Gate Closure | c51d392d | feature/lcip-c0-industrialization-20260726 | docs/reviews/lcip-c0gr-plan-repair/REPORT.md | docs/reviews/lcip-c0gr-plan-repair/details/ | docs/reviews/lcip-c0gr-plan-repair/evidence/ | PASS |
 
+| 2026-07-26 | LCIP C.1-W01 — Industrial Wave One | 1eae54ca | feature/lcip-c1-wave-01-20260726 | docs/reviews/lcip-c1-wave-01/REPORT.md | docs/reviews/lcip-c1-wave-01/details/ | docs/reviews/lcip-c1-wave-01/evidence/ | PASS |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*

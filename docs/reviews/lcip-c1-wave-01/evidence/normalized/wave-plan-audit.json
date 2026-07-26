@@ -1,0 +1,19 @@
+{
+  "total": 200,
+  "unique_ids": 200,
+  "unique_templates": 200,
+  "archetypes_used": 49,
+  "duplicates": 0,
+  "creation": 166,
+  "no_action": 34,
+  "restart": 24,
+  "fr": 134,
+  "en": 33,
+  "pcm": 33,
+  "web": 67,
+  "telegram": 67,
+  "whatsapp": 66,
+  "standard": 100,
+  "advanced": 60,
+  "expert": 40
+}
