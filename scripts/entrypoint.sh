@@ -20,9 +20,25 @@ vault_key = os.environ.get("LAWIM_VAULT_KEY", "")
 if vault_key:
     CredentialVault.set_global_key(vault_key)
 
-from lawim_v2.bootstrap import build_runtime, ApplicationRuntime
 from lawim_v2.config import AppConfig
-config = AppConfig()
+from pathlib import Path
+config = AppConfig(
+    host=os.environ.get("LAWIM_HOST", "0.0.0.0"),
+    port=int(os.environ.get("LAWIM_PORT", "3000")),
+    db_path=Path(os.environ.get("LAWIM_DB_PATH", "/app/data/runtime/lawim.sqlite3")),
+    db_driver=os.environ.get("LAWIM_DB_DRIVER", "sqlite"),
+    database_url=os.environ.get("DATABASE_URL", ""),
+    db_fallback=True,
+    app_env=os.environ.get("APP_ENV", "production"),
+    stack_profile=os.environ.get("LAWIM_STACK_PROFILE", "standard"),
+    log_level=os.environ.get("LOG_LEVEL", "info"),
+    public_base_url=os.environ.get("PUBLIC_BASE_URL", "https://api.lawim.app"),
+    secret_provider=os.environ.get("LAWIM_SECRET_PROVIDER", "env"),
+    seed_demo_data=os.environ.get("LAWIM_SEED_DEMO_DATA", "true").lower() == "true",
+    session_ttl_seconds=int(os.environ.get("SESSION_TTL_SECONDS", "86400")),
+    media_storage_path=Path(os.environ.get("LAWIM_MEDIA_PATH", "/app/data/runtime/media")),
+)
+from lawim_v2.bootstrap import build_runtime
 runtime = build_runtime(config)
 runtime.start()
 
