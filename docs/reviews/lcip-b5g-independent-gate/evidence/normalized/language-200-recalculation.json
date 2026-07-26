@@ -1,0 +1,16 @@
+{
+  "FR_SCENARIOS": 142,
+  "FR_PASS": 142,
+  "EN_SCENARIOS": 29,
+  "EN_PASS": 29,
+  "PCM_SCENARIOS": 29,
+  "PCM_PASS": 29,
+  "UNKNOWN_LANGUAGE": 0,
+  "LANGUAGE_DRIFT": 0,
+  "pilot_language_breakdown": {
+    "fr": 16,
+    "en": 2,
+    "pcm": 2
+  },
+  "total_200": 200
+}

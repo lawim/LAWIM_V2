@@ -31,6 +31,7 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 | 2026-07-26 | LCIP B.4R-E — Runtime Pilot Execution | 8795a09b | feature/lcip-b4r-spec-repair-20260726 | docs/reviews/lcip-b4re-runtime-pilot/REPORT.md | docs/reviews/lcip-b4re-runtime-pilot/details/ | docs/reviews/lcip-b4re-runtime-pilot/evidence/ | PASS |
 | 2026-07-26 | LCIP B.4R-F — Restart & Idempotence Validation | 312d22ec | feature/lcip-b4r-spec-repair-20260726 | docs/reviews/lcip-b4rf-restart-idempotence/REPORT.md | docs/reviews/lcip-b4rf-restart-idempotence/details/ | docs/reviews/lcip-b4rf-restart-idempotence/evidence/ | PASS |
 | 2026-07-26 | LCIP B.5 — Certification of 200 Real Dialogues | 2670f2be | feature/lcip-b5-corpus-200-certification-20260726 | docs/reviews/lcip-b5-corpus-200/REPORT.md | docs/reviews/lcip-b5-corpus-200/details/ | docs/reviews/lcip-b5-corpus-200/evidence/ | PASS |
+| 2026-07-26 | LCIP B.5G — Independent Gate Audit | 2670f2be | feature/lcip-b5-corpus-200-certification-20260726 | docs/reviews/lcip-b5g-independent-gate/REPORT.md | docs/reviews/lcip-b5g-independent-gate/details/ | docs/reviews/lcip-b5g-independent-gate/evidence/ | PARTIAL |
 
 ---
 

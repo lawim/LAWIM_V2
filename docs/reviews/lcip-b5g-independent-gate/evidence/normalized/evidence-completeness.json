@@ -1,0 +1,10 @@
+{
+  "corpus_id_audit": true,
+  "status_recalculation": true,
+  "idempotence_recalculation": true,
+  "restart_independent_audit": true,
+  "cohort_audit": true,
+  "language_200_recalculation": true,
+  "facts_business_recalculation": true,
+  "independent_sample_40": true
+}

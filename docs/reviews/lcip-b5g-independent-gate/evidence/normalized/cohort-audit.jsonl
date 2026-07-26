@@ -1,0 +1,6 @@
+{"cohort": "B5-C01", "selected": 30, "executed": 30, "results": 30, "calls": 150, "errors": 0, "verdict": "PASS"}
+{"cohort": "B5-C02", "selected": 30, "executed": 30, "results": 30, "calls": 148, "errors": 0, "verdict": "PASS"}
+{"cohort": "B5-C03", "selected": 30, "executed": 30, "results": 30, "calls": 148, "errors": 0, "verdict": "PASS"}
+{"cohort": "B5-C04", "selected": 30, "executed": 30, "results": 30, "calls": 157, "errors": 0, "verdict": "PASS"}
+{"cohort": "B5-C05", "selected": 30, "executed": 30, "results": 30, "calls": 151, "errors": 0, "verdict": "PASS"}
+{"cohort": "B5-C06", "selected": 30, "executed": 30, "results": 30, "calls": 152, "errors": 0, "verdict": "PASS"}
