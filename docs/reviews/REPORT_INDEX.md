@@ -23,6 +23,7 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 | 2026-07-26 | LCIP B.1R — Audit Indépendant Migration & Certification | 1258fe19 | release/final-acceptance-and-ovh-readiness-20260721 | docs/reviews/lcip-b1r-independent-audit/REPORT.md | docs/reviews/lcip-b1r-independent-audit/details/ | docs/reviews/lcip-b1r-independent-audit/evidence/ | FAIL |
 | 2026-07-26 | LCIP A.3R — Réparation Moteur Certification Runtime | 1258fe19 | release/final-acceptance-and-ovh-readiness-20260721 | docs/reviews/lcip-a3r-runtime-certification/REPORT.md | docs/reviews/lcip-a3r-runtime-certification/details/ | docs/reviews/lcip-a3r-runtime-certification/evidence/ | PASS |
 | 2026-07-26 | LCIP A.3R-C — Clôture Moteur Certification Runtime | 473b2722 | main | docs/reviews/lcip-a3r-completion/REPORT.md | docs/reviews/lcip-a3r-completion/details/ | docs/reviews/lcip-a3r-completion/evidence/ | PASS |
+| 2026-07-26 | LCIP B.2 — Certification Runtime 200 Dialogues Réels | 303f9ae6 | main | docs/reviews/lcip-b2-runtime-certification/REPORT.md | docs/reviews/lcip-b2-runtime-certification/details/ | docs/reviews/lcip-b2-runtime-certification/evidence/ | PASS |
 
 ---
 

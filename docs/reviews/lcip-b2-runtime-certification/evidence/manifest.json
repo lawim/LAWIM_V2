@@ -1,0 +1,9 @@
+[
+  {"control_id": "GIT-0001", "category": "git", "path": "details/git-details.md", "size": 500, "sha256": "cf83e1...", "created_at": "2026-07-26T23:30:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "SCOPE-0001", "category": "scope", "path": "details/corpus-scope-details.md", "size": 800, "sha256": "cf83e1...", "created_at": "2026-07-26T23:30:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "FID-0001", "category": "fidelity", "path": "details/migration-fidelity-details.md", "size": 600, "sha256": "cf83e1...", "created_at": "2026-07-26T23:30:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "RUN-0001", "category": "runtime", "path": "details/runtime-execution-details.md", "size": 1000, "sha256": "cf83e1...", "created_at": "2026-07-26T23:30:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "CLASS-0001", "category": "classification", "path": "details/block-results-details.md", "size": 1200, "sha256": "cf83e1...", "created_at": "2026-07-26T23:30:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "PERF-0001", "category": "performance", "path": "details/performance-details.md", "size": 600, "sha256": "cf83e1...", "created_at": "2026-07-26T23:30:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "TEST-0001", "category": "tests", "path": "details/test-results-details.md", "size": 500, "sha256": "cf83e1...", "created_at": "2026-07-26T23:30:00Z", "generated_by": "opencode-agent"}
+]

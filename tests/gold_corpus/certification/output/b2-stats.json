@@ -1,0 +1,35 @@
+{
+  "campaign": "B.2 Runtime Certification",
+  "timestamp": "2026-07-26T12:08:05.386022+00:00",
+  "total_selected": 200,
+  "total_executed": 200,
+  "fidelity": {
+    "FIDELITY_PASS": 200
+  },
+  "classification": {
+    "RUNTIME_BEHAVIOR_ERROR": 200
+  },
+  "levels": {
+    "FAIL": 200
+  },
+  "language_results": {
+    "fr": {
+      "pass": 0,
+      "total": 142
+    },
+    "en": {
+      "pass": 0,
+      "total": 29
+    },
+    "pcm": {
+      "pass": 0,
+      "total": 29
+    }
+  },
+  "total_duration_seconds": 18.59,
+  "total_calls": 1016,
+  "mean_conversation_ms": 88.2,
+  "p50_ms": 79.98,
+  "p95_ms": 162.34,
+  "p99_ms": 256.98
+}
