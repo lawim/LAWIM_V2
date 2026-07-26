@@ -1,0 +1,1 @@
+# Canonical Model — B.3\n\n## Fichiers créés\n\n- `canonical/canonical_turn.py` — CanonicalTurn, CanonicalValue\n- `canonical/enum_mapping.py` — 6 tables de mapping\n- `canonical/expected_normalizer.py` — ExpectedNormalizer\n- `canonical/actual_normalizer.py` — ActualNormalizer\n- `canonical/comparator.py` — CanonicalComparator\n\n## Tests\n\n25/26 tests PASS

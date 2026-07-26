@@ -1,0 +1,1 @@
+# Campaign Results — B.3\n\n200/200 exécutées. 0 CANONICAL_FUNCTIONAL_PASS. 200 SPECIFICATION_ERROR.\n\nCause : les expected générés par B.1 utilisent un modèle de données qui ne correspond pas au comportement réel du runtime ProgramFEngineAdapter.

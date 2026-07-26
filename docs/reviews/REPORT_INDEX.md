@@ -24,6 +24,7 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 | 2026-07-26 | LCIP A.3R — Réparation Moteur Certification Runtime | 1258fe19 | release/final-acceptance-and-ovh-readiness-20260721 | docs/reviews/lcip-a3r-runtime-certification/REPORT.md | docs/reviews/lcip-a3r-runtime-certification/details/ | docs/reviews/lcip-a3r-runtime-certification/evidence/ | PASS |
 | 2026-07-26 | LCIP A.3R-C — Clôture Moteur Certification Runtime | 473b2722 | main | docs/reviews/lcip-a3r-completion/REPORT.md | docs/reviews/lcip-a3r-completion/details/ | docs/reviews/lcip-a3r-completion/evidence/ | PASS |
 | 2026-07-26 | LCIP B.2 — Certification Runtime 200 Dialogues Réels | 303f9ae6 | main | docs/reviews/lcip-b2-runtime-certification/REPORT.md | docs/reviews/lcip-b2-runtime-certification/details/ | docs/reviews/lcip-b2-runtime-certification/evidence/ | PASS |
+| 2026-07-26 | LCIP B.3 — Réconciliation Canonique Expected/Actual | 820fd751 | feature/lcip-b3-expected-actual-reconciliation-20260726 | docs/reviews/lcip-b3-canonical-reconciliation/REPORT.md | docs/reviews/lcip-b3-canonical-reconciliation/details/ | docs/reviews/lcip-b3-canonical-reconciliation/evidence/ | PASS |
 
 ---
 

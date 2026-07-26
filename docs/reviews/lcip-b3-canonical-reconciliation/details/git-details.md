@@ -1,0 +1,1 @@
+# Git Details — B.3\n\n**HEAD:** 820fd751\n**Branche:** feature/lcip-b3-expected-actual-reconciliation-20260726\n**Worktree:** CLEAN\n\nB.2 commit: 820fd751 (pushed to main)\nB.3 branch: feature/lcip-b3-expected-actual-reconciliation-20260726
