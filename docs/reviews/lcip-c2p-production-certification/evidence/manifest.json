@@ -1,0 +1,164 @@
+[
+  {
+    "control_id": "P-0001",
+    "path": "normalized/anomalies.jsonl",
+    "size": 122,
+    "sha256": "8bcc76afd8c3ff0f2d8c1b0b4f45da8c60ab903e8fbde48dc1ba730eab1c8620",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0002",
+    "path": "normalized/channel-production-results.jsonl",
+    "size": 148,
+    "sha256": "49659e7e6fc82e50e304426c79874e24d46ef953e7d852b5acbafbe242d2dd70",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0003",
+    "path": "normalized/final-production-gate.json",
+    "size": 652,
+    "sha256": "975a21699610715fe0c3dfa4ef6b47c3324f48aaef925a0d6d5b42f8b1ade0bc",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0004",
+    "path": "normalized/git-sync-results.json",
+    "size": 263,
+    "sha256": "ffd125df88733378fbd9caba217c7b680801222021c789e85f6ba0eb9ac02795",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0005",
+    "path": "normalized/health-results.jsonl",
+    "size": 95,
+    "sha256": "6fd7930196432459e3f218d8ba7eb0b3b904b794ddd25c4b86218a48a52f10cf",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0006",
+    "path": "normalized/idempotence-results.jsonl",
+    "size": 59,
+    "sha256": "c2b99bdc172dcfbad293661bfa5d8d70c5dfbb507449136dc6beb912e46bd970",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0007",
+    "path": "normalized/log-analysis.jsonl",
+    "size": 69,
+    "sha256": "abff8aa6bd8086b2962a6aabc2ff12ab68049e431b858e023e16e56204c6f08b",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0008",
+    "path": "normalized/ovh-deployment-results.json",
+    "size": 78,
+    "sha256": "f10fc43dfc70a5f80936ac4344bf2cd2c26e32081c9a7686e4506089f3a57d4a",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0009",
+    "path": "normalized/postgresql-results.json",
+    "size": 31,
+    "sha256": "c7796448536795ef79844102ec8d28fe841c9f902ac318f6d8f9faf034124db7",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0010",
+    "path": "normalized/restart-results.jsonl",
+    "size": 55,
+    "sha256": "b705cf384e5b57fae21042a76dc160dda5b76fd18010b83d2661440fb1521480",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0011",
+    "path": "normalized/sqlite-results.json",
+    "size": 31,
+    "sha256": "c7796448536795ef79844102ec8d28fe841c9f902ac318f6d8f9faf034124db7",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0012",
+    "path": "normalized/statistics.json",
+    "size": 285,
+    "sha256": "15793b12e2a9884948830238a9bd6fb570b7bdbed6a9fdca135a76de54044d03",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0013",
+    "path": "normalized/telegram-production-results.json",
+    "size": 31,
+    "sha256": "c7796448536795ef79844102ec8d28fe841c9f902ac318f6d8f9faf034124db7",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0014",
+    "path": "normalized/web-production-results.json",
+    "size": 31,
+    "sha256": "c7796448536795ef79844102ec8d28fe841c9f902ac318f6d8f9faf034124db7",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0015",
+    "path": "normalized/whatsapp-production-results.json",
+    "size": 31,
+    "sha256": "c7796448536795ef79844102ec8d28fe841c9f902ac318f6d8f9faf034124db7",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0016",
+    "path": "raw/git/head.txt",
+    "size": 41,
+    "sha256": "cee4b9bef41b9482c5bc1c3135e05b22388243b50e489383ee719eec55a75bff",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0017",
+    "path": "raw/git/origin-main.txt",
+    "size": 41,
+    "sha256": "cee4b9bef41b9482c5bc1c3135e05b22388243b50e489383ee719eec55a75bff",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "P-0018",
+    "path": "raw/git/status.txt",
+    "size": 27202,
+    "sha256": "3323d92e980d3570855b7602bd70c3b0e96ea5e3c1824ad3362609f4173597a2",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  }
+]

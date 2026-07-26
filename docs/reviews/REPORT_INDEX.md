@@ -58,6 +58,8 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-26 | LCIP C.2 — Global Certification of 990 | f46107a2 | feature/lcip-c2-global-certification-20260726 | docs/reviews/lcip-c2-global-certification/REPORT.md | docs/reviews/lcip-c2-global-certification/details/ | docs/reviews/lcip-c2-global-certification/evidence/ | PASS |
 
+| 2026-07-26 | LCIP C.2P — Production Certification | 10e8a43ff00914a12ef4e022231abb870a29e283 | main | docs/reviews/lcip-c2p-production-certification/REPORT.md | docs/reviews/lcip-c2p-production-certification/details/ | docs/reviews/lcip-c2p-production-certification/evidence/ | PARTIAL |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*

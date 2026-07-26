@@ -1,0 +1,18 @@
+{
+  "git_sync": "PASS",
+  "image_sync": "NOT_AVAILABLE",
+  "container_sync": "NOT_AVAILABLE",
+  "runtime_checksum": "NOT_AVAILABLE",
+  "health": "NOT_AVAILABLE",
+  "ready": "NOT_AVAILABLE",
+  "sqlite": "NOT_AVAILABLE",
+  "postgresql": "NOT_AVAILABLE",
+  "web": "NOT_AVAILABLE",
+  "telegram": "NOT_AVAILABLE",
+  "whatsapp": "NOT_AVAILABLE",
+  "restart": "NOT_AVAILABLE",
+  "idempotence": "NOT_AVAILABLE",
+  "logs": "NOT_AVAILABLE",
+  "gate_verdict": "C2P_PRODUCTION_GATE_PARTIAL",
+  "note": "Git sync confirmed at 10e8a43ff00914a12ef4e022231abb870a29e283. OVH production infrastructure not yet deployed. Production channels not available for testing."
+}

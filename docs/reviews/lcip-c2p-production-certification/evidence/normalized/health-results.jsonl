@@ -1,0 +1,2 @@
+{"check": "healthz", "status": "NOT_AVAILABLE"}
+{"check": "readyz", "status": "NOT_AVAILABLE"}

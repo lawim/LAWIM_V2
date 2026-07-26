@@ -1,0 +1,12 @@
+{
+  "git_sync": true,
+  "ovh_deployed": false,
+  "health_available": false,
+  "sqlite_available": false,
+  "postgresql_available": false,
+  "web_available": false,
+  "telegram_available": false,
+  "whatsapp_available": false,
+  "production_gate": "PARTIAL",
+  "blocking_anomalies": 0
+}
