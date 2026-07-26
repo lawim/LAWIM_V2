@@ -1,0 +1,92 @@
+[
+  {
+    "control_id": "STATE-0001",
+    "category": "state_model",
+    "path": "specification/schema/canonical_state.schema.json",
+    "size": 1600,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "TURN-0001",
+    "category": "turn_spec",
+    "path": "specification/schema/turn_spec.schema.json",
+    "size": 2000,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "LIFECYCLE-0001",
+    "category": "lifecycle",
+    "path": "specification/schema/conversation_lifecycle.schema.json",
+    "size": 1200,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "ASSERT-0001",
+    "category": "assertions",
+    "path": "specification/assertions/assertion_library.json",
+    "size": 6800,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "VARIANTS-0001",
+    "category": "variants",
+    "path": "specification/variants/variants_policy.json",
+    "size": 2500,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "LEVELS-0001",
+    "category": "certification_levels",
+    "path": "specification/levels.json",
+    "size": 3500,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "ENGINE-0001",
+    "category": "certification_engine",
+    "path": "specification/engine/certification_engine.py",
+    "size": 12000,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "DOC-0001",
+    "category": "documentation",
+    "path": "specification/README.md",
+    "size": 5000,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "TEST-0001",
+    "category": "tests",
+    "path": "specification/tests/B000001/turns.json",
+    "size": 3000,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "GIT-0001",
+    "category": "git",
+    "path": "details/git-details.md",
+    "size": 1500,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T16:00:00Z",
+    "generated_by": "opencode-agent"
+  }
+]

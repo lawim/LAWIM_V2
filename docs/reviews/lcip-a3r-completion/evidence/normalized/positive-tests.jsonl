@@ -1,0 +1,7 @@
+{"test": "POS-001", "description": "location simple Douala", "runtime_called": true, "result": "PASS"}
+{"test": "POS-002", "description": "achat simple Yaound\u00e9", "runtime_called": true, "result": "PASS"}
+{"test": "POS-003", "description": "correction budget", "runtime_called": true, "result": "PASS"}
+{"test": "POS-004", "description": "correction quartier", "runtime_called": true, "result": "PASS"}
+{"test": "POS-005", "description": "confirmation explicite (visite)", "runtime_called": true, "result": "PASS"}
+{"test": "POS-006", "description": "refus cr\u00e9ation", "runtime_called": true, "result": "PASS"}
+{"test": "POS-007", "description": "idempotence", "runtime_called": true, "result": "PASS"}

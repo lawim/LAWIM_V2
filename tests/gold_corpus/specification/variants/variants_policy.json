@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lawim.ai/schemas/variants-policy-v1.json",
+  "title": "Variants Acceptance Policy",
+  "description": "Mecanisme officiel pour considerer des formulations equivalentes comme valides",
+  "version": "1.0",
+  "principles": [
+    "La certification ne depend jamais d'une phrase exacte",
+    "La certification depend des faits, des etats, des transitions et des decisions metier",
+    "Deux formulations sont equivalentes si elles conduisent au meme etat conversationnel",
+    "Les variantes sont definies par tour dans turn_spec.user_input.variants",
+    "Une variante peut etre lexicale, syntaxique ou semantique"
+  ],
+  "variant_types": {
+    "lexical": {
+      "description": "Variation de vocabulaire sans changement de sens",
+      "examples": [
+        ["appartement", "appt"],
+        ["maison", "villa"],
+        ["louer", "location"],
+        ["acheter", "acquerir"]
+      ],
+      "match_requirement": "equals_state"
+    },
+    "syntactic": {
+      "description": "Variation de structure grammaticale",
+      "examples": [
+        ["Je cherche un appartement", "Je voudrais un appartement", "Il me faut un appartement"],
+        ["Mon budget est de X", "J'ai X comme budget", "Je peux mettre X"]
+      ],
+      "match_requirement": "equals_state"
+    },
+    "semantic": {
+      "description": "Variation de sens equivalent dans le contexte LAWIM",
+      "examples": [
+        ["Je veux visiter", "Je peux voir le bien", "Je suis interesse"],
+        ["Pas interesse", "Non merci", "Je vais reflechir"]
+      ],
+      "match_requirement": "equals_business_decision"
+    },
+    "language_switch": {
+      "description": "Meme intention exprimee dans une autre langue",
+      "match_requirement": "equals_intent"
+    },
+    "partial_input": {
+      "description": "Entree partielle contenant les memes entites",
+      "examples": [
+        ["Deux chambres a Douala", "2 chambres Douala"],
+        ["Bonamoussadi 180000", "Bona 180k"]
+      ],
+      "match_requirement": "equals_extracted_entities"
+    }
+  },
+  "match_requirements": {
+    "equals_state": {
+      "description": "L'etat conversationnel final doit etre identique",
+      "comparison": "deep_equal",
+      "fields": ["intent", "qualification.status", "memory.active", "business"]
+    },
+    "equals_business_decision": {
+      "description": "La decision metier doit etre identique",
+      "comparison": "deep_equal",
+      "fields": ["business.decision", "business.action"]
+    },
+    "equals_intent": {
+      "description": "L'intention doit etre identique",
+      "comparison": "deep_equal",
+      "fields": ["intent"]
+    },
+    "equals_extracted_entities": {
+      "description": "Les entites extraites doivent etre identiques",
+      "comparison": "entity_match",
+      "fields": ["memory.active"]
+    }
+  },
+  "certification_rule": "Une conversation est certifiee si elle satisfait les assertions pour AU MOINS UNE des formulations de chaque tour."
+}

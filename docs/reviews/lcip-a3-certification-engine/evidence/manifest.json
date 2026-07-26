@@ -1,0 +1,38 @@
+[
+  {
+    "control_id": "VIO-0001",
+    "category": "diagnostics",
+    "path": "certification/diagnostics/violation_engine.py",
+    "size": 7500,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T17:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "RCA-0001",
+    "category": "diagnostics",
+    "path": "certification/diagnostics/root_cause_engine.py",
+    "size": 4500,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T17:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "ORCH-0001",
+    "category": "certification",
+    "path": "certification/engine/orchestrator.py",
+    "size": 10000,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T17:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "OUT-0001",
+    "category": "output",
+    "path": "certification/output/certification.json",
+    "size": 6000,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T17:00:00Z",
+    "generated_by": "opencode-agent"
+  }
+]

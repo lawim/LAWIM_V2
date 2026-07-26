@@ -1,0 +1,2 @@
+{"migrated_id": "B000001", "source_id": "LAWIM-GOLD-B01-0001", "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip", "category_source": "rental_search", "category_migrated": "rental", "language_source": "fr", "runtime_executed": false, "status": "STATIC_SCHEMA_VALID"}
+{"migrated_id": "B000990", "source_id": "LAWIM-GOLD-B10-0990", "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_10_DETAILED.zip", "category_source": "visit_request", "category_migrated": "visit", "language_source": "en", "runtime_executed": false, "status": "STATIC_SCHEMA_VALID"}

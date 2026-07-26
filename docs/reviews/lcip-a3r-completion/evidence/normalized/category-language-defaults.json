@@ -1,0 +1,10 @@
+{
+  "category_defaults_removed": true,
+  "language_defaults_removed": true,
+  "tests": {
+    "test_missing_category_stays_unknown": "PASS",
+    "test_missing_language_stays_unknown": "PASS",
+    "test_category_not_defaulted_to_rental": "PASS",
+    "test_language_not_defaulted_to_fr": "PASS"
+  }
+}

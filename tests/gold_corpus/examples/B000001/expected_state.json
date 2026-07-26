@@ -1,0 +1,19 @@
+{
+  "intent": "rental_search",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "property_type": "apartment",
+    "bedrooms": 2,
+    "city": "Douala",
+    "budget_xaf": 180000,
+    "district": "Bonamoussadi"
+  },
+  "next_action": "search_properties",
+  "memory_retained": [
+    "property_type",
+    "bedrooms",
+    "city",
+    "budget_xaf",
+    "district"
+  ]
+}

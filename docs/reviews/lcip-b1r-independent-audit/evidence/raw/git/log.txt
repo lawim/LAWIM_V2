@@ -1,0 +1,11 @@
+=== LOG ===
+473b2722 (HEAD -> main, origin/main) docs(evidence): publish V1.1 production validation, gold corpus audit, evidence directory
+4d65582a (tag: lawim-v1.1.0, origin/feature/lawim-v1.1-gold-corpus-integration-20260726, feature/lawim-v1.1-pcm-stabilization-20260726, feature/lawim-v1.1-gold-corpus-integration-20260726) feat(gold-corpus): add validators, runners, certified blocks 01-02
+6bf7a1e4 (origin/feature/lawim-v1.1-pcm-stabilization-20260726) feat(gold-corpus): initial structure — schema, source manifest, replacement map
+89ca1149 feat(pcm): V1.1 PCM stabilization — detection, templates, corpus, tests
+28a9a6da (tag: lawim-v1.0.0-multichannel-accepted, tag: lawim-v1.0.0) docs(sync): normalize production sync to e8cee707 — rename report, update references, close todos
+e8cee707 docs(sync): global production sync report — f9c5e5ee aligned everywhere
+f9c5e5ee docs(certification): LAWIM V1 production certification — all channels PASS
+bd30d3c5 docs(baseline): final certification — 1383 explained, 107 tests listed, 23 capabilities matrix, master context updated
+e39c2c51 cleanup(v1): definitive baseline cleanup — remove dead branches, tags, tests, scripts, reports, docs, knowledge, datasets, compose, docker, env, mission tests
+d7cdd410 docs(release): LAWIM V1.0.0 final release report

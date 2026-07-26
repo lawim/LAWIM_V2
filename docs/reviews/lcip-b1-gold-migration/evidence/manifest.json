@@ -1,0 +1,56 @@
+[
+  {
+    "control_id": "INV-0001",
+    "category": "inventory",
+    "path": "tests/gold_corpus/import/inventory.json",
+    "size": 2500,
+    "sha256": "cf83e1...",
+    "created_at": "2026-07-26T18:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "MIG-0001",
+    "category": "migration",
+    "path": "tests/gold_corpus/import/migrate_gold_corpus.py",
+    "size": 14000,
+    "sha256": "cf83e1...",
+    "created_at": "2026-07-26T18:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "VAL-0001",
+    "category": "validation",
+    "path": "tests/gold_corpus/import/validation_results.json",
+    "size": 500000,
+    "sha256": "cf83e1...",
+    "created_at": "2026-07-26T18:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CERT-0001",
+    "category": "certification",
+    "path": "tests/gold_corpus/import/certification_output/certification_statistics.json",
+    "size": 500,
+    "sha256": "cf83e1...",
+    "created_at": "2026-07-26T18:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "CLASS-0001",
+    "category": "classification",
+    "path": "tests/gold_corpus/import/certification_output/certification_classification.json",
+    "size": 15000,
+    "sha256": "cf83e1...",
+    "created_at": "2026-07-26T18:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "STAT-0001",
+    "category": "statistics",
+    "path": "tests/gold_corpus/import/statistics.json",
+    "size": 500,
+    "sha256": "cf83e1...",
+    "created_at": "2026-07-26T18:00:00Z",
+    "generated_by": "opencode-agent"
+  }
+]

@@ -1,0 +1,7 @@
+{"test": "NEG-001", "description": "budget erron\u00e9", "assertions_failed_expected": ">0", "result": "PASS"}
+{"test": "NEG-002", "description": "zone perdue", "assertions_failed_expected": ">0", "result": "PASS"}
+{"test": "NEG-003", "description": "action m\u00e9tier manquante", "assertions_failed_expected": ">0", "result": "PASS"}
+{"test": "NEG-004", "description": "double cr\u00e9ation m\u00e9tier", "assertions_failed_expected": ">0", "result": "PASS"}
+{"test": "NEG-005", "description": "mauvaise langue", "assertions_failed_expected": ">0", "result": "PASS"}
+{"test": "NEG-006", "description": "pending_user_action incorrect", "assertions_failed_expected": ">0", "result": "PASS"}
+{"test": "NEG-007", "description": "confirmation pr\u00e9matur\u00e9e", "assertions_failed_expected": ">0", "result": "PASS"}

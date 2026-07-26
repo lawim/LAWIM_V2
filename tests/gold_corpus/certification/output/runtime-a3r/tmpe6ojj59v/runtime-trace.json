@@ -1,0 +1,54 @@
+{
+  "conversation_id": "POS-0003",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "total_duration_ms": 19.01,
+  "call_count": 3,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un studio \u00e0 Douala",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un studio \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "studio",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 6.7,
+      "error": null
+    },
+    {
+      "turn_index": 1,
+      "user_input": "Mon budget est 200000 FCFA",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un studio \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "studio",
+        "city": "Douala",
+        "budget_max": 200000
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 5.88,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Non finalement 150000 FCFA",
+      "assistant_output": "Je prends note de votre correction : budget passe de 200000 \u00e0 150000.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "studio",
+        "city": "Douala",
+        "budget_max": 150000
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 6.43,
+      "error": null
+    }
+  ]
+}

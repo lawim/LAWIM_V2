@@ -1,0 +1,120 @@
+[
+  {
+    "turn_number": 0,
+    "user_input": {
+      "text": "Je cherche un appartement de deux chambres a Douala",
+      "variants": [
+        "Je voudrais un appartement 2 chambres a Douala",
+        "Appartement 2 pieces Douala",
+        "Je recherche un deux pieces a Douala"
+      ],
+      "language": "fr"
+    },
+    "expected_intent": "rental_search",
+    "expected_entities": {
+      "property_type": "apartment",
+      "bedrooms": 2,
+      "city": "Douala"
+    },
+    "facts_extracted": [
+      {"fact": "property_type", "value": "apartment", "source": "input"},
+      {"fact": "bedrooms", "value": 2, "source": "input"},
+      {"fact": "city", "value": "Douala", "source": "input"}
+    ],
+    "memory_changes": {
+      "set": {
+        "property_type": "apartment",
+        "bedrooms": 2,
+        "city": "Douala"
+      },
+      "unset": []
+    },
+    "allowed_questions": [
+      {"question": "Quel est votre budget mensuel ?", "context": "Premiere demande utilisateur"}
+    ],
+    "forbidden_questions": [
+      "Voulez-vous acheter ou louer ?",
+      "Quel type de bien ?"
+    ],
+    "expected_transition": {
+      "from_phase": "initial",
+      "to_phase": "in_progress",
+      "business_action": "qualify"
+    },
+    "assertions": ["MEM-0001", "MEM-0004", "INT-0001", "STATE-0001", "QST-0001", "CHANNEL-0001"]
+  },
+  {
+    "turn_number": 1,
+    "user_input": {
+      "text": "Mon budget est de 180 000 FCFA par mois",
+      "variants": [
+        "J'ai un budget de 180000 FCFA",
+        "Je peux mettre 180 000 FCFA par mois",
+        "180k FCFA"
+      ],
+      "language": "fr"
+    },
+    "expected_intent": "budget_provided",
+    "expected_entities": {
+      "budget_xaf": 180000
+    },
+    "facts_extracted": [
+      {"fact": "budget_xaf", "value": 180000, "source": "input"}
+    ],
+    "memory_changes": {
+      "set": {
+        "budget_xaf": 180000
+      },
+      "unset": []
+    },
+    "allowed_questions": [
+      {"question": "Avez-vous un quartier prefere ?", "context": "Apres confirmation du budget"}
+    ],
+    "forbidden_questions": [
+      "Voulez-vous acheter ou louer ?",
+      "Quel est votre budget ?"
+    ],
+    "expected_transition": {
+      "from_phase": "in_progress",
+      "to_phase": "in_progress",
+      "business_action": "qualify"
+    },
+    "assertions": ["MEM-0001", "MEM-0002", "MEM-0003", "STATE-0003", "QST-0001"]
+  },
+  {
+    "turn_number": 2,
+    "user_input": {
+      "text": "Je prefere Bonamoussadi",
+      "variants": [
+        "Bonamoussadi",
+        "Le quartier Bonamoussadi",
+        "A Bonamoussadi"
+      ],
+      "language": "fr"
+    },
+    "expected_intent": "district_provided",
+    "expected_entities": {
+      "district": "Bonamoussadi"
+    },
+    "facts_extracted": [
+      {"fact": "district", "value": "Bonamoussadi", "source": "input"}
+    ],
+    "memory_changes": {
+      "set": {
+        "district": "Bonamoussadi"
+      },
+      "unset": []
+    },
+    "allowed_questions": [],
+    "forbidden_questions": [
+      "Quel est votre budget ?",
+      "Quel quartier ?"
+    ],
+    "expected_transition": {
+      "from_phase": "in_progress",
+      "to_phase": "qualified",
+      "business_action": "search_properties"
+    },
+    "assertions": ["MEM-0001", "MEM-0004", "QLF-0001", "STATE-0002", "BIZ-0001", "BIZ-0002"]
+  }
+]

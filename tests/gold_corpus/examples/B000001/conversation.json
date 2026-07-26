@@ -1,0 +1,37 @@
+{
+  "id": "B000001",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Recherche locative de base avec tous les criteres fournis progressivement",
+  "tags": ["rental", "douala", "bonamoussadi", "apartment"],
+  "business_object": "apartment",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement de deux chambres a Douala",
+      "intent": "rental_search"
+    },
+    {
+      "role": "assistant",
+      "text": "Je peux vous aider a trouver un appartement a Douala. Quel est votre budget mensuel ?",
+      "intent": "qualification"
+    },
+    {
+      "role": "user",
+      "text": "Mon budget est de 180 000 FCFA par mois",
+      "intent": "budget_provided"
+    },
+    {
+      "role": "assistant",
+      "text": "Un budget de 180 000 FCFA pour un deux pieces a Douala. Avez-vous un quartier prefere ?",
+      "intent": "qualification"
+    },
+    {
+      "role": "user",
+      "text": "Je prefere Bonamoussadi",
+      "intent": "district_provided"
+    }
+  ]
+}

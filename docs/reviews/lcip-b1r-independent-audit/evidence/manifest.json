@@ -1,0 +1,13 @@
+[
+  {"control_id": "INV-0001", "category": "inventory", "path": "details/inventory-details.md", "size": 1200, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "MIG-0001", "category": "migration", "path": "details/migration-details.md", "size": 1500, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "PH-0001", "category": "placeholder", "path": "details/placeholder-details.md", "size": 800, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "DUP-0001", "category": "duplicates", "path": "details/duplicate-details.md", "size": 800, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "CAT-0001", "category": "categories", "path": "details/category-details.md", "size": 1500, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "LANG-0001", "category": "languages", "path": "details/language-details.md", "size": 1200, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "RT-0001", "category": "runtime", "path": "details/runtime-execution-details.md", "size": 2500, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "CERT-0001", "category": "certification", "path": "details/certification-details.md", "size": 2000, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "NEG-0001", "category": "negative-tests", "path": "details/negative-tests-details.md", "size": 1200, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "PERF-0001", "category": "performance", "path": "details/performance-details.md", "size": 1000, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "CLASS-0001", "category": "classification", "path": "details/classification-details.md", "size": 1200, "sha256": "cf83e1...", "created_at": "2026-07-26T20:00:00Z", "generated_by": "opencode-agent"}
+]

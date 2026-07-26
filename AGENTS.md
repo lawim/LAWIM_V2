@@ -14,6 +14,7 @@ dernière version à jour :
 - `docs/ai-context/LAWIM_ENGINEERING_RULES.md` — regles techniques permanentes
 - `docs/ai-context/LAWIM_PRODUCTION_EVIDENCE_POLICY.md` — politique de preuve
 - `docs/ai-context/LAWIM_SECRET_MANAGEMENT_POLICY.md` — gestion des secrets
+- `docs/ai-context/LAWIM_REPORTING_POLICY.md` — politique de rapport detaille obligatoire
 - `docs/canonical/01_PRINCIPLES_AND_GOVERNANCE.md` — principes et gouvernance
 - `docs/canonical/15_AI_GOVERNANCE.md` — gouvernance IA
 - Toute ADR applicable au composant concerne
@@ -189,7 +190,40 @@ Reproduire chaque defaut avec un test en echec avant correction.
 - worktree propre a la cloture
 - `origin/main...HEAD = 0 0`
 
-## 14. Rappels
+## 15. Rapport détaillé obligatoire
+
+Tout rapport de mission LAWIM doit suivre la structure définie dans
+`docs/ai-context/LAWIM_REPORTING_POLICY.md`.
+
+Aucun `PASS` sans fichier de détail. Aucune synthèse sans preuve.
+
+La vérification finale doit toujours afficher le statut de chaque fichier de
+détail. Tout fichier manquant = `UNPROVEN`.
+
+## 16. Vérification de clôture de mission
+
+Avant de clôturer une mission, l'agent DOIT vérifier la présence de tous les
+éléments suivants dans le dossier de rapport :
+
+- `REPORT.md` — rapport principal
+- `REPORT_INDEX.md` — index global mis à jour
+- `TRACEABILITY.md` — matrice de traçabilité
+- `details/` — dossier complet des détails
+- `evidence/` — dossier des preuves
+- `evidence/manifest.json` — manifeste des preuves
+- `evidence/SHA256SUMS` — sommes de contrôle
+
+Si un seul élément manque, le verdict de la mission est `UNPROVEN`.
+
+La commande suivante peut être utilisée pour la vérification :
+
+```bash
+python tools/reporting/check_reporting_policy.py docs/reviews/<mission>/
+```
+
+Tout rapport qui ne satisfait pas cette vérification est rejeté.
+
+## 17. Rappels
 
 - LAWIM n'est pas un chatbot. LAWIM est une plateforme immobiliere
   intelligente et operationnelle.

@@ -1,0 +1,27 @@
+{
+  "total": 1,
+  "pass": 1,
+  "fail": 0,
+  "duration_seconds": 0.018,
+  "timestamp": "2026-07-26T10:51:14.966284+00:00",
+  "results": [
+    {
+      "id": "B000001",
+      "pass": true,
+      "duration_seconds": 0.018,
+      "schema_pass": 7,
+      "schema_fail": 0,
+      "scores": {
+        "conversation": 1.0,
+        "memory": 1.0,
+        "qualification": 1.0,
+        "business": 1.0,
+        "runtime": 1.0,
+        "language": 1.0,
+        "channel": 1.0,
+        "intent": 1.0,
+        "global": 1.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lawim.ai/schemas/expected-state-v1.json",
+  "title": "Expected State Schema",
+  "description": "Etat conversationnel attendu apres traitement",
+  "type": "object",
+  "required": [
+    "intent",
+    "qualification_status",
+    "slots_filled",
+    "next_action"
+  ],
+  "properties": {
+    "intent": {
+      "type": "string",
+      "description": "Intention finale detectee"
+    },
+    "qualification_status": {
+      "type": "string",
+      "enum": ["in_progress", "qualified", "unqualified", "requires_human"],
+      "description": "Statut de qualification"
+    },
+    "slots_filled": {
+      "type": "object",
+      "description": "Slots qui doivent etre remplis",
+      "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+    },
+    "next_action": {
+      "type": "string",
+      "description": "Prochaine action metier attendue"
+    },
+    "memory_retained": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Elements de memoire qui doivent etre conserves"
+    }
+  }
+}

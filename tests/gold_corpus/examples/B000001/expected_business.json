@@ -1,0 +1,13 @@
+{
+  "business_action": "search",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "city": "Douala",
+    "district": "Bonamoussadi",
+    "property_type": "apartment",
+    "bedrooms": 2,
+    "max_price_xaf": 180000
+  },
+  "expected_result": "Liste de biens correspondant aux criteres",
+  "handover_required": false
+}

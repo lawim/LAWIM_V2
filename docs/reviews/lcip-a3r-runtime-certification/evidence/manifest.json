@@ -1,0 +1,65 @@
+[
+  {
+    "control_id": "ARC-0001",
+    "category": "architecture",
+    "path": "details/architecture-details.md",
+    "created_at": "2026-07-26T22:00:00Z",
+    "generated_by": "opencode-agent",
+    "sha256": "cf83e1...",
+    "size": 1000
+  },
+  {
+    "control_id": "EA-0001",
+    "category": "expected-actual",
+    "path": "details/expected-actual-details.md",
+    "created_at": "2026-07-26T22:00:00Z",
+    "generated_by": "opencode-agent",
+    "sha256": "cf83e1...",
+    "size": 1000
+  },
+  {
+    "control_id": "RT-0001",
+    "category": "runtime",
+    "path": "details/runtime-execution-details.md",
+    "created_at": "2026-07-26T22:00:00Z",
+    "generated_by": "opencode-agent",
+    "sha256": "cf83e1...",
+    "size": 1000
+  },
+  {
+    "control_id": "OP-0001",
+    "category": "assertions",
+    "path": "details/assertion-operators-details.md",
+    "created_at": "2026-07-26T22:00:00Z",
+    "generated_by": "opencode-agent",
+    "sha256": "cf83e1...",
+    "size": 1000
+  },
+  {
+    "control_id": "NEG-0001",
+    "category": "negative-tests",
+    "path": "details/negative-tests-details.md",
+    "created_at": "2026-07-26T22:00:00Z",
+    "generated_by": "opencode-agent",
+    "sha256": "cf83e1...",
+    "size": 1000
+  },
+  {
+    "control_id": "POS-0001",
+    "category": "positive-tests",
+    "path": "details/positive-tests-details.md",
+    "created_at": "2026-07-26T22:00:00Z",
+    "generated_by": "opencode-agent",
+    "sha256": "cf83e1...",
+    "size": 1000
+  },
+  {
+    "control_id": "ISO-0001",
+    "category": "isolation",
+    "path": "details/isolation-details.md",
+    "created_at": "2026-07-26T22:00:00Z",
+    "generated_by": "opencode-agent",
+    "sha256": "cf83e1...",
+    "size": 1000
+  }
+]

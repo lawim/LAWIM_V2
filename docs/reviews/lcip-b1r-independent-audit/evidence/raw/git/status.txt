@@ -1,0 +1,33 @@
+=== GIT STATUS ===
+ M AGENTS.md
+?? docs/ai-context/LAWIM_REPORTING_POLICY.md
+?? docs/reviews/REPORT_INDEX.md
+?? docs/reviews/consolidate-reporting-policy-20260726/
+?? docs/reviews/lcip-a1-framework/
+?? docs/reviews/lcip-a2-specification/
+?? docs/reviews/lcip-a3-certification-engine/
+?? docs/reviews/lcip-b1-gold-migration/
+?? docs/reviews/lcip-b1r-independent-audit/
+?? "how \\"
+?? tests/gold_corpus/README.md
+?? tests/gold_corpus/benchmark/
+?? tests/gold_corpus/certification/
+?? tests/gold_corpus/conversations/
+?? tests/gold_corpus/examples/
+?? tests/gold_corpus/import/
+?? tests/gold_corpus/reports/
+?? tests/gold_corpus/schema/assertions.schema.json
+?? tests/gold_corpus/schema/conversation.schema.json
+?? tests/gold_corpus/schema/expected_business.schema.json
+?? tests/gold_corpus/schema/expected_language.schema.json
+?? tests/gold_corpus/schema/expected_questions.schema.json
+?? tests/gold_corpus/schema/expected_runtime.schema.json
+?? tests/gold_corpus/schema/expected_state.schema.json
+?? tests/gold_corpus/specification/
+?? tests/gold_corpus/statistics/
+?? tests/gold_corpus/validators/__init__.py
+?? tests/gold_corpus/validators/validate_assertions.py
+?? tests/gold_corpus/validators/validate_business.py
+?? tests/gold_corpus/validators/validate_conversation.py
+?? tests/gold_corpus/validators/validate_schema.py
+?? tools/

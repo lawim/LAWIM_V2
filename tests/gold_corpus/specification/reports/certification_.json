@@ -1,0 +1,265 @@
+{
+  "spec_dir": "tests/gold_corpus/specification/tests/B000001/",
+  "actual_dir": "tests/gold_corpus/examples/B000001/",
+  "verdict": "FAIL",
+  "scores": {
+    "memory": 1.0,
+    "business": 0.5,
+    "intent": 1.0,
+    "state": 1.0,
+    "qualification": 1.0,
+    "channel": 1.0,
+    "questions": 1.0,
+    "turns": 0.0,
+    "global": 0.8125
+  },
+  "assertions": {
+    "MEM-0001": {
+      "pass": true,
+      "assertion": "memory_retained",
+      "category": "memory",
+      "severity": "error",
+      "detail": "path='memory_retained', exists=True"
+    },
+    "BIZ-0001": {
+      "pass": false,
+      "assertion": "business_object_created",
+      "category": "business",
+      "severity": "error",
+      "detail": "exists=False"
+    },
+    "INT-0001": {
+      "pass": true,
+      "assertion": "intent_correct",
+      "category": "intent",
+      "severity": "error",
+      "detail": "expected=rental_search, actual=rental_search"
+    },
+    "STATE-0003": {
+      "pass": true,
+      "assertion": "slots_filled_correctly",
+      "category": "state",
+      "severity": "error",
+      "detail": "expected={'property_type': 'apartment', 'bedrooms': 2, 'city': 'Douala', 'budget_xaf': 180000, 'district': 'Bonamoussadi'}, actual={'property_type': 'apartment', 'bedrooms': 2, 'city': 'Douala', 'budget_xaf': 180000, 'district': 'Bonamoussadi'}"
+    },
+    "QLF-0001": {
+      "pass": true,
+      "assertion": "qualification_complete",
+      "category": "qualification",
+      "severity": "error",
+      "detail": "expected=qualified, actual=qualified"
+    },
+    "MEM-0004": {
+      "pass": true,
+      "assertion": "zone_preserved",
+      "category": "memory",
+      "severity": "error",
+      "detail": "path='slots_filled.district', exists=True"
+    },
+    "MEM-0003": {
+      "pass": true,
+      "assertion": "budget_modified",
+      "category": "memory",
+      "severity": "error",
+      "detail": "expected=180000, actual=180000"
+    },
+    "BIZ-0002": {
+      "pass": true,
+      "assertion": "business_action_correct",
+      "category": "business",
+      "severity": "error",
+      "detail": "expected=search, actual=search"
+    },
+    "CHANNEL-0001": {
+      "pass": true,
+      "assertion": "channel_behavior_correct",
+      "category": "channel",
+      "severity": "error",
+      "detail": "expected=None, actual=None"
+    },
+    "STATE-0001": {
+      "pass": true,
+      "assertion": "phase_transition_correct",
+      "category": "state",
+      "severity": "error",
+      "detail": "expected=qualified, actual=qualified"
+    },
+    "STATE-0002": {
+      "pass": true,
+      "assertion": "final_state_correct",
+      "category": "state",
+      "severity": "error",
+      "detail": "expected=qualified, actual=qualified"
+    },
+    "MEM-0002": {
+      "pass": true,
+      "assertion": "memory_updated",
+      "category": "memory",
+      "severity": "error",
+      "detail": "expected={'property_type': 'apartment', 'bedrooms': 2, 'city': 'Douala', 'budget_xaf': 180000, 'district': 'Bonamoussadi'}, actual={'property_type': 'apartment', 'bedrooms': 2, 'city': 'Douala', 'budget_xaf': 180000, 'district': 'Bonamoussadi'}"
+    },
+    "QST-0001": {
+      "pass": true,
+      "assertion": "one_question_per_turn",
+      "category": "questions",
+      "severity": "error",
+      "detail": "max_questions=1 (presumed)"
+    }
+  },
+  "turns": {
+    "results": [
+      {
+        "turn_number": 0,
+        "expected_intent": "rental_search",
+        "actual_intent": null,
+        "assertions": {
+          "MEM-0001": {
+            "pass": false,
+            "assertion": "memory_retained",
+            "category": "memory",
+            "severity": "error",
+            "detail": "path='memory_retained', exists=False"
+          },
+          "MEM-0004": {
+            "pass": false,
+            "assertion": "zone_preserved",
+            "category": "memory",
+            "severity": "error",
+            "detail": "path='slots_filled.district', exists=False"
+          },
+          "INT-0001": {
+            "pass": true,
+            "assertion": "intent_correct",
+            "category": "intent",
+            "severity": "error",
+            "detail": "expected=None, actual=None"
+          },
+          "STATE-0001": {
+            "pass": true,
+            "assertion": "phase_transition_correct",
+            "category": "state",
+            "severity": "error",
+            "detail": "expected=None, actual=None"
+          },
+          "QST-0001": {
+            "pass": true,
+            "assertion": "one_question_per_turn",
+            "category": "questions",
+            "severity": "error",
+            "detail": "max_questions=1 (presumed)"
+          },
+          "CHANNEL-0001": {
+            "pass": true,
+            "assertion": "channel_behavior_correct",
+            "category": "channel",
+            "severity": "error",
+            "detail": "expected=None, actual=None"
+          }
+        },
+        "pass": false
+      },
+      {
+        "turn_number": 1,
+        "expected_intent": "budget_provided",
+        "actual_intent": null,
+        "assertions": {
+          "MEM-0001": {
+            "pass": false,
+            "assertion": "memory_retained",
+            "category": "memory",
+            "severity": "error",
+            "detail": "path='memory_retained', exists=False"
+          },
+          "MEM-0002": {
+            "pass": true,
+            "assertion": "memory_updated",
+            "category": "memory",
+            "severity": "error",
+            "detail": "expected=None, actual=None"
+          },
+          "MEM-0003": {
+            "pass": true,
+            "assertion": "budget_modified",
+            "category": "memory",
+            "severity": "error",
+            "detail": "expected=None, actual=None"
+          },
+          "STATE-0003": {
+            "pass": true,
+            "assertion": "slots_filled_correctly",
+            "category": "state",
+            "severity": "error",
+            "detail": "expected=None, actual=None"
+          },
+          "QST-0001": {
+            "pass": true,
+            "assertion": "one_question_per_turn",
+            "category": "questions",
+            "severity": "error",
+            "detail": "max_questions=1 (presumed)"
+          }
+        },
+        "pass": false
+      },
+      {
+        "turn_number": 2,
+        "expected_intent": "district_provided",
+        "actual_intent": null,
+        "assertions": {
+          "MEM-0001": {
+            "pass": false,
+            "assertion": "memory_retained",
+            "category": "memory",
+            "severity": "error",
+            "detail": "path='memory_retained', exists=False"
+          },
+          "MEM-0004": {
+            "pass": false,
+            "assertion": "zone_preserved",
+            "category": "memory",
+            "severity": "error",
+            "detail": "path='slots_filled.district', exists=False"
+          },
+          "QLF-0001": {
+            "pass": true,
+            "assertion": "qualification_complete",
+            "category": "qualification",
+            "severity": "error",
+            "detail": "expected=None, actual=None"
+          },
+          "STATE-0002": {
+            "pass": true,
+            "assertion": "final_state_correct",
+            "category": "state",
+            "severity": "error",
+            "detail": "expected=None, actual=None"
+          },
+          "BIZ-0001": {
+            "pass": false,
+            "assertion": "business_object_created",
+            "category": "business",
+            "severity": "error",
+            "detail": "exists=False"
+          },
+          "BIZ-0002": {
+            "pass": true,
+            "assertion": "business_action_correct",
+            "category": "business",
+            "severity": "error",
+            "detail": "expected=None, actual=None"
+          }
+        },
+        "pass": false
+      }
+    ],
+    "passed": 0,
+    "failed": 3
+  },
+  "summary": {
+    "assertions_total": 13,
+    "assertions_passed": 12,
+    "assertions_failed": 1,
+    "errors": 1,
+    "warnings": 0
+  }
+}

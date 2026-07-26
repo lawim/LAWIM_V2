@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lawim.ai/schemas/expected-business-v1.json",
+  "title": "Expected Business Schema",
+  "description": "Comportement metier attendu",
+  "type": "object",
+  "required": [
+    "business_action",
+    "target_service"
+  ],
+  "properties": {
+    "business_action": {
+      "type": "string",
+      "description": "Action metier attendue (search, match, schedule_visit, etc.)"
+    },
+    "target_service": {
+      "type": "string",
+      "description": "Service metier cible"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Parametres de l'action metier",
+      "additionalProperties": true
+    },
+    "expected_result": {
+      "type": "string",
+      "description": "Resultat attendu de l'action metier"
+    },
+    "handover_required": {
+      "type": "boolean",
+      "description": "Un handover humain est-il attendu"
+    }
+  }
+}

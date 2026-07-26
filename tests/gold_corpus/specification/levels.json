@@ -1,0 +1,100 @@
+{
+  "levels": [
+    {
+      "level": "BRONZE",
+      "description": "Certification de base : la conversation est structurellement valide et l'intention principale est correcte",
+      "minimum_scores": {
+        "conversation": 0.7,
+        "intent": 0.8,
+        "global": 0.5
+      },
+      "required_assertions": [
+        "MEM-0001", "INT-0001", "STATE-0001", "STATE-0003",
+        "QST-0001", "LANG-0004", "CHANNEL-0001"
+      ],
+      "max_failures": 2,
+      "memory_retention_required": false,
+      "handover_allowed": true,
+      "variants_required": false
+    },
+    {
+      "level": "SILVER",
+      "description": "Certification intermediaire : la memoire est conservee et la qualification est correcte",
+      "minimum_scores": {
+        "conversation": 0.8,
+        "memory": 0.7,
+        "qualification": 0.8,
+        "intent": 1.0,
+        "business": 0.7,
+        "global": 0.7
+      },
+      "required_assertions": [
+        "MEM-0001", "MEM-0002", "MEM-0004", "MEM-0005",
+        "QLF-0001", "QLF-0002", "INT-0001", "BIZ-0001",
+        "STATE-0001", "STATE-0002", "STATE-0003",
+        "QST-0001", "LANG-0001", "LANG-0004", "CHANNEL-0001"
+      ],
+      "max_failures": 1,
+      "memory_retention_required": true,
+      "handover_allowed": true,
+      "variants_required": false
+    },
+    {
+      "level": "GOLD",
+      "description": "Certification avancee : toutes les dimensions avec une tolerance minimale",
+      "minimum_scores": {
+        "conversation": 0.9,
+        "memory": 0.85,
+        "qualification": 0.9,
+        "intent": 1.0,
+        "business": 0.85,
+        "runtime": 0.8,
+        "language": 0.9,
+        "channel": 1.0,
+        "global": 0.85
+      },
+      "required_assertions": [
+        "MEM-0001", "MEM-0002", "MEM-0003", "MEM-0004", "MEM-0005", "MEM-0007",
+        "QLF-0001", "QLF-0002", "INT-0001", "INT-0002",
+        "BIZ-0001", "BIZ-0002", "BIZ-0003",
+        "STATE-0001", "STATE-0002", "STATE-0003",
+        "QST-0001", "QST-0003", "LANG-0001", "LANG-0002", "LANG-0004",
+        "CHANNEL-0001", "RUNTIME-0001"
+      ],
+      "max_failures": 0,
+      "memory_retention_required": true,
+      "handover_allowed": false,
+      "variants_required": true
+    },
+    {
+      "level": "PLATINUM",
+      "description": "Certification maximale : conversation parfaite dans toutes les dimensions, incluant idempotence et non-regression",
+      "minimum_scores": {
+        "conversation": 1.0,
+        "memory": 1.0,
+        "qualification": 1.0,
+        "intent": 1.0,
+        "business": 1.0,
+        "runtime": 1.0,
+        "language": 1.0,
+        "channel": 1.0,
+        "global": 0.95
+      },
+      "required_assertions": [
+        "MEM-0001", "MEM-0002", "MEM-0003", "MEM-0004", "MEM-0005", "MEM-0006", "MEM-0007",
+        "QLF-0001", "QLF-0002", "INT-0001", "INT-0002",
+        "BIZ-0001", "BIZ-0002", "BIZ-0003", "BIZ-0004",
+        "STATE-0001", "STATE-0002", "STATE-0003",
+        "QST-0001", "QST-0002", "QST-0003",
+        "LANG-0001", "LANG-0002", "LANG-0003", "LANG-0004",
+        "CHANNEL-0001", "RUNTIME-0001", "RUNTIME-0002",
+        "IDEM-0001", "IDEM-0002"
+      ],
+      "max_failures": 0,
+      "memory_retention_required": true,
+      "handover_allowed": false,
+      "variants_required": true
+    }
+  ],
+  "fallback_rule": "Si aucun niveau n'est atteint, la certification est REFUSED"
+}

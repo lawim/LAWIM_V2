@@ -1,0 +1,17 @@
+{
+  "root_causes": [
+    {
+      "assertion_id": "BIZ-0001",
+      "category": "business",
+      "turn_number": 2,
+      "responsible_component": "ConversationJourneyOrchestrator",
+      "root_confidence": 0.85,
+      "explanation": "Aucun objet metier n'a ete cree alors qu'un objet etait attendu",
+      "expected_correction": "Verifier que l'action metier declenchee cree bien l'objet attendu"
+    }
+  ],
+  "component_summary": {
+    "ConversationJourneyOrchestrator": 1
+  },
+  "components_affected": 1
+}

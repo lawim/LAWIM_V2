@@ -1,0 +1,15 @@
+{
+  "engine": "ConversationJourneyOrchestrator",
+  "expected_services": [
+    "ConversationStateService",
+    "QualificationService",
+    "PropertySearchService"
+  ],
+  "expected_repositories": [
+    "ConversationStateRepository",
+    "PropertyRepository"
+  ],
+  "timeout_seconds": 30,
+  "retry_allowed": true,
+  "fallback_chain": ["deepseek", "openai", "gemini"]
+}

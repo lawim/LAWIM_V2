@@ -1,0 +1,56 @@
+[
+  {
+    "control_id": "DOC-0001",
+    "category": "documentation",
+    "path": "docs/ai-context/LAWIM_REPORTING_POLICY.md",
+    "size": 4500,
+    "sha256": "ce08e5ab3e38e23a1e6610a146d03f3e3c9e7f04b6afdfa69d3feae9b4708b48",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "DOC-0002",
+    "category": "documentation",
+    "path": "docs/reviews/REPORT_INDEX.md",
+    "size": 1200,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "DOC-0003",
+    "category": "documentation",
+    "path": "AGENTS.md",
+    "size": 6200,
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "TOOL-0001",
+    "category": "tooling",
+    "path": "tools/reporting/check_reporting_policy.py",
+    "size": 4800,
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "TRACE-0001",
+    "category": "traceability",
+    "path": "docs/reviews/consolidate-reporting-policy-20260726/TRACEABILITY.md",
+    "size": 800,
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "GIT-0001",
+    "category": "git",
+    "path": "docs/reviews/consolidate-reporting-policy-20260726/details/git-details.md",
+    "size": 1500,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T12:00:00Z",
+    "generated_by": "opencode-agent"
+  }
+]

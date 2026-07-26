@@ -1,0 +1,15 @@
+{
+  "total": 1,
+  "violations": [
+    {
+      "assertion_id": "BIZ-0001",
+      "category": "business",
+      "turn_number": 2,
+      "expected": null,
+      "actual": null,
+      "explanation": "Aucun objet metier n'a ete cree alors qu'un objet etait attendu",
+      "expected_correction": "Verifier que l'action metier declenchee cree bien l'objet attendu",
+      "confidence": 0.9
+    }
+  ]
+}

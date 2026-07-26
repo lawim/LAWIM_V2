@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lawim.ai/schemas/certification-level-v1.json",
+  "title": "Certification Level Schema",
+  "description": "Definition des niveaux de certification conversationnelle",
+  "type": "object",
+  "required": ["level", "minimum_scores", "required_assertions"],
+  "properties": {
+    "level": {
+      "type": "string",
+      "enum": ["BRONZE", "SILVER", "GOLD", "PLATINUM"]
+    },
+    "minimum_scores": {
+      "type": "object",
+      "properties": {
+        "conversation": { "type": "number", "minimum": 0, "maximum": 1 },
+        "memory": { "type": "number", "minimum": 0, "maximum": 1 },
+        "qualification": { "type": "number", "minimum": 0, "maximum": 1 },
+        "business": { "type": "number", "minimum": 0, "maximum": 1 },
+        "runtime": { "type": "number", "minimum": 0, "maximum": 1 },
+        "language": { "type": "number", "minimum": 0, "maximum": 1 },
+        "channel": { "type": "number", "minimum": 0, "maximum": 1 },
+        "intent": { "type": "number", "minimum": 0, "maximum": 1 },
+        "global": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "description": "Scores minimums requis par dimension"
+    },
+    "required_assertions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Assertions obligatoires pour ce niveau"
+    },
+    "max_failures": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Nombre maximum d'assertions echouees autorise"
+    },
+    "memory_retention_required": {
+      "type": "boolean",
+      "description": "La retention de memoire est-elle requise"
+    },
+    "handover_allowed": {
+      "type": "boolean",
+      "description": "Un handover humain est-il autorise pour ce niveau"
+    },
+    "variants_required": {
+      "type": "boolean",
+      "description": "Les variantes linguistiques sont-elles requises"
+    }
+  }
+}

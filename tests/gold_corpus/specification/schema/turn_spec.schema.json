@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lawim.ai/schemas/turn-spec-v1.json",
+  "title": "Turn Specification Schema",
+  "description": "Specification complete d'un tour de conversation LAWIM",
+  "type": "object",
+  "required": [
+    "turn_number",
+    "user_input",
+    "expected_intent",
+    "expected_entities",
+    "facts_extracted",
+    "memory_changes",
+    "allowed_questions",
+    "forbidden_questions",
+    "expected_transition",
+    "assertions"
+  ],
+  "properties": {
+    "turn_number": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Numero du tour (0-indexed)"
+    },
+    "user_input": {
+      "type": "object",
+      "required": ["text", "variants"],
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Entree utilisateur canonique"
+        },
+        "variants": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Formulations equivalentes acceptees"
+        },
+        "language": {
+          "type": "string",
+          "enum": ["fr", "en", "pcm"],
+          "description": "Langue de l'entree"
+        }
+      }
+    },
+    "expected_intent": {
+      "type": "string",
+      "description": "Intention attendue apres ce tour"
+    },
+    "expected_entities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["string", "number", "boolean", "array"]
+      },
+      "description": "Entites attendues extraites de l'entree"
+    },
+    "facts_extracted": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fact": { "type": "string" },
+          "value": { "type": ["string", "number", "boolean"] },
+          "source": { "type": "string", "description": "Origine du fait (input, inference, system)" }
+        }
+      },
+      "description": "Faits extraits durant ce tour"
+    },
+    "memory_changes": {
+      "type": "object",
+      "properties": {
+        "set": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Variables a ajouter ou mettre a jour"
+        },
+        "unset": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Variables a supprimer de la memoire"
+        }
+      },
+      "description": "Modifications de memoire attendues"
+    },
+    "allowed_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": { "type": "string" },
+          "context": { "type": "string" }
+        }
+      },
+      "description": "Questions autorisees pour ce tour (max 1)"
+    },
+    "forbidden_questions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Questions interdites pour ce tour"
+    },
+    "expected_transition": {
+      "type": "object",
+      "required": ["from_phase", "to_phase"],
+      "properties": {
+        "from_phase": {
+          "type": "string",
+          "enum": ["initial", "in_progress", "qualified", "unqualified", "completed", "handover", "error"]
+        },
+        "to_phase": {
+          "type": "string",
+          "enum": ["initial", "in_progress", "qualified", "unqualified", "completed", "handover", "error"]
+        },
+        "business_action": {
+          "type": "string",
+          "description": "Action metier declenchee par cette transition"
+        }
+      },
+      "description": "Transition de phase attendue apres ce tour"
+    },
+    "assertions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Identifiants des assertions a verifier pour ce tour"
+    }
+  }
+}

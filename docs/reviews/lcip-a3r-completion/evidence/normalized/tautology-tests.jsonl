@@ -1,0 +1,5 @@
+{"test": "TAUT-001", "description": "object identity rejected", "result": "PASS"}
+{"test": "TAUT-002", "description": "no runtime calls rejected", "result": "PASS"}
+{"test": "TAUT-003", "description": "runtime generated accepted", "result": "PASS"}
+{"test": "TAUT-004", "description": "different classes for loader/executor", "result": "PASS"}
+{"test": "TAUT-005", "description": "actual source type is RUNTIME_EXECUTION", "result": "PASS"}

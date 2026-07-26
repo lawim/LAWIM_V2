@@ -1,0 +1,21 @@
+{
+  "conversation_id": "LANG-0001",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "total_duration_ms": 0.3,
+  "call_count": 1,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "hello",
+      "assistant_output": "\ud83e\udd16 LAWIM AI\n\nBonjour et bienvenue sur LAWIM. Veuillez d\u00e9crire votre projet immobilier du jour en quelques lignes : achat, vente, location, terrain, gestion ou autre besoin.",
+      "intent_detected": "",
+      "facts_after": {},
+      "pending_after": "",
+      "business_actions": [],
+      "duration_ms": 0.3,
+      "error": null
+    }
+  ]
+}

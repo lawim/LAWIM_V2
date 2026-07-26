@@ -1,0 +1,20 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 1,
+      "expected_question": "Quel est votre budget mensuel ?",
+      "context": "Apres la premiere demande utilisateur"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Avez-vous un quartier prefere ?",
+      "context": "Apres confirmation du budget"
+    }
+  ],
+  "forbidden_questions": [
+    "Voulez-vous acheter ou louer ?",
+    "Quel type de bien ?"
+  ],
+  "rephrase_on_confusion": true
+}

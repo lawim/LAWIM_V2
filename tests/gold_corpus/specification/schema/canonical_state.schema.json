@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lawim.ai/schemas/canonical-state-v1.json",
+  "title": "Canonical Conversation State",
+  "description": "Modele officiel decrivant l'etat canonique d'une conversation LAWIM a tout moment",
+  "type": "object",
+  "required": [
+    "conversation_id",
+    "phase",
+    "intent",
+    "qualification",
+    "memory",
+    "business"
+  ],
+  "properties": {
+    "conversation_id": {
+      "type": "string",
+      "description": "Identifiant persistant de la conversation"
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["initial", "in_progress", "qualified", "unqualified", "completed", "handover", "error"],
+      "description": "Phase du cycle de vie conversationnel"
+    },
+    "intent": {
+      "type": ["string", "null"],
+      "description": "Intention courante detectee"
+    },
+    "qualification": {
+      "type": "object",
+      "required": ["status", "level"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["unstarted", "in_progress", "qualified", "unqualified", "requires_human"]
+        },
+        "level": {
+          "type": "string",
+          "enum": ["basic", "intermediate", "advanced", "expert"]
+        },
+        "criteria_collected": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Criteres deja collectes"
+        },
+        "criteria_missing": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Criteres encore necessaires"
+        }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "required": ["active", "expired"],
+      "properties": {
+        "active": {
+          "type": "object",
+          "additionalProperties": { "type": ["string", "number", "boolean", "object", "null"] },
+          "description": "Variables conversationnelles actives"
+        },
+        "expired": {
+          "type": "object",
+          "additionalProperties": { "type": ["string", "number", "boolean", "object", "null"] },
+          "description": "Variables expirees (history)"
+        },
+        "retention_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Nombre d'elements de memoire conserves"
+        }
+      }
+    },
+    "business": {
+      "type": "object",
+      "properties": {
+        "object_type": {
+          "type": "string",
+          "description": "Type d'objet metier (apartment, house, land, etc.)"
+        },
+        "object_id": {
+          "type": "string",
+          "description": "Identifiant de l'objet metier cree ou consulte"
+        },
+        "decision": {
+          "type": "string",
+          "description": "Decision metier prise"
+        },
+        "action": {
+          "type": "string",
+          "description": "Action metier en cours"
+        }
+      }
+    },
+    "turn_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Nombre de tours ecoules"
+    },
+    "language": {
+      "type": "string",
+      "enum": ["fr", "en", "pcm"],
+      "description": "Langue active"
+    },
+    "channel": {
+      "type": "string",
+      "enum": ["web", "telegram", "whatsapp", "api"],
+      "description": "Canal actif"
+    }
+  }
+}

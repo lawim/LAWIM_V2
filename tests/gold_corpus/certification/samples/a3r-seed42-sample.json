@@ -1,0 +1,272 @@
+[
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0082",
+    "category_source": "cancellation_refusal",
+    "language_source": "fr",
+    "difficulty": "standard",
+    "turn_count": 6,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0015",
+    "category_source": "rental_search",
+    "language_source": "fr",
+    "difficulty": "standard",
+    "turn_count": 12,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0004",
+    "category_source": "rental_search",
+    "language_source": "fr",
+    "difficulty": "standard",
+    "turn_count": 12,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0095",
+    "category_source": "multilingual_pcm",
+    "language_source": "pcm",
+    "difficulty": "advanced",
+    "turn_count": 12,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0036",
+    "category_source": "seller_onboarding",
+    "language_source": "fr",
+    "difficulty": "standard",
+    "turn_count": 10,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0032",
+    "category_source": "purchase_search",
+    "language_source": "fr",
+    "difficulty": "standard",
+    "turn_count": 8,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0029",
+    "category_source": "purchase_search",
+    "language_source": "fr",
+    "difficulty": "standard",
+    "turn_count": 8,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0018",
+    "category_source": "rental_search",
+    "language_source": "fr",
+    "difficulty": "standard",
+    "turn_count": 12,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0014",
+    "category_source": "rental_search",
+    "language_source": "fr",
+    "difficulty": "standard",
+    "turn_count": 12,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0087",
+    "category_source": "restart_resume",
+    "language_source": "fr",
+    "difficulty": "advanced",
+    "turn_count": 12,
+    "sample_group": "block1"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0195",
+    "category_source": "multilingual_correction",
+    "language_source": "en",
+    "difficulty": "advanced",
+    "turn_count": 6,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0170",
+    "category_source": "undo_last_change",
+    "language_source": "pcm",
+    "difficulty": "advanced",
+    "turn_count": 8,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0112",
+    "category_source": "double_fact_correction",
+    "language_source": "fr",
+    "difficulty": "advanced",
+    "turn_count": 14,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0176",
+    "category_source": "contradiction_resolution",
+    "language_source": "fr",
+    "difficulty": "expert",
+    "turn_count": 12,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0155",
+    "category_source": "city_and_area_switch",
+    "language_source": "pcm",
+    "difficulty": "advanced",
+    "turn_count": 8,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0105",
+    "category_source": "single_fact_correction",
+    "language_source": "pcm",
+    "difficulty": "advanced",
+    "turn_count": 12,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0104",
+    "category_source": "single_fact_correction",
+    "language_source": "en",
+    "difficulty": "advanced",
+    "turn_count": 12,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0128",
+    "category_source": "correction_after_recap",
+    "language_source": "fr",
+    "difficulty": "advanced",
+    "turn_count": 8,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0130",
+    "category_source": "correction_after_recap",
+    "language_source": "pcm",
+    "difficulty": "advanced",
+    "turn_count": 8,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0165",
+    "category_source": "undo_last_change",
+    "language_source": "pcm",
+    "difficulty": "advanced",
+    "turn_count": 8,
+    "sample_group": "block2"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_09_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B09-0822",
+    "category_source": "restart_recovery",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 22,
+    "sample_group": "others"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_06_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B06-0543",
+    "category_source": "agency_listing",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 21,
+    "sample_group": "others"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_05_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B05-0430",
+    "category_source": "property_comparison",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 21,
+    "sample_group": "others"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_10_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B10-0999",
+    "category_source": "edge_to_success",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 27,
+    "sample_group": "others"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_03_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B03-0279",
+    "category_source": "visit_planning",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 23,
+    "sample_group": "others"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_10_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B10-0951",
+    "category_source": "telegram_to_whatsapp",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 27,
+    "sample_group": "others"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_07_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B07-0639",
+    "category_source": "visit_cancellation",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 21,
+    "sample_group": "others"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_10_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B10-0984",
+    "category_source": "production_acceptance",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 27,
+    "sample_group": "others"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_07_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B07-0650",
+    "category_source": "multi_property_visits",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 21,
+    "sample_group": "others"
+  },
+  {
+    "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_10_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B10-0921",
+    "category_source": "end_to_end_rent_journey",
+    "language_source": "",
+    "difficulty": "",
+    "turn_count": 27,
+    "sample_group": "others"
+  }
+]

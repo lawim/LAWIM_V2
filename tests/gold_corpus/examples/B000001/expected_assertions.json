@@ -1,0 +1,44 @@
+{
+  "assertions": [
+    {
+      "id": "ASSERT-0001",
+      "type": "intent",
+      "description": "L intention finale doit etre rental_search",
+      "expected": "rental_search",
+      "path": "intent",
+      "operator": "eq"
+    },
+    {
+      "id": "ASSERT-0002",
+      "type": "state",
+      "description": "Le statut de qualification doit etre qualified",
+      "expected": "qualified",
+      "path": "qualification_status",
+      "operator": "eq"
+    },
+    {
+      "id": "ASSERT-0003",
+      "type": "memory",
+      "description": "Le budget doit etre retenu en memoire",
+      "expected": 180000,
+      "path": "slots_filled.budget_xaf",
+      "operator": "eq"
+    },
+    {
+      "id": "ASSERT-0004",
+      "type": "business",
+      "description": "L action metier doit etre search",
+      "expected": "search",
+      "path": "business_action",
+      "operator": "eq"
+    },
+    {
+      "id": "ASSERT-0005",
+      "type": "language",
+      "description": "La langue de reponse doit etre fr",
+      "expected": "fr",
+      "path": "responses_language",
+      "operator": "eq"
+    }
+  ]
+}

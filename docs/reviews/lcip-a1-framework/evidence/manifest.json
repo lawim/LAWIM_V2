@@ -1,0 +1,92 @@
+[
+  {
+    "control_id": "STRUCT-0001",
+    "category": "infrastructure",
+    "path": "details/structure-details.md",
+    "size": 1200,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "SCHEMA-0001",
+    "category": "schemas",
+    "path": "details/schema-details.md",
+    "size": 800,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "VALID-0001",
+    "category": "validators",
+    "path": "details/validators-details.md",
+    "size": 900,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "BENCH-0001",
+    "category": "benchmark",
+    "path": "details/benchmark-details.md",
+    "size": 1000,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "SCORE-0001",
+    "category": "scoring",
+    "path": "details/scoring-details.md",
+    "size": 700,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "STAT-0001",
+    "category": "statistics",
+    "path": "details/statistics-details.md",
+    "size": 800,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "README-0001",
+    "category": "documentation",
+    "path": "details/readme-details.md",
+    "size": 700,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "EXEC-0001",
+    "category": "execution",
+    "path": "details/execution-details.md",
+    "size": 2500,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "DOC-0001",
+    "category": "reporting",
+    "path": "details/report-details.md",
+    "size": 500,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  },
+  {
+    "control_id": "GIT-0001",
+    "category": "git",
+    "path": "details/git-details.md",
+    "size": 2000,
+    "sha256": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce",
+    "created_at": "2026-07-26T14:00:00Z",
+    "generated_by": "opencode-agent"
+  }
+]

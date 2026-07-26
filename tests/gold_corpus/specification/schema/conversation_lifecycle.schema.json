@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lawim.ai/schemas/conversation-lifecycle-v1.json",
+  "title": "Conversation Lifecycle Schema",
+  "description": "Cycle de vie complet d'une conversation LAWIM avec toutes les transitions autorisees",
+  "type": "object",
+  "required": ["states", "transitions", "final_states"],
+  "properties": {
+    "states": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["initial", "in_progress", "qualified", "unqualified", "completed", "handover", "error"]
+      },
+      "description": "Tous les etats possibles du cycle de vie"
+    },
+    "initial_state": {
+      "type": "string",
+      "enum": ["initial"],
+      "description": "Etat initial obligatoire"
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "trigger"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "trigger": {
+            "type": "string",
+            "description": "Evenement declencheur de la transition"
+          },
+          "guard": {
+            "type": "string",
+            "description": "Condition necessaire pour autoriser la transition"
+          },
+          "action": {
+            "type": "string",
+            "description": "Action metier executee pendant la transition"
+          }
+        }
+      },
+      "description": "Transitions autorisees entre etats"
+    },
+    "final_states": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["completed", "handover", "error"]
+      },
+      "description": "Etats terminaux du cycle de vie"
+    },
+    "memory_policy": {
+      "type": "object",
+      "properties": {
+        "max_active_variables": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Nombre maximum de variables actives"
+        },
+        "retention_on_completion": {
+          "type": "string",
+          "enum": ["persist", "expire", "archive"],
+          "description": "Politique de retention a la completion"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,278 @@
+{
+  "assertions": [
+    {
+      "id": "MEM-0001",
+      "name": "memory_retained",
+      "description": "Un element de memoire est conserve entre deux tours",
+      "category": "memory",
+      "operator": "exists_in_path",
+      "path": "memory_retained",
+      "severity": "error"
+    },
+    {
+      "id": "MEM-0002",
+      "name": "memory_updated",
+      "description": "Un element de memoire est correctement mis a jour",
+      "category": "memory",
+      "operator": "eq",
+      "path": "slots_filled",
+      "severity": "error"
+    },
+    {
+      "id": "MEM-0003",
+      "name": "budget_modified",
+      "description": "Le budget utilisateur est correctement modifie",
+      "category": "memory",
+      "operator": "eq",
+      "path": "slots_filled.budget_xaf",
+      "severity": "error"
+    },
+    {
+      "id": "MEM-0004",
+      "name": "zone_preserved",
+      "description": "La zone/quartier est conserve en memoire",
+      "category": "memory",
+      "operator": "exists_in_path",
+      "path": "slots_filled.district",
+      "severity": "error"
+    },
+    {
+      "id": "MEM-0005",
+      "name": "date_preserved",
+      "description": "Une date est correctement conservee entre les tours",
+      "category": "memory",
+      "operator": "exists_in_path",
+      "path": "slots_filled.date",
+      "severity": "error"
+    },
+    {
+      "id": "MEM-0006",
+      "name": "memory_expired",
+      "description": "Un element de memoire est correctement expire",
+      "category": "memory",
+      "operator": "not_exists_in_path",
+      "path": "memory.expired",
+      "severity": "warning"
+    },
+    {
+      "id": "MEM-0007",
+      "name": "no_memory_leak",
+      "description": "Aucune variable indesirable n'est retenue en memoire",
+      "category": "memory",
+      "operator": "not_contains",
+      "path": "memory.active",
+      "severity": "error"
+    },
+    {
+      "id": "QLF-0001",
+      "name": "qualification_complete",
+      "description": "La qualification utilisateur est complete avec tous les criteres",
+      "category": "qualification",
+      "operator": "eq",
+      "path": "qualification_status",
+      "severity": "error"
+    },
+    {
+      "id": "QLF-0002",
+      "name": "qualification_criteria_progressive",
+      "description": "Les criteres sont collectes un par un (une question par tour)",
+      "category": "qualification",
+      "operator": "progressive_check",
+      "severity": "error"
+    },
+    {
+      "id": "QLF-0003",
+      "name": "qualification_rejected",
+      "description": "L'utilisateur est correctement disqualifie",
+      "category": "qualification",
+      "operator": "eq",
+      "path": "qualification_status",
+      "severity": "error"
+    },
+    {
+      "id": "BIZ-0001",
+      "name": "business_object_created",
+      "description": "Un objet metier est cree suite a la conversation",
+      "category": "business",
+      "operator": "exists",
+      "path": "business.object_id",
+      "severity": "error"
+    },
+    {
+      "id": "BIZ-0002",
+      "name": "business_action_correct",
+      "description": "L'action metier declenchee est correcte",
+      "category": "business",
+      "operator": "eq",
+      "path": "business_action",
+      "severity": "error"
+    },
+    {
+      "id": "BIZ-0003",
+      "name": "no_duplicate_business_object",
+      "description": "Aucun doublon d'objet metier n'est cree",
+      "category": "business",
+      "operator": "idempotence_check",
+      "severity": "error"
+    },
+    {
+      "id": "BIZ-0004",
+      "name": "handover_correct",
+      "description": "Le handover humain est declenche correctement",
+      "category": "business",
+      "operator": "eq",
+      "path": "handover_required",
+      "severity": "error"
+    },
+    {
+      "id": "INT-0001",
+      "name": "intent_correct",
+      "description": "L'intention detectee est correcte",
+      "category": "intent",
+      "operator": "eq",
+      "path": "intent",
+      "severity": "error"
+    },
+    {
+      "id": "INT-0002",
+      "name": "intent_changed_correctly",
+      "description": "Le changement d'intention est correct",
+      "category": "intent",
+      "operator": "neq",
+      "path": "intent",
+      "severity": "error"
+    },
+    {
+      "id": "LANG-0001",
+      "name": "language_matches_input",
+      "description": "La langue de reponse correspond a la langue d'entree",
+      "category": "language",
+      "operator": "eq",
+      "path": "responses_language",
+      "severity": "error"
+    },
+    {
+      "id": "LANG-0002",
+      "name": "identity_correct",
+      "description": "L'identite LAWIM AI est presente",
+      "category": "language",
+      "operator": "contains",
+      "path": "identity",
+      "severity": "error"
+    },
+    {
+      "id": "LANG-0003",
+      "name": "footer_present",
+      "description": "Le footer IA est present dans la reponse",
+      "category": "language",
+      "operator": "contains",
+      "path": "footer_required",
+      "severity": "warning"
+    },
+    {
+      "id": "LANG-0004",
+      "name": "forbidden_phrases_absent",
+      "description": "Aucune phrase interdite n'apparait dans la reponse",
+      "category": "language",
+      "operator": "not_contains",
+      "path": "forbidden_phrases",
+      "severity": "error"
+    },
+    {
+      "id": "QST-0001",
+      "name": "one_question_per_turn",
+      "description": "Au maximum une question est posee par tour",
+      "category": "questions",
+      "operator": "max_questions",
+      "severity": "error"
+    },
+    {
+      "id": "QST-0002",
+      "name": "next_question_relevant",
+      "description": "La prochaine question est pertinente pour le contexte",
+      "category": "questions",
+      "operator": "eq",
+      "path": "allowed_questions",
+      "severity": "warning"
+    },
+    {
+      "id": "QST-0003",
+      "name": "no_forbidden_question",
+      "description": "Aucune question interdite n'est posee",
+      "category": "questions",
+      "operator": "not_contains",
+      "path": "forbidden_questions",
+      "severity": "error"
+    },
+    {
+      "id": "RUNTIME-0001",
+      "name": "correct_engine",
+      "description": "Le moteur conversationnel utilise est correct",
+      "category": "runtime",
+      "operator": "eq",
+      "path": "engine",
+      "severity": "error"
+    },
+    {
+      "id": "RUNTIME-0002",
+      "name": "no_unexpected_fallback",
+      "description": "Aucun fallback inattendu n'est declenche",
+      "category": "runtime",
+      "operator": "eq",
+      "path": "retry_allowed",
+      "severity": "warning"
+    },
+    {
+      "id": "CHANNEL-0001",
+      "name": "channel_behavior_correct",
+      "description": "Le comportement canal est conforme aux attentes",
+      "category": "channel",
+      "operator": "eq",
+      "path": "channel",
+      "severity": "error"
+    },
+    {
+      "id": "IDEM-0001",
+      "name": "idempotence_respected",
+      "description": "La meme entree produit le meme etat (pas d'effet de bord)",
+      "category": "idempotence",
+      "operator": "idempotence_check",
+      "severity": "error"
+    },
+    {
+      "id": "IDEM-0002",
+      "name": "no_regression",
+      "description": "Aucune regression par rapport au comportement precedent",
+      "category": "idempotence",
+      "operator": "regression_check",
+      "severity": "error"
+    },
+    {
+      "id": "STATE-0001",
+      "name": "phase_transition_correct",
+      "description": "La transition de phase est conforme au cycle de vie",
+      "category": "state",
+      "operator": "eq",
+      "path": "qualification_status",
+      "severity": "error"
+    },
+    {
+      "id": "STATE-0002",
+      "name": "final_state_correct",
+      "description": "L'etat final est conforme aux attentes",
+      "category": "state",
+      "operator": "eq",
+      "path": "qualification_status",
+      "severity": "error"
+    },
+    {
+      "id": "STATE-0003",
+      "name": "slots_filled_correctly",
+      "description": "Tous les slots attendus sont remplis avec les bonnes valeurs",
+      "category": "state",
+      "operator": "eq",
+      "path": "slots_filled",
+      "severity": "error"
+    }
+  ]
+}

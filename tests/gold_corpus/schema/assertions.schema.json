@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lawim.ai/schemas/assertions-v1.json",
+  "title": "Assertions Schema",
+  "description": "Assertions automatisees pour valider le comportement runtime",
+  "type": "object",
+  "required": ["assertions"],
+  "properties": {
+    "assertions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "description", "expected"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^ASSERT-\\d{4}$",
+            "description": "Identifiant unique de l'assertion"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "state", "memory", "business", "language",
+              "channel", "runtime", "questions", "intent"
+            ],
+            "description": "Type d'assertion"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de ce que l'assertion verifie"
+          },
+          "expected": {
+            "type": ["string", "number", "boolean", "object", "array"],
+            "description": "Valeur attendue"
+          },
+          "path": {
+            "type": "string",
+            "description": "Chemin JSON pour acceder a la valeur (ex: state.intent)"
+          },
+          "operator": {
+            "type": "string",
+            "enum": ["eq", "neq", "contains", "not_contains", "exists", "not_exists", "gt", "lt", "regex"],
+            "description": "Operateur de comparaison",
+            "default": "eq"
+          }
+        }
+      }
+    }
+  }
+}

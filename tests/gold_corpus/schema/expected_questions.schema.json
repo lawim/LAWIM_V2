@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://lawim.ai/schemas/expected-questions-v1.json",
+  "title": "Expected Questions Schema",
+  "description": "Questions et reponses attendues dans le dialogue",
+  "type": "object",
+  "required": ["maximum_questions_per_turn", "required_questions"],
+  "properties": {
+    "maximum_questions_per_turn": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Au maximum une question par tour"
+    },
+    "required_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["turn", "expected_question"],
+        "properties": {
+          "turn": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "expected_question": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string",
+            "description": "Contexte dans lequel la question doit etre posee"
+          }
+        }
+      }
+    },
+    "forbidden_questions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Questions qui ne doivent jamais etre posees"
+    },
+    "rephrase_on_confusion": {
+      "type": "boolean",
+      "description": "Le systeme doit-il reformuler en cas de confusion"
+    }
+  }
+}
