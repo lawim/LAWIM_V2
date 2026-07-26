@@ -20,12 +20,14 @@ vault_key = os.environ.get("LAWIM_VAULT_KEY", "")
 if vault_key:
     CredentialVault.set_global_key(vault_key)
 
-from lawim_v2.bootstrap import BootstrapEngine
-engine = BootstrapEngine()
-engine.run()
+from lawim_v2.bootstrap import build_runtime, ApplicationRuntime
+from lawim_v2.config import AppConfig
+config = AppConfig()
+runtime = build_runtime(config)
+runtime.start()
 
-# Start a simple HTTP server for the admin UI
-import http.server, socketserver, threading, time
+# Start a simple HTTP server for health checks
+import http.server, socketserver
 HOST = os.environ.get("LAWIM_HOST", "0.0.0.0")
 PORT = int(os.environ.get("LAWIM_PORT", "3000"))
 
