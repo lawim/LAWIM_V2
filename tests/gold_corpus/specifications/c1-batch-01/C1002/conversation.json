@@ -1,0 +1,95 @@
+{
+  "id": "C1002",
+  "category": "memory",
+  "level": "medium",
+  "channel": "whatsapp",
+  "language": "fr",
+  "description": "L'utilisateur donne des infos en plusieurs sessions",
+  "tags": [
+    "memory",
+    "multi_session",
+    "progressive"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche une maison.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Vous cherchez à louer ou à acheter ?",
+      "intent": "CLARIFY_TRANSACTION"
+    },
+    {
+      "role": "user",
+      "text": "À louer.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Dans quelle ville ?",
+      "intent": "ASK_CITY"
+    },
+    {
+      "role": "user",
+      "text": "Yaoundé.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel maximal ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "250 000 francs.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "Au moins 3.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quels quartiers préférez-vous à Yaoundé ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bastos ou Mvan.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En décembre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous que j'enregistre cette recherche de location ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui, enregistrez.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

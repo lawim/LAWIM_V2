@@ -1,0 +1,8 @@
+{
+  "conversation_id": "C1025",
+  "expected_business_action": "NONE",
+  "expected_business_object_count": 0,
+  "final_ask_turn": null,
+  "consent_turn": null,
+  "has_restart": false
+}

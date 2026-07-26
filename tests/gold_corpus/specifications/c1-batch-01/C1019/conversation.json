@@ -1,0 +1,84 @@
+{
+  "id": "C1019",
+  "category": "robustness",
+  "level": "easy",
+  "channel": "whatsapp",
+  "language": "fr",
+  "description": "Messages très courts à chaque tour",
+  "tags": [
+    "short_messages",
+    "robustness"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Maison à louer.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Dans quelle ville ?",
+      "intent": "ASK_CITY"
+    },
+    {
+      "role": "user",
+      "text": "Douala.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Budget ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "300K.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "3.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quartier ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Akwa.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Entrée ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Juin.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Enregistré.",
+      "intent": "NONE"
+    }
+  ]
+}

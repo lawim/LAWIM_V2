@@ -1,0 +1,18 @@
+{
+  "conversation_id": "C1002",
+  "language": "fr",
+  "expected_facts": {
+    "property_type": "house",
+    "move_in_date": "Décembre",
+    "transaction_type": "rent",
+    "city": "Yaoundé",
+    "budget": 3,
+    "preferred_areas": [
+      "Bastos",
+      "Mvan"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

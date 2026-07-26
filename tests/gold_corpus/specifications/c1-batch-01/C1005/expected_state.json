@@ -1,0 +1,17 @@
+{
+  "conversation_id": "C1005",
+  "language": "pcm",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "land",
+    "city": "Kribi",
+    "budget": 100,
+    "preferred_areas": [
+      "Dombe"
+    ],
+    "move_in_date": "January"
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

@@ -1,0 +1,65 @@
+{
+  "id": "C1005",
+  "category": "multilingual",
+  "level": "medium",
+  "channel": "whatsapp",
+  "language": "pcm",
+  "description": "Cameroon Pidgin English rental for land",
+  "tags": [
+    "pcm",
+    "rental",
+    "multilingual"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "I wan get land for rent for Kribi.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "How much you fit pay every month?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "Ma budget na 100 thousand FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Which area you prefer for Kribi?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Dombe side.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Which time you wan start?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Next year, for January.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "You want make I register this search?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Yes, register am.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Your search don register well.",
+      "intent": "NONE"
+    }
+  ]
+}

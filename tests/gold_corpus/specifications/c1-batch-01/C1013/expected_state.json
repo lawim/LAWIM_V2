@@ -1,0 +1,12 @@
+{
+  "conversation_id": "C1013",
+  "language": "fr",
+  "expected_facts": {
+    "property_type": "apartment",
+    "city": "Douala",
+    "budget": 10
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

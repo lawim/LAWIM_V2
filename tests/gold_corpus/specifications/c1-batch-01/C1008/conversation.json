@@ -1,0 +1,65 @@
+{
+  "id": "C1008",
+  "category": "advanced_search",
+  "level": "easy",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Recherche achat avec plusieurs zones",
+  "tags": [
+    "advanced",
+    "multiple_areas",
+    "purchase"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux acheter un terrain à Kribi.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel est votre budget d'achat ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "5 000 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quels secteurs préférez-vous à Kribi ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Dombe ou Mpangou.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quelle surface minimale recherchez-vous ?",
+      "intent": "ASK_CLARIFICATION"
+    },
+    {
+      "role": "user",
+      "text": "Au moins 200 m².",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : achat terrain à Kribi, zones Dombe ou Mpangou, budget 5 000 000 FCFA, 200 m² minimum. Souhaitez-vous enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche d'achat a été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

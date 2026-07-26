@@ -1,0 +1,17 @@
+{
+  "conversation_id": "C1008",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "buy",
+    "property_type": "land",
+    "city": "Kribi",
+    "budget": 200,
+    "preferred_areas": [
+      "Dombe",
+      "Mpangou"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

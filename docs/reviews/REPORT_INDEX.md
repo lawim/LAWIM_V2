@@ -34,6 +34,8 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 | 2026-07-26 | LCIP B.5G — Independent Gate Audit | 2670f2be | feature/lcip-b5-corpus-200-certification-20260726 | docs/reviews/lcip-b5g-independent-gate/REPORT.md | docs/reviews/lcip-b5g-independent-gate/details/ | docs/reviews/lcip-b5g-independent-gate/evidence/ | PASS |
 | 2026-07-26 | LCIP B.5G-C — Closure, Merge & Tag | ebeee7e9 | main | docs/reviews/lcip-b5g-closure/REPORT.md | docs/reviews/lcip-b5g-closure/details/ | — | PASS |
 
+| 2026-07-26 | LCIP C.1 — Real Dialogue Batch 01 | 3910c80e | feature/lcip-c1-real-dialogues-batch-01-20260726 | docs/reviews/lcip-c1-batch-01/REPORT.md | docs/reviews/lcip-c1-batch-01/details/ | docs/reviews/lcip-c1-batch-01/evidence/ | PASS |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*

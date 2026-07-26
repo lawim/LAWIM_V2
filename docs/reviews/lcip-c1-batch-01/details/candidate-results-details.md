@@ -1,0 +1,4 @@
+# Candidate Results — LCIP C.1
+
+25 conversations: 25 CERTIFIED_FOR_INTEGRATION.
+0 REPAIR_REQUIRED.

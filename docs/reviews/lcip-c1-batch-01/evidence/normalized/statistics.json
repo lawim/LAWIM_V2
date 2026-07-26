@@ -1,0 +1,27 @@
+{
+  "total": 25,
+  "by_category": {
+    "memory": 3,
+    "multilingual": 3,
+    "advanced_search": 3,
+    "seller": 3,
+    "visit": 3,
+    "ambiguity": 3,
+    "robustness": 3,
+    "restart": 2,
+    "idempotence": 2
+  },
+  "by_language": {
+    "fr": 20,
+    "en": 3,
+    "pcm": 2
+  },
+  "by_channel": {
+    "web": 10,
+    "whatsapp": 7,
+    "telegram": 8
+  },
+  "runtime_ok": 25,
+  "runtime_err": 0,
+  "objects_created": 16
+}

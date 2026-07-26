@@ -1,0 +1,17 @@
+{
+  "conversation_id": "C1010",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "sell",
+    "property_type": "apartment",
+    "city": "Douala",
+    "budget": 3,
+    "preferred_areas": [
+      "Bonamoussadi"
+    ],
+    "bedrooms": 3
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

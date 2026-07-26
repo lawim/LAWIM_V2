@@ -1,0 +1,75 @@
+{
+  "id": "C1003",
+  "category": "memory",
+  "level": "medium",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Correction après interruption: l'utilisateur corrige un fait précédemment fourni",
+  "tags": [
+    "memory",
+    "fact_update",
+    "correction"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un studio à louer à Bafoussam.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "80 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier à Bafoussam ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Tamdja.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Je reviens, finalement c'est 100 000 FCFA le budget.",
+      "intent": "CORRECTION"
+    },
+    {
+      "role": "assistant",
+      "text": "Budget corrigé à 100 000 FCFA. Quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En janvier.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

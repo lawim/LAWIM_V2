@@ -1,0 +1,231 @@
+{
+  "batch": "c1-batch-01",
+  "total": 25,
+  "conversations": [
+    {
+      "id": "C1001",
+      "category": "memory",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "medium",
+      "source_block": "BLOCK_03_DETAILED",
+      "replaces_template": "TEMPLATE_B0300"
+    },
+    {
+      "id": "C1002",
+      "category": "memory",
+      "lang": "fr",
+      "channel": "whatsapp",
+      "difficulty": "medium",
+      "source_block": "BLOCK_04_DETAILED",
+      "replaces_template": "TEMPLATE_B0301"
+    },
+    {
+      "id": "C1003",
+      "category": "memory",
+      "lang": "fr",
+      "channel": "telegram",
+      "difficulty": "medium",
+      "source_block": "BLOCK_05_DETAILED",
+      "replaces_template": "TEMPLATE_B0302"
+    },
+    {
+      "id": "C1004",
+      "category": "multilingual",
+      "lang": "en",
+      "channel": "telegram",
+      "difficulty": "easy",
+      "source_block": "BLOCK_06_DETAILED",
+      "replaces_template": "TEMPLATE_B0303"
+    },
+    {
+      "id": "C1005",
+      "category": "multilingual",
+      "lang": "pcm",
+      "channel": "whatsapp",
+      "difficulty": "medium",
+      "source_block": "BLOCK_07_DETAILED",
+      "replaces_template": "TEMPLATE_B0304"
+    },
+    {
+      "id": "C1006",
+      "category": "multilingual",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "medium",
+      "source_block": "BLOCK_08_DETAILED",
+      "replaces_template": "TEMPLATE_B0305"
+    },
+    {
+      "id": "C1007",
+      "category": "advanced_search",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "easy",
+      "source_block": "BLOCK_09_DETAILED",
+      "replaces_template": "TEMPLATE_B0306"
+    },
+    {
+      "id": "C1008",
+      "category": "advanced_search",
+      "lang": "fr",
+      "channel": "telegram",
+      "difficulty": "easy",
+      "source_block": "BLOCK_10_DETAILED",
+      "replaces_template": "TEMPLATE_B0307"
+    },
+    {
+      "id": "C1009",
+      "category": "advanced_search",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "medium",
+      "source_block": "BLOCK_03_DETAILED",
+      "replaces_template": "TEMPLATE_B0308"
+    },
+    {
+      "id": "C1010",
+      "category": "seller",
+      "lang": "fr",
+      "channel": "whatsapp",
+      "difficulty": "medium",
+      "source_block": "BLOCK_04_DETAILED",
+      "replaces_template": "TEMPLATE_B0309"
+    },
+    {
+      "id": "C1011",
+      "category": "seller",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "medium",
+      "source_block": "BLOCK_05_DETAILED",
+      "replaces_template": "TEMPLATE_B0310"
+    },
+    {
+      "id": "C1012",
+      "category": "seller",
+      "lang": "en",
+      "channel": "telegram",
+      "difficulty": "medium",
+      "source_block": "BLOCK_06_DETAILED",
+      "replaces_template": "TEMPLATE_B0311"
+    },
+    {
+      "id": "C1013",
+      "category": "visit",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "easy",
+      "source_block": "BLOCK_07_DETAILED",
+      "replaces_template": "TEMPLATE_B0312"
+    },
+    {
+      "id": "C1014",
+      "category": "visit",
+      "lang": "fr",
+      "channel": "whatsapp",
+      "difficulty": "easy",
+      "source_block": "BLOCK_08_DETAILED",
+      "replaces_template": "TEMPLATE_B0313"
+    },
+    {
+      "id": "C1015",
+      "category": "visit",
+      "lang": "en",
+      "channel": "telegram",
+      "difficulty": "easy",
+      "source_block": "BLOCK_09_DETAILED",
+      "replaces_template": "TEMPLATE_B0314"
+    },
+    {
+      "id": "C1016",
+      "category": "ambiguity",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "hard",
+      "source_block": "BLOCK_10_DETAILED",
+      "replaces_template": "TEMPLATE_B0315"
+    },
+    {
+      "id": "C1017",
+      "category": "ambiguity",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "medium",
+      "source_block": "BLOCK_03_DETAILED",
+      "replaces_template": "TEMPLATE_B0316"
+    },
+    {
+      "id": "C1018",
+      "category": "ambiguity",
+      "lang": "fr",
+      "channel": "telegram",
+      "difficulty": "medium",
+      "source_block": "BLOCK_04_DETAILED",
+      "replaces_template": "TEMPLATE_B0317"
+    },
+    {
+      "id": "C1019",
+      "category": "robustness",
+      "lang": "fr",
+      "channel": "whatsapp",
+      "difficulty": "easy",
+      "source_block": "BLOCK_05_DETAILED",
+      "replaces_template": "TEMPLATE_B0318"
+    },
+    {
+      "id": "C1020",
+      "category": "robustness",
+      "lang": "fr",
+      "channel": "telegram",
+      "difficulty": "easy",
+      "source_block": "BLOCK_06_DETAILED",
+      "replaces_template": "TEMPLATE_B0319"
+    },
+    {
+      "id": "C1021",
+      "category": "robustness",
+      "lang": "pcm",
+      "channel": "whatsapp",
+      "difficulty": "medium",
+      "source_block": "BLOCK_07_DETAILED",
+      "replaces_template": "TEMPLATE_B0320"
+    },
+    {
+      "id": "C1022",
+      "category": "restart",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "hard",
+      "source_block": "BLOCK_08_DETAILED",
+      "replaces_template": "TEMPLATE_B0321"
+    },
+    {
+      "id": "C1023",
+      "category": "restart",
+      "lang": "fr",
+      "channel": "telegram",
+      "difficulty": "hard",
+      "source_block": "BLOCK_09_DETAILED",
+      "replaces_template": "TEMPLATE_B0322"
+    },
+    {
+      "id": "C1024",
+      "category": "idempotence",
+      "lang": "fr",
+      "channel": "web",
+      "difficulty": "medium",
+      "source_block": "BLOCK_10_DETAILED",
+      "replaces_template": "TEMPLATE_B0323"
+    },
+    {
+      "id": "C1025",
+      "category": "idempotence",
+      "lang": "fr",
+      "channel": "whatsapp",
+      "difficulty": "medium",
+      "source_block": "BLOCK_03_DETAILED",
+      "replaces_template": "TEMPLATE_B0324"
+    }
+  ]
+}

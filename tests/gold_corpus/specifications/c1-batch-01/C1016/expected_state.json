@@ -1,0 +1,16 @@
+{
+  "conversation_id": "C1016",
+  "language": "fr",
+  "expected_facts": {
+    "city": "Douala",
+    "transaction_type": "rent",
+    "property_type": "studio",
+    "budget": 70000,
+    "preferred_areas": [
+      "Akwa"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

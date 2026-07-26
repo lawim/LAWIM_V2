@@ -1,0 +1,16 @@
+{
+  "conversation_id": "C1023",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "land",
+    "city": "Yaoundé",
+    "budget": 80000,
+    "preferred_areas": [
+      "Mvan"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

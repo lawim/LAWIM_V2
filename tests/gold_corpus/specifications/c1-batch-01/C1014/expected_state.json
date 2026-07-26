@@ -1,0 +1,13 @@
+{
+  "conversation_id": "C1014",
+  "language": "fr",
+  "expected_facts": {
+    "property_type": "house",
+    "city": "Yaoundé",
+    "budget": 15,
+    "move_in_date": "Mai"
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

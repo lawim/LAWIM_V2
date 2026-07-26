@@ -1,0 +1,75 @@
+{
+  "id": "C1021",
+  "category": "robustness",
+  "level": "medium",
+  "channel": "whatsapp",
+  "language": "pcm",
+  "description": "PCM informel avec abréviations",
+  "tags": [
+    "pcm",
+    "informal",
+    "robustness"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "I wan rent house for Buea.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "How much you fit pay?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "150k.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "How many bedroom?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "2.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Which area?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Molyko.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "When you wan start?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Now.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "You want make I register?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Yes o.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Done.",
+      "intent": "NONE"
+    }
+  ]
+}

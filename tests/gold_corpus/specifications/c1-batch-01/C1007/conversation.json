@@ -1,0 +1,35 @@
+{
+  "id": "C1007",
+  "category": "advanced_search",
+  "level": "easy",
+  "channel": "web",
+  "language": "fr",
+  "description": "Recherche avec tous les critères fournis d'un coup",
+  "tags": [
+    "advanced",
+    "multi_criteria",
+    "all_fields"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement 3 pièces à louer à Douala quartier Akwa, budget 200 000, pour mars.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : appartement à louer à Douala, Akwa, budget 200 000 FCFA, 3 pièces, entrée mars. Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

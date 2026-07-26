@@ -1,0 +1,94 @@
+{
+  "id": "C1016",
+  "category": "ambiguity",
+  "level": "hard",
+  "channel": "web",
+  "language": "fr",
+  "description": "Demande ambiguë nécessitant clarification",
+  "tags": [
+    "ambiguity",
+    "clarification"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche quelque chose de pas trop cher à Douala.",
+      "intent": "AMBIGUOUS_SEARCH"
+    },
+    {
+      "role": "assistant",
+      "text": "Cherchez-vous à louer ou à acheter ?",
+      "intent": "CLARIFY_TRANSACTION"
+    },
+    {
+      "role": "user",
+      "text": "Louer.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel type de bien ?",
+      "intent": "CLARIFY_PROPERTY_TYPE"
+    },
+    {
+      "role": "user",
+      "text": "Un studio ou une chambre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget maximal ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "70 000 FCFA max.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Près du centre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous préciser un quartier à Douala ?",
+      "intent": "CLARIFY_AMBIGUITY"
+    },
+    {
+      "role": "user",
+      "text": "Akwa.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Dès que possible.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche a été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

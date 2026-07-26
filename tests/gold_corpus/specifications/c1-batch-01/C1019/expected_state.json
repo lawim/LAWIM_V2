@@ -1,0 +1,17 @@
+{
+  "conversation_id": "C1019",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "move_in_date": "Juin",
+    "city": "Douala",
+    "budget": 3,
+    "preferred_areas": [
+      "Akwa"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

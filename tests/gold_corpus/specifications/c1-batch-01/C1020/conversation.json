@@ -1,0 +1,75 @@
+{
+  "id": "C1020",
+  "category": "robustness",
+  "level": "easy",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Messages informels avec fautes de frappe",
+  "tags": [
+    "typo",
+    "informal",
+    "robustness"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Slt je chreche un apart a louer a Bafoussam.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "100 000 fr.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "2 chamb.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier à Bafoussam ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Tamdja stp.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Le pluto possible.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui merci.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Recherche enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

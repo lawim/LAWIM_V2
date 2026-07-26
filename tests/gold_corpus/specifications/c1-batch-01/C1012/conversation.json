@@ -1,0 +1,85 @@
+{
+  "id": "C1012",
+  "category": "seller",
+  "level": "medium",
+  "channel": "telegram",
+  "language": "en",
+  "description": "English seller conversation",
+  "tags": [
+    "seller",
+    "english",
+    "sell"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "I want to sell my house in Douala.",
+      "intent": "SELL_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "What price are you asking?",
+      "intent": "ASK_PRICE"
+    },
+    {
+      "role": "user",
+      "text": "35 million FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Are you the owner or authorized agent?",
+      "intent": "ASK_OWNERSHIP"
+    },
+    {
+      "role": "user",
+      "text": "I am the owner.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Which area is the house in?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Makepe.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "How many bedrooms?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "4 bedrooms.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "How should we contact you?",
+      "intent": "ASK_CONTACT_PREFERENCE"
+    },
+    {
+      "role": "user",
+      "text": "By phone.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Would you like to register this sale listing?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Yes.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Your listing has been registered.",
+      "intent": "NONE"
+    }
+  ]
+}

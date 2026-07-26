@@ -1,0 +1,11 @@
+{
+  "conversation_id": "C1015",
+  "language": "en",
+  "expected_facts": {
+    "city": "Douala",
+    "budget": 2
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

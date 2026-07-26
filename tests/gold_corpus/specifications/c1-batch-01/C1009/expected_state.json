@@ -1,0 +1,17 @@
+{
+  "conversation_id": "C1009",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "commercial",
+    "city": "Douala",
+    "budget": 50,
+    "preferred_areas": [
+      "Akwa",
+      "Bonanjo"
+    ]
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

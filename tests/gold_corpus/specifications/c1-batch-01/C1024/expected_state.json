@@ -1,0 +1,17 @@
+{
+  "conversation_id": "C1024",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "studio",
+    "city": "Douala",
+    "preferred_areas": [
+      "Akwa"
+    ],
+    "budget": 80000,
+    "move_in_date": "Août"
+  },
+  "intent": "property_search",
+  "qualification_status": "complete",
+  "next_action": "create_search_request"
+}

@@ -1,0 +1,44 @@
+{
+  "id": "C1014",
+  "category": "visit",
+  "level": "easy",
+  "channel": "whatsapp",
+  "language": "fr",
+  "description": "Demande de visite rapide pour une maison",
+  "tags": [
+    "visit",
+    "quick"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux visiter la maison ref PROP-2002 à Yaoundé samedi.",
+      "intent": "SCHEDULE_VISIT"
+    },
+    {
+      "role": "assistant",
+      "text": "À quelle heure samedi ?",
+      "intent": "ASK_VISIT_TIME"
+    },
+    {
+      "role": "user",
+      "text": "15 h.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer la visite pour samedi 15 h ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La demande de visite a été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "id": "C1001",
+  "category": "memory",
+  "level": "medium",
+  "channel": "web",
+  "language": "fr",
+  "description": "Retour après interruption: l'utilisateur donne des critères, s'interrompt, puis reprend",
+  "tags": [
+    "memory",
+    "persistence",
+    "confirmation"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement à louer à Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel souhaitez-vous consacrer à cette location ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "150 000 FCFA maximum.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres souhaitez-vous ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "2 pièces.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier préférez-vous à Douala ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Je reviens vers vous, je vérifie mes disponibilités.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Pas de problème, je garde vos critères en mémoire. Vous cherchez un appartement à Douala, budget 150 000 FCFA, deux pièces.",
+      "intent": "ACKNOWLEDGE"
+    },
+    {
+      "role": "user",
+      "text": "Bonjour, je reprends. Je veux le quartier Makepe.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Le mois prochain.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous que j'enregistre cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "id": "C1025",
+  "category": "idempotence",
+  "level": "medium",
+  "channel": "whatsapp",
+  "language": "fr",
+  "description": "Refus après confirmation - idempotence de la non-action",
+  "tags": [
+    "idempotence",
+    "refusal",
+    "no_action"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche une maison à louer à Yaoundé, budget 350 000, 3 chambres, Bastos.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En septembre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Merci, mais pas maintenant.",
+      "intent": "REFUSE"
+    },
+    {
+      "role": "assistant",
+      "text": "Aucune recherche n'a été créée. N'hésitez pas à revenir.",
+      "intent": "NONE"
+    }
+  ]
+}

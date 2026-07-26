@@ -1,0 +1,75 @@
+{
+  "id": "C1004",
+  "category": "multilingual",
+  "level": "easy",
+  "channel": "telegram",
+  "language": "en",
+  "description": "English rental conversation in Douala",
+  "tags": [
+    "english",
+    "rental",
+    "multilingual"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "I am looking for a house to rent in Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "What is your maximum monthly budget?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "300,000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "How many bedrooms do you need?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "Three bedrooms.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Which area do you prefer?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "When would you like to move in?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Next month.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Would you like me to register this search?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Yes, please.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Your search request has been registered.",
+      "intent": "NONE"
+    }
+  ]
+}
