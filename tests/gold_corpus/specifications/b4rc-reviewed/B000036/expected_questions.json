@@ -1,0 +1,27 @@
+{
+  "conversation_id": "B000036",
+  "total_questions": 4,
+  "maximum_questions": 4,
+  "questions": [
+    {
+      "turn": 2,
+      "question": "Quel prix souhaitez-vous demander ?",
+      "expected_pending": "ASK_PRICE"
+    },
+    {
+      "turn": 4,
+      "question": "Êtes-vous bien le propriétaire ou son mandataire autorisé ?",
+      "expected_pending": "ASK_OWNERSHIP"
+    },
+    {
+      "turn": 6,
+      "question": "Par quel canal préférez-vous être recontacté ?",
+      "expected_pending": "ASK_CONTACT_PREFERENCE"
+    },
+    {
+      "turn": 8,
+      "question": "Je récapitule : mise en vente d’un maison à Melen, Yaoundé, prix demandé 15 000 000 FCFA. Souhaitez-vous enregistrer cette demande ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}

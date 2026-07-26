@@ -1,0 +1,37 @@
+{
+  "conversation_id": "B000111",
+  "total_questions": 6,
+  "maximum_questions": 6,
+  "questions": [
+    {
+      "turn": 2,
+      "question": "Quel budget mensuel ?",
+      "expected_pending": "ASK_BUDGET"
+    },
+    {
+      "turn": 4,
+      "question": "Combien de chambres ?",
+      "expected_pending": "ASK_BEDROOMS"
+    },
+    {
+      "turn": 6,
+      "question": "Quel quartier préférez-vous ?",
+      "expected_pending": "ASK_AREAS"
+    },
+    {
+      "turn": 8,
+      "question": "Quand souhaitez-vous emménager ?",
+      "expected_pending": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "turn": 10,
+      "question": "Récapitulatif : location, appartement, à Kribi, budget 100 000 FCFA, 1 chambre(s), zones Dombe, entrée octobre. Enregistrer ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "turn": 12,
+      "question": "Les deux corrections sont prises en compte : location, appartement, à Kribi, budget 120 000 FCFA, 1 chambre(s), zones Mboamanga, entrée octobre. Enregistrer ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}

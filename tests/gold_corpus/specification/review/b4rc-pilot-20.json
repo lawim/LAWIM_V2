@@ -1,0 +1,212 @@
+{
+  "pilot": {
+    "name": "LCIP B.4R-C Supervised Specification Repair Pilot",
+    "date": "2026-07-26",
+    "total_selected": 20,
+    "total_unique": 20,
+    "selection_criteria": {
+      "simple_block1": 5,
+      "correction_block2": 5,
+      "english": 2,
+      "pcm": 2,
+      "refusal_cancellation": 2,
+      "clarification": 2,
+      "correction_after_recap": 1,
+      "transaction_switch": 1,
+      "note": "B000121 counted in both correction_block2 and correction_after_recap; 20 unique IDs via B000036 (sale)"
+    }
+  },
+  "conversations": [
+    {
+      "conversation_id": "B000001",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "simple_block1",
+      "language": "fr",
+      "turn_count": 12,
+      "selection_reason": "Simple rental qualification, multi-area (Melen/Ngoa-Ekellé), complete flow with confirmation"
+    },
+    {
+      "conversation_id": "B000002",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "simple_block1",
+      "language": "fr",
+      "turn_count": 12,
+      "selection_reason": "Simple studio rental with semantic edge case (3 bedrooms for studio)"
+    },
+    {
+      "conversation_id": "B000004",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "simple_block1",
+      "language": "fr",
+      "turn_count": 12,
+      "selection_reason": "Simple rental with grammatical error (1 chambres)"
+    },
+    {
+      "conversation_id": "B000005",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "simple_block1",
+      "language": "fr",
+      "turn_count": 12,
+      "selection_reason": "Simple rental Yaoundé, complete qualification cycle"
+    },
+    {
+      "conversation_id": "B000021",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "simple_block1",
+      "language": "fr",
+      "turn_count": 10,
+      "selection_reason": "Purchase flow (achat), different transaction type from rental"
+    },
+    {
+      "conversation_id": "B000056",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "source_block": 2,
+      "category": "correction_block2",
+      "language": "fr",
+      "turn_count": 8,
+      "selection_reason": "Correction after recap: budget and area changed simultaneously"
+    },
+    {
+      "conversation_id": "B000057",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "source_block": 2,
+      "category": "correction_block2",
+      "language": "fr",
+      "turn_count": 8,
+      "selection_reason": "Correction variant with different values (210K instead of 200K)"
+    },
+    {
+      "conversation_id": "B000101",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "source_block": 2,
+      "category": "correction_block2",
+      "language": "fr",
+      "turn_count": 12,
+      "selection_reason": "Single fact correction (budget only 100K->120K), explicit confirmation"
+    },
+    {
+      "conversation_id": "B000111",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "source_block": 2,
+      "category": "correction_block2",
+      "language": "fr",
+      "turn_count": 14,
+      "selection_reason": "Double fact correction (budget+area) in single user message"
+    },
+    {
+      "conversation_id": "B000121",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "source_block": 2,
+      "category": "correction_block2",
+      "language": "fr",
+      "turn_count": 8,
+      "selection_reason": "Correction after recap: sequential multi-turn corrections (bedrooms then move-in date)"
+    },
+    {
+      "conversation_id": "B000089",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "english",
+      "language": "en",
+      "turn_count": 12,
+      "selection_reason": "Full English rental flow with FCFA currency, Telegram channel"
+    },
+    {
+      "conversation_id": "B000090",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "english",
+      "language": "en",
+      "turn_count": 12,
+      "selection_reason": "English rental flow, variant of B000089"
+    },
+    {
+      "conversation_id": "B000095",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "pcm",
+      "language": "pcm",
+      "turn_count": 12,
+      "selection_reason": "Cameroonian Pidgin (PCM) rental flow, WhatsApp channel"
+    },
+    {
+      "conversation_id": "B000096",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "pcm",
+      "language": "pcm",
+      "turn_count": 12,
+      "selection_reason": "PCM rental Douala, variant of PCM dialogue"
+    },
+    {
+      "conversation_id": "B000076",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "refusal_cancellation",
+      "language": "fr",
+      "turn_count": 6,
+      "selection_reason": "User provides full details then refuses registration and cancels entirely"
+    },
+    {
+      "conversation_id": "B000077",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "refusal_cancellation",
+      "language": "fr",
+      "turn_count": 6,
+      "selection_reason": "Refusal variant, tests no_business_action path"
+    },
+    {
+      "conversation_id": "B000066",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "clarification",
+      "language": "fr",
+      "turn_count": 18,
+      "selection_reason": "Ambiguous search, progressive qualification through 9 turns"
+    },
+    {
+      "conversation_id": "B000083",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "clarification",
+      "language": "fr",
+      "turn_count": 12,
+      "selection_reason": "SERVICE_RESTART event, persistence test"
+    },
+    {
+      "conversation_id": "B000131",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "source_block": 2,
+      "category": "transaction_switch",
+      "language": "fr",
+      "turn_count": 12,
+      "selection_reason": "Transaction type switch: rental -> purchase after recap"
+    },
+    {
+      "conversation_id": "B000036",
+      "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "source_block": 1,
+      "category": "other",
+      "language": "fr",
+      "turn_count": 10,
+      "selection_reason": "Sale/vente flow (owner selling property), distinct transaction type"
+    }
+  ],
+  "unique_conversation_ids": [
+    "B000001", "B000002", "B000004", "B000005", "B000021",
+    "B000056", "B000057", "B000101", "B000111", "B000121",
+    "B000089", "B000090",
+    "B000095", "B000096",
+    "B000076", "B000077",
+    "B000066", "B000083",
+    "B000131", "B000036"
+  ],
+  "placeholders_found": 0,
+  "real_dialogues": 20
+}

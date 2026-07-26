@@ -1,0 +1,47 @@
+{
+  "conversation_id": "B000066",
+  "total_questions": 8,
+  "maximum_questions": 8,
+  "questions": [
+    {
+      "turn": 2,
+      "question": "Cherchez-vous à louer ou à acheter ?",
+      "expected_pending": "CLARIFY_TRANSACTION"
+    },
+    {
+      "turn": 4,
+      "question": "Quel type de bien recherchez-vous ?",
+      "expected_pending": "CLARIFY_PROPERTY_TYPE"
+    },
+    {
+      "turn": 6,
+      "question": "Par exemple un studio, une chambre moderne ou un appartement ?",
+      "expected_pending": "CLARIFY_PROPERTY_TYPE"
+    },
+    {
+      "turn": 8,
+      "question": "Dans quelle ville ?",
+      "expected_pending": "ASK_CITY"
+    },
+    {
+      "turn": 10,
+      "question": "Quel budget maximal ?",
+      "expected_pending": "ASK_BUDGET"
+    },
+    {
+      "turn": 12,
+      "question": "Quel quartier préférez-vous ?",
+      "expected_pending": "ASK_AREAS"
+    },
+    {
+      "turn": 14,
+      "question": "Quand souhaitez-vous emménager ?",
+      "expected_pending": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "turn": 16,
+      "question": "Souhaitez-vous que j’enregistre cette recherche de studio ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}

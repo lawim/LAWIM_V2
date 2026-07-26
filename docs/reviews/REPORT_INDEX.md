@@ -25,6 +25,9 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 | 2026-07-26 | LCIP A.3R-C — Clôture Moteur Certification Runtime | 473b2722 | main | docs/reviews/lcip-a3r-completion/REPORT.md | docs/reviews/lcip-a3r-completion/details/ | docs/reviews/lcip-a3r-completion/evidence/ | PASS |
 | 2026-07-26 | LCIP B.2 — Certification Runtime 200 Dialogues Réels | 303f9ae6 | main | docs/reviews/lcip-b2-runtime-certification/REPORT.md | docs/reviews/lcip-b2-runtime-certification/details/ | docs/reviews/lcip-b2-runtime-certification/evidence/ | PASS |
 | 2026-07-26 | LCIP B.3 — Réconciliation Canonique Expected/Actual | 820fd751 | feature/lcip-b3-expected-actual-reconciliation-20260726 | docs/reviews/lcip-b3-canonical-reconciliation/REPORT.md | docs/reviews/lcip-b3-canonical-reconciliation/details/ | docs/reviews/lcip-b3-canonical-reconciliation/evidence/ | PASS |
+| 2026-07-26 | LCIP B.4 — Reconstruction Indépendante Spécifications Gold | e52b6c57 | feature/lcip-b4-gold-spec-reconstruction-20260726 | docs/reviews/lcip-b4-specification-reconstruction/REPORT.md | docs/reviews/lcip-b4-specification-reconstruction/details/ | docs/reviews/lcip-b4-specification-reconstruction/evidence/ | PARTIAL |
+| 2026-07-26 | LCIP B.4R — Réparation Spécifications Gold 200 Dialogues | e52b6c57 | feature/lcip-b4r-spec-repair-20260726 | docs/reviews/lcip-b4r-spec-repair/REPORT.md | docs/reviews/lcip-b4r-spec-repair/details/ | docs/reviews/lcip-b4r-spec-repair/evidence/ | PARTIAL |
+| 2026-07-26 | LCIP B.4R-C — Supervised Spec Repair Pilot | e52b6c57 | feature/lcip-b4r-spec-repair-20260726 | docs/reviews/lcip-b4rc-supervised-spec-repair/REPORT.md | docs/reviews/lcip-b4rc-supervised-spec-repair/details/ | docs/reviews/lcip-b4rc-supervised-spec-repair/evidence/ | PARTIAL |
 
 ---
 

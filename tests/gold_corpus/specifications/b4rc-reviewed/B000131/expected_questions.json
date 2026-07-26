@@ -1,0 +1,32 @@
+{
+  "conversation_id": "B000131",
+  "total_questions": 5,
+  "maximum_questions": 5,
+  "questions": [
+    {
+      "turn": 2,
+      "question": "Quel est votre budget de location ?",
+      "expected_pending": "ASK_BUDGET"
+    },
+    {
+      "turn": 4,
+      "question": "Souhaitez-vous préciser un quartier ?",
+      "expected_pending": "ASK_AREAS"
+    },
+    {
+      "turn": 6,
+      "question": "Je récapitule : location, terrain, à Kribi, budget 100 000 FCFA, zones Dombe, entrée septembre. Enregistrer ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "turn": 8,
+      "question": "D'accord, je remplace la location par un achat. Quel est votre budget d'achat ?",
+      "expected_pending": "ASK_BUDGET"
+    },
+    {
+      "turn": 10,
+      "question": "Nouveau récapitulatif : achat, terrain, à Kribi, budget 12 000 000 FCFA, zones Dombe. Souhaitez-vous enregistrer la recherche d'achat ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "conversation_id": "B000090",
+  "assertions": [
+    {
+      "id": "B000090-LANG-001",
+      "description": "Language is en",
+      "expected": "en"
+    },
+    {
+      "id": "B000090-BIZ-001",
+      "description": "Business action is CREATE_SEARCH",
+      "expected": "CREATE_SEARCH"
+    },
+    {
+      "id": "B000090-BIZ-002",
+      "description": "Business object count is 1",
+      "expected": 1
+    },
+    {
+      "id": "B000090-LAST-001",
+      "description": "Last Assistant intent is NONE",
+      "expected": "NONE"
+    }
+  ]
+}

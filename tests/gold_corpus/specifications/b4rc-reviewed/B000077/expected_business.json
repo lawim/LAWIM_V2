@@ -1,0 +1,9 @@
+{
+  "conversation_id": "B000077",
+  "expected_business_action": "NONE",
+  "expected_business_object_count": 0,
+  "final_ask_turn": 2,
+  "consent_turn": null,
+  "required_facts_complete": false,
+  "correction_in_confirmation": false
+}

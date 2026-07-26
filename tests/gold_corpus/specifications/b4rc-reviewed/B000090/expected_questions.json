@@ -1,0 +1,32 @@
+{
+  "conversation_id": "B000090",
+  "total_questions": 5,
+  "maximum_questions": 5,
+  "questions": [
+    {
+      "turn": 2,
+      "question": "What is your maximum monthly budget?",
+      "expected_pending": "ASK_BUDGET"
+    },
+    {
+      "turn": 4,
+      "question": "How many bedrooms do you need?",
+      "expected_pending": "ASK_BEDROOMS"
+    },
+    {
+      "turn": 6,
+      "question": "Which area do you prefer?",
+      "expected_pending": "ASK_AREAS"
+    },
+    {
+      "turn": 8,
+      "question": "When would you like to move in?",
+      "expected_pending": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "turn": 10,
+      "question": "Would you like me to register this search?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}

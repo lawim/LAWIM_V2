@@ -1,0 +1,61 @@
+{
+  "conversation_id": "B000036",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "sell",
+    "property_type": "house",
+    "city": "Yaoundé",
+    "preferred_areas": [
+      "Melen"
+    ],
+    "move_in_date": "Mai",
+    "budget": 15000,
+    "price": 15000,
+    "is_owner": true
+  },
+  "qualification_status": "complete",
+  "provenance": {
+    "transaction_type": {
+      "value": "sell",
+      "source_rule": "EXP-0001",
+      "confidence": 1.0
+    },
+    "property_type": {
+      "value": "house",
+      "source_rule": "EXP-0002",
+      "confidence": 1.0
+    },
+    "city": {
+      "value": "Yaoundé",
+      "source_rule": "EXP-0003",
+      "confidence": 1.0
+    },
+    "preferred_areas": {
+      "value": [
+        "Melen"
+      ],
+      "source_rule": "EXP-0006",
+      "confidence": 1.0
+    },
+    "move_in_date": {
+      "value": "Mai",
+      "source_rule": "EXP-0000",
+      "confidence": 1.0
+    },
+    "budget": {
+      "value": 15000,
+      "source_rule": "EXP-0004",
+      "confidence": 1.0
+    },
+    "price": {
+      "value": 15000,
+      "source_rule": "EXP-0000",
+      "confidence": 1.0
+    },
+    "is_owner": {
+      "value": true,
+      "source_rule": "EXP-0000",
+      "confidence": 1.0
+    }
+  }
+}

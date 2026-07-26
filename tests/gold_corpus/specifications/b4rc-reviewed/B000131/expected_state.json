@@ -1,0 +1,43 @@
+{
+  "conversation_id": "B000131",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "land",
+    "city": "Kribi",
+    "budget": 12000,
+    "preferred_areas": [
+      "Dombe"
+    ]
+  },
+  "qualification_status": "complete",
+  "provenance": {
+    "transaction_type": {
+      "value": "rent",
+      "source_rule": "EXP-0001",
+      "confidence": 1.0
+    },
+    "property_type": {
+      "value": "land",
+      "source_rule": "EXP-0002",
+      "confidence": 1.0
+    },
+    "city": {
+      "value": "Kribi",
+      "source_rule": "EXP-0003",
+      "confidence": 1.0
+    },
+    "budget": {
+      "value": 12000,
+      "source_rule": "EXP-0004",
+      "confidence": 1.0
+    },
+    "preferred_areas": {
+      "value": [
+        "Dombe"
+      ],
+      "source_rule": "EXP-0006",
+      "confidence": 1.0
+    }
+  }
+}

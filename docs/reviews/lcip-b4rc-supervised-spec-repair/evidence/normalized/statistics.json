@@ -1,0 +1,18 @@
+{
+  "total_pilot": 20,
+  "derivation_rules": 20,
+  "derivation_rule_tests": 40,
+  "derivation_rule_pass": 40,
+  "derivation_rule_fail": 0,
+  "review_files_created": 20,
+  "human_review_approved": 20,
+  "human_review_repair_required": 0,
+  "human_review_source_ambiguous": 0,
+  "human_review_out_of_scope": 0,
+  "spec_static_approved": 20,
+  "spec_static_repair_required": 0,
+  "spec_static_invalid": 0,
+  "normalizer_errors": 0,
+  "comparator_errors": 0,
+  "tautology_detected": 0
+}

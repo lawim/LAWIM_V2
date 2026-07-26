@@ -1,0 +1,22 @@
+{
+  "conversation_id": "B000056",
+  "total_questions": 3,
+  "maximum_questions": 3,
+  "questions": [
+    {
+      "turn": 2,
+      "question": "À partir de quand souhaitez-vous emménager ?",
+      "expected_pending": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "turn": 4,
+      "question": "Je récapitule : appartement à Bastos, deux chambres, budget 150 000 FCFA, entrée en octobre. Souhaitez-vous enregistrer ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "turn": 6,
+      "question": "Correction prise en compte : budget 200 000 FCFA, zone Melen. Souhaitez-vous maintenant enregistrer la recherche ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}

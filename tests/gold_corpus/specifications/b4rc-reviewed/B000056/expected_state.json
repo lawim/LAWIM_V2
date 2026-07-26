@@ -1,0 +1,57 @@
+{
+  "conversation_id": "B000056",
+  "language": "fr",
+  "expected_facts": {
+    "transaction_type": "rent",
+    "property_type": "apartment",
+    "city": "Yaoundé",
+    "budget": 200000,
+    "bedrooms": 1,
+    "preferred_areas": [
+      "Melen",
+      "Bastos"
+    ],
+    "move_in_date": "Octobre"
+  },
+  "qualification_status": "complete",
+  "provenance": {
+    "transaction_type": {
+      "value": "rent",
+      "source_rule": "EXP-0001",
+      "confidence": 1.0
+    },
+    "property_type": {
+      "value": "apartment",
+      "source_rule": "EXP-0002",
+      "confidence": 1.0
+    },
+    "city": {
+      "value": "Yaoundé",
+      "source_rule": "EXP-0003",
+      "confidence": 1.0
+    },
+    "budget": {
+      "value": 200000,
+      "source_rule": "EXP-0004",
+      "confidence": 1.0
+    },
+    "bedrooms": {
+      "value": 1,
+      "source_rule": "EXP-0005",
+      "confidence": 1.0
+    },
+    "preferred_areas": {
+      "value": [
+        "Melen",
+        "Bastos"
+      ],
+      "source_rule": "EXP-0006",
+      "confidence": 1.0
+    },
+    "move_in_date": {
+      "value": "Octobre",
+      "source_rule": "EXP-0000",
+      "confidence": 1.0
+    }
+  }
+}

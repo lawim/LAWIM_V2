@@ -1,0 +1,6 @@
+{
+  "conversation_id": "B000066",
+  "expected_turn_count": 18,
+  "expected_final_intent": "NONE",
+  "expected_business_action": "CREATE_SEARCH"
+}

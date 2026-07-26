@@ -1,0 +1,27 @@
+{
+  "conversation_id": "B000021",
+  "total_questions": 4,
+  "maximum_questions": 4,
+  "questions": [
+    {
+      "turn": 2,
+      "question": "Quel est votre budget d’achat ?",
+      "expected_pending": "ASK_BUDGET"
+    },
+    {
+      "turn": 4,
+      "question": "Avez-vous des quartiers préférés ?",
+      "expected_pending": "ASK_AREAS"
+    },
+    {
+      "turn": 6,
+      "question": "Combien de chambres minimum ?",
+      "expected_pending": "ASK_BEDROOMS"
+    },
+    {
+      "turn": 8,
+      "question": "Je récapitule : achat d’un maison à Yaoundé, budget maximal 12 000 000 FCFA, zones Bastos ou Mvan, trois chambres minimum. Souhaitez-vous enregistrer cette recherche ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}

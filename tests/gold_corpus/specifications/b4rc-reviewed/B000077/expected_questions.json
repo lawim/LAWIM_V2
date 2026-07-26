@@ -1,0 +1,12 @@
+{
+  "conversation_id": "B000077",
+  "total_questions": 1,
+  "maximum_questions": 1,
+  "questions": [
+    {
+      "turn": 2,
+      "question": "Souhaitez-vous que j’enregistre cette recherche ?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}

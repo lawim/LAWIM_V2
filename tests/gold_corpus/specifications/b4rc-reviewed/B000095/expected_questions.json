@@ -1,0 +1,32 @@
+{
+  "conversation_id": "B000095",
+  "total_questions": 5,
+  "maximum_questions": 5,
+  "questions": [
+    {
+      "turn": 2,
+      "question": "How much you fit pay every month?",
+      "expected_pending": "ASK_BUDGET"
+    },
+    {
+      "turn": 4,
+      "question": "How many bedroom you need?",
+      "expected_pending": "ASK_BEDROOMS"
+    },
+    {
+      "turn": 6,
+      "question": "Which area you prefer?",
+      "expected_pending": "ASK_AREAS"
+    },
+    {
+      "turn": 8,
+      "question": "Which time you wan enter the house?",
+      "expected_pending": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "turn": 10,
+      "question": "I don note am. You wan make I register this search?",
+      "expected_pending": "CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}
