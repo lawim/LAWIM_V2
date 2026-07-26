@@ -29,6 +29,7 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 | 2026-07-26 | LCIP B.4R — Réparation Spécifications Gold 200 Dialogues | e52b6c57 | feature/lcip-b4r-spec-repair-20260726 | docs/reviews/lcip-b4r-spec-repair/REPORT.md | docs/reviews/lcip-b4r-spec-repair/details/ | docs/reviews/lcip-b4r-spec-repair/evidence/ | PARTIAL |
 | 2026-07-26 | LCIP B.4R-C — Supervised Spec Repair Pilot | e52b6c57 | feature/lcip-b4r-spec-repair-20260726 | docs/reviews/lcip-b4rc-supervised-spec-repair/REPORT.md | docs/reviews/lcip-b4rc-supervised-spec-repair/details/ | docs/reviews/lcip-b4rc-supervised-spec-repair/evidence/ | PARTIAL |
 | 2026-07-26 | LCIP B.4R-E — Runtime Pilot Execution | 8795a09b | feature/lcip-b4r-spec-repair-20260726 | docs/reviews/lcip-b4re-runtime-pilot/REPORT.md | docs/reviews/lcip-b4re-runtime-pilot/details/ | docs/reviews/lcip-b4re-runtime-pilot/evidence/ | PASS |
+| 2026-07-26 | LCIP B.4R-F — Restart & Idempotence Validation | 312d22ec | feature/lcip-b4r-spec-repair-20260726 | docs/reviews/lcip-b4rf-restart-idempotence/REPORT.md | docs/reviews/lcip-b4rf-restart-idempotence/details/ | docs/reviews/lcip-b4rf-restart-idempotence/evidence/ | PASS |
 
 ---
 

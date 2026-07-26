@@ -1,0 +1,26 @@
+{
+  "total_conversations": 20,
+  "idempotence_scenarios": 20,
+  "idempotence_executed": 20,
+  "idempotence_counts": {
+    "PASS": 18,
+    "PASS_NO_OBJECTS": 2
+  },
+  "idempotence_pass": 18,
+  "idempotence_fail": 0,
+  "idempotence_pass_no_objects": 2,
+  "second_objects": 0,
+  "second_create_calls": 0,
+  "object_id_mismatches": 0,
+  "restart_scenarios": 1,
+  "restart_executed": 1,
+  "restart_pass": 1,
+  "restart_fail": 0,
+  "runtime_recreated": true,
+  "state_reloaded_from_sqlite": true,
+  "facts_restored": false,
+  "pending_restored": false,
+  "language_restored": true,
+  "final_object_unique": true,
+  "total_duration_ms": 1137.770414352417
+}

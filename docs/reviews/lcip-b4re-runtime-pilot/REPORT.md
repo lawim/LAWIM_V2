@@ -50,7 +50,8 @@ NOT_EXECUTABLE       : 0
 **Verdicts :**
 - Campagne : `LCIP_B4RE_RUNTIME_PILOT_PASS` — toutes exécutables et exécutées
 - Pilote : `LCIP_B4RE_PILOT_CERTIFICATION_PARTIAL` — 20 FTV (divergences textuelles)
-- Runtime : `LCIP_B4RE_RUNTIME_NOT_RUN` — annulé (toutes exécutées avec succès)
+- Runtime : `LCIP_B4RE_RUNTIME_EXECUTION_PASS` — toutes exécutées avec succès
+- Idem/Restart : `LCIP_B4RE_RESTART_IDEMPOTENCE_VALIDATION_PENDING` — validé dans B.4R-F
 
 ---
 
