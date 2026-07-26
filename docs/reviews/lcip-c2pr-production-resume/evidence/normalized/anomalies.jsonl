@@ -1,0 +1,1 @@
+{"id": "P-R01", "severity": "INFO", "description": "Deployment compose targets V3 Dockerfile not compatible with V2 main", "blocking": false}

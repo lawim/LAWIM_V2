@@ -1,0 +1,8 @@
+{
+  "git_sync": "PASS",
+  "ovh_access": "PASS",
+  "ovh_git_head": "dc9caee6",
+  "container_build": "FAILED",
+  "healthz": "200",
+  "gate_verdict": "C2PR_PRODUCTION_GATE_PARTIAL"
+}

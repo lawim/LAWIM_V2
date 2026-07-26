@@ -1,0 +1,65 @@
+[
+  {
+    "control_id": "PR-0001",
+    "path": "normalized/anomalies.jsonl",
+    "size": 142,
+    "sha256": "8ee736f1dcf0b190676e096acaa0322f33fddc0d62bb8b2ed5528c13113c87de",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PR-0002",
+    "path": "normalized/final-production-gate.json",
+    "size": 179,
+    "sha256": "db6b413ba0ad7e3b2bc04106acf474665e5683901b09614ef7f41e92027dba15",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PR-0003",
+    "path": "normalized/git-sync-results.json",
+    "size": 63,
+    "sha256": "a65748296069a30ef94fd3e21bed25fcf938ffc23d2f881010630b068088434c",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PR-0004",
+    "path": "normalized/health-results.jsonl",
+    "size": 37,
+    "sha256": "dd75751893f41955d02a939486254aa2dfd0e7f25481c124263204fb20c1285b",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PR-0005",
+    "path": "normalized/runtime-checksum-results.jsonl",
+    "size": 68,
+    "sha256": "74b2a359f91f6917d1bc818dc2a9e41f093b21beccca78688b62d74cc77d52df",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PR-0006",
+    "path": "normalized/statistics.json",
+    "size": 131,
+    "sha256": "6c55f2a621f407ac1c2bd1c7e01e81cc2452c4a4bfb4b1d1d5a9141c74698a3c",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "PR-0007",
+    "path": "raw/ovh/state-after.txt",
+    "size": 129,
+    "sha256": "f4b1cd6fbcc4b72591c718e146bc386d691e08f447d40746f71f6320da3405eb",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  }
+]
