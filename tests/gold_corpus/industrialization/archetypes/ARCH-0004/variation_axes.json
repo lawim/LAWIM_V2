@@ -1,0 +1,11 @@
+{
+  "forced_axes": [
+    "city",
+    "budget"
+  ],
+  "recommended_axes": [
+    "area",
+    "formulation"
+  ],
+  "minimum_variations": 3
+}

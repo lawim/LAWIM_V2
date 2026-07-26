@@ -1,0 +1,28 @@
+{
+  "axes": [
+    "city",
+    "district",
+    "budget",
+    "bedrooms",
+    "property_type",
+    "transaction",
+    "information_order",
+    "turn_count",
+    "wording",
+    "detail_level",
+    "language",
+    "language_switch",
+    "channel",
+    "tone",
+    "correction",
+    "hesitation",
+    "contradiction",
+    "refusal",
+    "confirmation",
+    "move_in_date",
+    "user_goal"
+  ],
+  "standard_minimum": 3,
+  "advanced_minimum": 5,
+  "expert_minimum": 7
+}

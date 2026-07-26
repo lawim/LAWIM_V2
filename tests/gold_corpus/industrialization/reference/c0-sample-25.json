@@ -1,0 +1,227 @@
+[
+  {
+    "conversation_id": "C1001",
+    "dialogue_hash": "5df2416ba2a73dbe",
+    "specification_hash": "d3edfee21f6cfb20",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1002",
+    "dialogue_hash": "c3a946bc75c33f32",
+    "specification_hash": "b3a9ad3244244ad5",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1003",
+    "dialogue_hash": "2c2ed12188ba9586",
+    "specification_hash": "aa62c56524b197dc",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1004",
+    "dialogue_hash": "d66a81d982c82db8",
+    "specification_hash": "3fd841aa254fee90",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1005",
+    "dialogue_hash": "76846016e9fbe491",
+    "specification_hash": "0878d4c133bf4264",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1006",
+    "dialogue_hash": "90d00d42e7b85372",
+    "specification_hash": "9e964ddf647c6b8a",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1007",
+    "dialogue_hash": "03b74fd2405bf8ab",
+    "specification_hash": "b512318e55a36aaf",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1008",
+    "dialogue_hash": "b1b333e4fcd0291f",
+    "specification_hash": "9b475818c35d567d",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1009",
+    "dialogue_hash": "15a7c45aa5851c1e",
+    "specification_hash": "c6b1016af7b58751",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1010",
+    "dialogue_hash": "d7710fd30acec4c2",
+    "specification_hash": "9d9bf122c495c667",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1011",
+    "dialogue_hash": "25384452a911469b",
+    "specification_hash": "fe2dc9c9c68ec571",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1012",
+    "dialogue_hash": "d4e56ade4bca0fb1",
+    "specification_hash": "080ce7e9401447de",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1013",
+    "dialogue_hash": "43bfb3e11c7bf4e3",
+    "specification_hash": "5f8d4e5953dd0d6f",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1014",
+    "dialogue_hash": "7eb2e5873fd93b3e",
+    "specification_hash": "0d9b96f016911181",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1015",
+    "dialogue_hash": "1430eb2dd9b27766",
+    "specification_hash": "1501749948c0d3ff",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1016",
+    "dialogue_hash": "f1cb437177938776",
+    "specification_hash": "86345864bea20bd4",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1017",
+    "dialogue_hash": "89561bcda23f5510",
+    "specification_hash": "4f804d8188333c2c",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1018",
+    "dialogue_hash": "96a2259681d2cdde",
+    "specification_hash": "76c86eaf7bbdc77b",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1019",
+    "dialogue_hash": "64a0cb0064e615c8",
+    "specification_hash": "7483b8cb7d64a507",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1020",
+    "dialogue_hash": "a1e14987d577abfd",
+    "specification_hash": "6d9142ffe8dab865",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1021",
+    "dialogue_hash": "56214fefb5144504",
+    "specification_hash": "b423462a359601a5",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1022",
+    "dialogue_hash": "f898db7829367ef1",
+    "specification_hash": "9b5e414e50038401",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "PASS"
+  },
+  {
+    "conversation_id": "C1023",
+    "dialogue_hash": "fbc3b78a792da83e",
+    "specification_hash": "2f5e20dbf35a8448",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "PASS"
+  },
+  {
+    "conversation_id": "C1024",
+    "dialogue_hash": "a48bb1a2227abd39",
+    "specification_hash": "241a4f24ca5720df",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  },
+  {
+    "conversation_id": "C1025",
+    "dialogue_hash": "5c91cb809036798d",
+    "specification_hash": "c028821ce80f16ff",
+    "expected_classification": "RUNTIME_CERTIFIED",
+    "runtime_classification": "RUNTIME_CERTIFIED",
+    "idempotence_status": "PASS",
+    "restart_status": "N/A"
+  }
+]

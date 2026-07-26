@@ -1,0 +1,8 @@
+{
+  "allowed": [
+    "fr",
+    "en",
+    "pcm"
+  ],
+  "strict": true
+}

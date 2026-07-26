@@ -1,0 +1,62 @@
+[
+  {
+    "id": "studio",
+    "name_fr": "studio",
+    "name_en": "studio",
+    "name_pcm": "small house"
+  },
+  {
+    "id": "room",
+    "name_fr": "chambre",
+    "name_en": "room",
+    "name_pcm": "room"
+  },
+  {
+    "id": "apartment",
+    "name_fr": "appartement",
+    "name_en": "apartment",
+    "name_pcm": "appartment"
+  },
+  {
+    "id": "house",
+    "name_fr": "maison",
+    "name_en": "house",
+    "name_pcm": "house"
+  },
+  {
+    "id": "villa",
+    "name_fr": "villa",
+    "name_en": "villa",
+    "name_pcm": "villa"
+  },
+  {
+    "id": "land",
+    "name_fr": "terrain",
+    "name_en": "land",
+    "name_pcm": "land"
+  },
+  {
+    "id": "office",
+    "name_fr": "bureau",
+    "name_en": "office",
+    "name_pcm": "office"
+  },
+  {
+    "id": "commercial",
+    "name_fr": "commerce",
+    "name_en": "shop",
+    "name_pcm": "shop"
+  },
+  {
+    "id": "warehouse",
+    "name_fr": "entrepôt",
+    "name_en": "warehouse",
+    "name_pcm": "warehouse"
+  },
+  {
+    "id": "building",
+    "name_fr": "immeuble",
+    "name_en": "building",
+    "name_pcm": "building"
+  }
+]

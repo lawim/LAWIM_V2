@@ -1,0 +1,72 @@
+{"archetype_id": "ARCH-0001", "name": "Rent studio", "transaction": "rent", "property": "studio"}
+{"archetype_id": "ARCH-0002", "name": "Rent chambre", "transaction": "rent", "property": "room"}
+{"archetype_id": "ARCH-0003", "name": "Rent appartement", "transaction": "rent", "property": "apartment"}
+{"archetype_id": "ARCH-0004", "name": "Rent maison", "transaction": "rent", "property": "house"}
+{"archetype_id": "ARCH-0005", "name": "Rent villa", "transaction": "rent", "property": "villa"}
+{"archetype_id": "ARCH-0006", "name": "Rent terrain", "transaction": "rent", "property": "land"}
+{"archetype_id": "ARCH-0007", "name": "Rent bureau", "transaction": "rent", "property": "office"}
+{"archetype_id": "ARCH-0008", "name": "Rent commerce", "transaction": "rent", "property": "commercial"}
+{"archetype_id": "ARCH-0009", "name": "Buy studio", "transaction": "buy", "property": "studio"}
+{"archetype_id": "ARCH-0010", "name": "Buy chambre", "transaction": "buy", "property": "room"}
+{"archetype_id": "ARCH-0011", "name": "Buy appartement", "transaction": "buy", "property": "apartment"}
+{"archetype_id": "ARCH-0012", "name": "Buy maison", "transaction": "buy", "property": "house"}
+{"archetype_id": "ARCH-0013", "name": "Buy villa", "transaction": "buy", "property": "villa"}
+{"archetype_id": "ARCH-0014", "name": "Buy terrain", "transaction": "buy", "property": "land"}
+{"archetype_id": "ARCH-0015", "name": "Buy bureau", "transaction": "buy", "property": "office"}
+{"archetype_id": "ARCH-0016", "name": "Buy commerce", "transaction": "buy", "property": "commercial"}
+{"archetype_id": "ARCH-0017", "name": "Sell appartement", "transaction": "sell", "property": "apartment"}
+{"archetype_id": "ARCH-0018", "name": "Sell maison", "transaction": "sell", "property": "house"}
+{"archetype_id": "ARCH-0019", "name": "Sell villa", "transaction": "sell", "property": "villa"}
+{"archetype_id": "ARCH-0020", "name": "Sell terrain", "transaction": "sell", "property": "land"}
+{"archetype_id": "ARCH-0021", "name": "Sell bureau", "transaction": "sell", "property": "office"}
+{"archetype_id": "ARCH-0022", "name": "Sell commerce", "transaction": "sell", "property": "commercial"}
+{"archetype_id": "ARCH-0023", "name": "Visit studio", "transaction": "visit", "property": "studio"}
+{"archetype_id": "ARCH-0024", "name": "Visit chambre", "transaction": "visit", "property": "room"}
+{"archetype_id": "ARCH-0025", "name": "Visit appartement", "transaction": "visit", "property": "apartment"}
+{"archetype_id": "ARCH-0026", "name": "Visit maison", "transaction": "visit", "property": "house"}
+{"archetype_id": "ARCH-0027", "name": "Visit villa", "transaction": "visit", "property": "villa"}
+{"archetype_id": "ARCH-0028", "name": "Visit terrain", "transaction": "visit", "property": "land"}
+{"archetype_id": "ARCH-0029", "name": "Visit bureau", "transaction": "visit", "property": "office"}
+{"archetype_id": "ARCH-0030", "name": "Visit commerce", "transaction": "visit", "property": "commercial"}
+{"archetype_id": "ARCH-0031", "name": "Investment studio", "transaction": "investment", "property": "studio"}
+{"archetype_id": "ARCH-0032", "name": "Investment chambre", "transaction": "investment", "property": "room"}
+{"archetype_id": "ARCH-0033", "name": "Investment appartement", "transaction": "investment", "property": "apartment"}
+{"archetype_id": "ARCH-0034", "name": "Investment maison", "transaction": "investment", "property": "house"}
+{"archetype_id": "ARCH-0035", "name": "Investment villa", "transaction": "investment", "property": "villa"}
+{"archetype_id": "ARCH-0036", "name": "Investment terrain", "transaction": "investment", "property": "land"}
+{"archetype_id": "ARCH-0037", "name": "Investment bureau", "transaction": "investment", "property": "office"}
+{"archetype_id": "ARCH-0038", "name": "Investment commerce", "transaction": "investment", "property": "commercial"}
+{"archetype_id": "ARCH-0039", "name": "Ambigu\u00eft\u00e9 et clarification", "transaction": "rent", "property": "any"}
+{"archetype_id": "ARCH-0040", "name": "Refus apr\u00e8s qualification", "transaction": "rent", "property": "any"}
+{"archetype_id": "ARCH-0041", "name": "Code-switching FR/EN", "transaction": "rent", "property": "any"}
+{"archetype_id": "ARCH-0042", "name": "Buy office Variant 1", "transaction": "buy", "property": "office"}
+{"archetype_id": "ARCH-0043", "name": "Visit land Variant 2", "transaction": "visit", "property": "land"}
+{"archetype_id": "ARCH-0044", "name": "Rent office Variant 3", "transaction": "rent", "property": "office"}
+{"archetype_id": "ARCH-0045", "name": "Buy villa Variant 4", "transaction": "buy", "property": "villa"}
+{"archetype_id": "ARCH-0046", "name": "Buy land Variant 5", "transaction": "buy", "property": "land"}
+{"archetype_id": "ARCH-0047", "name": "Rent villa Variant 6", "transaction": "rent", "property": "villa"}
+{"archetype_id": "ARCH-0048", "name": "Visit villa Variant 7", "transaction": "visit", "property": "villa"}
+{"archetype_id": "ARCH-0049", "name": "Sell office Variant 8", "transaction": "sell", "property": "office"}
+{"archetype_id": "ARCH-0050", "name": "Rent studio Variant 9", "transaction": "rent", "property": "studio"}
+{"archetype_id": "ARCH-0051", "name": "Rent studio Variant 10", "transaction": "rent", "property": "studio"}
+{"archetype_id": "ARCH-0052", "name": "Sell commercial Variant 11", "transaction": "sell", "property": "commercial"}
+{"archetype_id": "ARCH-0053", "name": "Sell apartment Variant 12", "transaction": "sell", "property": "apartment"}
+{"archetype_id": "ARCH-0054", "name": "Sell house Variant 13", "transaction": "sell", "property": "house"}
+{"archetype_id": "ARCH-0055", "name": "Visit villa Variant 14", "transaction": "visit", "property": "villa"}
+{"archetype_id": "ARCH-0056", "name": "Visit villa Variant 15", "transaction": "visit", "property": "villa"}
+{"archetype_id": "ARCH-0057", "name": "Sell villa Variant 16", "transaction": "sell", "property": "villa"}
+{"archetype_id": "ARCH-0058", "name": "Visit office Variant 17", "transaction": "visit", "property": "office"}
+{"archetype_id": "ARCH-0059", "name": "Buy villa Variant 18", "transaction": "buy", "property": "villa"}
+{"archetype_id": "ARCH-0060", "name": "Visit studio Variant 19", "transaction": "visit", "property": "studio"}
+{"archetype_id": "ARCH-0061", "name": "Rent villa Variant 20", "transaction": "rent", "property": "villa"}
+{"archetype_id": "ARCH-0062", "name": "Visit commercial Variant 21", "transaction": "visit", "property": "commercial"}
+{"archetype_id": "ARCH-0063", "name": "Buy commercial Variant 22", "transaction": "buy", "property": "commercial"}
+{"archetype_id": "ARCH-0064", "name": "Visit villa Variant 23", "transaction": "visit", "property": "villa"}
+{"archetype_id": "ARCH-0065", "name": "Visit commercial Variant 24", "transaction": "visit", "property": "commercial"}
+{"archetype_id": "ARCH-0066", "name": "Buy land Variant 25", "transaction": "buy", "property": "land"}
+{"archetype_id": "ARCH-0067", "name": "Visit house Variant 26", "transaction": "visit", "property": "house"}
+{"archetype_id": "ARCH-0068", "name": "Rent studio Variant 27", "transaction": "rent", "property": "studio"}
+{"archetype_id": "ARCH-0069", "name": "Visit office Variant 28", "transaction": "visit", "property": "office"}
+{"archetype_id": "ARCH-0070", "name": "Sell villa Variant 29", "transaction": "sell", "property": "villa"}
+{"archetype_id": "ARCH-0071", "name": "Rent studio Variant 30", "transaction": "rent", "property": "studio"}
+{"archetype_id": "ARCH-0072", "name": "Rent commercial Variant 31", "transaction": "rent", "property": "commercial"}

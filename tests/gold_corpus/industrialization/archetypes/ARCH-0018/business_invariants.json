@@ -1,0 +1,10 @@
+{
+  "no_creation_without_consent": true,
+  "no_creation_after_refusal": true,
+  "single_business_object": true,
+  "no_duplicate_creation": true,
+  "facts_preserved": true,
+  "correction_targeted": false,
+  "language_stable_except_switch": true,
+  "restart_restores_state": false
+}

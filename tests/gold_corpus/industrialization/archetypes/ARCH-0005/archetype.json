@@ -1,0 +1,41 @@
+{
+  "archetype_id": "ARCH-0005",
+  "name": "Rent villa",
+  "category": "rental",
+  "transaction_type": "rent",
+  "property_type": "villa",
+  "difficulty": "advanced",
+  "allowed_languages": [
+    "fr",
+    "en",
+    "pcm"
+  ],
+  "allowed_channels": [
+    "web",
+    "telegram",
+    "whatsapp"
+  ],
+  "minimum_turns": 6,
+  "maximum_turns": 14,
+  "required_facts": [
+    "transaction_type",
+    "property_type",
+    "city"
+  ],
+  "optional_facts": [
+    "budget",
+    "bedrooms",
+    "preferred_areas",
+    "move_in_date"
+  ],
+  "correction_patterns": [
+    "budget",
+    "area",
+    "city",
+    "property_type"
+  ],
+  "business_outcome": "create_search",
+  "restart_required": false,
+  "idempotence_required": true,
+  "no_action_expected": false
+}

@@ -1,0 +1,35 @@
+{
+  "archetype_id": "ARCH-0041",
+  "name": "Code-switching FR/EN",
+  "category": "rental",
+  "transaction_type": "rent",
+  "property_type": "any",
+  "difficulty": "advanced",
+  "allowed_languages": [
+    "fr",
+    "en"
+  ],
+  "allowed_channels": [
+    "web",
+    "telegram"
+  ],
+  "minimum_turns": 6,
+  "maximum_turns": 12,
+  "required_facts": [
+    "transaction_type",
+    "city"
+  ],
+  "optional_facts": [
+    "budget",
+    "property_type",
+    "bedrooms",
+    "preferred_areas"
+  ],
+  "correction_patterns": [
+    "budget"
+  ],
+  "business_outcome": "create_search",
+  "restart_required": false,
+  "idempotence_required": true,
+  "no_action_expected": false
+}

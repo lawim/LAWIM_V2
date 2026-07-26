@@ -1,0 +1,19 @@
+{
+  "archetypes": 41,
+  "corpus_plan": 765,
+  "waves": {
+    "C1-W01": 200,
+    "C1-W02": 200,
+    "C1-W03": 200,
+    "C1-W04": 165
+  },
+  "validation_sample_generated": 25,
+  "validation_sample_executed": 25,
+  "validation_sample_ok": 25,
+  "baseline_regressions": 0,
+  "certified_corpus": {
+    "total": 225,
+    "fully_certified": 225,
+    "functional_text_variant": 15
+  }
+}

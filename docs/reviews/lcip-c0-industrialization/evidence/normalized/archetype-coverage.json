@@ -1,0 +1,31 @@
+{
+  "total": 72,
+  "transactions": {
+    "rent": 19,
+    "buy": 14,
+    "sell": 12,
+    "visit": 19,
+    "investment": 8
+  },
+  "property_types": {
+    "studio": 9,
+    "room": 4,
+    "apartment": 6,
+    "house": 7,
+    "villa": 15,
+    "land": 8,
+    "office": 10,
+    "commercial": 10,
+    "any": 3
+  },
+  "languages": {
+    "fr": 72,
+    "en": 72,
+    "pcm": 55
+  },
+  "difficulties": {
+    "standard": 32,
+    "advanced": 25,
+    "expert": 15
+  }
+}

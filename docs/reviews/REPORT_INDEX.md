@@ -40,6 +40,8 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-26 | LCIP C.1A-R — Batch Repair | d2a7a6fc | feature/lcip-c1-real-dialogues-batch-01-20260726 | docs/reviews/lcip-c1ar-batch-repair/REPORT.md | docs/reviews/lcip-c1ar-batch-repair/details/ | docs/reviews/lcip-c1ar-batch-repair/evidence/ | PASS |
 
+| 2026-07-26 | LCIP C.0 — Industrial Pipeline | ef593a14 | feature/lcip-c0-industrialization-20260726 | docs/reviews/lcip-c0-industrialization/REPORT.md | docs/reviews/lcip-c0-industrialization/details/ | docs/reviews/lcip-c0-industrialization/evidence/ | PASS |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*

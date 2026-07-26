@@ -1,0 +1,6 @@
+{
+  "no_creation_without_consent": true,
+  "single_business_object": true,
+  "facts_preserved": true,
+  "restart_restores_state": true
+}

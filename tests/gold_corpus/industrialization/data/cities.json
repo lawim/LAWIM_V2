@@ -1,0 +1,78 @@
+[
+  {
+    "id": "DLA",
+    "name": "Douala",
+    "areas": [
+      "Akwa",
+      "Bonamoussadi",
+      "Makepe",
+      "Bonanjo",
+      "Deido",
+      "Bali",
+      "Ndogpassi",
+      "Cité",
+      "Beedi"
+    ],
+    "country": "Cameroon"
+  },
+  {
+    "id": "YDE",
+    "name": "Yaoundé",
+    "areas": [
+      "Melen",
+      "Ngoa-Ekellé",
+      "Bastos",
+      "Mvan",
+      "Biyem-Assi",
+      "Ekounou",
+      "Mimboman",
+      "Ngousso",
+      "Etoudi",
+      "Mokolo"
+    ],
+    "country": "Cameroon"
+  },
+  {
+    "id": "KRI",
+    "name": "Kribi",
+    "areas": [
+      "Dombe",
+      "Mpangou",
+      "Grand Batanga",
+      "Bépanda"
+    ],
+    "country": "Cameroon"
+  },
+  {
+    "id": "BFS",
+    "name": "Bafoussam",
+    "areas": [
+      "Tamdja",
+      "Djeleng",
+      "Banengo",
+      "Kami"
+    ],
+    "country": "Cameroon"
+  },
+  {
+    "id": "BUE",
+    "name": "Buea",
+    "areas": [
+      "Molyko",
+      "Bonduma",
+      "Mile 16",
+      "Small Soppo"
+    ],
+    "country": "Cameroon"
+  },
+  {
+    "id": "LIM",
+    "name": "Limbé",
+    "areas": [
+      "Botaland",
+      "Down Beach",
+      "Wotutu"
+    ],
+    "country": "Cameroon"
+  }
+]

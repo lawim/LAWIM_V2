@@ -1,0 +1,31 @@
+{
+  "archetype_id": "ARCH-0030",
+  "name": "Visit commerce",
+  "category": "visit",
+  "transaction_type": "visit",
+  "property_type": "commercial",
+  "difficulty": "expert",
+  "allowed_languages": [
+    "fr",
+    "en",
+    "pcm"
+  ],
+  "allowed_channels": [
+    "web",
+    "telegram",
+    "whatsapp"
+  ],
+  "minimum_turns": 4,
+  "maximum_turns": 8,
+  "required_facts": [
+    "transaction_type",
+    "property_type",
+    "city"
+  ],
+  "optional_facts": [],
+  "correction_patterns": [],
+  "business_outcome": "schedule_visit",
+  "restart_required": false,
+  "idempotence_required": false,
+  "no_action_expected": false
+}

@@ -1,0 +1,4 @@
+{
+  "minimum_sample": 120,
+  "strategy": "stratified"
+}

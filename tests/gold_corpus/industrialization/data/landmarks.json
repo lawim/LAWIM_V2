@@ -1,0 +1,28 @@
+[
+  {
+    "city": "Douala",
+    "landmarks": [
+      "Marché Central",
+      "Aéroport",
+      "Port Autonome",
+      "Cathédrale Saint-Pierre-et-Paul"
+    ]
+  },
+  {
+    "city": "Yaoundé",
+    "landmarks": [
+      "Mont Fébé",
+      "Palais de l'Unité",
+      "Mfoundi",
+      "Université de Yaoundé"
+    ]
+  },
+  {
+    "city": "Kribi",
+    "landmarks": [
+      "Plage",
+      "Chutes de la Lobé",
+      "Port en eau profonde"
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "barriers": [
+    "NORMALIZER_ERRORS=0",
+    "COMPARATOR_ERRORS=0",
+    "TAUTOLOGY=0",
+    "SPEC_ERROR_RATE<=5%",
+    "EXECUTION_ERROR_RATE<=1%",
+    "DUPLICATES=0"
+  ]
+}

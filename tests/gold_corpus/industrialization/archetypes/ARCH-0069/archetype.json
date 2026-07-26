@@ -1,0 +1,36 @@
+{
+  "archetype_id": "ARCH-0069",
+  "name": "Visit office Variant 28",
+  "category": "visit",
+  "transaction_type": "visit",
+  "property_type": "office",
+  "difficulty": "standard",
+  "allowed_languages": [
+    "fr",
+    "en",
+    "pcm"
+  ],
+  "allowed_channels": [
+    "web",
+    "telegram",
+    "whatsapp"
+  ],
+  "minimum_turns": 6,
+  "maximum_turns": 14,
+  "required_facts": [
+    "transaction_type",
+    "property_type",
+    "city"
+  ],
+  "optional_facts": [
+    "budget",
+    "bedrooms",
+    "preferred_areas",
+    "move_in_date"
+  ],
+  "correction_patterns": [],
+  "business_outcome": "none",
+  "restart_required": false,
+  "idempotence_required": false,
+  "no_action_expected": true
+}

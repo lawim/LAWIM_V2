@@ -1,0 +1,38 @@
+{
+  "archetype_id": "ARCH-0053",
+  "name": "Sell apartment Variant 12",
+  "category": "seller",
+  "transaction_type": "sell",
+  "property_type": "apartment",
+  "difficulty": "expert",
+  "allowed_languages": [
+    "fr",
+    "en"
+  ],
+  "allowed_channels": [
+    "web",
+    "telegram",
+    "whatsapp"
+  ],
+  "minimum_turns": 6,
+  "maximum_turns": 14,
+  "required_facts": [
+    "transaction_type",
+    "property_type",
+    "city"
+  ],
+  "optional_facts": [
+    "budget",
+    "bedrooms",
+    "preferred_areas",
+    "move_in_date"
+  ],
+  "correction_patterns": [
+    "budget",
+    "area"
+  ],
+  "business_outcome": "schedule_visit",
+  "restart_required": false,
+  "idempotence_required": true,
+  "no_action_expected": false
+}

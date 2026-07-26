@@ -1,0 +1,34 @@
+{
+  "archetype_id": "ARCH-0039",
+  "name": "Ambigu\u00eft\u00e9 et clarification",
+  "category": "rental",
+  "transaction_type": "rent",
+  "property_type": "any",
+  "difficulty": "expert",
+  "allowed_languages": [
+    "fr",
+    "en",
+    "pcm"
+  ],
+  "allowed_channels": [
+    "web"
+  ],
+  "minimum_turns": 8,
+  "maximum_turns": 16,
+  "required_facts": [
+    "transaction_type"
+  ],
+  "optional_facts": [
+    "city",
+    "budget",
+    "property_type"
+  ],
+  "correction_patterns": [
+    "city",
+    "budget"
+  ],
+  "business_outcome": "create_search",
+  "restart_required": false,
+  "idempotence_required": true,
+  "no_action_expected": false
+}
