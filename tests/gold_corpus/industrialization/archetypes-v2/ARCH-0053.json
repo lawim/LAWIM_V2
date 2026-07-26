@@ -1,0 +1,17 @@
+{
+  "archetype_id": "ARCH-0053",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "31662f87",
+  "transaction": "sell",
+  "category": "seller",
+  "property": "apartment",
+  "outcome": "schedule_visit",
+  "restart": false,
+  "no_action": false,
+  "corrections": [
+    "budget",
+    "area"
+  ],
+  "keep_as_independent": true
+}

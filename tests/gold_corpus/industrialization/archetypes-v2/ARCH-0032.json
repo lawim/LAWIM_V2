@@ -1,0 +1,14 @@
+{
+  "archetype_id": "ARCH-0032",
+  "classification": "LANGUAGE_VARIANT",
+  "parent": null,
+  "normalized_hash": "995cbfe0",
+  "transaction": "investment",
+  "category": "rental",
+  "property": "room",
+  "outcome": "schedule_visit",
+  "restart": false,
+  "no_action": false,
+  "corrections": [],
+  "keep_as_independent": false
+}

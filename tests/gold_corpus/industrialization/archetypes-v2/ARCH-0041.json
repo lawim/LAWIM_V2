@@ -1,0 +1,16 @@
+{
+  "archetype_id": "ARCH-0041",
+  "classification": "ROOT_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "fdf8a856",
+  "transaction": "rent",
+  "category": "rental",
+  "property": "any",
+  "outcome": "create_search",
+  "restart": false,
+  "no_action": false,
+  "corrections": [
+    "budget"
+  ],
+  "keep_as_independent": true
+}

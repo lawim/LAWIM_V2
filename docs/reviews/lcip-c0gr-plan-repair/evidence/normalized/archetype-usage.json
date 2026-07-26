@@ -1,0 +1,246 @@
+{
+  "total_independent": 60,
+  "unused": [],
+  "usage": {
+    "ARCH-0001": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0002": {
+      "planned_count": 6,
+      "used": true
+    },
+    "ARCH-0003": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0004": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0005": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0006": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0007": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0008": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0009": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0010": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0011": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0012": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0013": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0014": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0015": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0016": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0017": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0018": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0021": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0023": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0024": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0027": {
+      "planned_count": 19,
+      "used": true
+    },
+    "ARCH-0030": {
+      "planned_count": 18,
+      "used": true
+    },
+    "ARCH-0031": {
+      "planned_count": 18,
+      "used": true
+    },
+    "ARCH-0033": {
+      "planned_count": 18,
+      "used": true
+    },
+    "ARCH-0036": {
+      "planned_count": 18,
+      "used": true
+    },
+    "ARCH-0039": {
+      "planned_count": 18,
+      "used": true
+    },
+    "ARCH-0040": {
+      "planned_count": 18,
+      "used": true
+    },
+    "ARCH-0041": {
+      "planned_count": 18,
+      "used": true
+    },
+    "ARCH-0042": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0043": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0044": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0045": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0046": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0047": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0048": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0049": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0050": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0051": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0052": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0053": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0054": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0055": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0056": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0057": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0058": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0059": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0060": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0061": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0062": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0063": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0064": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0065": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0066": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0067": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0068": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0069": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0070": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0071": {
+      "planned_count": 1,
+      "used": true
+    },
+    "ARCH-0072": {
+      "planned_count": 1,
+      "used": true
+    }
+  }
+}

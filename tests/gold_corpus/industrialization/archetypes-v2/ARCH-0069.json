@@ -1,0 +1,14 @@
+{
+  "archetype_id": "ARCH-0069",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "354e59bf",
+  "transaction": "visit",
+  "category": "visit",
+  "property": "office",
+  "outcome": "none",
+  "restart": false,
+  "no_action": true,
+  "corrections": [],
+  "keep_as_independent": true
+}

@@ -1,0 +1,50 @@
+{
+  "C1-W01": {
+    "total": 200,
+    "creation": 166,
+    "no_action": 34,
+    "restart": 24,
+    "fr": 134,
+    "en": 33,
+    "pcm": 33,
+    "web": 67,
+    "telegram": 67,
+    "whatsapp": 66
+  },
+  "C1-W02": {
+    "total": 200,
+    "creation": 166,
+    "no_action": 34,
+    "restart": 24,
+    "fr": 134,
+    "en": 33,
+    "pcm": 33,
+    "web": 67,
+    "telegram": 66,
+    "whatsapp": 67
+  },
+  "C1-W03": {
+    "total": 200,
+    "creation": 168,
+    "no_action": 32,
+    "restart": 25,
+    "fr": 132,
+    "en": 34,
+    "pcm": 34,
+    "web": 66,
+    "telegram": 67,
+    "whatsapp": 67
+  },
+  "C1-W04": {
+    "total": 165,
+    "creation": 137,
+    "no_action": 28,
+    "restart": 20,
+    "fr": 111,
+    "en": 27,
+    "pcm": 27,
+    "web": 55,
+    "telegram": 55,
+    "whatsapp": 55
+  }
+}

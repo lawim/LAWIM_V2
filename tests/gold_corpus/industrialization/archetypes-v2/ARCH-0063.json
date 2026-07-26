@@ -1,0 +1,17 @@
+{
+  "archetype_id": "ARCH-0063",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "c563feaf",
+  "transaction": "buy",
+  "category": "search",
+  "property": "commercial",
+  "outcome": "create_search",
+  "restart": false,
+  "no_action": false,
+  "corrections": [
+    "budget",
+    "area"
+  ],
+  "keep_as_independent": true
+}

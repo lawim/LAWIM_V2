@@ -1,0 +1,17 @@
+{
+  "archetype_id": "ARCH-0056",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "fa0b0a8c",
+  "transaction": "visit",
+  "category": "visit",
+  "property": "villa",
+  "outcome": "schedule_visit",
+  "restart": true,
+  "no_action": false,
+  "corrections": [
+    "budget",
+    "area"
+  ],
+  "keep_as_independent": true
+}

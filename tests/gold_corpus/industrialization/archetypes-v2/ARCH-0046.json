@@ -1,0 +1,17 @@
+{
+  "archetype_id": "ARCH-0046",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "a242965d",
+  "transaction": "buy",
+  "category": "search",
+  "property": "land",
+  "outcome": "create_search",
+  "restart": true,
+  "no_action": false,
+  "corrections": [
+    "budget",
+    "area"
+  ],
+  "keep_as_independent": true
+}

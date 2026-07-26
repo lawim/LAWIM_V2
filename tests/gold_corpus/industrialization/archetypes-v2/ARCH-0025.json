@@ -1,0 +1,14 @@
+{
+  "archetype_id": "ARCH-0025",
+  "classification": "LANGUAGE_VARIANT",
+  "parent": null,
+  "normalized_hash": "fe00facb",
+  "transaction": "visit",
+  "category": "visit",
+  "property": "apartment",
+  "outcome": "schedule_visit",
+  "restart": false,
+  "no_action": false,
+  "corrections": [],
+  "keep_as_independent": false
+}

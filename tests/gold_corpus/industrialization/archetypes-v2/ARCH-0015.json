@@ -1,0 +1,19 @@
+{
+  "archetype_id": "ARCH-0015",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "c563feaf",
+  "transaction": "buy",
+  "category": "search",
+  "property": "office",
+  "outcome": "create_search",
+  "restart": false,
+  "no_action": false,
+  "corrections": [
+    "budget",
+    "area",
+    "city",
+    "property_type"
+  ],
+  "keep_as_independent": true
+}

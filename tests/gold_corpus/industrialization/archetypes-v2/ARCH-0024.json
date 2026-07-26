@@ -1,0 +1,14 @@
+{
+  "archetype_id": "ARCH-0024",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "cdcc47f3",
+  "transaction": "visit",
+  "category": "visit",
+  "property": "room",
+  "outcome": "schedule_visit",
+  "restart": true,
+  "no_action": false,
+  "corrections": [],
+  "keep_as_independent": true
+}

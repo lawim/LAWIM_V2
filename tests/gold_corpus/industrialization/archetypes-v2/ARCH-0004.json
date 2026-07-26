@@ -1,0 +1,19 @@
+{
+  "archetype_id": "ARCH-0004",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "fdf8a856",
+  "transaction": "rent",
+  "category": "rental",
+  "property": "house",
+  "outcome": "create_search",
+  "restart": false,
+  "no_action": false,
+  "corrections": [
+    "budget",
+    "area",
+    "city",
+    "property_type"
+  ],
+  "keep_as_independent": true
+}

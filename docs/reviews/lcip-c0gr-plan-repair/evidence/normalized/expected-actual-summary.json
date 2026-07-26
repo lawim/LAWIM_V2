@@ -1,0 +1,11 @@
+{
+  "initial_sample": 25,
+  "complementary_sample": 15,
+  "total": 40,
+  "separated": 40,
+  "runtime_calls_positive": 40,
+  "responses_observed": 40,
+  "states_observed": 40,
+  "tautologies": 0,
+  "missing_evidence": 0
+}

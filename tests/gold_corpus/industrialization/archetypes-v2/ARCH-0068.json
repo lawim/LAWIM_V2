@@ -1,0 +1,17 @@
+{
+  "archetype_id": "ARCH-0068",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "fdf8a856",
+  "transaction": "rent",
+  "category": "rental",
+  "property": "studio",
+  "outcome": "create_search",
+  "restart": false,
+  "no_action": false,
+  "corrections": [
+    "budget",
+    "area"
+  ],
+  "keep_as_independent": true
+}

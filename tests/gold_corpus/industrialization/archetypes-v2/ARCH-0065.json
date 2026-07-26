@@ -1,0 +1,17 @@
+{
+  "archetype_id": "ARCH-0065",
+  "classification": "SPECIALIZED_ARCHETYPE",
+  "parent": null,
+  "normalized_hash": "2219b1fa",
+  "transaction": "visit",
+  "category": "visit",
+  "property": "commercial",
+  "outcome": "schedule_visit",
+  "restart": false,
+  "no_action": false,
+  "corrections": [
+    "budget",
+    "area"
+  ],
+  "keep_as_independent": true
+}

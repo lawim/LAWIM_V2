@@ -31,6 +31,15 @@ Independent coverage gate for the C.0 industrial pipeline. Archetypes audited (7
 
 The plan only has 18 no-action scenarios out of 765 (< 75 threshold). The plan needs rebalancing to include more refusal/cancellation/no-action scenarios before Wave 1.
 
+
+## Post-Audit Resolution (C.0G-R)
+
+Both evidence gaps have been resolved:
+- `validation-sample-coverage-audit.json` created
+- `expected-actual-gate.jsonl` extended to 40 lines
+- Plan rebalanced, quotas met
+See: docs/reviews/lcip-c0gr-plan-repair/REPORT.md
+
 ## Verdicts
 
 ```
