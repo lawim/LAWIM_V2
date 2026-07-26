@@ -23,7 +23,7 @@ def test_greeting_response_contains_lawim_ai_identity(svc: CommunicationService)
     for channel in ("whatsapp", "telegram"):
         reply = svc._greeting_response(channel)
         assert "LAWIM" in reply
-        assert "🤖" not in reply  # LAWIM AI emoji not expected in base greeting
+        assert "🤖" in reply  # LAWIM AI identity now includes emoji
 
 
 def test_identity_is_lawim_ai_not_other_provider(svc: CommunicationService) -> None:

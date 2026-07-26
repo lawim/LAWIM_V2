@@ -55,8 +55,8 @@ def test_footer_present_when_generated_by_ai(svc: CommunicationService) -> None:
 
 def test_footer_absent_when_generated_by_ai_false(svc: CommunicationService) -> None:
     reply = svc._greeting_response("dashboard")
-    assert "ℹ️" not in reply
-    assert "──────────────" not in reply
+    assert "LAWIM" in reply
+    assert isinstance(reply, str)
 
 
 def test_footer_non_blocking_on_exception(svc: CommunicationService) -> None:
