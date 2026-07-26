@@ -1,0 +1,981 @@
+{
+  "meta": {
+    "baseline_commit": "e39c2c5182b5e800ed67c32141b9c4146ccd5ef1",
+    "reference_commit": "d7cdd41087da19836d6303f56ca6335373b848b7",
+    "total_before": 5194,
+    "total_after": 5087,
+    "disappeared": 107,
+    "classification": {
+      "legacy": 27,
+      "historical": 80,
+      "unknown": 0,
+      "still_required": 0
+    },
+    "generated_at": "2026-07-26T05:00:00Z"
+  },
+  "tests": [
+    {
+      "nodeid": "scripts/test_validate_lawim_context.py::test_valid_produces_pass",
+      "file": "scripts/test_validate_lawim_context.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "scripts/test_validate_lawim_context.py",
+      "reason": "Script directory fully deleted — validation belongs to CI, not runtime tests",
+      "v1_capability_replacement": null,
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "scripts/test_validate_lawim_context.py::test_missing_file_produces_fail",
+      "file": "scripts/test_validate_lawim_context.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "scripts/test_validate_lawim_context.py",
+      "reason": "Script directory fully deleted",
+      "v1_capability_replacement": null,
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "scripts/test_validate_lawim_context.py::test_invalid_commit_produces_fail",
+      "file": "scripts/test_validate_lawim_context.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "scripts/test_validate_lawim_context.py",
+      "reason": "Script directory fully deleted",
+      "v1_capability_replacement": null,
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "scripts/test_validate_lawim_context.py::test_invalid_status_produces_fail",
+      "file": "scripts/test_validate_lawim_context.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "scripts/test_validate_lawim_context.py",
+      "reason": "Script directory fully deleted",
+      "v1_capability_replacement": null,
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "scripts/validation/test_lawim_agent_understanding.py::test_all",
+      "file": "scripts/validation/test_lawim_agent_understanding.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "scripts/validation/test_lawim_agent_understanding.py",
+      "reason": "Script directory fully deleted",
+      "v1_capability_replacement": null,
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_01_matching_returns_results",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests — depended on removed datasets/ and knowledge_unified/; matching capability covered by lawim_runtime/domains/matching/",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_02_matching_scores_in_range",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_03_matching_deterministic_across_runs",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_04_matching_empty_search_returns_empty",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_05_matching_without_project_criteria",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_06_matching_single_item",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_07_matching_explanations_present",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_08_matching_ranked_by_score",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_09_matching_min_max_average_stats",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_10_matching_criteria_used_listed",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_11_matching_explanation_generated",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_12_matching_yaounde_houses",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_13_matching_determinism_second_city",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_14_matching_without_criteria_uses_search_request",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_15_matching_score_is_deterministic_multi_criteria",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_16_matching_repeated_with_project_criteria",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_17_matching_score_logs_per_item",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_18_matching_top_match_returned",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_19_matching_full_pipeline",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/matching/test_matching_real.py::TestMatchingRealDB::test_20_matching_insufficient_criteria_rejected",
+      "file": "tests/mission_3b2/matching/test_matching_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/matching/",
+      "reason": "Mission 3b2 matching tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/privacy/test_privacy.py::TestPrivacyMasking::test_1_phone_masked_before_consent",
+      "file": "tests/mission_3b2/privacy/test_privacy.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/privacy/",
+      "reason": "Mission 3b2 privacy tests — consent/privacy coverage in tests/conversation_v2/",
+      "v1_capability_replacement": "tests/conversation_v2/ (consent, data masking)",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/privacy/test_privacy.py::TestPrivacyMasking::test_2_email_masked_before_consent",
+      "file": "tests/mission_3b2/privacy/test_privacy.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/privacy/",
+      "reason": "Mission 3b2 privacy tests",
+      "v1_capability_replacement": "tests/conversation_v2/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/privacy/test_privacy.py::TestPrivacyMasking::test_3_exact_scope_shared_after_consent",
+      "file": "tests/mission_3b2/privacy/test_privacy.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/privacy/",
+      "reason": "Mission 3b2 privacy tests",
+      "v1_capability_replacement": "tests/conversation_v2/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/privacy/test_privacy.py::TestPrivacyMasking::test_4_extra_data_not_shared_beyond_scope",
+      "file": "tests/mission_3b2/privacy/test_privacy.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/privacy/",
+      "reason": "Mission 3b2 privacy tests",
+      "v1_capability_replacement": "tests/conversation_v2/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/privacy/test_privacy.py::TestPrivacyMasking::test_5_other_user_cannot_access_relationship",
+      "file": "tests/mission_3b2/privacy/test_privacy.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/privacy/",
+      "reason": "Mission 3b2 privacy tests",
+      "v1_capability_replacement": "tests/conversation_v2/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/privacy/test_privacy.py::TestPrivacyMasking::test_6_other_org_cannot_access_relationship",
+      "file": "tests/mission_3b2/privacy/test_privacy.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/privacy/",
+      "reason": "Mission 3b2 privacy tests",
+      "v1_capability_replacement": "tests/conversation_v2/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/privacy/test_privacy.py::TestPrivacyMasking::test_7_consent_revocation_stops_data_sharing",
+      "file": "tests/mission_3b2/privacy/test_privacy.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/privacy/",
+      "reason": "Mission 3b2 privacy tests",
+      "v1_capability_replacement": "tests/conversation_v2/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/privacy/test_privacy.py::TestPrivacyMasking::test_8_consent_expiry_stops_data_sharing",
+      "file": "tests/mission_3b2/privacy/test_privacy.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/privacy/",
+      "reason": "Mission 3b2 privacy tests",
+      "v1_capability_replacement": "tests/conversation_v2/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_10_cross_access_blocked",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests — relationship coverage in lawim_runtime/domains/",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_11_private_data_masked_before_consent",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_12_data_scope_respected_after_consent",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_1_double_accept_creates_relationship",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_2_requester_consent_proposal_pending",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_3_target_consent_creates_relationship",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_4_requester_refuses_no_relationship",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_5_target_refuses_no_relationship",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_6_consent_expires_no_relationship",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_7_consent_revoked_relationship_ends",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_8_duplicate_proposal_idempotent",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/relationship/test_relationship.py::TestRelationshipFlow::test_9_relationship_without_consent_blocked",
+      "file": "tests/mission_3b2/relationship/test_relationship.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/relationship/",
+      "reason": "Mission 3b2 relationship tests",
+      "v1_capability_replacement": "lawim_runtime/domains/crm/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_01_empty_request_returns_error",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests — depended on real demo database; search coverage in lawim_runtime/",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_02_search_all_properties",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_03_search_by_city_yaounde",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_04_search_by_city_douala",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_05_search_by_property_type_apartment",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_06_search_by_property_type_house",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_07_search_by_budget_range",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_08_search_by_budget_min_only",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_09_search_by_budget_max_only",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_10_search_by_bedrooms",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_11_search_by_surface_range",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_12_search_city_and_budget",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_13_search_city_and_property_type",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_14_search_zero_results_nonexistent_city",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_15_search_zero_results_impossible_budget",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_16_search_zero_results_mismatched_criteria",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_17_search_pagination_offset",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_18_search_by_transaction_type_buy",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_19_search_by_transaction_type_rent",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_20_search_multi_criteria_combined",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_21_search_execution_time_reported",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_22_search_by_criteria_dict",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_23_search_with_create_alert",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_24_search_zero_results_partner_type",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_25_search_source_name_is_set",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_26_search_result_items_have_required_fields",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_27_search_without_criteria_returns_all",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_28_search_marketplace_type",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_29_search_region_specific",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_30_search_combined_house_douala",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_31_search_max_results_respected",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_32_search_minimal_budget_zero",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_33_search_high_budget",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_34_search_professional_partner",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_35_search_no_criteria_surface_only",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_36_search_verify_deterministic",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_37_search_empty_criteria_dict",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_38_search_large_offset",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_39_search_zero_min_surface",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/mission_3b2/search/test_search_real.py::TestSearchRealDB::test_40_search_all_cities_count",
+      "file": "tests/mission_3b2/search/test_search_real.py",
+      "classification": "HISTORICAL_CAMPAIGN",
+      "component_removed": "tests/mission_3b2/search/",
+      "reason": "Mission 3b2 search tests",
+      "v1_capability_replacement": "lawim_runtime/domains/matching/tests/",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Roles::test_commercial_role_accepted",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module — demo adapters no longer needed",
+      "v1_capability_replacement": "tests/test_authorization.py, tests/test_admin_reset_password.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Roles::test_auditor_role_accepted",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Roles::test_super_admin_role_accepted",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Roles::test_service_provider_role_accepted",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2AuthStatus::test_active_login_success",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_login.py, tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2AuthStatus::test_login_disabled_rejected",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2AuthStatus::test_suspended_rejected",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2AuthStatus::test_blocked_rejected",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2AuthStatus::test_wrong_password_rejected",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_login.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2AuthStatus::test_user_not_found",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_login.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Authorization::test_support_cannot_modify_payment",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Authorization::test_commercial_cannot_create_admin",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Authorization::test_auditor_read_only",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Authorization::test_commercial_can_create_property",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Authorization::test_admin_can_manage_users",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2Authorization::test_super_admin_has_all",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_authorization.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2PropertyAdapter::test_owner_creates_apartment",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_property_api.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2PropertyAdapter::test_agent_creates_house",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_property_api.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2PropertyAdapter::test_commercial_creates_studio",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_property_api.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2PropertyAdapter::test_admin_creates_land",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_property_api.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2PropertyAdapter::test_property_persists_after_reopen",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_property_api.py",
+      "recovery_commit": "d7cdd410"
+    },
+    {
+      "nodeid": "tests/test_demo_real_adapters.py::TestV2PropertyAdapter::test_property_lifecycle",
+      "file": "tests/test_demo_real_adapters.py",
+      "classification": "LEGACY_COMPONENT_REMOVED",
+      "component_removed": "lawim_demo/",
+      "reason": "Depended on deleted lawim_demo module",
+      "v1_capability_replacement": "tests/test_property_api.py",
+      "recovery_commit": "d7cdd410"
+    }
+  ]
+}

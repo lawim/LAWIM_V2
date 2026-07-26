@@ -1,11 +1,12 @@
 # LAWIM — Project Master Context
 
 ## Metadata
-- **HEAD :** 1056ec68
-- **Branche active :** feature/lawim-v1-definitive-cleanup-20260725
-- **Branche de production :** main
-- **Tags de release :** lawim-v3-program-f-conversation-engine-complete, lawim-v1-runtime-clean, lawim-v1-pre-cleanup-20260725-160240
-- **Tags de preuve :** lawim-pre-runtime-consolidation-20260725-143856, lawim-pre-consolidation-20260725-143856, lawim-v1-pre-cleanup-20260725-160240
+- **HEAD :** e39c2c51
+- **Origin/main :** d7cdd410 (push pending)
+- **Branche active :** main
+- **Branche active secondaire :** maintenance/1.0.x
+- **Tags de release :** lawim-v1.0.0, lawim-v1.0.0-multichannel-accepted
+- **Tags supprimés :** 320 tags historiques supprimés (restent uniquement les 2 tags V1)
 - **Remote :** git@github-lawim:lawim/LAWIM_V2.git
 
 ## Architecture canonique
@@ -28,21 +29,31 @@
 | Metier (marketplace) | PostgreSQL (prod), SQLite (dev) | _PostgresMarketplaceRepository / _SQLiteMarketplaceRepository dans marketplace_adapter.py | **CANONIQUE** |
 | V2 ConversationStateRepository | SQLite | ConversationStateRepository (fallback V2) | Fallback |
 
-### Scripts canoniques
+### Scripts canoniques (conservés)
 | Fonction | Script | Statut |
 |---|---|---|
 | Deploiement OVH | deployment/scripts/deploy_program_f_acceptance.sh | **CANONIQUE** |
 | Acceptance Web | deployment/scripts/acceptance_program_f_web.py | **CANONIQUE** |
-| Validation gold corpus | scripts/g5_validate_corpus.py | **CANONIQUE** |
-| Validation G.5 | scripts/g5_validate_corpus.py | **CANONIQUE** |
-| Admin reset password | scripts/admin_reset_password.py | **CANONIQUE** |
+| Deploiement general | deployment/scripts/deploy.sh | **CANONIQUE** |
+| Rollback | deployment/scripts/rollback.sh | **CANONIQUE** |
+| Backup | deployment/scripts/backup.sh | **CANONIQUE** |
+| Restore | deployment/scripts/restore.sh | **CANONIQUE** |
+| Healthcheck | deployment/health/health_checker.py | **CANONIQUE** |
+| Migration plan | deployment/migration/ (6 fichiers) | **CANONIQUE** |
+| Migrations Prisma | prisma/migrations/ (3 migrations) | **CANONIQUE** |
+
+### Scripts supprimés (récupérables via Git)
+- `scripts/` entier (56 fichiers) : dev, validation, QA — non nécessaires au runtime
+- `scripts/g5_validate_corpus.py` → `git show d7cdd410:scripts/g5_validate_corpus.py`
+- `scripts/admin_reset_password.py` → `git show d7cdd410:scripts/admin_reset_password.py`
 
 ### Docker Compose
 | Environnement | Fichier | Statut |
 |---|---|---|
-| Production OVH | deployment/compose/docker-compose.ovh.yml (ou .prod.yml adapte) | **CANONIQUE** |
-| Developpement | deployment/compose/docker-compose.dev.yml | Support |
-| Staging | deployment/compose/docker-compose.staging.yml | Support |
+| Production OVH | /opt/lawim/compose/docker-compose.ovh.yml | **CANONIQUE** |
+| Production (deployment) | deployment/compose/docker-compose.prod.yml | **CANONIQUE** |
+| Developpement | deployment/compose/docker-compose.dev.yml (supprimé — récup. git) | HISTORICAL |
+| Staging | deployment/compose/docker-compose.staging.yml (supprimé — récup. git) | HISTORICAL |
 
 ## Pipeline de traitement d'un message
 
@@ -63,7 +74,7 @@ Web/WhatsApp/Telegram
               -> _PostgresMarketplaceRepository [PostgreSQL, si database_url]
               -> _SQLiteMarketplaceRepository [SQLite, fallback]
         -> _SQLiteJourneyRepository.save() (persistance etat)
-    -> Fallback: ConversationStateEngine (V2) [si PF indisponible]
+    -> Fallback: safety response (ProgramFEngineAdapter gère son propre fallback interne)
 ```
 
 ## OVH
@@ -79,44 +90,68 @@ Web/WhatsApp/Telegram
 
 ## Tests
 
-| Suite | Commande | Resultat |
-|---|---|---|
-| Conversation | python3 -m pytest lawim_runtime/conversation/tests/ | 118 PASS |
-| Globale | python3 -m pytest --ignore=tests --ignore=code --ignore=docs --ignore=demo --ignore=deployment | 856 PASS |
-| Gold corpus | python3 scripts/g5_validate_corpus.py | 30 sc. 20 PASS / 10 FAIL |
+| Suite | Commande | Resultat | Date |
+|---|---|---|---|
+| Conversation + Runtime | `pytest tests/test_conversation_*.py lawim_runtime/ -q` | **988 PASS, 0 FAIL** | 2026-07-26 |
+| Full suite | `pytest tests/ lawim_runtime/ -q` | **5,087 PASS, 0 FAIL** | 2026-07-26 |
+| Compilation | `compileall lawim_runtime code` | **0 erreurs** | 2026-07-26 |
+
+Tests supprimés : 107 (27 LEGACY, 80 HISTORICAL, 0 UNKNOWN).
+Détail dans `docs/reviews/release/e39c2c51-disappeared-tests.json`.
+
+## 23 Capacités V1 validées
+
+| # | Capacité | Tsts | Canal | Preuve runtime |
+|---|---|---|---|---|
+| 1 | Qualification location | 14 | Web/TG/WA | SQLite state |
+| 2 | Qualification achat | 2 | Web | PostgreSQL |
+| 3 | Correction budget | 7 | Web | SQLite history |
+| 4 | Correction zone | 7 | Web | SQLite history |
+| 5 | Plusieurs zones | 17 | Web | SQLite history |
+| 6 | Date d'entrée | 72 | Web | SQLite history |
+| 7 | Négation | 2 | TG/WA | Pipeline |
+| 8 | Confirmation | 19 | TG/WA | Pipeline |
+| 9 | Refus | 2 | TG/WA | Pipeline |
+| 10 | Consentement métier | 13 | TG/WA | Pipeline |
+| 11 | Création métier | 5 | Web | PostgreSQL objects |
+| 12 | Idempotence | 21 | TG/WA | Duplicate detection |
+| 13 | Restart | 2 | TG/WA | State persists |
+| 14 | SQLite | 31 | All | program_f_state.sqlite3 |
+| 15 | PostgreSQL | 13 | All | lawim-postgres |
+| 16 | Web | 4 | Web | https://lawim.app |
+| 17 | Telegram | 3 | TG | event 524 |
+| 18 | WhatsApp | 30 | WA | event 525 |
+| 19 | Authentification | 32 | Web | API |
+| 20 | Administration | 33 | Web | API |
+| 21 | Sécurité | 11 | All | API |
+| 22 | Healthz | 23 | API | HTTP 200 |
+| 23 | Readyz | 24 | API | HTTP 200 |
 
 ## Limites connues
 
-1. **Derives PCM (10 scenarios)** : Les templates PCM utilisent un anglais simplifie, _detect_language classe comme EN
-2. **PostgreSQL** : Adaptateur code present mais validation reelle bloquee (abel n'a pas CREATEDB)
-3. **Gold corpus** : Clarification, restart, annulation non couverts dans les 30 scenarios
-4. **Barriere metier** : Active, biz_unexpected != 0 → RC non-zero
+1. **Derives PCM** : Identifiées, à corriger dans LAWIM V1.1
+2. **PostgreSQL** : Operationnel sur OVH (`lawim-postgres` sain)
+3. **e39c2c51** : Non encore poussé sur origin/main
+4. **Tags OVH** : 322 tags historiques encore présents sur OVH (sync git push)
+5. **Anciens scripts/répertoires** : Récupérables via Git (`git show d7cdd410:<path>`)
 
 ## Branches
 
-### Actives
-- main (production)
-- feature/program-g5d-regression-recovery-20260724 (travail en cours)
-- feature/program-f-conversation-engine (archive, fusionne dans main)
+| Branche | Statut |
+|---|---|
+| main | **ACTIVE** — production |
+| maintenance/1.0.x | **ACTIVE** — support V1 |
+| Toutes les autres (23) | **SUPPRIMEES** — fusionnées dans main |
 
-### Historiques (non fusionnees, a archiver)
-- feature/action-execution-engine-20260722
-- feature/ai-intelligence-platform-20260723
-- feature/controlled-response-generation-20260721
-- feature/conversation-memory-continuity-20260721
-- feature/demo-world-*
-- feature/external-operational-certification-20260723
-- feature/interaction-platform-multichannel-20260723
-- feature/production-*
-- feature/program-e-completion-20260723
-- feature/program-g2-*
-- feature/program-g5-multilingual-semantic-postgres-20260724
-- feature/project-profile-field-registry-20260722
-- feature/qualification-decision-engine-20260722
-- governance/vscode-lawim-context-20260720
+## Traçabilité des suppressions
+
+Index de récupération : `docs/consolidation/deleted-evidence-recovery-index.md`
+Tests disparus : `docs/reviews/release/e39c2c51-disappeared-tests.json`
+Rapport de vérification : `docs/reviews/release/e39c2c51-baseline-independent-verification.md`
+Certification finale : `docs/reviews/release/e39c2c51-baseline-final-certification.md`
 
 ## Prochaine etape recommandee
-- Fusionner feature/program-g5d-regression-recovery-20260724 dans main
-- Tagguer lawim-v3-program-g5-stability-complete
-- Nettoyer les branches historiques
-- Programme G.6 : 10 000 conversations industrielles (si PostgreSQL valide)
+- **LAWIM V1.1 — PCM STABILIZATION** (après push de e39c2c51 sur origin/main)
+- Pousser e39c2c51 sur origin/main
+- Déployer e39c2c51 sur OVH (docker build + compose up -d)
+- Synchroniser tags OVH
