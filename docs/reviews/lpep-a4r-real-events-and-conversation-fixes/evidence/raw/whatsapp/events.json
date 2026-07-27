@@ -1,0 +1,22 @@
+{
+  "phone": "+23796745712",
+  "turns": [
+    {
+      "time": "07:43:57",
+      "input": "bonjour",
+      "response_len": 235,
+      "provider_message_id": "3EB0AE023E970E42DC848C",
+      "http_status": 200
+    },
+    {
+      "time": "07:44:18",
+      "input": "j'ai besoin d'un appartement meubl\u00e9",
+      "response_len": 106,
+      "provider_message_id": "3EB06BA3EB084D4EABC9A8",
+      "http_status": 200
+    }
+  ],
+  "inbound_pass": true,
+  "outbound_pass": true,
+  "provider_status": "authorized"
+}

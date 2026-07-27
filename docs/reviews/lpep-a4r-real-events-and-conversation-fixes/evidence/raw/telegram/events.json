@@ -1,0 +1,32 @@
+{
+  "chat_id": "1607704887",
+  "turns": [
+    {
+      "time": "07:39:32",
+      "input": "/start",
+      "telegram_message_id": 77,
+      "http_status": 200
+    },
+    {
+      "time": "07:39:43",
+      "input": "bonjour",
+      "telegram_message_id": 78,
+      "http_status": 200
+    },
+    {
+      "time": "07:39:59",
+      "input": "je veux un studio",
+      "telegram_message_id": 79,
+      "http_status": 200
+    },
+    {
+      "time": "07:40:13",
+      "input": "a nlonkak",
+      "telegram_message_id": 80,
+      "http_status": 200
+    }
+  ],
+  "inbound_pass": true,
+  "outbound_pass": true,
+  "provider_status": "webhook_registered"
+}

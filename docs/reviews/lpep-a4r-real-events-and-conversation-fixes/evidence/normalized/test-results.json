@@ -1,0 +1,14 @@
+{
+  "targeted": {
+    "pass": 12,
+    "fail": 0
+  },
+  "v1": {
+    "pass": 994,
+    "fail": 0
+  },
+  "lcip": {
+    "pass": 104,
+    "fail": 0
+  }
+}

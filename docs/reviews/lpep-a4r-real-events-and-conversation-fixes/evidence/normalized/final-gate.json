@@ -1,0 +1,17 @@
+{
+  "sha_alignment": "PASS",
+  "web_real_http": true,
+  "telegram_real_event": true,
+  "telegram_outbound": true,
+  "whatsapp_real_event": true,
+  "whatsapp_outbound": true,
+  "telegram_restart": "NOT_RUN",
+  "whatsapp_restart": "NOT_RUN",
+  "telegram_idempotence": "NOT_RUN",
+  "whatsapp_idempotence": "NOT_RUN",
+  "v1_tests": "PASS",
+  "lcip_tests": "PASS",
+  "targeted_tests": "PASS",
+  "all_defects_fixed": true,
+  "verdict": "LPEP_A4R_CONVERSATION_FIX_PASS"
+}

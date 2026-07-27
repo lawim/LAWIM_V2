@@ -1,0 +1,48 @@
+[
+  {
+    "id": "DEFECT-001",
+    "severity": "HIGH",
+    "component": "lawim_runtime/conversation/entity/__init__.py",
+    "root_cause": "French transaction words (louer, acheter, vendre) missing from NON_CITIES exclusion list",
+    "test": "test_defect001_transaction_not_city",
+    "fixed": true,
+    "fix": "Added 7 French transaction keywords to NON_CITIES set",
+    "extra_guard": "Cross-contamination guard: city discarded if raw value matches TRANSACTION_TYPES"
+  },
+  {
+    "id": "DEFECT-002",
+    "severity": "HIGH",
+    "component": "lawim_runtime/conversation/entity/__init__.py",
+    "root_cause": "Correction with 'j'ai dit' failed because city from 'louer' was same as previously extracted city",
+    "test": "test_defect002_correction_with_jai_dit",
+    "fixed": true,
+    "fix": "DEFECT-001 fix prevents initial city contamination"
+  },
+  {
+    "id": "DEFECT-003",
+    "severity": "MEDIUM",
+    "component": "lawim_runtime/conversation/entity/__init__.py",
+    "root_cause": "No field or extraction rule for furnished qualifier meubl\u00e9/meubl\u00e9e",
+    "test": "test_defect003_meuble",
+    "fixed": true,
+    "fix": "Added 'furnished' boolean extraction for meubl\u00e9/meubl\u00e9e/non meubl\u00e9"
+  },
+  {
+    "id": "DEFECT-004",
+    "severity": "MEDIUM",
+    "component": "lawim_runtime/conversation/intent/__init__.py",
+    "root_cause": "/start not in greeting keywords, detected as 'unknown' instead of 'greeting'",
+    "test": "test_defect004_start_is_greeting",
+    "fixed": true,
+    "fix": "Added /start to greeting keyword set"
+  },
+  {
+    "id": "DEFECT-005",
+    "severity": "LOW",
+    "component": "lawim_runtime/conversation/entity/__init__.py",
+    "root_cause": "District variant 'nlonkak' (single g) missing from DISTRICTS dict (only nlongkak with double g present)",
+    "test": "test_defect005_nlonkak_as_district",
+    "fixed": true,
+    "fix": "Added nlonkak as alias for Nlongkak"
+  }
+]

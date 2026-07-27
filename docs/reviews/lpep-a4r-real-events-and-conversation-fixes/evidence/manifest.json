@@ -1,0 +1,65 @@
+[
+  {
+    "control_id": "E-0001",
+    "path": "normalized/defects.json",
+    "size": 1933,
+    "sha256": "f15df34e9d1f8bab238474c160e3635d268bc21490c3872f7a06f99c6478b1ee",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "E-0002",
+    "path": "normalized/final-gate.json",
+    "size": 464,
+    "sha256": "b94f522e4ba1cd41981f35535419cbe1c03d60d3aec8c5c1ba4e79b9f2b12690",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "E-0003",
+    "path": "normalized/test-results.json",
+    "size": 147,
+    "sha256": "a1002ee78db54d34621fe5d6d55bbac5f2af9d142990efebc68c13b378ee7ea2",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "E-0004",
+    "path": "raw/git/sha.txt",
+    "size": 57,
+    "sha256": "501433595571c9fe99ae3221e70044a8c7cea81b27c8660e297b3ca04ec9717f",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "E-0005",
+    "path": "raw/logs/application.log",
+    "size": 19806,
+    "sha256": "392155583c7b913c36993762918d1eadc21e5d29d23668eda22c0b0a3ecbf956",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "E-0006",
+    "path": "raw/telegram/events.json",
+    "size": 641,
+    "sha256": "6a136c08d8b35c07e08efb36ca78daf50e6bc79e9be70779d867e4f91b929fbc",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "E-0007",
+    "path": "raw/whatsapp/events.json",
+    "size": 507,
+    "sha256": "193577143e2699175ca5c7e4df08a12b0bf715cebfa8d4d85381f18d981a6355",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  }
+]

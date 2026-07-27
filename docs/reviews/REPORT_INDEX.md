@@ -74,6 +74,8 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-27 | LPEP A.3G — Independent Multichannel Gate | c9358410 | main | docs/reviews/lpep-a3g-independent-multichannel-gate/REPORT.md | details/ | evidence/ | LPEP_A3G_MULTICHANNEL_GATE_PARTIAL |
 
+| 2026-07-27 | LPEP A.4R — Real Events & Conversation Fixes | bfce22c7 | main | docs/reviews/lpep-a4r-real-events-and-conversation-fixes/REPORT.md | details/ | evidence/ | LPEP_A4R_CONVERSATION_FIX_PASS |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*
