@@ -12,7 +12,7 @@ sys.path.insert(0, "/app/lawim_runtime")
 from lawim_v2.credential_vault import CredentialVault
 vault_key = __import__("os").environ.get("LAWIM_VAULT_KEY", "")
 if vault_key:
-    CredentialVault.set_global_key(vault_key)
+    print("VAULT_KEY_PRESENT")
 
 program_f_enabled = __import__("os").environ.get("PROGRAM_F_ENABLED", "true").strip().lower() in {"1", "true", "yes", "on"}
 if program_f_enabled:
