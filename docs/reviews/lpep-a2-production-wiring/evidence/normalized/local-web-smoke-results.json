@@ -1,0 +1,11 @@
+{
+  "message": "Bonjour, test canary LPEP A2.",
+  "registration": "PASS",
+  "login": "PASS",
+  "conversation_created": "PASS",
+  "message_added": "PASS",
+  "handler": "LawimRequestHandler",
+  "program_f_adapter": "activated (ProgramFEngineAdapter)",
+  "journey_orchestrator": "instantiated (ConversationJourneyOrchestrator)",
+  "response_returned": "PASS"
+}

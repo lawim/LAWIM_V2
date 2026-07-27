@@ -1,0 +1,13 @@
+LAWIM_BUILD_SHA=8f3ebf9d
+IMPORT_PASS:lawim_runtime.conversation.journey
+IMPORT_PASS:lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter
+LAWIM_V2 listening on http://0.0.0.0:3100
+GET /health -> 200
+GET /healthz -> 200
+GET /readyz -> 200
+POST /api/notifications/telegram/webhook -> 503 (expected - no secret)
+POST /api/notifications/whatsapp/webhook -> 401 (expected - no auth)
+POST /api/auth/register -> 201 (user created)
+POST /api/auth/login -> 200 (token)
+POST /api/conversations -> 201 (conversation created)
+POST /api/conversations/1/messages -> 201 (message added)

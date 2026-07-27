@@ -64,6 +64,12 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-26 | LCIP C.2PR-D — Runtime Deployment | 229d8cd3 | main | docs/reviews/lcip-c2prd-runtime-deployment/REPORT.md | details/ | evidence/ | PASS |
 
+| 2026-07-26 | LCIP C.2PR-V — Functional Validation | 229d8cd3 | main | docs/reviews/lcip-c2prv-functional-production-validation/REPORT.md | details/ | evidence/ | PARTIAL |
+
+| 2026-07-27 | LPEP A.1 — Audit chaîne exécution | 229d8cd3 | main | docs/reviews/lpep-a1-audit-repair/REPORT.md | details/ | evidence/ | REPAIR_REQUIRED |
+
+| 2026-07-27 | LPEP A.2 — Production Wiring | 8f3ebf9dff40b7d32421bd39be9327b9d82eff45 | feature/lpep-a2-production-wiring-20260727 | docs/reviews/lpep-a2-production-wiring/REPORT.md | details/ | evidence/ | LPEP_A2_LOCAL_WIRING_GATE_PASS |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*

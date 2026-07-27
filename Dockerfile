@@ -12,7 +12,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     LAWIM_DB_PATH=/app/data/runtime/lawim.sqlite3 \
     LAWIM_SEED_DEMO_DATA=true \
     PATH="/app/code:${PATH}" \
-    LAWIM_BUILD_SHA=${LAWIM_BUILD_SHA}
+    LAWIM_BUILD_SHA=${LAWIM_BUILD_SHA} \
+    LAWIM_FEATURE_CONVERSATION_V2=true \
+    PROGRAM_F_ENABLED=true
 
 LABEL org.opencontainers.image.revision=${LAWIM_BUILD_SHA}
 
@@ -25,6 +27,7 @@ RUN useradd --system --create-home --home-dir /home/lawim --shell /usr/sbin/nolo
 COPY requirements.txt requirements-postgresql.txt /app/
 COPY --chown=lawim:lawim sitecustomize.py /app/sitecustomize.py
 COPY --chown=lawim:lawim code /app/code
+COPY --chown=lawim:lawim lawim_runtime /app/lawim_runtime
 COPY --chown=lawim:lawim scripts/entrypoint.sh /app/entrypoint.sh
 
 RUN chmod +x /app/entrypoint.sh \

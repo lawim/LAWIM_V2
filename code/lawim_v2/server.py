@@ -178,7 +178,7 @@ class LawimRequestHandler(BaseHTTPRequestHandler):
         if path.startswith("/media/"):
             self._send_media_asset(path)
             return
-        if path == "/healthz":
+        if path in {"/health", "/healthz"}:
             self._send_text("ok", content_type="text/plain; charset=utf-8")
             return
         if path == "/readyz":

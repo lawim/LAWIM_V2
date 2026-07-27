@@ -1,0 +1,15 @@
+{
+  "canonical_name": "PROGRAM_F_ENABLED",
+  "default_value": "true",
+  "development_value": "true",
+  "test_value": "true",
+  "production_value": "true",
+  "effect_if_absent": "Runtime initialization required (treated as enabled)",
+  "secondary_flag": "LAWIM_FEATURE_CONVERSATION_V2",
+  "secondary_value": "true",
+  "valid_values": [
+    "true",
+    "false"
+  ],
+  "documentation": "When true, ProgramF engine is mandatory at startup. Missing lawim_runtime causes startup failure. When false, ProgramF engine is silently disabled."
+}

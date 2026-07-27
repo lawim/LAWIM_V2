@@ -215,6 +215,7 @@ class LawimServices:
         if _conv_biz_service is None:
             _conv_biz_service = MarketplacePropertySearchAdapter(repository=repository)
             logger.warning("Business repository: sqlite (fallback — no DATABASE_URL)")
+        _program_f_enabled = os.environ.get("PROGRAM_F_ENABLED", "true").strip().lower() in {"1", "true", "yes", "on"}
         try:
             _conv_engine_pf = ProgramFEngineAdapter(
                 db_path=_conv_pf_db_path,
@@ -222,8 +223,11 @@ class LawimServices:
             )
             logger.info("ProgramFEngineAdapter activated as primary engine (db=%s)", _conv_pf_db_path)
         except ImportError:
+            if _program_f_enabled:
+                logger.critical("Program F engine is required (PROGRAM_F_ENABLED=true) but lawim_runtime is not available")
+                raise
             _conv_engine_pf = None
-            logger.warning("Program F engine unavailable — fallback disabled")
+            logger.warning("Program F engine unavailable — disabled by feature flag (PROGRAM_F_ENABLED=false)")
 
         self.communication = CommunicationService(
             repository,

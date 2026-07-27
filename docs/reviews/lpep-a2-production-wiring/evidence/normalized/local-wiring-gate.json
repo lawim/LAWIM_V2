@@ -1,0 +1,14 @@
+{
+  "lawim_runtime_in_image": true,
+  "entrypoint_complete": true,
+  "program_f_adapter_instantiated": true,
+  "conversation_journey_orchestrator_instantiated": true,
+  "web_route_registered": true,
+  "telegram_route_registered": true,
+  "whatsapp_route_registered": true,
+  "health_pass": true,
+  "ready_pass": true,
+  "web_local_smoke_pass": true,
+  "no_regression": true,
+  "verdict": "LPEP_A2_LOCAL_WIRING_GATE_PASS"
+}
