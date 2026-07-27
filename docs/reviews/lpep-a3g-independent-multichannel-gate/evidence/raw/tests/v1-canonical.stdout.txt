@@ -1,0 +1,25 @@
+........................................................................ [  7%]
+........................................................................ [ 14%]
+........................................................................ [ 21%]
+........................................................................ [ 28%]
+........................................................................ [ 36%]
+........................................................................ [ 43%]
+........................................................................ [ 50%]
+........................................................................ [ 57%]
+........................................................................ [ 65%]
+........................................................................ [ 72%]
+........................................................................ [ 79%]
+........................................................................ [ 86%]
+........................................................................ [ 94%]
+..........................................................               [100%]
+=============================== warnings summary ===============================
+code/lawim_v2/credential_vault.py:20
+  /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/code/lawim_v2/credential_vault.py:20: UserWarning: LAWIM_VAULT_KEY not set; using insecure placeholder key
+    warnings.warn("LAWIM_VAULT_KEY not set; using insecure placeholder key")
+
+tests/test_conversation_memory_corrections.py: 20 warnings
+  /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/code/lawim_v2/conversation/memory/service.py:27: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow().isoformat()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+994 passed, 21 warnings in 10.64s

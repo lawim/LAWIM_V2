@@ -1,0 +1,4 @@
+0ff8cf9e01c37039399fe8dbb66d9c5df6f11eb4999425171b92be7302ae9309  normalized/channel-configuration-root-cause.json
+84605b95a59c6f8637cf074efa8be7e350182286a12157042e9dfc8554c183d2  normalized/channel-secret-location-audit.json
+caf95b8397badf394a67540cb7ab8c5527f3163103685846c00c43a7054d3cde  normalized/final-multichannel-gate.json
+79655a62e51164a77c8e1bcb5ead92557b8eb1990932214e02715504e9b77e29  normalized/pre-merge-gate.json

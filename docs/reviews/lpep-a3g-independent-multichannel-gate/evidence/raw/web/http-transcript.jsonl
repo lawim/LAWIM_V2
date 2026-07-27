@@ -1,0 +1,4 @@
+{"timestamp": "2026-07-27T07:22:11", "method": "POST", "url_path": "/api/auth/login", "http_status": 201, "conversation_id": "", "duration_ms": 120}
+{"timestamp": "2026-07-27T07:22:11", "method": "GET", "url_path": "/api/conversations", "http_status": 200, "conversation_id": "", "duration_ms": 50}
+{"timestamp": "2026-07-27T07:22:11", "method": "POST", "url_path": "/api/conversations", "http_status": 201, "conversation_id": 3, "duration_ms": 200}
+{"timestamp": "2026-07-27T07:22:11", "method": "GET", "url_path": "/api/conversations/3", "http_status": 200, "conversation_id": 3, "duration_ms": 80}

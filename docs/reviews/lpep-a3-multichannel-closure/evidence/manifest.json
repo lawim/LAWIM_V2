@@ -1,0 +1,38 @@
+[
+  {
+    "control_id": "C-0001",
+    "path": "normalized/channel-configuration-root-cause.json",
+    "size": 319,
+    "sha256": "0ff8cf9e01c37039399fe8dbb66d9c5df6f11eb4999425171b92be7302ae9309",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "C-0002",
+    "path": "normalized/channel-secret-location-audit.json",
+    "size": 1685,
+    "sha256": "84605b95a59c6f8637cf074efa8be7e350182286a12157042e9dfc8554c183d2",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "C-0003",
+    "path": "normalized/final-multichannel-gate.json",
+    "size": 473,
+    "sha256": "caf95b8397badf394a67540cb7ab8c5527f3163103685846c00c43a7054d3cde",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "C-0004",
+    "path": "normalized/pre-merge-gate.json",
+    "size": 539,
+    "sha256": "79655a62e51164a77c8e1bcb5ead92557b8eb1990932214e02715504e9b77e29",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  }
+]

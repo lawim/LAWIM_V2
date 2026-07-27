@@ -1,0 +1,52 @@
+{
+  "sha_alignment": "PASS",
+  "wiring_tests": {
+    "pass": 28,
+    "fail": 0,
+    "exit": 0
+  },
+  "v1_canonical": {
+    "pass": 994,
+    "fail": 0,
+    "collected": 994,
+    "exit": 0
+  },
+  "lcip": {
+    "pass": 104,
+    "fail": 0,
+    "exit": 0
+  },
+  "web": {
+    "real_http": true,
+    "pass": true,
+    "handler": "LawimRequestHandler",
+    "adapter": "ProgramFEngineAdapter",
+    "orchestrator": "ConversationJourneyOrchestrator"
+  },
+  "telegram": {
+    "config_present": true,
+    "webhook_registered": false,
+    "real_event": "NOT_PROVEN",
+    "outbound": "NOT_PROVEN",
+    "restart": "NOT_RUN",
+    "idempotence": "NOT_RUN"
+  },
+  "whatsapp": {
+    "config_present": true,
+    "instance_authorized": true,
+    "real_event": "NOT_PROVEN",
+    "outbound": "NOT_PROVEN",
+    "restart": "NOT_RUN",
+    "idempotence": "NOT_RUN"
+  },
+  "logs": {
+    "analyzed": 25,
+    "errors": 0,
+    "critical": 0,
+    "tracebacks": 0,
+    "blocking": 0
+  },
+  "raw_evidence_present": true,
+  "raw_evidence_files": 20,
+  "verdict": "LPEP_A3G_MULTICHANNEL_GATE_PARTIAL"
+}

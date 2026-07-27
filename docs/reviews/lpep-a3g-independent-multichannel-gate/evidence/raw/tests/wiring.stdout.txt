@@ -1,0 +1,8 @@
+............................                                             [100%]
+=============================== warnings summary ===============================
+tests/test_production_composition_root.py::test_services_pf_import_reads_flag
+  /media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/code/lawim_v2/credential_vault.py:20: UserWarning: LAWIM_VAULT_KEY not set; using insecure placeholder key
+    warnings.warn("LAWIM_VAULT_KEY not set; using insecure placeholder key")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+28 passed, 1 warning in 0.78s

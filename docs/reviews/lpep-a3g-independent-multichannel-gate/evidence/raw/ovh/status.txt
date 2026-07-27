@@ -1,0 +1,5 @@
+lawim-app Up (healthy)
+lawim-postgres Up 39h
+lawim-redis Up 39h
+PostgreSQL connected
+ProgramFEngineAdapter activated

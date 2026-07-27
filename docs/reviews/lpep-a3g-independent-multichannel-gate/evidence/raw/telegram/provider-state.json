@@ -1,0 +1,14 @@
+{
+  "variables_present": [
+    "TELEGRAM_BOT_TOKEN",
+    "TELEGRAM_WEBHOOK_SECRET",
+    "TELEGRAM_WEBHOOK_URL",
+    "TELEGRAM_BOT_USERNAME",
+    "TELEGRAM_FALLBACK_ENABLED"
+  ],
+  "webhook_url_configured": "https://api.lawim.app/api/notifications/telegram/webhook",
+  "webhook_registered_on_telegram": false,
+  "webhook_registration_note": "Webhook URL present in env but needs setWebhook API call to register with Telegram",
+  "pending_update_count": 0,
+  "handler_route_test": "401 (needs auth header)"
+}

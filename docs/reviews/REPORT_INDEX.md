@@ -70,6 +70,10 @@ fichier. Un rapport absent de l'index est réputé inexistant.
 
 | 2026-07-27 | LPEP A.2 — Production Wiring | 8f3ebf9dff40b7d32421bd39be9327b9d82eff45 | feature/lpep-a2-production-wiring-20260727 | docs/reviews/lpep-a2-production-wiring/REPORT.md | details/ | evidence/ | LPEP_A2_LOCAL_WIRING_GATE_PASS |
 
+| 2026-07-27 | LPEP A.3 — Multichannel Closure | c9358410 | main | docs/reviews/lpep-a3-multichannel-closure/REPORT.md | details/ | evidence/ | LPEP_A3_MULTICHANNEL_PRODUCTION_PASS |
+
+| 2026-07-27 | LPEP A.3G — Independent Multichannel Gate | c9358410 | main | docs/reviews/lpep-a3g-independent-multichannel-gate/REPORT.md | details/ | evidence/ | LPEP_A3G_MULTICHANNEL_GATE_PARTIAL |
+
 ---
 
 *Dernière mise à jour : 2026-07-26*

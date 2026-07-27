@@ -1,0 +1,10 @@
+{
+  "real_http": true,
+  "requests": 4,
+  "pass_count": 4,
+  "conversation_id": 3,
+  "handler": "LawimRequestHandler",
+  "adapter": "ProgramFEngineAdapter",
+  "orchestrator": "ConversationJourneyOrchestrator",
+  "raw_evidence": true
+}

@@ -1,0 +1,4 @@
+{
+  "classification": "CONFIG-01_ENV_FILE_NOT_LOADED_BY_COMPOSE",
+  "detail": "The production .env file (/opt/lawim/compose/.env) has all required Telegram and Green API secrets. Old deployments used docker run without --env-file, so variables were never loaded. LPEP A.3 restored --env-file /opt/lawim/compose/.env."
+}
