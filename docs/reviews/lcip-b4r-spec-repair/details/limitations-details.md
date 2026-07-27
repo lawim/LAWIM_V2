@@ -1,0 +1,3 @@
+# limitations-details
+
+Non applicable.

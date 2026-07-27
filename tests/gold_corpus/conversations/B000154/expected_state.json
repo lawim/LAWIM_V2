@@ -1,0 +1,25 @@
+{
+  "intent": "unknown",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "rent",
+    "property_type": "maison",
+    "city": "Yaoundé",
+    "budget": 220000,
+    "bedrooms": 1,
+    "preferred_areas": [
+      "Melen"
+    ],
+    "move_in_date": "septembre"
+  },
+  "next_action": "CREATE_SEARCH_REQUEST",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "city",
+    "budget",
+    "bedrooms",
+    "preferred_areas",
+    "move_in_date"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "id": "B000120",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "web",
+  "language": "pcm",
+  "description": "Double Fact Correction #10",
+  "tags": [
+    "double_fact_correction",
+    "correction",
+    "state_consistency",
+    "explicit_confirmation",
+    "idempotence"
+  ],
+  "business_object": "apartment",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B02-0120",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux louer un appartement à Douala."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?"
+    },
+    {
+      "role": "user",
+      "text": "150 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?"
+    },
+    {
+      "role": "user",
+      "text": "1."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier préférez-vous ?"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?"
+    },
+    {
+      "role": "user",
+      "text": "En octobre."
+    },
+    {
+      "role": "assistant",
+      "text": "Récapitulatif : location, appartement, à Douala, budget 150 000 FCFA, 1 chambre(s), zones Bonamoussadi, entrée octobre. Enregistrer ?"
+    },
+    {
+      "role": "user",
+      "text": "Changez le budget à 170 000 FCFA et remplacez Bonamoussadi par Makepe."
+    },
+    {
+      "role": "assistant",
+      "text": "Les deux corrections sont prises en compte : location, appartement, à Douala, budget 170 000 FCFA, 1 chambre(s), zones Makepe, entrée octobre. Enregistrer ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui, enregistrez."
+    },
+    {
+      "role": "assistant",
+      "text": "La demande corrigée a été enregistrée."
+    }
+  ]
+}

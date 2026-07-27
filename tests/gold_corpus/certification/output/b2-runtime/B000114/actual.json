@@ -1,0 +1,80 @@
+{
+  "conversation_id": "B000114",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 7,
+  "total_duration_ms": 195.38,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je veux louer un appartement \u00e0 Douala.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un appartement \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 13.79,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "220 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, \u00e0 louer, \u00e0 Douala, avec un budget de 220000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 14.23,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "1.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 26.64,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Bonamoussadi",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 220000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 44.2,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "En octobre.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 220000 FCFA, emm\u00e9nagement En octobre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 18.76,
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Changez le budget \u00e0 240 000 FCFA et remplacez Bonamoussadi par Makepe.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, \u00e0 louer, \u00e0 Douala, dans le secteur Bonamoussadi, Makepe, avec un budget de 240000 FCFA, emm\u00e9nagement En octobre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 14.79,
+      "error": null
+    },
+    {
+      "turn_index": 12,
+      "user_input": "Oui, enregistrez.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 62.97,
+      "error": null
+    }
+  ]
+}

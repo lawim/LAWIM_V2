@@ -1,0 +1,7 @@
+{
+  "intent": "unknown",
+  "qualification_status": "qualified",
+  "slots_filled": {},
+  "next_action": "CREATE_VISIT",
+  "memory_retained": []
+}

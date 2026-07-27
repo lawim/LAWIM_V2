@@ -1,0 +1,8 @@
+STATUS=running HEALTH=healthy
+CMD=null
+ENTRYPOINT=["/app/entrypoint.sh"]
+BUILD_SHA=229d8cd3b9240d78a1ff9508d8bef24c2c47437b
+lawim_runtime/: NOT_PRESENT
+server.py: PRESENT (4104 lines)
+LAWIM_FEATURE_CONVERSATION_V2: (empty - falsy)
+LROS vars: DEFINED but NEVER READ by code

@@ -1,0 +1,98 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "I wan rent house for Yaound\u00e9.",
+    "assistant_output": "I don see say you want for rent house for Yaound\u00e9.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 11.96
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Ma budget na 150 thousand.",
+    "assistant_output": "Here be your search summary : house, for rent, in Yaound\u00e9, budget 150000 FCFA. Your search information complete. You want make I register am?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 150000
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 17.25
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Na 1 bedroom.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 1 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, avec un budget de 150000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 150000,
+      "bedrooms": 1
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 14.58
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Odza",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 1 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Odza, avec un budget de 150000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 150000,
+      "bedrooms": 1,
+      "district": "Odza"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 26.87
+  },
+  {
+    "turn_index": 8,
+    "user_input": "September.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 150000,
+      "bedrooms": 1,
+      "district": "Odza"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 15.54
+  },
+  {
+    "turn_index": 10,
+    "user_input": "Yes, register am.",
+    "assistant_output": "Your search information complete. You want make I register am?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 150000,
+      "bedrooms": 1,
+      "district": "Odza"
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 15.67
+  }
+]

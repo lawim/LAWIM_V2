@@ -1,0 +1,12 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "property_type": "house",
+    "preferred_areas": [
+      "Finalement"
+    ]
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

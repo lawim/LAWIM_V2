@@ -1,0 +1,62 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je cherche un appartement \u00e0 Douala, budget 180 000 FCFA, Bonamoussadi.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un appartement \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 180000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 15.11
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Passez le budget \u00e0 230 000 FCFA.",
+    "assistant_output": "Je prends note de votre correction : budget passe de 180000 \u00e0 230000.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 230000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 12.73
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Annulez ma derni\u00e8re modification.",
+    "assistant_output": "I don see say you want pour rent apartment for Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 230000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 15.81
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Oui.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un appartement \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 230000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 12.85
+  }
+]

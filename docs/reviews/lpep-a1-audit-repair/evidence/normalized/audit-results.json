@@ -1,0 +1,18 @@
+{
+  "container_entrypoint": "/app/entrypoint.sh",
+  "container_command": "null (ENTRYPOINT only)",
+  "python_module_started": "heredoc inline (not -m lawim_v2, not asgi_app.py)",
+  "http_application_started": "HealthHandler (entrypoint.sh:51-71) \u2014 NOT LawimRequestHandler (server.py:68)",
+  "web_conversation_routes_active": null,
+  "telegram_webhook_active": null,
+  "whatsapp_webhook_active": null,
+  "program_f_adapter_instantiated": null,
+  "program_f_adapter_reason": "lawim_runtime ABSENT from container \u2192 ImportError catch\u00e9e services.py:224",
+  "journey_orchestrator_instantiated": null,
+  "journey_orchestrator_reason": "Impossible \u2014 ProgramFEngineAdapter jamais instanci\u00e9 avec succ\u00e8s",
+  "routing_mode": "Aucun \u2014 HealthHandler ne route que /health et /ready",
+  "lawim_runtime_present": false,
+  "v3_feature_enabled": false,
+  "lros_flags_used": false,
+  "repair_required": true
+}

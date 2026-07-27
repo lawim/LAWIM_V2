@@ -1,0 +1,9 @@
+{
+  "deployment_sha": "229d8cd3",
+  "sqlite": "PASS",
+  "postgresql": "NOT_PROVEN",
+  "web": "NOT_PROVEN",
+  "telegram": "NOT_PROVEN",
+  "whatsapp": "NOT_PROVEN",
+  "gate": "PARTIAL"
+}

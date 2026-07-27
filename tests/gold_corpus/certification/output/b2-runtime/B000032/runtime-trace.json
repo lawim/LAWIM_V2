@@ -1,0 +1,63 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je veux acheter un terrain \u00e0 Douala.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 acheter un terrain \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Douala"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 10.9
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Je peux aller jusqu\u2019\u00e0 18 000 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 acheter, \u00e0 Douala, avec un budget de 18000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Douala",
+      "budget_max": 18000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 6.55
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Bonapriso ou Makepe.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 acheter, \u00e0 Douala, dans le quartier Makepe, avec un budget de 18000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Douala",
+      "budget_max": 18000000,
+      "district": "Makepe"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 9.2
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Oui.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Douala",
+      "budget_max": 18000000,
+      "district": "Makepe"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 7.08
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "studio",
+    "city": "Douala",
+    "preferred_areas": [
+      "Douala"
+    ],
+    "budget": 250000,
+    "bedrooms": 3
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

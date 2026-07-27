@@ -1,0 +1,3 @@
+# telegram-details
+
+Non applicable.

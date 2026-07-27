@@ -1,0 +1,14 @@
+{
+  "conversation_id": "B000068",
+  "source_block": 1,
+  "source_archive": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "conv_dir": "/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/tests/gold_corpus/conversations/B000068",
+  "turn_count": 18,
+  "language": "fr",
+  "channel": "web",
+  "category": "rental",
+  "placeholder_free": true,
+  "runtime_executable": true,
+  "fidelity": "FIDELITY_PASS",
+  "fidelity_issues": []
+}

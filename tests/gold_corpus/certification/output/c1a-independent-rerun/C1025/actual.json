@@ -1,0 +1,63 @@
+{
+  "conversation_id": "C1025",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 3,
+  "total_duration_ms": 18.171072006225586,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche une maison \u00e0 louer \u00e0 Yaound\u00e9, budget 350 000, 3 chambres, Bastos.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "district": "Bastos",
+        "budget_max": 350000,
+        "bedrooms": 3
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "En septembre.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 3 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Bastos, avec un budget de 350000 FCFA, emm\u00e9nagement En septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "district": "Bastos",
+        "budget_max": 350000,
+        "bedrooms": 3,
+        "move_in_date": "En septembre"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Merci, mais pas maintenant.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "district": "Bastos",
+        "budget_max": 350000,
+        "bedrooms": 3,
+        "move_in_date": "En septembre"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    }
+  ]
+}

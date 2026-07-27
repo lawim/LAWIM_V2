@@ -1,0 +1,15 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "apartment",
+    "preferred_areas": [
+      "Kribi"
+    ],
+    "budget": 500000,
+    "bedrooms": 1
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

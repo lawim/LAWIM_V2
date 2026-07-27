@@ -1,0 +1,44 @@
+{
+  "id": "C1024",
+  "category": "idempotence",
+  "level": "medium",
+  "channel": "web",
+  "language": "fr",
+  "description": "Test d'idempotence de la confirmation finale",
+  "tags": [
+    "idempotence",
+    "confirmation"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un studio \u00e0 louer \u00e0 Douala, budget 80 000 FCFA, quartier Akwa.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emm\u00e9nager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En ao\u00fbt.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche de studio ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

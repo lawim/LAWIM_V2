@@ -1,0 +1,18 @@
+{
+  "business_action": "create_search_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "boutique",
+    "city": "Bafoussam",
+    "budget": 300000,
+    "bedrooms": null,
+    "preferred_areas": [
+      "Banengo",
+      "Djeleng"
+    ],
+    "move_in_date": "septembre"
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

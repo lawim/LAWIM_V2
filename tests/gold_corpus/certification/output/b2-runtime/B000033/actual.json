@@ -1,0 +1,60 @@
+{
+  "conversation_id": "B000033",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 5,
+  "total_duration_ms": 31.85,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je veux acheter un maison \u00e0 Bafoussam.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 acheter une maison \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 9.54,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Je peux aller jusqu\u2019\u00e0 25 000 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, \u00e0 acheter, \u00e0 Bafoussam, avec un budget de 25000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 6.2,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Tamdja ou Kena.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 5.11,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Trois chambres minimum.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 3 chambres, \u00e0 acheter, \u00e0 Bafoussam, avec un budget de 25000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.6,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Oui.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 6.4,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "assertions": [
+    {
+      "id": "ASSERT-0001",
+      "type": "business",
+      "description": "L'action metier est correcte",
+      "expected": "create_property_listing",
+      "path": "next_action",
+      "operator": "eq"
+    },
+    {
+      "id": "ASSERT-0002",
+      "type": "language",
+      "description": "La langue de reponse est correcte",
+      "expected": "fr",
+      "path": "responses_language",
+      "operator": "eq"
+    },
+    {
+      "id": "ASSERT-0003",
+      "type": "questions",
+      "description": "Au maximum une question par tour",
+      "expected": 1,
+      "path": "maximum_questions_per_turn",
+      "operator": "eq"
+    }
+  ]
+}

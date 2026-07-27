@@ -1,0 +1,182 @@
+{
+  "total_zips": 10,
+  "skipped_duplicates": 0,
+  "zips": [
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+      "size_bytes": 22591,
+      "sha256": "534fe46102550ded2df913c6da7b5deac9fcd72e61829e8c3a76166125eac762",
+      "json_files": [
+        "lawim_gold_block_01_0001_0100.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_01_0001_0100.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_01_manifest.json"
+      ],
+      "readme_files": [
+        "README_BLOCK_01.md"
+      ],
+      "conversations_in_json": 100,
+      "conversations_in_jsonl": 100
+    },
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+      "size_bytes": 25539,
+      "sha256": "8dc4e70cd0bd7a940464b578f1bcb401088b35ad4841825d0d05e1a94c5ff76b",
+      "json_files": [
+        "lawim_gold_block_02_detailed_0101_0200.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_02_detailed_0101_0200.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_02_detailed_manifest.json"
+      ],
+      "readme_files": [
+        "README_BLOCK_02_DETAILED.md"
+      ],
+      "conversations_in_json": 100,
+      "conversations_in_jsonl": 100
+    },
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_03_DETAILED.zip",
+      "size_bytes": 12490,
+      "sha256": "08950ee51ca4b8763e4e0be42b4affe23e0a4ee4322c8f35f124c1bb2003a1b6",
+      "json_files": [
+        "lawim_gold_block_03_detailed_0201_0300.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_03_detailed_0201_0300.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_03_manifest.json"
+      ],
+      "readme_files": [],
+      "conversations_in_json": 90,
+      "conversations_in_jsonl": 90
+    },
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_04_DETAILED.zip",
+      "size_bytes": 12830,
+      "sha256": "b3d29295eae7b85f02a89752b6986e93225e63b09a05099f8c5414772707cad6",
+      "json_files": [
+        "lawim_gold_block_04_detailed_0301_0400.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_04_detailed_0301_0400.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_04_manifest.json"
+      ],
+      "readme_files": [],
+      "conversations_in_json": 100,
+      "conversations_in_jsonl": 100
+    },
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_05_DETAILED.zip",
+      "size_bytes": 8610,
+      "sha256": "6ffd246693b35a2eebc84a0749e92228445c1e9eed781927c7ee4c2166cc4fee",
+      "json_files": [
+        "lawim_gold_block_05_detailed_0401_0500.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_05_detailed_0401_0500.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_05_manifest.json"
+      ],
+      "readme_files": [],
+      "conversations_in_json": 100,
+      "conversations_in_jsonl": 100
+    },
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_06_DETAILED.zip",
+      "size_bytes": 8492,
+      "sha256": "686f850d52f9a9566209bea5b90ab2500ac070b3a2f7487f2324c636f073ffb8",
+      "json_files": [
+        "lawim_gold_block_06_detailed_0501_0600.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_06_detailed_0501_0600.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_06_manifest.json"
+      ],
+      "readme_files": [],
+      "conversations_in_json": 100,
+      "conversations_in_jsonl": 100
+    },
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_07_DETAILED.zip",
+      "size_bytes": 8869,
+      "sha256": "c58eeba064f5a4a8e073ee5c48847f82d75b7cee3d600c7d6f6573ef3db6486b",
+      "json_files": [
+        "lawim_gold_block_07_detailed_0601_0700.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_07_detailed_0601_0700.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_07_manifest.json"
+      ],
+      "readme_files": [],
+      "conversations_in_json": 100,
+      "conversations_in_jsonl": 100
+    },
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_08_DETAILED.zip",
+      "size_bytes": 9044,
+      "sha256": "235a1e0818a38e49e1140acb4300e177f2b78edebce710183918ea76e3fb3951",
+      "json_files": [
+        "lawim_gold_block_08_detailed_0701_0800.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_08_detailed_0701_0800.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_08_manifest.json"
+      ],
+      "readme_files": [],
+      "conversations_in_json": 100,
+      "conversations_in_jsonl": 100
+    },
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_09_DETAILED.zip",
+      "size_bytes": 10138,
+      "sha256": "6934bad3ffc6499392f53248c53faba1a84aa72abb1c2048b5bfdb0b32150123",
+      "json_files": [
+        "lawim_gold_block_09_detailed_0801_0900.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_09_detailed_0801_0900.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_09_manifest.json"
+      ],
+      "readme_files": [],
+      "conversations_in_json": 100,
+      "conversations_in_jsonl": 100
+    },
+    {
+      "zip": "LAWIM_GOLD_CORPUS_BLOCK_10_DETAILED.zip",
+      "size_bytes": 12025,
+      "sha256": "ffc689d6585ca4d0ef46e9757a76167b157a51a920bd1f32c6235a5f6a3baf66",
+      "json_files": [
+        "lawim_gold_block_10_detailed_0901_1000.json"
+      ],
+      "jsonl_files": [
+        "lawim_gold_block_10_detailed_0901_1000.jsonl"
+      ],
+      "manifest_files": [
+        "lawim_gold_block_10_manifest.json"
+      ],
+      "readme_files": [],
+      "conversations_in_json": 100,
+      "conversations_in_jsonl": 100
+    }
+  ],
+  "total_conversations": 990,
+  "total_jsonl": 990
+}

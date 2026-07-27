@@ -1,0 +1,149 @@
+{
+  "id": "B000931",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Conversation B000931",
+  "tags": [],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_10_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B10-0941",
+  "messages": [
+    {
+      "role": "user",
+      "text": "User turn 1 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 2",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 3 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 4",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 5 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 6",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 7 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 8",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 9 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 10",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 11 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 12",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 13 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 14",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 15 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 16",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 17 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 18",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "User turn 19 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 20",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "User turn 21 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 22",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "User turn 23 (web_to_telegram)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 24",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "system",
+      "text": "PRODUCTION_VALIDATION",
+      "intent": "unknown"
+    },
+    {
+      "role": "user",
+      "text": "Oui, je valide définitivement.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Parcours terminé avec succès.",
+      "intent": "unknown"
+    }
+  ]
+}

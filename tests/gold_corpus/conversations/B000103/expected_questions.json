@@ -1,0 +1,32 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Combien de chambres souhaitez-vous ?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Quel quartier préférez-vous à Douala ?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Quand souhaitez-vous emménager ?",
+      "context": "Tour 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "Je récapitule : location, maison, à Douala, budget 180 000 FCFA, 3 chambre(s), zones Bonamoussadi, entrée septembre. Souhaitez-vous enregistrer ?",
+      "context": "Tour 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Budget corrigé. Nouveau récapitulatif : location, maison, à Douala, budget 230 000 FCFA, 3 chambre(s), zones Bonamoussadi, entrée septembre. Souhaitez-vous enregistrer ?",
+      "context": "Tour 4"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

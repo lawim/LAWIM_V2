@@ -1,0 +1,8 @@
+{
+  "route": "POST /api/notifications/whatsapp/webhook",
+  "status_code": 401,
+  "reason": "Unauthorized \u2014 no valid auth token (correct handler reached)",
+  "handler_reachable": true,
+  "provider_configured": false,
+  "real_message": "NOT_PROVEN"
+}

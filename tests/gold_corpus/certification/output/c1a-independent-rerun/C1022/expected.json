@@ -1,0 +1,74 @@
+{
+  "id": "C1022",
+  "category": "restart",
+  "level": "hard",
+  "channel": "web",
+  "language": "fr",
+  "description": "Conversation avec restart apr\u00e8s les premiers faits",
+  "tags": [
+    "restart",
+    "persistence"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement \u00e0 louer \u00e0 Kribi.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "120 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "2 chambres.",
+      "intent": "unknown"
+    },
+    {
+      "role": "system",
+      "text": "SERVICE_RESTART",
+      "intent": "unknown"
+    },
+    {
+      "role": "user",
+      "text": "Je pr\u00e9f\u00e8re le quartier Dombe.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emm\u00e9nager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En juillet.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

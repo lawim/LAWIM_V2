@@ -1,0 +1,21 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel est votre budget d’achat ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Avez-vous des quartiers préférés ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Je récapitule : achat d’un terrain à Douala, budget maximal 18 000 000 FCFA, zones Bonapriso ou Makepe. Souhaitez-vous enregistrer cette recherche ?",
+      "context": "Turn 2"
+    }
+  ],
+  "forbidden_questions": []
+}

@@ -1,0 +1,16 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Yaoundé",
+    "preferred_areas": [
+      "Bonamoussadi",
+      "Pour"
+    ],
+    "budget": 220000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

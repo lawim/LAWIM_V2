@@ -1,0 +1,43 @@
+{
+  "assertions": [
+    {
+      "id": "ASSERT-0001",
+      "type": "memory",
+      "description": "Les faits sont retenus en memoire",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget",
+        "bedrooms",
+        "preferred_areas"
+      ],
+      "path": "memory_retained",
+      "operator": "contains"
+    },
+    {
+      "id": "ASSERT-0002",
+      "type": "business",
+      "description": "L'action metier est correcte",
+      "expected": "cancelled",
+      "path": "next_action",
+      "operator": "eq"
+    },
+    {
+      "id": "ASSERT-0003",
+      "type": "language",
+      "description": "La langue de reponse est correcte",
+      "expected": "fr",
+      "path": "responses_language",
+      "operator": "eq"
+    },
+    {
+      "id": "ASSERT-0004",
+      "type": "questions",
+      "description": "Au maximum une question par tour",
+      "expected": 1,
+      "path": "maximum_questions_per_turn",
+      "operator": "eq"
+    }
+  ]
+}

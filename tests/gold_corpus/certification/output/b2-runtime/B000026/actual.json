@@ -1,0 +1,50 @@
+{
+  "conversation_id": "B000026",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 40.83,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je veux acheter un terrain \u00e0 Yaound\u00e9.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 acheter un terrain \u00e0 Yaound\u00e9.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 18.17,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Je peux aller jusqu\u2019\u00e0 12 000 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 acheter, \u00e0 Yaound\u00e9, avec un budget de 12000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 6.23,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Bastos ou Mvan.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 acheter, \u00e0 Yaound\u00e9, dans le secteur Bastos, Mvan, avec un budget de 12000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 11.64,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Oui.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.8,
+      "error": null
+    }
+  ]
+}

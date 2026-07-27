@@ -1,0 +1,61 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je veux acheter un terrain \u00e0 Kribi.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 acheter un terrain \u00e0 Kribi.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Kribi"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 5.16
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Je peux aller jusqu\u2019\u00e0 35 000 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 acheter, \u00e0 Kribi, avec un budget de 35000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Kribi",
+      "budget_max": 35000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 5.33
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Mboamanga ou Bwambe.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Kribi",
+      "budget_max": 35000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 5.58
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Oui.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Kribi",
+      "budget_max": 35000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 8.54
+  }
+]

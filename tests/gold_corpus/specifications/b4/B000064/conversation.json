@@ -1,0 +1,50 @@
+{
+  "id": "B000064",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Correction budget et zone 64",
+  "tags": [
+    "correction",
+    "change_of_mind",
+    "no_premature_action"
+  ],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0064",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement à louer à Yaoundé, budget 150 000 FCFA, deux chambres à Bastos."
+    },
+    {
+      "role": "assistant",
+      "text": "À partir de quand souhaitez-vous emménager ?"
+    },
+    {
+      "role": "user",
+      "text": "En octobre."
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : appartement à Bastos, deux chambres, budget 150 000 FCFA, entrée en octobre. Souhaitez-vous enregistrer ?"
+    },
+    {
+      "role": "user",
+      "text": "Non, corrigez : mon budget est 280 000 FCFA et je préfère Melen, pas Bastos."
+    },
+    {
+      "role": "assistant",
+      "text": "Correction prise en compte : budget 280 000 FCFA, zone Melen. Souhaitez-vous maintenant enregistrer la recherche ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche corrigée a bien été enregistrée."
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "I wan rent house for Douala.",
+    "assistant_output": "I don see say you want for rent house for Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 20.85
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Ma budget na 200 thousand.",
+    "assistant_output": "Here be your search summary : house, for rent, in Douala, budget 200000 FCFA. Your search information complete. You want make I register am?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 200000
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 11.77
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Na 3 bedroom.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 3 chambres, \u00e0 louer, \u00e0 Douala, avec un budget de 200000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 200000,
+      "bedrooms": 3
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 12.45
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Bonamoussadi",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 3 chambres, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 200000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 200000,
+      "bedrooms": 3,
+      "district": "Bonamoussadi"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 13.3
+  },
+  {
+    "turn_index": 8,
+    "user_input": "September.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 200000,
+      "bedrooms": 3,
+      "district": "Bonamoussadi"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 13.36
+  },
+  {
+    "turn_index": 10,
+    "user_input": "Yes, register am.",
+    "assistant_output": "Your search information complete. You want make I register am?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 200000,
+      "bedrooms": 3,
+      "district": "Bonamoussadi"
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 13.65
+  }
+]

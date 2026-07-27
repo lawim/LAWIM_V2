@@ -1,0 +1,36 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel budget mensuel ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Combien de chambres ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Quel quartier préférez-vous ?",
+      "context": "Turn 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "Quand souhaitez-vous emménager ?",
+      "context": "Turn 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Récapitulatif : location, appartement, à Douala, budget 150 000 FCFA, 2 chambre(s), zones Bonamoussadi, entrée octobre. Enregistrer ?",
+      "context": "Turn 4"
+    },
+    {
+      "turn": 5,
+      "expected_question": "Les deux corrections sont prises en compte : location, appartement, à Douala, budget 180 000 FCFA, 2 chambre(s), zones Makepe, entrée octobre. Enregistrer ?",
+      "context": "Turn 5"
+    }
+  ],
+  "forbidden_questions": []
+}

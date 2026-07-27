@@ -1,0 +1,16 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "land",
+    "preferred_areas": [
+      "Dombe",
+      "Pour"
+    ],
+    "budget": 180000,
+    "city": "Douala"
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

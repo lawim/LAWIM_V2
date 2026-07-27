@@ -1,0 +1,90 @@
+{
+  "id": "B000723",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Conversation B000723",
+  "tags": [],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_08_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B08-0733",
+  "messages": [
+    {
+      "role": "user",
+      "text": "User turn 1 (conflicting_answers)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 2"
+    },
+    {
+      "role": "user",
+      "text": "User turn 3 (conflicting_answers)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 4"
+    },
+    {
+      "role": "user",
+      "text": "User turn 5 (conflicting_answers)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 6"
+    },
+    {
+      "role": "user",
+      "text": "User turn 7 (conflicting_answers)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 8"
+    },
+    {
+      "role": "user",
+      "text": "User turn 9 (conflicting_answers)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 10"
+    },
+    {
+      "role": "user",
+      "text": "User turn 11 (conflicting_answers)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 12"
+    },
+    {
+      "role": "user",
+      "text": "User turn 13 (conflicting_answers)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 14"
+    },
+    {
+      "role": "user",
+      "text": "User turn 15 (conflicting_answers)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 16"
+    },
+    {
+      "role": "user",
+      "text": "User turn 17 (conflicting_answers)"
+    },
+    {
+      "role": "user",
+      "text": "Oui, je confirme après clarification."
+    },
+    {
+      "role": "assistant",
+      "text": "Demande enregistrée après clarification."
+    }
+  ]
+}

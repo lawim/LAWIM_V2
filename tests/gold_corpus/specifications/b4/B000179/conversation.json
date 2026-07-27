@@ -1,0 +1,68 @@
+{
+  "id": "B000179",
+  "category": "rental",
+  "level": "expert",
+  "channel": "whatsapp",
+  "language": "en",
+  "description": "Contradiction Resolution #9",
+  "tags": [
+    "contradiction_resolution",
+    "correction",
+    "state_consistency",
+    "explicit_confirmation",
+    "idempotence"
+  ],
+  "business_object": "apartment",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B02-0179",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement à louer à Kribi."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget maximum ?"
+    },
+    {
+      "role": "user",
+      "text": "Pas plus de 100 000 FCFA, mais je peux aller jusqu'à 150 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Vous avez indiqué deux plafonds. Quel budget maximal dois-je retenir : 100 000 ou 150 000 FCFA ?"
+    },
+    {
+      "role": "user",
+      "text": "Retenez 150 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?"
+    },
+    {
+      "role": "user",
+      "text": "3, mais deux seraient mieux."
+    },
+    {
+      "role": "assistant",
+      "text": "Dois-je retenir deux chambres comme critère final ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui, deux chambres."
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : location, appartement, à Kribi, budget 150 000 FCFA, 2 chambre(s), zones Dombe, entrée septembre. Enregistrer ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche clarifiée a été enregistrée."
+    }
+  ]
+}

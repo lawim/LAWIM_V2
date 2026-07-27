@@ -1,0 +1,16 @@
+{
+  "business_action": "cancelled",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "maison",
+    "city": "Douala",
+    "budget": 300000,
+    "bedrooms": 3,
+    "preferred_areas": [
+      "Bonamoussadi"
+    ]
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

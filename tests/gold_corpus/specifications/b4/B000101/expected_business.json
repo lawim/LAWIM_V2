@@ -1,0 +1,9 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "budget": 120000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

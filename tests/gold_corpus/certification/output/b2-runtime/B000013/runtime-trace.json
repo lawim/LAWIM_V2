@@ -1,0 +1,112 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Bonjour, je cherche un maison \u00e0 louer \u00e0 Yaound\u00e9.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Yaound\u00e9.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 4.9
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Mon budget maximum est de 200 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, \u00e0 louer, \u00e0 Yaound\u00e9, avec un budget de 200000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 200000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 8.82
+  },
+  {
+    "turn_index": 4,
+    "user_input": "2 chambres.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, avec un budget de 200000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 200000,
+      "bedrooms": 2
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 4.54
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Melen ou Ngoa-Ekell\u00e9.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le secteur Ngoa-Ekell\u00e9, Melen, avec un budget de 200000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 200000,
+      "bedrooms": 2,
+      "district": "Melen",
+      "preferred_areas": [
+        "Ngoa-Ekell\u00e9",
+        "Melen"
+      ]
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 15.21
+  },
+  {
+    "turn_index": 8,
+    "user_input": "En septembre.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le secteur Ngoa-Ekell\u00e9, Melen, avec un budget de 200000 FCFA, emm\u00e9nagement En septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 200000,
+      "bedrooms": 2,
+      "district": "Melen",
+      "preferred_areas": [
+        "Ngoa-Ekell\u00e9",
+        "Melen"
+      ],
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 8.66
+  },
+  {
+    "turn_index": 10,
+    "user_input": "Oui, enregistrez-la.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "budget_max": 200000,
+      "bedrooms": 2,
+      "district": "Melen",
+      "preferred_areas": [
+        "Ngoa-Ekell\u00e9",
+        "Melen"
+      ],
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 9.54
+  }
+]

@@ -1,0 +1,50 @@
+{
+  "id": "B000049",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Visite appartement Mvan",
+  "tags": [
+    "visite",
+    "rendez_vous",
+    "confirmation"
+  ],
+  "business_object": "apartment",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0049",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux visiter le appartement référence PROP-1049 à Mvan."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel jour vous conviendrait ?"
+    },
+    {
+      "role": "user",
+      "text": "Vendredi."
+    },
+    {
+      "role": "assistant",
+      "text": "À quelle heure ?"
+    },
+    {
+      "role": "user",
+      "text": "Vers 15 heures."
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous que j’enregistre une demande de visite pour vendredi à 15 h ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La demande de visite a bien été enregistrée. Un agent confirmera la disponibilité."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "property_type": "house",
+    "city": "Yaoundé",
+    "preferred_areas": [
+      "Melen"
+    ],
+    "budget": 15000000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

@@ -1,0 +1,90 @@
+{
+  "id": "B000074",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "web",
+  "language": "fr",
+  "description": "Clarification recherche vague 74",
+  "tags": [
+    "clarification",
+    "ambiguity",
+    "progressive_qualification"
+  ],
+  "business_object": "studio",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0074",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche quelque chose de bien et pas cher."
+    },
+    {
+      "role": "assistant",
+      "text": "Cherchez-vous à louer ou à acheter ?"
+    },
+    {
+      "role": "user",
+      "text": "À louer."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel type de bien recherchez-vous ?"
+    },
+    {
+      "role": "user",
+      "text": "Un petit logement."
+    },
+    {
+      "role": "assistant",
+      "text": "Par exemple un studio, une chambre moderne ou un appartement ?"
+    },
+    {
+      "role": "user",
+      "text": "Un studio."
+    },
+    {
+      "role": "assistant",
+      "text": "Dans quelle ville ?"
+    },
+    {
+      "role": "user",
+      "text": "Yaoundé"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget maximal ?"
+    },
+    {
+      "role": "user",
+      "text": "100 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier préférez-vous ?"
+    },
+    {
+      "role": "user",
+      "text": "Melen"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?"
+    },
+    {
+      "role": "user",
+      "text": "Dès que possible."
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous que j’enregistre cette recherche de studio ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche a bien été enregistrée."
+    }
+  ]
+}

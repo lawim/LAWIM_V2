@@ -1,0 +1,66 @@
+{
+  "id": "B000093",
+  "category": "rental",
+  "level": "basic",
+  "channel": "telegram",
+  "language": "en",
+  "description": "English rental flow 93",
+  "tags": [
+    "english",
+    "multilingual",
+    "rental"
+  ],
+  "business_object": "apartment",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0093",
+  "messages": [
+    {
+      "role": "user",
+      "text": "I am looking for an apartment to rent in Douala."
+    },
+    {
+      "role": "assistant",
+      "text": "What is your maximum monthly budget?"
+    },
+    {
+      "role": "user",
+      "text": "250,000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "How many bedrooms do you need?"
+    },
+    {
+      "role": "user",
+      "text": "Two bedrooms."
+    },
+    {
+      "role": "assistant",
+      "text": "Which area do you prefer?"
+    },
+    {
+      "role": "user",
+      "text": "Makepe"
+    },
+    {
+      "role": "assistant",
+      "text": "When would you like to move in?"
+    },
+    {
+      "role": "user",
+      "text": "In October."
+    },
+    {
+      "role": "assistant",
+      "text": "Would you like me to register this search?"
+    },
+    {
+      "role": "user",
+      "text": "Yes, please register it."
+    },
+    {
+      "role": "assistant",
+      "text": "Your search request has been registered."
+    }
+  ]
+}

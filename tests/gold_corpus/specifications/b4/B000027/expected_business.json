@@ -1,0 +1,16 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "buy",
+    "property_type": "house",
+    "city": "Douala",
+    "preferred_areas": [
+      "Douala"
+    ],
+    "budget": 18000000,
+    "bedrooms": 3
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

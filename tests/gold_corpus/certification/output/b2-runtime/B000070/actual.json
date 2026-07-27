@@ -1,0 +1,100 @@
+{
+  "conversation_id": "B000070",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 9,
+  "total_duration_ms": 133.45,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche quelque chose de bien et pas cher.",
+      "assistant_output": "Vous cherchez \u00e0 louer, acheter ou vendre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 14.53,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "\u00c0 louer.",
+      "assistant_output": "Quel type de bien recherchez-vous ? (appartement, maison, studio, terrain...)",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 14.83,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Un petit logement.",
+      "assistant_output": "Dans quelle ville recherchez-vous ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 17.78,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Un studio.",
+      "assistant_output": "Quel budget mensuel maximum pr\u00e9voyez-vous ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 14.2,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Yaound\u00e9",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un studio \u00e0 Yaound\u00e9.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 14.59,
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "100 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, \u00e0 louer, \u00e0 Yaound\u00e9, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 13.36,
+      "error": null
+    },
+    {
+      "turn_index": 12,
+      "user_input": "Melen",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Melen, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 19.94,
+      "error": null
+    },
+    {
+      "turn_index": 14,
+      "user_input": "D\u00e8s que possible.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 12.59,
+      "error": null
+    },
+    {
+      "turn_index": 16,
+      "user_input": "Oui.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 11.62,
+      "error": null
+    }
+  ]
+}

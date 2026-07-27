@@ -1,0 +1,3 @@
+# sqlite-details
+
+Non applicable.

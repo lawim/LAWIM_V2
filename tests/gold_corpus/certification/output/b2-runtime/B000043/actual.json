@@ -1,0 +1,60 @@
+{
+  "conversation_id": "B000043",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 5,
+  "total_duration_ms": 27.36,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je souhaite vendre mon boutique situ\u00e9 \u00e0 Bwambe, Kribi.",
+      "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+      "intent_detected": "unknown",
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 4.64,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "80 000 000 FCFA.",
+      "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+      "intent_detected": "unknown",
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 4.76,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Oui, je suis le propri\u00e9taire.",
+      "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+      "intent_detected": "unknown",
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 5.11,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Par WhatsApp.",
+      "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+      "intent_detected": "unknown",
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 6.54,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Oui, enregistrez.",
+      "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+      "intent_detected": "unknown",
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 6.31,
+      "error": null
+    }
+  ]
+}

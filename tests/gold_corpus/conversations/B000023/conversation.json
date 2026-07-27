@@ -1,0 +1,58 @@
+{
+  "id": "B000023",
+  "category": "purchase",
+  "level": "basic",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Achat terrain à Bafoussam",
+  "tags": [
+    "achat",
+    "qualification",
+    "confirmation"
+  ],
+  "business_object": "terrain",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0023",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux acheter un terrain à Bafoussam.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel est votre budget d’achat ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "Je peux aller jusqu’à 25 000 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Avez-vous des quartiers préférés ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Tamdja ou Kena.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : achat d’un terrain à Bafoussam, budget maximal 25 000 000 FCFA, zones Tamdja ou Kena. Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche d’achat a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

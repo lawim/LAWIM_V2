@@ -1,0 +1,68 @@
+{
+  "id": "B000101",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "web",
+  "language": "fr",
+  "description": "Single Fact Correction #1",
+  "tags": [
+    "single_fact_correction",
+    "correction",
+    "state_consistency",
+    "explicit_confirmation",
+    "idempotence"
+  ],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B02-0101",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un maison à louer à Douala, budget 100 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres souhaitez-vous ?"
+    },
+    {
+      "role": "user",
+      "text": "1 chambre(s)."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier préférez-vous à Douala ?"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?"
+    },
+    {
+      "role": "user",
+      "text": "En septembre."
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : location, maison, à Douala, budget 100 000 FCFA, 1 chambre(s), zones Bonamoussadi, entrée septembre. Souhaitez-vous enregistrer ?"
+    },
+    {
+      "role": "user",
+      "text": "Non, corrigez seulement le budget : 120 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Budget corrigé. Nouveau récapitulatif : location, maison, à Douala, budget 120 000 FCFA, 1 chambre(s), zones Bonamoussadi, entrée septembre. Souhaitez-vous enregistrer ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche corrigée a été enregistrée."
+    }
+  ]
+}

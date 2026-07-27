@@ -1,0 +1,15 @@
+{
+  "business_action": "create_seller_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "intent": "sell_property",
+    "property_type": "appartement",
+    "city": "Bafoussam",
+    "area": "Tamdja",
+    "asking_price": 40000000,
+    "ownership_confirmed": true,
+    "contact_preference": "WhatsApp"
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

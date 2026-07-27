@@ -1,6 +1,24 @@
 [
   {
     "control_id": "B-0001",
+    "path": "manifest.json",
+    "size": 2053,
+    "sha256": "52d12b1b363132b7b53ac4bf130f8202d61784e6f3931ea67c8812a7b18d23cf",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "B-0002",
+    "path": "normalized/canary-results.json",
+    "size": 278,
+    "sha256": "e9f3d4aa15801cbae7ca6dff0d11ec06cd698aa509252474c64e513fd6a99555",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "B-0003",
     "path": "normalized/feature-flag-contract.json",
     "size": 534,
     "sha256": "baf9b0b8cf9564b9ccf4577a241b1f1dc5b2f10a5c64b3145cec5b1e15023ca4",
@@ -9,7 +27,7 @@
     "created_at": "2026-07-27T00:00:00Z"
   },
   {
-    "control_id": "B-0002",
+    "control_id": "B-0004",
     "path": "normalized/local-route-smoke-results.json",
     "size": 165,
     "sha256": "3aeeed94dec41c0d399517fd10cf67437dac1a3196373ca16eb11213ec4dedbd",
@@ -18,7 +36,7 @@
     "created_at": "2026-07-27T00:00:00Z"
   },
   {
-    "control_id": "B-0003",
+    "control_id": "B-0005",
     "path": "normalized/local-web-smoke-results.json",
     "size": 357,
     "sha256": "29c562018219c9354a2ae38cdd9e04b8c13bf9fb2ec785ef7d8f1be6a921812f",
@@ -27,16 +45,43 @@
     "created_at": "2026-07-27T00:00:00Z"
   },
   {
-    "control_id": "B-0004",
+    "control_id": "B-0006",
     "path": "normalized/local-wiring-gate.json",
-    "size": 422,
-    "sha256": "52392ec2092228019f6cd6e07ed4c1214731ad886e2f1e901f0b3a71b9b43af3",
+    "size": 545,
+    "sha256": "04e045ac6a936edb749ad49b92da65a27a0db43c8aa9b8965c2d4b60a3f2bda9",
     "category": "evidence",
     "generated_by": "opencode-agent",
     "created_at": "2026-07-27T00:00:00Z"
   },
   {
-    "control_id": "B-0005",
+    "control_id": "B-0007",
+    "path": "normalized/production-telegram-results.json",
+    "size": 244,
+    "sha256": "6bcc37745140debf207dbfc78240f40cad14cc8469943614890891dbf246abd0",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "B-0008",
+    "path": "normalized/production-web-results.json",
+    "size": 343,
+    "sha256": "886e0d7833e2a3d03dcf5d240b8cd42ff99adec666cd42b5ee7f61f3b4952dc2",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "B-0009",
+    "path": "normalized/production-whatsapp-results.json",
+    "size": 253,
+    "sha256": "6315713f5c5d83f0403a520f676080aa038d5ace9aa504fa940033a87b0f8afc",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "B-0010",
     "path": "normalized/wiring-results.json",
     "size": 1106,
     "sha256": "664ff5edb7654f0dcb3cfc21722620d097db6ad59b4140f7a8e9df2137a0df86",
@@ -45,7 +90,7 @@
     "created_at": "2026-07-27T00:00:00Z"
   },
   {
-    "control_id": "B-0006",
+    "control_id": "B-0011",
     "path": "raw/baseline/checksums-before.txt",
     "size": 570,
     "sha256": "af0857296ab96133da82c81cb5ea11cc3f894a7c9f0a1490d7f78ac80a6cd12e",
@@ -54,7 +99,7 @@
     "created_at": "2026-07-27T00:00:00Z"
   },
   {
-    "control_id": "B-0007",
+    "control_id": "B-0012",
     "path": "raw/smoke/runner-log.txt",
     "size": 580,
     "sha256": "d20179dca7ab75a15ed5e4d88dccafdfe2c56c3ed6d28c98bc1f23f19d751deb",

@@ -1,0 +1,15 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "buy",
+    "property_type": "apartment",
+    "preferred_areas": [
+      "Limbe"
+    ],
+    "budget": 50000000,
+    "bedrooms": 3
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

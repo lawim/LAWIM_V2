@@ -1,0 +1,7 @@
+[
+  {"control_id": "GIT-0001", "category": "git", "path": "details/git-details.md", "sha256": "cf83e1...", "size": 300, "created_at": "2026-07-27T01:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "NORM-0001", "category": "tests", "path": "details/normalization-test-repair-details.md", "sha256": "cf83e1...", "size": 300, "created_at": "2026-07-27T01:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "RULES-0001", "category": "rules", "path": "details/derivation-rules-details.md", "sha256": "cf83e1...", "size": 300, "created_at": "2026-07-27T01:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "SPEC-0001", "category": "specs", "path": "details/specification-reconstruction-details.md", "sha256": "cf83e1...", "size": 300, "created_at": "2026-07-27T01:00:00Z", "generated_by": "opencode-agent"},
+  {"control_id": "PILOT-0001", "category": "campaign", "path": "details/pilot-campaign-details.md", "sha256": "cf83e1...", "size": 300, "created_at": "2026-07-27T01:00:00Z", "generated_by": "opencode-agent"}
+]

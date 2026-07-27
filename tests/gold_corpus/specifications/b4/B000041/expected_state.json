@@ -1,0 +1,19 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "property_type": "land",
+    "city": "Douala",
+    "preferred_areas": [
+      "Akwa"
+    ],
+    "budget": 25000000
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "property_type",
+    "city",
+    "preferred_areas",
+    "budget"
+  ]
+}

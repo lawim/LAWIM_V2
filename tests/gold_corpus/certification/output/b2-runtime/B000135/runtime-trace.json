@@ -1,0 +1,91 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je cherche un terrain \u00e0 louer \u00e0 Kribi.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un terrain \u00e0 Kribi.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "rent",
+      "city": "Kribi"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 12.87
+  },
+  {
+    "turn_index": 2,
+    "user_input": "100 000 FCFA par mois.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 louer, \u00e0 Kribi, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "rent",
+      "city": "Kribi",
+      "budget_max": 100000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 15.22
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Dombe",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "rent",
+      "city": "Kribi",
+      "budget_max": 100000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 11.7
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Finalement je veux acheter, pas louer.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 acheter, \u00e0 Kribi, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Kribi",
+      "budget_max": 100000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 11.9
+  },
+  {
+    "turn_index": 8,
+    "user_input": "13 000 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 acheter, \u00e0 Kribi, avec un budget de 13000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Kribi",
+      "budget_max": 13000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 11.83
+  },
+  {
+    "turn_index": 10,
+    "user_input": "Oui.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "buy",
+      "city": "Kribi",
+      "budget_max": 13000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 12.66
+  }
+]

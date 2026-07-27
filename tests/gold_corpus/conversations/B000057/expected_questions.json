@@ -1,0 +1,22 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "À partir de quand souhaitez-vous emménager ?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Je récapitule : appartement à Bastos, deux chambres, budget 150 000 FCFA, entrée en octobre. Souhaitez-vous enregistrer ?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Correction prise en compte : budget 210 000 FCFA, zone Melen. Souhaitez-vous maintenant enregistrer la recherche ?",
+      "context": "Tour 2"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

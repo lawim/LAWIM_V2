@@ -1,0 +1,22 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Yaoundé",
+    "preferred_areas": [
+      "Bonamoussadi",
+      "Pour"
+    ],
+    "budget": 220000
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "city",
+    "preferred_areas",
+    "budget"
+  ]
+}

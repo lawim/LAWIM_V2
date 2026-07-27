@@ -1,0 +1,11 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "property_type": "apartment",
+    "city": "Douala",
+    "budget": 120000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

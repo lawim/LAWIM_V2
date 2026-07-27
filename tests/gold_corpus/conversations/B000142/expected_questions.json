@@ -1,0 +1,27 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel budget ?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Combien de chambres ?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Récapitulatif : location, appartement, à Kribi, budget 150 000 FCFA, zones Dombe, entrée septembre. Enregistrer ?",
+      "context": "Tour 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "Type de bien remplacé, autres critères conservés : location, maison, à Kribi, budget 150 000 FCFA, zones Dombe, entrée septembre. Enregistrer ?",
+      "context": "Tour 3"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

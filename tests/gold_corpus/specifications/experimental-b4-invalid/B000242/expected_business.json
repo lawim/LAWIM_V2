@@ -1,0 +1,7 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {},
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

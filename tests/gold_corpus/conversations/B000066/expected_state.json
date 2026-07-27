@@ -1,0 +1,23 @@
+{
+  "intent": "ambiguous_search",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "rent",
+    "property_type": "studio",
+    "city": "Yaoundé",
+    "budget": 100000,
+    "preferred_areas": [
+      "Melen"
+    ],
+    "move_in_date": "immédiatement"
+  },
+  "next_action": "CREATE_SEARCH_REQUEST",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "city",
+    "budget",
+    "preferred_areas",
+    "move_in_date"
+  ]
+}

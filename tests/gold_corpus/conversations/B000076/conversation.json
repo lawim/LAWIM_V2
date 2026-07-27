@@ -1,0 +1,48 @@
+{
+  "id": "B000076",
+  "category": "rental",
+  "level": "basic",
+  "channel": "whatsapp",
+  "language": "fr",
+  "description": "Refus et annulation 76",
+  "tags": [
+    "refusal",
+    "cancellation",
+    "no_business_action"
+  ],
+  "business_object": "maison",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0076",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche une maison à louer à Douala, trois chambres, budget 300 000 FCFA, Bonamoussadi.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous que j’enregistre cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Non, n’enregistrez rien pour le moment.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "D’accord, aucune demande n’a été créée. Nous pouvons continuer à préciser vos critères si vous le souhaitez.",
+      "intent": "NONE"
+    },
+    {
+      "role": "user",
+      "text": "Finalement, annulez complètement.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La conversation est annulée. Aucune action métier n’a été effectuée.",
+      "intent": "NONE"
+    }
+  ]
+}

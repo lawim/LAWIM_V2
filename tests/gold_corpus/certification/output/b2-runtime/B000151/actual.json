@@ -1,0 +1,50 @@
+{
+  "conversation_id": "B000151",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 54.73,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un terrain \u00e0 louer \u00e0 Kribi, de pr\u00e9f\u00e9rence \u00e0 Dombe.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un terrain \u00e0 Kribi.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 12.36,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "100 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 louer, \u00e0 Kribi, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 13.33,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "En fait, changez la ville pour Douala et le quartier pour Bonamoussadi.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 12.66,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Oui.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 16.38,
+      "error": null
+    }
+  ]
+}

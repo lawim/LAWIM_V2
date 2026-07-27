@@ -1,0 +1,6 @@
+{
+  "real_event": "NOT_PROVEN",
+  "provider_status": "NOT_PROVEN",
+  "restart": "NOT_RUN",
+  "note": "WhatsApp requires Green API credentials. Not configured in this deployment."
+}

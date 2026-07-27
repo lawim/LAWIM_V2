@@ -1,0 +1,69 @@
+{
+  "tautology_check": true,
+  "tautology_detail": "INDEPENDENT",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 1,
+  "assertions_total": 3,
+  "assertions_passed": 0,
+  "assertions_failed": 3,
+  "assertions": {
+    "ASSERT-INTENT": {
+      "pass": false,
+      "assertion": "Intent detection",
+      "category": "intent",
+      "expected": "search_property",
+      "actual": "property_search",
+      "detail": "op=eq, expected=search_property, actual=property_search"
+    },
+    "ASSERT-QUAL": {
+      "pass": false,
+      "assertion": "Qualification status",
+      "category": "state",
+      "expected": "qualified",
+      "actual": "QUALIFYING",
+      "detail": "op=eq, expected=qualified, actual=QUALIFYING"
+    },
+    "ASSERT-ACTION": {
+      "pass": false,
+      "assertion": "Next business action",
+      "category": "state",
+      "expected": "search",
+      "actual": "CONFIRM_FIELD_VALUE",
+      "detail": "op=eq, expected=search, actual=CONFIRM_FIELD_VALUE"
+    }
+  },
+  "violations": [
+    {
+      "assertion_id": "ASSERT-INTENT",
+      "category": "intent",
+      "expected": "search_property",
+      "actual": "property_search",
+      "detail": "op=eq, expected=search_property, actual=property_search"
+    },
+    {
+      "assertion_id": "ASSERT-QUAL",
+      "category": "state",
+      "expected": "qualified",
+      "actual": "QUALIFYING",
+      "detail": "op=eq, expected=qualified, actual=QUALIFYING"
+    },
+    {
+      "assertion_id": "ASSERT-ACTION",
+      "category": "state",
+      "expected": "search",
+      "actual": "CONFIRM_FIELD_VALUE",
+      "detail": "op=eq, expected=search, actual=CONFIRM_FIELD_VALUE"
+    }
+  ],
+  "conversation_id": "NEG-0002",
+  "total_duration_ms": 8.527755737304688,
+  "spec_dir": "/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/dev-storage/tmp/tmpx8xxexlu",
+  "timestamp": "2026-07-26T12:51:11.049333+00:00",
+  "expected_loader": "ExpectedSpecLoader",
+  "actual_executor": "RuntimeExecutor",
+  "expected_type": "CORPUS_FILE",
+  "actual_type": "RUNTIME_EXECUTION",
+  "verdict": "RUNTIME_FAIL"
+}

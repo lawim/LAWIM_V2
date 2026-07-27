@@ -1,0 +1,11 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "budget": 250000
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "budget"
+  ]
+}

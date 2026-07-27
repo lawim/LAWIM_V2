@@ -1,0 +1,19 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "property_type": "apartment",
+    "city": "Bafoussam",
+    "preferred_areas": [
+      "Tamdja"
+    ],
+    "budget": 40000000
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "property_type",
+    "city",
+    "preferred_areas",
+    "budget"
+  ]
+}

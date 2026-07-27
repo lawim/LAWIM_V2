@@ -1,0 +1,68 @@
+{
+  "id": "B000138",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Transaction Switch #8",
+  "tags": [
+    "transaction_switch",
+    "correction",
+    "state_consistency",
+    "explicit_confirmation",
+    "idempotence"
+  ],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B02-0138",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un maison à louer à Douala."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel est votre budget de location ?"
+    },
+    {
+      "role": "user",
+      "text": "220 000 FCFA par mois."
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous préciser un quartier ?"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi"
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : location, maison, à Douala, budget 220 000 FCFA, 2 chambre(s), zones Bonamoussadi, entrée septembre. Enregistrer ?"
+    },
+    {
+      "role": "user",
+      "text": "Finalement je veux acheter, pas louer."
+    },
+    {
+      "role": "assistant",
+      "text": "D'accord, je remplace la location par un achat. Quel est votre budget d'achat ?"
+    },
+    {
+      "role": "user",
+      "text": "25 000 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Nouveau récapitulatif : achat, maison, à Douala, budget 25 000 000 FCFA, 2 chambre(s), zones Bonamoussadi. Souhaitez-vous enregistrer la recherche d'achat ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche d'achat a été enregistrée."
+    }
+  ]
+}

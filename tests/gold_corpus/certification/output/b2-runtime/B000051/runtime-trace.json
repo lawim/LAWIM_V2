@@ -1,0 +1,58 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je veux visiter le studio r\u00e9f\u00e9rence PROP-1051 \u00e0 Djeleng.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un studio \u00e0 Djeleng.",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "studio",
+      "city": "Djeleng",
+      "city_raw": "Djeleng"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 6.05
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Lundi.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un studio \u00e0 Djeleng.",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "studio",
+      "city": "Djeleng",
+      "city_raw": "Djeleng"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 4.69
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Vers 15 heures.",
+    "assistant_output": "Pouvez-vous pr\u00e9ciser le lieu ? Proche de quel quartier ou rep\u00e8re ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "studio",
+      "city": "Djeleng",
+      "city_raw": "Djeleng"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 5.5
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Oui.",
+    "assistant_output": "Je n'ai pas bien compris. Pouvez-vous pr\u00e9ciser le nom d'un quartier, d'un point de rep\u00e8re ou d'un axe routier ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "studio",
+      "city": "Djeleng",
+      "city_raw": "Djeleng"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 6.53
+  }
+]

@@ -1,0 +1,17 @@
+12: _log = logging.getLogger("lawim_v2.conversation.program_f_adapter")
+14: try:
+15:     from lawim_runtime.conversation.journey import (
+16:         ConversationJourneyOrchestrator,
+17:         JourneyState,
+18:     )
+19:     HAS_PROGRAM_F = True
+20: except ImportError:
+21:     ConversationJourneyOrchestrator = None
+22:     JourneyState = None
+23:     HAS_PROGRAM_F = False
+24:     _log.warning("lawim_runtime not available — Program F engine disabled")
+77: class ProgramFEngineAdapter:
+84:     if not HAS_PROGRAM_F:
+85:         _log.error("Program F engine not available")
+86:         raise ImportError("lawim_runtime package required")
+87:     self._orchestrator = ConversationJourneyOrchestrator(...)

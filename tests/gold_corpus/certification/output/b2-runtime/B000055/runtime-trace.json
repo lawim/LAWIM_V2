@@ -1,0 +1,54 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je veux visiter le appartement r\u00e9f\u00e9rence PROP-1055 \u00e0 Ngoa-Ekell\u00e9.",
+    "assistant_output": "Dans quelle ville recherchez-vous ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "apartment",
+      "district": "Ngoa"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 6.26
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Lundi.",
+    "assistant_output": "Combien de chambres souhaitez-vous ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "apartment",
+      "district": "Ngoa"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 7.41
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Vers 15 heures.",
+    "assistant_output": "Pouvez-vous pr\u00e9ciser le lieu ? Proche de quel quartier ou rep\u00e8re ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "apartment",
+      "district": "Ngoa"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 5.07
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Oui.",
+    "assistant_output": "Je n'ai pas bien compris. Pouvez-vous pr\u00e9ciser le nom d'un quartier, d'un point de rep\u00e8re ou d'un axe routier ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "apartment",
+      "district": "Ngoa"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 5.83
+  }
+]

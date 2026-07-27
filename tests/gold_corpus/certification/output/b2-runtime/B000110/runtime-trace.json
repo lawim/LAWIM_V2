@@ -1,0 +1,100 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je cherche un terrain \u00e0 louer \u00e0 Kribi, budget 150 000 FCFA.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "rent",
+      "city": "Kribi",
+      "budget_max": 150000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 16.64
+  },
+  {
+    "turn_index": 2,
+    "user_input": "1 chambre(s).",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, 1 chambres, \u00e0 louer, \u00e0 Kribi, avec un budget de 150000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "rent",
+      "city": "Kribi",
+      "budget_max": 150000,
+      "bedrooms": 1
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 14.31
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Dombe",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "rent",
+      "city": "Kribi",
+      "budget_max": 150000,
+      "bedrooms": 1
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 22.87
+  },
+  {
+    "turn_index": 6,
+    "user_input": "En septembre.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, 1 chambres, \u00e0 louer, \u00e0 Kribi, avec un budget de 150000 FCFA, emm\u00e9nagement En septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "rent",
+      "city": "Kribi",
+      "budget_max": 150000,
+      "bedrooms": 1,
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 16.56
+  },
+  {
+    "turn_index": 8,
+    "user_input": "Non, corrigez seulement le budget : 170 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, 1 chambres, \u00e0 louer, \u00e0 Kribi, avec un budget de 170000 FCFA, emm\u00e9nagement En septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "rent",
+      "city": "Kribi",
+      "budget_max": 170000,
+      "bedrooms": 1,
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 19.13
+  },
+  {
+    "turn_index": 10,
+    "user_input": "Oui.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "rent",
+      "city": "Kribi",
+      "budget_max": 170000,
+      "bedrooms": 1,
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 16.33
+  }
+]

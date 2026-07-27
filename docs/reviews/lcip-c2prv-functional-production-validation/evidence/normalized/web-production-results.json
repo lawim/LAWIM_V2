@@ -1,0 +1,8 @@
+{
+  "turns": 0,
+  "conversation_id": "NOT_RUN",
+  "object_id": "NOT_RUN",
+  "restart": "NOT_RUN",
+  "idempotence": "NOT_RUN",
+  "note": "V2 runtime deployed via compose provides health endpoints only. Full conversation API requires V3 API layer."
+}

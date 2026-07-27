@@ -1,0 +1,21 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Je récapitule : location, terrain, à Kribi, budget 220 000 FCFA, zones Dombe, entrée septembre. Souhaitez-vous enregistrer ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Nombre de chambres corrigé. Nouveau récapitulatif : location, terrain, à Kribi, budget 220 000 FCFA, 2 chambre(s), zones Dombe, entrée septembre. Enregistrer ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Date corrigée. Nouveau récapitulatif : location, terrain, à Kribi, budget 220 000 FCFA, 2 chambre(s), zones Dombe, entrée novembre. Enregistrer ?",
+      "context": "Turn 2"
+    }
+  ],
+  "forbidden_questions": []
+}

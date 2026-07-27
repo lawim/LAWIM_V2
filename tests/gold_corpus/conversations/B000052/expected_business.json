@@ -1,0 +1,15 @@
+{
+  "business_action": "create_visit_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "intent": "schedule_visit",
+    "property_reference": "PROP-1052",
+    "city": "Yaoundé",
+    "area": "Bastos",
+    "preferred_day": "mercredi",
+    "preferred_time": "15:00",
+    "contact_confirmation": true
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

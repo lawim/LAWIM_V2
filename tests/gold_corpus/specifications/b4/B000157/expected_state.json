@@ -1,0 +1,22 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "rent",
+    "property_type": "land",
+    "preferred_areas": [
+      "Dombe",
+      "Pour"
+    ],
+    "budget": 180000,
+    "city": "Douala"
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "preferred_areas",
+    "budget",
+    "city"
+  ]
+}

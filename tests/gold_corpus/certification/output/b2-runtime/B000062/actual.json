@@ -1,0 +1,50 @@
+{
+  "conversation_id": "B000062",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 33.78,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un appartement \u00e0 louer \u00e0 Yaound\u00e9, budget 150 000 FCFA, deux chambres \u00e0 Bastos.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 13.54,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "En octobre.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Bastos, avec un budget de 150000 FCFA, emm\u00e9nagement En octobre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 6.78,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Non, corrigez : mon budget est 260 000 FCFA et je pr\u00e9f\u00e8re Melen, pas Bastos.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le secteur Bastos, Melen, avec un budget de 260000 FCFA, emm\u00e9nagement En octobre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 5.44,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Oui.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 8.02,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "id": "B000027",
+  "category": "purchase",
+  "level": "basic",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Achat maison à Douala",
+  "tags": [
+    "achat",
+    "qualification",
+    "confirmation"
+  ],
+  "business_object": "maison",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0027",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux acheter un maison à Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel est votre budget d’achat ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "Je peux aller jusqu’à 18 000 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Avez-vous des quartiers préférés ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bonapriso ou Makepe.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres minimum ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "Trois chambres minimum.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : achat d’un maison à Douala, budget maximal 18 000 000 FCFA, zones Bonapriso ou Makepe, trois chambres minimum. Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche d’achat a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

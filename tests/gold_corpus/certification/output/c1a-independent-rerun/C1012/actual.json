@@ -1,0 +1,121 @@
+{
+  "conversation_id": "C1012",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 7,
+  "total_duration_ms": 49.564361572265625,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "I want to sell my house in Douala.",
+      "assistant_output": "I noted you are looking for sale a house for Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "sell",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "35 million FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, \u00e0 vendre, \u00e0 Douala, avec un budget de 35000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "sell",
+        "city": "Douala",
+        "budget_max": 35000000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "I am the owner.",
+      "assistant_output": "I noted you are looking for sale a house for Douala.",
+      "intent_detected": "owner_listing",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "sell",
+        "city": "Douala",
+        "budget_max": 35000000
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Makepe.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 vendre une maison \u00e0 Douala.",
+      "intent_detected": "owner_listing",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "sell",
+        "city": "Douala",
+        "budget_max": 35000000,
+        "district": "Makepe"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "4 bedrooms.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 vendre une maison \u00e0 Douala.",
+      "intent_detected": "owner_listing",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "sell",
+        "city": "Douala",
+        "budget_max": 35000000,
+        "district": "Makepe",
+        "bedrooms": 4
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "By phone.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 vendre une maison \u00e0 Douala.",
+      "intent_detected": "owner_listing",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "sell",
+        "city": "Douala",
+        "budget_max": 35000000,
+        "district": "Makepe",
+        "bedrooms": 4
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 12,
+      "user_input": "Yes.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 vendre une maison \u00e0 Douala.",
+      "intent_detected": "owner_listing",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "sell",
+        "city": "Douala",
+        "budget_max": 35000000,
+        "district": "Makepe",
+        "bedrooms": 4
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    }
+  ]
+}

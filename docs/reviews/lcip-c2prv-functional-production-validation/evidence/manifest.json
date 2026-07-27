@@ -1,0 +1,119 @@
+[
+  {
+    "control_id": "V-0001",
+    "path": "normalized/anomalies.jsonl",
+    "size": 159,
+    "sha256": "8eadccaf26681e9dcb0de3b54eb839e07eb6bf30e14966cb1a5f5ed1fa076c39",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0002",
+    "path": "normalized/final-health-results.json",
+    "size": 92,
+    "sha256": "bc2aecef749638fb56642e4427f74f0e110ea7cd8348b75ebd43d19c11fd9f39",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0003",
+    "path": "normalized/final-production-gate.json",
+    "size": 366,
+    "sha256": "57e0b773614e254d1cf36550c5a92c26d1d8f873a8cc12a3f8ad4461f616bb34",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0004",
+    "path": "normalized/log-analysis.json",
+    "size": 94,
+    "sha256": "fe1fd9bfa61dccb41ffe021600c74f7dd00771a64c7d7381300516f564b23cc2",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0005",
+    "path": "normalized/postgresql-results.json",
+    "size": 207,
+    "sha256": "723e2f5f0bdcdfed3ea585ca9005bfcacc9a4df42ab08d804a28304ebedf0a7f",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0006",
+    "path": "normalized/runtime-checksum-results.jsonl",
+    "size": 396,
+    "sha256": "57e38c5443774af5e0ff2310c34abd1db8cdc0e4efb9d9e25d397f08581cfe9e",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0007",
+    "path": "normalized/sqlite-results.json",
+    "size": 309,
+    "sha256": "eb609dac4d4b3dad21cd76f6950e40904dbe7d22a241422e6b5b2be7bd2b400b",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0008",
+    "path": "normalized/statistics.json",
+    "size": 184,
+    "sha256": "6deead8d4e719aa817400dd9bf6a0ea7a2406ae28cde88dbda5e6ff4712671e2",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0009",
+    "path": "normalized/telegram-production-results.json",
+    "size": 191,
+    "sha256": "137f7f8d355381fd2e789a35bf15f4fc6b27aee237a3ca2e26af3c70f0bbe5f3",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0010",
+    "path": "normalized/web-production-results.json",
+    "size": 248,
+    "sha256": "a805e539ef5c0d15be2588813b4973879b1d406d7195844059d9f88f015fda27",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0011",
+    "path": "normalized/whatsapp-production-results.json",
+    "size": 180,
+    "sha256": "0da4d02175f3b1591a955527c916c33d568a48bc61c89314ff1a82088baaf017",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0012",
+    "path": "raw/git/sha.txt",
+    "size": 13,
+    "sha256": "bd63d759148885b0562a04bf2dee0b06ee30e3e3f74dcdc09b812ad1ab67b6a9",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  },
+  {
+    "control_id": "V-0013",
+    "path": "raw/health/initial.txt",
+    "size": 23,
+    "sha256": "b59e6bfbe63051d8a846f716a20b6b9e27158996b92cd2f14413d90ad5967766",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-26T12:00:00Z"
+  }
+]

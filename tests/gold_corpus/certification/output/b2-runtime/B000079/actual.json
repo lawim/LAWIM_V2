@@ -1,0 +1,40 @@
+{
+  "conversation_id": "B000079",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 3,
+  "total_duration_ms": 51.12,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche une maison \u00e0 louer \u00e0 Douala, trois chambres, budget 300 000 FCFA, Bonamoussadi.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 12.17,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Non, n\u2019enregistrez rien pour le moment.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 24.29,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Finalement, annulez compl\u00e8tement.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 14.66,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "conversation_id": "POS-0004",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "total_duration_ms": 18.05,
+  "call_count": 3,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un appartement \u00e0 Douala",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un appartement \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 5.71,
+      "error": null
+    },
+    {
+      "turn_index": 1,
+      "user_input": "Je veux Bonamoussadi",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un appartement \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "city": "Douala",
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 6.45,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Non finalement Mak\u00e9p\u00e9",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un appartement \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "city": "Douala",
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 5.89,
+      "error": null
+    }
+  ]
+}

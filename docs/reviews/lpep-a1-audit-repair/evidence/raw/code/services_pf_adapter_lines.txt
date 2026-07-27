@@ -1,0 +1,15 @@
+197: from .communication.service import CommunicationService
+198: from .conversation.program_f_adapter import ProgramFEngineAdapter
+199: from .conversation.marketplace_adapter import MarketplacePropertySearchAdapter
+204: _conv_dir = config.db_path.parent / "conversation"
+205: _conv_dir.mkdir(parents=True, exist_ok=True)
+206: _conv_pf_db_path = str(_conv_dir / "program_f_state.sqlite3")
+218: try:
+219:     _conv_engine_pf = ProgramFEngineAdapter(
+220:         db_path=_conv_pf_db_path,
+221:         property_search_service=_conv_biz_service,
+222:     )
+223:     logger.info("ProgramFEngineAdapter activated as primary engine")
+224: except ImportError:
+225:     _conv_engine_pf = None
+226:     logger.warning("Program F engine unavailable — fallback disabled")

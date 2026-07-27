@@ -1,0 +1,19 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "buy",
+    "property_type": "land",
+    "preferred_areas": [
+      "Limbe"
+    ],
+    "budget": 50000000
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "preferred_areas",
+    "budget"
+  ]
+}

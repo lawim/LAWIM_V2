@@ -1,0 +1,83 @@
+[
+  {
+    "control_id": "A-0001",
+    "path": "manifest.json",
+    "size": 1676,
+    "sha256": "e26738745796e7c312594af77c9ee43ac152451d849013c7bbd57659c6336287",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "A-0002",
+    "path": "normalized/audit-results.json",
+    "size": 924,
+    "sha256": "f46d080258ac035b419553614536eab07995e0f2755dfc1ba6975a8cfe172ac5",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "A-0003",
+    "path": "normalized/statistics.json",
+    "size": 162,
+    "sha256": "184c2ff93019cf05c121fbea37d3c46ee86b9e33cbc1ee86dfe2522ce93f6471",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "A-0004",
+    "path": "raw/code/program_f_adapter_lines.txt",
+    "size": 709,
+    "sha256": "3b924c23d805f1b57df0de29da0211473f2456d263cca5a58523eb6717f0359c",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "A-0005",
+    "path": "raw/code/services_pf_adapter_lines.txt",
+    "size": 764,
+    "sha256": "ea194e8c6323997784a8574375e0605f712c3bb836f78984646f34c14b9d4186",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "A-0006",
+    "path": "raw/container/inspect.txt",
+    "size": 273,
+    "sha256": "8adbf7cc0549940944af020e2c569f5993ef5c69dc93c30adb1599cb89035d29",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "A-0007",
+    "path": "raw/entrypoint/entrypoint.sh",
+    "size": 1984,
+    "sha256": "9da338a2194b5603a08bfb1c552a4fd05efba2698b09a443c4fe4dfcf08096d7",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "A-0008",
+    "path": "raw/logs/container_startup.txt",
+    "size": 358,
+    "sha256": "6c37af19f9d18d6133fc0fc26ddfff04c9747be6c28002ce0541566bf80db854",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  },
+  {
+    "control_id": "A-0009",
+    "path": "raw/server/server_routes.txt",
+    "size": 1725,
+    "sha256": "8a03eb34bf20f503689e0e6d3d5672f1cb7850cd53b6da26162dfb02a8a020eb",
+    "category": "evidence",
+    "generated_by": "opencode-agent",
+    "created_at": "2026-07-27T00:00:00Z"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Récapitulatif : location, maison, à Douala, budget 100 000 FCFA, 2 chambre(s), zones Bonamoussadi, entrée septembre. Enregistrer ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Corrections prises en compte : location, maison, à Douala, budget 130 000 FCFA, 2 chambre(s), zones Makepe, entrée septembre. Enregistrer ?",
+      "context": "Turn 1"
+    }
+  ],
+  "forbidden_questions": []
+}

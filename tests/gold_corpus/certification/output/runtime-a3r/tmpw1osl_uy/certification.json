@@ -1,0 +1,69 @@
+{
+  "tautology_check": true,
+  "tautology_detail": "INDEPENDENT",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 3,
+  "assertions_total": 3,
+  "assertions_passed": 0,
+  "assertions_failed": 3,
+  "assertions": {
+    "ASSERT-INTENT": {
+      "pass": false,
+      "assertion": "Intent detection",
+      "category": "intent",
+      "expected": "search_property",
+      "actual": "property_search",
+      "detail": "op=eq, expected=search_property, actual=property_search"
+    },
+    "ASSERT-QUAL": {
+      "pass": false,
+      "assertion": "Qualification status",
+      "category": "state",
+      "expected": "qualified",
+      "actual": "READY_FOR_ACTION",
+      "detail": "op=eq, expected=qualified, actual=READY_FOR_ACTION"
+    },
+    "ASSERT-ACTION": {
+      "pass": false,
+      "assertion": "Next business action",
+      "category": "state",
+      "expected": "search",
+      "actual": "CONFIRM_BUSINESS_CREATION",
+      "detail": "op=eq, expected=search, actual=CONFIRM_BUSINESS_CREATION"
+    }
+  },
+  "violations": [
+    {
+      "assertion_id": "ASSERT-INTENT",
+      "category": "intent",
+      "expected": "search_property",
+      "actual": "property_search",
+      "detail": "op=eq, expected=search_property, actual=property_search"
+    },
+    {
+      "assertion_id": "ASSERT-QUAL",
+      "category": "state",
+      "expected": "qualified",
+      "actual": "READY_FOR_ACTION",
+      "detail": "op=eq, expected=qualified, actual=READY_FOR_ACTION"
+    },
+    {
+      "assertion_id": "ASSERT-ACTION",
+      "category": "state",
+      "expected": "search",
+      "actual": "CONFIRM_BUSINESS_CREATION",
+      "detail": "op=eq, expected=search, actual=CONFIRM_BUSINESS_CREATION"
+    }
+  ],
+  "conversation_id": "POS-0001",
+  "total_duration_ms": 24.54662322998047,
+  "spec_dir": "/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/dev-storage/tmp/tmpw1osl_uy",
+  "timestamp": "2026-07-26T14:40:47.036340+00:00",
+  "expected_loader": "ExpectedSpecLoader",
+  "actual_executor": "RuntimeExecutor",
+  "expected_type": "CORPUS_FILE",
+  "actual_type": "RUNTIME_EXECUTION",
+  "verdict": "RUNTIME_FAIL"
+}

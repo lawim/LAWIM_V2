@@ -1,0 +1,70 @@
+{
+  "conversation_id": "B000007",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 36.28,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Bonjour, je cherche un boutique \u00e0 louer \u00e0 Bafoussam.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 4.76,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Mon budget maximum est de 300 000 FCFA.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 6.64,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Je n'ai pas de pr\u00e9f\u00e9rence sur le nombre de pi\u00e8ces.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 7.79,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Banengo ou Djeleng.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 5.29,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "En septembre.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 6.87,
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Oui, enregistrez-la.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 4.92,
+      "error": null
+    }
+  ]
+}

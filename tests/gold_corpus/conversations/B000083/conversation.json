@@ -1,0 +1,78 @@
+{
+  "id": "B000083",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "web",
+  "language": "fr",
+  "description": "Reprise après redémarrage 83",
+  "tags": [
+    "restart",
+    "persistence",
+    "no_repeated_questions"
+  ],
+  "business_object": "appartement",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0083",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement à louer à Yaoundé.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "180 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "Deux chambres.",
+      "intent": "unknown"
+    },
+    {
+      "role": "system",
+      "text": "SERVICE_RESTART",
+      "intent": "unknown"
+    },
+    {
+      "role": "user",
+      "text": "Je préfère Melen ou Ngoa-Ekellé.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "À partir de quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En septembre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche a été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

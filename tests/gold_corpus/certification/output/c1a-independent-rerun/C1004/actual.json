@@ -1,0 +1,101 @@
+{
+  "conversation_id": "C1004",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 37.70112991333008,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "I am looking for a house to rent in Douala.",
+      "assistant_output": "I noted you are looking for rent a house for Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "300,000 FCFA.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Three bedrooms.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "bedrooms": 3
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Bonamoussadi.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "bedrooms": 3,
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Next month.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "bedrooms": 3,
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Yes, please.",
+      "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+      "intent_detected": "legal_question",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "bedrooms": 3,
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "NONE",
+      "business_actions": [],
+      "error": null
+    }
+  ]
+}

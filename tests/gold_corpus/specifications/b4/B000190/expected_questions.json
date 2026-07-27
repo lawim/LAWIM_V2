@@ -1,0 +1,16 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Récapitulatif : location, terrain, à Kribi, budget 150 000 FCFA, zones Dombe, entrée septembre. Enregistrer ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Corrections prises en compte : location, terrain, à Kribi, budget 170 000 FCFA, zones Mboamanga, entrée septembre. Enregistrer ?",
+      "context": "Turn 1"
+    }
+  ],
+  "forbidden_questions": []
+}

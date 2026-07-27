@@ -1,0 +1,114 @@
+{
+  "conversation_id": "C1011",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 36.59701347351074,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je veux mettre en vente mon terrain \u00e0 Yaound\u00e9.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 vendre un terrain \u00e0 Yaound\u00e9.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "sell",
+        "city": "Yaounde"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "8 000 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 vendre, \u00e0 Yaound\u00e9, avec un budget de 8000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "sell",
+        "city": "Yaounde",
+        "budget_max": 8000000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Oui.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "sell",
+        "city": "Yaounde",
+        "budget_max": 8000000
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_fd6ad0e463a8"
+      ],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "\u00c0 Ngoa-Ekell\u00e9.",
+      "assistant_output": "Je mets \u00e0 jour votre demande : un terrain, \u00e0 vendre, \u00e0 Yaound\u00e9, dans le quartier Ngoa, avec un budget de 8000000 FCFA.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "sell",
+        "city": "Yaounde",
+        "budget_max": 8000000,
+        "district": "Ngoa"
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_fd6ad0e463a8"
+      ],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "300 m\u00e8tres carr\u00e9s.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "sell",
+        "city": "Yaounde",
+        "budget_max": 8000000,
+        "district": "Ngoa"
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_fd6ad0e463a8"
+      ],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Oui.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "sell",
+        "city": "Yaounde",
+        "budget_max": 8000000,
+        "district": "Ngoa"
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_fd6ad0e463a8"
+      ],
+      "error": null
+    }
+  ]
+}

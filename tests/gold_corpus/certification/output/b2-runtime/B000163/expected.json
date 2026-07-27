@@ -1,0 +1,199 @@
+{
+  "expected_state": {
+    "intent": "unknown",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "transaction_type": "rent",
+      "property_type": "maison",
+      "city": "Douala",
+      "budget": 180000,
+      "bedrooms": 3,
+      "preferred_areas": [
+        "Bonamoussadi"
+      ],
+      "move_in_date": "septembre"
+    },
+    "next_action": "CREATE_SEARCH_REQUEST",
+    "memory_retained": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "bedrooms",
+      "preferred_areas",
+      "move_in_date"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_search_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "transaction_type": "rent",
+      "property_type": "maison",
+      "city": "Douala",
+      "budget": 180000,
+      "bedrooms": 3,
+      "preferred_areas": [
+        "Bonamoussadi"
+      ],
+      "move_in_date": "septembre"
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "fr",
+    "responses_language": "fr",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "R\u00e9capitulatif : location, maison, \u00e0 Douala, budget 180 000 FCFA, 3 chambre(s), zones Bonamoussadi, entr\u00e9e septembre. Enregistrer ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "Budget modifi\u00e9 : location, maison, \u00e0 Douala, budget 230 000 FCFA, 3 chambre(s), zones Bonamoussadi, entr\u00e9e septembre. Enregistrer ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 2,
+        "expected_question": "Derni\u00e8re modification annul\u00e9e. Retour \u00e0 : location, maison, \u00e0 Douala, budget 180 000 FCFA, 3 chambre(s), zones Bonamoussadi, entr\u00e9e septembre. Enregistrer ?",
+        "context": "Tour 2"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000163",
+    "category": "rental",
+    "level": "advanced",
+    "channel": "whatsapp",
+    "language": "fr",
+    "description": "Undo Last Change #3",
+    "tags": [
+      "undo_last_change",
+      "correction",
+      "state_consistency",
+      "explicit_confirmation",
+      "idempotence"
+    ],
+    "business_object": "maison",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0163",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je cherche un appartement \u00e0 Douala, budget 180 000 FCFA, Bonamoussadi.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "R\u00e9capitulatif : location, maison, \u00e0 Douala, budget 180 000 FCFA, 3 chambre(s), zones Bonamoussadi, entr\u00e9e septembre. Enregistrer ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Passez le budget \u00e0 230 000 FCFA.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Budget modifi\u00e9 : location, maison, \u00e0 Douala, budget 230 000 FCFA, 3 chambre(s), zones Bonamoussadi, entr\u00e9e septembre. Enregistrer ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Annulez ma derni\u00e8re modification.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Derni\u00e8re modification annul\u00e9e. Retour \u00e0 : location, maison, \u00e0 Douala, budget 180 000 FCFA, 3 chambre(s), zones Bonamoussadi, entr\u00e9e septembre. Enregistrer ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "La recherche initiale a \u00e9t\u00e9 enregistr\u00e9e.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

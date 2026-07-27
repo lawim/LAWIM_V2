@@ -1,0 +1,31 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel budget mensuel souhaitez-vous consacrer à cette location ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Combien de chambres souhaitez-vous ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Quels quartiers préférez-vous à Douala ?",
+      "context": "Turn 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "À partir de quand souhaitez-vous emménager ?",
+      "context": "Turn 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Récapitulatif : studio à louer à Douala, budget 250 000 FCFA, 3, zones Bonamoussadi ou Akwa, entrée en septembre. Souhaitez-vous que j’enregistre cette recherche ?",
+      "context": "Turn 4"
+    }
+  ],
+  "forbidden_questions": []
+}

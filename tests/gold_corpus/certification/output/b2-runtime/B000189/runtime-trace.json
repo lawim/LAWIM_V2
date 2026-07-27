@@ -1,0 +1,47 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je cherche un maison \u00e0 Douala, budget 100 000 FCFA, quartier Bonamoussadi.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer une maison \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 100000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 12.37
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Corrigez : 150 000 FCFA et Makepe.",
+    "assistant_output": "Je prends note de votre correction : quartier passe de Bonamoussadi \u00e0 Makepe.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "city": "Douala",
+      "district": "Makepe",
+      "budget_max": 150000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 17.07
+  },
+  {
+    "turn_index": 5,
+    "user_input": "Oui, enregistrez maintenant.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer une maison \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "city": "Douala",
+      "district": "Makepe",
+      "budget_max": 150000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 11.99
+  }
+]

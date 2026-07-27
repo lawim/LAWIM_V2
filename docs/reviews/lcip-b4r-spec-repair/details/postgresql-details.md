@@ -1,0 +1,3 @@
+# postgresql-details
+
+Non applicable.

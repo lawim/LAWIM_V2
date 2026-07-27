@@ -1,0 +1,15 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "preferred_areas": [
+      "Bwambe"
+    ],
+    "budget": 80000000
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "preferred_areas",
+    "budget"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "buy",
+    "property_type": "apartment",
+    "preferred_areas": [
+      "Kribi"
+    ],
+    "budget": 35000000,
+    "bedrooms": 3
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "preferred_areas",
+    "budget",
+    "bedrooms"
+  ]
+}

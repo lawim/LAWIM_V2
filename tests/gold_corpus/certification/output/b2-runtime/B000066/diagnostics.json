@@ -1,0 +1,6 @@
+{
+  "runtime_called": true,
+  "call_count": 9,
+  "adapter": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator"
+}

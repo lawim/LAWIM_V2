@@ -1,0 +1,26 @@
+{
+  "intent": "search_property",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "rent",
+    "property_type": "studio",
+    "city": "Douala",
+    "budget": 250000,
+    "bedrooms": 3,
+    "preferred_areas": [
+      "Bonamoussadi",
+      "Akwa"
+    ],
+    "move_in_date": "septembre"
+  },
+  "next_action": "CREATE_SEARCH_REQUEST",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "city",
+    "budget",
+    "bedrooms",
+    "preferred_areas",
+    "move_in_date"
+  ]
+}

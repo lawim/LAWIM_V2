@@ -1,0 +1,26 @@
+{
+  "total": 3,
+  "violations": [
+    {
+      "assertion_id": "ASSERT-INTENT",
+      "category": "intent",
+      "expected": "search_property",
+      "actual": "property_search",
+      "detail": "op=eq, expected=search_property, actual=property_search"
+    },
+    {
+      "assertion_id": "ASSERT-QUAL",
+      "category": "state",
+      "expected": "qualified",
+      "actual": "READY_FOR_ACTION",
+      "detail": "op=eq, expected=qualified, actual=READY_FOR_ACTION"
+    },
+    {
+      "assertion_id": "ASSERT-ACTION",
+      "category": "state",
+      "expected": "search",
+      "actual": "CONFIRM_BUSINESS_CREATION",
+      "detail": "op=eq, expected=search, actual=CONFIRM_BUSINESS_CREATION"
+    }
+  ]
+}

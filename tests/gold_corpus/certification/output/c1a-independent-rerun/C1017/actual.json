@@ -1,0 +1,122 @@
+{
+  "conversation_id": "C1017",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 7,
+  "total_duration_ms": 39.26515579223633,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un appartement \u00e0 louer \u00e0 Yaound\u00e9.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un appartement \u00e0 Yaound\u00e9.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "transaction_type": "rent",
+        "city": "Yaounde"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "180 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, \u00e0 louer, \u00e0 Yaound\u00e9, avec un budget de 180000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 180000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "2.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 180000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "En fait je cherche plut\u00f4t \u00e0 Douala, pas Yaound\u00e9.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 180000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Bonamoussadi.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Bonamoussadi, avec un budget de 180000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 180000,
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "En avril.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Bonamoussadi, avec un budget de 180000 FCFA, emm\u00e9nagement En avril. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 180000,
+        "district": "Bonamoussadi",
+        "move_in_date": "En avril"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 12,
+      "user_input": "Oui.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 180000,
+        "district": "Bonamoussadi",
+        "move_in_date": "En avril"
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_426ed7d232bf"
+      ],
+      "error": null
+    }
+  ]
+}

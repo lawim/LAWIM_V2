@@ -1,0 +1,12 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "property_type": "apartment",
+    "preferred_areas": [
+      "Bastos"
+    ]
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

@@ -1,0 +1,66 @@
+{
+  "id": "B000083",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "web",
+  "language": "fr",
+  "description": "Reprise après redémarrage 83",
+  "tags": [
+    "restart",
+    "persistence",
+    "no_repeated_questions"
+  ],
+  "business_object": "apartment",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0083",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement à louer à Yaoundé."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?"
+    },
+    {
+      "role": "user",
+      "text": "180 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?"
+    },
+    {
+      "role": "user",
+      "text": "Deux chambres."
+    },
+    {
+      "role": "system",
+      "text": "SERVICE_RESTART"
+    },
+    {
+      "role": "user",
+      "text": "Je préfère Melen ou Ngoa-Ekellé."
+    },
+    {
+      "role": "assistant",
+      "text": "À partir de quand souhaitez-vous emménager ?"
+    },
+    {
+      "role": "user",
+      "text": "En septembre."
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche a été enregistrée."
+    }
+  ]
+}

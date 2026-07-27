@@ -1,0 +1,68 @@
+{
+  "id": "B000043",
+  "category": "rental",
+  "level": "basic",
+  "channel": "whatsapp",
+  "language": "fr",
+  "description": "Vente boutique à Kribi",
+  "tags": [
+    "vente",
+    "propriétaire",
+    "consentement"
+  ],
+  "business_object": "boutique",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0043",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je souhaite vendre mon boutique situé à Bwambe, Kribi.",
+      "intent": "SELL_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel prix souhaitez-vous demander ?",
+      "intent": "ASK_PRICE"
+    },
+    {
+      "role": "user",
+      "text": "80 000 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Êtes-vous bien le propriétaire ou son mandataire autorisé ?",
+      "intent": "ASK_OWNERSHIP"
+    },
+    {
+      "role": "user",
+      "text": "Oui, je suis le propriétaire.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Par quel canal préférez-vous être recontacté ?",
+      "intent": "ASK_CONTACT_PREFERENCE"
+    },
+    {
+      "role": "user",
+      "text": "Par WhatsApp.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : mise en vente d’un boutique à Bwambe, Kribi, prix demandé 80 000 000 FCFA. Souhaitez-vous enregistrer cette demande ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui, enregistrez.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre demande de mise en vente a été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

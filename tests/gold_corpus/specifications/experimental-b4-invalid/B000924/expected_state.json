@@ -1,0 +1,11 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "buy"
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "transaction_type"
+  ]
+}

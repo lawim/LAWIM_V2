@@ -1,0 +1,74 @@
+{
+  "id": "C1018",
+  "category": "ambiguity",
+  "level": "medium",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Utilisateur refuse d'enregistrer apr\u00e8s qualification compl\u00e8te",
+  "tags": [
+    "refusal",
+    "no_action"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche une villa \u00e0 louer \u00e0 Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "400 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "4 chambres.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi ou Makepe.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emm\u00e9nager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En mai.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Non, pas maintenant.",
+      "intent": "REFUSE"
+    },
+    {
+      "role": "assistant",
+      "text": "D'accord, aucun enregistrement n'a \u00e9t\u00e9 fait. Vous pouvez revenir quand vous voulez.",
+      "intent": "NONE"
+    }
+  ]
+}

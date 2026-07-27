@@ -1,0 +1,36 @@
+{
+  "categories": [
+    "advanced_search",
+    "ambiguity",
+    "idempotence",
+    "memory",
+    "multilingual",
+    "restart",
+    "robustness",
+    "seller",
+    "visit"
+  ],
+  "category_count": 9,
+  "languages": [
+    "en",
+    "fr",
+    "pcm"
+  ],
+  "language_count": 3,
+  "channels": [
+    "telegram",
+    "web",
+    "whatsapp"
+  ],
+  "channel_count": 3,
+  "difficulties": [
+    "easy",
+    "hard",
+    "medium"
+  ],
+  "restart_scenarios": 2,
+  "idempotence_scenarios": 17,
+  "no_action_scenarios": 2,
+  "correction_scenarios": 3,
+  "ambiguity_scenarios": 2
+}

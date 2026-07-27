@@ -1,0 +1,197 @@
+{
+  "expected_state": {
+    "intent": "search_property",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "transaction_type": "rent",
+      "property_type": "appartement",
+      "city": "Yaound\u00e9",
+      "budget": 290000,
+      "bedrooms": 2,
+      "preferred_areas": [
+        "Melen"
+      ],
+      "move_in_date": "octobre"
+    },
+    "next_action": "CREATE_SEARCH_REQUEST",
+    "memory_retained": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "bedrooms",
+      "preferred_areas",
+      "move_in_date"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_search_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "transaction_type": "rent",
+      "property_type": "appartement",
+      "city": "Yaound\u00e9",
+      "budget": 290000,
+      "bedrooms": 2,
+      "preferred_areas": [
+        "Melen"
+      ],
+      "move_in_date": "octobre"
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "fr",
+    "responses_language": "fr",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "\u00c0 partir de quand souhaitez-vous emm\u00e9nager ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "Je r\u00e9capitule : appartement \u00e0 Bastos, deux chambres, budget 150 000 FCFA, entr\u00e9e en octobre. Souhaitez-vous enregistrer ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 2,
+        "expected_question": "Correction prise en compte : budget 290 000 FCFA, zone Melen. Souhaitez-vous maintenant enregistrer la recherche ?",
+        "context": "Tour 2"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000065",
+    "category": "rental",
+    "level": "advanced",
+    "channel": "telegram",
+    "language": "fr",
+    "description": "Correction budget et zone 65",
+    "tags": [
+      "correction",
+      "change_of_mind",
+      "no_premature_action"
+    ],
+    "business_object": "appartement",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0065",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je cherche un appartement \u00e0 louer \u00e0 Yaound\u00e9, budget 150 000 FCFA, deux chambres \u00e0 Bastos.",
+        "intent": "SEARCH_PROPERTY"
+      },
+      {
+        "role": "assistant",
+        "text": "\u00c0 partir de quand souhaitez-vous emm\u00e9nager ?",
+        "intent": "ASK_MOVE_IN_DATE"
+      },
+      {
+        "role": "user",
+        "text": "En octobre.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Je r\u00e9capitule : appartement \u00e0 Bastos, deux chambres, budget 150 000 FCFA, entr\u00e9e en octobre. Souhaitez-vous enregistrer ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Non, corrigez : mon budget est 290 000 FCFA et je pr\u00e9f\u00e8re Melen, pas Bastos.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Correction prise en compte : budget 290 000 FCFA, zone Melen. Souhaitez-vous maintenant enregistrer la recherche ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "La recherche corrig\u00e9e a bien \u00e9t\u00e9 enregistr\u00e9e.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "total": 200,
+  "fully_certified": 185,
+  "functional_text_variant": 15,
+  "other": 0,
+  "source": "Certified from B.5 closure - no baseline regression test executed separately",
+  "regressions": 0
+}

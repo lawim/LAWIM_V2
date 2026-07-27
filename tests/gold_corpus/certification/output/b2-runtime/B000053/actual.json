@@ -1,0 +1,50 @@
+{
+  "conversation_id": "B000053",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 32.97,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je veux visiter le maison r\u00e9f\u00e9rence PROP-1053 \u00e0 Makepe.",
+      "assistant_output": "Dans quelle ville recherchez-vous ?",
+      "intent_detected": "visit_request",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 4.9,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Vendredi.",
+      "assistant_output": "Combien de chambres souhaitez-vous ?",
+      "intent_detected": "visit_request",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 7.73,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Vers 15 heures.",
+      "assistant_output": "Pouvez-vous pr\u00e9ciser le lieu ? Proche de quel quartier ou rep\u00e8re ?",
+      "intent_detected": "visit_request",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 11.35,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Oui.",
+      "assistant_output": "Je n'ai pas bien compris. Pouvez-vous pr\u00e9ciser le nom d'un quartier, d'un point de rep\u00e8re ou d'un axe routier ?",
+      "intent_detected": "visit_request",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 8.98,
+      "error": null
+    }
+  ]
+}

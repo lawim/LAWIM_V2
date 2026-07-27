@@ -1,0 +1,17 @@
+{
+  "business_action": "create_search_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "appartement",
+    "city": "Douala",
+    "budget": 180000,
+    "bedrooms": 2,
+    "preferred_areas": [
+      "Bonamoussadi"
+    ],
+    "move_in_date": "septembre"
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

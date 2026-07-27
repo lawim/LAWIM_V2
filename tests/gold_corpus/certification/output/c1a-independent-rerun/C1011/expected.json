@@ -1,0 +1,75 @@
+{
+  "id": "C1011",
+  "category": "seller",
+  "level": "medium",
+  "channel": "web",
+  "language": "fr",
+  "description": "Vente d'un terrain",
+  "tags": [
+    "seller",
+    "land",
+    "sell"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux mettre en vente mon terrain \u00e0 Yaound\u00e9.",
+      "intent": "SELL_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel prix souhaitez-vous ?",
+      "intent": "ASK_PRICE"
+    },
+    {
+      "role": "user",
+      "text": "8 000 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "\u00cates-vous le propri\u00e9taire ?",
+      "intent": "ASK_OWNERSHIP"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "O\u00f9 est situ\u00e9 le terrain exactement ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "\u00c0 Ngoa-Ekell\u00e9.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quelle est la superficie ?",
+      "intent": "ASK_CLARIFICATION"
+    },
+    {
+      "role": "user",
+      "text": "300 m\u00e8tres carr\u00e9s.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette mise en vente ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre annonce a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

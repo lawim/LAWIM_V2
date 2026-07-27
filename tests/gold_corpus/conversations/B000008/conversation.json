@@ -1,0 +1,79 @@
+{
+  "id": "B000008",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Location appartement à Kribi",
+  "tags": [
+    "location",
+    "qualification",
+    "confirmation",
+    "multi_area"
+  ],
+  "business_object": "appartement",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0008",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Bonjour, je cherche un appartement à louer à Kribi.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel souhaitez-vous consacrer à cette location ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "Mon budget maximum est de 500 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres souhaitez-vous ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "1 chambres.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quels quartiers préférez-vous à Kribi ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Dombe ou Mpangou.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "À partir de quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En septembre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Récapitulatif : appartement à louer à Kribi, budget 500 000 FCFA, 1, zones Dombe ou Mpangou, entrée en septembre. Souhaitez-vous que j’enregistre cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui, enregistrez-la.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre demande de recherche a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

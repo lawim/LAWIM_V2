@@ -1,0 +1,16 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Summary: apartment rental in Kribi, budget 180 000 FCFA, area Dombe. Register it?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Updated: budget 230 000 FCFA, area Mboamanga. Should I register it?",
+      "context": "Turn 1"
+    }
+  ],
+  "forbidden_questions": []
+}

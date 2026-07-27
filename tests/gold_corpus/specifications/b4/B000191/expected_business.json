@@ -1,0 +1,11 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "apartment",
+    "budget": 120000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

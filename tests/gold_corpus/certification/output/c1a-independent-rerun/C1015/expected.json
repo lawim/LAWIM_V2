@@ -1,0 +1,55 @@
+{
+  "id": "C1015",
+  "category": "visit",
+  "level": "medium",
+  "channel": "telegram",
+  "language": "en",
+  "description": "English visit request for a property in Douala",
+  "tags": [
+    "visit",
+    "english",
+    "multilingual"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Hello, I saw property PROP-2003 online. I want to visit it.",
+      "intent": "SCHEDULE_VISIT"
+    },
+    {
+      "role": "assistant",
+      "text": "Great! Which day would work for you to visit?",
+      "intent": "ASK_VISIT_DAY"
+    },
+    {
+      "role": "user",
+      "text": "I am free on Friday afternoon.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "What time on Friday suits you best?",
+      "intent": "ASK_VISIT_TIME"
+    },
+    {
+      "role": "user",
+      "text": "Around 2 PM if possible.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Shall I register this visit request for Friday at 2 PM?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Yes, please register it.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Your visit request has been registered. An agent will confirm the appointment.",
+      "intent": "NONE"
+    }
+  ]
+}

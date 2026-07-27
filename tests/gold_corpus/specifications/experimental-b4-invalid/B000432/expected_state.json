@@ -1,0 +1,11 @@
+{
+  "intent": "property_search",
+  "qualification_status": "in_progress",
+  "slots_filled": {
+    "budget": 19
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "budget"
+  ]
+}

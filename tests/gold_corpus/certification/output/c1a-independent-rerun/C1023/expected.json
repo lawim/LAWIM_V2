@@ -1,0 +1,65 @@
+{
+  "id": "C1023",
+  "category": "restart",
+  "level": "hard",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Restart apr\u00e8s correction de budget",
+  "tags": [
+    "restart",
+    "persistence",
+    "correction"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un terrain \u00e0 louer \u00e0 Yaound\u00e9.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "50 000 FCFA par mois.",
+      "intent": "unknown"
+    },
+    {
+      "role": "system",
+      "text": "SERVICE_RESTART",
+      "intent": "unknown"
+    },
+    {
+      "role": "user",
+      "text": "Finalement je veux 80 000 FCFA de budget.",
+      "intent": "CORRECTION"
+    },
+    {
+      "role": "assistant",
+      "text": "Budget corrig\u00e9 \u00e0 80 000 FCFA. Quel quartier pr\u00e9f\u00e9rez-vous ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Mvan.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Recherche enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

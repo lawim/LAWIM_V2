@@ -10,5 +10,8 @@
   "ready_pass": true,
   "web_local_smoke_pass": true,
   "no_regression": true,
-  "verdict": "LPEP_A2_LOCAL_WIRING_GATE_PASS"
+  "verdict": "LPEP_A2_PRODUCTION_WEB_WIRING_PASS",
+  "production_web_wiring": true,
+  "production_telegram": "NOT_CONFIGURED",
+  "production_whatsapp": "NOT_CONFIGURED"
 }

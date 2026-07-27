@@ -1,0 +1,224 @@
+{
+  "expected_state": {
+    "intent": "search_property",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "transaction_type": "rent",
+      "property_type": "appartement",
+      "city": "Yaound\u00e9",
+      "budget": 180000,
+      "bedrooms": 2,
+      "preferred_areas": [
+        "Melen",
+        "Ngoa-Ekell\u00e9"
+      ],
+      "move_in_date": "septembre"
+    },
+    "next_action": "CREATE_SEARCH_REQUEST",
+    "memory_retained": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "bedrooms",
+      "preferred_areas",
+      "move_in_date"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_search_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "transaction_type": "rent",
+      "property_type": "appartement",
+      "city": "Yaound\u00e9",
+      "budget": 180000,
+      "bedrooms": 2,
+      "preferred_areas": [
+        "Melen",
+        "Ngoa-Ekell\u00e9"
+      ],
+      "move_in_date": "septembre"
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "fr",
+    "responses_language": "fr",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "Quel budget mensuel ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "Combien de chambres ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 3,
+        "expected_question": "\u00c0 partir de quand souhaitez-vous emm\u00e9nager ?",
+        "context": "Tour 3"
+      },
+      {
+        "turn": 4,
+        "expected_question": "Souhaitez-vous enregistrer cette recherche ?",
+        "context": "Tour 4"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000086",
+    "category": "rental",
+    "level": "advanced",
+    "channel": "web",
+    "language": "fr",
+    "description": "Reprise apr\u00e8s red\u00e9marrage 86",
+    "tags": [
+      "restart",
+      "persistence",
+      "no_repeated_questions"
+    ],
+    "business_object": "appartement",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0086",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je cherche un appartement \u00e0 louer \u00e0 Yaound\u00e9.",
+        "intent": "SEARCH_PROPERTY"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel budget mensuel ?",
+        "intent": "ASK_BUDGET"
+      },
+      {
+        "role": "user",
+        "text": "180 000 FCFA.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Combien de chambres ?",
+        "intent": "ASK_BEDROOMS"
+      },
+      {
+        "role": "user",
+        "text": "Deux chambres.",
+        "intent": "unknown"
+      },
+      {
+        "role": "system",
+        "text": "SERVICE_RESTART",
+        "intent": "unknown"
+      },
+      {
+        "role": "user",
+        "text": "Je pr\u00e9f\u00e8re Melen ou Ngoa-Ekell\u00e9.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "\u00c0 partir de quand souhaitez-vous emm\u00e9nager ?",
+        "intent": "ASK_MOVE_IN_DATE"
+      },
+      {
+        "role": "user",
+        "text": "En septembre.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Souhaitez-vous enregistrer cette recherche ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "La recherche a \u00e9t\u00e9 enregistr\u00e9e.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

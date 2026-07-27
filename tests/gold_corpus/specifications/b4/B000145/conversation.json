@@ -1,0 +1,60 @@
+{
+  "id": "B000145",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "telegram",
+  "language": "pcm",
+  "description": "Property Type Switch #5",
+  "tags": [
+    "property_type_switch",
+    "correction",
+    "state_consistency",
+    "explicit_confirmation",
+    "idempotence"
+  ],
+  "business_object": "house",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B02-0145",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement à louer à Douala."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget ?"
+    },
+    {
+      "role": "user",
+      "text": "100 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?"
+    },
+    {
+      "role": "user",
+      "text": "2."
+    },
+    {
+      "role": "assistant",
+      "text": "Récapitulatif : location, appartement, à Douala, budget 100 000 FCFA, 2 chambre(s), zones Bonamoussadi, entrée septembre. Enregistrer ?"
+    },
+    {
+      "role": "user",
+      "text": "Je préfère finalement une maison. Gardez tous les autres critères."
+    },
+    {
+      "role": "assistant",
+      "text": "Type de bien remplacé, autres critères conservés : location, maison, à Douala, budget 100 000 FCFA, 2 chambre(s), zones Bonamoussadi, entrée septembre. Enregistrer ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche de maison a été enregistrée."
+    }
+  ]
+}

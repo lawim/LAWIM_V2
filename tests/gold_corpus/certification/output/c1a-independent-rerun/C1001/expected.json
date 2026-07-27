@@ -1,0 +1,85 @@
+{
+  "id": "C1001",
+  "category": "memory",
+  "level": "medium",
+  "channel": "web",
+  "language": "fr",
+  "description": "Retour apr\u00e8s interruption: l'utilisateur donne des crit\u00e8res, s'interrompt, puis reprend",
+  "tags": [
+    "memory",
+    "persistence",
+    "confirmation"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement \u00e0 louer \u00e0 Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel souhaitez-vous consacrer \u00e0 cette location ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "150 000 FCFA maximum.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres souhaitez-vous ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "2 pi\u00e8ces.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier pr\u00e9f\u00e9rez-vous \u00e0 Douala ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Je reviens vers vous, je v\u00e9rifie mes disponibilit\u00e9s.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Pas de probl\u00e8me, je garde vos crit\u00e8res en m\u00e9moire. Vous cherchez un appartement \u00e0 Douala, budget 150 000 FCFA, deux pi\u00e8ces.",
+      "intent": "ACKNOWLEDGE"
+    },
+    {
+      "role": "user",
+      "text": "Bonjour, je reprends. Je veux le quartier Makepe.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emm\u00e9nager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Le mois prochain.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous que j'enregistre cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a bien \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

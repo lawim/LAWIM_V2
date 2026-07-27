@@ -1,0 +1,120 @@
+{
+  "conversation_id": "C1018",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 37.058115005493164,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche une villa \u00e0 louer \u00e0 Douala.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une villa \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "villa",
+        "transaction_type": "rent",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "400 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une villa, \u00e0 louer, \u00e0 Douala, avec un budget de 400000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "villa",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 400000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "4 chambres.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une villa, 4 chambres, \u00e0 louer, \u00e0 Douala, avec un budget de 400000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "villa",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 400000,
+        "bedrooms": 4
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Bonamoussadi ou Makepe.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une villa, 4 chambres, \u00e0 louer, \u00e0 Douala, dans le secteur Bonamoussadi, Makepe, avec un budget de 400000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "villa",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 400000,
+        "bedrooms": 4,
+        "district": "Makepe",
+        "preferred_areas": [
+          "Bonamoussadi",
+          "Makepe"
+        ]
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "En mai.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une villa, 4 chambres, \u00e0 louer, \u00e0 Douala, dans le secteur Bonamoussadi, Makepe, avec un budget de 400000 FCFA, emm\u00e9nagement En mai. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "villa",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 400000,
+        "bedrooms": 4,
+        "district": "Makepe",
+        "preferred_areas": [
+          "Bonamoussadi",
+          "Makepe"
+        ],
+        "move_in_date": "En mai"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Non, pas maintenant.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "villa",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 400000,
+        "bedrooms": 4,
+        "district": "Makepe",
+        "preferred_areas": [
+          "Bonamoussadi",
+          "Makepe"
+        ],
+        "move_in_date": "En mai"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    }
+  ]
+}

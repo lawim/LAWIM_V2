@@ -1,0 +1,16 @@
+{
+  "business_action": "create_search_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "studio",
+    "city": "Douala",
+    "budget": 100000,
+    "preferred_areas": [
+      "Bonamoussadi"
+    ],
+    "move_in_date": "immédiatement"
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

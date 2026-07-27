@@ -1,0 +1,9 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "bedrooms": 2
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

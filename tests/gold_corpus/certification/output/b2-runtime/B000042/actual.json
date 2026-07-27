@@ -1,0 +1,60 @@
+{
+  "conversation_id": "B000042",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 5,
+  "total_duration_ms": 35.11,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je souhaite vendre mon appartement situ\u00e9 \u00e0 Tamdja, Bafoussam.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 vendre un appartement \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 11.17,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "40 000 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, \u00e0 vendre, \u00e0 Bafoussam, avec un budget de 40000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.73,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Oui, je suis le propri\u00e9taire.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 6.36,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Par WhatsApp.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 8.05,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Oui, enregistrez.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.8,
+      "error": null
+    }
+  ]
+}

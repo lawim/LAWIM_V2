@@ -1,0 +1,49 @@
+{
+  "conversation_id": "C1014",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 3,
+  "total_duration_ms": 22.8118896484375,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je veux visiter la maison ref PROP-2002 \u00e0 Yaound\u00e9 samedi.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer une maison \u00e0 Yaound\u00e9.",
+      "intent_detected": "visit_request",
+      "facts_after": {
+        "property_type": "house",
+        "city": "Yaounde"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "15 h.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer une maison \u00e0 Yaound\u00e9.",
+      "intent_detected": "visit_request",
+      "facts_after": {
+        "property_type": "house",
+        "city": "Yaounde"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Oui.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer une maison \u00e0 Yaound\u00e9.",
+      "intent_detected": "visit_request",
+      "facts_after": {
+        "property_type": "house",
+        "city": "Yaounde"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    }
+  ]
+}

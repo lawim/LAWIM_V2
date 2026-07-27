@@ -1,0 +1,11 @@
+{
+  "route": "https://api.lawim.app/api/conversations",
+  "health_pass": true,
+  "registration_pass": true,
+  "login_pass": true,
+  "conversation_create_pass": true,
+  "conversation_get_pass": true,
+  "program_f_adapter": "activated",
+  "journey_orchestrator": "instantiated",
+  "state_repository": "sqlite:///app/data/runtime/lawim.sqlite3"
+}

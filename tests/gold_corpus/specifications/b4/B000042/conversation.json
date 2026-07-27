@@ -1,0 +1,58 @@
+{
+  "id": "B000042",
+  "category": "rental",
+  "level": "basic",
+  "channel": "whatsapp",
+  "language": "fr",
+  "description": "Vente appartement à Bafoussam",
+  "tags": [
+    "vente",
+    "propriétaire",
+    "consentement"
+  ],
+  "business_object": "apartment",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0042",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je souhaite vendre mon appartement situé à Tamdja, Bafoussam."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel prix souhaitez-vous demander ?"
+    },
+    {
+      "role": "user",
+      "text": "40 000 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Êtes-vous bien le propriétaire ou son mandataire autorisé ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui, je suis le propriétaire."
+    },
+    {
+      "role": "assistant",
+      "text": "Par quel canal préférez-vous être recontacté ?"
+    },
+    {
+      "role": "user",
+      "text": "Par WhatsApp."
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : mise en vente d’un appartement à Tamdja, Bafoussam, prix demandé 40 000 000 FCFA. Souhaitez-vous enregistrer cette demande ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui, enregistrez."
+    },
+    {
+      "role": "assistant",
+      "text": "Votre demande de mise en vente a été enregistrée."
+    }
+  ]
+}

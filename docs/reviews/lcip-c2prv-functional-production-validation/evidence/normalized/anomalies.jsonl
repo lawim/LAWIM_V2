@@ -1,0 +1,1 @@
+{"id": "V-001", "severity": "INFO", "description": "Full production validation (Web, Telegram, WhatsApp) requires V3 API layer deployment", "blocking": false}

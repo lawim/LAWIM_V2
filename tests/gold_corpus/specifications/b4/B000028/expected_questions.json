@@ -1,0 +1,26 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel est votre budget d’achat ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Avez-vous des quartiers préférés ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Combien de chambres minimum ?",
+      "context": "Turn 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "Je récapitule : achat d’un appartement à Bafoussam, budget maximal 25 000 000 FCFA, zones Tamdja ou Kena, trois chambres minimum. Souhaitez-vous enregistrer cette recherche ?",
+      "context": "Turn 3"
+    }
+  ],
+  "forbidden_questions": []
+}

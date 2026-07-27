@@ -1,0 +1,15 @@
+{
+  "business_action": "create_visit_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "intent": "schedule_visit",
+    "property_reference": "PROP-1055",
+    "city": "Yaoundé",
+    "area": "Ngoa-Ekellé",
+    "preferred_day": "lundi",
+    "preferred_time": "15:00",
+    "contact_confirmation": true
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

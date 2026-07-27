@@ -1,0 +1,73 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Location maison \u00e0 Douala, 180 000 FCFA, Bonamoussadi, septembre.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 180000,
+      "move_in_date": "septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 12.98
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Pas encore. Je veux finalement 4 chambres.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 4 chambres, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 180000 FCFA, emm\u00e9nagement septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 180000,
+      "move_in_date": "septembre",
+      "bedrooms": 4
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 13.69
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Et l'entr\u00e9e doit \u00eatre en novembre, pas septembre.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 4 chambres, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 180000 FCFA, emm\u00e9nagement en novembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 180000,
+      "move_in_date": "en novembre",
+      "bedrooms": 4
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 16.74
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Oui.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 180000,
+      "move_in_date": "en novembre",
+      "bedrooms": 4
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 17.75
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "I don note house for rent for Douala, budget 150 thousand, area Bonamoussadi. You wan make I register am?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "I don correct am: budget 200 thousand, area Makepe. Make I register am?",
+      "context": "Turn 1"
+    }
+  ],
+  "forbidden_questions": []
+}

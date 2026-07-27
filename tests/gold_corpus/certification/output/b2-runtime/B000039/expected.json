@@ -1,0 +1,208 @@
+{
+  "expected_state": {
+    "intent": "sell_property",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "intent": "sell_property",
+      "property_type": "boutique",
+      "city": "Kribi",
+      "area": "Bwambe",
+      "asking_price": 80000000,
+      "ownership_confirmed": true,
+      "contact_preference": "WhatsApp"
+    },
+    "next_action": "CREATE_SELLER_REQUEST",
+    "memory_retained": [
+      "intent",
+      "property_type",
+      "city",
+      "area",
+      "asking_price",
+      "ownership_confirmed",
+      "contact_preference"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_seller_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "intent": "sell_property",
+      "property_type": "boutique",
+      "city": "Kribi",
+      "area": "Bwambe",
+      "asking_price": 80000000,
+      "ownership_confirmed": true,
+      "contact_preference": "WhatsApp"
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "fr",
+    "responses_language": "fr",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "Quel prix souhaitez-vous demander ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "\u00cates-vous bien le propri\u00e9taire ou son mandataire autoris\u00e9 ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 2,
+        "expected_question": "Par quel canal pr\u00e9f\u00e9rez-vous \u00eatre recontact\u00e9 ?",
+        "context": "Tour 2"
+      },
+      {
+        "turn": 3,
+        "expected_question": "Je r\u00e9capitule : mise en vente d\u2019un boutique \u00e0 Bwambe, Kribi, prix demand\u00e9 80 000 000 FCFA. Souhaitez-vous enregistrer cette demande ?",
+        "context": "Tour 3"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "intent",
+          "property_type",
+          "city",
+          "area",
+          "asking_price",
+          "ownership_confirmed",
+          "contact_preference"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_seller_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000039",
+    "category": "rental",
+    "level": "basic",
+    "channel": "whatsapp",
+    "language": "fr",
+    "description": "Vente boutique \u00e0 Kribi",
+    "tags": [
+      "vente",
+      "propri\u00e9taire",
+      "consentement"
+    ],
+    "business_object": "boutique",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0039",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je souhaite vendre mon boutique situ\u00e9 \u00e0 Bwambe, Kribi.",
+        "intent": "SELL_PROPERTY"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel prix souhaitez-vous demander ?",
+        "intent": "ASK_PRICE"
+      },
+      {
+        "role": "user",
+        "text": "80 000 000 FCFA.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "\u00cates-vous bien le propri\u00e9taire ou son mandataire autoris\u00e9 ?",
+        "intent": "ASK_OWNERSHIP"
+      },
+      {
+        "role": "user",
+        "text": "Oui, je suis le propri\u00e9taire.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Par quel canal pr\u00e9f\u00e9rez-vous \u00eatre recontact\u00e9 ?",
+        "intent": "ASK_CONTACT_PREFERENCE"
+      },
+      {
+        "role": "user",
+        "text": "Par WhatsApp.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Je r\u00e9capitule : mise en vente d\u2019un boutique \u00e0 Bwambe, Kribi, prix demand\u00e9 80 000 000 FCFA. Souhaitez-vous enregistrer cette demande ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui, enregistrez.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Votre demande de mise en vente a \u00e9t\u00e9 enregistr\u00e9e.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

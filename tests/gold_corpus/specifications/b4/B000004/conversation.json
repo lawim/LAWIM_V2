@@ -1,0 +1,67 @@
+{
+  "id": "B000004",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Location appartement à Kribi",
+  "tags": [
+    "location",
+    "qualification",
+    "confirmation",
+    "multi_area"
+  ],
+  "business_object": "apartment",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0004",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Bonjour, je cherche un appartement à louer à Kribi."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel souhaitez-vous consacrer à cette location ?"
+    },
+    {
+      "role": "user",
+      "text": "Mon budget maximum est de 180 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres souhaitez-vous ?"
+    },
+    {
+      "role": "user",
+      "text": "1 chambres."
+    },
+    {
+      "role": "assistant",
+      "text": "Quels quartiers préférez-vous à Kribi ?"
+    },
+    {
+      "role": "user",
+      "text": "Dombe ou Mpangou."
+    },
+    {
+      "role": "assistant",
+      "text": "À partir de quand souhaitez-vous emménager ?"
+    },
+    {
+      "role": "user",
+      "text": "En septembre."
+    },
+    {
+      "role": "assistant",
+      "text": "Récapitulatif : appartement à louer à Kribi, budget 180 000 FCFA, 1, zones Dombe ou Mpangou, entrée en septembre. Souhaitez-vous que j’enregistre cette recherche ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui, enregistrez-la."
+    },
+    {
+      "role": "assistant",
+      "text": "Votre demande de recherche a bien été enregistrée."
+    }
+  ]
+}

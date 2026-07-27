@@ -1,0 +1,44 @@
+=== LAWIM SERVER ROUTES (server.py, NEVER STARTED) ===
+
+Health routes (also covered by entrypoint.sh):
+  GET /healthz                       line 181-183
+  GET /readyz                        line 184-188
+
+Web conversation routes:
+  GET /api/conversations             line 401-413
+  GET /api/conversations/{id}/messages line 428-433
+  GET /api/conversations/{id}        line 435-439
+  POST /api/conversations            line 744-757
+  POST /api/conversations/{id}/messages line 764-773
+  PUT/PATCH/DELETE /api/conversations/{id} line 1021-1035
+
+V3 conversation routes (gated by LAWIM_FEATURE_CONVERSATION_V2):
+  GET /api/v3/conversations          line 3664-3671
+  GET /api/v3/conversations/{id}     line 3673-3677
+  POST /api/v3/conversations/messages line 3705-3708
+  POST /api/v3/projects              line 3710-3713
+  POST /api/v3/relationship-proposals line 3715-3718
+  POST /api/v3/consents              line 3720-3723
+  POST /api/v3/handover              line 3725-3728
+
+Telegram webhook:
+  POST /api/notifications/telegram/webhook line 213-214
+
+WhatsApp webhook:
+  POST /api/notifications/whatsapp/webhook line 210-211
+
+Campay webhook:
+  POST /api/v2/financial/providers/campay/webhook line 203-208
+
+All other API routes:
+  /api/health, /api/metrics, /api/bootstrap, /api/events, /api/me
+  /api/auth/login, /api/auth/register, /api/auth/logout
+  /api/organizations, /api/users, /api/properties, /api/media
+  /api/notifications, /api/geo/*
+  /api/v2/* (communication, security, financial, marketplace, crm,
+  analytics, source-intelligence, backup, knowledge, cognition,
+  projects, workflows, ecosystem, operations, deployment, installer,
+  releases, maintenance)
+  /api/v4/knowledge/*
+  /api/admin/ai/*
+  /admin/ (SPA)

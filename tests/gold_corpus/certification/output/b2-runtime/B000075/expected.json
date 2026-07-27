@@ -1,0 +1,268 @@
+{
+  "expected_state": {
+    "intent": "ambiguous_search",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "transaction_type": "rent",
+      "property_type": "studio",
+      "city": "Douala",
+      "budget": 100000,
+      "preferred_areas": [
+        "Bonamoussadi"
+      ],
+      "move_in_date": "imm\u00e9diatement"
+    },
+    "next_action": "CREATE_SEARCH_REQUEST",
+    "memory_retained": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "preferred_areas",
+      "move_in_date"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_search_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "transaction_type": "rent",
+      "property_type": "studio",
+      "city": "Douala",
+      "budget": 100000,
+      "preferred_areas": [
+        "Bonamoussadi"
+      ],
+      "move_in_date": "imm\u00e9diatement"
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "fr",
+    "responses_language": "fr",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "Cherchez-vous \u00e0 louer ou \u00e0 acheter ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "Quel type de bien recherchez-vous ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 2,
+        "expected_question": "Par exemple un studio, une chambre moderne ou un appartement ?",
+        "context": "Tour 2"
+      },
+      {
+        "turn": 3,
+        "expected_question": "Dans quelle ville ?",
+        "context": "Tour 3"
+      },
+      {
+        "turn": 4,
+        "expected_question": "Quel budget maximal ?",
+        "context": "Tour 4"
+      },
+      {
+        "turn": 5,
+        "expected_question": "Quel quartier pr\u00e9f\u00e9rez-vous ?",
+        "context": "Tour 5"
+      },
+      {
+        "turn": 6,
+        "expected_question": "Quand souhaitez-vous emm\u00e9nager ?",
+        "context": "Tour 6"
+      },
+      {
+        "turn": 7,
+        "expected_question": "Souhaitez-vous que j\u2019enregistre cette recherche de studio ?",
+        "context": "Tour 7"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000075",
+    "category": "rental",
+    "level": "advanced",
+    "channel": "web",
+    "language": "fr",
+    "description": "Clarification recherche vague 75",
+    "tags": [
+      "clarification",
+      "ambiguity",
+      "progressive_qualification"
+    ],
+    "business_object": "studio",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0075",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je cherche quelque chose de bien et pas cher.",
+        "intent": "AMBIGUOUS_SEARCH"
+      },
+      {
+        "role": "assistant",
+        "text": "Cherchez-vous \u00e0 louer ou \u00e0 acheter ?",
+        "intent": "CLARIFY_TRANSACTION"
+      },
+      {
+        "role": "user",
+        "text": "\u00c0 louer.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel type de bien recherchez-vous ?",
+        "intent": "CLARIFY_PROPERTY_TYPE"
+      },
+      {
+        "role": "user",
+        "text": "Un petit logement.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Par exemple un studio, une chambre moderne ou un appartement ?",
+        "intent": "CLARIFY_PROPERTY_TYPE"
+      },
+      {
+        "role": "user",
+        "text": "Un studio.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Dans quelle ville ?",
+        "intent": "ASK_CITY"
+      },
+      {
+        "role": "user",
+        "text": "Douala",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel budget maximal ?",
+        "intent": "ASK_BUDGET"
+      },
+      {
+        "role": "user",
+        "text": "100 000 FCFA.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel quartier pr\u00e9f\u00e9rez-vous ?",
+        "intent": "ASK_AREAS"
+      },
+      {
+        "role": "user",
+        "text": "Bonamoussadi",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Quand souhaitez-vous emm\u00e9nager ?",
+        "intent": "ASK_MOVE_IN_DATE"
+      },
+      {
+        "role": "user",
+        "text": "D\u00e8s que possible.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Souhaitez-vous que j\u2019enregistre cette recherche de studio ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "La recherche a bien \u00e9t\u00e9 enregistr\u00e9e.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "rent",
+    "preferred_areas": [
+      "Louer"
+    ],
+    "property_type": "studio",
+    "city": "Yaoundé",
+    "budget": 100000
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "transaction_type",
+    "preferred_areas",
+    "property_type",
+    "city",
+    "budget"
+  ]
+}

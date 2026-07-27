@@ -1,0 +1,58 @@
+{
+  "id": "B000034",
+  "category": "rental",
+  "level": "basic",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Achat appartement à Kribi",
+  "tags": [
+    "achat",
+    "qualification",
+    "confirmation"
+  ],
+  "business_object": "apartment",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0034",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux acheter un appartement à Kribi."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel est votre budget d’achat ?"
+    },
+    {
+      "role": "user",
+      "text": "Je peux aller jusqu’à 35 000 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Avez-vous des quartiers préférés ?"
+    },
+    {
+      "role": "user",
+      "text": "Mboamanga ou Bwambe."
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres minimum ?"
+    },
+    {
+      "role": "user",
+      "text": "Trois chambres minimum."
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : achat d’un appartement à Kribi, budget maximal 35 000 000 FCFA, zones Mboamanga ou Bwambe, trois chambres minimum. Souhaitez-vous enregistrer cette recherche ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche d’achat a bien été enregistrée."
+    }
+  ]
+}

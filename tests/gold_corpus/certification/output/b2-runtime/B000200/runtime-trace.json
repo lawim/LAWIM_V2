@@ -1,0 +1,58 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "I wan rent house for Douala, ma budget na 150 thousand, for Bonamoussadi.",
+    "assistant_output": "Your search information complete. You want make I register am?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "district": "Bonamoussadi",
+      "budget_max": 150000
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 13.88
+  },
+  {
+    "turn_index": 2,
+    "user_input": "No be 150 thousand. Na 170 thousand, and no be Bonamoussadi, na Makepe.",
+    "assistant_output": "Here be your search summary : house, for rent, in Douala, in Bonamoussadi, Makepe, budget 150000 FCFA. Your search information complete. You want make I register am?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "district": "Makepe",
+      "budget_max": 150000,
+      "preferred_areas": [
+        "Bonamoussadi",
+        "Makepe"
+      ]
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 17.48
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Yes, register am.",
+    "assistant_output": "Your search information complete. You want make I register am?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "district": "Makepe",
+      "budget_max": 150000,
+      "preferred_areas": [
+        "Bonamoussadi",
+        "Makepe"
+      ]
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 14.71
+  }
+]

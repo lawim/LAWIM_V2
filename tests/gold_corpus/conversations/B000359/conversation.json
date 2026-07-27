@@ -1,0 +1,114 @@
+{
+  "id": "B000359",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Conversation B000359",
+  "tags": [],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_04_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B04-0369",
+  "messages": [
+    {
+      "role": "user",
+      "text": "PCM user message 1 (language_after_restart)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 2",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 3 (language_after_restart)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 4",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 5 (language_after_restart)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 6",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 7 (language_after_restart)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 8",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 9 (language_after_restart)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 10",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 11 (language_after_restart)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 12",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 13 (language_after_restart)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 14",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 15 (language_after_restart)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 16",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 17 (language_after_restart)",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 18",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Final confirmation",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Business object created",
+      "intent": "NONE"
+    }
+  ]
+}

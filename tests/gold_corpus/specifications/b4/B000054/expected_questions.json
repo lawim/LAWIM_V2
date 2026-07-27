@@ -1,0 +1,21 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel jour vous conviendrait ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "À quelle heure ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Souhaitez-vous que j’enregistre une demande de visite pour samedi à 15 h ?",
+      "context": "Turn 2"
+    }
+  ],
+  "forbidden_questions": []
+}

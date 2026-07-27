@@ -1,0 +1,32 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel budget mensuel souhaitez-vous consacrer à cette location ?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Combien de chambres souhaitez-vous ?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Quels quartiers préférez-vous à Kribi ?",
+      "context": "Tour 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "À partir de quand souhaitez-vous emménager ?",
+      "context": "Tour 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Récapitulatif : appartement à louer à Kribi, budget 500 000 FCFA, 1, zones Dombe ou Mpangou, entrée en septembre. Souhaitez-vous que j’enregistre cette recherche ?",
+      "context": "Tour 4"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

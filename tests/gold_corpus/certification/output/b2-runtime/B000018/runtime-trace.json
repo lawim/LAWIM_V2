@@ -1,0 +1,112 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Bonjour, je cherche un studio \u00e0 louer \u00e0 Douala.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un studio \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "studio",
+      "transaction_type": "rent",
+      "city": "Douala"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 5.16
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Mon budget maximum est de 100 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un studio, \u00e0 louer, \u00e0 Douala, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "studio",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 100000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 7.19
+  },
+  {
+    "turn_index": 4,
+    "user_input": "3 chambres.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un studio, 3 chambres, \u00e0 louer, \u00e0 Douala, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "studio",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 100000,
+      "bedrooms": 3
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 9.77
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Bonamoussadi ou Akwa.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un studio, 3 chambres, \u00e0 louer, \u00e0 Douala, dans le secteur Bonamoussadi, Akwa, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "studio",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 100000,
+      "bedrooms": 3,
+      "district": "Bonamoussadi",
+      "preferred_areas": [
+        "Bonamoussadi",
+        "Akwa"
+      ]
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 6.87
+  },
+  {
+    "turn_index": 8,
+    "user_input": "En septembre.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un studio, 3 chambres, \u00e0 louer, \u00e0 Douala, dans le secteur Bonamoussadi, Akwa, avec un budget de 100000 FCFA, emm\u00e9nagement En septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "studio",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 100000,
+      "bedrooms": 3,
+      "district": "Bonamoussadi",
+      "preferred_areas": [
+        "Bonamoussadi",
+        "Akwa"
+      ],
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 6.11
+  },
+  {
+    "turn_index": 10,
+    "user_input": "Oui, enregistrez-la.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "studio",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 100000,
+      "bedrooms": 3,
+      "district": "Bonamoussadi",
+      "preferred_areas": [
+        "Bonamoussadi",
+        "Akwa"
+      ],
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 5.59
+  }
+]

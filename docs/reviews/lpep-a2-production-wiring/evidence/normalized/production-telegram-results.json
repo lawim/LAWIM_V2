@@ -1,0 +1,8 @@
+{
+  "route": "POST /api/notifications/telegram/webhook",
+  "status_code": 503,
+  "reason": "Service Unavailable \u2014 webhook_secret not configured",
+  "handler_reachable": true,
+  "provider_configured": false,
+  "real_message": "NOT_PROVEN"
+}

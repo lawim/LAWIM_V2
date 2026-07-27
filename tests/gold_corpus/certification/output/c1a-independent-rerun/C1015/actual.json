@@ -1,0 +1,52 @@
+{
+  "conversation_id": "C1015",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 22.902965545654297,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Hello, I saw property PROP-2003 online. I want to visit it.",
+      "assistant_output": "Are you looking to rent, buy or sell?",
+      "intent_detected": "property_search",
+      "facts_after": {},
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "I am free on Friday afternoon.",
+      "assistant_output": "What type of property are you looking for? (apartment, house, studio...)",
+      "intent_detected": "property_search",
+      "facts_after": {},
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Around 2 PM if possible.",
+      "assistant_output": "Vous cherchez \u00e0 louer, acheter ou vendre ?",
+      "intent_detected": "property_search",
+      "facts_after": {},
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Yes, please register it.",
+      "assistant_output": "I have noted your information. Continue when you are ready.",
+      "intent_detected": "legal_question",
+      "facts_after": {
+        "transaction_type": "rent"
+      },
+      "pending_after": "NONE",
+      "business_actions": [],
+      "error": null
+    }
+  ]
+}

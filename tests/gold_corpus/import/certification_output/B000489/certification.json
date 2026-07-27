@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-07-26T11:12:42.697496+00:00",
+  "spec_dir": "/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/tests/gold_corpus/conversations/B000489",
+  "actual_dir": "/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/tests/gold_corpus/conversations/B000489",
+  "verdict": "PASS",
+  "scores": {
+    "turns": 1.0,
+    "global": 1.0
+  },
+  "summary": {
+    "assertions_total": 0,
+    "assertions_passed": 0,
+    "assertions_failed": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "violations_count": 0,
+  "components_affected": 0,
+  "violations": [],
+  "root_causes": [],
+  "component_summary": {},
+  "assertions": {},
+  "turns": {
+    "results": [],
+    "passed": 0,
+    "failed": 0
+  }
+}

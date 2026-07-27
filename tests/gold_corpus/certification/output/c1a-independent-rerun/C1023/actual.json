@@ -1,0 +1,99 @@
+{
+  "conversation_id": "C1023",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 5,
+  "total_duration_ms": 32.58466720581055,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un terrain \u00e0 louer \u00e0 Yaound\u00e9.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un terrain \u00e0 Yaound\u00e9.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Yaounde"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "50 000 FCFA par mois.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 louer, \u00e0 Yaound\u00e9, avec un budget de 50000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 50000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 3,
+      "user_input": "[SYSTEM_RESTART]",
+      "assistant_output": "[RESTART_COMPLETE]",
+      "intent_detected": "",
+      "facts_after": {},
+      "pending_after": "",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Finalement je veux 80 000 FCFA de budget.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 louer, \u00e0 Yaound\u00e9, avec un budget de 80000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 80000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Mvan.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Mvan, avec un budget de 80000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 80000,
+        "district": "Mvan"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Oui.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 80000,
+        "district": "Mvan"
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_f52c909484bf"
+      ],
+      "error": null
+    }
+  ]
+}

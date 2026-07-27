@@ -1,0 +1,23 @@
+{
+  "intent": "sell_property",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "intent": "sell_property",
+    "property_type": "boutique",
+    "city": "Kribi",
+    "area": "Bwambe",
+    "asking_price": 80000000,
+    "ownership_confirmed": true,
+    "contact_preference": "WhatsApp"
+  },
+  "next_action": "CREATE_SELLER_REQUEST",
+  "memory_retained": [
+    "intent",
+    "property_type",
+    "city",
+    "area",
+    "asking_price",
+    "ownership_confirmed",
+    "contact_preference"
+  ]
+}

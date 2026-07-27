@@ -1,0 +1,205 @@
+{
+  "rules": [
+    {
+      "rule_id": "EXP-0001",
+      "name": "transaction_type from first user turn",
+      "applies_to": ["all"],
+      "description": "Le type de transaction (rent/buy) est extrait du premier message utilisateur",
+      "input_conditions": {"turn": 0, "role": "user"},
+      "expected_effect": {"facts.transaction_type": "match(acheter|louer|rent|buy|location|achat|vente|sell)"},
+      "criticality": "critical",
+      "source_document": "LAWIM Conversation Contract",
+      "tests": ["test_transaction_from_dialogue"]
+    },
+    {
+      "rule_id": "EXP-0002",
+      "name": "property_type from user dialogue",
+      "applies_to": ["all"],
+      "description": "Le type de bien est extrait du dialogue utilisateur",
+      "input_conditions": {"role": "user"},
+      "expected_effect": {"facts.property_type": "match(appartement|maison|studio|villa|terrain|apartment|house|land)"},
+      "criticality": "critical",
+      "source_document": "LAWIM Glossary"
+    },
+    {
+      "rule_id": "EXP-0003",
+      "name": "city is explicitly stated",
+      "applies_to": ["all"],
+      "description": "La ville est mentionnée explicitement par l'utilisateur",
+      "input_conditions": {"role": "user"},
+      "expected_effect": {"facts.city": "match(Douala|Yaoundé|Bafoussam|etc)"},
+      "criticality": "critical",
+      "source_document": "LAWIM Conversation Contract"
+    },
+    {
+      "rule_id": "EXP-0004",
+      "name": "budget extracted as integer",
+      "applies_to": ["all"],
+      "description": "Le budget est extrait comme entier, normalisé en FCFA",
+      "input_conditions": {"role": "user", "text_contains": "budget|FCFA|franc|million|price"},
+      "expected_effect": {"facts.budget": "integer from text"},
+      "criticality": "critical",
+      "source_document": "LAWIM Qualification Rules"
+    },
+    {
+      "rule_id": "EXP-0005",
+      "name": "bedrooms explicitly stated",
+      "applies_to": ["all"],
+      "description": "Le nombre de chambres est extrait du dialogue",
+      "input_conditions": {"role": "user", "text_contains": "chambre|chambres|bedroom|pieces|pièce"},
+      "expected_effect": {"facts.bedrooms": "integer from text"},
+      "criticality": "major",
+      "source_document": "LAWIM Qualification Rules"
+    },
+    {
+      "rule_id": "EXP-0006",
+      "name": "multiple preferred areas preserved as list",
+      "applies_to": ["all"],
+      "description": "Les zones préférées sont conservées comme une liste ordonnée",
+      "input_conditions": {"role": "user"},
+      "expected_effect": {"facts.preferred_areas": "list from text (split on 'ou'|'et'|',')"},
+      "criticality": "major",
+      "source_document": "LAWIM Conversation Contract"
+    },
+    {
+      "rule_id": "EXP-0007",
+      "name": "correction replaces only the targeted fact",
+      "applies_to": ["correction"],
+      "description": "Une correction remplace uniquement le fait corrigé, pas les autres faits",
+      "input_conditions": {"role": "user", "intent": "correction"},
+      "expected_effect": {"facts": "only targeted field changes"},
+      "criticality": "critical",
+      "source_document": "LAWIM Correction Rules"
+    },
+    {
+      "rule_id": "EXP-0008",
+      "name": "uncorrected facts are preserved",
+      "applies_to": ["correction"],
+      "description": "Les faits non ciblés par une correction restent inchangés",
+      "input_conditions": {"role": "user", "intent": "correction"},
+      "expected_effect": {"facts": "non-targeted fields unchanged"},
+      "criticality": "critical",
+      "source_document": "LAWIM Memory Rules"
+    },
+    {
+      "rule_id": "EXP-0009",
+      "name": "final confirmation required before business action",
+      "applies_to": ["all"],
+      "description": "Une confirmation explicite est requise avant d'exécuter une action métier",
+      "input_conditions": {"pending": "CONFIRM_*"},
+      "expected_effect": {"business_action": "only after user confirms"},
+      "criticality": "critical",
+      "source_document": "LAWIM Qualification Rules"
+    },
+    {
+      "rule_id": "EXP-0010",
+      "name": "refusal blocks business creation",
+      "applies_to": ["all"],
+      "description": "Un refus explicite empêche toute création métier",
+      "input_conditions": {"role": "user", "intent": "refusal|negative"},
+      "expected_effect": {"business_action": "none", "business_object_count": "unchanged"},
+      "criticality": "critical",
+      "source_document": "LAWIM Business Safety"
+    },
+    {
+      "rule_id": "EXP-0011",
+      "name": "explicit confirmation allows business creation",
+      "applies_to": ["all"],
+      "description": "Une confirmation positive explicite autorise la création métier",
+      "input_conditions": {"role": "user", "pending": "CONFIRM_CREATION", "text_contains": "oui|yes|confirme|ok|d'accord"},
+      "expected_effect": {"business_action": "create_*", "business_object_count": "+1"},
+      "criticality": "critical",
+      "source_document": "LAWIM Business Safety"
+    },
+    {
+      "rule_id": "EXP-0012",
+      "name": "unique business object creation",
+      "applies_to": ["all"],
+      "description": "Une seule création métier par conversation",
+      "input_conditions": {"business_object_count": "> 0"},
+      "expected_effect": {"business_object_count": "does not increase twice"},
+      "criticality": "critical",
+      "source_document": "LAWIM Idempotence Rules"
+    },
+    {
+      "rule_id": "EXP-0013",
+      "name": "pending_action set after assistant question",
+      "applies_to": ["all"],
+      "description": "La pending action correspond à la question posée par l'assistant",
+      "input_conditions": {"role": "assistant", "text_ends_with": "?"},
+      "expected_effect": {"pending_user_action": "matches question intent"},
+      "criticality": "major",
+      "source_document": "LAWIM State Machine"
+    },
+    {
+      "rule_id": "EXP-0014",
+      "name": "pending_action reset after action",
+      "applies_to": ["all"],
+      "description": "La pending action est réinitialisée après exécution métier",
+      "input_conditions": {"business_action": "!= none"},
+      "expected_effect": {"pending_user_action": "NONE after execution"},
+      "criticality": "major",
+      "source_document": "LAWIM State Machine"
+    },
+    {
+      "rule_id": "EXP-0015",
+      "name": "conversational language persists",
+      "applies_to": ["all"],
+      "description": "La langue conversationnelle reste stable entre les tours",
+      "input_conditions": {"no explicit switch"},
+      "expected_effect": {"language": "unchanged from previous turn"},
+      "criticality": "major",
+      "source_document": "LAWIM Language Policy"
+    },
+    {
+      "rule_id": "EXP-0016",
+      "name": "short message does not change language",
+      "applies_to": ["all"],
+      "description": "Un message court (<3 mots) ne change pas la langue à lui seul",
+      "input_conditions": {"role": "user", "word_count": "< 3"},
+      "expected_effect": {"language": "not changed by short message"},
+      "criticality": "minor",
+      "source_document": "LAWIM Language Policy"
+    },
+    {
+      "rule_id": "EXP-0017",
+      "name": "explicit language switch recognized",
+      "applies_to": ["multilingual"],
+      "description": "Un changement de langue explicite est reconnu et respecté",
+      "input_conditions": {"language_detected": "!= conversation_language"},
+      "expected_effect": {"conversation_language": "updated to new language"},
+      "criticality": "major",
+      "source_document": "LAWIM Language Policy"
+    },
+    {
+      "rule_id": "EXP-0018",
+      "name": "restart preserves confirmed facts",
+      "applies_to": ["restart"],
+      "description": "Un restart conserve les faits déjà confirmés",
+      "input_conditions": {"event": "SERVICE_RESTART"},
+      "expected_effect": {"facts": "preserved from before restart"},
+      "criticality": "critical",
+      "source_document": "LAWIM Recovery Rules"
+    },
+    {
+      "rule_id": "EXP-0019",
+      "name": "final replay is idempotent",
+      "applies_to": ["idempotence"],
+      "description": "Rejouer l'événement final ne crée pas de duplicat",
+      "input_conditions": {"event": "CONFIRM_CREATION", "replay": true},
+      "expected_effect": {"business_object_count": "unchanged on replay"},
+      "criticality": "critical",
+      "source_document": "LAWIM Idempotence Rules"
+    },
+    {
+      "rule_id": "EXP-0020",
+      "name": "recap based on current state",
+      "applies_to": ["all"],
+      "description": "Le récapitulatif est fondé sur l'état courant, pas sur un template fixe",
+      "input_conditions": {"phase": "qualified|completed"},
+      "expected_effect": {"response": "references current confirmed_facts"},
+      "criticality": "minor",
+      "source_document": "LAWIM Conversation Contract"
+    }
+  ]
+}

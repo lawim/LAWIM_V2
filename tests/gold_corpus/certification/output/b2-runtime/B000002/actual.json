@@ -1,0 +1,70 @@
+{
+  "conversation_id": "B000002",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 55.15,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Bonjour, je cherche un studio \u00e0 louer \u00e0 Douala.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un studio \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 7.66,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Mon budget maximum est de 100 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, \u00e0 louer, \u00e0 Douala, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.85,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "3 chambres.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, 3 chambres, \u00e0 louer, \u00e0 Douala, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 10.24,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Bonamoussadi ou Akwa.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, 3 chambres, \u00e0 louer, \u00e0 Douala, dans le secteur Bonamoussadi, Akwa, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 16.6,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "En septembre.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, 3 chambres, \u00e0 louer, \u00e0 Douala, dans le secteur Bonamoussadi, Akwa, avec un budget de 100000 FCFA, emm\u00e9nagement En septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 6.84,
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Oui, enregistrez-la.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 8.94,
+      "error": null
+    }
+  ]
+}

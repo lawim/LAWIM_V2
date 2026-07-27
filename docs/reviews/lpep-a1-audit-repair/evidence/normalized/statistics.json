@@ -1,0 +1,7 @@
+{
+  "files_audited": 8,
+  "routes_defined": 137,
+  "routes_active": 2,
+  "root_cause": "HealthHandler instead of LawimRequestHandler",
+  "repair_required": true
+}

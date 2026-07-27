@@ -1,0 +1,3 @@
+# logs-details
+
+Non applicable.

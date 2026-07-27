@@ -1,0 +1,102 @@
+{
+  "conversation_id": "C1005",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 41.92161560058594,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Hello, I wan get land for rent for Kribi o.",
+      "assistant_output": "I don see say you want for rent land for Kribi.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Kribi"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Ma budget na 100 thousand FCFA.",
+      "assistant_output": "Here be your search summary : land, for rent, in Kribi, budget 100000 FCFA. Your search information complete. You want make I register am?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Kribi",
+        "budget_max": 100000
+      },
+      "pending_after": "NONE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Make e be small, around 200 square metres.",
+      "assistant_output": "Your search information complete. You want make I register am?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Kribi",
+        "budget_max": 100000
+      },
+      "pending_after": "NONE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Dombe side, I like that place.",
+      "assistant_output": "Your search information is complete. Should I register it?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Kribi",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Next year for January, God willing.",
+      "assistant_output": "Your search information is complete. Should I register it?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Kribi",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Yes, register am make I no forget.",
+      "assistant_output": "Your request don register. I fit help you with anything else?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "rent",
+        "city": "Kribi",
+        "budget_max": 100000
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_af3cbff1e4bc"
+      ],
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "id": "B000297",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Conversation B000297",
+  "tags": [],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_04_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B04-0307",
+  "messages": [
+    {
+      "role": "user",
+      "text": "FR user message 1 (language_switch_fr_en_pcm)"
+    },
+    {
+      "role": "assistant",
+      "text": "FR assistant reply 2"
+    },
+    {
+      "role": "user",
+      "text": "FR user message 3 (language_switch_fr_en_pcm)"
+    },
+    {
+      "role": "assistant",
+      "text": "FR assistant reply 4"
+    },
+    {
+      "role": "user",
+      "text": "FR user message 5 (language_switch_fr_en_pcm)"
+    },
+    {
+      "role": "assistant",
+      "text": "FR assistant reply 6"
+    },
+    {
+      "role": "user",
+      "text": "FR user message 7 (language_switch_fr_en_pcm)"
+    },
+    {
+      "role": "assistant",
+      "text": "EN assistant reply 8"
+    },
+    {
+      "role": "user",
+      "text": "EN user message 9 (language_switch_fr_en_pcm)"
+    },
+    {
+      "role": "assistant",
+      "text": "EN assistant reply 10"
+    },
+    {
+      "role": "user",
+      "text": "EN user message 11 (language_switch_fr_en_pcm)"
+    },
+    {
+      "role": "assistant",
+      "text": "EN assistant reply 12"
+    },
+    {
+      "role": "user",
+      "text": "EN user message 13 (language_switch_fr_en_pcm)"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 14"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 15 (language_switch_fr_en_pcm)"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 16"
+    },
+    {
+      "role": "user",
+      "text": "PCM user message 17 (language_switch_fr_en_pcm)"
+    },
+    {
+      "role": "assistant",
+      "text": "PCM assistant reply 18"
+    },
+    {
+      "role": "user",
+      "text": "Final confirmation"
+    },
+    {
+      "role": "assistant",
+      "text": "Business object created"
+    }
+  ]
+}

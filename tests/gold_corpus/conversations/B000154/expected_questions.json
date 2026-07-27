@@ -1,0 +1,22 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel budget ?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Je récapitule : location, maison, à Douala, budget 220 000 FCFA, 1 chambre(s), zones Bonamoussadi, entrée septembre. Enregistrer ?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Ville et zone mises à jour : location, maison, à Yaoundé, budget 220 000 FCFA, 1 chambre(s), zones Melen, entrée septembre. Enregistrer ?",
+      "context": "Tour 2"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

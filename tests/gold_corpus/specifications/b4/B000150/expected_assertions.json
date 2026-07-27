@@ -1,0 +1,23 @@
+{
+  "assertions": [
+    {
+      "id": "ASSERT-B4-001",
+      "type": "memory",
+      "description": "Faits extraits conservés en mémoire",
+      "expected": [
+        "property_type",
+        "preferred_areas"
+      ],
+      "path": "memory_retained",
+      "operator": "contains"
+    },
+    {
+      "id": "ASSERT-B4-003",
+      "type": "language",
+      "description": "Langue correcte",
+      "expected": "pcm",
+      "path": "responses_language",
+      "operator": "eq"
+    }
+  ]
+}

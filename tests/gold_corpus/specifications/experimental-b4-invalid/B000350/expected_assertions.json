@@ -1,0 +1,12 @@
+{
+  "assertions": [
+    {
+      "id": "ASSERT-B4-003",
+      "type": "language",
+      "description": "Langue correcte",
+      "expected": "fr",
+      "path": "responses_language",
+      "operator": "eq"
+    }
+  ]
+}

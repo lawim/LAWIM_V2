@@ -1,0 +1,24 @@
+{
+  "intent": "search_property",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "buy",
+    "property_type": "maison",
+    "city": "Kribi",
+    "budget": 35000000,
+    "bedrooms": 3,
+    "preferred_areas": [
+      "Mboamanga",
+      "Bwambe"
+    ]
+  },
+  "next_action": "CREATE_SEARCH_REQUEST",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "city",
+    "budget",
+    "bedrooms",
+    "preferred_areas"
+  ]
+}

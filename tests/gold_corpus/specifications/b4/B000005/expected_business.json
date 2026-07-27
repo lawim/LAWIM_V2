@@ -1,0 +1,16 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Yaoundé",
+    "preferred_areas": [
+      "Yaoundé"
+    ],
+    "budget": 200000,
+    "bedrooms": 2
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

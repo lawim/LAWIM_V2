@@ -1,0 +1,12 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "preferred_areas": [
+      "Bwambe"
+    ],
+    "budget": 80000000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

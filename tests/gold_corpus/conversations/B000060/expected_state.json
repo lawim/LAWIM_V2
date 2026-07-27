@@ -1,0 +1,25 @@
+{
+  "intent": "search_property",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "rent",
+    "property_type": "appartement",
+    "city": "Yaoundé",
+    "budget": 240000,
+    "bedrooms": 2,
+    "preferred_areas": [
+      "Melen"
+    ],
+    "move_in_date": "octobre"
+  },
+  "next_action": "CREATE_SEARCH_REQUEST",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "city",
+    "budget",
+    "bedrooms",
+    "preferred_areas",
+    "move_in_date"
+  ]
+}

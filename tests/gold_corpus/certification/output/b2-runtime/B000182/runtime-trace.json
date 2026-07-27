@@ -1,0 +1,44 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je cherche un terrain \u00e0 Kribi, budget 150 000 FCFA, quartier Dombe.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un terrain \u00e0 Kribi.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "city": "Kribi",
+      "budget_max": 150000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 14.67
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Corrigez : 180 000 FCFA et Mboamanga.",
+    "assistant_output": "Je prends note de votre correction : budget passe de 150000 \u00e0 180000.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "city": "Kribi",
+      "budget_max": 180000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 63.0
+  },
+  {
+    "turn_index": 5,
+    "user_input": "Oui, enregistrez maintenant.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un terrain \u00e0 Kribi.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "city": "Kribi",
+      "budget_max": 180000
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 15.67
+  }
+]

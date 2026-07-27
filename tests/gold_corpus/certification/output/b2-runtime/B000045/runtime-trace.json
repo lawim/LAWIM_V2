@@ -1,0 +1,81 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je souhaite vendre mon terrain situ\u00e9 \u00e0 Akwa, Douala.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 vendre un terrain \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "sell",
+      "city": "Douala",
+      "district": "Akwa"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 40.62
+  },
+  {
+    "turn_index": 2,
+    "user_input": "25 000 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 vendre, \u00e0 Douala, dans le quartier Akwa, avec un budget de 25000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "sell",
+      "city": "Douala",
+      "district": "Akwa",
+      "budget_max": 25000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 25.09
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Oui, je suis le propri\u00e9taire.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "sell",
+      "city": "Douala",
+      "district": "Akwa",
+      "budget_max": 25000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 4.62
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Par WhatsApp.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "sell",
+      "city": "Douala",
+      "district": "Akwa",
+      "budget_max": 25000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 4.49
+  },
+  {
+    "turn_index": 8,
+    "user_input": "Oui, enregistrez.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "land",
+      "transaction_type": "sell",
+      "city": "Douala",
+      "district": "Akwa",
+      "budget_max": 25000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 4.8
+  }
+]

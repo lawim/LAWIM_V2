@@ -1,0 +1,22 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Je récapitule : location, maison, à Douala, budget 100 000 FCFA, 2 chambre(s), zones Bonamoussadi, entrée septembre. Souhaitez-vous enregistrer ?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Nombre de chambres corrigé. Nouveau récapitulatif : location, maison, à Douala, budget 100 000 FCFA, 3 chambre(s), zones Bonamoussadi, entrée septembre. Enregistrer ?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Date corrigée. Nouveau récapitulatif : location, maison, à Douala, budget 100 000 FCFA, 3 chambre(s), zones Bonamoussadi, entrée novembre. Enregistrer ?",
+      "context": "Tour 2"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

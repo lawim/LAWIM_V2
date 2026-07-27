@@ -1,0 +1,58 @@
+{
+  "id": "B000053",
+  "category": "visit",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Visite maison Makepe",
+  "tags": [
+    "visite",
+    "rendez_vous",
+    "confirmation"
+  ],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0053",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux visiter le maison référence PROP-1053 à Makepe.",
+      "intent": "SCHEDULE_VISIT"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel jour vous conviendrait ?",
+      "intent": "ASK_VISIT_DAY"
+    },
+    {
+      "role": "user",
+      "text": "Vendredi.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "À quelle heure ?",
+      "intent": "ASK_VISIT_TIME"
+    },
+    {
+      "role": "user",
+      "text": "Vers 15 heures.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous que j’enregistre une demande de visite pour vendredi à 15 h ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La demande de visite a bien été enregistrée. Un agent confirmera la disponibilité.",
+      "intent": "NONE"
+    }
+  ]
+}

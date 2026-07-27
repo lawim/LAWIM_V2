@@ -1,0 +1,81 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je cherche un appartement \u00e0 louer \u00e0 Yaound\u00e9, budget 150 000 FCFA, deux chambres \u00e0 Bastos.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "district": "Bastos",
+      "budget_max": 150000,
+      "bedrooms": 2
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 8.76
+  },
+  {
+    "turn_index": 2,
+    "user_input": "En octobre.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Bastos, avec un budget de 150000 FCFA, emm\u00e9nagement En octobre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "district": "Bastos",
+      "budget_max": 150000,
+      "bedrooms": 2,
+      "move_in_date": "En octobre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 6.14
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Non, corrigez : mon budget est 200 000 FCFA et je pr\u00e9f\u00e8re Melen, pas Bastos.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un appartement, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le secteur Bastos, Melen, avec un budget de 200000 FCFA, emm\u00e9nagement En octobre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "district": "Bastos",
+      "budget_max": 200000,
+      "bedrooms": 2,
+      "move_in_date": "En octobre",
+      "preferred_areas": [
+        "Bastos",
+        "Melen"
+      ]
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 4.97
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Oui.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Yaounde",
+      "district": "Bastos",
+      "budget_max": 200000,
+      "bedrooms": 2,
+      "move_in_date": "En octobre",
+      "preferred_areas": [
+        "Bastos",
+        "Melen"
+      ]
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 4.69
+  }
+]

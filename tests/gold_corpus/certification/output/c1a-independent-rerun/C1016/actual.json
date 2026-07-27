@@ -1,0 +1,136 @@
+{
+  "conversation_id": "C1016",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 8,
+  "total_duration_ms": 53.18570137023926,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche quelque chose de pas trop cher \u00e0 Douala.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Louer.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "city": "Douala",
+        "transaction_type": "rent"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Un studio ou une chambre.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un studio \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "city": "Douala",
+        "transaction_type": "rent",
+        "property_type": "studio",
+        "bedrooms": 1
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "70 000 FCFA max.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, 1 chambres, \u00e0 louer, \u00e0 Douala, avec un budget de 70000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "city": "Douala",
+        "transaction_type": "rent",
+        "property_type": "studio",
+        "bedrooms": 1,
+        "budget_max": 70000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Pr\u00e8s du centre.",
+      "assistant_output": "Pouvez-vous pr\u00e9ciser le lieu ? Proche de quel quartier ou rep\u00e8re ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "city": "Douala",
+        "transaction_type": "rent",
+        "property_type": "studio",
+        "bedrooms": 1,
+        "budget_max": 70000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Akwa.",
+      "assistant_output": "Merci, je note Akwa.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "city": "Douala",
+        "transaction_type": "rent",
+        "property_type": "studio",
+        "bedrooms": 1,
+        "budget_max": 70000,
+        "district": "Akwa"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 12,
+      "user_input": "D\u00e8s que possible.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "city": "Douala",
+        "transaction_type": "rent",
+        "property_type": "studio",
+        "bedrooms": 1,
+        "budget_max": 70000,
+        "district": "Akwa"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 14,
+      "user_input": "Oui.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "city": "Douala",
+        "transaction_type": "rent",
+        "property_type": "studio",
+        "bedrooms": 1,
+        "budget_max": 70000,
+        "district": "Akwa"
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_1c3a34954c79"
+      ],
+      "error": null
+    }
+  ]
+}

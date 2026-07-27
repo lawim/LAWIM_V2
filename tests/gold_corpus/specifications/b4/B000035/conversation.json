@@ -1,0 +1,50 @@
+{
+  "id": "B000035",
+  "category": "rental",
+  "level": "basic",
+  "channel": "telegram",
+  "language": "fr",
+  "description": "Achat terrain à Limbe",
+  "tags": [
+    "achat",
+    "qualification",
+    "confirmation"
+  ],
+  "business_object": "land",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0035",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux acheter un terrain à Limbe."
+    },
+    {
+      "role": "assistant",
+      "text": "Quel est votre budget d’achat ?"
+    },
+    {
+      "role": "user",
+      "text": "Je peux aller jusqu’à 50 000 000 FCFA."
+    },
+    {
+      "role": "assistant",
+      "text": "Avez-vous des quartiers préférés ?"
+    },
+    {
+      "role": "user",
+      "text": "Down Beach ou Mokunda."
+    },
+    {
+      "role": "assistant",
+      "text": "Je récapitule : achat d’un terrain à Limbe, budget maximal 50 000 000 FCFA, zones Down Beach ou Mokunda. Souhaitez-vous enregistrer cette recherche ?"
+    },
+    {
+      "role": "user",
+      "text": "Oui."
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche d’achat a bien été enregistrée."
+    }
+  ]
+}

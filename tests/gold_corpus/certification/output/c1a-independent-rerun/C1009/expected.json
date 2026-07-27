@@ -1,0 +1,65 @@
+{
+  "id": "C1009",
+  "category": "advanced_search",
+  "level": "medium",
+  "channel": "web",
+  "language": "fr",
+  "description": "Recherche de local commercial",
+  "tags": [
+    "advanced",
+    "commercial",
+    "rental"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un local commercial \u00e0 louer \u00e0 Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget mensuel ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "500 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Akwa ou Bonanjo.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quelle surface ?",
+      "intent": "ASK_CLARIFICATION"
+    },
+    {
+      "role": "user",
+      "text": "50 m\u00b2 minimum.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche de local commercial ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui, enregistrez.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

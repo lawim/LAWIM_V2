@@ -1,0 +1,26 @@
+{
+  "total": 3,
+  "violations": [
+    {
+      "assertion_id": "ASSERT-INTENT",
+      "category": "intent",
+      "expected": "create_case",
+      "actual": "unknown",
+      "detail": "op=eq, expected=create_case, actual=unknown"
+    },
+    {
+      "assertion_id": "ASSERT-QUAL",
+      "category": "state",
+      "expected": "qualified",
+      "actual": "QUALIFYING",
+      "detail": "op=eq, expected=qualified, actual=QUALIFYING"
+    },
+    {
+      "assertion_id": "ASSERT-ACTION",
+      "category": "state",
+      "expected": "create",
+      "actual": "NONE",
+      "detail": "op=eq, expected=create, actual=NONE"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "conversation_id": "C1007",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 2,
+  "total_duration_ms": 13.926506042480469,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un appartement 3 pi\u00e8ces \u00e0 louer \u00e0 Douala quartier Akwa, budget 200 000, pour mars.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "district": "Akwa",
+        "budget_max": 200000,
+        "bedrooms": 3,
+        "move_in_date": "pour mars"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Oui.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "district": "Akwa",
+        "budget_max": 200000,
+        "bedrooms": 3,
+        "move_in_date": "pour mars"
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_4f730175fd62"
+      ],
+      "error": null
+    }
+  ]
+}

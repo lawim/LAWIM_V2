@@ -1,0 +1,31 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Combien de chambres souhaitez-vous ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Quel quartier préférez-vous à Kribi ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Quand souhaitez-vous emménager ?",
+      "context": "Turn 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "Je récapitule : location, terrain, à Kribi, budget 150 000 FCFA, zones Dombe, entrée septembre. Souhaitez-vous enregistrer ?",
+      "context": "Turn 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Budget corrigé. Nouveau récapitulatif : location, terrain, à Kribi, budget 170 000 FCFA, zones Dombe, entrée septembre. Souhaitez-vous enregistrer ?",
+      "context": "Turn 4"
+    }
+  ],
+  "forbidden_questions": []
+}

@@ -1,0 +1,17 @@
+{
+  "conversations": 25,
+  "unique_ids": 25,
+  "realistic_dialogues": 23,
+  "low_quality_dialogues": 2,
+  "exact_duplicates": 0,
+  "near_duplicates": 0,
+  "spec_confirmed": 25,
+  "spec_errors": 0,
+  "independent_rerun": 25,
+  "independent_rerun_ok": 25,
+  "objects_created": 16,
+  "expected_actual_separated": 25,
+  "tests": 104,
+  "tests_pass": 104,
+  "tests_fail": 0
+}

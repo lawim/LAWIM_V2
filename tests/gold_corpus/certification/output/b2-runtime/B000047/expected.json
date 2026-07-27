@@ -1,0 +1,193 @@
+{
+  "expected_state": {
+    "intent": "schedule_visit",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "intent": "schedule_visit",
+      "property_reference": "PROP-1047",
+      "city": "Douala",
+      "area": "Akwa",
+      "preferred_day": "lundi",
+      "preferred_time": "15:00",
+      "contact_confirmation": true
+    },
+    "next_action": "CREATE_VISIT_REQUEST",
+    "memory_retained": [
+      "intent",
+      "property_reference",
+      "city",
+      "area",
+      "preferred_day",
+      "preferred_time",
+      "contact_confirmation"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_visit_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "intent": "schedule_visit",
+      "property_reference": "PROP-1047",
+      "city": "Douala",
+      "area": "Akwa",
+      "preferred_day": "lundi",
+      "preferred_time": "15:00",
+      "contact_confirmation": true
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "fr",
+    "responses_language": "fr",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "Quel jour vous conviendrait ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "\u00c0 quelle heure ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 2,
+        "expected_question": "Souhaitez-vous que j\u2019enregistre une demande de visite pour lundi \u00e0 15 h ?",
+        "context": "Tour 2"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "intent",
+          "property_reference",
+          "city",
+          "area",
+          "preferred_day",
+          "preferred_time",
+          "contact_confirmation"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_visit_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000047",
+    "category": "visit",
+    "level": "basic",
+    "channel": "web",
+    "language": "fr",
+    "description": "Visite maison Akwa",
+    "tags": [
+      "visite",
+      "rendez_vous",
+      "confirmation"
+    ],
+    "business_object": "unknown",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0047",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je veux visiter le maison r\u00e9f\u00e9rence PROP-1047 \u00e0 Akwa.",
+        "intent": "SCHEDULE_VISIT"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel jour vous conviendrait ?",
+        "intent": "ASK_VISIT_DAY"
+      },
+      {
+        "role": "user",
+        "text": "Lundi.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "\u00c0 quelle heure ?",
+        "intent": "ASK_VISIT_TIME"
+      },
+      {
+        "role": "user",
+        "text": "Vers 15 heures.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Souhaitez-vous que j\u2019enregistre une demande de visite pour lundi \u00e0 15 h ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "La demande de visite a bien \u00e9t\u00e9 enregistr\u00e9e. Un agent confirmera la disponibilit\u00e9.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

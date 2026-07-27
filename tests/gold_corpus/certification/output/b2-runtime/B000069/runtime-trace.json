@@ -1,0 +1,126 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je cherche quelque chose de bien et pas cher.",
+    "assistant_output": "Vous cherchez \u00e0 louer, acheter ou vendre ?",
+    "intent_detected": "property_search",
+    "facts_after": {},
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 8.99
+  },
+  {
+    "turn_index": 2,
+    "user_input": "\u00c0 louer.",
+    "assistant_output": "Quel type de bien recherchez-vous ? (appartement, maison, studio, terrain...)",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "transaction_type": "rent"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 4.96
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Un petit logement.",
+    "assistant_output": "Dans quelle ville recherchez-vous ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "transaction_type": "rent"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 8.74
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Un studio.",
+    "assistant_output": "Quel budget mensuel maximum pr\u00e9voyez-vous ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "transaction_type": "rent",
+      "property_type": "studio"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 4.59
+  },
+  {
+    "turn_index": 8,
+    "user_input": "Douala",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un studio \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "transaction_type": "rent",
+      "property_type": "studio",
+      "city": "Douala"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 8.14
+  },
+  {
+    "turn_index": 10,
+    "user_input": "100 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un studio, \u00e0 louer, \u00e0 Douala, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "transaction_type": "rent",
+      "property_type": "studio",
+      "city": "Douala",
+      "budget_max": 100000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 6.94
+  },
+  {
+    "turn_index": 12,
+    "user_input": "Bonamoussadi",
+    "assistant_output": "Je r\u00e9capitule votre recherche : un studio, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "transaction_type": "rent",
+      "property_type": "studio",
+      "city": "Douala",
+      "budget_max": 100000,
+      "district": "Bonamoussadi"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 8.53
+  },
+  {
+    "turn_index": 14,
+    "user_input": "D\u00e8s que possible.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "transaction_type": "rent",
+      "property_type": "studio",
+      "city": "Douala",
+      "budget_max": 100000,
+      "district": "Bonamoussadi"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 6.83
+  },
+  {
+    "turn_index": 16,
+    "user_input": "Oui.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "transaction_type": "rent",
+      "property_type": "studio",
+      "city": "Douala",
+      "budget_max": 100000,
+      "district": "Bonamoussadi"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 5.7
+  }
+]

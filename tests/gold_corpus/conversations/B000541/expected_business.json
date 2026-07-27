@@ -1,0 +1,7 @@
+{
+  "business_action": "create_property_listing",
+  "target_service": "PropertySearchService",
+  "parameters": {},
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

@@ -1,0 +1,23 @@
+{
+  "initial_sample_25": {
+    "total": 25,
+    "creations": 25,
+    "no_actions": 0,
+    "restarts": 0
+  },
+  "complementary_sample_15": {
+    "total": 15,
+    "no_actions": 5,
+    "restarts": 5,
+    "complex": 5
+  },
+  "combined_coverage_40": {
+    "total": 40,
+    "creations": 30,
+    "no_actions": 5,
+    "restarts": 5,
+    "complex": 5
+  },
+  "gap_analysis": "Initial sample covers only creation scenarios. Complementary sample adds no-action (5), restart (5), and complex (5). Full coverage requires 40 conversations.",
+  "note": "Existing data preserved. No historical results modified."
+}

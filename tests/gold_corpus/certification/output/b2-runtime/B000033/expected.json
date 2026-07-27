@@ -1,0 +1,210 @@
+{
+  "expected_state": {
+    "intent": "search_property",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "transaction_type": "buy",
+      "property_type": "maison",
+      "city": "Bafoussam",
+      "budget": 25000000,
+      "bedrooms": 3,
+      "preferred_areas": [
+        "Tamdja",
+        "Kena"
+      ]
+    },
+    "next_action": "CREATE_SEARCH_REQUEST",
+    "memory_retained": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "bedrooms",
+      "preferred_areas"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_search_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "transaction_type": "buy",
+      "property_type": "maison",
+      "city": "Bafoussam",
+      "budget": 25000000,
+      "bedrooms": 3,
+      "preferred_areas": [
+        "Tamdja",
+        "Kena"
+      ]
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "fr",
+    "responses_language": "fr",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "Quel est votre budget d\u2019achat ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "Avez-vous des quartiers pr\u00e9f\u00e9r\u00e9s ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 2,
+        "expected_question": "Combien de chambres minimum ?",
+        "context": "Tour 2"
+      },
+      {
+        "turn": 3,
+        "expected_question": "Je r\u00e9capitule : achat d\u2019un maison \u00e0 Bafoussam, budget maximal 25 000 000 FCFA, zones Tamdja ou Kena, trois chambres minimum. Souhaitez-vous enregistrer cette recherche ?",
+        "context": "Tour 3"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000033",
+    "category": "purchase",
+    "level": "basic",
+    "channel": "telegram",
+    "language": "fr",
+    "description": "Achat maison \u00e0 Bafoussam",
+    "tags": [
+      "achat",
+      "qualification",
+      "confirmation"
+    ],
+    "business_object": "maison",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0033",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je veux acheter un maison \u00e0 Bafoussam.",
+        "intent": "SEARCH_PROPERTY"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel est votre budget d\u2019achat ?",
+        "intent": "ASK_BUDGET"
+      },
+      {
+        "role": "user",
+        "text": "Je peux aller jusqu\u2019\u00e0 25 000 000 FCFA.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Avez-vous des quartiers pr\u00e9f\u00e9r\u00e9s ?",
+        "intent": "ASK_AREAS"
+      },
+      {
+        "role": "user",
+        "text": "Tamdja ou Kena.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Combien de chambres minimum ?",
+        "intent": "ASK_BEDROOMS"
+      },
+      {
+        "role": "user",
+        "text": "Trois chambres minimum.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Je r\u00e9capitule : achat d\u2019un maison \u00e0 Bafoussam, budget maximal 25 000 000 FCFA, zones Tamdja ou Kena, trois chambres minimum. Souhaitez-vous enregistrer cette recherche ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "La recherche d\u2019achat a bien \u00e9t\u00e9 enregistr\u00e9e.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

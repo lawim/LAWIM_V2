@@ -1,0 +1,104 @@
+{
+  "conversation_id": "C1003",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 37.47105598449707,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un studio \u00e0 louer \u00e0 Bafoussam.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un studio \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Bafoussam"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "80 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, \u00e0 louer, \u00e0 Bafoussam, avec un budget de 80000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 80000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Tamdja.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 80000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Je reviens, finalement c'est 100 000 FCFA le budget.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, \u00e0 louer, \u00e0 Bafoussam, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "En janvier.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un studio, \u00e0 louer, \u00e0 Bafoussam, avec un budget de 100000 FCFA, emm\u00e9nagement En janvier. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 100000,
+        "move_in_date": "En janvier"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Oui.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "studio",
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 100000,
+        "move_in_date": "En janvier"
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_e48d8f39e5d6"
+      ],
+      "error": null
+    }
+  ]
+}

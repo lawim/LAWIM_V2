@@ -1,0 +1,12 @@
+{
+  "primary_language": "en",
+  "responses_language": "en",
+  "allow_code_switch": false,
+  "forbidden_phrases": [
+    "assistant neutre",
+    "I cannot make business decisions",
+    "provide more context"
+  ],
+  "footer_required": true,
+  "identity": "LAWIM AI"
+}

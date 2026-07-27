@@ -1,0 +1,14 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "rent",
+    "city": "Bafoussam",
+    "preferred_areas": [
+      "Bafoussam"
+    ],
+    "budget": 150000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

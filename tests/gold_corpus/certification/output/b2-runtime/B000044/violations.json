@@ -1,0 +1,40 @@
+{
+  "total": 3,
+  "violations": [
+    {
+      "assertion_id": "ASSERT-0001",
+      "category": "memory",
+      "expected": [
+        "intent",
+        "property_type",
+        "city",
+        "area",
+        "asking_price",
+        "ownership_confirmed",
+        "contact_preference"
+      ],
+      "actual": [
+        "property_type",
+        "transaction_type",
+        "city",
+        "district",
+        "budget_max"
+      ],
+      "detail": "op=contains, expected=['intent', 'property_type', 'city', 'area', 'asking_price', 'ownership_confirmed', 'contact_preference'], actual=['property_type', 'transaction_type', 'city', 'district', 'budget_max']"
+    },
+    {
+      "assertion_id": "ASSERT-0002",
+      "category": "business",
+      "expected": "create_seller_request",
+      "actual": "CONFIRM_BUSINESS_CREATION",
+      "detail": "op=eq, expected=create_seller_request, actual=CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "assertion_id": "ASSERT-0004",
+      "category": "questions",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    }
+  ]
+}

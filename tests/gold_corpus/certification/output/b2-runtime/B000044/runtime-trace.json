@@ -1,0 +1,81 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je souhaite vendre mon maison situ\u00e9 \u00e0 Melen, Yaound\u00e9.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 vendre une maison \u00e0 Yaound\u00e9.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "sell",
+      "city": "Yaounde",
+      "district": "Melen"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 58.95
+  },
+  {
+    "turn_index": 2,
+    "user_input": "15 000 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, \u00e0 vendre, \u00e0 Yaound\u00e9, dans le quartier Melen, avec un budget de 15000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "sell",
+      "city": "Yaounde",
+      "district": "Melen",
+      "budget_max": 15000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 4.69
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Oui, je suis le propri\u00e9taire.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "sell",
+      "city": "Yaounde",
+      "district": "Melen",
+      "budget_max": 15000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 4.81
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Par WhatsApp.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "sell",
+      "city": "Yaounde",
+      "district": "Melen",
+      "budget_max": 15000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 9.15
+  },
+  {
+    "turn_index": 8,
+    "user_input": "Oui, enregistrez.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "sell",
+      "city": "Yaounde",
+      "district": "Melen",
+      "budget_max": 15000000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 10.43
+  }
+]

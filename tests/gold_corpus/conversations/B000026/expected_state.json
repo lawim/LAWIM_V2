@@ -1,0 +1,23 @@
+{
+  "intent": "search_property",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "buy",
+    "property_type": "terrain",
+    "city": "Yaoundé",
+    "budget": 12000000,
+    "preferred_areas": [
+      "Bastos",
+      "Mvan"
+    ]
+  },
+  "next_action": "CREATE_SEARCH_REQUEST",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "city",
+    "budget",
+    "bedrooms",
+    "preferred_areas"
+  ]
+}

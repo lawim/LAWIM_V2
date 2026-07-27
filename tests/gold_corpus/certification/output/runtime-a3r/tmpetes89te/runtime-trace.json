@@ -1,0 +1,24 @@
+{
+  "conversation_id": "NEG-0005",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "total_duration_ms": 6.16,
+  "call_count": 1,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "I want an apartment in Douala",
+      "assistant_output": "I noted you are looking pour rent an apartment for Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "apartment",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 6.16,
+      "error": null
+    }
+  ]
+}

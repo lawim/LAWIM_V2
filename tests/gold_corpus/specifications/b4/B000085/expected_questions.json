@@ -1,0 +1,26 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel budget mensuel ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Combien de chambres ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 3,
+      "expected_question": "À partir de quand souhaitez-vous emménager ?",
+      "context": "Turn 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Souhaitez-vous enregistrer cette recherche ?",
+      "context": "Turn 4"
+    }
+  ],
+  "forbidden_questions": []
+}

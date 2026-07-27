@@ -1,0 +1,10 @@
+{
+  "location": "/app/data/runtime/lawim.sqlite3",
+  "size": 5431296,
+  "database_present": true,
+  "write_pass": true,
+  "read_pass": true,
+  "restart_executed": "NOT_RUN",
+  "facts_restored": "NOT_RUN",
+  "note": "Runtime initializes SQLite. Bootstrap completed. Production write/read requires API layer."
+}

@@ -1,0 +1,6 @@
+{
+  "healthz_attempts": 3,
+  "healthz_pass": 3,
+  "readyz_attempts": 3,
+  "readyz_pass": 3
+}

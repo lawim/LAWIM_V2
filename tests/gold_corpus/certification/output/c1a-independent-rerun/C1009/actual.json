@@ -1,0 +1,102 @@
+{
+  "conversation_id": "C1009",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 5,
+  "total_duration_ms": 27.10247039794922,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un local commercial \u00e0 louer \u00e0 Douala.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un local commercial \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "commercial",
+        "transaction_type": "rent",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "500 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un local commercial, \u00e0 louer, \u00e0 Douala, avec un budget de 500000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "commercial",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 500000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Akwa ou Bonanjo.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un local commercial, \u00e0 louer, \u00e0 Douala, dans le secteur Bonanjo, Akwa, avec un budget de 500000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "commercial",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 500000,
+        "district": "Bonanjo",
+        "preferred_areas": [
+          "Bonanjo",
+          "Akwa"
+        ]
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "50 m\u00b2 minimum.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "commercial",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 500000,
+        "district": "Bonanjo",
+        "preferred_areas": [
+          "Bonanjo",
+          "Akwa"
+        ]
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Oui, enregistrez.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "commercial",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "budget_max": 500000,
+        "district": "Bonanjo",
+        "preferred_areas": [
+          "Bonanjo",
+          "Akwa"
+        ]
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_28769c8e5b8c"
+      ],
+      "error": null
+    }
+  ]
+}

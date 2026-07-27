@@ -1,0 +1,15 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "rent",
+    "preferred_areas": [
+      "Louer"
+    ],
+    "property_type": "studio",
+    "city": "Yaoundé",
+    "budget": 100000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

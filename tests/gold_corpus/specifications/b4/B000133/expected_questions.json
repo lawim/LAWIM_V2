@@ -1,0 +1,31 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel est votre budget de location ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Souhaitez-vous préciser un quartier ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Je récapitule : location, terrain, à Kribi, budget 180 000 FCFA, zones Dombe, entrée septembre. Enregistrer ?",
+      "context": "Turn 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "D'accord, je remplace la location par un achat. Quel est votre budget d'achat ?",
+      "context": "Turn 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Nouveau récapitulatif : achat, terrain, à Kribi, budget 23 000 000 FCFA, zones Dombe. Souhaitez-vous enregistrer la recherche d'achat ?",
+      "context": "Turn 4"
+    }
+  ],
+  "forbidden_questions": []
+}

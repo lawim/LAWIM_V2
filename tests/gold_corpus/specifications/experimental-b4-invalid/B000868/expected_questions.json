@@ -1,0 +1,5 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [],
+  "forbidden_questions": []
+}

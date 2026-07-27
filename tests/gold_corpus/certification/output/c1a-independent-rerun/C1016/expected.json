@@ -1,0 +1,94 @@
+{
+  "id": "C1016",
+  "category": "ambiguity",
+  "level": "hard",
+  "channel": "web",
+  "language": "fr",
+  "description": "Demande ambigu\u00eb n\u00e9cessitant clarification",
+  "tags": [
+    "ambiguity",
+    "clarification"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche quelque chose de pas trop cher \u00e0 Douala.",
+      "intent": "AMBIGUOUS_SEARCH"
+    },
+    {
+      "role": "assistant",
+      "text": "Cherchez-vous \u00e0 louer ou \u00e0 acheter ?",
+      "intent": "CLARIFY_TRANSACTION"
+    },
+    {
+      "role": "user",
+      "text": "Louer.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel type de bien ?",
+      "intent": "CLARIFY_PROPERTY_TYPE"
+    },
+    {
+      "role": "user",
+      "text": "Un studio ou une chambre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget maximal ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "70 000 FCFA max.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Pr\u00e8s du centre.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous pr\u00e9ciser un quartier \u00e0 Douala ?",
+      "intent": "CLARIFY_AMBIGUITY"
+    },
+    {
+      "role": "user",
+      "text": "Akwa.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emm\u00e9nager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "D\u00e8s que possible.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

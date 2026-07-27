@@ -1,0 +1,32 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "What is your maximum monthly budget?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "How many bedrooms do you need?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Which area do you prefer?",
+      "context": "Tour 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "When would you like to move in?",
+      "context": "Tour 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Would you like me to register this search?",
+      "context": "Tour 4"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

@@ -1,0 +1,105 @@
+{
+  "tautology_check": true,
+  "tautology_detail": "INDEPENDENT",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "assertions_total": 4,
+  "assertions_passed": 1,
+  "assertions_failed": 3,
+  "assertions": {
+    "ASSERT-0001": {
+      "pass": false,
+      "assertion": "Les faits sont retenus en memoire",
+      "category": "memory",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget",
+        "bedrooms",
+        "preferred_areas",
+        "move_in_date"
+      ],
+      "actual": [
+        "property_type",
+        "transaction_type",
+        "city",
+        "district",
+        "budget_max",
+        "move_in_date",
+        "bedrooms"
+      ],
+      "detail": "op=contains, expected=['transaction_type', 'property_type', 'city', 'budget', 'bedrooms', 'preferred_areas', 'move_in_date'], actual=['property_type', 'transaction_type', 'city', 'district', 'budget_max', 'move_in_date', 'bedrooms']"
+    },
+    "ASSERT-0002": {
+      "pass": false,
+      "assertion": "L'action metier est correcte",
+      "category": "business",
+      "expected": "create_search_request",
+      "actual": "CONFIRM_BUSINESS_CREATION",
+      "detail": "op=eq, expected=create_search_request, actual=CONFIRM_BUSINESS_CREATION"
+    },
+    "ASSERT-0003": {
+      "pass": true,
+      "assertion": "La langue de reponse est correcte",
+      "category": "language",
+      "expected": "pcm",
+      "actual": "pcm",
+      "detail": "op=eq, expected=pcm, actual=pcm"
+    },
+    "ASSERT-0004": {
+      "pass": false,
+      "assertion": "Au maximum une question par tour",
+      "category": "questions",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    }
+  },
+  "violations": [
+    {
+      "assertion_id": "ASSERT-0001",
+      "category": "memory",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget",
+        "bedrooms",
+        "preferred_areas",
+        "move_in_date"
+      ],
+      "actual": [
+        "property_type",
+        "transaction_type",
+        "city",
+        "district",
+        "budget_max",
+        "move_in_date",
+        "bedrooms"
+      ],
+      "detail": "op=contains, expected=['transaction_type', 'property_type', 'city', 'budget', 'bedrooms', 'preferred_areas', 'move_in_date'], actual=['property_type', 'transaction_type', 'city', 'district', 'budget_max', 'move_in_date', 'bedrooms']"
+    },
+    {
+      "assertion_id": "ASSERT-0002",
+      "category": "business",
+      "expected": "create_search_request",
+      "actual": "CONFIRM_BUSINESS_CREATION",
+      "detail": "op=eq, expected=create_search_request, actual=CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "assertion_id": "ASSERT-0004",
+      "category": "questions",
+      "expected": 1,
+      "actual": null,
+      "detail": "op=eq, expected=1, actual=None"
+    }
+  ],
+  "conversation_id": "B000125",
+  "total_duration_ms": 89.28,
+  "spec_dir": "/media/abel/5688bf41-1616-43e6-95c7-b9f1f043c850/LAWIM_V2/tests/gold_corpus/conversations/B000125",
+  "timestamp": "2026-07-26T12:07:58.266453+00:00",
+  "classification": "RUNTIME_BEHAVIOR_ERROR"
+}

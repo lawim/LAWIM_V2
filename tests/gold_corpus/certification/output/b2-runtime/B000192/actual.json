@@ -1,0 +1,40 @@
+{
+  "conversation_id": "B000192",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 3,
+  "total_duration_ms": 45.48,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "I wan rent house for Douala, ma budget na 150 thousand, for Bonamoussadi.",
+      "assistant_output": "Your search information complete. You want make I register am?",
+      "intent_detected": "property_search",
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 14.08,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "No be 150 thousand. Na 180 thousand, and no be Bonamoussadi, na Makepe.",
+      "assistant_output": "Here be your search summary : house, for rent, in Douala, in Bonamoussadi, Makepe, budget 150000 FCFA. Your search information complete. You want make I register am?",
+      "intent_detected": "property_search",
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 18.73,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Yes, register am.",
+      "assistant_output": "Your search information complete. You want make I register am?",
+      "intent_detected": "property_search",
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 12.67,
+      "error": null
+    }
+  ]
+}

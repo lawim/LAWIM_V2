@@ -1,0 +1,41 @@
+{
+  "conversation_id": "POS-0002",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "total_duration_ms": 21.36,
+  "call_count": 2,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche une maison \u00e0 acheter \u00e0 Yaound\u00e9",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 acheter une maison \u00e0 Yaound\u00e9.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "buy",
+        "city": "Yaounde"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 9.5,
+      "error": null
+    },
+    {
+      "turn_index": 1,
+      "user_input": "Mon budget est 50 millions",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, \u00e0 acheter, \u00e0 Yaound\u00e9, avec un budget de 50000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "buy",
+        "city": "Yaounde",
+        "budget_max": 50000000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 11.87,
+      "error": null
+    }
+  ]
+}

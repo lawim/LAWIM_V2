@@ -1,0 +1,85 @@
+{
+  "id": "C1010",
+  "category": "seller",
+  "level": "medium",
+  "channel": "whatsapp",
+  "language": "fr",
+  "description": "Mise en vente d'un appartement par un propri\u00e9taire",
+  "tags": [
+    "seller",
+    "sell",
+    "proprietaire"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je souhaite vendre mon appartement \u00e0 Douala.",
+      "intent": "SELL_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel prix demandez-vous ?",
+      "intent": "ASK_PRICE"
+    },
+    {
+      "role": "user",
+      "text": "25 000 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "\u00cates-vous bien le propri\u00e9taire ou son mandataire ?",
+      "intent": "ASK_OWNERSHIP"
+    },
+    {
+      "role": "user",
+      "text": "Oui, c'est mon appartement.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Dans quel quartier se situe-t-il ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de pi\u00e8ces ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "3 chambres.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Par quel canal souhaitez-vous \u00eatre recontact\u00e9 ?",
+      "intent": "ASK_CONTACT_PREFERENCE"
+    },
+    {
+      "role": "user",
+      "text": "Par WhatsApp.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette demande de mise en vente ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre demande de mise en vente a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

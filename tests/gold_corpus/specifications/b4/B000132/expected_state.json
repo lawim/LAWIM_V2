@@ -1,0 +1,13 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "rent",
+    "budget": 18000000
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "transaction_type",
+    "budget"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "total_conversations": 990,
+  "total_import_errors": 0,
+  "certified": 990,
+  "repairable": 0,
+  "rejected": 0,
+  "categories": {
+    "rental": 950,
+    "purchase": 15,
+    "idempotence": 15,
+    "visit": 10
+  },
+  "languages": {
+    "fr": 932,
+    "en": 29,
+    "pcm": 29
+  },
+  "levels": {},
+  "channels": {},
+  "validation_schema_pass": 990,
+  "validation_schema_fail": 0
+}

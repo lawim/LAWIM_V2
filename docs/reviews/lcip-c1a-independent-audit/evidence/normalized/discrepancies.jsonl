@@ -1,0 +1,3 @@
+{"id": "C1A-001", "severity": "MINOR", "field": "COHORTS", "reported": "COHORTS=5, COHORTS_EXECUTED=1 (single pass)", "verified": "5 planned, 1 actual execution. No separate gate checks between cohorts.", "fix": "Report as COHORTS_PLANNED=5, CAMPAIGN_EXECUTIONS=1"}
+{"id": "C1A-002", "severity": "MINOR", "field": "REVIEW_DIRECTORY", "reported": "Not created individually", "verified": "No individual review files. 25 AGENT_STRUCTURED_REVIEW claimed but unproven.", "fix": "Create review files or note as UNPROVEN"}
+{"id": "C1A-003", "severity": "LOW", "field": "Dialogue Quality", "reported": "25 REALISTIC_DIALOGUE", "verified": "23 REALISTIC, 2 LOW_QUALITY (short dialogues C1005, C1015)", "fix": "Accept as-is or improve short dialogues"}

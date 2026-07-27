@@ -1,0 +1,71 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je souhaite vendre mon boutique situ\u00e9 \u00e0 Bwambe, Kribi.",
+    "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+    "intent_detected": "unknown",
+    "facts_after": {
+      "transaction_type": "sell",
+      "city": "Kribi"
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 4.86
+  },
+  {
+    "turn_index": 2,
+    "user_input": "80 000 000 FCFA.",
+    "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+    "intent_detected": "unknown",
+    "facts_after": {
+      "transaction_type": "sell",
+      "city": "Kribi",
+      "budget_max": 80000000
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 8.57
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Oui, je suis le propri\u00e9taire.",
+    "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+    "intent_detected": "unknown",
+    "facts_after": {
+      "transaction_type": "sell",
+      "city": "Kribi",
+      "budget_max": 80000000
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 7.84
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Par WhatsApp.",
+    "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+    "intent_detected": "unknown",
+    "facts_after": {
+      "transaction_type": "sell",
+      "city": "Kribi",
+      "budget_max": 80000000
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 4.68
+  },
+  {
+    "turn_index": 8,
+    "user_input": "Oui, enregistrez.",
+    "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+    "intent_detected": "unknown",
+    "facts_after": {
+      "transaction_type": "sell",
+      "city": "Kribi",
+      "budget_max": 80000000
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 4.73
+  }
+]

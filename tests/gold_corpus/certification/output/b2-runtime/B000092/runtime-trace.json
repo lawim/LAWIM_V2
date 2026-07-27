@@ -1,0 +1,93 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "I am looking for an apartment to rent in Douala.",
+    "assistant_output": "I noted you are looking for rent an apartment for Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Douala"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 12.77
+  },
+  {
+    "turn_index": 2,
+    "user_input": "250,000 FCFA.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un appartement \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Douala"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 13.16
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Two bedrooms.",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un appartement \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "bedrooms": 2
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 11.89
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Makepe",
+    "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer un appartement \u00e0 Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "bedrooms": 2,
+      "district": "Makepe"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 21.15
+  },
+  {
+    "turn_index": 8,
+    "user_input": "In October.",
+    "assistant_output": "I noted you are looking for rent an apartment for Douala.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "bedrooms": 2,
+      "district": "Makepe"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 11.98
+  },
+  {
+    "turn_index": 10,
+    "user_input": "Yes, please register it.",
+    "assistant_output": "I have noted your information. Continue when you are ready.",
+    "intent_detected": "legal_question",
+    "facts_after": {
+      "property_type": "apartment",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "bedrooms": 2,
+      "district": "Makepe"
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 15.41
+  }
+]

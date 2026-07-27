@@ -1,0 +1,84 @@
+{
+  "id": "C1017",
+  "category": "ambiguity",
+  "level": "medium",
+  "channel": "web",
+  "language": "fr",
+  "description": "L'utilisateur se contredit sur la ville",
+  "tags": [
+    "contradiction",
+    "change_of_mind"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement \u00e0 louer \u00e0 Yaound\u00e9.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "180 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "2.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier \u00e0 Yaound\u00e9 ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "En fait je cherche plut\u00f4t \u00e0 Douala, pas Yaound\u00e9.",
+      "intent": "CORRECTION"
+    },
+    {
+      "role": "assistant",
+      "text": "Je corrige : recherche \u00e0 Douala. Quel quartier pr\u00e9f\u00e9rez-vous ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emm\u00e9nager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "En avril.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

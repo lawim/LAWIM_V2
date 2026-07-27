@@ -1,0 +1,122 @@
+{
+  "id": "B000950",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Conversation B000950",
+  "tags": [],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_10_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B10-0960",
+  "messages": [
+    {
+      "role": "user",
+      "text": "User turn 1 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 2"
+    },
+    {
+      "role": "user",
+      "text": "User turn 3 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 4"
+    },
+    {
+      "role": "user",
+      "text": "User turn 5 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 6"
+    },
+    {
+      "role": "user",
+      "text": "User turn 7 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 8"
+    },
+    {
+      "role": "user",
+      "text": "User turn 9 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 10"
+    },
+    {
+      "role": "user",
+      "text": "User turn 11 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 12"
+    },
+    {
+      "role": "user",
+      "text": "User turn 13 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 14"
+    },
+    {
+      "role": "user",
+      "text": "User turn 15 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 16"
+    },
+    {
+      "role": "user",
+      "text": "User turn 17 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 18"
+    },
+    {
+      "role": "user",
+      "text": "User turn 19 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 20"
+    },
+    {
+      "role": "user",
+      "text": "User turn 21 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 22"
+    },
+    {
+      "role": "user",
+      "text": "User turn 23 (telegram_to_whatsapp)"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 24"
+    },
+    {
+      "role": "system",
+      "text": "PRODUCTION_VALIDATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui, je valide définitivement."
+    },
+    {
+      "role": "assistant",
+      "text": "Parcours terminé avec succès."
+    }
+  ]
+}

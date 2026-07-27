@@ -1,0 +1,24 @@
+{
+  "intent": "confirmation",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "rent",
+    "property_type": "apartment",
+    "city": "Douala",
+    "preferred_areas": [
+      "Douala",
+      "240"
+    ],
+    "budget": 240000,
+    "bedrooms": 2
+  },
+  "next_action": "NONE",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "city",
+    "preferred_areas",
+    "budget",
+    "bedrooms"
+  ]
+}

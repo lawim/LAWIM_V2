@@ -1,0 +1,62 @@
+{
+  "conversation_id": "C1013",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 30.06768226623535,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je veux visiter l'appartement ref PROP-2001 \u00e0 Douala.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un appartement \u00e0 Douala.",
+      "intent_detected": "visit_request",
+      "facts_after": {
+        "property_type": "apartment",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Mercredi.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un appartement \u00e0 Douala.",
+      "intent_detected": "visit_request",
+      "facts_after": {
+        "property_type": "apartment",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "10 heures.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un appartement \u00e0 Douala.",
+      "intent_detected": "visit_request",
+      "facts_after": {
+        "property_type": "apartment",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Oui.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez pour louer un appartement \u00e0 Douala.",
+      "intent_detected": "visit_request",
+      "facts_after": {
+        "property_type": "apartment",
+        "city": "Douala"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    }
+  ]
+}

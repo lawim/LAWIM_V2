@@ -1,0 +1,23 @@
+{
+  "intent": "schedule_visit",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "intent": "schedule_visit",
+    "property_reference": "PROP-1055",
+    "city": "Yaoundé",
+    "area": "Ngoa-Ekellé",
+    "preferred_day": "lundi",
+    "preferred_time": "15:00",
+    "contact_confirmation": true
+  },
+  "next_action": "CREATE_VISIT_REQUEST",
+  "memory_retained": [
+    "intent",
+    "property_reference",
+    "city",
+    "area",
+    "preferred_day",
+    "preferred_time",
+    "contact_confirmation"
+  ]
+}

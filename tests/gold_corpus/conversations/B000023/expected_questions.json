@@ -1,0 +1,22 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel est votre budget d’achat ?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Avez-vous des quartiers préférés ?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Je récapitule : achat d’un terrain à Bafoussam, budget maximal 25 000 000 FCFA, zones Tamdja ou Kena. Souhaitez-vous enregistrer cette recherche ?",
+      "context": "Tour 2"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

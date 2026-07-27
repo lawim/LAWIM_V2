@@ -1,0 +1,17 @@
+{
+  "business_action": "create_search_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "apartment",
+    "city": "Kribi",
+    "budget": 200000,
+    "bedrooms": 1,
+    "preferred_areas": [
+      "Mboamanga"
+    ],
+    "move_in_date": "September"
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

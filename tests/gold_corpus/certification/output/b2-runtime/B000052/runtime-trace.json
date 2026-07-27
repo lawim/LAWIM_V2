@@ -1,0 +1,54 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je veux visiter le appartement r\u00e9f\u00e9rence PROP-1052 \u00e0 Bastos.",
+    "assistant_output": "Dans quelle ville recherchez-vous ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "apartment",
+      "district": "Bastos"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 5.29
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Mercredi.",
+    "assistant_output": "Combien de chambres souhaitez-vous ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "apartment",
+      "district": "Bastos"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 8.59
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Vers 15 heures.",
+    "assistant_output": "Pouvez-vous pr\u00e9ciser le lieu ? Proche de quel quartier ou rep\u00e8re ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "apartment",
+      "district": "Bastos"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 5.84
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Oui.",
+    "assistant_output": "Je n'ai pas bien compris. Pouvez-vous pr\u00e9ciser le nom d'un quartier, d'un point de rep\u00e8re ou d'un axe routier ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "apartment",
+      "district": "Bastos"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 4.78
+  }
+]

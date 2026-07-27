@@ -1,0 +1,55 @@
+{
+  "id": "C1006",
+  "category": "multilingual",
+  "level": "medium",
+  "channel": "web",
+  "language": "fr",
+  "description": "Code-switching conversation (FR/EN mixed)",
+  "tags": [
+    "mixed_language",
+    "code_switching",
+    "rental"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "I want to rent a house in Yaound\u00e9, my budget is 200 000.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Combien de chambres souhaitez-vous ?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "Two bedrooms, please.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier pr\u00e9f\u00e9rez-vous \u00e0 Yaound\u00e9 ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Melen. Et je veux emm\u00e9nager en f\u00e9vrier.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Yes, go ahead.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

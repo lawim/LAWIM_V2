@@ -1,0 +1,104 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je cherche un maison \u00e0 louer \u00e0 Douala, budget 100 000 FCFA.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 100000
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 17.98
+  },
+  {
+    "turn_index": 2,
+    "user_input": "2 chambre(s).",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Douala, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 100000,
+      "bedrooms": 2
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 13.28
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Bonamoussadi",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 100000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 100000,
+      "bedrooms": 2,
+      "district": "Bonamoussadi"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 26.04
+  },
+  {
+    "turn_index": 6,
+    "user_input": "En septembre.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 100000 FCFA, emm\u00e9nagement En septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 100000,
+      "bedrooms": 2,
+      "district": "Bonamoussadi",
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 14.08
+  },
+  {
+    "turn_index": 8,
+    "user_input": "Non, corrigez seulement le budget : 130 000 FCFA.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 130000 FCFA, emm\u00e9nagement En septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 130000,
+      "bedrooms": 2,
+      "district": "Bonamoussadi",
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 20.86
+  },
+  {
+    "turn_index": 10,
+    "user_input": "Oui.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Douala",
+      "budget_max": 130000,
+      "bedrooms": 2,
+      "district": "Bonamoussadi",
+      "move_in_date": "En septembre"
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 25.32
+  }
+]

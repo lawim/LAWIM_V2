@@ -1,0 +1,17 @@
+{
+  "business_action": "create_search_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "transaction_type": "buy",
+    "property_type": "maison",
+    "city": "Limbe",
+    "budget": 50000000,
+    "bedrooms": 3,
+    "preferred_areas": [
+      "Down Beach",
+      "Mokunda"
+    ]
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

@@ -1,0 +1,46 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Cherchez-vous à louer ou à acheter ?",
+      "context": "Turn 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Quel type de bien recherchez-vous ?",
+      "context": "Turn 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Par exemple un studio, une chambre moderne ou un appartement ?",
+      "context": "Turn 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "Dans quelle ville ?",
+      "context": "Turn 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Quel budget maximal ?",
+      "context": "Turn 4"
+    },
+    {
+      "turn": 5,
+      "expected_question": "Quel quartier préférez-vous ?",
+      "context": "Turn 5"
+    },
+    {
+      "turn": 6,
+      "expected_question": "Quand souhaitez-vous emménager ?",
+      "context": "Turn 6"
+    },
+    {
+      "turn": 7,
+      "expected_question": "Souhaitez-vous que j’enregistre cette recherche de studio ?",
+      "context": "Turn 7"
+    }
+  ],
+  "forbidden_questions": []
+}

@@ -1,0 +1,80 @@
+{
+  "conversation_id": "C1006",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 21.4540958404541,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "I want to rent a house in Yaound\u00e9, my budget is 200 000.",
+      "assistant_output": "Your search information is complete. Should I register it?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 200000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Two bedrooms, please.",
+      "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+      "intent_detected": "legal_question",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 200000,
+        "bedrooms": 2
+      },
+      "pending_after": "NONE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Melen. Et je veux emm\u00e9nager en f\u00e9vrier.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Melen, avec un budget de 200000 FCFA, emm\u00e9nagement en f\u00e9vrier. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 200000,
+        "bedrooms": 2,
+        "district": "Melen",
+        "move_in_date": "en f\u00e9vrier"
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Yes, go ahead.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Yaounde",
+        "budget_max": 200000,
+        "bedrooms": 2,
+        "district": "Melen",
+        "move_in_date": "en f\u00e9vrier"
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_87084ad55bd6"
+      ],
+      "error": null
+    }
+  ]
+}

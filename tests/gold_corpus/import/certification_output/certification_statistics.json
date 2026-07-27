@@ -1,0 +1,27 @@
+{
+  "total_conversations": 990,
+  "duration_seconds": 1.4,
+  "certified": 990,
+  "repairable": 0,
+  "rejected": 0,
+  "scores": {
+    "mean": {
+      "global": 1.0,
+      "turns": 1.0
+    },
+    "median": {
+      "global": 1.0,
+      "turns": 1.0
+    },
+    "min": {
+      "global": 1.0,
+      "turns": 1.0
+    },
+    "max": {
+      "global": 1.0,
+      "turns": 1.0
+    }
+  },
+  "most_violated_assertions": [],
+  "most_responsible_components": []
+}

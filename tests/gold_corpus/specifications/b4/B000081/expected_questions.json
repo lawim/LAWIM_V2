@@ -1,0 +1,11 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Souhaitez-vous que j’enregistre cette recherche ?",
+      "context": "Turn 0"
+    }
+  ],
+  "forbidden_questions": []
+}

@@ -1,0 +1,32 @@
+{
+  "conversation_id": "NEG-0004",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "total_duration_ms": 12.51,
+  "call_count": 2,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Cr\u00e9e un dossier pour moi",
+      "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+      "intent_detected": "unknown",
+      "facts_after": {},
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 5.94,
+      "error": null
+    },
+    {
+      "turn_index": 1,
+      "user_input": "Cr\u00e9e un autre dossier identique",
+      "assistant_output": "Je prends note de vos informations. Continuez lorsque vous serez prets.",
+      "intent_detected": "unknown",
+      "facts_after": {},
+      "pending_after": "NONE",
+      "business_actions": [],
+      "duration_ms": 6.57,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "service": "lawim-postgres",
+  "health": "Up 38 hours (healthy)",
+  "connection": "NOT_PROVEN",
+  "object_id": "NOT_PROVEN",
+  "note": "PostgreSQL container healthy. V2 runtime uses SQLite by default."
+}

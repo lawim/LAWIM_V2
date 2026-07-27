@@ -1,0 +1,108 @@
+{
+  "id": "B000073",
+  "category": "rental",
+  "level": "advanced",
+  "channel": "web",
+  "language": "fr",
+  "description": "Clarification recherche vague 73",
+  "tags": [
+    "clarification",
+    "ambiguity",
+    "progressive_qualification"
+  ],
+  "business_object": "studio",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0073",
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche quelque chose de bien et pas cher.",
+      "intent": "AMBIGUOUS_SEARCH"
+    },
+    {
+      "role": "assistant",
+      "text": "Cherchez-vous à louer ou à acheter ?",
+      "intent": "CLARIFY_TRANSACTION"
+    },
+    {
+      "role": "user",
+      "text": "À louer.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel type de bien recherchez-vous ?",
+      "intent": "CLARIFY_PROPERTY_TYPE"
+    },
+    {
+      "role": "user",
+      "text": "Un petit logement.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Par exemple un studio, une chambre moderne ou un appartement ?",
+      "intent": "CLARIFY_PROPERTY_TYPE"
+    },
+    {
+      "role": "user",
+      "text": "Un studio.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Dans quelle ville ?",
+      "intent": "ASK_CITY"
+    },
+    {
+      "role": "user",
+      "text": "Douala",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel budget maximal ?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "100 000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel quartier préférez-vous ?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Bonamoussadi",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Quand souhaitez-vous emménager ?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "Dès que possible.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous que j’enregistre cette recherche de studio ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La recherche a bien été enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

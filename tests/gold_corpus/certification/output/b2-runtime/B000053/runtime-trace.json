@@ -1,0 +1,57 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "Je veux visiter le maison r\u00e9f\u00e9rence PROP-1053 \u00e0 Makepe.",
+    "assistant_output": "Dans quelle ville recherchez-vous ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "house",
+      "district": "Makepe"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 4.9
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Vendredi.",
+    "assistant_output": "Combien de chambres souhaitez-vous ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "house",
+      "district": "Makepe",
+      "transaction_type": "sell"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 7.73
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Vers 15 heures.",
+    "assistant_output": "Pouvez-vous pr\u00e9ciser le lieu ? Proche de quel quartier ou rep\u00e8re ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "house",
+      "district": "Makepe",
+      "transaction_type": "sell"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 11.35
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Oui.",
+    "assistant_output": "Je n'ai pas bien compris. Pouvez-vous pr\u00e9ciser le nom d'un quartier, d'un point de rep\u00e8re ou d'un axe routier ?",
+    "intent_detected": "visit_request",
+    "facts_after": {
+      "property_type": "house",
+      "district": "Makepe",
+      "transaction_type": "sell"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 8.98
+  }
+]

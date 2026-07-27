@@ -1,0 +1,17 @@
+{
+  "business_action": "create_search_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "transaction_type": "buy",
+    "property_type": "maison",
+    "city": "Kribi",
+    "budget": 35000000,
+    "bedrooms": 3,
+    "preferred_areas": [
+      "Mboamanga",
+      "Bwambe"
+    ]
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

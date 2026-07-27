@@ -1,0 +1,21 @@
+{
+  "conversation_id": "NEG-0007",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "total_duration_ms": 6.61,
+  "call_count": 1,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche",
+      "assistant_output": "Vous cherchez \u00e0 louer, acheter ou vendre ?",
+      "intent_detected": "property_search",
+      "facts_after": {},
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 6.61,
+      "error": null
+    }
+  ]
+}

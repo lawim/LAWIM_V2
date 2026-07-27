@@ -1,0 +1,24 @@
+{
+  "intent": "unknown",
+  "qualification_status": "qualified",
+  "slots_filled": {
+    "transaction_type": "buy",
+    "property_type": "maison",
+    "city": "Douala",
+    "budget": 25000000,
+    "bedrooms": 2,
+    "preferred_areas": [
+      "Bonamoussadi"
+    ]
+  },
+  "next_action": "CREATE_SEARCH_REQUEST",
+  "memory_retained": [
+    "transaction_type",
+    "property_type",
+    "city",
+    "budget",
+    "bedrooms",
+    "preferred_areas",
+    "move_in_date"
+  ]
+}

@@ -1,0 +1,184 @@
+{
+  "expected_state": {
+    "intent": "unknown",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "transaction_type": "rent",
+      "property_type": "apartment",
+      "city": "Kribi",
+      "budget": 130000,
+      "bedrooms": 2,
+      "preferred_areas": [
+        "Mboamanga"
+      ],
+      "move_in_date": "September"
+    },
+    "next_action": "CREATE_SEARCH_REQUEST",
+    "memory_retained": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "bedrooms",
+      "preferred_areas",
+      "move_in_date"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_search_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "transaction_type": "rent",
+      "property_type": "apartment",
+      "city": "Kribi",
+      "budget": 130000,
+      "bedrooms": 2,
+      "preferred_areas": [
+        "Mboamanga"
+      ],
+      "move_in_date": "September"
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "en",
+    "responses_language": "en",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "Summary: apartment rental in Kribi, budget 100 000 FCFA, area Dombe. Register it?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "Updated: budget 130 000 FCFA, area Mboamanga. Should I register it?",
+        "context": "Tour 1"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "en",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000195",
+    "category": "rental",
+    "level": "advanced",
+    "channel": "telegram",
+    "language": "en",
+    "description": "Multilingual Correction #5",
+    "tags": [
+      "multilingual_correction",
+      "correction",
+      "state_consistency",
+      "explicit_confirmation",
+      "idempotence"
+    ],
+    "business_object": "apartment",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0195",
+    "messages": [
+      {
+        "role": "user",
+        "text": "I need an apartment to rent in Kribi, budget 100 000 FCFA, around Dombe.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Summary: apartment rental in Kribi, budget 100 000 FCFA, area Dombe. Register it?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "No. Change the budget to 130 000 FCFA and the area to Mboamanga.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Updated: budget 130 000 FCFA, area Mboamanga. Should I register it?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Yes, register it.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Your corrected search has been registered.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

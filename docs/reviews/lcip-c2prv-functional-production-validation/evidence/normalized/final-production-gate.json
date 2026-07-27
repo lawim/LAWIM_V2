@@ -1,0 +1,15 @@
+{
+  "runtime_sha": "PASS",
+  "runtime_checksum": "PASS",
+  "healthz": "PASS",
+  "readyz": "PASS",
+  "sqlite": "PASS",
+  "postgresql": "NOT_PROVEN",
+  "web": "NOT_PROVEN",
+  "telegram": "NOT_PROVEN",
+  "whatsapp": "NOT_PROVEN",
+  "restart": "NOT_PROVEN",
+  "idempotence": "NOT_PROVEN",
+  "logs": "NOT_PROVEN",
+  "gate_verdict": "C2PRV_PRODUCTION_VALIDATION_PARTIAL"
+}

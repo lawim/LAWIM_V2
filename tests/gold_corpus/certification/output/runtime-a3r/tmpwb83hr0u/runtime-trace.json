@@ -1,0 +1,23 @@
+{
+  "conversation_id": "NEG-0002",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "total_duration_ms": 6.36,
+  "call_count": 1,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche \u00e0 Bonamoussadi",
+      "assistant_output": "Vous cherchez \u00e0 louer, acheter ou vendre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "district": "Bonamoussadi"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 6.36,
+      "error": null
+    }
+  ]
+}

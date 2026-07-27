@@ -1,0 +1,227 @@
+{
+  "expected_state": {
+    "intent": "unknown",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "transaction_type": "buy",
+      "property_type": "terrain",
+      "city": "Kribi",
+      "budget": 12000000,
+      "preferred_areas": [
+        "Dombe"
+      ]
+    },
+    "next_action": "CREATE_SEARCH_REQUEST",
+    "memory_retained": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "bedrooms",
+      "preferred_areas",
+      "move_in_date"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_search_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "transaction_type": "buy",
+      "property_type": "terrain",
+      "city": "Kribi",
+      "budget": 12000000,
+      "bedrooms": null,
+      "preferred_areas": [
+        "Dombe"
+      ],
+      "move_in_date": null
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "fr",
+    "responses_language": "fr",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "Quel est votre budget de location ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "Souhaitez-vous pr\u00e9ciser un quartier ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 2,
+        "expected_question": "Je r\u00e9capitule : location, terrain, \u00e0 Kribi, budget 100 000 FCFA, zones Dombe, entr\u00e9e septembre. Enregistrer ?",
+        "context": "Tour 2"
+      },
+      {
+        "turn": 3,
+        "expected_question": "D'accord, je remplace la location par un achat. Quel est votre budget d'achat ?",
+        "context": "Tour 3"
+      },
+      {
+        "turn": 4,
+        "expected_question": "Nouveau r\u00e9capitulatif : achat, terrain, \u00e0 Kribi, budget 12 000 000 FCFA, zones Dombe. Souhaitez-vous enregistrer la recherche d'achat ?",
+        "context": "Tour 4"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000131",
+    "category": "rental",
+    "level": "advanced",
+    "channel": "web",
+    "language": "fr",
+    "description": "Transaction Switch #1",
+    "tags": [
+      "transaction_switch",
+      "correction",
+      "state_consistency",
+      "explicit_confirmation",
+      "idempotence"
+    ],
+    "business_object": "terrain",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0131",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Je cherche un terrain \u00e0 louer \u00e0 Kribi.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel est votre budget de location ?",
+        "intent": "ASK_BUDGET"
+      },
+      {
+        "role": "user",
+        "text": "100 000 FCFA par mois.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Souhaitez-vous pr\u00e9ciser un quartier ?",
+        "intent": "ASK_AREAS"
+      },
+      {
+        "role": "user",
+        "text": "Dombe",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Je r\u00e9capitule : location, terrain, \u00e0 Kribi, budget 100 000 FCFA, zones Dombe, entr\u00e9e septembre. Enregistrer ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Finalement je veux acheter, pas louer.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "D'accord, je remplace la location par un achat. Quel est votre budget d'achat ?",
+        "intent": "ASK_BUDGET"
+      },
+      {
+        "role": "user",
+        "text": "12 000 000 FCFA.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Nouveau r\u00e9capitulatif : achat, terrain, \u00e0 Kribi, budget 12 000 000 FCFA, zones Dombe. Souhaitez-vous enregistrer la recherche d'achat ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "La recherche d'achat a \u00e9t\u00e9 enregistr\u00e9e.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "C1007",
+  "category": "advanced_search",
+  "level": "easy",
+  "channel": "web",
+  "language": "fr",
+  "description": "Recherche avec tous les crit\u00e8res fournis d'un coup",
+  "tags": [
+    "advanced",
+    "multi_criteria",
+    "all_fields"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je cherche un appartement 3 pi\u00e8ces \u00e0 louer \u00e0 Douala quartier Akwa, budget 200 000, pour mars.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "Je r\u00e9capitule : appartement \u00e0 louer \u00e0 Douala, Akwa, budget 200 000 FCFA, 3 pi\u00e8ces, entr\u00e9e mars. Souhaitez-vous enregistrer cette recherche ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Votre recherche a \u00e9t\u00e9 enregistr\u00e9e.",
+      "intent": "NONE"
+    }
+  ]
+}

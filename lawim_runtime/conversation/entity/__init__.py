@@ -55,6 +55,7 @@ CITIES = {"yaound\u00e9": "Yaounde", "yaounde": "Yaounde", "douala": "Douala", "
           "kumba": "Kumba", "sangm\u00e9lima": "Sangmelima", "sangmelima": "Sangmelima"}
 
 DISTRICTS = {"mvan": "Mvan", "bastos": "Bastos", "odza": "Odza", "nlongkak": "Nlongkak",
+             "nlonkak": "Nlongkak",
              "tsinga": "Tsinga", "ngousso": "Ngousso", "essos": "Essos",
              "mendong": "Mendong", "biyem-assi": "Biyem-Assi", "biyem assi": "Biyem-Assi",
              "makepe": "Makepe", "bonanjo": "Bonanjo", "bonamoussadi": "Bonamoussadi",
@@ -78,6 +79,12 @@ class EntityExtractionEngine:
             if fr in lower:
                 result.entities["property_type"] = en
                 break
+
+        # Furnished qualifier
+        if re.search(r"\bmeubl[e\u00e9]e?\b", lower):
+            result.entities["furnished"] = True
+        elif re.search(r"\bnon\s+meubl[e\u00e9]\b", lower) or re.search(r"\bvide\b", lower):
+            result.entities["furnished"] = False
 
         # Transaction type (check longest keys first, with negation handling)
         sorted_tt = sorted(TRANSACTION_TYPES.items(), key=lambda x: -len(x[0]))
@@ -112,7 +119,8 @@ class EntityExtractionEngine:
                 "new","old","big","small","large","small","great","real","first","last","next","same",
                 "living","dining","bath","kitchen","bedroom","bedrooms","balcony","terrace","garden",
                 "yard","garage","parking","basement","attic","entrance","exit","door","window",
-                "floor","level","storey","office","workspace","studio","loft","cellar"}
+                "floor","level","storey","office","workspace","studio","loft","cellar",
+                "louer","location","acheter","achat","vendre","vente","investir"}
                 # Also skip known districts to avoid city/district confusion
                 known_districts = {k.lower() for k in DISTRICTS}
                 if raw_lower in NON_CITIES or raw_lower in known_districts:
@@ -153,6 +161,13 @@ class EntityExtractionEngine:
         move_in = self._extract_move_in_date(text)
         if move_in:
             result.entities["move_in_date"] = move_in
+
+        # Cross-contamination guard: discard city if same raw value as transaction_type
+        if "city" in result.entities and "transaction_type" in result.entities:
+            raw_city = result.entities.get("city_raw", "").lower()
+            if raw_city and raw_city in TRANSACTION_TYPES:
+                del result.entities["city"]
+                result.entities.pop("city_raw", None)
 
         # Determine missing info
         if "property_type" not in result.entities:

@@ -1,0 +1,50 @@
+{
+  "conversation_id": "B000126",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 62.23,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Location terrain \u00e0 Kribi, 150 000 FCFA, Dombe, septembre.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 14.18,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Pas encore. Je veux finalement 4 chambres.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, 4 chambres, \u00e0 louer, \u00e0 Kribi, avec un budget de 150000 FCFA, emm\u00e9nagement septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 16.42,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Et l'entr\u00e9e doit \u00eatre en novembre, pas septembre.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, 4 chambres, \u00e0 louer, \u00e0 Kribi, avec un budget de 150000 FCFA, emm\u00e9nagement en novembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 19.94,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Oui.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 11.68,
+      "error": null
+    }
+  ]
+}

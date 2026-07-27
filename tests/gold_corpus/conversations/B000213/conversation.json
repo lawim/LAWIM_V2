@@ -1,0 +1,129 @@
+{
+  "id": "B000213",
+  "category": "rental",
+  "level": "basic",
+  "channel": "web",
+  "language": "fr",
+  "description": "Conversation B000213",
+  "tags": [],
+  "business_object": "unknown",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_03_DETAILED.zip",
+  "source_id": "LAWIM-GOLD-B03-0213",
+  "messages": [
+    {
+      "role": "user",
+      "text": "User turn 1 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 2",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 3 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 4",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 5 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 6",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 7 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 8",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 9 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 10",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 11 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 12",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 13 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 14",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 15 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 16",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 17 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 18",
+      "intent": "COLLECT_FACTS"
+    },
+    {
+      "role": "user",
+      "text": "User turn 19 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Assistant turn 20",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "User turn 21 for long_memory",
+      "intent": "unknown"
+    },
+    {
+      "role": "user",
+      "text": "Oui, confirme.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Recherche enregistrée.",
+      "intent": "NONE"
+    }
+  ]
+}

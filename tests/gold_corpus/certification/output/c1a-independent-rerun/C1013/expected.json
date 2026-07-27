@@ -1,0 +1,54 @@
+{
+  "id": "C1013",
+  "category": "visit",
+  "level": "easy",
+  "channel": "web",
+  "language": "fr",
+  "description": "Demande de visite pour un appartement",
+  "tags": [
+    "visit",
+    "appointment"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "text": "Je veux visiter l'appartement ref PROP-2001 \u00e0 Douala.",
+      "intent": "SCHEDULE_VISIT"
+    },
+    {
+      "role": "assistant",
+      "text": "Quel jour souhaitez-vous visiter ?",
+      "intent": "ASK_VISIT_DAY"
+    },
+    {
+      "role": "user",
+      "text": "Mercredi.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "\u00c0 quelle heure ?",
+      "intent": "ASK_VISIT_TIME"
+    },
+    {
+      "role": "user",
+      "text": "10 heures.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Souhaitez-vous enregistrer cette demande de visite ?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Oui.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "La demande de visite a \u00e9t\u00e9 enregistr\u00e9e. Un agent confirmera.",
+      "intent": "NONE"
+    }
+  ]
+}

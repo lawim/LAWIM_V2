@@ -74,7 +74,7 @@ INTENT_PRIORITY: list[tuple[str, set[str], str]] = [
     ("complaint", {"complaint", "plainte", "reclam", "reclamation",
                    "insatisfait", "dissatisfied", "tres mecontent"}, "GENERAL"),
     ("greeting", {"bonjour", "salut", "hello", "hi", "bonsoir", "good morning",
-                  "bjr", "slt", "hey", "good evening"}, "GENERAL"),
+                  "bjr", "slt", "hey", "good evening", "/start"}, "GENERAL"),
 ]
 
 

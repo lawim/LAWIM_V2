@@ -1,0 +1,25 @@
+{
+  "assertions": [
+    {
+      "id": "ASSERT-B4-001",
+      "type": "memory",
+      "description": "Faits extraits conservés en mémoire",
+      "expected": [
+        "transaction_type",
+        "property_type",
+        "city",
+        "budget"
+      ],
+      "path": "memory_retained",
+      "operator": "contains"
+    },
+    {
+      "id": "ASSERT-B4-003",
+      "type": "language",
+      "description": "Langue correcte",
+      "expected": "en",
+      "path": "responses_language",
+      "operator": "eq"
+    }
+  ]
+}

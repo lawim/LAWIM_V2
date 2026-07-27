@@ -1,0 +1,26 @@
+{
+  "total": 3,
+  "violations": [
+    {
+      "assertion_id": "ASSERT-INTENT",
+      "category": "intent",
+      "expected": "test",
+      "actual": "",
+      "detail": "op=eq, expected=test, actual="
+    },
+    {
+      "assertion_id": "ASSERT-QUAL",
+      "category": "state",
+      "expected": "qualified",
+      "actual": "",
+      "detail": "op=eq, expected=qualified, actual="
+    },
+    {
+      "assertion_id": "ASSERT-ACTION",
+      "category": "state",
+      "expected": "none",
+      "actual": "",
+      "detail": "op=eq, expected=none, actual="
+    }
+  ]
+}

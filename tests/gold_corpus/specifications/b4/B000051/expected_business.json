@@ -1,0 +1,12 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "property_type": "studio",
+    "preferred_areas": [
+      "Djeleng"
+    ]
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

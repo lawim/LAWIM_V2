@@ -1,0 +1,78 @@
+{
+  "id": "B000093",
+  "category": "rental",
+  "level": "basic",
+  "channel": "telegram",
+  "language": "en",
+  "description": "English rental flow 93",
+  "tags": [
+    "english",
+    "multilingual",
+    "rental"
+  ],
+  "business_object": "apartment",
+  "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+  "source_id": "LAWIM-GOLD-B01-0093",
+  "messages": [
+    {
+      "role": "user",
+      "text": "I am looking for an apartment to rent in Douala.",
+      "intent": "SEARCH_PROPERTY"
+    },
+    {
+      "role": "assistant",
+      "text": "What is your maximum monthly budget?",
+      "intent": "ASK_BUDGET"
+    },
+    {
+      "role": "user",
+      "text": "250,000 FCFA.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "How many bedrooms do you need?",
+      "intent": "ASK_BEDROOMS"
+    },
+    {
+      "role": "user",
+      "text": "Two bedrooms.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Which area do you prefer?",
+      "intent": "ASK_AREAS"
+    },
+    {
+      "role": "user",
+      "text": "Makepe",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "When would you like to move in?",
+      "intent": "ASK_MOVE_IN_DATE"
+    },
+    {
+      "role": "user",
+      "text": "In October.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Would you like me to register this search?",
+      "intent": "CONFIRM_BUSINESS_CREATION"
+    },
+    {
+      "role": "user",
+      "text": "Yes, please register it.",
+      "intent": "unknown"
+    },
+    {
+      "role": "assistant",
+      "text": "Your search request has been registered.",
+      "intent": "NONE"
+    }
+  ]
+}

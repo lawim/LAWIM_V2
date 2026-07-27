@@ -1,0 +1,95 @@
+[
+  {
+    "turn_index": 0,
+    "user_input": "I wan rent house for Bafoussam.",
+    "assistant_output": "I don see say you want for rent house for Bafoussam.",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Bafoussam"
+    },
+    "pending_after": "CONFIRM_FIELD_VALUE",
+    "business_actions": [],
+    "duration_ms": 13.61
+  },
+  {
+    "turn_index": 2,
+    "user_input": "Ma budget na 120 thousand.",
+    "assistant_output": "Here be your search summary : house, for rent, in Bafoussam, budget 120000 FCFA. Your search information complete. You want make I register am?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Bafoussam",
+      "budget_max": 120000
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 14.97
+  },
+  {
+    "turn_index": 4,
+    "user_input": "Na 2 bedroom.",
+    "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Bafoussam, avec un budget de 120000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Bafoussam",
+      "budget_max": 120000,
+      "bedrooms": 2
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 16.03
+  },
+  {
+    "turn_index": 6,
+    "user_input": "Banengo",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Bafoussam",
+      "budget_max": 120000,
+      "bedrooms": 2
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 25.09
+  },
+  {
+    "turn_index": 8,
+    "user_input": "September.",
+    "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Bafoussam",
+      "budget_max": 120000,
+      "bedrooms": 2
+    },
+    "pending_after": "CONFIRM_BUSINESS_CREATION",
+    "business_actions": [],
+    "duration_ms": 16.73
+  },
+  {
+    "turn_index": 10,
+    "user_input": "Yes, register am.",
+    "assistant_output": "Your search information complete. You want make I register am?",
+    "intent_detected": "property_search",
+    "facts_after": {
+      "property_type": "house",
+      "transaction_type": "rent",
+      "city": "Bafoussam",
+      "budget_max": 120000,
+      "bedrooms": 2
+    },
+    "pending_after": "NONE",
+    "business_actions": [],
+    "duration_ms": 15.99
+  }
+]

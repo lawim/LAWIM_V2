@@ -1,0 +1,14 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "property_type": "apartment",
+    "city": "Bafoussam",
+    "preferred_areas": [
+      "Tamdja"
+    ],
+    "budget": 40000000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

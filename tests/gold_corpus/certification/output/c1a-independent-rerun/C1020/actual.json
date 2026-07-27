@@ -1,0 +1,93 @@
+{
+  "conversation_id": "C1020",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 30.869722366333008,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Slt je chreche un apart a louer a Bafoussam.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "transaction_type": "rent",
+        "city": "Bafoussam"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "100 000 fr.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "2 chamb.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Tamdja stp.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Le pluto possible.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Oui merci.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer \u00e0 Bafoussam.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "transaction_type": "rent",
+        "city": "Bafoussam",
+        "budget_max": 100000
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    }
+  ]
+}

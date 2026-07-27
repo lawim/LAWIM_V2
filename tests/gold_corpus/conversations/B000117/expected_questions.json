@@ -1,0 +1,37 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel budget mensuel ?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Combien de chambres ?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Quel quartier préférez-vous ?",
+      "context": "Tour 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "Quand souhaitez-vous emménager ?",
+      "context": "Tour 3"
+    },
+    {
+      "turn": 4,
+      "expected_question": "Récapitulatif : location, appartement, à Kribi, budget 180 000 FCFA, 1 chambre(s), zones Dombe, entrée octobre. Enregistrer ?",
+      "context": "Tour 4"
+    },
+    {
+      "turn": 5,
+      "expected_question": "Les deux corrections sont prises en compte : location, appartement, à Kribi, budget 200 000 FCFA, 1 chambre(s), zones Mboamanga, entrée octobre. Enregistrer ?",
+      "context": "Tour 5"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

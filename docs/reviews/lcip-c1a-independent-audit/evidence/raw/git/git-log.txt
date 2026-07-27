@@ -1,0 +1,12 @@
+d2a7a6fc (HEAD -> feature/lcip-c1-real-dialogues-batch-01-20260726, origin/feature/lcip-c1-real-dialogues-batch-01-20260726) test(lcip): reconstruct and certify first 25 template conversations
+3910c80e (origin/main, main) docs(lcip): complete corpus 200 certification closure evidence
+cea3af12 docs(lcip): closure report for corpus 200 certification
+ebeee7e9 (tag: lawim-lcip-corpus-200-certified, origin/feature/lcip-b5-corpus-200-certification-20260726, feature/lcip-b5-corpus-200-certification-20260726) docs(lcip): close corpus 200 independent certification gate
+06d21436 test(lcip): certify 200 real gold conversations
+2670f2be (origin/feature/lcip-b4r-spec-repair-20260726, feature/lcip-b4r-spec-repair-20260726) test(lcip): validate restart and idempotence for supervised pilot
+312d22ec test(lcip): execute supervised gold specification pilot
+8795a09b test(lcip): validate supervised gold specifications pilot
+e52b6c57 (origin/feature/lcip-b3-expected-actual-reconciliation-20260726, feature/lcip-b4-gold-spec-reconstruction-20260726, feature/lcip-b3-expected-actual-reconciliation-20260726) feat(lcip): B.3 canonical expected/actual reconciliation
+820fd751 test(lcip): B.2 runtime certification campaign — 200 real dialogues executed
+303f9ae6 feat(lcip): complete LCIP A.3R runtime certification engine with safeguards
+473b2722 docs(evidence): publish V1.1 production validation, gold corpus audit, evidence directory

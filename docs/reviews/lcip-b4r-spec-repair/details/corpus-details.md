@@ -1,0 +1,3 @@
+# corpus-details
+
+Non applicable.

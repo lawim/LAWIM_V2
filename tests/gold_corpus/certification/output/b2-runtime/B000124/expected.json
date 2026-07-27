@@ -1,0 +1,199 @@
+{
+  "expected_state": {
+    "intent": "unknown",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "transaction_type": "rent",
+      "property_type": "terrain",
+      "city": "Kribi",
+      "budget": 220000,
+      "bedrooms": 2,
+      "preferred_areas": [
+        "Dombe"
+      ],
+      "move_in_date": "novembre"
+    },
+    "next_action": "CREATE_SEARCH_REQUEST",
+    "memory_retained": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "bedrooms",
+      "preferred_areas",
+      "move_in_date"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_search_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "transaction_type": "rent",
+      "property_type": "terrain",
+      "city": "Kribi",
+      "budget": 220000,
+      "bedrooms": 2,
+      "preferred_areas": [
+        "Dombe"
+      ],
+      "move_in_date": "novembre"
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "en",
+    "responses_language": "en",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "Je r\u00e9capitule : location, terrain, \u00e0 Kribi, budget 220 000 FCFA, zones Dombe, entr\u00e9e septembre. Souhaitez-vous enregistrer ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "Nombre de chambres corrig\u00e9. Nouveau r\u00e9capitulatif : location, terrain, \u00e0 Kribi, budget 220 000 FCFA, 2 chambre(s), zones Dombe, entr\u00e9e septembre. Enregistrer ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 2,
+        "expected_question": "Date corrig\u00e9e. Nouveau r\u00e9capitulatif : location, terrain, \u00e0 Kribi, budget 220 000 FCFA, 2 chambre(s), zones Dombe, entr\u00e9e novembre. Enregistrer ?",
+        "context": "Tour 2"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "en",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000124",
+    "category": "rental",
+    "level": "advanced",
+    "channel": "web",
+    "language": "en",
+    "description": "Correction After Recap #4",
+    "tags": [
+      "correction_after_recap",
+      "correction",
+      "state_consistency",
+      "explicit_confirmation",
+      "idempotence"
+    ],
+    "business_object": "terrain",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_02_DETAILED.zip",
+    "source_id": "LAWIM-GOLD-B02-0124",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Location terrain \u00e0 Kribi, 220 000 FCFA, Dombe, septembre.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Je r\u00e9capitule : location, terrain, \u00e0 Kribi, budget 220 000 FCFA, zones Dombe, entr\u00e9e septembre. Souhaitez-vous enregistrer ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Pas encore. Je veux finalement 2 chambres.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Nombre de chambres corrig\u00e9. Nouveau r\u00e9capitulatif : location, terrain, \u00e0 Kribi, budget 220 000 FCFA, 2 chambre(s), zones Dombe, entr\u00e9e septembre. Enregistrer ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Et l'entr\u00e9e doit \u00eatre en novembre, pas septembre.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Date corrig\u00e9e. Nouveau r\u00e9capitulatif : location, terrain, \u00e0 Kribi, budget 220 000 FCFA, 2 chambre(s), zones Dombe, entr\u00e9e novembre. Enregistrer ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Votre recherche a bien \u00e9t\u00e9 enregistr\u00e9e.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

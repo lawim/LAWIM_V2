@@ -1,0 +1,27 @@
+{
+  "maximum_questions_per_turn": 1,
+  "required_questions": [
+    {
+      "turn": 0,
+      "expected_question": "Quel budget maximum ?",
+      "context": "Tour 0"
+    },
+    {
+      "turn": 1,
+      "expected_question": "Vous avez indiqué deux plafonds. Quel budget maximal dois-je retenir : 100 000 ou 130 000 FCFA ?",
+      "context": "Tour 1"
+    },
+    {
+      "turn": 2,
+      "expected_question": "Combien de chambres ?",
+      "context": "Tour 2"
+    },
+    {
+      "turn": 3,
+      "expected_question": "Je récapitule : location, appartement, à Kribi, budget 130 000 FCFA, 2 chambre(s), zones Dombe, entrée septembre. Enregistrer ?",
+      "context": "Tour 3"
+    }
+  ],
+  "forbidden_questions": [],
+  "rephrase_on_confusion": true
+}

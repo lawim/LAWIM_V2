@@ -1,0 +1,120 @@
+{
+  "conversation_id": "C1019",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 7,
+  "total_duration_ms": 44.278860092163086,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Maison \u00e0 louer.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Louer.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Louer",
+        "city_raw": "louer"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Douala.",
+      "assistant_output": "Je prends note de votre correction : ville passe de Louer \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "city_raw": "louer"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "300K.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "city_raw": "louer"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "3.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "city_raw": "louer"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Akwa.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "city_raw": "louer",
+        "district": "Akwa"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Juin.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "city_raw": "louer",
+        "district": "Akwa",
+        "move_in_date": "Juin"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 12,
+      "user_input": "Oui.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "house",
+        "transaction_type": "rent",
+        "city": "Douala",
+        "city_raw": "louer",
+        "district": "Akwa",
+        "move_in_date": "Juin"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    }
+  ]
+}

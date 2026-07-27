@@ -1,0 +1,14 @@
+{
+  "business_action": "none",
+  "target_service": "None",
+  "parameters": {
+    "transaction_type": "buy",
+    "property_type": "land",
+    "preferred_areas": [
+      "Kribi"
+    ],
+    "budget": 35000000
+  },
+  "expected_result": "Aucune action",
+  "handover_required": false
+}

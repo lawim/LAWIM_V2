@@ -1,0 +1,50 @@
+{
+  "conversation_id": "B000156",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 4,
+  "total_duration_ms": 67.66,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je cherche un maison \u00e0 louer \u00e0 Douala, de pr\u00e9f\u00e9rence \u00e0 Bonamoussadi.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Douala.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 17.17,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "150 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, \u00e0 louer, \u00e0 Douala, dans le quartier Bonamoussadi, avec un budget de 150000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 15.2,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "En fait, changez la ville pour Yaound\u00e9 et le quartier pour Melen.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, \u00e0 louer, \u00e0 Yaound\u00e9, dans le quartier Melen, avec un budget de 150000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 23.13,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Oui.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 12.16,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "expected_state": {
+    "intent": "search_property",
+    "qualification_status": "qualified",
+    "slots_filled": {
+      "transaction_type": "rent",
+      "property_type": "appartement",
+      "city": "Kribi",
+      "budget": 500000,
+      "bedrooms": 1,
+      "preferred_areas": [
+        "Dombe",
+        "Mpangou"
+      ],
+      "move_in_date": "septembre"
+    },
+    "next_action": "CREATE_SEARCH_REQUEST",
+    "memory_retained": [
+      "transaction_type",
+      "property_type",
+      "city",
+      "budget",
+      "bedrooms",
+      "preferred_areas",
+      "move_in_date"
+    ]
+  },
+  "expected_business": {
+    "business_action": "create_search_request",
+    "target_service": "PropertySearchService",
+    "parameters": {
+      "transaction_type": "rent",
+      "property_type": "appartement",
+      "city": "Kribi",
+      "budget": 500000,
+      "bedrooms": 1,
+      "preferred_areas": [
+        "Dombe",
+        "Mpangou"
+      ],
+      "move_in_date": "septembre"
+    },
+    "expected_result": "Recherche de biens correspondant aux criteres",
+    "handover_required": false
+  },
+  "expected_language": {
+    "primary_language": "fr",
+    "responses_language": "fr",
+    "allow_code_switch": false,
+    "forbidden_phrases": [
+      "assistant neutre",
+      "I cannot make business decisions",
+      "provide more context"
+    ],
+    "footer_required": true,
+    "identity": "LAWIM AI"
+  },
+  "expected_runtime": {
+    "engine": "ConversationJourneyOrchestrator",
+    "expected_services": [
+      "ConversationStateService",
+      "QualificationService"
+    ],
+    "expected_repositories": [
+      "ConversationStateRepository"
+    ],
+    "timeout_seconds": 30,
+    "retry_allowed": true,
+    "fallback_chain": [
+      "deepseek",
+      "openai",
+      "gemini"
+    ]
+  },
+  "expected_questions": {
+    "maximum_questions_per_turn": 1,
+    "required_questions": [
+      {
+        "turn": 0,
+        "expected_question": "Quel budget mensuel souhaitez-vous consacrer \u00e0 cette location ?",
+        "context": "Tour 0"
+      },
+      {
+        "turn": 1,
+        "expected_question": "Combien de chambres souhaitez-vous ?",
+        "context": "Tour 1"
+      },
+      {
+        "turn": 2,
+        "expected_question": "Quels quartiers pr\u00e9f\u00e9rez-vous \u00e0 Kribi ?",
+        "context": "Tour 2"
+      },
+      {
+        "turn": 3,
+        "expected_question": "\u00c0 partir de quand souhaitez-vous emm\u00e9nager ?",
+        "context": "Tour 3"
+      },
+      {
+        "turn": 4,
+        "expected_question": "R\u00e9capitulatif : appartement \u00e0 louer \u00e0 Kribi, budget 500 000 FCFA, 1, zones Dombe ou Mpangou, entr\u00e9e en septembre. Souhaitez-vous que j\u2019enregistre cette recherche ?",
+        "context": "Tour 4"
+      }
+    ],
+    "forbidden_questions": [],
+    "rephrase_on_confusion": true
+  },
+  "expected_assertions": {
+    "assertions": [
+      {
+        "id": "ASSERT-0001",
+        "type": "memory",
+        "description": "Les faits sont retenus en memoire",
+        "expected": [
+          "transaction_type",
+          "property_type",
+          "city",
+          "budget",
+          "bedrooms",
+          "preferred_areas",
+          "move_in_date"
+        ],
+        "path": "memory_retained",
+        "operator": "contains"
+      },
+      {
+        "id": "ASSERT-0002",
+        "type": "business",
+        "description": "L'action metier est correcte",
+        "expected": "create_search_request",
+        "path": "next_action",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0003",
+        "type": "language",
+        "description": "La langue de reponse est correcte",
+        "expected": "fr",
+        "path": "responses_language",
+        "operator": "eq"
+      },
+      {
+        "id": "ASSERT-0004",
+        "type": "questions",
+        "description": "Au maximum une question par tour",
+        "expected": 1,
+        "path": "maximum_questions_per_turn",
+        "operator": "eq"
+      }
+    ]
+  },
+  "conversation": {
+    "id": "B000016",
+    "category": "rental",
+    "level": "basic",
+    "channel": "web",
+    "language": "fr",
+    "description": "Location appartement \u00e0 Kribi",
+    "tags": [
+      "location",
+      "qualification",
+      "confirmation",
+      "multi_area"
+    ],
+    "business_object": "appartement",
+    "source_zip": "LAWIM_GOLD_CORPUS_BLOCK_01.zip",
+    "source_id": "LAWIM-GOLD-B01-0016",
+    "messages": [
+      {
+        "role": "user",
+        "text": "Bonjour, je cherche un appartement \u00e0 louer \u00e0 Kribi.",
+        "intent": "SEARCH_PROPERTY"
+      },
+      {
+        "role": "assistant",
+        "text": "Quel budget mensuel souhaitez-vous consacrer \u00e0 cette location ?",
+        "intent": "ASK_BUDGET"
+      },
+      {
+        "role": "user",
+        "text": "Mon budget maximum est de 500 000 FCFA.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Combien de chambres souhaitez-vous ?",
+        "intent": "ASK_BEDROOMS"
+      },
+      {
+        "role": "user",
+        "text": "1 chambres.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Quels quartiers pr\u00e9f\u00e9rez-vous \u00e0 Kribi ?",
+        "intent": "ASK_AREAS"
+      },
+      {
+        "role": "user",
+        "text": "Dombe ou Mpangou.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "\u00c0 partir de quand souhaitez-vous emm\u00e9nager ?",
+        "intent": "ASK_MOVE_IN_DATE"
+      },
+      {
+        "role": "user",
+        "text": "En septembre.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "R\u00e9capitulatif : appartement \u00e0 louer \u00e0 Kribi, budget 500 000 FCFA, 1, zones Dombe ou Mpangou, entr\u00e9e en septembre. Souhaitez-vous que j\u2019enregistre cette recherche ?",
+        "intent": "CONFIRM_BUSINESS_CREATION"
+      },
+      {
+        "role": "user",
+        "text": "Oui, enregistrez-la.",
+        "intent": "unknown"
+      },
+      {
+        "role": "assistant",
+        "text": "Votre demande de recherche a bien \u00e9t\u00e9 enregistr\u00e9e.",
+        "intent": "NONE"
+      }
+    ]
+  }
+}

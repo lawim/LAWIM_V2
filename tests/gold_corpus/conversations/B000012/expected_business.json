@@ -1,0 +1,18 @@
+{
+  "business_action": "create_search_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "appartement",
+    "city": "Kribi",
+    "budget": 180000,
+    "bedrooms": 1,
+    "preferred_areas": [
+      "Dombe",
+      "Mpangou"
+    ],
+    "move_in_date": "septembre"
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

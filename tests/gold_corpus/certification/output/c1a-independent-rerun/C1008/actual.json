@@ -1,0 +1,87 @@
+{
+  "conversation_id": "C1008",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 5,
+  "total_duration_ms": 36.5900993347168,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Je veux acheter un terrain \u00e0 Kribi.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 acheter un terrain \u00e0 Kribi.",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "buy",
+        "city": "Kribi"
+      },
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "5 000 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : un terrain, \u00e0 acheter, \u00e0 Kribi, avec un budget de 5000000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "buy",
+        "city": "Kribi",
+        "budget_max": 5000000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "Dombe ou Mpangou.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "buy",
+        "city": "Kribi",
+        "budget_max": 5000000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Au moins 200 m\u00b2.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "buy",
+        "city": "Kribi",
+        "budget_max": 5000000
+      },
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "Oui.",
+      "assistant_output": "Votre demande a bien \u00e9t\u00e9 enregistr\u00e9e. Puis-je vous aider avec autre chose ?",
+      "intent_detected": "property_search",
+      "facts_after": {
+        "property_type": "land",
+        "transaction_type": "buy",
+        "city": "Kribi",
+        "budget_max": 5000000
+      },
+      "pending_after": "NONE",
+      "business_actions": [
+        "business_action",
+        "create_search_request:obj_ea075a3c411d"
+      ],
+      "error": null
+    }
+  ]
+}

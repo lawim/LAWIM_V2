@@ -1,0 +1,17 @@
+{
+  "business_action": "create_search_request",
+  "target_service": "PropertySearchService",
+  "parameters": {
+    "transaction_type": "rent",
+    "property_type": "house",
+    "city": "Douala",
+    "budget": 250000,
+    "bedrooms": 3,
+    "preferred_areas": [
+      "Makepe"
+    ],
+    "move_in_date": "September"
+  },
+  "expected_result": "Recherche de biens correspondant aux criteres",
+  "handover_required": false
+}

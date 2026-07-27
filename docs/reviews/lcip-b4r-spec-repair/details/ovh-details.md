@@ -1,0 +1,3 @@
+# ovh-details
+
+Non applicable.

@@ -1,0 +1,70 @@
+{
+  "conversation_id": "B000013",
+  "runtime_called": true,
+  "adapter_class": "lawim_v2.conversation.program_f_adapter.ProgramFEngineAdapter",
+  "orchestrator_class": "lawim_runtime.conversation.journey.ConversationJourneyOrchestrator",
+  "call_count": 6,
+  "total_duration_ms": 51.67,
+  "turns": [
+    {
+      "turn_index": 0,
+      "user_input": "Bonjour, je cherche un maison \u00e0 louer \u00e0 Yaound\u00e9.",
+      "assistant_output": "J'ai not\u00e9 que vous cherchez \u00e0 louer une maison \u00e0 Yaound\u00e9.",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_FIELD_VALUE",
+      "business_actions": [],
+      "duration_ms": 4.9,
+      "error": null
+    },
+    {
+      "turn_index": 2,
+      "user_input": "Mon budget maximum est de 200 000 FCFA.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, \u00e0 louer, \u00e0 Yaound\u00e9, avec un budget de 200000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 8.82,
+      "error": null
+    },
+    {
+      "turn_index": 4,
+      "user_input": "2 chambres.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, avec un budget de 200000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 4.54,
+      "error": null
+    },
+    {
+      "turn_index": 6,
+      "user_input": "Melen ou Ngoa-Ekell\u00e9.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le secteur Ngoa-Ekell\u00e9, Melen, avec un budget de 200000 FCFA. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 15.21,
+      "error": null
+    },
+    {
+      "turn_index": 8,
+      "user_input": "En septembre.",
+      "assistant_output": "Je r\u00e9capitule votre recherche : une maison, 2 chambres, \u00e0 louer, \u00e0 Yaound\u00e9, dans le secteur Ngoa-Ekell\u00e9, Melen, avec un budget de 200000 FCFA, emm\u00e9nagement En septembre. Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 8.66,
+      "error": null
+    },
+    {
+      "turn_index": 10,
+      "user_input": "Oui, enregistrez-la.",
+      "assistant_output": "Les informations de votre recherche sont compl\u00e8tes. Souhaitez-vous que je l'enregistre ?",
+      "intent_detected": "property_search",
+      "pending_after": "CONFIRM_BUSINESS_CREATION",
+      "business_actions": [],
+      "duration_ms": 9.54,
+      "error": null
+    }
+  ]
+}
